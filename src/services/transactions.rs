@@ -2,6 +2,7 @@ extern crate reqwest;
 
 use super::base_transaction_service_url;
 use crate::models::backend::about::About;
+use crate::models::backend::transactions::Transaction;
 use reqwest::Url;
 
 pub fn get_about() -> String {
@@ -16,17 +17,17 @@ pub fn get_about() -> String {
 }
 
 pub fn get_transactions_details(tx_hash: String) -> String {
-    // let url_string = format!(
-    //     "{}/transactions/{}",
-    //     base_transaction_service_url(),
-    //     tx_hash
-    // );
-    // let url = Url::parse(&url_string).unwrap();
-    // println!("{}", &url);
-    // let body = reqwest::blocking::get(url).unwrap().text().unwrap();
-    // println!("{:#}", body);
-    // let transaction_dto: TransactionDto = serde_json::from_str(&body).unwrap();
-    // let transaction: Transaction = transactionDto.to_transaction();
+    let url_string = format!(
+        "{}/transactions/{}",
+        base_transaction_service_url(),
+        tx_hash
+    );
+    let url = Url::parse(&url_string).unwrap();
+    println!("{}", &url);
+    let body = reqwest::blocking::get(url).unwrap().text().unwrap();
+    println!("{:#}", body);
+    // let transaction: Transaction = serde_json::from_str(&body).unwrap();
+    // let transaction: Transaction = transaction.to_transaction();
     // serde_json::to_string(&transaction).unwrap()
-    String::new()
+    body
 }

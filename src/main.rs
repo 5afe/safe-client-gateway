@@ -5,6 +5,7 @@ extern crate rocket;
 
 pub mod routes;
 pub mod services;
+pub mod models;
 
 use routes::transaction_routes;
 

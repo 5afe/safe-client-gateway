@@ -33,7 +33,7 @@ pub struct Transaction {
     pub confirmations_required: Option<usize>,
     pub confirmations: Option<Vec<Confirmation>>,
     pub signatures: Option<String>,
-    pub tx_type: TransactionType,
+    pub tx_type: Option<TransactionType>,
 }
 
 #[derive(Deserialize, Debug)]

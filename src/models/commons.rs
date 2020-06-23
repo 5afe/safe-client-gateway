@@ -14,6 +14,7 @@ pub enum TransactionType {
     MultisigTransaction,
     EthereumTransaction,
     ModuleTransaction,
+    Unknown
 }
 
 #[derive(Serialize, Deserialize, Debug)]

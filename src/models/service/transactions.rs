@@ -15,8 +15,16 @@ pub struct SettingsChange {
     pub date: DateTime<Utc>,
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Custom {
+    pub to: Address
+}
+
 #[typetag::serde(name = "TRANSFER")]
 impl ServiceTransaction for Transfer {}
 
 #[typetag::serde(name = "SETTINGS_CHANGE")]
 impl ServiceTransaction for SettingsChange {}
+
+#[typetag::serde(name = "CUSTOM")]
+impl ServiceTransaction for Custom {}

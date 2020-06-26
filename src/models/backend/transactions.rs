@@ -3,8 +3,6 @@ use chrono::{DateTime, Utc};
 use ethereum_types::{Address, H256};
 use serde::{Serialize, Deserialize};
 use super::super::service::transactions::ServiceTransaction;
-use super::super::converters::transactions;
-use crate::models::service::transactions::{SettingsChange, Transfer};
 
 #[typetag::serde(tag = "txType")]
 pub trait Transaction {

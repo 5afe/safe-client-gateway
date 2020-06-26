@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use ethereum_types::Address;
 
 #[derive(Deserialize, Debug)]

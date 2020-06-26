@@ -1,13 +1,14 @@
 use crate::services::transactions;
+use rocket::response::content;
 
 #[get("/transactions/<safe_address>")]
-pub fn all(safe_address: String) -> String {
-    transactions::get_all_transactions(safe_address)
+pub fn all(safe_address: String) -> content::Json<String> {
+    content::Json(transactions::get_all_transactions(safe_address))
 }
 
 #[get("/transaction/<tx_hash>")]
-pub fn details(tx_hash: String) -> String {
-    transactions::get_transactions_details(tx_hash)
+pub fn details(tx_hash: String) -> content::Json<String> {
+    content::Json(transactions::get_transactions_details(tx_hash))
 }
 
 #[get("/transactions/about")]

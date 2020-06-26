@@ -1,11 +1,22 @@
-use ethereum_types::{Address, H256, U256};
-use serde::Serialize;
+use ethereum_types::Address;
+use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
-use super::super::commons::TransactionType;
 
-#[derive(Serialize, Debug)]
-pub struct Transaction {
+#[typetag::serde(tag = "transaction_type")]
+pub trait ServiceTransaction {}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Transfer {
     pub to: Address,
-    pub timestamp: DateTime<Utc>,
-    pub transaction_type: TransactionType,
 }
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct SettingsChange {
+    pub date: DateTime<Utc>,
+}
+
+#[typetag::serde(name = "TRANSFER")]
+impl ServiceTransaction for Transfer {}
+
+#[typetag::serde(name = "SETTINGS_CHANGE")]
+impl ServiceTransaction for SettingsChange {}

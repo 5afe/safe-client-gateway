@@ -72,27 +72,6 @@ pub struct ModuleTransaction {
     pub tx_type: Option<TransactionType>,
 }
 
-#[typetag::serde(name = "MULTISIG_TRANSACTION")]
-impl Transaction for MultisigTransaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
-        Box::new(self.to_settings_change())
-    }
-}
-
-#[typetag::serde(name = "ETHEREUM_TRANSACTION")]
-impl Transaction for EthereumTransaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
-        Box::new(self.to_transfer())
-    }
-}
-
-#[typetag::serde(name = "MODULE_TRANSACTION")]
-impl Transaction for ModuleTransaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
-        Box::new(self.to_service_transaction())
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Confirmation {

@@ -16,6 +16,13 @@ pub enum TransactionType {
     ModuleTransaction,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ServiceTransactionType {
+    SettingsChange,
+    Transfer,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Page<T> {

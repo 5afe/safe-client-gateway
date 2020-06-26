@@ -3,7 +3,7 @@ extern crate reqwest;
 use super::base_transaction_service_url;
 use crate::models::backend::about::About;
 use crate::models::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::Transaction;
+use crate::models::service::transactions::ServiceTransaction;
 use crate::models::converters::transactions;
 use crate::models::commons::Page;
 use reqwest::Url;
@@ -46,10 +46,8 @@ pub fn get_all_transactions(safe_address: String) -> String {
     println!("request URL: {}", &url_string);
     println!("{:#?}", body);
     let transactions: Page<Box<dyn TransactionDto>> = serde_json::from_str(&body).unwrap();
-    let transactions: Vec<Transaction> = transactions.results.into_iter()
+    let transactions: Vec<Box<dyn ServiceTransaction>> = transactions.results.into_iter()
         .map(|transaction| transaction.to_service_transaction())//.to_transaction())
         .collect();
     serde_json::to_string(&transactions).unwrap()
-    // let json = serde_json::to_string(&transactions).unwrap();
-    // json
 }

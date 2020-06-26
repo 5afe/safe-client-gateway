@@ -2,12 +2,13 @@ use super::super::commons::{Operation, TransactionType};
 use chrono::{DateTime, Utc};
 use ethereum_types::{Address, H256};
 use serde::{Serialize, Deserialize};
-use super::super::service::transactions::Transaction as ServiceTransaction;
+use super::super::service::transactions::ServiceTransaction;
 use super::super::converters::transactions;
+use crate::models::service::transactions::{SettingsChange, Transfer};
 
 #[typetag::serde(tag = "txType")]
 pub trait Transaction {
-    fn to_service_transaction(&self) -> ServiceTransaction;
+    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction>;
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -75,22 +76,22 @@ pub struct ModuleTransaction {
 
 #[typetag::serde(name = "MULTISIG_TRANSACTION")]
 impl Transaction for MultisigTransaction {
-    fn to_service_transaction(&self) -> ServiceTransaction {
-        self.to_transaction()
+    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
+        Box::new(self.to_settings_change())
     }
 }
 
 #[typetag::serde(name = "ETHEREUM_TRANSACTION")]
 impl Transaction for EthereumTransaction {
-    fn to_service_transaction(&self) -> ServiceTransaction {
-        self.to_transaction()
+    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
+        Box::new(self.to_transfer())
     }
 }
 
 #[typetag::serde(name = "MODULE_TRANSACTION")]
 impl Transaction for ModuleTransaction {
-    fn to_service_transaction(&self) -> ServiceTransaction {
-        self.to_transaction()
+    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
+        Box::new(self.to_service_transaction())
     }
 }
 

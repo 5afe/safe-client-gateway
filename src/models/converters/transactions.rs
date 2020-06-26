@@ -6,22 +6,24 @@ use crate::models::service::transactions::{SettingsChange, Transfer, ServiceTran
 
 #[typetag::serde(name = "MULTISIG_TRANSACTION")]
 impl Transaction for MultisigTransaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
-        Box::new(self.to_settings_change())
+    fn to_service_transaction(&self) -> Vec<Box<dyn ServiceTransaction>> {
+        vec!(
+            Box::new(self.to_settings_change())
+        )
     }
 }
 
 #[typetag::serde(name = "ETHEREUM_TRANSACTION")]
 impl Transaction for EthereumTransaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
-        Box::new(self.to_transfer())
+    fn to_service_transaction(&self) -> Vec<Box<dyn ServiceTransaction>> {
+        vec!(Box::new(self.to_transfer()))
     }
 }
 
 #[typetag::serde(name = "MODULE_TRANSACTION")]
 impl Transaction for ModuleTransaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction> {
-        Box::new(self.some_mapping_magic())
+    fn to_service_transaction(&self) -> Vec<Box<dyn ServiceTransaction>> {
+        vec!(Box::new(self.some_mapping_magic()))
     }
 }
 

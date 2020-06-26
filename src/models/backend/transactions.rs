@@ -6,7 +6,7 @@ use super::super::service::transactions::ServiceTransaction;
 
 #[typetag::serde(tag = "txType")]
 pub trait Transaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction>;
+    fn to_service_transaction(&self) -> Vec<Box<dyn ServiceTransaction>>;
 }
 
 #[derive(Serialize, Deserialize, Debug)]

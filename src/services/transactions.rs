@@ -47,7 +47,7 @@ pub fn get_all_transactions(safe_address: String) -> Result<String> {
     println!("{:#?}", body);
     let transactions: Page<Box<dyn TransactionDto>> = serde_json::from_str(&body)?;
     let transactions: Vec<Box<dyn ServiceTransaction>> = transactions.results.into_iter()
-        .map(|transaction| transaction.to_service_transaction())//.to_transaction())
+        .flat_map(|transaction| transaction.to_service_transaction())//.to_transaction())
         .collect();
     Ok(serde_json::to_string(&transactions)?)
 }

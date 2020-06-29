@@ -10,14 +10,6 @@ pub enum Operation {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum TransactionType {
-    MultisigTransaction,
-    EthereumTransaction,
-    ModuleTransaction,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ServiceTransactionType {
     SettingsChange,
     Transfer,

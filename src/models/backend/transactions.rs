@@ -1,15 +1,23 @@
-use super::super::commons::{Operation, TransactionType};
+use super::super::commons::Operation;
 use chrono::{DateTime, Utc};
 use ethereum_types::{Address, H256};
 use serde::{Serialize, Deserialize};
-use super::super::service::transactions::ServiceTransaction;
+use crate::models::backend::transfers::Transfer;
 
-#[typetag::serde(tag = "txType")]
-pub trait Transaction {
-    fn to_service_transaction(&self) -> Box<dyn ServiceTransaction>;
+#[derive(Deserialize, Debug)]
+#[serde(tag = "txType")]
+pub enum Transaction {
+    #[serde(rename(deserialize = "MULTISIG_TRANSACTION"))]
+    Multisig(MultisigTransaction),
+    #[serde(rename(deserialize = "ETHEREUM_TRANSACTION"))]
+    Ethereum(EthereumTransaction),
+    #[serde(rename(deserialize = "MODULE_TRANSACTION"))]
+    Module(ModuleTransaction),
+    #[serde(other)]
+    Unknown,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigTransaction {
     pub safe: Option<Address>,
@@ -39,10 +47,9 @@ pub struct MultisigTransaction {
     pub confirmations_required: Option<usize>,
     pub confirmations: Option<Vec<Confirmation>>,
     pub signatures: Option<String>,
-    pub tx_type: Option<TransactionType>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct EthereumTransaction {
     pub execution_date: DateTime<Utc>,
@@ -50,12 +57,11 @@ pub struct EthereumTransaction {
     pub data: Option<String>,
     pub tx_hash: Option<H256>,
     pub block_number: Option<usize>,
-    // pub transfers: Option<Vec<Transfer>>,
-    pub tx_type: Option<TransactionType>,
+    pub transfers: Option<Vec<Transfer>>,
     pub from: Address,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleTransaction {
     pub created: Option<Address>,
@@ -69,7 +75,6 @@ pub struct ModuleTransaction {
     pub data: Option<String>,
     pub operation: Operation,
     // pub transfers: Option<Vec<Transfer>>,
-    pub tx_type: Option<TransactionType>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -79,6 +84,5 @@ pub struct Confirmation {
     submission_date: Option<DateTime<Utc>>,
     transaction_hash: Option<H256>,
     confirmation_type: String,
-    // looks like it should be an enum
     signature: Option<String>,
 }

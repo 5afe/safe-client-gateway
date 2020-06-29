@@ -3,7 +3,8 @@ extern crate reqwest;
 use super::base_transaction_service_url;
 use crate::models::backend::about::About;
 use crate::models::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::ServiceTransaction;
+use crate::models::service::transactions::Transaction as ServiceTransaction;
+use crate::models::converters::transactions::Transaction;
 use crate::models::commons::Page;
 use reqwest::Url;
 use anyhow::Result;
@@ -27,11 +28,11 @@ pub fn get_transactions_details(tx_hash: String) -> String {
     );
     let url = Url::parse(&url_string).unwrap();
     let body = reqwest::blocking::get(url).unwrap().text().unwrap();
-    let transaction: Box<dyn TransactionDto> = serde_json::from_str(&body).unwrap();
+    // let transaction: Box<TransactionDto> = serde_json::from_str(&body).unwrap();
     // let transaction: Transaction = transaction.to_transaction();
     // serde_json::to_string(&transaction).unwrap()
-    let json = serde_json::to_string(&transaction).unwrap();
-    json
+    // let json = serde_json::to_string(&transaction).unwrap();
+    body
 }
 
 
@@ -45,9 +46,9 @@ pub fn get_all_transactions(safe_address: String) -> Result<String> {
     let body = reqwest::blocking::get(url)?.text()?;
     println!("request URL: {}", &url_string);
     println!("{:#?}", body);
-    let transactions: Page<Box<dyn TransactionDto>> = serde_json::from_str(&body)?;
-    let transactions: Vec<Box<dyn ServiceTransaction>> = transactions.results.into_iter()
-        .map(|transaction| transaction.to_service_transaction())//.to_transaction())
+    let transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
+    let transactions: Vec<ServiceTransaction> = transactions.results.into_iter()
+        .flat_map(|transaction| transaction.to_service_transaction())
         .collect();
     Ok(serde_json::to_string(&transactions)?)
 }

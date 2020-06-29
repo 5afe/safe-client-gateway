@@ -2,6 +2,7 @@ use super::super::commons::Operation;
 use chrono::{DateTime, Utc};
 use ethereum_types::{Address, H256};
 use serde::{Serialize, Deserialize};
+use crate::models::backend::transfers::Transfer;
 
 #[derive(Deserialize, Debug)]
 #[serde(tag = "txType")]
@@ -56,7 +57,7 @@ pub struct EthereumTransaction {
     pub data: Option<String>,
     pub tx_hash: Option<H256>,
     pub block_number: Option<usize>,
-    // pub transfers: Option<Vec<Transfer>>,
+    pub transfers: Option<Vec<Transfer>>,
     pub from: Address,
 }
 
@@ -83,6 +84,5 @@ pub struct Confirmation {
     submission_date: Option<DateTime<Utc>>,
     transaction_hash: Option<H256>,
     confirmation_type: String,
-    // looks like it should be an enum
     signature: Option<String>,
 }

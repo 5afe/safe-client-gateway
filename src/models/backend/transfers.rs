@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
+use serde::Deserialize;
 use chrono::{DateTime, Utc};
-use ethereum_types::{Address, H256, U256};
+use ethereum_types::{Address, U256};
 
 #[derive(Deserialize, Debug)]
 #[serde(tag = "type")]

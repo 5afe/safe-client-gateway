@@ -3,7 +3,6 @@ extern crate chrono;
 use super::super::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
 use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
-use crate::models::converters::transfers;
 
 pub trait Transaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction>;

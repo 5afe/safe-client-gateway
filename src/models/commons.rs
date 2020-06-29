@@ -23,6 +23,14 @@ pub enum ServiceTransactionType {
     Transfer,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum TransferType {
+    Erc721Transfer,
+    Erc20Transfer,
+    EthTransfer,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Page<T> {

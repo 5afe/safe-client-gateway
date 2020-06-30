@@ -23,11 +23,3 @@ pub struct Page<T> {
     pub previous: Option<String>,
     pub results: Vec<T>,
 }
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum TransferType {
-    Erc721,
-    Erc20,
-    Ether,
-}

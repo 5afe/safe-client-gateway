@@ -20,17 +20,34 @@ pub enum Transfer {
 pub struct Erc721Transfer {
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,
+    pub transaction_hash: H256,
     pub to: Address,
+    pub token_id: String,
+    pub token_address: Address,
+    pub from: Address,
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc20Transfer {
-    pub token_address: Address,
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,
+    pub transaction_hash: H256,
     pub to: Address,
+    pub value: String,
+    pub token_address: Address,
+    pub token_info: Erc20TokenInfo,
+    pub from: Address,
+}
 
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Erc20TokenInfo {
+    pub address: Address,
+    pub name: String,
+    pub symbol: String,
+    pub decimals: usize,
+    pub logo_uri: String,
 }
 
 #[derive(Deserialize, Debug)]

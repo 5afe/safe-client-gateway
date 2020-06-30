@@ -55,7 +55,7 @@ pub struct EthereumTransaction {
     pub execution_date: DateTime<Utc>,
     pub to: Address,
     pub data: Option<String>,
-    pub tx_hash: Option<H256>,
+    pub tx_hash: H256,
     pub block_number: Option<usize>,
     pub transfers: Option<Vec<Transfer>>,
     pub from: Address,

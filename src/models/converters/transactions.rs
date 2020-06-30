@@ -3,6 +3,7 @@ extern crate chrono;
 use super::super::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
 use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
+use crate::models::commons::TransferType;
 
 pub trait Transaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction>;
@@ -25,7 +26,8 @@ impl Transaction for TransactionDto {
 impl MultisigTransaction {
     pub fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
         vec!(ServiceTransaction::Transfer {
-            to: self.to
+            to: self.to,
+            transafer_type: TransferType::Ether, //TODO infer correct type
         })
     }
 }

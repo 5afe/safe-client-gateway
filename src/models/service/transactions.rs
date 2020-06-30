@@ -15,7 +15,6 @@ pub enum Transaction {
 #[serde(rename_all = "camelCase")]
 pub struct Transfer {
     pub sender: Address,
-    // pub transfer_type: TransferType,
     pub recipient: Address,
     pub date: DateTime<Utc>,
     pub transaction_hash: H256,

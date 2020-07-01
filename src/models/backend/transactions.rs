@@ -3,6 +3,7 @@ use chrono::{DateTime, Utc};
 use ethereum_types::{Address, H256};
 use serde::{Serialize, Deserialize};
 use crate::models::backend::transfers::Transfer;
+use crate::models::commons::DataDecoded;
 
 #[derive(Deserialize, Debug)]
 #[serde(tag = "txType")]
@@ -24,6 +25,7 @@ pub struct MultisigTransaction {
     pub to: Address,
     pub value: Option<String>,
     pub data: Option<String>,
+    pub data_decoded: Option<DataDecoded>,
     pub operation: Option<Operation>,
     pub gas_token: Option<Address>,
     pub safe_tx_gas: Option<usize>,

@@ -1,13 +1,14 @@
 use ethereum_types::{Address, H256};
 use serde::Serialize;
 use chrono::{DateTime, Utc};
+use crate::models::commons::DataDecoded;
 
 #[derive(Serialize, Debug)]
 #[serde(tag = "type")]
 pub enum Transaction {
     Transfer(Transfer),
-    SettingsChange { date: DateTime<Utc> },
-    Custom { to: Address },
+    SettingsChange(SettingsChange),
+    Custom(Custom),
     Unknown,
 }
 
@@ -39,4 +40,16 @@ pub enum TransferInfo {
     Ether {
         value: String,
     },
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct SettingsChange {
+    pub data_decoded: DataDecoded
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Custom {
+    pub to: Address
 }

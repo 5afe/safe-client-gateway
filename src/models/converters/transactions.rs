@@ -44,6 +44,32 @@ impl MultisigTransaction {
     #[allow(dead_code)]
     fn is_erc20_transfer(&self) -> bool {
         self.operation.filter(|&operation| operation == Operation::CALL).is_some()
+            && self.data_decoded.as_ref().filter(
+            |data_decoded| {
+                (data_decoded.method.as_str() == "transfer" || data_decoded.method.as_str() == "transferFrom")
+                    && data_decoded.parameters.as_ref().into_iter().any(
+                    |parameters| {
+                        parameters.into_iter().any(|parameter| parameter.name == "value")
+                    })
+            }).is_some()
+    }
+
+    #[allow(dead_code)]
+    fn is_erc721_transfer(&self) -> bool {
+        self.operation.filter(|&operation| operation == Operation::CALL).is_some()
+            && self.data_decoded.as_ref().filter(
+            |data_decoded| {
+                (data_decoded.method.as_str() == "safeTransferFrom" || data_decoded.method.as_str() == "transferFrom")
+                    && data_decoded.parameters.as_ref().into_iter().any(
+                    |parameters| {
+                        parameters.into_iter().any(|parameter| parameter.name == "tokenId")
+                    })
+            }).is_some()
+    }
+
+    #[allow(dead_code)]
+    fn is_ether_transfer(&self) -> bool {
+        self.operation.filter(|&operation| operation == Operation::CALL).is_some() && self.data.is_some()
     }
 
     // fn isErc721Transfer(&self) -> bool{}

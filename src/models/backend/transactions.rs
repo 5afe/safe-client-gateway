@@ -21,8 +21,8 @@ pub enum Transaction {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigTransaction {
-    pub safe: Option<Address>,
-    pub to: Address,
+    pub safe: Address,
+    pub to: Option<Address>,
     pub value: Option<String>,
     pub data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
@@ -34,7 +34,7 @@ pub struct MultisigTransaction {
     pub refund_receiver: Option<Address>,
     pub nonce: Option<usize>,
     pub execution_date: Option<DateTime<Utc>>,
-    pub submission_date: Option<DateTime<Utc>>,
+    pub submission_date: DateTime<Utc>,
     pub modified: Option<DateTime<Utc>>,
     pub block_number: Option<usize>,
     pub transaction_hash: Option<H256>,

@@ -1,16 +1,13 @@
 extern crate chrono;
 
 use super::super::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::{Transaction as ServiceTransaction, SettingsChange, Custom as CustomTransaction};
+use crate::models::service::transactions::{Transaction as ServiceTransaction, SettingsChange, Custom as CustomTransaction, Transfer, Custom, TransferInfo};
 use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
 use crate::models::commons::Operation;
+use ethereum_types::{Address, H160, H256};
 
-pub trait Transaction {
-    fn to_service_transaction(&self) -> Vec<ServiceTransaction>;
-}
-
-impl Transaction for TransactionDto {
-    fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
+impl TransactionDto {
+    pub fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
         match self {
             TransactionDto::Multisig(transaction) => transaction.to_service_transaction(),
             TransactionDto::Ethereum(transaction) => transaction.to_service_transaction(),
@@ -25,56 +22,97 @@ impl Transaction for TransactionDto {
 
 impl MultisigTransaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
-        vec!(match &self.data_decoded {
-            Some(data_decoded) =>
-                ServiceTransaction::SettingsChange(
-                    SettingsChange {
-                        data_decoded: data_decoded.clone(),
-                    }
-                ),
-            None =>
-                ServiceTransaction::Custom(
-                    CustomTransaction {
-                        to: self.to
-                    }
-                )
-        })
+        vec!(
+            if self.is_erc20_transfer() {
+                ServiceTransaction::Transfer(self.to_erc20_transfer())
+            } else if self.is_erc721_transfer() {
+                ServiceTransaction::Transfer(self.to_erc721_transfer())
+            } else if self.is_ether_transfer() {
+                ServiceTransaction::Transfer(self.to_ether_transfer())
+            } else if self.is_settings_change() {
+                ServiceTransaction::SettingsChange(self.to_settings_change())
+            } else {
+                ServiceTransaction::Custom(self.to_custom())
+            }
+        )
     }
 
-    #[allow(dead_code)]
     fn is_erc20_transfer(&self) -> bool {
-        self.operation.filter(|&operation| operation == Operation::CALL).is_some()
-            && self.data_decoded.as_ref().filter(
-            |data_decoded| {
-                (data_decoded.method.as_str() == "transfer" || data_decoded.method.as_str() == "transferFrom")
-                    && data_decoded.parameters.as_ref().into_iter().any(
-                    |parameters| {
-                        parameters.into_iter().any(|parameter| parameter.name == "value")
-                    })
-            }).is_some()
+        self.operation.contains(&Operation::CALL)
+            && self.data_decoded.is_some()
+            && self.data_decoded.as_ref().unwrap().is_erc20_transfer_method()
+            && self.data_decoded.as_ref().unwrap().contains_parameter("value")
     }
 
-    #[allow(dead_code)]
     fn is_erc721_transfer(&self) -> bool {
-        self.operation.filter(|&operation| operation == Operation::CALL).is_some()
-            && self.data_decoded.as_ref().filter(
-            |data_decoded| {
-                (data_decoded.method.as_str() == "safeTransferFrom" || data_decoded.method.as_str() == "transferFrom")
-                    && data_decoded.parameters.as_ref().into_iter().any(
-                    |parameters| {
-                        parameters.into_iter().any(|parameter| parameter.name == "tokenId")
-                    })
-            }).is_some()
+        self.operation.contains(&Operation::CALL)
+            && self.data_decoded.is_some()
+            && self.data_decoded.as_ref().unwrap().is_erc721_transfer_method()
+            && self.data_decoded.as_ref().unwrap().contains_parameter("tokenId")
     }
 
-    #[allow(dead_code)]
     fn is_ether_transfer(&self) -> bool {
-        self.operation.filter(|&operation| operation == Operation::CALL).is_some() && self.data.is_some()
+        self.operation.contains(&Operation::CALL)
+            && self.data.is_some()
     }
 
-    // fn isErc721Transfer(&self) -> bool{}
-    // fn isEtherTransfer(&self) -> bool{}
-    // fn isSettingsChange(&self) -> bool{}
+    fn is_settings_change(&self) -> bool {
+        self.to.unwrap_or(Address::from(H160::zero())) == self.safe
+            && self.operation.contains(&Operation::CALL)
+            && self.data_decoded.is_some()
+            && self.data_decoded.as_ref().unwrap().is_settings_change()
+    }
+
+    fn to_erc20_transfer(&self) -> Transfer {
+        Transfer {
+            sender: self.safe,
+            recipient: self.safe,
+            date: self.submission_date,
+            transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
+            transfer_info: TransferInfo::Erc20 {
+                token_name: String::from("Blabla"),
+                token_symbol: String::from("BLA"),
+                logo_uri: String::from("some.url"),
+                decimals: 12,
+                value: String::from("23928390283"),
+            },
+        }
+    }
+
+    fn to_erc721_transfer(&self) -> Transfer {
+        Transfer {
+            sender: self.safe,
+            recipient: self.safe,
+            date: self.submission_date,
+            transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
+            transfer_info: TransferInfo::Erc721 {
+                token_id: String::from("Blabla"),
+                token_address: Address::from(H160::zero()),
+            },
+        }
+    }
+
+    fn to_ether_transfer(&self) -> Transfer {
+        Transfer {
+            sender: self.safe,
+            recipient: self.safe,
+            date: self.submission_date,
+            transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
+            transfer_info: TransferInfo::Ether {
+                value: self.value.as_ref().unwrap().to_string(),
+            },
+        }
+    }
+
+    fn to_settings_change(&self) -> SettingsChange {
+        SettingsChange {
+            data_decoded: self.data_decoded.as_ref().unwrap().to_owned()
+        }
+    }
+
+    fn to_custom(&self) -> Custom {
+        Custom { to: self.safe }
+    }
 }
 
 impl EthereumTransaction {

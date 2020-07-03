@@ -1,4 +1,4 @@
-#![feature(proc_macro_hygiene, decl_macro)]
+#![feature(proc_macro_hygiene, decl_macro, option_result_contains)]
 
 #[macro_use]
 extern crate rocket;
@@ -9,6 +9,7 @@ extern crate rocket_contrib;
 pub mod routes;
 pub mod services;
 pub mod models;
+pub mod utils;
 
 use routes::transaction_routes;
 use crate::routes::error_catchers;

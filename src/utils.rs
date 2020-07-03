@@ -14,9 +14,15 @@ pub const SETTINGS_CHANGE_METHODS: &[&str] = &["setFallbackHandler",
     "disableModule"];
 
 impl DataDecoded {
-    pub fn contains_parameter(&self, parameter_name: &str) -> bool {
+    pub fn get_parameter_value(&self, name: &str) -> Option<String> {
+        self.parameters.as_ref()?.iter()
+                    .find(|&param| param.name == name)
+                    .map(|result| result.value.clone())
+    }
+
+    pub fn contains_parameter(&self, name: &str) -> bool {
         self.parameters.as_ref()
-            .map(|parameters| parameters.iter().any(|param| param.name == parameter_name))
+            .map(|parameters| parameters.iter().any(|param| param.name == name))
             .is_some()
     }
 

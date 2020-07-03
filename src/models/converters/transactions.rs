@@ -74,7 +74,9 @@ impl MultisigTransaction {
                 token_symbol: String::from("BLA"),
                 logo_uri: String::from("some.url"),
                 decimals: 12,
-                value: String::from("23928390283"),
+                value: self.data_decoded.as_ref().and_then(
+                    |it| it.get_parameter_value("value")
+                ).unwrap_or(String::from("0")),
             },
         }
     }
@@ -86,7 +88,9 @@ impl MultisigTransaction {
             date: self.submission_date,
             transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
             transfer_info: TransferInfo::Erc721 {
-                token_id: String::from("Blabla"),
+                token_id:  self.data_decoded.as_ref().and_then(
+                    |it| it.get_parameter_value("tokenId")
+                ).unwrap_or(String::from("0")),
                 token_address: Address::from(H160::zero()),
             },
         }

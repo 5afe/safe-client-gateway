@@ -3,6 +3,7 @@ use chrono::{DateTime, Utc};
 use ethereum_types::{Address, H256};
 use serde::{Serialize, Deserialize};
 use crate::models::backend::transfers::Transfer;
+use crate::models::commons::DataDecoded;
 
 #[derive(Deserialize, Debug)]
 #[serde(tag = "txType")]
@@ -20,10 +21,11 @@ pub enum Transaction {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigTransaction {
-    pub safe: Option<Address>,
-    pub to: Address,
+    pub safe: Address,
+    pub to: Option<Address>,
     pub value: Option<String>,
     pub data: Option<String>,
+    pub data_decoded: Option<DataDecoded>,
     pub operation: Option<Operation>,
     pub gas_token: Option<Address>,
     pub safe_tx_gas: Option<usize>,
@@ -32,7 +34,7 @@ pub struct MultisigTransaction {
     pub refund_receiver: Option<Address>,
     pub nonce: Option<usize>,
     pub execution_date: Option<DateTime<Utc>>,
-    pub submission_date: Option<DateTime<Utc>>,
+    pub submission_date: DateTime<Utc>,
     pub modified: Option<DateTime<Utc>>,
     pub block_number: Option<usize>,
     pub transaction_hash: Option<H256>,

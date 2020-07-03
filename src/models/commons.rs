@@ -8,11 +8,20 @@ pub enum Operation {
     DELEGATE = 1,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum ServiceTransactionType {
-    SettingsChange,
-    Transfer,
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct DataDecoded {
+    pub method: String,
+    pub parameters: Option<Vec<Parameter>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Parameter {
+    pub name: String,
+    #[serde(rename(deserialize = "type"))]
+    pub param_type: String,
+    pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

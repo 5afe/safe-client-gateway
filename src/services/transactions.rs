@@ -4,7 +4,6 @@ use super::base_transaction_service_url;
 use crate::models::backend::about::About;
 use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
-use crate::models::converters::transactions::Transaction;
 use crate::models::commons::Page;
 use reqwest::Url;
 use anyhow::Result;

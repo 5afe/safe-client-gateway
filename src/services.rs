@@ -1,10 +1,8 @@
 pub mod transactions;
 
-//TODO set network based in the url in which the API is exposed somehow?
-// const SUPPORTED_NETWORKS: [&str; 2] = ["rinkeby", "mainnet"];
+use std::env;
 
 fn base_transaction_service_url() -> String {
-    //TODO implement logic for selecting network mainnet/rinkeby
-    // String::from("https://safe-transaction.rinkeby.gnosis.io/api/v1")
-    String::from("https://safe-transaction.staging.gnosisdev.com/api/v1")
+    let transactions_service_host = env::var("TRANSACTION_SERVICE_URL").expect("Must have TRANSACTION_SERVICE_URL with host defined");
+    format!("{}{}", transactions_service_host, "/api/v1")
 }

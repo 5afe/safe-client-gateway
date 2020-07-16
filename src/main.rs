@@ -6,6 +6,9 @@ extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 
+#[macro_use]
+extern crate dotenv_codegen;
+
 pub mod routes;
 pub mod services;
 pub mod models;

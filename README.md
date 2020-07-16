@@ -14,3 +14,5 @@ Useful links:
 - Staging(rinkeby): https://safe-transaction.staging.gnosisdev.com/
 - Production(rinkeby): https://safe-transaction.rinkeby.gnosis.io/
 - Production(mainnet): https://safe-transaction.gnosis.io/
+
+Additional NOTE: the `structs` defined in this project match those in staging. Therefore, using this in any other environment could potentially panic if the endpoint in the transaction service API is not deployed to production yet, or the data layout looks differently.  

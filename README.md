@@ -4,7 +4,7 @@ Place a `.env` file in the root of the project containing URL pointing to the en
 
 The contents of the file should be the following:
 
-```.env
+```
 TRANSACTION_SERVICE_URL=<Transaction service host>
 ``` 
 

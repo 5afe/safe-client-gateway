@@ -1,4 +1,13 @@
-# safe-client-gateway
+# Safe Client Gateway
+
+## Quickstart
+
+- Clone project and go to project folder
+- `rustup default nightly` (Rocket currently requires a nightly version)
+- `cp .env.sample .env`
+- `cargo run`
+
+## Environment
 
 Place a `.env` file in the root of the project containing URL pointing to the environment in which you want the gateway to run.
 

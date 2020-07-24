@@ -35,7 +35,7 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 }
 
 
-pub fn get_all_transactions(safe_address: String) -> Result<String> {
+pub fn get_all_transactions(safe_address: &String) -> Result<Vec<ServiceTransaction>> {
     let url_string = format!(
         "{}/safes/{}/all-transactions",
         base_transaction_service_url(),
@@ -49,5 +49,5 @@ pub fn get_all_transactions(safe_address: String) -> Result<String> {
     let transactions: Vec<ServiceTransaction> = transactions.results.into_iter()
         .flat_map(|transaction| transaction.to_service_transaction())
         .collect();
-    Ok(serde_json::to_string(&transactions)?)
+    Ok(transactions)
 }

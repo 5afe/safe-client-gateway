@@ -9,17 +9,20 @@ extern crate rocket_contrib;
 #[macro_use]
 extern crate dotenv_codegen;
 
-pub mod routes;
-pub mod services;
-pub mod models;
-pub mod utils;
+mod cache;
+mod routes;
+mod services;
+mod models;
+mod utils;
 
+use cache::{ServiceCache};
 use routes::transaction_routes;
 use crate::routes::error_catchers;
 
 fn main() {
     rocket::ignite()
         .mount("/", transaction_routes())
+        .attach(ServiceCache::fairing())
         .register(error_catchers())
         .launch();
 }

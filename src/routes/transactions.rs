@@ -6,8 +6,8 @@ use anyhow::Result;
 
 #[get("/transactions/<safe_address>")]
 pub fn all(cache: ServiceCache, safe_address: String) -> Result<content::Json<String>> {
-    cache_resp!(cache, &safe_address, 60 * 2, { 
-        transactions::get_all_transactions(&safe_address)?
+    cache.cache_resp(&safe_address, 60 * 2, || { 
+        transactions::get_all_transactions(&safe_address)
     })
 }
 
@@ -17,6 +17,6 @@ pub fn details(tx_hash: String) -> content::Json<String> {
 }
 
 #[get("/transactions/about")]
-pub fn about() -> String {
-    transactions::get_about()
+pub fn about(cache: ServiceCache) -> Result<content::Json<String>> {
+    cache.cache_resp(&"about_page".to_owned(), 60 * 200, transactions::get_about)
 }

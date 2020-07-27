@@ -1,4 +1,8 @@
 use rocket_contrib::databases::redis::{self, Commands};
+use serde_json;
+use serde::ser::{Serialize};
+use anyhow::Result;
+use rocket::response::content;
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -18,21 +22,21 @@ impl ServiceCache {
     pub fn invalidate(&self, id: &String) {
         let _: () = self.del(id).unwrap();
     }
-}
 
-#[macro_export]
-macro_rules! cache_resp {
-    ($cache: ident, $key:expr, $timeout:expr, $resp:block) => {{
-        let key = $key;
-        let cached = $cache.fetch(key);
+    pub fn cache_resp<S, R>(&self, key: &String, timeout: usize, resp: S) -> Result<content::Json<String>>
+    where 
+        S: Fn() -> Result<R>,
+        R: Serialize
+    {
+        let cached = self.fetch(key);
         match cached {
             Some(value) => Ok(content::Json(value)),
             None => {
-                let resp = $resp;
+                let resp = resp()?;
                 let resp_string = serde_json::to_string(&resp)?;
-                $cache.create(key, &resp_string, $timeout);
+                self.create(key, &resp_string, timeout);
                 Ok(content::Json(resp_string))
             },
         }
-    };
-}}
+    }
+}

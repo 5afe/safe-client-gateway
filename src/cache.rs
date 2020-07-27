@@ -11,7 +11,7 @@ impl ServiceCache {
     pub fn fetch(&self, id: &String) -> Option<String> {
         match self.get(id) {
             Ok(value) => Some(value),
-            Err(_e) => None,
+            _ => None,
         }
     }
 
@@ -24,9 +24,9 @@ impl ServiceCache {
     }
 
     pub fn cache_resp<S, R>(&self, key: &String, timeout: usize, resp: S) -> Result<content::Json<String>>
-    where 
-        S: Fn() -> Result<R>,
-        R: Serialize
+        where
+            S: Fn() -> Result<R>,
+            R: Serialize
     {
         let cached = self.fetch(key);
         match cached {
@@ -36,7 +36,7 @@ impl ServiceCache {
                 let resp_string = serde_json::to_string(&resp)?;
                 self.create(key, &resp_string, timeout);
                 Ok(content::Json(resp_string))
-            },
+            }
         }
     }
 }

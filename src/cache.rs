@@ -23,10 +23,8 @@ impl ServiceCache {
         let _: () = self.del(id).unwrap();
     }
 
-    pub fn cache_resp<S, R>(&self, key: &String, timeout: usize, resp: S) -> Result<content::Json<String>>
-        where
-            S: Fn() -> Result<R>,
-            R: Serialize
+    pub fn cache_resp<R>(&self, key: &String, timeout: usize, resp: impl Fn() -> Result<R>) -> Result<content::Json<String>>
+        where R: Serialize
     {
         let cached = self.fetch(key);
         match cached {

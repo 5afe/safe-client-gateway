@@ -36,24 +36,22 @@ impl InfoProvider<'_> {
     }
 
     pub fn safe_info(&self, safe: &String) -> Result<SafeInfo> {
-        let key = format!("safe_info_{}", safe);
         let url = format!(
             "{}/safes/{}/",
             base_transaction_service_url(),
             safe
         );
-        let data = self.cache.request_cached(self.client, &key, &url, 60*15)?;
+        let data = self.cache.request_cached(self.client, &url, 60*15)?;
         Ok(serde_json::from_str(&data)?)
     }
 
     pub fn token_info(&self, token: &String) -> Result<TokenInfo> {
-        let key = format!("token_info_{}", token);
         let url = format!(
             "{}/tokens/{}/",
             base_transaction_service_url(),
             token
         );
-        let data = self.cache.request_cached(self.client, &key, &url, 60*15)?;
+        let data = self.cache.request_cached(self.client, &url, 60*15)?;
         Ok(serde_json::from_str(&data)?)
     }
 }

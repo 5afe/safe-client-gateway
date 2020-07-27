@@ -38,12 +38,12 @@ impl ServiceCache {
         }
     }
 
-    pub fn request_cached(&self, client: &reqwest::blocking::Client, key: &String, url: &String, timeout: usize) -> Result<String>  {
-        let data: String = match self.fetch(&key) {
+    pub fn request_cached(&self, client: &reqwest::blocking::Client, url: &String, timeout: usize) -> Result<String>  {
+        let data: String = match self.fetch(&url) {
             Some(cached) => cached,
             None => {
                 let response = client.get(url).send()?.text()?;
-                self.create(&key, &response, timeout);
+                self.create(&url, &response, timeout);
                 response
             }
         };

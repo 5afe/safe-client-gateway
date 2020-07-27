@@ -14,6 +14,7 @@ mod routes;
 mod services;
 mod models;
 mod utils;
+mod providers;
 
 use cache::{ServiceCache};
 use utils::cors::{CORS};

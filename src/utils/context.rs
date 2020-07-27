@@ -5,7 +5,7 @@ use rocket::State;
 use crate::cache::{ServiceCache};
 
 pub struct Context<'a, 'r> {
-    request: &'a Request<'r>,
+    request: &'a Request<'r>
 }
 
 impl<'a, 'r> Context<'a, 'r> {

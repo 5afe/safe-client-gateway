@@ -6,6 +6,7 @@ use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
+use crate::providers::info::InfoProvider;
 use reqwest::Url;
 use anyhow::Result;
 
@@ -37,6 +38,7 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 
 
 pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<Vec<ServiceTransaction>> {
+    let info_provider = InfoProvider::new(context);
     let url_string = format!(
         "{}/safes/{}/all-transactions",
         base_transaction_service_url(),

@@ -5,6 +5,7 @@ use crate::models::backend::about::About;
 use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
 use crate::models::commons::Page;
+use crate::utils::context::Context;
 use reqwest::Url;
 use anyhow::Result;
 
@@ -35,14 +36,14 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 }
 
 
-pub fn get_all_transactions(safe_address: &String) -> Result<Vec<ServiceTransaction>> {
+pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<Vec<ServiceTransaction>> {
     let url_string = format!(
         "{}/safes/{}/all-transactions",
         base_transaction_service_url(),
         safe_address
     );
     let url = Url::parse(&url_string)?;
-    let body = reqwest::blocking::get(url)?.text()?;
+    let body = context.client().get(url).send()?.text()?;
     println!("request URL: {}", &url_string);
     println!("{:#?}", body);
     let transactions: Page<TransactionDto> = serde_json::from_str(&body)?;

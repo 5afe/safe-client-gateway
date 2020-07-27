@@ -16,12 +16,15 @@ mod models;
 mod utils;
 
 use cache::{ServiceCache};
+use utils::cors::{CORS};
 use routes::transaction_routes;
 use crate::routes::error_catchers;
 
 fn main() {
     rocket::ignite()
         .mount("/", transaction_routes())
+        .manage(reqwest::blocking::Client::new())
+        .attach(CORS())
         .attach(ServiceCache::fairing())
         .register(error_catchers())
         .launch();

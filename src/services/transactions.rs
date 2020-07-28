@@ -50,7 +50,7 @@ pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<
     println!("{:#?}", body);
     let transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
     let transactions: Vec<ServiceTransaction> = transactions.results.into_iter()
-        .flat_map(|transaction| transaction.to_service_transaction())
+        .flat_map(|transaction| { transaction.to_service_transaction().unwrap() })
         .collect();
     Ok(transactions)
 }

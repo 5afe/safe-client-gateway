@@ -14,7 +14,7 @@ impl TransactionDto {
             TransactionDto::Ethereum(transaction) => Ok(transaction.to_service_transaction()),
             TransactionDto::Module(transaction) => Ok(transaction.to_service_transaction()),
             TransactionDto::Unknown => {
-                Error::msg("Unknown transaction type from backend")
+                Err(Error::msg("Unknown transaction type from backend"))
             }
         }
     }
@@ -24,7 +24,7 @@ impl MultisigTransaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
         vec!(ServiceTransaction {
             id: String::from("multisig_<something_else_eventually>"),
-            timestamp: self.execution_date.unwrap().timestamp_millis().as_(),
+            timestamp: self.execution_date.unwrap().timestamp_millis(),
             tx_status: TransactionStatus::Success,
             execution_info: None,
             tx_info: self.transaction_info(),
@@ -125,8 +125,8 @@ impl MultisigTransaction {
     fn to_custom(&self) -> Custom {
         Custom {
             to: self.safe,
-            data_size: self.data.unwrap_or(String::new()).len().as_(),
-            value: self.value.unwrap_or(String::from("0")),
+            data_size: self.data.as_ref().unwrap_or(&String::new()).len().to_string(),
+            value: self.value.as_ref().unwrap().into(),
         }
     }
 }
@@ -135,7 +135,15 @@ impl EthereumTransaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
         match &self.transfers {
             Some(transfers) => transfers.into_iter()
-                .map(|transfer| transfer.to_transfer())
+                .map(|transfer| {
+                    ServiceTransaction {
+                        id: String::from("ethereum_<something_else_eventually>"),
+                        timestamp: self.execution_date.timestamp_millis(),
+                        tx_status: TransactionStatus::Success,
+                        execution_info: None,
+                        tx_info: transfer.to_transfer(),
+                    }
+                })
                 .collect(),
             _ => vec!()
         }
@@ -146,15 +154,15 @@ impl ModuleTransaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
         vec!(
             ServiceTransaction {
-                id: String::from("multisig_<something_else_eventually>"),
-                timestamp: self.execution_date.unwrap().timestamp_millis().as_(),
+                id: String::from("module_<something_else_eventually>"),
+                timestamp: self.execution_date.unwrap().timestamp_millis(),
                 tx_status: TransactionStatus::Success,
                 execution_info: None,
                 tx_info: TransactionInfo::Custom(
                     CustomTransaction {
                         to: self.to,
-                        data_size: self.data.unwrap_or(String::new()).len().as_(),
-                        value: self.value.unwrap_or(String::from("0")),
+                        data_size: self.data.as_ref().unwrap_or(&String::new()).len().to_string(),
+                        value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
                     }),
             }
         )

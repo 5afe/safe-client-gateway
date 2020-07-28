@@ -7,7 +7,7 @@ use crate::models::commons::DataDecoded;
 #[serde(rename_all = "camelCase")]
 pub struct Transaction {
     pub id: String,
-    pub timestamp: u64,
+    pub timestamp: i64,
     pub tx_status: TransactionStatus,
     pub tx_info: TransactionInfo,
     pub execution_info: Option<ExecutionInfo>,

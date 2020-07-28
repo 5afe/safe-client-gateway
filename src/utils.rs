@@ -7,7 +7,7 @@ pub mod context;
 
 //TODO think of a better impl, using enums as per Nick's suggestion
 pub const ERC20_TRANSFER_METHODS: &[&str] = &["transfer", "transferFrom"];
-pub const ERC721_TRANSFER_METHODS: &[&str] = &["transferFrom", "safeTransferFrom"];
+pub const ERC721_TRANSFER_METHODS: &[&str] = &["transfer", "transferFrom", "safeTransferFrom"];
 pub const SETTINGS_CHANGE_METHODS: &[&str] = &["setFallbackHandler",
     "addOwnerWithThreshold",
     "removeOwner",

@@ -1,6 +1,5 @@
 use serde::Deserialize;
 use chrono::{DateTime, Utc};
-use ethereum_types::{Address, H256};
 
 #[derive(Deserialize, Debug)]
 #[serde(tag = "type")]
@@ -20,11 +19,20 @@ pub enum Transfer {
 pub struct Erc721Transfer {
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,
-    pub transaction_hash: H256,
-    pub to: Address,
+    pub transaction_hash: String,
+    pub to: String,
     pub token_id: String,
-    pub token_address: Address,
-    pub from: Address,
+    pub token_address: String,
+    pub token_info: Erc721TokenInfo,
+    pub from: String,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Erc721TokenInfo {
+    pub name: String,
+    pub symbol: String,
+    pub logo_uri: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -32,22 +40,21 @@ pub struct Erc721Transfer {
 pub struct Erc20Transfer {
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,
-    pub transaction_hash: H256,
-    pub to: Address,
+    pub to: String,
     pub value: String,
-    pub token_address: Address,
+    pub token_address: String,
     pub token_info: Erc20TokenInfo,
-    pub from: Address,
+    pub from: String,
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc20TokenInfo {
-    pub address: Address,
+    pub address: String,
     pub name: String,
     pub symbol: String,
-    pub decimals: usize,
-    pub logo_uri: String,
+    pub decimals: u64,
+    pub logo_uri: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -55,8 +62,8 @@ pub struct Erc20TokenInfo {
 pub struct EtherTransfer {
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,
-    pub transaction_hash: H256,
-    pub to: Address,
+    pub transaction_hash: String,
+    pub to: String,
     pub value: String,
-    pub from: Address,
+    pub from: String,
 }

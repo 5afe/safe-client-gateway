@@ -1,4 +1,3 @@
-use ethereum_types::{Address, H256};
 use serde::Serialize;
 use chrono::{DateTime, Utc};
 use crate::models::commons::DataDecoded;
@@ -43,10 +42,8 @@ pub struct ExecutionInfo {
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Transfer {
-    pub sender: Address,
-    pub recipient: Address,
-    pub date: DateTime<Utc>,
-    pub transaction_hash: H256,
+    pub sender: String,
+    pub recipient: String,
     pub transfer_info: TransferInfo,
 }
 
@@ -54,16 +51,19 @@ pub struct Transfer {
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransferInfo {
     Erc20 {
+        token_address: String,
         token_name: String,
         token_symbol: String,
-        logo_uri: String,
-        decimals: usize,
+        logo_uri: Option<String>,
+        decimals: u64,
         value: String,
     },
     Erc721 {
+        token_address: String,
+        token_name: String,
+        token_symbol: String,
         token_id: String,
-        token_address: Address,
-        // logo_uri: String,
+        logo_uri: Option<String>,
     },
     Ether {
         value: String,
@@ -79,7 +79,7 @@ pub struct SettingsChange {
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Custom {
-    pub to: Address,
+    pub to: String,
     pub data_size: String,
     pub value: String,
 }

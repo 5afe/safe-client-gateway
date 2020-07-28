@@ -67,7 +67,7 @@ pub struct EthereumTransaction {
 #[serde(rename_all = "camelCase")]
 pub struct ModuleTransaction {
     pub created: Option<Address>,
-    pub execution_date: Option<DateTime<Utc>>,
+    pub execution_date: DateTime<Utc>,
     pub block_number: Option<usize>,
     pub transaction_hash: Option<H256>,
     pub safe: Option<Address>,

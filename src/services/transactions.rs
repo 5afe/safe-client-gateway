@@ -37,7 +37,7 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 }
 
 
-pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<Vec<ServiceTransaction>> {
+pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<Page<ServiceTransaction>> {
     let mut info_provider = InfoProvider::new(context);
     info_provider.safe_info(safe_address);
     let url = format!(
@@ -48,9 +48,14 @@ pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<
     let body = context.cache().request_cached(&context.client(), &url, request_cache_duration())?;
     println!("request URL: {}", &url);
     println!("{:#?}", body);
-    let transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
-    let transactions: Vec<ServiceTransaction> = transactions.results.into_iter()
-        .flat_map(|transaction| transaction.to_service_transaction())
+    let backend_transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
+    let service_transactions: Vec<ServiceTransaction> = backend_transactions.results.into_iter()
+        .flat_map(|transaction| transaction.to_service_transaction().unwrap_or(vec!()))
         .collect();
-    Ok(transactions)
+    Ok(Page {
+        count: service_transactions.len(),
+        next: backend_transactions.next,
+        previous: backend_transactions.previous,
+        results: service_transactions,
+    })
 }

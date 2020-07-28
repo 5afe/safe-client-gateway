@@ -18,8 +18,6 @@ impl Erc20Transfer {
         ServiceTransfer {
             sender: self.from,
             recipient: self.to,
-            date: self.execution_date,
-            transaction_hash: self.transaction_hash,
             transfer_info: TransferInfo::Erc20 {
                 token_name: self.token_info.name.clone(),
                 token_symbol: self.token_info.symbol.clone(),
@@ -36,8 +34,6 @@ impl Erc721Transfer {
         ServiceTransfer {
             sender: self.from,
             recipient: self.to,
-            date: self.execution_date,
-            transaction_hash: self.transaction_hash,
             transfer_info: TransferInfo::Erc721 {
                 token_id: self.token_id.clone(),
                 token_address: self.token_address.clone(),
@@ -51,8 +47,6 @@ impl EtherTransfer {
         ServiceTransfer {
             sender: self.from,
             recipient: self.to,
-            date: self.execution_date,
-            transaction_hash: self.transaction_hash,
             transfer_info: TransferInfo::Ether {
                 value: self.value.clone()
             },

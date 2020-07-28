@@ -1,16 +1,16 @@
 extern crate chrono;
 
 use super::super::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::{Transaction, SettingsChange, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo};
+use crate::models::service::transactions::{Transaction, SettingsChange, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo, ExecutionInfo};
 use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
 use crate::models::commons::Operation;
-use ethereum_types::{Address, H160, H256};
+use crate::providers::info::InfoProvider;
 use anyhow::{Result, Error};
 
 impl TransactionDto {
-    pub fn to_service_transaction(&self) -> Result<Vec<Transaction>> {
+    pub fn to_service_transaction(&self, info_provider: &mut InfoProvider) -> Result<Vec<Transaction>> {
         match self {
-            TransactionDto::Multisig(transaction) => Ok(transaction.to_service_transaction()),
+            TransactionDto::Multisig(transaction) => Ok(transaction.to_service_transaction(info_provider)?),
             TransactionDto::Ethereum(transaction) => Ok(transaction.to_service_transaction()),
             TransactionDto::Module(transaction) => Ok(transaction.to_service_transaction()),
             TransactionDto::Unknown => {
@@ -21,14 +21,23 @@ impl TransactionDto {
 }
 
 impl MultisigTransaction {
-    fn to_service_transaction(&self) -> Vec<Transaction> {
-        vec!(Transaction {
+    fn to_service_transaction(&self, info_provider: &mut InfoProvider) -> Result<Vec<Transaction>> {
+        let safe_info = info_provider.safe_info(&self.safe.to_string())?;
+        let confirmations_submitted = match &self.confirmations {
+            Some(confirmations) => confirmations.len(),
+            None => 0
+        };
+        Ok(vec!(Transaction {
             id: String::from("multisig_<something_else_eventually>"),
             timestamp: self.execution_date.unwrap().timestamp_millis(),
             tx_status: TransactionStatus::Success,
-            execution_info: None,
+            execution_info: Some(ExecutionInfo{
+                nonce: self.nonce,
+                confirmations_submitted: confirmations_submitted as u64,
+                confirmations_required: safe_info.threshold
+            }),
             tx_info: self.transaction_info(),
-        })
+        }))
     }
 
     fn transaction_info(&self) -> TransactionInfo {
@@ -65,7 +74,7 @@ impl MultisigTransaction {
     }
 
     fn is_settings_change(&self) -> bool {
-        self.to.unwrap_or(Address::from(H160::zero())) == self.safe
+        self.to == self.safe
             && self.operation.contains(&Operation::CALL)
             && self.data_decoded.is_some()
             && self.data_decoded.as_ref().unwrap().is_settings_change()
@@ -75,8 +84,6 @@ impl MultisigTransaction {
         Transfer {
             sender: self.safe,
             recipient: self.safe,
-            date: self.submission_date,
-            transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
             transfer_info: TransferInfo::Erc20 {
                 token_name: String::from("Blabla"),
                 token_symbol: String::from("BLA"),
@@ -93,13 +100,11 @@ impl MultisigTransaction {
         Transfer {
             sender: self.safe,
             recipient: self.safe,
-            date: self.submission_date,
-            transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
             transfer_info: TransferInfo::Erc721 {
                 token_id: self.data_decoded.as_ref().and_then(
                     |it| it.get_parameter_value("tokenId")
                 ).unwrap_or(String::from("0")),
-                token_address: Address::from(H160::zero()),
+                token_address: "".to_owned(),
             },
         }
     }
@@ -108,8 +113,6 @@ impl MultisigTransaction {
         Transfer {
             sender: self.safe,
             recipient: self.safe,
-            date: self.submission_date,
-            transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
             transfer_info: TransferInfo::Ether {
                 value: self.value.as_ref().unwrap().to_string(),
             },

@@ -1,5 +1,9 @@
 use crate::models::commons::DataDecoded;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 
+pub mod cors;
+pub mod context;
 
 //TODO think of a better impl, using enums as per Nick's suggestion
 pub const ERC20_TRANSFER_METHODS: &[&str] = &["transfer", "transferFrom"];
@@ -37,4 +41,10 @@ impl DataDecoded {
     pub fn is_settings_change(&self) -> bool {
         SETTINGS_CHANGE_METHODS.iter().any(|&value| value == self.method)
     }
+}
+
+pub fn hex_hash<T: Hash>(t: &T) -> String {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    format!("{:#x}", s.finish())
 }

@@ -1,6 +1,6 @@
 extern crate reqwest;
 
-use super::base_transaction_service_url;
+use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::about::About;
 use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
@@ -45,7 +45,7 @@ pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<
         base_transaction_service_url(),
         safe_address
     );
-    let body = context.cache().request_cached(&context.client(), &url, 15)?;
+    let body = context.cache().request_cached(&context.client(), &url, request_cache_duration())?;
     println!("request URL: {}", &url);
     println!("{:#?}", body);
     let transactions: Page<TransactionDto> = serde_json::from_str(&body)?;

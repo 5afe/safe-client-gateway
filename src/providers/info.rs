@@ -1,4 +1,4 @@
-use crate::services::base_transaction_service_url;
+use crate::config::{base_transaction_service_url, safe_info_cache_duration, token_info_cache_duration};
 use crate::utils::context::{Context};
 use crate::cache::{ServiceCache};
 use serde_json;
@@ -59,7 +59,7 @@ impl InfoProvider<'_> {
             safe
         );
         with_in_memory_cache!(self.safe_cache, &url, |url: &String| -> Result<SafeInfo> {
-            let data = self.cache.request_cached(self.client, &url, 60*15)?;
+            let data = self.cache.request_cached(self.client, &url, safe_info_cache_duration())?;
             Ok(serde_json::from_str(&data)?)
         })
     }
@@ -71,7 +71,7 @@ impl InfoProvider<'_> {
             token
         );
         with_in_memory_cache!(self.token_cache, &url, |url: &String| -> Result<TokenInfo> {
-            let data = self.cache.request_cached(self.client, &url, 60*15)?;
+            let data = self.cache.request_cached(self.client, &url, token_info_cache_duration())?;
             Ok(serde_json::from_str(&data)?)
         })
     }

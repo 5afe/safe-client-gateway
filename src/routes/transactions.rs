@@ -1,3 +1,4 @@
+use crate::config::request_cache_duration
 use crate::utils::context::Context;
 use crate::services::transactions;
 use rocket::response::content;
@@ -5,7 +6,7 @@ use anyhow::Result;
 
 #[get("/transactions/<safe_address>")]
 pub fn all(context: Context, safe_address: String) -> Result<content::Json<String>> {
-    context.cache().cache_resp(&safe_address, 60 * 2, || {
+    context.cache().cache_resp(&safe_address, request_cache_duration(), || {
         transactions::get_all_transactions(&context, &safe_address)
     })
 }

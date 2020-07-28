@@ -1,20 +1,20 @@
 extern crate chrono;
 
 use super::super::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::{Transaction as ServiceTransaction, SettingsChange, Custom as CustomTransaction, Transfer, Custom, TransferInfo};
+use crate::models::service::transactions::{Transaction as ServiceTransaction, SettingsChange, Custom as CustomTransaction, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo};
 use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
 use crate::models::commons::Operation;
 use ethereum_types::{Address, H160, H256};
+use anyhow::{Result, Error};
 
 impl TransactionDto {
-    pub fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
+    pub fn to_service_transaction(&self) -> Result<Vec<ServiceTransaction>> {
         match self {
-            TransactionDto::Multisig(transaction) => transaction.to_service_transaction(),
-            TransactionDto::Ethereum(transaction) => transaction.to_service_transaction(),
-            TransactionDto::Module(transaction) => transaction.to_service_transaction(),
+            TransactionDto::Multisig(transaction) => Ok(transaction.to_service_transaction()),
+            TransactionDto::Ethereum(transaction) => Ok(transaction.to_service_transaction()),
+            TransactionDto::Module(transaction) => Ok(transaction.to_service_transaction()),
             TransactionDto::Unknown => {
-                println!("Unknown transaction type");
-                vec!(ServiceTransaction::Unknown)
+                Error::msg("Unknown transaction type from backend")
             }
         }
     }
@@ -22,19 +22,27 @@ impl TransactionDto {
 
 impl MultisigTransaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
-        vec!(
-            if self.is_erc20_transfer() {
-                ServiceTransaction::Transfer(self.to_erc20_transfer())
-            } else if self.is_erc721_transfer() {
-                ServiceTransaction::Transfer(self.to_erc721_transfer())
-            } else if self.is_ether_transfer() {
-                ServiceTransaction::Transfer(self.to_ether_transfer())
-            } else if self.is_settings_change() {
-                ServiceTransaction::SettingsChange(self.to_settings_change())
-            } else {
-                ServiceTransaction::Custom(self.to_custom())
-            }
-        )
+        vec!(ServiceTransaction {
+            id: String::from("multisig_<something_else_eventually>"),
+            timestamp: self.execution_date.unwrap().timestamp_millis().as_(),
+            tx_status: TransactionStatus::Success,
+            execution_info: None,
+            tx_info: self.transaction_info(),
+        })
+    }
+
+    fn transaction_info(&self) -> TransactionInfo {
+        if self.is_erc20_transfer() {
+            TransactionInfo::Transfer(self.to_erc20_transfer())
+        } else if self.is_erc721_transfer() {
+            TransactionInfo::Transfer(self.to_erc721_transfer())
+        } else if self.is_ether_transfer() {
+            TransactionInfo::Transfer(self.to_ether_transfer())
+        } else if self.is_settings_change() {
+            TransactionInfo::SettingsChange(self.to_settings_change())
+        } else {
+            TransactionInfo::Custom(self.to_custom())
+        }
     }
 
     fn is_erc20_transfer(&self) -> bool {
@@ -88,7 +96,7 @@ impl MultisigTransaction {
             date: self.submission_date,
             transaction_hash: self.transaction_hash.unwrap_or(H256::zero()),
             transfer_info: TransferInfo::Erc721 {
-                token_id:  self.data_decoded.as_ref().and_then(
+                token_id: self.data_decoded.as_ref().and_then(
                     |it| it.get_parameter_value("tokenId")
                 ).unwrap_or(String::from("0")),
                 token_address: Address::from(H160::zero()),
@@ -115,7 +123,11 @@ impl MultisigTransaction {
     }
 
     fn to_custom(&self) -> Custom {
-        Custom { to: self.safe }
+        Custom {
+            to: self.safe,
+            data_size: self.data.unwrap_or(String::new()).len().as_(),
+            value: self.value.unwrap_or(String::from("0")),
+        }
     }
 }
 
@@ -132,10 +144,19 @@ impl EthereumTransaction {
 
 impl ModuleTransaction {
     fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
-        vec!(ServiceTransaction::Custom(
-            CustomTransaction {
-                to: self.to
-            })
+        vec!(
+            ServiceTransaction {
+                id: String::from("multisig_<something_else_eventually>"),
+                timestamp: self.execution_date.unwrap().timestamp_millis().as_(),
+                tx_status: TransactionStatus::Success,
+                execution_info: None,
+                tx_info: TransactionInfo::Custom(
+                    CustomTransaction {
+                        to: self.to,
+                        data_size: self.data.unwrap_or(String::new()).len().as_(),
+                        value: self.value.unwrap_or(String::from("0")),
+                    }),
+            }
         )
     }
 }

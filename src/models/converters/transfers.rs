@@ -1,15 +1,14 @@
-use crate::models::service::transactions::Transaction::{Unknown, Transfer};
-use crate::models::service::transactions::{Transaction, TransferInfo};
+use crate::models::service::transactions::{TransferInfo, TransactionInfo};
 use crate::models::service::transactions::Transfer as ServiceTransfer;
 use crate::models::backend::transfers::{Transfer as TransferDto, Erc20Transfer, Erc721Transfer, EtherTransfer};
 
 impl TransferDto {
-    pub fn to_transfer(&self) -> Transaction {
+    pub fn to_transfer(&self) -> TransactionInfo {
         match self {
-            TransferDto::Erc721(transfer) => Transfer(transfer.to_transfer_transaction()),
-            TransferDto::Erc20(transfer) => Transfer(transfer.to_transfer_transaction()),
-            TransferDto::Ether(transfer) => Transfer(transfer.to_transfer_transaction()),
-            _ => Unknown
+            TransferDto::Erc721(transfer) => TransactionInfo::Transfer(transfer.to_transfer_transaction()),
+            TransferDto::Erc20(transfer) => TransactionInfo::Transfer(transfer.to_transfer_transaction()),
+            TransferDto::Ether(transfer) => TransactionInfo::Transfer(transfer.to_transfer_transaction()),
+            _ => TransactionInfo::Unknown
         }
     }
 }

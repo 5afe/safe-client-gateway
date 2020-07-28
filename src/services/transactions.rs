@@ -40,14 +40,13 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<Vec<ServiceTransaction>> {
     let mut info_provider = InfoProvider::new(context);
     info_provider.safe_info(safe_address);
-    let url_string = format!(
+    let url = format!(
         "{}/safes/{}/all-transactions",
         base_transaction_service_url(),
         safe_address
     );
-    let url = Url::parse(&url_string)?;
-    let body = context.client().get(url).send()?.text()?;
-    println!("request URL: {}", &url_string);
+    let body = context.cache().request_cached(&context.client(), &url, 15)?;
+    println!("request URL: {}", &url);
     println!("{:#?}", body);
     let transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
     let transactions: Vec<ServiceTransaction> = transactions.results.into_iter()

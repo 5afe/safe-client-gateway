@@ -9,6 +9,7 @@ use crate::utils::context::Context;
 use crate::providers::info::InfoProvider;
 use reqwest::Url;
 use anyhow::Result;
+use rocket::http::uri::Absolute;
 
 pub fn get_about() -> Result<String> {
     let url_string = format!("{}{}", base_transaction_service_url(), "/about");
@@ -53,8 +54,12 @@ pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<
         .collect();
     Ok(Page {
         count: service_transactions.len(),
-        next: backend_transactions.next,
-        previous: backend_transactions.previous,
+        next: backend_transactions.next.as_ref().and_then(|link| {
+            Some(Absolute::parse(link).ok()?.origin()?.query()?.to_string())
+        }),
+        previous: backend_transactions.previous.as_ref().and_then(|link| {
+            Some(Absolute::parse(link).ok()?.origin()?.query()?.to_string())
+        }),
         results: service_transactions,
     })
 }

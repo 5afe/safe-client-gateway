@@ -1,14 +1,14 @@
 extern crate chrono;
 
 use super::super::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::{Transaction as ServiceTransaction, SettingsChange, Custom as CustomTransaction, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo};
+use crate::models::service::transactions::{Transaction, SettingsChange, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo};
 use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
 use crate::models::commons::Operation;
 use ethereum_types::{Address, H160, H256};
 use anyhow::{Result, Error};
 
 impl TransactionDto {
-    pub fn to_service_transaction(&self) -> Result<Vec<ServiceTransaction>> {
+    pub fn to_service_transaction(&self) -> Result<Vec<Transaction>> {
         match self {
             TransactionDto::Multisig(transaction) => Ok(transaction.to_service_transaction()),
             TransactionDto::Ethereum(transaction) => Ok(transaction.to_service_transaction()),
@@ -21,8 +21,8 @@ impl TransactionDto {
 }
 
 impl MultisigTransaction {
-    fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
-        vec!(ServiceTransaction {
+    fn to_service_transaction(&self) -> Vec<Transaction> {
+        vec!(Transaction {
             id: String::from("multisig_<something_else_eventually>"),
             timestamp: self.execution_date.unwrap().timestamp_millis(),
             tx_status: TransactionStatus::Success,
@@ -132,11 +132,11 @@ impl MultisigTransaction {
 }
 
 impl EthereumTransaction {
-    fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
+    fn to_service_transaction(&self) -> Vec<Transaction> {
         match &self.transfers {
             Some(transfers) => transfers.into_iter()
                 .map(|transfer| {
-                    ServiceTransaction {
+                    Transaction {
                         id: String::from("ethereum_<something_else_eventually>"),
                         timestamp: self.execution_date.timestamp_millis(),
                         tx_status: TransactionStatus::Success,
@@ -151,15 +151,15 @@ impl EthereumTransaction {
 }
 
 impl ModuleTransaction {
-    fn to_service_transaction(&self) -> Vec<ServiceTransaction> {
+    fn to_service_transaction(&self) -> Vec<Transaction> {
         vec!(
-            ServiceTransaction {
+            Transaction {
                 id: String::from("module_<something_else_eventually>"),
                 timestamp: self.execution_date.timestamp_millis(),
                 tx_status: TransactionStatus::Success,
                 execution_info: None,
                 tx_info: TransactionInfo::Custom(
-                    CustomTransaction {
+                    Custom {
                         to: self.to,
                         data_size: self.data.as_ref().unwrap_or(&String::new()).len().to_string(),
                         value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),

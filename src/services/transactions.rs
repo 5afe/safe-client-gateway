@@ -50,7 +50,6 @@ pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<
     println!("{:#?}", body);
     let backend_transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
     let service_transactions: Vec<ServiceTransaction> = backend_transactions.results.into_iter()
-        .filter_map(Result::ok)
         .flat_map(|transaction| transaction.to_service_transaction().unwrap())
         .collect();
     Ok(Page {

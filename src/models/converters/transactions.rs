@@ -155,7 +155,7 @@ impl ModuleTransaction {
         vec!(
             ServiceTransaction {
                 id: String::from("module_<something_else_eventually>"),
-                timestamp: self.execution_date.unwrap().timestamp_millis(),
+                timestamp: self.execution_date.timestamp_millis(),
                 tx_status: TransactionStatus::Success,
                 execution_info: None,
                 tx_info: TransactionInfo::Custom(

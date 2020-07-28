@@ -125,7 +125,7 @@ impl MultisigTransaction {
     fn to_custom(&self) -> Custom {
         Custom {
             to: self.safe,
-            data_size: self.data.as_ref().unwrap_or(&String::new()).len().to_string(),
+            data_size: data_size(&self.data),
             value: self.value.as_ref().unwrap().into(),
         }
     }
@@ -161,10 +161,23 @@ impl ModuleTransaction {
                 tx_info: TransactionInfo::Custom(
                     Custom {
                         to: self.to,
-                        data_size: self.data.as_ref().unwrap_or(&String::new()).len().to_string(),
+                        data_size: data_size(&self.data),
                         value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
                     }),
             }
         )
     }
+}
+
+fn data_size(data: &Option<String>) -> String {
+    match data {
+        Some(actual_data) => {
+            let length = actual_data.len();
+            match length {
+                0 => 0,
+                _ => (length - 2),
+            }
+        }
+        None => 0,
+    }.to_string()
 }

@@ -21,7 +21,6 @@ pub enum TransactionStatus {
     Cancelled,
     Failed,
     Success,
-    Pending, //is this really necessary as it's a state only reachable in devices, afaik?
 }
 
 #[derive(Serialize, Debug)]

@@ -35,7 +35,7 @@ impl DataDecoded {
     }
 
     pub fn is_erc721_transfer_method(&self) -> bool {
-        ERC20_TRANSFER_METHODS.iter().any(|&value| value == self.method)
+        ERC721_TRANSFER_METHODS.iter().any(|&value| value == self.method)
     }
 
     pub fn is_settings_change(&self) -> bool {

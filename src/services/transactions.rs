@@ -38,7 +38,8 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 
 
 pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<Vec<ServiceTransaction>> {
-    let info_provider = InfoProvider::new(context);
+    let mut info_provider = InfoProvider::new(context);
+    info_provider.safe_info(safe_address);
     let url_string = format!(
         "{}/safes/{}/all-transactions",
         base_transaction_service_url(),

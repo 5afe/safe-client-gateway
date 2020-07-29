@@ -8,14 +8,14 @@ use rocket::response::content;
 pub struct ServiceCache(redis::Connection);
 
 impl ServiceCache {
-    pub fn fetch(&self, id: &String) -> Option<String> {
+    pub fn fetch(&self, id: &str) -> Option<String> {
         match self.get(id) {
             Ok(value) => Some(value),
             _ => None,
         }
     }
 
-    pub fn create(&self, id: &String, dest: &String, timeout: usize) {
+    pub fn create(&self, id: &str, dest: &String, timeout: usize) {
         let _: () = self.set_ex(id, dest, timeout).unwrap();
     }
 
@@ -23,7 +23,7 @@ impl ServiceCache {
         let _: () = self.del(id).unwrap();
     }
 
-    pub fn cache_resp<R>(&self, key: &String, timeout: usize, resp: impl Fn() -> Result<R>) -> Result<content::Json<String>>
+    pub fn cache_resp<R>(&self, key: &str, timeout: usize, resp: impl Fn() -> Result<R>) -> Result<content::Json<String>>
         where R: Serialize
     {
         let cached = self.fetch(key);

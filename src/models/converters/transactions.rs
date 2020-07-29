@@ -153,7 +153,7 @@ impl MultisigTransaction {
     fn to_ether_transfer(&self) -> Transfer {
         Transfer {
             sender: self.safe.to_owned(),
-            recipient: self.safe.to_owned(),
+            recipient: self.to.to_owned(),
             transfer_info: TransferInfo::Ether {
                 value: self.value.as_ref().unwrap().to_string(),
             },

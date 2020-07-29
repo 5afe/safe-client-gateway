@@ -38,7 +38,7 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 }
 
 
-pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>, previous: &Option<String>) -> Result<Page<ServiceTransaction>> {
+pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>) -> Result<Page<ServiceTransaction>> {
     let mut info_provider = InfoProvider::new(context);
     let url = format!(
         "{}/safes/{}/all-transactions/?{}",

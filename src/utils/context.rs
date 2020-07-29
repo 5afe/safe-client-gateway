@@ -20,6 +20,10 @@ impl<'a, 'r> Context<'a, 'r> {
     pub fn cache(&self) -> ServiceCache {
         self.get::<ServiceCache>()
     }
+
+    pub fn host(&self) -> Option<&str> {
+        self.request.headers().get_one("Host")
+    }
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for Context<'a, 'r> {

@@ -52,7 +52,7 @@ impl MultisigTransaction {
             }
         } else if safe_info.nonce > self.nonce {
             TransactionStatus::Cancelled
-        } else if self.confirmation_count() < self.confirmations_required.unwrap_or(0) {
+        } else if self.confirmation_count() < self.confirmations_required.unwrap_or(safe_info.threshold as usize) {
             TransactionStatus::AwaitingConfirmations
         } else {
             TransactionStatus::AwaitingExecution

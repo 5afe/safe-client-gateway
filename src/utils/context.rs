@@ -4,6 +4,7 @@ use rocket::State;
 
 use crate::cache::{ServiceCache};
 use std::borrow::Borrow;
+use crate::config::scheme;
 
 pub struct Context<'a, 'r> {
     request: &'a Request<'r>
@@ -22,8 +23,14 @@ impl<'a, 'r> Context<'a, 'r> {
         self.get::<ServiceCache>()
     }
 
-    pub fn host(&self) -> Option<&str> {
-        self.request.headers().get_one("Host")
+    pub fn host(&self) -> Option<String> {
+        self.request.headers().get_one("Host").map(|host| {
+            if host.starts_with("localhost:") {
+                String::from(host)
+            } else {
+                format!("{}://{}", scheme(), host)
+            }
+        })
     }
 
     pub fn origin(&self) -> String {

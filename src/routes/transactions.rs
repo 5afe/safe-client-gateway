@@ -6,7 +6,7 @@ use anyhow::Result;
 
 #[get("/transactions/<safe_address>")]
 pub fn all(context: Context, safe_address: String) -> Result<content::Json<String>> {
-    context.cache().cache_resp(&safe_address, request_cache_duration(), || {
+    context.cache().cache_resp(&context.path().to_owned(), request_cache_duration(), || {
         transactions::get_all_transactions(&context, &safe_address)
     })
 }

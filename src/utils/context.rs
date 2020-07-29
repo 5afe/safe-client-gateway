@@ -25,11 +25,7 @@ impl<'a, 'r> Context<'a, 'r> {
 
     pub fn host(&self) -> Option<String> {
         self.request.headers().get_one("Host").map(|host| {
-            if host.starts_with("localhost:") {
-                String::from(host)
-            } else {
-                format!("{}://{}", scheme(), host)
-            }
+            format!("{}://{}", scheme(), host)
         })
     }
 

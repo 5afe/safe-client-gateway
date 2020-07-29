@@ -55,20 +55,16 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Opt
         .flat_map(|transaction| transaction.to_service_transaction(&mut info_provider).unwrap_or(vec!()))
         .collect();
     Ok(Page {
-        next: backend_transactions.next.as_ref().and_then(|link| {
-            Some(format!("{}{}?next={}",
-                         context.host().unwrap_or(String::new()),
-                         context.origin(),
-                         Uri::percent_encode(Absolute::parse(link).ok()?.origin()?.query()?)
-            ))
-        }),
-        previous: backend_transactions.previous.as_ref().and_then(|link| {
-            Some(format!("{}{}?next={}",
-                         context.host().unwrap_or(String::new()),
-                         context.origin(),
-                         Uri::percent_encode(Absolute::parse(link).ok()?.origin()?.query()?)
-            ))
-        }),
+        next: backend_transactions.next.as_ref().and_then(|link| build_paging_link(link, context)),
+        previous: backend_transactions.previous.as_ref().and_then(|link| build_paging_link(link, context)),
         results: service_transactions,
     })
+}
+
+fn build_paging_link(link: &String, context: &Context) -> Option<String> {
+    Some(format!("{}{}?next={}",
+                 context.host().unwrap(),
+                 context.origin(),
+                 Uri::percent_encode(Absolute::parse(link).ok()?.origin()?.query()?))
+    )
 }

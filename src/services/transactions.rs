@@ -53,7 +53,6 @@ pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<
         .flat_map(|transaction| transaction.to_service_transaction(&mut info_provider).unwrap_or(vec!()))
         .collect();
     Ok(Page {
-        count: service_transactions.len(),
         next: backend_transactions.next.as_ref().and_then(|link| {
             Some(Absolute::parse(link).ok()?.origin()?.query()?.to_string())
         }),

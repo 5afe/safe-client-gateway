@@ -129,7 +129,12 @@ impl MultisigTransaction {
     fn to_erc721_transfer(&self, token: &TokenInfo) -> Transfer {
         Transfer {
             sender: self.safe.to_owned(),
-            recipient: self.safe.to_owned(),
+            recipient: self.data_decoded.as_ref().and_then(
+                |it| match it.get_parameter_value("_to") {
+                    Some(e) => Some(e),
+                    None => it.get_parameter_value("to")
+                }
+            ).unwrap_or(String::from("0x0")),
             transfer_info: TransferInfo::Erc721 {
                 token_address: token.address.to_owned(),
                 token_name: token.name.to_owned(),

@@ -29,18 +29,22 @@ impl MultisigTransaction {
             tx_status: self.map_status(&safe_info),
             execution_info: Some(ExecutionInfo{
                 nonce: self.nonce,
-                confirmations_submitted: self.confirmation_count() as u64,
-                confirmations_required: safe_info.threshold
+                confirmations_submitted: self.confirmation_count(),
+                confirmations_required: self.confirmation_required(&safe_info)
             }),
             tx_info: self.transaction_info(info_provider),
         }))
     }
 
-    fn confirmation_count(&self) -> usize {
+    fn confirmation_count(&self) -> u64 {
         match &self.confirmations {
-            Some(confirmations) => confirmations.len(),
+            Some(confirmations) => confirmations.len() as u64,
             None => 0
         }
+    }
+
+    fn confirmation_required(&self, safe_info: &SafeInfo) -> u64 {
+        self.confirmations_required.unwrap_or(safe_info.threshold)
     }
 
     fn map_status(&self, safe_info: &SafeInfo) -> TransactionStatus {
@@ -52,7 +56,7 @@ impl MultisigTransaction {
             }
         } else if safe_info.nonce > self.nonce {
             TransactionStatus::Cancelled
-        } else if self.confirmation_count() < self.confirmations_required.unwrap_or(safe_info.threshold as usize) {
+        } else if self.confirmation_count() < self.confirmation_required(safe_info) {
             TransactionStatus::AwaitingConfirmations
         } else {
             TransactionStatus::AwaitingExecution

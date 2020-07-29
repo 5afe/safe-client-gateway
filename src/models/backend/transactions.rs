@@ -45,7 +45,7 @@ pub struct MultisigTransaction {
     pub gas_used: Option<usize>,
     pub fee: Option<String>,
     pub origin: Option<String>,
-    pub confirmations_required: Option<usize>,
+    pub confirmations_required: Option<u64>,
     pub confirmations: Option<Vec<Confirmation>>,
     pub signatures: Option<String>,
 }

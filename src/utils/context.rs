@@ -3,6 +3,7 @@ use rocket::Outcome;
 use rocket::State;
 
 use crate::cache::{ServiceCache};
+use std::borrow::Borrow;
 
 pub struct Context<'a, 'r> {
     request: &'a Request<'r>
@@ -25,8 +26,8 @@ impl<'a, 'r> Context<'a, 'r> {
         self.request.headers().get_one("Host")
     }
 
-    pub fn path(&self) -> &str {
-        self.request.uri().path()
+    pub fn origin(&self) -> String {
+        self.request.uri().to_string()
     }
 }
 

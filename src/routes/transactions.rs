@@ -5,9 +5,9 @@ use rocket::response::content;
 use anyhow::Result;
 
 #[get("/transactions/<safe_address>?<next>")]
-pub fn all(context: Context, next: Option<String>, safe_address: String) -> Result<content::Json<String>> {
-    context.cache().cache_resp(context.path(), request_cache_duration(), || {
-        transactions::get_all_transactions(&context, &safe_address)
+pub fn all(context: Context, safe_address: String, next: Option<String>) -> Result<content::Json<String>> {
+    context.cache().cache_resp(&context.origin(), request_cache_duration(), || {
+        transactions::get_all_transactions(&context, &safe_address, &next)
     })
 }
 
@@ -18,5 +18,5 @@ pub fn details(tx_hash: String) -> content::Json<String> {
 
 #[get("/transactions/about")]
 pub fn about(context: Context) -> Result<content::Json<String>> {
-    context.cache().cache_resp(context.path(), 60 * 200, transactions::get_about)
+    context.cache().cache_resp(&context.origin(), 60 * 200, transactions::get_about)
 }

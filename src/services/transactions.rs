@@ -1,6 +1,6 @@
 extern crate reqwest;
 
-use crate::config::{base_transaction_service_url, request_cache_duration, scheme};
+use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::about::About;
 use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
@@ -64,7 +64,7 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Opt
 fn build_paging_link(link: &String, context: &Context) -> Option<String> {
     Some(format!("{}{}?next={}",
                  context.host().unwrap(),
-                 context.origin(),
-                 Uri::percent_encode(Absolute::parse(link).ok()?.origin()?.query()?))
-    )
+                 context.path(),
+                 Uri::percent_encode(Absolute::parse(link).ok()?.origin()?.query()?)
+    ))
 }

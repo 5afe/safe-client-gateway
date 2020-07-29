@@ -3,7 +3,6 @@ use rocket::Outcome;
 use rocket::State;
 
 use crate::cache::{ServiceCache};
-use std::borrow::Borrow;
 use crate::config::scheme;
 
 pub struct Context<'a, 'r> {
@@ -29,7 +28,11 @@ impl<'a, 'r> Context<'a, 'r> {
         })
     }
 
-    pub fn origin(&self) -> String {
+    pub fn path(&self) -> String {
+        self.request.uri().path().to_string()
+    }
+
+    pub fn uri(&self) -> String {
         self.request.uri().to_string()
     }
 }

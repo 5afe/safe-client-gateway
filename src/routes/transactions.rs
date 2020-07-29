@@ -6,7 +6,8 @@ use anyhow::Result;
 
 #[get("/transactions/<safe_address>?<next>")]
 pub fn all(context: Context, safe_address: String, next: Option<String>) -> Result<content::Json<String>> {
-    context.cache().cache_resp(&context.origin(), request_cache_duration(), || {
+    println!("cache key: {}", &context.path());
+    context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
         transactions::get_all_transactions(&context, &safe_address, &next)
     })
 }
@@ -18,5 +19,5 @@ pub fn details(tx_hash: String) -> content::Json<String> {
 
 #[get("/transactions/about")]
 pub fn about(context: Context) -> Result<content::Json<String>> {
-    context.cache().cache_resp(&context.origin(), 60 * 200, transactions::get_about)
+    context.cache().cache_resp(&context.uri(), 60 * 200, transactions::get_about)
 }

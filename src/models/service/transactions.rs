@@ -1,5 +1,4 @@
 use serde::Serialize;
-use chrono::{DateTime, Utc};
 use crate::models::commons::DataDecoded;
 
 #[derive(Serialize, Debug)]

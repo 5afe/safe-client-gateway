@@ -24,6 +24,10 @@ impl<'a, 'r> Context<'a, 'r> {
     pub fn host(&self) -> Option<&str> {
         self.request.headers().get_one("Host")
     }
+
+    pub fn path(&self) -> &str {
+        self.request.uri().path()
+    }
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for Context<'a, 'r> {

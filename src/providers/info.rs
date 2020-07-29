@@ -4,7 +4,6 @@ use crate::cache::{ServiceCache};
 use serde_json;
 use serde::{Deserialize, Serialize};
 use anyhow::Result;
-use ethereum_types::{Address};
 use std::collections::HashMap;
 
 pub struct InfoProvider<'p> {
@@ -15,19 +14,33 @@ pub struct InfoProvider<'p> {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum TokenType {
+    Erc721,
+    Erc20,
+    #[serde(other)]
+    Unknown,
+}
+
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct SafeInfo {
-    nonce: u64,
-    threshold: u64,
-    owners: Vec<Address>
+    pub nonce: u64,
+    pub threshold: u64,
+    pub owners: Vec<String>
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct TokenInfo {
-    token_type: String,
-    decimals: u64,
-    symbol: String,
-    name: String,
-    logo_uri: Option<String>
+    #[serde(rename = "type")]
+    pub token_type: TokenType,
+    pub address: String,
+    pub decimals: u64,
+    pub symbol: String,
+    pub name: String,
+    pub logo_uri: Option<String>
 }
 
 macro_rules! with_in_memory_cache {

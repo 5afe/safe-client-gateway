@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use ethereum_types::Address;
 
 #[derive(Deserialize, Debug)]
 pub struct About {
@@ -17,5 +16,5 @@ pub struct SettingsDto {
     ethereum_tracing_node_url: String,
     eth_internal_txs_block_process_limit: Option<usize>,
     eth_reorg_blocks: usize,
-    eth_uniswap_factory_address: Address,
+    eth_uniswap_factory_address: String,
 }

@@ -1,4 +1,4 @@
-use crate::config::request_cache_duration
+use crate::config::request_cache_duration;
 use crate::utils::context::Context;
 use crate::services::transactions;
 use rocket::response::content;

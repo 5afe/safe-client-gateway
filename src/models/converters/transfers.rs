@@ -16,11 +16,10 @@ impl TransferDto {
 impl Erc20Transfer {
     fn to_transfer_transaction(&self) -> ServiceTransfer {
         ServiceTransfer {
-            sender: self.from,
-            recipient: self.to,
-            date: self.execution_date,
-            transaction_hash: self.transaction_hash,
+            sender: self.from.to_owned(),
+            recipient: self.to.to_owned(),
             transfer_info: TransferInfo::Erc20 {
+                token_address: self.token_address.clone(),
                 token_name: self.token_info.name.clone(),
                 token_symbol: self.token_info.symbol.clone(),
                 logo_uri: self.token_info.logo_uri.clone(),
@@ -34,13 +33,14 @@ impl Erc20Transfer {
 impl Erc721Transfer {
     fn to_transfer_transaction(&self) -> ServiceTransfer {
         ServiceTransfer {
-            sender: self.from,
-            recipient: self.to,
-            date: self.execution_date,
-            transaction_hash: self.transaction_hash,
+            sender: self.from.to_owned(),
+            recipient: self.to.to_owned(),
             transfer_info: TransferInfo::Erc721 {
-                token_id: self.token_id.clone(),
                 token_address: self.token_address.clone(),
+                token_id: self.token_id.clone(),
+                token_name: self.token_info.name.clone(),
+                token_symbol: self.token_info.symbol.clone(),
+                logo_uri: self.token_info.logo_uri.clone(),
             },
         }
     }
@@ -49,10 +49,8 @@ impl Erc721Transfer {
 impl EtherTransfer {
     fn to_transfer_transaction(&self) -> ServiceTransfer {
         ServiceTransfer {
-            sender: self.from,
-            recipient: self.to,
-            date: self.execution_date,
-            transaction_hash: self.transaction_hash,
+            sender: self.from.to_owned(),
+            recipient: self.to.to_owned(),
             transfer_info: TransferInfo::Ether {
                 value: self.value.clone()
             },

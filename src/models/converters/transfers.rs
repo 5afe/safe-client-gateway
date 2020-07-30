@@ -20,11 +20,11 @@ impl Erc20Transfer {
             recipient: self.to.to_owned(),
             transfer_info: TransferInfo::Erc20 {
                 token_address: self.token_address.clone(),
-                token_name: self.token_info.name.clone(),
-                token_symbol: self.token_info.symbol.clone(),
-                logo_uri: self.token_info.logo_uri.clone(),
-                decimals: self.token_info.decimals,
                 value: self.value.clone(),
+                token_name: self.token_info.as_ref().map(|it| it.name.to_owned()),
+                decimals: self.token_info.as_ref().map(|it| it.decimals.to_owned()),
+                logo_uri: self.token_info.as_ref().and_then(|it| it.logo_uri.to_owned()),
+                token_symbol: self.token_info.as_ref().map(|it| it.symbol.to_owned()),
             },
         }
     }
@@ -38,9 +38,9 @@ impl Erc721Transfer {
             transfer_info: TransferInfo::Erc721 {
                 token_address: self.token_address.clone(),
                 token_id: self.token_id.clone(),
-                token_name: self.token_info.name.clone(),
-                token_symbol: self.token_info.symbol.clone(),
-                logo_uri: self.token_info.logo_uri.clone(),
+                token_name: self.token_info.as_ref().map(|it| it.name.to_owned()),
+                token_symbol: self.token_info.as_ref().map(|it| it.symbol.to_owned()),
+                logo_uri: self.token_info.as_ref().and_then(|it| it.logo_uri.to_owned()),
             },
         }
     }

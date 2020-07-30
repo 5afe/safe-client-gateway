@@ -31,7 +31,7 @@ impl<'a, 'r> Context<'a, 'r> {
         self.request.uri().to_string()
     }
 
-    pub fn build_paging_link(&self, origin: Origin) -> String {
+    pub fn build_absolute_url(&self, origin: Origin) -> String {
         format!("{}{}", self.host().unwrap(), origin)
     }
 

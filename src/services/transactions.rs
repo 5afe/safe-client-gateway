@@ -6,7 +6,7 @@ use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
-use crate::utils::extract_next_link;
+use crate::utils::extract_query_string;
 use crate::providers::info::InfoProvider;
 use reqwest::Url;
 use anyhow::Result;
@@ -57,14 +57,14 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Opt
 
     Ok(Page {
         next: backend_transactions.next.as_ref()
-            .and_then(|link| extract_next_link(link))
+            .and_then(|link| extract_query_string(link))
             .map(|link|
-                context.build_paging_link(uri!(crate::routes::transactions::all: safe_address, link))
+                context.build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
             ),
         previous: backend_transactions.previous.as_ref()
-            .and_then(|link| extract_next_link(link))
+            .and_then(|link| extract_query_string(link))
             .map(|link|
-                context.build_paging_link(uri!(crate::routes::transactions::all: safe_address, link))
+                context.build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
             ),
         results: service_transactions,
     })

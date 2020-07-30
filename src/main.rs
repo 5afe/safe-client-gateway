@@ -24,7 +24,7 @@ use crate::routes::error_catchers;
 
 fn main() {
     dotenv().ok();
-
+    
     rocket::ignite()
         .mount("/", transaction_routes())
         .manage(reqwest::blocking::Client::new())

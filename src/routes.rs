@@ -4,7 +4,7 @@ use rocket::Route;
 use rocket::Catcher;
 use rocket_contrib::json::JsonValue;
 
-mod transactions;
+pub mod transactions;
 
 pub fn transaction_routes() -> Vec<Route> {
     routes![transactions::details, transactions::about, transactions::all]

@@ -6,10 +6,10 @@ use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
+use crate::utils::extract_next_link;
 use crate::providers::info::InfoProvider;
 use reqwest::Url;
 use anyhow::Result;
-use rocket::http::uri::{Absolute, Uri};
 
 pub fn get_about() -> Result<String> {
     let url_string = format!("{}{}", base_transaction_service_url(), "/about");
@@ -54,17 +54,18 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Opt
     let service_transactions: Vec<ServiceTransaction> = backend_transactions.results.into_iter()
         .flat_map(|transaction| transaction.to_service_transaction(&mut info_provider).unwrap_or(vec!()))
         .collect();
+
     Ok(Page {
-        next: backend_transactions.next.as_ref().and_then(|link| build_paging_link(link, context)),
-        previous: backend_transactions.previous.as_ref().and_then(|link| build_paging_link(link, context)),
+        next: backend_transactions.next.as_ref()
+            .and_then(|link| extract_next_link(link))
+            .map(|link|
+                context.build_paging_link(uri!(crate::routes::transactions::all: safe_address, link))
+            ),
+        previous: backend_transactions.previous.as_ref()
+            .and_then(|link| extract_next_link(link))
+            .map(|link|
+                context.build_paging_link(uri!(crate::routes::transactions::all: safe_address, link))
+            ),
         results: service_transactions,
     })
-}
-
-fn build_paging_link(link: &String, context: &Context) -> Option<String> {
-    Some(format!("{}{}?next={}",
-                 context.host().unwrap(),
-                 context.path(),
-                 Uri::percent_encode(Absolute::parse(link).ok()?.origin()?.query()?)
-    ))
 }

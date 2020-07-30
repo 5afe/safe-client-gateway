@@ -1,6 +1,7 @@
 use crate::models::commons::DataDecoded;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
+use rocket::http::uri::Absolute;
 
 pub mod cors;
 pub mod context;
@@ -20,8 +21,8 @@ pub const SETTINGS_CHANGE_METHODS: &[&str] = &["setFallbackHandler",
 impl DataDecoded {
     pub fn get_parameter_value(&self, name: &str) -> Option<String> {
         self.parameters.as_ref()?.iter()
-                    .find(|&param| param.name == name)
-                    .map(|result| result.value.clone())
+            .find(|&param| param.name == name)
+            .map(|result| result.value.clone())
     }
 
     pub fn contains_parameter(&self, name: &str) -> bool {
@@ -47,4 +48,10 @@ pub fn hex_hash<T: Hash>(t: &T) -> String {
     let mut s = DefaultHasher::new();
     t.hash(&mut s);
     format!("{:#x}", s.finish())
+}
+
+//TODO verify we are only touching 'offset' and 'limit'
+pub fn extract_next_link(raw_link: &String) -> Option<String> {
+    let parsed = Absolute::parse(raw_link).ok()?;
+    parsed.origin()?.query().map(|it| it.to_string())
 }

@@ -27,10 +27,10 @@ impl MultisigTransaction {
             id: String::from("multisig_<something_else_eventually>"),
             timestamp: self.execution_date.unwrap_or(self.submission_date).timestamp_millis(),
             tx_status: self.map_status(&safe_info),
-            execution_info: Some(ExecutionInfo{
+            execution_info: Some(ExecutionInfo {
                 nonce: self.nonce,
                 confirmations_submitted: self.confirmation_count(),
-                confirmations_required: self.confirmation_required(&safe_info)
+                confirmations_required: self.confirmation_required(&safe_info),
             }),
             tx_info: self.transaction_info(info_provider),
         }))
@@ -115,10 +115,10 @@ impl MultisigTransaction {
             ).unwrap_or(String::from("0x0")),
             transfer_info: TransferInfo::Erc20 {
                 token_address: token.address.to_owned(),
-                token_name: token.name.to_owned(),
-                token_symbol: token.symbol.to_owned(),
                 logo_uri: token.logo_uri.to_owned(),
-                decimals: token.decimals,
+                token_name: Some(token.name.to_owned()),
+                token_symbol: Some(token.symbol.to_owned()),
+                decimals: Some(token.decimals),
                 value: self.data_decoded.as_ref().and_then(
                     |it| it.get_parameter_value("value")
                 ).unwrap_or(String::from("0")),
@@ -137,8 +137,8 @@ impl MultisigTransaction {
             ).unwrap_or(String::from("0x0")),
             transfer_info: TransferInfo::Erc721 {
                 token_address: token.address.to_owned(),
-                token_name: token.name.to_owned(),
-                token_symbol: token.symbol.to_owned(),
+                token_name: Some(token.name.to_owned()),
+                token_symbol: Some(token.symbol.to_owned()),
                 token_id: self.data_decoded.as_ref().and_then(
                     |it| match it.get_parameter_value("tokenId") {
                         Some(e) => Some(e),

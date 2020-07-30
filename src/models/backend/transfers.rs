@@ -23,7 +23,7 @@ pub struct Erc721Transfer {
     pub to: String,
     pub token_id: String,
     pub token_address: String,
-    pub token_info: Erc721TokenInfo,
+    pub token_info: Option<Erc721TokenInfo>,
     pub from: String,
 }
 
@@ -43,7 +43,7 @@ pub struct Erc20Transfer {
     pub to: String,
     pub value: String,
     pub token_address: String,
-    pub token_info: Erc20TokenInfo,
+    pub token_info: Option<Erc20TokenInfo>,
     pub from: String,
 }
 

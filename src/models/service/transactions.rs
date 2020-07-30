@@ -51,17 +51,17 @@ pub struct Transfer {
 pub enum TransferInfo {
     Erc20 {
         token_address: String,
-        token_name: String,
-        token_symbol: String,
+        token_name: Option<String>,
+        token_symbol: Option<String>,
         logo_uri: Option<String>,
-        decimals: u64,
+        decimals: Option<u64>,
         value: String,
     },
     Erc721 {
         token_address: String,
-        token_name: String,
-        token_symbol: String,
         token_id: String,
+        token_name: Option<String>,
+        token_symbol: Option<String>,
         logo_uri: Option<String>,
     },
     Ether {

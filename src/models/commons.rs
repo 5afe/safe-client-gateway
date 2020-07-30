@@ -27,7 +27,6 @@ pub struct Parameter {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Page<T> {
-    pub count: usize,
     pub next: Option<String>,
     pub previous: Option<String>,
     pub results: Vec<T>,

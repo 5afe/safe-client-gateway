@@ -1,6 +1,6 @@
 use crate::cache::ServiceCache;
 use crate::config::{
-    base_transaction_service_url, safe_info_cache_duration, token_info_cache_duration,
+    base_transaction_service_url, token_info_cache_duration,
 };
 use crate::utils::context::Context;
 use anyhow::Result;

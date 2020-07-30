@@ -6,6 +6,7 @@ use crate::models::backend::transactions::Transaction as TransactionDto;
 use crate::models::service::transactions::Transaction as ServiceTransaction;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
+use crate::utils::extract_query_string;
 use crate::providers::info::InfoProvider;
 use reqwest::Url;
 use anyhow::Result;
@@ -37,24 +38,34 @@ pub fn get_transactions_details(tx_hash: String) -> String {
 }
 
 
-pub fn get_all_transactions(context: &Context, safe_address: &String) -> Result<Page<ServiceTransaction>> {
+pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>) -> Result<Page<ServiceTransaction>> {
     let mut info_provider = InfoProvider::new(context);
     let url = format!(
-        "{}/safes/{}/all-transactions",
+        "{}/safes/{}/all-transactions/?{}",
         base_transaction_service_url(),
-        safe_address
+        safe_address,
+        next.as_ref().unwrap_or(&String::new())
     );
     let body = context.cache().request_cached(&context.client(), &url, request_cache_duration())?;
     println!("request URL: {}", &url);
+    println!("next: {:#?}", next);
     println!("{:#?}", body);
     let backend_transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
     let service_transactions: Vec<ServiceTransaction> = backend_transactions.results.into_iter()
         .flat_map(|transaction| transaction.to_service_transaction(&mut info_provider).unwrap_or(vec!()))
         .collect();
+
     Ok(Page {
-        count: service_transactions.len(),
-        next: backend_transactions.next,
-        previous: backend_transactions.previous,
+        next: backend_transactions.next.as_ref()
+            .and_then(|link| extract_query_string(link))
+            .map(|link|
+                context.build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
+            ),
+        previous: backend_transactions.previous.as_ref()
+            .and_then(|link| extract_query_string(link))
+            .map(|link|
+                context.build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
+            ),
         results: service_transactions,
     })
 }

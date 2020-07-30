@@ -8,7 +8,7 @@ use rocket::response::content;
 pub struct ServiceCache(redis::Connection);
 
 impl ServiceCache {
-    pub fn fetch(&self, id: &String) -> Option<String> {
+    pub fn fetch(&self, id: &str) -> Option<String> {
         match self.get(id) {
             Ok(value) => Some(value),
             _ => None,

@@ -9,7 +9,12 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
 
-pub struct InfoProvider<'p> {
+pub trait InfoProvider {
+    fn safe_info(&mut self, safe: &String) -> Result<SafeInfo>;
+    fn token_info(&mut self, token: &String) -> Result<TokenInfo>;
+}
+
+pub struct DefaultInfoProvider<'p> {
     client: &'p reqwest::blocking::Client,
     cache: ServiceCache,
     safe_cache: HashMap<String, SafeInfo>,
@@ -45,34 +50,35 @@ pub struct TokenInfo {
     pub logo_uri: Option<String>,
 }
 
-impl InfoProvider<'_> {
-    pub fn new<'p>(context: &'p Context) -> InfoProvider<'p> {
-        let provider = InfoProvider {
-            client: context.client(),
-            cache: context.cache(),
-            safe_cache: HashMap::new(),
-            token_cache: HashMap::new(),
-        };
-        return provider;
-    }
-
-    pub fn safe_info(&mut self, safe: &String) -> Result<SafeInfo> {
+impl InfoProvider for DefaultInfoProvider<'_> {
+    fn safe_info(&mut self, safe: &String) -> Result<SafeInfo> {
         let url = format!("{}/safes/{}/", base_transaction_service_url(), safe);
         self.cached(|this| &mut this.safe_cache, url)
     }
 
-    pub fn token_info(&mut self, token: &String) -> Result<TokenInfo> {
+    fn token_info(&mut self, token: &String) -> Result<TokenInfo> {
         let url = format!("{}/tokens/{}/", base_transaction_service_url(), token);
         self.cached(|this| &mut this.token_cache, url)
     }
+}
 
-    pub fn cached<T>(
+impl DefaultInfoProvider<'_> {
+    pub fn new<'p>(context: &'p Context) -> DefaultInfoProvider<'p> {
+        DefaultInfoProvider {
+            client: context.client(),
+            cache: context.cache(),
+            safe_cache: HashMap::new(),
+            token_cache: HashMap::new(),
+        }
+    }
+
+    fn cached<T>(
         &mut self,
         local_cache: impl Fn(&mut Self) -> &mut HashMap<String, T>,
         url: impl Into<String>,
     ) -> Result<T>
-    where
-        T: Clone + DeserializeOwned,
+        where
+            T: Clone + DeserializeOwned,
     {
         let url = url.into();
         match local_cache(self).get(&url) {

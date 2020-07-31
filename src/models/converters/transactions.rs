@@ -1,21 +1,35 @@
 extern crate chrono;
 
 use super::super::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::{Transaction, SettingsChange, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo, ExecutionInfo, Erc20Transfer, Erc721Transfer, EtherTransfer};
-use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
+use crate::models::backend::transactions::{
+    EthereumTransaction, ModuleTransaction, MultisigTransaction,
+};
 use crate::models::commons::Operation;
+use crate::models::service::transactions::{
+    Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, ExecutionInfo, SettingsChange,
+    Transaction, TransactionInfo, TransactionStatus, Transfer, TransferInfo,
+};
+use crate::models::service::transactions::{
+    DetailedExecutionInfo, TransactionData, TransactionDetails, ID_PREFIX_ETHEREUM_TX,
+    ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPERATOR,
+};
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
-use anyhow::{Result, Error};
+use crate::utils::hex_hash;
+use anyhow::{Error, Result};
 
 impl TransactionDto {
-    pub fn to_service_transaction(&self, info_provider: &mut InfoProvider) -> Result<Vec<Transaction>> {
+    pub fn to_service_transaction(
+        &self,
+        info_provider: &mut InfoProvider,
+        safe: &String,
+    ) -> Result<Vec<Transaction>> {
         match self {
-            TransactionDto::Multisig(transaction) => Ok(transaction.to_service_transaction(info_provider)?),
-            TransactionDto::Ethereum(transaction) => Ok(transaction.to_service_transaction()),
-            TransactionDto::Module(transaction) => Ok(transaction.to_service_transaction()),
-            TransactionDto::Unknown => {
-                Err(Error::msg("Unknown transaction type from backend"))
+            TransactionDto::Multisig(transaction) => {
+                Ok(transaction.to_service_transaction(info_provider)?)
             }
+            TransactionDto::Ethereum(transaction) => Ok(transaction.to_service_transaction(safe)),
+            TransactionDto::Module(transaction) => Ok(transaction.to_service_transaction()),
+            TransactionDto::Unknown => Err(Error::msg("Unknown transaction type from backend")),
         }
     }
 }
@@ -23,9 +37,15 @@ impl TransactionDto {
 impl MultisigTransaction {
     fn to_service_transaction(&self, info_provider: &mut InfoProvider) -> Result<Vec<Transaction>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
-        Ok(vec!(Transaction {
-            id: String::from("multisig_<something_else_eventually>"),
-            timestamp: self.execution_date.unwrap_or(self.submission_date).timestamp_millis(),
+        Ok(vec![Transaction {
+            id: format!(
+                "{}{}{}",
+                ID_PREFIX_MULTISIG_TX, ID_SEPERATOR, self.safe_tx_hash
+            ),
+            timestamp: self
+                .execution_date
+                .unwrap_or(self.submission_date)
+                .timestamp_millis(),
             tx_status: self.map_status(&safe_info),
             execution_info: Some(ExecutionInfo {
                 nonce: self.nonce,
@@ -33,13 +53,45 @@ impl MultisigTransaction {
                 confirmations_required: self.confirmation_required(&safe_info),
             }),
             tx_info: self.transaction_info(info_provider),
-        }))
+        }])
+    }
+
+    pub fn to_transaction_details(
+        &self,
+        info_provider: &mut InfoProvider,
+    ) -> Result<TransactionDetails> {
+        let safe_info = info_provider.safe_info(&self.safe.to_string())?;
+        Ok(TransactionDetails {
+            executed_at: self.execution_date.map(|data| data.timestamp_millis()),
+            submitted_at: Some(self.submission_date.timestamp_millis()),
+            tx_status: self.map_status(&safe_info),
+            tx_info: self.transaction_info(info_provider),
+            tx_data: self.data.as_ref().map(|data| TransactionData {
+                hex_data: data.to_owned(),
+                data_decoded: self.data_decoded.clone(),
+            }),
+            tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
+            detailed_execution_info: Some(DetailedExecutionInfo {
+                nonce: self.nonce,
+                operation: self.operation.unwrap_or(Operation::CALL),
+                safe_tx_hash: self.safe_tx_hash.to_owned(),
+                signers: safe_info.owners,
+                confirmations_required: self.confirmations_required.unwrap_or(safe_info.threshold),
+                confirmations: self
+                    .confirmations
+                    .as_ref()
+                    .unwrap_or(&vec![])
+                    .into_iter()
+                    .map(|confirmation| confirmation.owner.to_owned())
+                    .collect(),
+            }),
+        })
     }
 
     fn confirmation_count(&self) -> u64 {
         match &self.confirmations {
             Some(confirmations) => confirmations.len() as u64,
-            None => 0
+            None => 0,
         }
     }
 
@@ -82,22 +134,40 @@ impl MultisigTransaction {
 
     fn is_erc20_transfer(&self, token: &Option<TokenInfo>) -> bool {
         self.operation.contains(&Operation::CALL)
-            && token.as_ref().and_then(|t| Some(matches!(t.token_type, TokenType::Erc20))).unwrap_or(false)
+            && token
+                .as_ref()
+                .and_then(|t| Some(matches!(t.token_type, TokenType::Erc20)))
+                .unwrap_or(false)
             && self.data_decoded.is_some()
-            && self.data_decoded.as_ref().unwrap().is_erc20_transfer_method()
+            && self
+                .data_decoded
+                .as_ref()
+                .unwrap()
+                .is_erc20_transfer_method()
     }
 
     fn is_erc721_transfer(&self, token: &Option<TokenInfo>) -> bool {
         self.operation.contains(&Operation::CALL)
-            && token.as_ref().and_then(|t| Some(matches!(t.token_type, TokenType::Erc721))).unwrap_or(false)
+            && token
+                .as_ref()
+                .and_then(|t| Some(matches!(t.token_type, TokenType::Erc721)))
+                .unwrap_or(false)
             && self.data_decoded.is_some()
-            && self.data_decoded.as_ref().unwrap().is_erc721_transfer_method()
+            && self
+                .data_decoded
+                .as_ref()
+                .unwrap()
+                .is_erc721_transfer_method()
     }
 
     fn is_ether_transfer(&self) -> bool {
         self.operation.contains(&Operation::CALL)
             && self.data.is_none()
-            && self.value.as_ref().and_then(|v| Some(v.parse().unwrap_or(0) > 0)).unwrap_or(false)
+            && self
+                .value
+                .as_ref()
+                .and_then(|v| Some(v.parse().unwrap_or(0) > 0))
+                .unwrap_or(false)
     }
 
     fn is_settings_change(&self) -> bool {
@@ -110,45 +180,51 @@ impl MultisigTransaction {
     fn to_erc20_transfer(&self, token: &TokenInfo) -> Transfer {
         Transfer {
             sender: self.safe.to_owned(),
-            recipient: self.data_decoded.as_ref().and_then(
-                |it| it.get_parameter_value("to")
-            ).unwrap_or(String::from("0x0")),
-            transfer_info: TransferInfo::Erc20(
-                Erc20Transfer {
-                    token_address: token.address.to_owned(),
-                    logo_uri: token.logo_uri.to_owned(),
-                    token_name: Some(token.name.to_owned()),
-                    token_symbol: Some(token.symbol.to_owned()),
-                    decimals: Some(token.decimals),
-                    value: self.data_decoded.as_ref().and_then(
-                        |it| it.get_parameter_value("value")
-                    ).unwrap_or(String::from("0")),
-                }),
+            recipient: self
+                .data_decoded
+                .as_ref()
+                .and_then(|it| it.get_parameter_value("to"))
+                .unwrap_or(String::from("0x0")),
+            transfer_info: TransferInfo::Erc20(Erc20Transfer {
+                token_address: token.address.to_owned(),
+                logo_uri: token.logo_uri.to_owned(),
+                token_name: Some(token.name.to_owned()),
+                token_symbol: Some(token.symbol.to_owned()),
+                decimals: Some(token.decimals),
+                value: self
+                    .data_decoded
+                    .as_ref()
+                    .and_then(|it| it.get_parameter_value("value"))
+                    .unwrap_or(String::from("0")),
+            }),
         }
     }
 
     fn to_erc721_transfer(&self, token: &TokenInfo) -> Transfer {
         Transfer {
             sender: self.safe.to_owned(),
-            recipient: self.data_decoded.as_ref().and_then(
-                |it| match it.get_parameter_value("_to") {
+            recipient: self
+                .data_decoded
+                .as_ref()
+                .and_then(|it| match it.get_parameter_value("_to") {
                     Some(e) => Some(e),
-                    None => it.get_parameter_value("to")
-                }
-            ).unwrap_or(String::from("0x0")),
-            transfer_info: TransferInfo::Erc721(
-                Erc721Transfer {
-                    token_address: token.address.to_owned(),
-                    token_name: Some(token.name.to_owned()),
-                    token_symbol: Some(token.symbol.to_owned()),
-                    token_id: self.data_decoded.as_ref().and_then(
-                        |it| match it.get_parameter_value("tokenId") {
-                            Some(e) => Some(e),
-                            None => it.get_parameter_value("value")
-                        }
-                    ).unwrap_or(String::from("0")),
-                    logo_uri: token.logo_uri.to_owned(),
-                }),
+                    None => it.get_parameter_value("to"),
+                })
+                .unwrap_or(String::from("0x0")),
+            transfer_info: TransferInfo::Erc721(Erc721Transfer {
+                token_address: token.address.to_owned(),
+                token_name: Some(token.name.to_owned()),
+                token_symbol: Some(token.symbol.to_owned()),
+                token_id: self
+                    .data_decoded
+                    .as_ref()
+                    .and_then(|it| match it.get_parameter_value("tokenId") {
+                        Some(e) => Some(e),
+                        None => it.get_parameter_value("value"),
+                    })
+                    .unwrap_or(String::from("0")),
+                logo_uri: token.logo_uri.to_owned(),
+            }),
         }
     }
 
@@ -156,16 +232,15 @@ impl MultisigTransaction {
         Transfer {
             sender: self.safe.to_owned(),
             recipient: self.to.to_owned(),
-            transfer_info: TransferInfo::Ether(
-                EtherTransfer {
-                    value: self.value.as_ref().unwrap().to_string(),
-                }),
+            transfer_info: TransferInfo::Ether(EtherTransfer {
+                value: self.value.as_ref().unwrap().to_string(),
+            }),
         }
     }
 
     fn to_settings_change(&self) -> SettingsChange {
         SettingsChange {
-            data_decoded: self.data_decoded.as_ref().unwrap().to_owned()
+            data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
         }
     }
 
@@ -179,40 +254,73 @@ impl MultisigTransaction {
 }
 
 impl EthereumTransaction {
-    fn to_service_transaction(&self) -> Vec<Transaction> {
+    fn to_service_transaction(&self, safe: &String) -> Vec<Transaction> {
         match &self.transfers {
-            Some(transfers) => transfers.into_iter()
-                .map(|transfer| {
-                    Transaction {
-                        id: String::from("ethereum_<something_else_eventually>"),
-                        timestamp: self.execution_date.timestamp_millis(),
-                        tx_status: TransactionStatus::Success,
-                        execution_info: None,
-                        tx_info: transfer.to_transfer(),
-                    }
+            Some(transfers) => transfers
+                .into_iter()
+                .map(|transfer| Transaction {
+                    id: format!(
+                        "{}{}{}{}{}{}{}",
+                        ID_PREFIX_ETHEREUM_TX,
+                        ID_SEPERATOR,
+                        safe,
+                        ID_SEPERATOR,
+                        self.block_number,
+                        ID_SEPERATOR,
+                        hex_hash(transfer)
+                    ),
+                    timestamp: self.execution_date.timestamp_millis(),
+                    tx_status: TransactionStatus::Success,
+                    execution_info: None,
+                    tx_info: transfer.to_transfer(),
                 })
                 .collect(),
-            _ => vec!()
+            _ => vec![],
         }
     }
 }
 
 impl ModuleTransaction {
     fn to_service_transaction(&self) -> Vec<Transaction> {
-        vec!(
-            Transaction {
-                id: String::from("module_<something_else_eventually>"),
-                timestamp: self.execution_date.timestamp_millis(),
-                tx_status: TransactionStatus::Success,
-                execution_info: None,
-                tx_info: TransactionInfo::Custom(
-                    Custom {
-                        to: self.to.to_owned(),
-                        data_size: data_size(&self.data),
-                        value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
-                    }),
-            }
-        )
+        vec![Transaction {
+            id: format!(
+                "{}{}{}{}{}{}{}",
+                ID_PREFIX_MODULE_TX,
+                ID_SEPERATOR,
+                self.safe,
+                ID_SEPERATOR,
+                self.block_number,
+                ID_SEPERATOR,
+                hex_hash(self)
+            ),
+            timestamp: self.execution_date.timestamp_millis(),
+            tx_status: TransactionStatus::Success,
+            execution_info: None,
+            tx_info: self.to_transaction_info(),
+        }]
+    }
+
+    fn to_transaction_info(&self) -> TransactionInfo {
+        TransactionInfo::Custom(Custom {
+            to: self.to.to_owned(),
+            data_size: data_size(&self.data),
+            value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
+        })
+    }
+
+    pub fn to_transaction_details(&self) -> Result<TransactionDetails> {
+        Ok(TransactionDetails {
+            executed_at: Some(self.execution_date.timestamp_millis()),
+            submitted_at: None,
+            tx_status: TransactionStatus::Success,
+            tx_info: self.to_transaction_info(),
+            tx_data: self.data.as_ref().map(|data| TransactionData {
+                hex_data: data.to_owned(),
+                data_decoded: self.data_decoded.clone(),
+            }),
+            tx_hash: Some(self.transaction_hash.to_owned()),
+            detailed_execution_info: None,
+        })
     }
 }
 
@@ -226,5 +334,6 @@ fn data_size(data: &Option<String>) -> String {
             }
         }
         None => 0,
-    }.to_string()
+    }
+    .to_string()
 }

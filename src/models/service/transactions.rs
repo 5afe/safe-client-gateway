@@ -1,5 +1,10 @@
 use serde::Serialize;
-use crate::models::commons::DataDecoded;
+use crate::models::commons::{Operation, DataDecoded};
+
+pub const ID_SEPERATOR: &str = "_";
+pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
+pub const ID_PREFIX_MODULE_TX: &str = "module";
+pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -93,3 +98,34 @@ pub struct Custom {
     pub data_size: String,
     pub value: String,
 }
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TransactionDetails {
+    pub executed_at: Option<i64>,
+    pub submitted_at: Option<i64>,
+    pub tx_status: TransactionStatus,
+    pub tx_info: TransactionInfo,
+    pub tx_data: Option<TransactionData>,
+    pub detailed_execution_info: Option<DetailedExecutionInfo>,
+    pub tx_hash: Option<String>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct DetailedExecutionInfo {
+    pub nonce: u64,
+    pub operation: Operation,
+    pub safe_tx_hash: String,
+    pub signers: Vec<String>,
+    pub confirmations_required: u64,
+    pub confirmations: Vec<String>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TransactionData {
+    pub hex_data: String,
+    pub data_decoded: Option<DataDecoded>,
+}
+

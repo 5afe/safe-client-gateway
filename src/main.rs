@@ -8,7 +8,6 @@ extern crate rocket_contrib;
 
 extern crate dotenv;
 
-mod cache;
 mod config;
 mod routes;
 mod services;
@@ -17,7 +16,7 @@ mod utils;
 mod providers;
 
 use dotenv::dotenv;
-use cache::{ServiceCache};
+use utils::cache::{ServiceCache};
 use utils::cors::{CORS};
 use routes::transaction_routes;
 use crate::routes::error_catchers;

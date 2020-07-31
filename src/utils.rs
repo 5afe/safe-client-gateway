@@ -5,6 +5,7 @@ use rocket::http::uri::Absolute;
 
 pub mod cors;
 pub mod context;
+pub mod cache;
 
 //TODO think of a better impl, using enums as per Nick's suggestion
 pub const ERC20_TRANSFER_METHODS: &[&str] = &["transfer", "transferFrom"];

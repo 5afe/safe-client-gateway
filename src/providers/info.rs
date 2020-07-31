@@ -1,4 +1,4 @@
-use crate::cache::ServiceCache;
+use crate::utils::cache::ServiceCache;
 use crate::config::{
     base_transaction_service_url, token_info_cache_duration,
 };

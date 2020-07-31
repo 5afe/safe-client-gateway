@@ -19,7 +19,7 @@ pub struct DataDecoded {
 #[serde(rename_all = "camelCase")]
 pub struct Parameter {
     pub name: String,
-    #[serde(rename(deserialize = "type"))]
+    #[serde(rename = "type")]
     pub param_type: String,
     pub value: String,
 }

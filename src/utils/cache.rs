@@ -19,7 +19,7 @@ impl ServiceCache {
         let _: () = self.set_ex(id, dest, timeout).unwrap();
     }
 
-    pub fn invalidate(&self, id: &String) {
+    pub fn _invalidate(&self, id: &String) {
         let _: () = self.del(id).unwrap();
     }
 

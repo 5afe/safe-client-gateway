@@ -1,6 +1,8 @@
 use crate::config::request_cache_duration;
 use crate::utils::context::Context;
-use crate::services::transactions;
+use crate::services::about;
+use crate::services::transactions_details;
+use crate::services::transactions_list;
 use rocket::response::content;
 use anyhow::Result;
 
@@ -8,16 +10,16 @@ use anyhow::Result;
 pub fn all(context: Context, safe_address: String, next: Option<String>) -> Result<content::Json<String>> {
     println!("cache key: {}", &context.path());
     context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
-        transactions::get_all_transactions(&context, &safe_address, &next)
+        transactions_list::get_all_transactions(&context, &safe_address, &next)
     })
 }
 
-#[get("/v1/transaction/<tx_hash>")]
-pub fn details(tx_hash: String) -> content::Json<String> {
-    content::Json(transactions::get_transactions_details(tx_hash))
+#[get("/v1/transaction/<details_id>")]
+pub fn details(details_id: String) -> content::Json<String> {
+    content::Json(transactions_details::get_transactions_details(details_id))
 }
 
 #[get("/about")]
 pub fn about(context: Context) -> Result<content::Json<String>> {
-    context.cache().cache_resp(&context.uri(), 60 * 200, transactions::get_about)
+    context.cache().cache_resp(&context.uri(), 60 * 200, about::get_about)
 }

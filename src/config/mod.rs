@@ -19,7 +19,7 @@ pub fn token_info_cache_duration() -> usize {
     usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 15)
 }
 
-pub fn safe_info_cache_duration() -> usize {
+pub fn _safe_info_cache_duration() -> usize {
     usize_with_default("SAFE_INFO_CACHE_DURATION", 60 * 15)
 }
 

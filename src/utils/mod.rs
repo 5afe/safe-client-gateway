@@ -26,7 +26,7 @@ impl DataDecoded {
             .map(|result| result.value.clone())
     }
 
-    pub fn contains_parameter(&self, name: &str) -> bool {
+    pub fn _contains_parameter(&self, name: &str) -> bool {
         self.parameters.as_ref()
             .map(|parameters| parameters.iter().any(|param| param.name == name))
             .is_some()
@@ -45,7 +45,7 @@ impl DataDecoded {
     }
 }
 
-pub fn hex_hash<T: Hash>(t: &T) -> String {
+pub fn _hex_hash<T: Hash>(t: &T) -> String {
     let mut s = DefaultHasher::new();
     t.hash(&mut s);
     format!("{:#x}", s.finish())

@@ -1,7 +1,7 @@
 extern crate chrono;
 
 use super::super::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::{Transaction, SettingsChange, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo, ExecutionInfo};
+use crate::models::service::transactions::{Transaction, SettingsChange, Transfer, Custom, TransferInfo, TransactionStatus, TransactionInfo, ExecutionInfo, Erc20Transfer, Erc721Transfer, EtherTransfer};
 use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction, EthereumTransaction};
 use crate::models::commons::Operation;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
@@ -113,16 +113,17 @@ impl MultisigTransaction {
             recipient: self.data_decoded.as_ref().and_then(
                 |it| it.get_parameter_value("to")
             ).unwrap_or(String::from("0x0")),
-            transfer_info: TransferInfo::Erc20 {
-                token_address: token.address.to_owned(),
-                logo_uri: token.logo_uri.to_owned(),
-                token_name: Some(token.name.to_owned()),
-                token_symbol: Some(token.symbol.to_owned()),
-                decimals: Some(token.decimals),
-                value: self.data_decoded.as_ref().and_then(
-                    |it| it.get_parameter_value("value")
-                ).unwrap_or(String::from("0")),
-            },
+            transfer_info: TransferInfo::Erc20(
+                Erc20Transfer {
+                    token_address: token.address.to_owned(),
+                    logo_uri: token.logo_uri.to_owned(),
+                    token_name: Some(token.name.to_owned()),
+                    token_symbol: Some(token.symbol.to_owned()),
+                    decimals: Some(token.decimals),
+                    value: self.data_decoded.as_ref().and_then(
+                        |it| it.get_parameter_value("value")
+                    ).unwrap_or(String::from("0")),
+                }),
         }
     }
 
@@ -135,18 +136,19 @@ impl MultisigTransaction {
                     None => it.get_parameter_value("to")
                 }
             ).unwrap_or(String::from("0x0")),
-            transfer_info: TransferInfo::Erc721 {
-                token_address: token.address.to_owned(),
-                token_name: Some(token.name.to_owned()),
-                token_symbol: Some(token.symbol.to_owned()),
-                token_id: self.data_decoded.as_ref().and_then(
-                    |it| match it.get_parameter_value("tokenId") {
-                        Some(e) => Some(e),
-                        None => it.get_parameter_value("value")
-                    }
-                ).unwrap_or(String::from("0")),
-                logo_uri: token.logo_uri.to_owned(),
-            },
+            transfer_info: TransferInfo::Erc721(
+                Erc721Transfer {
+                    token_address: token.address.to_owned(),
+                    token_name: Some(token.name.to_owned()),
+                    token_symbol: Some(token.symbol.to_owned()),
+                    token_id: self.data_decoded.as_ref().and_then(
+                        |it| match it.get_parameter_value("tokenId") {
+                            Some(e) => Some(e),
+                            None => it.get_parameter_value("value")
+                        }
+                    ).unwrap_or(String::from("0")),
+                    logo_uri: token.logo_uri.to_owned(),
+                }),
         }
     }
 
@@ -154,9 +156,10 @@ impl MultisigTransaction {
         Transfer {
             sender: self.safe.to_owned(),
             recipient: self.to.to_owned(),
-            transfer_info: TransferInfo::Ether {
-                value: self.value.as_ref().unwrap().to_string(),
-            },
+            transfer_info: TransferInfo::Ether(
+                EtherTransfer {
+                    value: self.value.as_ref().unwrap().to_string(),
+                }),
         }
     }
 

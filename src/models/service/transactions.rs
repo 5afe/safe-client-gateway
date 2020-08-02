@@ -12,7 +12,6 @@ pub struct Transaction {
 }
 
 #[derive(Serialize, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransactionStatus {
     AwaitingConfirmations,
     AwaitingExecution,
@@ -49,24 +48,36 @@ pub struct Transfer {
 #[derive(Serialize, Debug)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransferInfo {
-    Erc20 {
-        token_address: String,
-        token_name: Option<String>,
-        token_symbol: Option<String>,
-        logo_uri: Option<String>,
-        decimals: Option<u64>,
-        value: String,
-    },
-    Erc721 {
-        token_address: String,
-        token_id: String,
-        token_name: Option<String>,
-        token_symbol: Option<String>,
-        logo_uri: Option<String>,
-    },
-    Ether {
-        value: String,
-    },
+    Erc20(Erc20Transfer),
+    Erc721(Erc721Transfer),
+    Ether(EtherTransfer),
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Erc20Transfer {
+    pub token_address: String,
+    pub token_name: Option<String>,
+    pub token_symbol: Option<String>,
+    pub logo_uri: Option<String>,
+    pub decimals: Option<u64>,
+    pub value: String,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Erc721Transfer {
+    pub token_address: String,
+    pub token_id: String,
+    pub token_name: Option<String>,
+    pub token_symbol: Option<String>,
+    pub logo_uri: Option<String>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct EtherTransfer {
+    pub value: String,
 }
 
 #[derive(Serialize, Debug)]

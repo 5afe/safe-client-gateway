@@ -9,7 +9,7 @@ use crate::models::service::transactions::{
     Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, TransferInfo,
 };
 use crate::providers::info::{
-    InfoProvider, TokenInfo, TokenType, TokenType::Erc20, TokenType::Erc721,
+    InfoProvider, TokenInfo, TokenType,
 };
 use anyhow::Result;
 

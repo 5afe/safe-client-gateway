@@ -36,7 +36,7 @@ macro_rules! concat_parts {
 macro_rules! create_id {
     ($tx_type:expr, $($parts:expr),+) => {
         // `stringify!` will convert the expression *as it is* into a string.
-        format!("{}{}{}", $tx_type, ID_SEPERATOR, concat_parts!($($parts),+));
+        format!("{}{}", $tx_type, concat_parts!($($parts),+));
     };
 }
 

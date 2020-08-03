@@ -1,0 +1,23 @@
+version: '3.5'
+
+volumes:
+  nginx-shared:
+
+services:
+  redis:
+    image: redis:5-alpine
+    ports:
+      - "6379:6379"
+
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    environment:
+      - ROCKET_DATABASES={service_cache={url="redis://redis"}}
+    depends_on:
+      - redis
+    ports:
+      - "8000:3666"

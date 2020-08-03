@@ -4,9 +4,9 @@ use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
+use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::{
-    TransactionDetails, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
-    ID_SEPERATOR,
+    ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPERATOR,
 };
 use crate::providers::info::InfoProvider;
 use crate::utils::context::Context;
@@ -108,9 +108,7 @@ pub fn get_transactions_details(
         ),
         ID_PREFIX_ETHEREUM_TX => get_ethereum_transaction_details(
             context,
-            id_parts
-                .get(1)
-                .ok_or(anyhow::anyhow!("No safe adress"))?,
+            id_parts.get(1).ok_or(anyhow::anyhow!("No safe adress"))?,
             id_parts
                 .get(2)
                 .ok_or(anyhow::anyhow!("No module tx block"))?
@@ -121,9 +119,7 @@ pub fn get_transactions_details(
         ),
         ID_PREFIX_MODULE_TX => get_module_transaction_details(
             context,
-            id_parts
-                .get(1)
-                .ok_or(anyhow::anyhow!("No safe adress"))?,
+            id_parts.get(1).ok_or(anyhow::anyhow!("No safe adress"))?,
             id_parts
                 .get(2)
                 .ok_or(anyhow::anyhow!("No module tx block"))?

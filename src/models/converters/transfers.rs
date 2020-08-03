@@ -2,10 +2,10 @@ use crate::models::backend::transfers::{
     Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto,
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
+use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::Transfer as ServiceTransfer;
 use crate::models::service::transactions::{
-    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionDetails, TransactionInfo,
-    TransactionStatus, TransferInfo,
+    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, TransferInfo,
 };
 use anyhow::Result;
 

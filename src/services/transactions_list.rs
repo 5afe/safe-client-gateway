@@ -1,15 +1,15 @@
 extern crate reqwest;
 
 use crate::config::{base_transaction_service_url, request_cache_duration};
-use crate::models::backend::transactions::Transaction as TransactionDto;
-use crate::models::service::transactions::Transaction as ServiceTransaction;
+use crate::models::backend::transactions::Transaction;
+use crate::models::service::transactions::list::TransactionSummary;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
 use crate::utils::extract_query_string;
 use crate::providers::info::InfoProvider;
 use anyhow::Result;
 
-pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>) -> Result<Page<ServiceTransaction>> {
+pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>) -> Result<Page<TransactionSummary>> {
     let mut info_provider = InfoProvider::new(context);
     let url = format!(
         "{}/safes/{}/all-transactions/?{}",
@@ -21,8 +21,8 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Opt
     println!("request URL: {}", &url);
     println!("next: {:#?}", next);
     println!("{:#?}", body);
-    let backend_transactions: Page<TransactionDto> = serde_json::from_str(&body)?;
-    let service_transactions: Vec<ServiceTransaction> = backend_transactions.results.into_iter()
+    let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
+    let service_transactions: Vec<TransactionSummary> = backend_transactions.results.into_iter()
         .flat_map(|transaction| transaction.to_service_transaction(&mut info_provider, safe_address).unwrap_or(vec!()))
         .collect();
 

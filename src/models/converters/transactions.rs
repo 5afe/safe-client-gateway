@@ -1,43 +1,49 @@
 extern crate chrono;
 
-use super::super::backend::transactions::Transaction as TransactionDto;
+use super::super::backend::transactions::Transaction;
 use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
 use crate::models::commons::Operation;
+use crate::models::service::transactions::details::{
+    DetailedExecutionInfo, TransactionData, TransactionDetails,
+};
+use crate::models::service::transactions::list::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
-    Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, ExecutionInfo, SettingsChange,
-    Transaction, TransactionInfo, TransactionStatus, Transfer, TransferInfo,
+    Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, TransactionInfo,
+    TransactionStatus, Transfer, TransferInfo,
 };
 use crate::models::service::transactions::{
-    DetailedExecutionInfo, TransactionData, TransactionDetails, ID_PREFIX_ETHEREUM_TX,
-    ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPERATOR,
+    ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPERATOR,
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
 use crate::utils::hex_hash;
 use anyhow::{Error, Result};
 
-impl TransactionDto {
+impl Transaction {
     pub fn to_service_transaction(
         &self,
         info_provider: &mut InfoProvider,
         safe: &String,
-    ) -> Result<Vec<Transaction>> {
+    ) -> Result<Vec<TransactionSummary>> {
         match self {
-            TransactionDto::Multisig(transaction) => {
+            Transaction::Multisig(transaction) => {
                 Ok(transaction.to_service_transaction(info_provider)?)
             }
-            TransactionDto::Ethereum(transaction) => Ok(transaction.to_service_transaction(safe)),
-            TransactionDto::Module(transaction) => Ok(transaction.to_service_transaction()),
-            TransactionDto::Unknown => Err(Error::msg("Unknown transaction type from backend")),
+            Transaction::Ethereum(transaction) => Ok(transaction.to_service_transaction(safe)),
+            Transaction::Module(transaction) => Ok(transaction.to_service_transaction()),
+            Transaction::Unknown => Err(Error::msg("Unknown transaction type from backend")),
         }
     }
 }
 
 impl MultisigTransaction {
-    fn to_service_transaction(&self, info_provider: &mut InfoProvider) -> Result<Vec<Transaction>> {
+    fn to_service_transaction(
+        &self,
+        info_provider: &mut InfoProvider,
+    ) -> Result<Vec<TransactionSummary>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
-        Ok(vec![Transaction {
+        Ok(vec![TransactionSummary {
             id: format!(
                 "{}{}{}",
                 ID_PREFIX_MULTISIG_TX, ID_SEPERATOR, self.safe_tx_hash
@@ -254,11 +260,11 @@ impl MultisigTransaction {
 }
 
 impl EthereumTransaction {
-    fn to_service_transaction(&self, safe: &String) -> Vec<Transaction> {
+    fn to_service_transaction(&self, safe: &String) -> Vec<TransactionSummary> {
         match &self.transfers {
             Some(transfers) => transfers
                 .into_iter()
-                .map(|transfer| Transaction {
+                .map(|transfer| TransactionSummary {
                     id: format!(
                         "{}{}{}{}{}{}{}",
                         ID_PREFIX_ETHEREUM_TX,
@@ -281,8 +287,8 @@ impl EthereumTransaction {
 }
 
 impl ModuleTransaction {
-    fn to_service_transaction(&self) -> Vec<Transaction> {
-        vec![Transaction {
+    fn to_service_transaction(&self) -> Vec<TransactionSummary> {
+        vec![TransactionSummary {
             id: format!(
                 "{}{}{}{}{}{}{}",
                 ID_PREFIX_MODULE_TX,

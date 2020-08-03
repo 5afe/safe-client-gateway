@@ -1,5 +1,8 @@
 use serde::Serialize;
-use crate::models::commons::{Operation, DataDecoded};
+use crate::models::commons::{DataDecoded};
+
+pub mod details;
+pub mod list;
 
 pub const ID_SEPERATOR: &str = "_";
 pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
@@ -7,16 +10,7 @@ pub const ID_PREFIX_MODULE_TX: &str = "module";
 pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
 
 #[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Transaction {
-    pub id: String,
-    pub timestamp: i64,
-    pub tx_status: TransactionStatus,
-    pub tx_info: TransactionInfo,
-    pub execution_info: Option<ExecutionInfo>,
-}
-
-#[derive(Serialize, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransactionStatus {
     AwaitingConfirmations,
     AwaitingExecution,
@@ -32,14 +26,6 @@ pub enum TransactionInfo {
     SettingsChange(SettingsChange),
     Custom(Custom),
     Unknown,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ExecutionInfo {
-    pub nonce: u64,
-    pub confirmations_required: u64,
-    pub confirmations_submitted: u64,
 }
 
 #[derive(Serialize, Debug)]
@@ -98,34 +84,3 @@ pub struct Custom {
     pub data_size: String,
     pub value: String,
 }
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct TransactionDetails {
-    pub executed_at: Option<i64>,
-    pub submitted_at: Option<i64>,
-    pub tx_status: TransactionStatus,
-    pub tx_info: TransactionInfo,
-    pub tx_data: Option<TransactionData>,
-    pub detailed_execution_info: Option<DetailedExecutionInfo>,
-    pub tx_hash: Option<String>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct DetailedExecutionInfo {
-    pub nonce: u64,
-    pub operation: Operation,
-    pub safe_tx_hash: String,
-    pub signers: Vec<String>,
-    pub confirmations_required: u64,
-    pub confirmations: Vec<String>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct TransactionData {
-    pub hex_data: String,
-    pub data_decoded: Option<DataDecoded>,
-}
-

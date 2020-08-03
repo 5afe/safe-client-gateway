@@ -6,7 +6,6 @@ use crate::models::commons::{Operation, DataDecoded};
 #[serde(rename_all = "camelCase")]
 pub struct TransactionDetails {
     pub executed_at: Option<i64>,
-    pub submitted_at: Option<i64>,
     pub tx_status: TransactionStatus,
     pub tx_info: TransactionInfo,
     pub tx_data: Option<TransactionData>,
@@ -19,12 +18,12 @@ pub struct TransactionDetails {
 pub enum DetailedExecutionInfo {
     Multisig(MultisigExecutionDetails),
     Module(ModuleExecutionDetails),
-    Ether(EtherTransfer),
 }
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigExecutionDetails {
+    pub submitted_at: i64,
     pub nonce: u64,
     pub safe_tx_hash: String,
     pub signers: Vec<String>,

@@ -35,7 +35,6 @@ impl TransferDto {
     ) -> Result<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),
-            submitted_at: None,
             tx_status: TransactionStatus::Success,
             tx_info: self.to_transfer(info_provider),
             tx_data: None,

@@ -18,7 +18,6 @@ impl MultisigTransaction {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
-            submitted_at: Some(self.submission_date.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
             tx_info: self.transaction_info(info_provider),
             tx_data: Some(TransactionData {
@@ -31,6 +30,7 @@ impl MultisigTransaction {
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
                 MultisigExecutionDetails {
+                    submitted_at: self.submission_date.timestamp_millis(),
                     nonce: self.nonce,
                     safe_tx_hash: self.safe_tx_hash.to_owned(),
                     signers: safe_info.owners,
@@ -57,7 +57,6 @@ impl ModuleTransaction {
     pub fn to_transaction_details(&self) -> Result<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
-            submitted_at: None,
             tx_status: TransactionStatus::Success,
             tx_info: self.to_transaction_info(),
             tx_data: Some(TransactionData {

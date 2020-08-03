@@ -1,5 +1,7 @@
 extern crate chrono;
 
+#[macro_use]
+pub mod macros;
 pub mod details;
 pub mod summary;
 
@@ -21,8 +23,8 @@ impl MultisigTransaction {
         }
     }
 
-    fn confirmation_required(&self, safe_info: &SafeInfo) -> u64 {
-        self.confirmations_required.unwrap_or(safe_info.threshold)
+    fn confirmation_required(&self, threshold: u64) -> u64 {
+        self.confirmations_required.unwrap_or(threshold)
     }
 
     fn map_status(&self, safe_info: &SafeInfo) -> TransactionStatus {
@@ -34,7 +36,7 @@ impl MultisigTransaction {
             }
         } else if safe_info.nonce > self.nonce {
             TransactionStatus::Cancelled
-        } else if self.confirmation_count() < self.confirmation_required(safe_info) {
+        } else if self.confirmation_count() < self.confirmation_required(safe_info.threshold) {
             TransactionStatus::AwaitingConfirmations
         } else {
             TransactionStatus::AwaitingExecution

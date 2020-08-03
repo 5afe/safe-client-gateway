@@ -13,33 +13,6 @@ use crate::providers::info::InfoProvider;
 use crate::utils::hex_hash;
 use anyhow::{Error, Result};
 
-macro_rules! concat_parts {
-    ($parts_head:expr) => {
-        // `stringify!` will convert the expression *as it is* into a string.
-        format!(
-            "{}{}",
-            ID_SEPERATOR,
-            $parts_head
-        );
-    };
-    ($parts_head:expr, $($parts_tail:expr),+) => {
-        // `stringify!` will convert the expression *as it is* into a string.
-        format!(
-            "{}{}{}",
-            ID_SEPERATOR,
-            $parts_head,
-            concat_parts!($($parts_tail),+)
-        );
-    };
-}
-
-macro_rules! create_id {
-    ($tx_type:expr, $($parts:expr),+) => {
-        // `stringify!` will convert the expression *as it is* into a string.
-        format!("{}{}", $tx_type, concat_parts!($($parts),+));
-    };
-}
-
 impl Transaction {
     pub fn to_transaction_summary(
         &self,
@@ -77,7 +50,7 @@ impl MultisigTransaction {
             execution_info: Some(ExecutionInfo {
                 nonce: self.nonce,
                 confirmations_submitted: self.confirmation_count(),
-                confirmations_required: self.confirmation_required(&safe_info),
+                confirmations_required: self.confirmation_required(safe_info.threshold),
             }),
             tx_info: self.transaction_info(info_provider),
         }])

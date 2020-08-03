@@ -8,7 +8,9 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
+use mockall::automock;
 
+#[automock]
 pub trait InfoProvider {
     fn safe_info(&mut self, safe: &String) -> Result<SafeInfo>;
     fn token_info(&mut self, token: &String) -> Result<TokenInfo>;

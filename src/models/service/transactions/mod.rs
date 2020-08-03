@@ -2,7 +2,7 @@ use serde::Serialize;
 use crate::models::commons::{DataDecoded};
 
 pub mod details;
-pub mod list;
+pub mod summary;
 
 pub const ID_SEPERATOR: &str = "_";
 pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";

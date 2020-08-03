@@ -1,6 +1,5 @@
 use serde::Serialize;
 use super::*;
-use crate::models::commons::{Operation, DataDecoded};
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]

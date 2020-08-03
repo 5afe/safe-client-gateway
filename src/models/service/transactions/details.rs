@@ -30,7 +30,14 @@ pub struct MultisigExecutionDetails {
     pub safe_tx_hash: String,
     pub signers: Vec<String>,
     pub confirmations_required: u64,
-    pub confirmations: Vec<String>,
+    pub confirmations: Vec<MultisigConfirmation>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct MultisigConfirmation {
+    pub signer: String,
+    pub signature: Option<String>,
 }
 
 #[derive(Serialize, Debug)]

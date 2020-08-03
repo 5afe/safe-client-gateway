@@ -15,7 +15,7 @@ pub enum Transfer {
     Unknown,
 }
 
-#[derive(Derivative, Deserialize, Debug)]
+#[derive(Derivative, Deserialize, Debug, Clone)]
 #[derivative(Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc721Transfer {
@@ -30,7 +30,7 @@ pub struct Erc721Transfer {
     pub from: String,
 }
 
-#[derive(Deserialize, Debug, Hash)]
+#[derive(Deserialize, Debug, Hash, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc721TokenInfo {
     pub name: String,
@@ -38,7 +38,7 @@ pub struct Erc721TokenInfo {
     pub logo_uri: Option<String>,
 }
 
-#[derive(Derivative, Deserialize, Debug)]
+#[derive(Derivative, Deserialize, Debug, Clone)]
 #[derivative(Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc20Transfer {
@@ -53,7 +53,7 @@ pub struct Erc20Transfer {
     pub from: String,
 }
 
-#[derive(Deserialize, Debug, Hash)]
+#[derive(Deserialize, Debug, Hash, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc20TokenInfo {
     pub address: String,
@@ -63,7 +63,7 @@ pub struct Erc20TokenInfo {
     pub logo_uri: Option<String>,
 }
 
-#[derive(Deserialize, Debug, Hash)]
+#[derive(Deserialize, Debug, Hash, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct EtherTransfer {
     pub execution_date: DateTime<Utc>,

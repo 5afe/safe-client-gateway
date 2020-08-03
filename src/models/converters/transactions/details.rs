@@ -3,8 +3,8 @@ extern crate chrono;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::Operation;
 use crate::models::service::transactions::details::{
-    DetailedExecutionInfo, ModuleExecutionDetails, MultisigExecutionDetails, TransactionData,
-    TransactionDetails,
+    DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
+    TransactionData, TransactionDetails,
 };
 use crate::models::service::transactions::TransactionStatus;
 use crate::providers::info::InfoProvider;
@@ -40,7 +40,10 @@ impl MultisigTransaction {
                         .as_ref()
                         .unwrap_or(&vec![])
                         .into_iter()
-                        .map(|confirmation| confirmation.owner.to_owned())
+                        .map(|confirmation| MultisigConfirmation {
+                            signer: confirmation.owner.to_owned(),
+                            signature: confirmation.signature.to_owned()
+                        })
                         .collect(),
                 },
             )),
@@ -60,11 +63,9 @@ impl ModuleTransaction {
                 data_decoded: self.data_decoded.clone(),
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
-            detailed_execution_info: Some(DetailedExecutionInfo::Module(
-                ModuleExecutionDetails {
-                    address: self.module.to_owned()
-                },
-            )),
+            detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {
+                address: self.module.to_owned(),
+            })),
         })
     }
 }

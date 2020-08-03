@@ -39,6 +39,7 @@ fn get_ethereum_transaction_details(
     block_number: u64,
     detail_hash: &str,
 ) -> Result<TransactionDetails> {
+    let mut info_provider = InfoProvider::new(context);
     let url = format!(
         "{}/safes/{}/transfers/?block_number={}&limit=1000",
         base_transaction_service_url(),
@@ -60,7 +61,7 @@ fn get_ethereum_transaction_details(
             hex_hash(transfer) == detail_hash
         })
         .ok_or(anyhow::anyhow!("No transfer found"))?;
-    let details = transfer.to_transaction_details()?;
+    let details = transfer.to_transaction_details(&mut info_provider)?;
 
     Ok(details)
 }

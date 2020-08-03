@@ -5,10 +5,8 @@ pub mod macros;
 pub mod details;
 pub mod summary;
 
-use crate::models::backend::transactions::{
-     ModuleTransaction, MultisigTransaction,
-};
-use crate::models::commons::Operation;
+use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
+use crate::models::commons::{DataDecoded, Operation};
 use crate::models::service::transactions::{
     Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, TransactionInfo,
     TransactionStatus, Transfer, TransferInfo,
@@ -43,7 +41,7 @@ impl MultisigTransaction {
         }
     }
 
-    fn transaction_info(&self, info_provider: &mut InfoProvider) -> TransactionInfo {
+    fn transaction_info(&self, info_provider: &mut InfoProvider, safe: &String) -> TransactionInfo {
         if self.is_settings_change() {
             // Early exit if it is a setting change
             return TransactionInfo::SettingsChange(self.to_settings_change());
@@ -72,6 +70,7 @@ impl MultisigTransaction {
                 .as_ref()
                 .unwrap()
                 .is_erc20_transfer_method()
+            && check_sender_or_receiver(&self.data_decoded, &self.safe)
     }
 
     fn is_erc721_transfer(&self, token: &Option<TokenInfo>) -> bool {
@@ -86,6 +85,7 @@ impl MultisigTransaction {
                 .as_ref()
                 .unwrap()
                 .is_erc721_transfer_method()
+            && check_sender_or_receiver(&self.data_decoded, &self.safe)
     }
 
     fn is_ether_transfer(&self) -> bool {
@@ -107,12 +107,8 @@ impl MultisigTransaction {
 
     fn to_erc20_transfer(&self, token: &TokenInfo) -> Transfer {
         Transfer {
-            sender: self.safe.to_owned(),
-            recipient: self
-                .data_decoded
-                .as_ref()
-                .and_then(|it| it.get_parameter_value("to"))
-                .unwrap_or(String::from("0x0")),
+            sender: get_from_param(&self.data_decoded, self.safe.to_owned()),
+            recipient: get_to_param(&self.data_decoded, String::from("0x0")),
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
                 token_address: token.address.to_owned(),
                 logo_uri: token.logo_uri.to_owned(),
@@ -130,15 +126,8 @@ impl MultisigTransaction {
 
     fn to_erc721_transfer(&self, token: &TokenInfo) -> Transfer {
         Transfer {
-            sender: self.safe.to_owned(),
-            recipient: self
-                .data_decoded
-                .as_ref()
-                .and_then(|it| match it.get_parameter_value("_to") {
-                    Some(e) => Some(e),
-                    None => it.get_parameter_value("to"),
-                })
-                .unwrap_or(String::from("0x0")),
+            sender: get_from_param(&self.data_decoded, self.safe.to_owned()),
+            recipient: get_to_param(&self.data_decoded, String::from("0x0")),
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: token.address.to_owned(),
                 token_name: Some(token.name.to_owned()),
@@ -203,4 +192,29 @@ fn data_size(data: &Option<String>) -> String {
         None => 0,
     }
     .to_string()
+}
+
+fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {
+    data_decoded
+        .as_ref()
+        .and_then(|it| match it.get_parameter_value("_from") {
+            Some(e) => Some(e),
+            None => it.get_parameter_value("from"),
+        })
+        .unwrap_or(fallback)
+}
+
+fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {
+    data_decoded
+        .as_ref()
+        .and_then(|it| match it.get_parameter_value("_to") {
+            Some(e) => Some(e),
+            None => it.get_parameter_value("to"),
+        })
+        .unwrap_or(fallback)
+}
+
+fn check_sender_or_receiver(data_decoded: &Option<DataDecoded>, expected: &String) -> bool {
+    &get_from_param(data_decoded, "".to_owned()) == expected
+        || &get_to_param(data_decoded, "".to_owned()) == expected
 }

@@ -5,11 +5,12 @@ pub mod macros;
 pub mod details;
 pub mod summary;
 
+use super::get_transfer_direction;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::{DataDecoded, Operation};
 use crate::models::service::transactions::{
     Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, TransactionInfo,
-    TransactionStatus, Transfer, TransferInfo,
+    TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
 
@@ -41,7 +42,7 @@ impl MultisigTransaction {
         }
     }
 
-    fn transaction_info(&self, info_provider: &mut InfoProvider, safe: &String) -> TransactionInfo {
+    fn transaction_info(&self, info_provider: &mut InfoProvider) -> TransactionInfo {
         if self.is_settings_change() {
             // Early exit if it is a setting change
             return TransactionInfo::SettingsChange(self.to_settings_change());
@@ -106,9 +107,13 @@ impl MultisigTransaction {
     }
 
     fn to_erc20_transfer(&self, token: &TokenInfo) -> Transfer {
+        let sender = get_from_param(&self.data_decoded, self.safe.to_owned());
+        let recipient = get_to_param(&self.data_decoded, String::from("0x0"));
+        let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender: get_from_param(&self.data_decoded, self.safe.to_owned()),
-            recipient: get_to_param(&self.data_decoded, String::from("0x0")),
+            sender,
+            recipient,
+            direction,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
                 token_address: token.address.to_owned(),
                 logo_uri: token.logo_uri.to_owned(),
@@ -125,9 +130,13 @@ impl MultisigTransaction {
     }
 
     fn to_erc721_transfer(&self, token: &TokenInfo) -> Transfer {
+        let sender = get_from_param(&self.data_decoded, self.safe.to_owned());
+        let recipient = get_to_param(&self.data_decoded, String::from("0x0"));
+        let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender: get_from_param(&self.data_decoded, self.safe.to_owned()),
-            recipient: get_to_param(&self.data_decoded, String::from("0x0")),
+            sender,
+            recipient,
+            direction,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: token.address.to_owned(),
                 token_name: Some(token.name.to_owned()),
@@ -149,6 +158,7 @@ impl MultisigTransaction {
         Transfer {
             sender: self.safe.to_owned(),
             recipient: self.to.to_owned(),
+            direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
                 value: self.value.as_ref().unwrap().to_string(),
             }),

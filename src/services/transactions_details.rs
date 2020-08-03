@@ -61,7 +61,7 @@ fn get_ethereum_transaction_details(
             hex_hash(transfer) == detail_hash
         })
         .ok_or(anyhow::anyhow!("No transfer found"))?;
-    let details = transfer.to_transaction_details(&mut info_provider)?;
+    let details = transfer.to_transaction_details(&mut info_provider, &safe.to_owned())?;
 
     Ok(details)
 }

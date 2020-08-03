@@ -1,3 +1,4 @@
+use super::get_transfer_direction;
 use crate::models::backend::transfers::{
     Erc20TokenInfo, Erc20Transfer as Erc20TransferDto, Erc721TokenInfo,
     Erc721Transfer as Erc721TransferDto, EtherTransfer as EtherTransferDto,
@@ -14,16 +15,16 @@ use crate::providers::info::{
 use anyhow::Result;
 
 impl TransferDto {
-    pub fn to_transfer(&self, info_provider: &mut InfoProvider) -> TransactionInfo {
+    pub fn to_transfer(&self, info_provider: &mut InfoProvider, safe: &String) -> TransactionInfo {
         match self {
             TransferDto::Erc721(transfer) => {
-                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider))
+                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
             TransferDto::Erc20(transfer) => {
-                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider))
+                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
             TransferDto::Ether(transfer) => {
-                TransactionInfo::Transfer(transfer.to_transfer_transaction())
+                TransactionInfo::Transfer(transfer.to_transfer_transaction(safe))
             }
             _ => TransactionInfo::Unknown,
         }
@@ -32,11 +33,12 @@ impl TransferDto {
     pub fn to_transaction_details(
         &self,
         info_provider: &mut InfoProvider,
+        safe: &String,
     ) -> Result<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,
-            tx_info: self.to_transfer(info_provider),
+            tx_info: self.to_transfer(info_provider, safe),
             tx_data: None,
             tx_hash: self.get_transaction_hash(),
             detailed_execution_info: None,
@@ -63,10 +65,11 @@ impl TransferDto {
 }
 
 impl Erc20TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut InfoProvider) -> ServiceTransfer {
+    fn to_transfer_transaction(&self, info_provider: &mut InfoProvider, safe: &String) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
+            direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(info_provider),
         }
     }
@@ -102,10 +105,11 @@ impl Erc20TransferDto {
 }
 
 impl Erc721TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut InfoProvider) -> ServiceTransfer {
+    fn to_transfer_transaction(&self, info_provider: &mut InfoProvider, safe: &String) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
+            direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(info_provider),
         }
     }
@@ -138,10 +142,11 @@ impl Erc721TransferDto {
 }
 
 impl EtherTransferDto {
-    fn to_transfer_transaction(&self) -> ServiceTransfer {
+    fn to_transfer_transaction(&self, safe: &String) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
+            direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(),
         }
     }

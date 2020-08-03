@@ -3,7 +3,8 @@ extern crate chrono;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::Operation;
 use crate::models::service::transactions::details::{
-    DetailedExecutionInfo, TransactionData, TransactionDetails,
+    DetailedExecutionInfo, ModuleExecutionDetails, MultisigExecutionDetails, TransactionData,
+    TransactionDetails,
 };
 use crate::models::service::transactions::TransactionStatus;
 use crate::providers::info::InfoProvider;
@@ -25,20 +26,24 @@ impl MultisigTransaction {
                 data_decoded: self.data_decoded.clone(),
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
-            detailed_execution_info: Some(DetailedExecutionInfo {
-                nonce: self.nonce,
-                operation: self.operation.unwrap_or(Operation::CALL),
-                safe_tx_hash: self.safe_tx_hash.to_owned(),
-                signers: safe_info.owners,
-                confirmations_required: self.confirmations_required.unwrap_or(safe_info.threshold),
-                confirmations: self
-                    .confirmations
-                    .as_ref()
-                    .unwrap_or(&vec![])
-                    .into_iter()
-                    .map(|confirmation| confirmation.owner.to_owned())
-                    .collect(),
-            }),
+            detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
+                MultisigExecutionDetails {
+                    nonce: self.nonce,
+                    operation: self.operation.unwrap_or(Operation::CALL),
+                    safe_tx_hash: self.safe_tx_hash.to_owned(),
+                    signers: safe_info.owners,
+                    confirmations_required: self
+                        .confirmations_required
+                        .unwrap_or(safe_info.threshold),
+                    confirmations: self
+                        .confirmations
+                        .as_ref()
+                        .unwrap_or(&vec![])
+                        .into_iter()
+                        .map(|confirmation| confirmation.owner.to_owned())
+                        .collect(),
+                },
+            )),
         })
     }
 }
@@ -55,7 +60,11 @@ impl ModuleTransaction {
                 data_decoded: self.data_decoded.clone(),
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
-            detailed_execution_info: None,
+            detailed_execution_info: Some(DetailedExecutionInfo::Module(
+                ModuleExecutionDetails {
+                    address: self.module.to_owned()
+                },
+            )),
         })
     }
 }

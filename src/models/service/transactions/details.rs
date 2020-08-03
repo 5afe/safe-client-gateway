@@ -15,14 +15,28 @@ pub struct TransactionDetails {
 }
 
 #[derive(Serialize, Debug)]
+#[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum DetailedExecutionInfo {
+    Multisig(MultisigExecutionDetails),
+    Module(ModuleExecutionDetails),
+    Ether(EtherTransfer),
+}
+
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct DetailedExecutionInfo {
+pub struct MultisigExecutionDetails {
     pub nonce: u64,
     pub operation: Operation,
     pub safe_tx_hash: String,
     pub signers: Vec<String>,
     pub confirmations_required: u64,
     pub confirmations: Vec<String>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ModuleExecutionDetails {
+    pub address: String,
 }
 
 #[derive(Serialize, Debug)]

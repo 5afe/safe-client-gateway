@@ -1,5 +1,5 @@
 use serde::Serialize;
-use crate::models::commons::{DataDecoded};
+use crate::models::commons::DataDecoded;
 
 pub mod details;
 pub mod summary;
@@ -9,7 +9,7 @@ pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
 pub const ID_PREFIX_MODULE_TX: &str = "module";
 pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransactionStatus {
     AwaitingConfirmations,
@@ -19,7 +19,7 @@ pub enum TransactionStatus {
     Success,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(tag = "type")]
 pub enum TransactionInfo {
     Transfer(Transfer),
@@ -37,7 +37,7 @@ pub struct Transfer {
     pub transfer_info: TransferInfo,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransferDirection {
     Incoming,
@@ -45,7 +45,7 @@ pub enum TransferDirection {
     Unknown,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransferInfo {
     Erc20(Erc20Transfer),
@@ -53,7 +53,7 @@ pub enum TransferInfo {
     Ether(EtherTransfer),
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc20Transfer {
     pub token_address: String,
@@ -64,7 +64,7 @@ pub struct Erc20Transfer {
     pub value: String,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc721Transfer {
     pub token_address: String,
@@ -80,13 +80,13 @@ pub struct EtherTransfer {
     pub value: String,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct SettingsChange {
     pub data_decoded: DataDecoded
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Custom {
     pub to: String,

@@ -21,15 +21,17 @@ impl MultisigTransaction {
             submitted_at: Some(self.submission_date.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
             tx_info: self.transaction_info(info_provider),
-            tx_data: self.data.as_ref().map(|data| TransactionData {
-                hex_data: data.to_owned(),
+            tx_data: Some(TransactionData {
+                to: self.to.to_owned(),
+                value: self.value.to_owned(),
+                hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
+                operation: self.operation.unwrap_or(Operation::CALL),
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
                 MultisigExecutionDetails {
                     nonce: self.nonce,
-                    operation: self.operation.unwrap_or(Operation::CALL),
                     safe_tx_hash: self.safe_tx_hash.to_owned(),
                     signers: safe_info.owners,
                     confirmations_required: self
@@ -58,9 +60,12 @@ impl ModuleTransaction {
             submitted_at: None,
             tx_status: TransactionStatus::Success,
             tx_info: self.to_transaction_info(),
-            tx_data: self.data.as_ref().map(|data| TransactionData {
-                hex_data: data.to_owned(),
+            tx_data: Some(TransactionData {
+                to: self.to.to_owned(),
+                value: self.value.to_owned(),
+                hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
+                operation: self.operation,
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {

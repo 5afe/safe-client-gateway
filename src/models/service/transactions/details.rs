@@ -26,7 +26,6 @@ pub enum DetailedExecutionInfo {
 #[serde(rename_all = "camelCase")]
 pub struct MultisigExecutionDetails {
     pub nonce: u64,
-    pub operation: Operation,
     pub safe_tx_hash: String,
     pub signers: Vec<String>,
     pub confirmations_required: u64,
@@ -49,6 +48,9 @@ pub struct ModuleExecutionDetails {
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionData {
-    pub hex_data: String,
+    pub hex_data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
+    pub to: String,
+    pub value: Option<String>,
+    pub operation: Operation,
 }

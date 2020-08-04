@@ -19,7 +19,7 @@ impl MultisigTransaction {
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
-            tx_info: self.transaction_info(info_provider),
+            tx_info: self.transaction_info(info_provider, &self.safe),
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),

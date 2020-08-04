@@ -52,7 +52,7 @@ impl MultisigTransaction {
                 confirmations_submitted: self.confirmation_count(),
                 confirmations_required: self.confirmation_required(safe_info.threshold),
             }),
-            tx_info: self.transaction_info(info_provider),
+            tx_info: self.transaction_info(info_provider, &self.safe),
         }])
     }
 }

@@ -28,7 +28,7 @@ pub enum TransactionInfo {
     Unknown,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Transfer {
     pub sender: String,
@@ -74,7 +74,7 @@ pub struct Erc721Transfer {
     pub logo_uri: Option<String>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct EtherTransfer {
     pub value: String,

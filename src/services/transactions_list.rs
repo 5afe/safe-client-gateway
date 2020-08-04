@@ -6,11 +6,11 @@ use crate::models::service::transactions::summary::TransactionSummary;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
 use crate::utils::extract_query_string;
-use crate::providers::info::InfoProvider;
+use crate::providers::info::DefaultInfoProvider;
 use anyhow::Result;
 
 pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>) -> Result<Page<TransactionSummary>> {
-    let mut info_provider = InfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
         "{}/safes/{}/all-transactions/?{}",
         base_transaction_service_url(),

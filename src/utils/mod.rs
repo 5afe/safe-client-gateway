@@ -45,7 +45,7 @@ impl DataDecoded {
     }
 }
 
-pub fn _hex_hash<T: Hash>(t: &T) -> String {
+pub fn hex_hash<T: Hash>(t: &T) -> String {
     let mut s = DefaultHasher::new();
     t.hash(&mut s);
     format!("{:#x}", s.finish())

@@ -1,17 +1,16 @@
 use serde::Serialize;
-use crate::models::commons::DataDecoded;
+use crate::models::commons::{DataDecoded};
+
+pub mod details;
+pub mod summary;
+
+pub const ID_SEPERATOR: &str = "_";
+pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
+pub const ID_PREFIX_MODULE_TX: &str = "module";
+pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
 
 #[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Transaction {
-    pub id: String,
-    pub timestamp: i64,
-    pub tx_status: TransactionStatus,
-    pub tx_info: TransactionInfo,
-    pub execution_info: Option<ExecutionInfo>,
-}
-
-#[derive(Serialize, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TransactionStatus {
     AwaitingConfirmations,
     AwaitingExecution,
@@ -27,14 +26,6 @@ pub enum TransactionInfo {
     SettingsChange(SettingsChange),
     Custom(Custom),
     Unknown,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ExecutionInfo {
-    pub nonce: u64,
-    pub confirmations_required: u64,
-    pub confirmations_submitted: u64,
 }
 
 #[derive(Serialize, Debug)]

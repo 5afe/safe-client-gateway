@@ -37,7 +37,7 @@ pub struct MultisigTransaction {
     pub modified: Option<DateTime<Utc>>,
     pub block_number: Option<usize>,
     pub transaction_hash: Option<String>,
-    pub safe_tx_hash: Option<String>,
+    pub safe_tx_hash: String,
     pub executor: Option<String>,
     pub is_executed: bool,
     pub is_successful: Option<bool>,
@@ -50,30 +50,31 @@ pub struct MultisigTransaction {
     pub signatures: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct EthereumTransaction {
     pub execution_date: DateTime<Utc>,
     pub to: String,
     pub data: Option<String>,
     pub tx_hash: String,
-    pub block_number: Option<usize>,
+    pub block_number: usize,
     pub transfers: Option<Vec<Transfer>>,
     pub from: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleTransaction {
-    pub created: Option<String>,
+    pub created: String,
     pub execution_date: DateTime<Utc>,
-    pub block_number: Option<usize>,
-    pub transaction_hash: Option<String>,
-    pub safe: Option<String>,
-    pub module: Option<String>,
+    pub block_number: u64,
+    pub transaction_hash: String,
+    pub safe: String,
+    pub module: String,
     pub to: String,
     pub value: Option<String>,
     pub data: Option<String>,
+    pub data_decoded: Option<DataDecoded>,
     pub operation: Operation,
     // pub transfers: Option<Vec<Transfer>>,
 }
@@ -81,9 +82,9 @@ pub struct ModuleTransaction {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Confirmation {
-    owner: String,
-    submission_date: Option<DateTime<Utc>>,
-    transaction_hash: Option<String>,
-    confirmation_type: String,
-    signature: Option<String>,
+    pub owner: String,
+    pub submission_date: Option<DateTime<Utc>>,
+    pub transaction_hash: Option<String>,
+    pub confirmation_type: String,
+    pub signature: Option<String>,
 }

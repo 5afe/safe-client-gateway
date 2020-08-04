@@ -5,9 +5,10 @@ use rocket::Catcher;
 use rocket_contrib::json::JsonValue;
 
 pub mod transactions;
+pub mod hooks;
 
-pub fn transaction_routes() -> Vec<Route> {
-    routes![transactions::details, transactions::about, transactions::all]
+pub fn active_routes() -> Vec<Route> {
+    routes![transactions::details, transactions::about, transactions::all, hooks::update]
 }
 
 pub fn error_catchers() -> Vec<Catcher> {

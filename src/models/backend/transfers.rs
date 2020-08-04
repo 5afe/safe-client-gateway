@@ -2,7 +2,7 @@ use serde::Deserialize;
 use derivative::Derivative;
 use chrono::{DateTime, Utc};
 
-#[derive(Deserialize, Debug, Hash)]
+#[derive(Deserialize, Debug, Clone, Hash)]
 #[serde(tag = "type")]
 pub enum Transfer {
     #[serde(rename(deserialize = "ERC721_TRANSFER"))]
@@ -25,7 +25,7 @@ pub struct Erc721Transfer {
     pub to: String,
     pub token_id: String,
     pub token_address: String,
-    #[derivative(Hash="ignore")]
+    #[derivative(Hash = "ignore")]
     pub token_info: Option<Erc721TokenInfo>,
     pub from: String,
 }
@@ -48,7 +48,7 @@ pub struct Erc20Transfer {
     pub to: String,
     pub value: String,
     pub token_address: String,
-    #[derivative(Hash="ignore")]
+    #[derivative(Hash = "ignore")]
     pub token_info: Option<Erc20TokenInfo>,
     pub from: String,
 }

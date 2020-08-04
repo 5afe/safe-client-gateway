@@ -3,5 +3,6 @@ use anyhow::Result;
 
 pub fn invalidate_caches(context: &Context, safe: &String) -> Result<()> {
     println!("{}", safe);
+    context.cache().invalidate_pattern(&format!("*{}*", safe));
     Ok(())
 }

@@ -1,8 +1,8 @@
-use rocket_contrib::databases::redis::{self, Commands};
-use serde_json;
-use serde::ser::{Serialize};
 use anyhow::Result;
 use rocket::response::content;
+use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
+use serde::ser::Serialize;
+use serde_json;
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -19,12 +19,29 @@ impl ServiceCache {
         let _: () = self.set_ex(id, dest, timeout).unwrap();
     }
 
+    pub fn invalidate_pattern(&self, pattern: &String) {
+        let keys: Iter<String> = self.scan_match(pattern).unwrap();
+        let pipeline = &mut pipe();
+        for key in keys {
+            pipeline.del(key);
+        }
+        // I don't know why I have to do this .... 3 f*n hours ...
+        let con: &redis::Connection = &self.0;
+        pipeline.execute(con);
+    }
+
     pub fn _invalidate(&self, id: &String) {
         let _: () = self.del(id).unwrap();
     }
 
-    pub fn cache_resp<R>(&self, key: &String, timeout: usize, resp: impl Fn() -> Result<R>) -> Result<content::Json<String>>
-        where R: Serialize
+    pub fn cache_resp<R>(
+        &self,
+        key: &String,
+        timeout: usize,
+        resp: impl Fn() -> Result<R>,
+    ) -> Result<content::Json<String>>
+    where
+        R: Serialize,
     {
         let cached = self.fetch(key);
         match cached {
@@ -38,7 +55,12 @@ impl ServiceCache {
         }
     }
 
-    pub fn request_cached(&self, client: &reqwest::blocking::Client, url: &String, timeout: usize) -> Result<String>  {
+    pub fn request_cached(
+        &self,
+        client: &reqwest::blocking::Client,
+        url: &String,
+        timeout: usize,
+    ) -> Result<String> {
         let data: String = match self.fetch(&url) {
             Some(cached) => cached,
             None => {

@@ -16,7 +16,7 @@ use anyhow::{Error, Result};
 impl Transaction {
     pub fn to_transaction_summary(
         &self,
-        info_provider: &mut InfoProvider,
+        info_provider: &mut dyn InfoProvider,
         safe: &String,
     ) -> Result<Vec<TransactionSummary>> {
         match self {
@@ -35,7 +35,7 @@ impl Transaction {
 impl MultisigTransaction {
     fn to_transaction_summary(
         &self,
-        info_provider: &mut InfoProvider,
+        info_provider: &mut dyn InfoProvider,
     ) -> Result<Vec<TransactionSummary>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         Ok(vec![TransactionSummary {
@@ -60,7 +60,7 @@ impl MultisigTransaction {
 impl EthereumTransaction {
     fn to_transaction_summary(
         &self,
-        info_provider: &mut InfoProvider,
+        info_provider: &mut dyn InfoProvider,
         safe: &String,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
@@ -85,7 +85,7 @@ impl EthereumTransaction {
 }
 
 impl ModuleTransaction {
-    fn to_transaction_summary(&self) -> Vec<TransactionSummary> {
+    pub(super) fn to_transaction_summary(&self) -> Vec<TransactionSummary> {
         vec![TransactionSummary {
             id: create_id!(
                 ID_PREFIX_MODULE_TX,

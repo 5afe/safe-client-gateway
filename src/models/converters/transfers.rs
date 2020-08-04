@@ -15,7 +15,7 @@ use crate::providers::info::{
 use anyhow::Result;
 
 impl TransferDto {
-    pub fn to_transfer(&self, info_provider: &mut InfoProvider, safe: &String) -> TransactionInfo {
+    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> TransactionInfo {
         match self {
             TransferDto::Erc721(transfer) => {
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
@@ -32,7 +32,7 @@ impl TransferDto {
 
     pub fn to_transaction_details(
         &self,
-        info_provider: &mut InfoProvider,
+        info_provider: &mut dyn InfoProvider,
         safe: &String,
     ) -> Result<TransactionDetails> {
         Ok(TransactionDetails {
@@ -65,7 +65,7 @@ impl TransferDto {
 }
 
 impl Erc20TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut InfoProvider, safe: &String) -> ServiceTransfer {
+    fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -74,7 +74,7 @@ impl Erc20TransferDto {
         }
     }
 
-    fn to_transfer_info(&self, info_provider: &mut InfoProvider) -> TransferInfo {
+    fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info = self.get_token_info(info_provider);
         let info_ref = token_info.as_ref();
         TransferInfo::Erc20(Erc20Transfer {
@@ -87,7 +87,7 @@ impl Erc20TransferDto {
         })
     }
 
-    fn get_token_info(&self, info_provider: &mut InfoProvider) -> Option<Erc20TokenInfo> {
+    fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc20TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
@@ -105,7 +105,7 @@ impl Erc20TransferDto {
 }
 
 impl Erc721TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut InfoProvider, safe: &String) -> ServiceTransfer {
+    fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -114,7 +114,7 @@ impl Erc721TransferDto {
         }
     }
 
-    fn to_transfer_info(&self, info_provider: &mut InfoProvider) -> TransferInfo {
+    fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info = self.get_token_info(info_provider);
         let info_ref = token_info.as_ref();
         TransferInfo::Erc721(Erc721Transfer {
@@ -126,7 +126,7 @@ impl Erc721TransferDto {
         })
     }
 
-    fn get_token_info(&self, info_provider: &mut InfoProvider) -> Option<Erc721TokenInfo> {
+    fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc721TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
@@ -159,7 +159,7 @@ impl EtherTransferDto {
 }
 
 fn token_info_with_fallback<T>(
-    info_provider: &mut InfoProvider,
+    info_provider: &mut dyn InfoProvider,
     token_address: &String,
     token_info: Option<T>,
     expected_type: TokenType,

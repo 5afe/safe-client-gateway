@@ -1,7 +1,7 @@
 use serde::Serialize;
 use super::*;
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionSummary {
     pub id: String,
@@ -11,7 +11,7 @@ pub struct TransactionSummary {
     pub execution_info: Option<ExecutionInfo>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct ExecutionInfo {
     pub nonce: u64,

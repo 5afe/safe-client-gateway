@@ -13,7 +13,7 @@ use anyhow::Result;
 impl MultisigTransaction {
     pub fn to_transaction_details(
         &self,
-        info_provider: &mut InfoProvider,
+        info_provider: &mut dyn InfoProvider,
     ) -> Result<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         Ok(TransactionDetails {

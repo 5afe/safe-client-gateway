@@ -4,6 +4,7 @@ extern crate chrono;
 pub mod macros;
 pub mod details;
 pub mod summary;
+mod test;
 
 use super::get_transfer_direction;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
@@ -42,7 +43,7 @@ impl MultisigTransaction {
         }
     }
 
-    fn transaction_info(&self, info_provider: &mut InfoProvider) -> TransactionInfo {
+    fn transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
         if self.is_settings_change() {
             // Early exit if it is a setting change
             return TransactionInfo::SettingsChange(self.to_settings_change());

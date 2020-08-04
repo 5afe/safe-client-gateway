@@ -52,7 +52,7 @@ impl MultisigTransaction {
                 confirmations_submitted: self.confirmation_count(),
                 confirmations_required: self.confirmation_required(safe_info.threshold),
             }),
-            tx_info: self.transaction_info(info_provider, &self.safe),
+            tx_info: self.transaction_info(info_provider),
         }])
     }
 }
@@ -76,7 +76,7 @@ impl EthereumTransaction {
                     timestamp: self.execution_date.timestamp_millis(),
                     tx_status: TransactionStatus::Success,
                     execution_info: None,
-                    tx_info: transfer.to_transfer(info_provider),
+                    tx_info: transfer.to_transfer(info_provider, safe),
                 })
                 .collect(),
             _ => vec![],

@@ -33,7 +33,16 @@ pub enum TransactionInfo {
 pub struct Transfer {
     pub sender: String,
     pub recipient: String,
+    pub direction: TransferDirection,
     pub transfer_info: TransferInfo,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum TransferDirection {
+    Incoming,
+    Outgoing,
+    Unknown,
 }
 
 #[derive(Serialize, Debug)]

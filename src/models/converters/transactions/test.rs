@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod test {
-    use crate::models::backend::transactions::{Transaction as TransactionDto, ModuleTransaction};
+    use crate::models::backend::transactions::{Transaction as TransactionDto, ModuleTransaction, EthereumTransaction};
     use crate::providers::info::*;
     use chrono::Utc;
     use crate::models::commons::Operation;
@@ -11,7 +11,7 @@ mod test {
     use crate::utils::hex_hash;
 
     #[test]
-    fn unknown_tx_to_service_transaction() {
+    fn unknown_tx_to_summary_transaction() {
         let unknown_tx = TransactionDto::Unknown;
         let mut mock_info_provider = MockInfoProvider::new();
 
@@ -21,7 +21,7 @@ mod test {
     }
 
     #[test]
-    fn module_tx_to_service_transaction() {
+    fn module_tx_to_summary_transaction() {
         let expected_to = String::from("0x12345789");
         let expected_date = Utc::now();
         let expected_date_in_millis = expected_date.timestamp_millis();
@@ -40,7 +40,7 @@ mod test {
         };
 
         let actual = ModuleTransaction::to_transaction_summary(&module_tx);
-        let expected: Vec<TransactionSummary> = vec!(
+        let expected = vec!(
             TransactionSummary {
                 id: create_id!(
                     ID_PREFIX_MODULE_TX,
@@ -62,5 +62,24 @@ mod test {
     }
 
     #[test]
-    fn ethereum_tx_to_service_transaction() {}
+    fn ethereum_tx_to_summary_transaction_no_transfers() {
+        let safe_address = String::from("0x2323");
+        let mut mock_info_provider = MockInfoProvider::new();
+
+        let ethereum_tx = EthereumTransaction {
+            execution_date: Utc::now(),
+            to: String::from("0x1234"),
+            data: None,
+            tx_hash: String::from("0x4321"),
+            block_number: 0,
+            transfers: None,
+            from: String::from("0x6789"),
+        };
+
+        let actual = EthereumTransaction::to_transaction_summary(&ethereum_tx, &mut mock_info_provider, &safe_address);
+        assert_eq!(actual, Vec::new());
+    }
+
+    #[test]
+    fn ethereum_tx_to_summary_transaction_with_transfers() {}
 }

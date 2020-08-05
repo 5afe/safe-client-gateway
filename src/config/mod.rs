@@ -4,6 +4,10 @@ pub fn base_transaction_service_url() -> String {
     format!("{}{}", env::var("TRANSACTION_SERVICE_URL").unwrap(), "/api/v1")
 }
 
+pub fn webhook_token() -> String {
+    env::var("WEBHOOK_TOKEN").unwrap()
+}
+
 pub fn scheme() -> String {
     env::var("SCHEME").unwrap_or(String::from("https"))
 }

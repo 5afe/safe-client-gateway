@@ -18,14 +18,14 @@ mod providers;
 use dotenv::dotenv;
 use utils::cache::{ServiceCache};
 use utils::cors::{CORS};
-use routes::transaction_routes;
+use routes::active_routes;
 use crate::routes::error_catchers;
 
 fn main() {
     dotenv().ok();
     
     rocket::ignite()
-        .mount("/", transaction_routes())
+        .mount("/", active_routes())
         .manage(reqwest::blocking::Client::new())
         .attach(CORS())
         .attach(ServiceCache::fairing())

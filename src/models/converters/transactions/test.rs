@@ -121,7 +121,7 @@ mod test {
                         ID_PREFIX_ETHEREUM_TX,
                         safe_address,
                         ethereum_tx.block_number,
-                        hex_hash(&ethereum_tx.transfers.as_ref().unwrap().get(0))
+                        hex_hash(&ethereum_tx.transfers.as_ref().unwrap().get(0).unwrap())
                     ),
                 timestamp: timestamp_millis,
                 tx_status: TransactionStatus::Success,
@@ -140,7 +140,7 @@ mod test {
                         ID_PREFIX_ETHEREUM_TX,
                         safe_address,
                         ethereum_tx.block_number,
-                        hex_hash(&ethereum_tx.transfers.as_ref().unwrap().get(1))
+                        hex_hash(&ethereum_tx.transfers.as_ref().unwrap().get(1).unwrap())
                     ),
                 timestamp: timestamp_millis,
                 tx_status: TransactionStatus::Success,

@@ -63,7 +63,8 @@ pub struct Erc20TokenInfo {
     pub logo_uri: Option<String>,
 }
 
-#[derive(Deserialize, Debug, Hash, Clone)]
+#[derive(Derivative, Deserialize, Debug, Clone)]
+#[derivative(Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct EtherTransfer {
     pub execution_date: DateTime<Utc>,

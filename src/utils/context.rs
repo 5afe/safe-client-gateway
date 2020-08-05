@@ -23,10 +23,6 @@ impl<'a, 'r> Context<'a, 'r> {
         self.get::<ServiceCache>()
     }
 
-    pub fn path(&self) -> String {
-        self.request.uri().path().to_string()
-    }
-
     pub fn uri(&self) -> String {
         self.request.uri().to_string()
     }

@@ -27,6 +27,8 @@ chrono = { version = "0.4", features = ["serde"] }
 
 anyhow = "1.0"
 
+mockall = "0.7.2"
+
 [dependencies.rocket_contrib]
 version = "0.4.5"
 default-features = false

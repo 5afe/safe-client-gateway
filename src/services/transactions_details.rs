@@ -8,7 +8,7 @@ use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::{
     ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPERATOR,
 };
-use crate::providers::info::InfoProvider;
+use crate::providers::info::DefaultInfoProvider;
 use crate::utils::context::Context;
 use crate::utils::hex_hash;
 use anyhow::Result;
@@ -17,7 +17,7 @@ fn get_multisig_transaction_details(
     context: &Context,
     safe_tx_hash: &str,
 ) -> Result<TransactionDetails> {
-    let mut info_provider = InfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
         "{}/transactions/{}",
         base_transaction_service_url(),
@@ -39,7 +39,7 @@ fn get_ethereum_transaction_details(
     block_number: u64,
     detail_hash: &str,
 ) -> Result<TransactionDetails> {
-    let mut info_provider = InfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
         "{}/safes/{}/transfers/?block_number={}&limit=1000",
         base_transaction_service_url(),

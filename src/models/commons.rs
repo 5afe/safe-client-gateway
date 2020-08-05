@@ -8,14 +8,14 @@ pub enum Operation {
     DELEGATE = 1,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Hash)]
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct DataDecoded {
     pub method: String,
     pub parameters: Option<Vec<Parameter>>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Hash)]
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Parameter {
     pub name: String,

@@ -4,7 +4,7 @@ mod test {
     use crate::providers::info::*;
     use chrono::Utc;
     use crate::models::commons::Operation;
-    use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPERATOR, Transfer, TransferDirection, TransferInfo, EtherTransfer};
+    use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPARATOR, Transfer, TransferDirection, TransferInfo, EtherTransfer};
     use crate::models::service::transactions::summary::TransactionSummary;
     use crate::utils::hex_hash;
     use crate::models::backend::transfers::{EtherTransfer as EtherTransferDto, Transfer as TransferDto};

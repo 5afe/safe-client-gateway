@@ -40,5 +40,5 @@ pub fn build_number() -> Option<String> {
 }
 
 pub fn version() -> Option<String> {
-    option_env!("SECRET_KEY").map(|it| it.to_string())
+    option_env!("VERSION").map(|it| it.to_string())
 }

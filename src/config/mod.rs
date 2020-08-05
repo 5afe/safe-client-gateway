@@ -39,6 +39,6 @@ pub fn build_number() -> Option<String> {
     option_env!("BUILD_NUMBER").map(|it| it.to_string())
 }
 
-pub fn version() -> Option<String> {
-    option_env!("VERSION").map(|it| it.to_string())
+pub fn version() -> String {
+    option_env!("VERSION").unwrap_or(env!("CARGO_PKG_VERSION")).to_string()
 }

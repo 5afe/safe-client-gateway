@@ -8,6 +8,7 @@ use crate::utils::context::Context;
 use crate::utils::extract_query_string;
 use crate::providers::info::DefaultInfoProvider;
 use anyhow::Result;
+use log::debug;
 
 pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>) -> Result<Page<TransactionSummary>> {
     let mut info_provider = DefaultInfoProvider::new(context);
@@ -18,9 +19,9 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Opt
         next.as_ref().unwrap_or(&String::new())
     );
     let body = context.cache().request_cached(&context.client(), &url, request_cache_duration())?;
-    println!("request URL: {}", &url);
-    println!("next: {:#?}", next);
-    println!("{:#?}", body);
+    debug!("request URL: {}", &url);
+    debug!("next: {:#?}", next);
+    debug!("{:#?}", body);
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let service_transactions: Vec<TransactionSummary> = backend_transactions.results.into_iter()
         .flat_map(|transaction| transaction.to_transaction_summary(&mut info_provider, safe_address).unwrap_or(vec!()))

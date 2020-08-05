@@ -12,6 +12,7 @@ use crate::providers::info::DefaultInfoProvider;
 use crate::utils::context::Context;
 use crate::utils::hex_hash;
 use anyhow::Result;
+use log::debug;
 
 fn get_multisig_transaction_details(
     context: &Context,
@@ -26,7 +27,7 @@ fn get_multisig_transaction_details(
     let body = context
         .cache()
         .request_cached(&context.client(), &url, request_cache_duration())?;
-    println!("{:#?}", body);
+    debug!("{:#?}", body);
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
     let details = multisig_tx.to_transaction_details(&mut info_provider)?;
 
@@ -46,18 +47,18 @@ fn get_ethereum_transaction_details(
         safe,
         block_number
     );
-    println!("url: {}", url);
+    debug!("url: {}", url);
     let body = context
         .cache()
         .request_cached(&context.client(), &url, request_cache_duration())?;
-    println!("{:#?}", body);
+    debug!("{:#?}", body);
     let transfers: Page<Transfer> = serde_json::from_str(&body)?;
     let transfer = transfers
         .results
         .into_iter()
         .find(|transfer| {
-            println!("expected: {}", detail_hash);
-            println!("actual: {}", hex_hash(transfer));
+            debug!("expected: {}", detail_hash);
+            debug!("actual: {}", hex_hash(transfer));
             hex_hash(transfer) == detail_hash
         })
         .ok_or(anyhow::anyhow!("No transfer found"))?;
@@ -78,7 +79,7 @@ fn get_module_transaction_details(
         safe,
         block_number
     );
-    println!("url: {}", url);
+    debug!("url: {}", url);
     let body = context
         .cache()
         .request_cached(&context.client(), &url, request_cache_duration())?;

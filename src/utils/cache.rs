@@ -20,14 +20,7 @@ impl ServiceCache {
     }
 
     pub fn invalidate_pattern(&self, pattern: &String) {
-        let keys: Iter<String> = self.scan_match(pattern).unwrap();
-        let pipeline = &mut pipe();
-        for key in keys {
-            pipeline.del(key);
-        }
-        // I don't know why I have to do this .... 3 f*n hours ...
-        let con: &redis::Connection = &self.0;
-        pipeline.execute(con);
+        pipeline_delete(self, self.scan_match(pattern).unwrap());
     }
 
     pub fn _invalidate(&self, id: &String) {
@@ -71,4 +64,12 @@ impl ServiceCache {
         };
         Ok(data)
     }
+}
+
+fn pipeline_delete(con: &redis::Connection, keys: Iter<String>) {
+    let pipeline = &mut pipe();
+    for key in keys {
+        pipeline.del(key);
+    }
+    pipeline.execute(con);
 }

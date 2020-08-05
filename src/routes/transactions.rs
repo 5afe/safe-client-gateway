@@ -22,5 +22,5 @@ pub fn details(context: Context, details_id: String) -> Result<content::Json<Str
 
 #[get("/about")]
 pub fn about(context: Context) -> Result<content::Json<String>> {
-    context.cache().cache_resp(&context.uri(), 60 * 200, about::get_about)
+    context.cache().cache_resp(&context.uri(), request_cache_duration(), about::get_about)
 }

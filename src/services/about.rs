@@ -1,17 +1,14 @@
 extern crate reqwest;
 
-use crate::config::{base_transaction_service_url};
-use crate::models::backend::about::About;
+use crate::config::{base_transaction_service_url, version, build_number};
 use anyhow::Result;
-use reqwest::Url;
+use crate::models::service::about::About;
 
-pub fn get_about() -> Result<String> {
-    let url_string = format!("{}{}", base_transaction_service_url(), "/about");
-    let url = Url::parse(&url_string)?;
-    let body = reqwest::blocking::get(url)?.text()?;
-    let about: About = serde_json::from_str(&body)?;
-    Ok(format!(
-        "This is an API wrapper for {}, version {}\nNo guarantees in terms of availability.",
-        about.name, about.api_version
-    ))
+pub fn get_about() -> Result<About> {
+    Ok(About {
+        transaction_service_base_url: base_transaction_service_url(),
+        name: env!("CARGO_PKG_NAME").to_string(),
+        version: version(),
+        build_number: build_number(),
+    })
 }

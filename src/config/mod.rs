@@ -31,3 +31,14 @@ pub fn request_cache_duration() -> usize {
     usize_with_default("REQUEST_CACHE_DURATION", 60 * 15)
 }
 
+pub fn about_cache_duration() -> usize {
+    usize_with_default("ABOUT_CACHE_DURATION", request_cache_duration())
+}
+
+pub fn build_number() -> Option<String> {
+    option_env!("BUILD_NUMBER").map(|it| it.to_string())
+}
+
+pub fn version() -> Option<String> {
+    option_env!("SECRET_KEY").map(|it| it.to_string())
+}

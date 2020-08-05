@@ -5,5 +5,6 @@ use serde::Serialize;
 pub struct About {
     pub transaction_service_base_url: String,
     pub name: String,
-    pub version: String,
+    pub version: Option<String>,
+    pub build_number: Option<String>,
 }

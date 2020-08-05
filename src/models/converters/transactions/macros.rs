@@ -3,7 +3,7 @@ macro_rules! concat_parts {
         // `stringify!` will convert the expression *as it is* into a string.
         format!(
             "{}{}",
-            ID_SEPERATOR,
+            ID_SEPARATOR,
             $parts_head
         );
     };
@@ -11,7 +11,7 @@ macro_rules! concat_parts {
         // `stringify!` will convert the expression *as it is* into a string.
         format!(
             "{}{}{}",
-            ID_SEPERATOR,
+            ID_SEPARATOR,
             $parts_head,
             concat_parts!($($parts_tail),+)
         );

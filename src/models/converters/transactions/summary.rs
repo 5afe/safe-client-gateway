@@ -7,7 +7,7 @@ use crate::models::backend::transactions::{
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
     TransactionStatus, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
-    ID_SEPERATOR,
+    ID_SEPARATOR,
 };
 use crate::providers::info::InfoProvider;
 use crate::utils::hex_hash;

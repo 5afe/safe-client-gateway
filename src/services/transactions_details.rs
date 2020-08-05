@@ -6,7 +6,7 @@ use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
 use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::{
-    ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPERATOR,
+    ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
 };
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::context::Context;
@@ -97,7 +97,7 @@ pub fn get_transactions_details(
     context: &Context,
     details_id: &String,
 ) -> Result<TransactionDetails> {
-    let id_parts: Vec<&str> = details_id.split(ID_SEPERATOR).collect();
+    let id_parts: Vec<&str> = details_id.split(ID_SEPARATOR).collect();
     let tx_type = id_parts.get(0).ok_or(anyhow::anyhow!("Invalid id"))?;
 
     match tx_type.to_owned() {

@@ -4,7 +4,7 @@ use crate::models::commons::DataDecoded;
 pub mod details;
 pub mod summary;
 
-pub const ID_SEPERATOR: &str = "_";
+pub const ID_SEPARATOR: &str = "_";
 pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
 pub const ID_PREFIX_MODULE_TX: &str = "module";
 pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";

@@ -1,5 +1,5 @@
 # Safe Client Gateway
-
+[![Build Status](https://travis-ci.com/gnosis/safe-client-gateway.svg?branch=master)](https://travis-ci.com/gnosis/safe-client-gateway)
 ## Quickstart
 
 This project requires `rustup` and `redis`

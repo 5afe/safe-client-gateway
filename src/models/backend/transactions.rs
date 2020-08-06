@@ -85,7 +85,7 @@ pub struct Confirmation {
     pub owner: String,
     pub submission_date: Option<DateTime<Utc>>,
     pub transaction_hash: Option<String>,
-    pub confirmation_type: String,
+    pub signature_type: String,
     pub signature: Option<String>,
 }
 

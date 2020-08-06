@@ -2,7 +2,7 @@ extern crate chrono;
 
 pub mod details;
 pub mod summary;
-mod test;
+mod tests;
 
 use super::get_transfer_direction;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};

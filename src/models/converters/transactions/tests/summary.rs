@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod test {
+mod summary {
     use crate::models::backend::transactions::{Transaction as TransactionDto, ModuleTransaction, EthereumTransaction};
     use crate::providers::info::*;
     use chrono::Utc;

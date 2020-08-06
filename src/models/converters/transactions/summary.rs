@@ -1,13 +1,11 @@
 extern crate chrono;
 
-use crate::models::backend::transactions::Transaction;
+use crate::models::backend::transactions::{Transaction, CreationTransaction};
 use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
-use crate::models::service::transactions::{
-    TransactionStatus, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
-};
+use crate::models::service::transactions::{TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, Creation, TransactionInfo};
 use crate::providers::info::InfoProvider;
 use crate::utils::hex_hash;
 use anyhow::{Error, Result};
@@ -97,5 +95,24 @@ impl ModuleTransaction {
             execution_info: None,
             tx_info: self.to_transaction_info(),
         }]
+    }
+}
+
+impl CreationTransaction {
+    pub fn to_creation(&self, safe_address: &String) -> TransactionSummary {
+        TransactionSummary {
+            id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
+            timestamp: self.created.timestamp_millis(),
+            tx_status: TransactionStatus::Success,
+            tx_info: TransactionInfo::Creation(
+                Creation {
+                    creator: self.creator.clone(),
+                    transaction_hash: self.transaction_hash.clone(),
+                    master_copy: self.master_copy.clone(),
+                    factory: self.factory_address.clone(),
+                }
+            ),
+            execution_info: None,
+        }
     }
 }

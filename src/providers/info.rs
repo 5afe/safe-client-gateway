@@ -1,6 +1,6 @@
 use crate::utils::cache::ServiceCache;
 use crate::config::{
-    base_transaction_service_url, token_info_cache_duration,
+    base_transaction_service_url, info_cache_duration,
 };
 use crate::utils::context::Context;
 use anyhow::Result;
@@ -88,7 +88,7 @@ impl DefaultInfoProvider<'_> {
             None => {
                 let data =
                     self.cache
-                        .request_cached(self.client, &url, token_info_cache_duration())?;
+                        .request_cached(self.client, &url, info_cache_duration())?;
                 let value: T = serde_json::from_str(&data)?;
                 local_cache(self).insert(url, value.clone());
                 Ok(value)

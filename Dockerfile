@@ -12,8 +12,6 @@ WORKDIR "/app"
 # Cache dependencies
 RUN cargo init
 COPY Cargo.toml Cargo.toml
-RUN ls src
-RUN tail src/main.rs
 RUN cargo build --release
 
 COPY . .

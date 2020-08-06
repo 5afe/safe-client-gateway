@@ -1,10 +1,10 @@
 #[cfg(test)]
 mod summary {
-    use crate::models::backend::transactions::{Transaction as TransactionDto, ModuleTransaction, EthereumTransaction};
+    use crate::models::backend::transactions::{Transaction as TransactionDto, ModuleTransaction, EthereumTransaction, CreationTransaction};
     use crate::providers::info::*;
     use chrono::Utc;
     use crate::models::commons::Operation;
-    use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPARATOR, Transfer, TransferDirection, TransferInfo, EtherTransfer};
+    use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_CREATION_TX, ID_PREFIX_MODULE_TX, Transfer, TransferDirection, TransferInfo, EtherTransfer, Creation};
     use crate::models::service::transactions::summary::TransactionSummary;
     use crate::utils::hex_hash;
     use crate::models::backend::transfers::{EtherTransfer as EtherTransferDto, Transfer as TransferDto};
@@ -156,5 +156,40 @@ mod summary {
                 execution_info: None,
             });
         assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn creation_transaction_to_summary() {
+        let created_date = Utc::now();
+        let safe_address = String::from("0x38497");
+        let creator = String::from("0x123");
+        let transaction_hash = String::from("0x2232");
+        let factory_address = String::from("0x123");
+        let master_copy = String::from("0x987");
+        let creation_tx = CreationTransaction {
+            created: created_date,
+            creator: creator.clone(),
+            transaction_hash: transaction_hash.clone(),
+            factory_address: Some(factory_address.clone()),
+            master_copy: Some(master_copy.clone()),
+        };
+        let expected = TransactionSummary {
+            id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
+            timestamp: created_date.timestamp_millis(),
+            tx_status: TransactionStatus::Success,
+            tx_info: TransactionInfo::Creation(
+                Creation {
+                    creator: creator,
+                    transaction_hash: transaction_hash,
+                    master_copy: Some(master_copy),
+                    factory: Some(factory_address),
+                }
+            ),
+            execution_info: None,
+        };
+
+        let actual = creation_tx.to_transaction_summary(&safe_address);
+
+        assert_eq!(expected, actual);
     }
 }

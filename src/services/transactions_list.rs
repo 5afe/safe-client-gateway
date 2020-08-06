@@ -61,6 +61,6 @@ fn get_creation_transaction_summary(
         .request_cached(&context.client(), &url, request_cache_duration())?;
 
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
-    let transaction_summary = creation_transaction_dto.to_creation(safe);
+    let transaction_summary = creation_transaction_dto.to_transaction_summary(safe);
     Ok(transaction_summary)
 }

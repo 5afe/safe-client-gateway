@@ -99,7 +99,7 @@ impl ModuleTransaction {
 }
 
 impl CreationTransaction {
-    pub fn to_creation(&self, safe_address: &String) -> TransactionSummary {
+    pub fn to_transaction_summary(&self, safe_address: &String) -> TransactionSummary {
         TransactionSummary {
             id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
             timestamp: self.created.timestamp_millis(),

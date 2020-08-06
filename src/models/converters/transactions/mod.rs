@@ -95,7 +95,7 @@ impl MultisigTransaction {
             && self
                 .value
                 .as_ref()
-                .and_then(|v| Some(v.parse().unwrap_or(0) > 0))
+                .and_then(|v| Some(v.parse::<u128>().unwrap_or(0) > 0))
                 .unwrap_or(false)
     }
 

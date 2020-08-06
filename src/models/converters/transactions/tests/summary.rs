@@ -172,6 +172,7 @@ mod summary {
             transaction_hash: transaction_hash.clone(),
             factory_address: Some(factory_address.clone()),
             master_copy: Some(master_copy.clone()),
+            setup_data: None,
         };
         let expected = TransactionSummary {
             id: create_id!(ID_PREFIX_CREATION_TX, safe_address),

@@ -27,8 +27,9 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Opt
         .flat_map(|transaction| transaction.to_transaction_summary(&mut info_provider, safe_address).unwrap_or(vec!()))
         .collect();
     if backend_transactions.next.is_none() {
-        let creation_transaction = get_creation_transaction_summary(context, safe_address)?;
-        service_transactions.push(creation_transaction);
+        if let Ok(creation_transaction) = get_creation_transaction_summary(context, safe_address) {
+            service_transactions.push(creation_transaction);
+        }
     }
 
     Ok(Page {

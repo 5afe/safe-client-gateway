@@ -97,6 +97,6 @@ pub struct CreationTransaction {
     pub transaction_hash: String,
     pub factory_address: Option<String>,
     pub master_copy: Option<String>,
-    // pub setup_data: Option<String>,
+    pub setup_data: Option<String>,
     // pub data_decoded: Option<DataDecoded>,
 }

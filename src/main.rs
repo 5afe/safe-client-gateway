@@ -8,6 +8,9 @@ extern crate rocket_contrib;
 
 extern crate dotenv;
 
+#[macro_use]
+pub mod macros;
+
 mod config;
 mod routes;
 mod services;

@@ -88,3 +88,15 @@ pub struct Confirmation {
     pub confirmation_type: String,
     pub signature: Option<String>,
 }
+
+#[derive(Deserialize, Debug, Hash)]
+#[serde(rename_all = "camelCase")]
+pub struct CreationTransaction {
+    pub created: DateTime<Utc>,
+    pub creator: String,
+    pub transaction_hash: String,
+    pub factory_address: Option<String>,
+    pub master_copy: Option<String>,
+    pub setup_data: Option<String>,
+    pub data_decoded: Option<DataDecoded>,
+}

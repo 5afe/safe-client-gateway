@@ -8,6 +8,7 @@ pub const ID_SEPARATOR: &str = "_";
 pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
 pub const ID_PREFIX_MODULE_TX: &str = "module";
 pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
+pub const ID_PREFIX_CREATION_TX: &str = "creation";
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
@@ -25,6 +26,7 @@ pub enum TransactionInfo {
     Transfer(Transfer),
     SettingsChange(SettingsChange),
     Custom(Custom),
+    Creation(Creation),
     Unknown,
 }
 
@@ -92,4 +94,13 @@ pub struct Custom {
     pub to: String,
     pub data_size: String,
     pub value: String,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct Creation {
+    pub creator: String,
+    pub transaction_hash: String,
+    pub master_copy: Option<String>,
+    pub factory: Option<String>,
 }

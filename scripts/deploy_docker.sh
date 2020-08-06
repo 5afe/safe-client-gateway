@@ -10,6 +10,8 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
     description="$(git describe --tags --always)"
     export VERSION=${description:1}
 
+    echo "Trigger docker build and upload for version $VERSION ($BUILD_NUMBER)"
+
     echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     if [ "$1" = "develop" -o "$1" = "main" ]; then
         # If image does not exist, don't use cache

@@ -1,7 +1,27 @@
 language: rust
 rust:
   - nightly
+cache: cargo
+env:
+  global:
+  - DOCKERHUB_ORG=gnosis.pm
+  - DOCKERHUB_PROJECT=safe-client-gateway
+services:
+  - docker
 script:
   - cargo build --verbose --all
   - cargo test --verbose --all
-cache: cargo
+deploy:
+  - provider: script
+    script: bash scripts/deploy_docker.sh staging
+    on:
+      branch: main
+  - provider: script
+    script: bash scripts/deploy_docker.sh develop
+    on:
+      branch: develop
+  - provider: script
+    script: bash scripts/deploy_docker.sh $TRAVIS_TAG
+    on:
+      tags: true
+      branch: main

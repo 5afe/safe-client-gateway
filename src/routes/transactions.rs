@@ -1,6 +1,5 @@
-use crate::config::{request_cache_duration, about_cache_duration};
+use crate::config::{request_cache_duration};
 use crate::utils::context::Context;
-use crate::services::about;
 use crate::services::transactions_details;
 use crate::services::transactions_list;
 use rocket::response::content;
@@ -18,9 +17,4 @@ pub fn details(context: Context, details_id: String) -> Result<content::Json<Str
     context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
         transactions_details::get_transactions_details(&context, &details_id)
     })
-}
-
-#[get("/about")]
-pub fn about(context: Context) -> Result<content::Json<String>> {
-    context.cache().cache_resp(&context.uri(), about_cache_duration(), about::get_about)
 }

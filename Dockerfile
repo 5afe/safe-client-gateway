@@ -1,15 +1,25 @@
 # Build Stage
 FROM rustlang/rust:nightly-buster-slim as builder
 
-WORKDIR /app
-
 RUN set -ex; \ 
   apt-get update; \
   apt-get install -y --no-install-recommends \
   pkg-config ca-certificates libssl-dev \
   && rm -rf /var/lib/apt/lists/*
 
+ENV USER=root
+WORKDIR "/app"
+# Cache dependencies
+RUN cargo init
+COPY Cargo.toml Cargo.toml
+RUN cargo build --release
+
 COPY . .
+
+ARG VERSION
+ARG BUILD_NUMBER
+# Remove fingerprint of app to force recompile (without dependency recompile)
+RUN rm -rf target/release/.fingerprint/safe-client-gateway*
 RUN cargo build --release
 
 # Image Stage

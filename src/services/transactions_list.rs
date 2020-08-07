@@ -52,7 +52,7 @@ fn get_creation_transaction_summary(
     safe: &String,
 ) -> Result<TransactionSummary> {
     let url = format!(
-        "{}/safes/{}/creation",
+        "{}/safes/{}/creation/",
         base_transaction_service_url(),
         safe
     );

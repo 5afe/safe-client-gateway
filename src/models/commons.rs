@@ -16,20 +16,19 @@ pub struct DataDecoded {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
-#[serde(rename_all = "camelCase", untagged)]
-pub enum Parameter {
-    SingleValue {
-        name: String,
-        #[serde(rename = "type")]
-        param_type: String,
-        value: String,
-    },
-    ArrayValue {
-        name: String,
-        #[serde(rename = "type")]
-        param_type: String,
-        value: Vec<String>,
-    },
+#[serde(rename_all = "camelCase")]
+pub struct Parameter {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub param_type: String,
+    pub value: ParamValue,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
+#[serde(untagged)]
+pub enum ParamValue {
+    SingleValue(String),
+    ArrayValue(Vec<ParamValue>),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -38,4 +37,10 @@ pub struct Page<T> {
     pub next: Option<String>,
     pub previous: Option<String>,
     pub results: Vec<T>,
+}
+
+impl From<String> for ParamValue {
+    fn from(item: String) -> Self {
+        ParamValue::SingleValue(item)
+    }
 }

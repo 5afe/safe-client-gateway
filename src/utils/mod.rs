@@ -1,4 +1,4 @@
-use crate::models::commons::{DataDecoded, Parameter};
+use crate::models::commons::{DataDecoded, ParamValue};
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use rocket::http::uri::Absolute;
@@ -24,9 +24,9 @@ impl DataDecoded {
     pub fn get_parameter_single_value(&self, some_name: &str) -> Option<String> {
         self.parameters.as_ref()?.iter()
             .find_map(|param| {
-                match param {
-                    Parameter::SingleValue { name, value, .. } => {
-                        if name == some_name { Some(value.clone()) } else { None }
+                match &param.value {
+                    ParamValue::SingleValue (value) => {
+                        if param.name == some_name { Some(value.clone()) } else { None }
                     }
                     _ => None
                 }

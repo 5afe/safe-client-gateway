@@ -3,7 +3,7 @@ macro_rules! concat_parts {
         // `stringify!` will convert the expression *as it is* into a string.
         format!(
             "{}{}",
-            ID_SEPARATOR,
+            $crate::models::service::transactions::ID_SEPARATOR,
             $parts_head
         );
     };
@@ -11,14 +11,13 @@ macro_rules! concat_parts {
         // `stringify!` will convert the expression *as it is* into a string.
         format!(
             "{}{}{}",
-            ID_SEPARATOR,
+            $crate::models::service::transactions::ID_SEPARATOR,
             $parts_head,
             concat_parts!($($parts_tail),+)
         );
     };
 }
 
-#[macro_export]
 macro_rules! create_id {
     ($tx_type:expr, $($parts:expr),+) => {
         // `stringify!` will convert the expression *as it is* into a string.

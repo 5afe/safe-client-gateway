@@ -110,7 +110,7 @@ pub fn get_transactions_details(
         ),
         ID_PREFIX_ETHEREUM_TX => get_ethereum_transaction_details(
             context,
-            id_parts.get(1).ok_or(anyhow::anyhow!("No safe adress"))?,
+            id_parts.get(1).ok_or(anyhow::anyhow!("No safe address"))?,
             id_parts
                 .get(2)
                 .ok_or(anyhow::anyhow!("No module tx block"))?
@@ -121,7 +121,7 @@ pub fn get_transactions_details(
         ),
         ID_PREFIX_MODULE_TX => get_module_transaction_details(
             context,
-            id_parts.get(1).ok_or(anyhow::anyhow!("No safe adress"))?,
+            id_parts.get(1).ok_or(anyhow::anyhow!("No safe address"))?,
             id_parts
                 .get(2)
                 .ok_or(anyhow::anyhow!("No module tx block"))?

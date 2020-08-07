@@ -38,5 +38,5 @@ RUN set -ex; \
   ca-certificates libssl-dev \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder --chown=$APP_USER:$APP_USER /app/target/release/safe-client-gateway ./
+COPY --from=builder --chown=rust:rust /app/target/release/safe-client-gateway ./
 CMD ["./safe-client-gateway"]

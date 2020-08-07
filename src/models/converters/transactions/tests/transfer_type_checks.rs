@@ -18,8 +18,8 @@ fn multisig_tx_check_erc721_transfer() {
         data_decoded: Some(DataDecoded {
             method: String::from("transfer"),
             parameters: Some(vec!(
-                Parameter {name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300")},
-                Parameter {name: String::from("value"), param_type: String::from("uint256"), value: String::from("1126")},
+                Parameter::SingleValue {name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300")},
+                Parameter::SingleValue {name: String::from("value"), param_type: String::from("uint256"), value: String::from("1126")},
             ))
         }),
         operation: Some(Operation::CALL),
@@ -94,8 +94,8 @@ fn multisig_tx_check_erc20_transfer() {
         data_decoded: Some(DataDecoded {
             method: String::from("transfer"),
             parameters: Some(vec!(
-                Parameter {name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300")},
-                Parameter {name: String::from("value"), param_type: String::from("uint256"), value: String::from("50000000000000")},
+                Parameter::SingleValue {name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300")},
+                Parameter::SingleValue {name: String::from("value"), param_type: String::from("uint256"), value: String::from("50000000000000")},
             ))
         }),
         operation: Some(Operation::CALL),

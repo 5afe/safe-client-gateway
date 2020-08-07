@@ -1,4 +1,4 @@
-use crate::models::commons::DataDecoded;
+use crate::models::commons::{DataDecoded, Parameter};
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use rocket::http::uri::Absolute;
@@ -21,16 +21,16 @@ pub const SETTINGS_CHANGE_METHODS: &[&str] = &["setFallbackHandler",
     "disableModule"];
 
 impl DataDecoded {
-    pub fn get_parameter_value(&self, name: &str) -> Option<String> {
+    pub fn get_parameter_single_value(&self, some_name: &str) -> Option<String> {
         self.parameters.as_ref()?.iter()
-            .find(|&param| param.name == name)
-            .map(|result| result.value.clone())
-    }
-
-    pub fn _contains_parameter(&self, name: &str) -> bool {
-        self.parameters.as_ref()
-            .map(|parameters| parameters.iter().any(|param| param.name == name))
-            .is_some()
+            .find_map(|param| {
+                match param {
+                    Parameter::SingleValue { name, value, .. } => {
+                        if name == some_name { Some(value.clone()) } else { None }
+                    }
+                    _ => None
+                }
+            })
     }
 
     pub fn is_erc20_transfer_method(&self) -> bool {

@@ -16,12 +16,20 @@ pub struct DataDecoded {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct Parameter {
-    pub name: String,
-    #[serde(rename = "type")]
-    pub param_type: String,
-    pub value: String,
+#[serde(rename_all = "camelCase", untagged)]
+pub enum Parameter {
+    SingleValue {
+        name: String,
+        #[serde(rename = "type")]
+        param_type: String,
+        value: String,
+    },
+    ArrayValue {
+        name: String,
+        #[serde(rename = "type")]
+        param_type: String,
+        value: Vec<String>,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]

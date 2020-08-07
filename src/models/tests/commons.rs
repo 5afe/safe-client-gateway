@@ -47,7 +47,7 @@ fn deserialise_params_value_as_array() {
             )
         ),
     };
-    
+
     assert!(actual.is_ok());
     assert_eq!(expected, actual.unwrap());
 }

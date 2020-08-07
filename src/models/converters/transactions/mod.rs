@@ -2,9 +2,12 @@ extern crate chrono;
 
 pub mod details;
 pub mod summary;
+
+#[cfg(test)]
 mod tests;
 
 use super::get_transfer_direction;
+use crate::utils::TRANSFER_METHOD;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::{DataDecoded, Operation};
 use crate::models::service::transactions::{
@@ -94,7 +97,7 @@ impl MultisigTransaction {
             && self
                 .value
                 .as_ref()
-                .and_then(|v| Some(v.parse().unwrap_or(0) > 0))
+                .and_then(|v| Some(v.parse::<u128>().unwrap_or(0) > 0))
                 .unwrap_or(false)
     }
 
@@ -195,7 +198,7 @@ fn data_size(data: &Option<String>) -> String {
             let length = actual_data.len();
             match length {
                 0 => 0,
-                _ => (length - 2),
+                _ => (length - 2) / 2,
             }
         }
         None => 0,
@@ -206,9 +209,9 @@ fn data_size(data: &Option<String>) -> String {
 fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_value("_from") {
+        .and_then(|it| match it.get_parameter_value("from") {
             Some(e) => Some(e),
-            None => it.get_parameter_value("from"),
+            None => it.get_parameter_value("_from"),
         })
         .unwrap_or(fallback)
 }
@@ -216,14 +219,17 @@ fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: String) -> Strin
 fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_value("_to") {
+        .and_then(|it| match it.get_parameter_value("to") {
             Some(e) => Some(e),
-            None => it.get_parameter_value("to"),
+            None => it.get_parameter_value("_to"),
         })
         .unwrap_or(fallback)
 }
 
 fn check_sender_or_receiver(data_decoded: &Option<DataDecoded>, expected: &String) -> bool {
-    &get_from_param(data_decoded, "".to_owned()) == expected
+    if data_decoded.is_none() { return false };
+    let data = data_decoded.as_ref().unwrap();
+    data.method == TRANSFER_METHOD
+        || &get_from_param(data_decoded, "".to_owned()) == expected
         || &get_to_param(data_decoded, "".to_owned()) == expected
 }

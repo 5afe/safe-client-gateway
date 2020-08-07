@@ -130,6 +130,7 @@ pub fn get_transactions_details(
                 .get(3)
                 .ok_or(anyhow::anyhow!("No module tx details hash"))?,
         ),
-        &_ => Err(anyhow::anyhow!("Invalid details type")),
+        &_ => get_multisig_transaction_details(context, tx_type)
+            .map_err(|_| anyhow::anyhow!("Invalid details type or Id")),
     }
 }

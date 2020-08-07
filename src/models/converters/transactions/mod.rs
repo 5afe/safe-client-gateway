@@ -2,6 +2,8 @@ extern crate chrono;
 
 pub mod details;
 pub mod summary;
+
+#[cfg(test)]
 mod tests;
 
 use super::get_transfer_direction;

@@ -196,7 +196,7 @@ fn data_size(data: &Option<String>) -> String {
             let length = actual_data.len();
             match length {
                 0 => 0,
-                _ => (length - 2),
+                _ => (length - 2) / 2,
             }
         }
         None => 0,

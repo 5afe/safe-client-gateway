@@ -183,6 +183,7 @@ fn creation_transaction_to_summary() {
         factory_address: Some(factory_address.clone()),
         master_copy: Some(master_copy.clone()),
         setup_data: None,
+        data_decoded: None,
     };
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_CREATION_TX, safe_address),

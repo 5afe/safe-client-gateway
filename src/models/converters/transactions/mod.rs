@@ -125,7 +125,7 @@ impl MultisigTransaction {
                 value: self
                     .data_decoded
                     .as_ref()
-                    .and_then(|it| it.get_parameter_value("value"))
+                    .and_then(|it| it.get_parameter_single_value("value"))
                     .unwrap_or(String::from("0")),
             }),
         }
@@ -146,9 +146,9 @@ impl MultisigTransaction {
                 token_id: self
                     .data_decoded
                     .as_ref()
-                    .and_then(|it| match it.get_parameter_value("tokenId") {
+                    .and_then(|it| match it.get_parameter_single_value("tokenId") {
                         Some(e) => Some(e),
-                        None => it.get_parameter_value("value"),
+                        None => it.get_parameter_single_value("value"),
                     })
                     .unwrap_or(String::from("0")),
                 logo_uri: token.logo_uri.to_owned(),
@@ -209,9 +209,9 @@ fn data_size(data: &Option<String>) -> String {
 fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_value("from") {
+        .and_then(|it| match it.get_parameter_single_value("from") {
             Some(e) => Some(e),
-            None => it.get_parameter_value("_from"),
+            None => it.get_parameter_single_value("_from"),
         })
         .unwrap_or(fallback)
 }
@@ -219,9 +219,9 @@ fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: String) -> Strin
 fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_value("to") {
+        .and_then(|it| match it.get_parameter_single_value("to") {
             Some(e) => Some(e),
-            None => it.get_parameter_value("_to"),
+            None => it.get_parameter_single_value("_to"),
         })
         .unwrap_or(fallback)
 }

@@ -4,7 +4,7 @@ rust:
 cache: cargo
 env:
   global:
-  - DOCKERHUB_ORG=gnosis.pm
+  - DOCKERHUB_ORG=gnosispm
   - DOCKERHUB_PROJECT=safe-client-gateway
 services:
   - docker

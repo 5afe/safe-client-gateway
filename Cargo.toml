@@ -29,7 +29,9 @@ anyhow = "1.0"
 
 mockall = "0.7.2"
 
+# Logging
 log = "0.4"
+env_logger = "0.7.1"
 
 [dependencies.rocket_contrib]
 version = "0.4.5"

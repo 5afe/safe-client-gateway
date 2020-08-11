@@ -9,7 +9,7 @@ pub mod transactions;
 pub mod hooks;
 
 pub fn active_routes() -> Vec<Route> {
-    routes![about::info, transactions::details, transactions::all, hooks::update]
+    routes![about::backbone, about::info, transactions::details, transactions::all, hooks::update]
 }
 
 pub fn error_catchers() -> Vec<Catcher> {

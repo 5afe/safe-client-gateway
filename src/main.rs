@@ -1,6 +1,9 @@
 #![feature(proc_macro_hygiene, decl_macro, option_result_contains)]
 
 #[macro_use]
+extern crate log;
+
+#[macro_use]
 extern crate rocket;
 
 #[macro_use]
@@ -26,6 +29,7 @@ use crate::routes::error_catchers;
 
 fn main() {
     dotenv().ok();
+    env_logger::init();
     
     rocket::ignite()
         .mount("/", active_routes())

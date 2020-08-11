@@ -7,7 +7,8 @@ use crate::utils::cache::{ServiceCache};
 use crate::config::scheme;
 
 pub struct Context<'a, 'r> {
-    request: &'a Request<'r>
+    request: &'a Request<'r>,
+    cache: ServiceCache,
 }
 
 impl<'a, 'r> Context<'a, 'r> {
@@ -19,8 +20,8 @@ impl<'a, 'r> Context<'a, 'r> {
         self.get::<State<reqwest::blocking::Client>>().inner()
     }
 
-    pub fn cache(&self) -> ServiceCache {
-        self.get::<ServiceCache>()
+    pub fn cache(&self) -> &ServiceCache {
+        &self.cache
     }
 
     pub fn uri(&self) -> String {
@@ -42,6 +43,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for Context<'a, 'r> {
     type Error = ();
 
     fn from_request(request: &'a Request<'r>) -> request::Outcome<Self, Self::Error> {
-        return Outcome::Success(Context { request });
+        let cache = request.guard().unwrap();
+        return Outcome::Success(Context { request, cache });
     }
 }

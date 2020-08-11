@@ -18,7 +18,7 @@ pub trait InfoProvider {
 
 pub struct DefaultInfoProvider<'p> {
     client: &'p reqwest::blocking::Client,
-    cache: ServiceCache,
+    cache: &'p ServiceCache,
     safe_cache: HashMap<String, SafeInfo>,
     token_cache: HashMap<String, TokenInfo>,
 }

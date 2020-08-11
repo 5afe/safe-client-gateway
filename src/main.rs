@@ -1,6 +1,5 @@
 #![feature(proc_macro_hygiene, decl_macro, option_result_contains)]
 
-#[macro_use]
 extern crate log;
 
 #[macro_use]

@@ -5,7 +5,7 @@
 
 This project is a gateway between the Safe clients ([Android](https://github.com/gnosis/safe-android)/ [iOS](https://github.com/gnosis/safe-ios)/ [web](https://github.com/gnosis/safe-react)) and the Safe backend services ([transaction service](https://github.com/gnosis/safe-transaction-service) and Ethereum nodes). It is providing a more UI-oriented mapping and multi-sourced data structures for ease of integration and rendering.
 
-### Documentation
+## Documentation
 
 - [Client Gateway Wiki](https://github.com/gnosis/safe-client-gateway/wiki)
 - [Safe developer documentation](https://docs.gnosis.io/safe/)

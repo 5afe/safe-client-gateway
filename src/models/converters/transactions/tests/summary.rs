@@ -293,3 +293,42 @@ fn multisig_transaction_to_erc721_transfer_summary() {
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
+
+#[test]
+fn multisig_transaction_to_ether_transfer_summary() {
+    let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ETHER_TRANSFER).unwrap();
+    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(1)
+        .return_once(move |_| Ok(safe_info));
+    mock_info_provider
+        .expect_token_info()
+        .times(1) // isErc20 or isErc721 check requires the token to be checked, Question: why do we use MultisigTx.to for fetching the token info?
+        .return_once(move |_| Ok(token_info));
+
+    let expected = TransactionSummary {
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x6e631d27c638458329ba95cc17961e74b8146c46886545cd1984bb2bcf4eccd3"),
+        timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::Transfer(Transfer {
+            sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            direction: TransferDirection::Outgoing,
+            transfer_info: TransferInfo::Ether(EtherTransfer {
+                value: "100000000000000000".to_string()
+            }),
+        }),
+        execution_info: Some(ExecutionInfo {
+            nonce: 147,
+            confirmations_required: 2,
+            confirmations_submitted: 2,
+        }),
+    };
+
+    let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
+
+    assert_eq!(&expected, actual.unwrap().get(0).unwrap());
+}

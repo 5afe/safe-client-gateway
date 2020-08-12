@@ -2,11 +2,12 @@ use crate::models::converters::transactions::{data_size};
 use crate::models::backend::transactions::{Transaction as TransactionDto, ModuleTransaction, EthereumTransaction, CreationTransaction, MultisigTransaction};
 use crate::providers::info::*;
 use chrono::Utc;
-use crate::models::commons::Operation;
-use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_MULTISIG_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_CREATION_TX, ID_PREFIX_MODULE_TX, Transfer, TransferDirection, TransferInfo, EtherTransfer, Creation, Erc20Transfer, Erc721Transfer};
+use crate::models::commons::{Operation, DataDecoded, Parameter};
+use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_MULTISIG_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_CREATION_TX, ID_PREFIX_MODULE_TX, Transfer, TransferDirection, TransferInfo, EtherTransfer, Creation, Erc20Transfer, Erc721Transfer, SettingsChange};
 use crate::models::service::transactions::summary::{TransactionSummary, ExecutionInfo};
 use crate::utils::hex_hash;
 use crate::models::backend::transfers::{EtherTransfer as EtherTransferDto, Transfer as TransferDto};
+use crate::models::commons::ParamValue::SingleValue;
 
 #[test]
 fn data_size_calculation() {
@@ -324,6 +325,52 @@ fn multisig_transaction_to_ether_transfer_summary() {
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 147,
+            confirmations_required: 2,
+            confirmations_submitted: 2,
+        }),
+    };
+
+    let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
+
+    assert_eq!(&expected, actual.unwrap().get(0).unwrap());
+}
+
+#[test]
+fn multisig_transaction_to_setttins_change_summary() {
+    let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE).unwrap();
+    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(1)
+        .return_once(move |_| Ok(safe_info));
+    mock_info_provider
+        .expect_token_info()
+        .times(0);
+
+    let expected = TransactionSummary {
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x57d94fe21bbee8f6646c420ee23126cd1ba1b9a53a6c9b10099a043da8f32eea"),
+        timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::SettingsChange(SettingsChange {
+            data_decoded: DataDecoded {
+                method: "addOwnerWithThreshold".to_string(),
+                parameters: Some(vec!(
+                    Parameter {
+                        name: "owner".to_string(),
+                        param_type: "address".to_string(),
+                        value: SingleValue("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string()),
+                    },
+                    Parameter {
+                        name: "_threshold".to_string(),
+                        param_type: "uint256".to_string(),
+                        value: SingleValue("2".to_string()),
+                    })),
+            }
+        }),
+        execution_info: Some(ExecutionInfo {
+            nonce: 135,
             confirmations_required: 2,
             confirmations_submitted: 2,
         }),

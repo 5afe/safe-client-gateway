@@ -298,6 +298,7 @@ fn multisig_transaction_to_erc721_transfer_summary() {
 fn multisig_transaction_to_ether_transfer_summary() {
     let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ETHER_TRANSFER).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_CRYPTO_KITTIES).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider

@@ -299,7 +299,6 @@ fn multisig_transaction_to_erc721_transfer_summary() {
 fn multisig_transaction_to_ether_transfer_summary() {
     let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ETHER_TRANSFER).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
-    let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_CRYPTO_KITTIES).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -308,8 +307,8 @@ fn multisig_transaction_to_ether_transfer_summary() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
-        .times(1) // isErc20 or isErc721 check requires the token to be checked, Question: why do we use MultisigTx.to for fetching the token info?
-        .return_once(move |_| Ok(token_info));
+        .times(1)
+        .return_once(move |_| Err(anyhow::anyhow!("No token info")));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x6e631d27c638458329ba95cc17961e74b8146c46886545cd1984bb2bcf4eccd3"),
@@ -385,7 +384,6 @@ fn multisig_transaction_to_setttins_change_summary() {
 fn multisig_transaction_to_custom_summary() {
     let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CUSTOM).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
-    let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_CRYPTO_KITTIES).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -395,7 +393,7 @@ fn multisig_transaction_to_custom_summary() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_| Ok(token_info));
+        .return_once(move |_| Err(anyhow::anyhow!("No token info")));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621"),
@@ -404,7 +402,7 @@ fn multisig_transaction_to_custom_summary() {
         tx_info: TransactionInfo::Custom(Custom {
             to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
             data_size: "68".to_string(),
-            value: "0".to_string()
+            value: "0".to_string(),
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 84,

@@ -1,0 +1,91 @@
+{
+  "safe": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+  "to": "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF",
+  "value": "0",
+  "data": "0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e76443000000000000000000000000000000000000000000000000000000000000000524",
+  "operation": 0,
+  "gasToken": "0x0000000000000000000000000000000000000000",
+  "safeTxGas": 47810,
+  "baseGas": 0,
+  "gasPrice": "0",
+  "refundReceiver": "0x0000000000000000000000000000000000000000",
+  "nonce": 177,
+  "executionDate": "2020-08-07T09:04:14Z",
+  "submissionDate": "2020-08-07T07:20:33.720911Z",
+  "modified": "2020-08-07T07:20:33.720911Z",
+  "blockNumber": 6975696,
+  "transactionHash": "0xaed85c03ee20f4c3b76e6ebb46ceb8c8498a98c877089b870b421c8462ac5820",
+  "safeTxHash": "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603",
+  "executor": "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd",
+  "isExecuted": true,
+  "isSuccessful": true,
+  "ethGasPrice": "1000000000",
+  "gasUsed": 80507,
+  "fee": "80507000000000",
+  "origin": null,
+  "dataDecoded": {
+    "method": "transfer",
+    "parameters": [
+      {
+        "name": "to",
+        "type": "address",
+        "value": "0x938bae50a210b80EA233112800Cd5Bc2e7644300"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "value": "1316"
+      }
+    ]
+  },
+  "confirmationsRequired": 3,
+  "confirmations": [
+    {
+      "owner": "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23",
+      "submissionDate": "2020-08-07T07:20:33.735857Z",
+      "transactionHash": null,
+      "confirmationType": "CONFIRMATION",
+      "signature": "0x55e23dbe4136564b32e9c4f0963459c9317f13fe01d6f76cdf6da053211bd2e46edc38aa07373736af12e3a8021317a9f22e1707f62bd947a704fd0d3e4c17d11c",
+      "signatureType": "EOA"
+    },
+    {
+      "owner": "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0",
+      "submissionDate": "2020-08-07T08:54:31.475781Z",
+      "transactionHash": null,
+      "confirmationType": "CONFIRMATION",
+      "signature": "0x76419e64fba1bebc7aaaf350a9b5018c7a50ea559394871a249ce850c39cd489743bd1b720c557ea56136eed572aaebbd511f8aaf06ca517d8e43b148f88892b1b",
+      "signatureType": "EOA"
+    },
+    {
+      "owner": "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd",
+      "submissionDate": "2020-08-07T09:04:41.000194Z",
+      "transactionHash": null,
+      "confirmationType": "CONFIRMATION",
+      "signature": "0x000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001",
+      "signatureType": "APPROVED_HASH"
+    }
+  ],
+  "signatures": "0x76419e64fba1bebc7aaaf350a9b5018c7a50ea559394871a249ce850c39cd489743bd1b720c557ea56136eed572aaebbd511f8aaf06ca517d8e43b148f88892b1b55e23dbe4136564b32e9c4f0963459c9317f13fe01d6f76cdf6da053211bd2e46edc38aa07373736af12e3a8021317a9f22e1707f62bd947a704fd0d3e4c17d11c000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001",
+  "transfers": [
+    {
+      "type": "ERC721_TRANSFER",
+      "executionDate": "2020-08-07T09:04:14Z",
+      "blockNumber": 6975696,
+      "transactionHash": "0xaed85c03ee20f4c3b76e6ebb46ceb8c8498a98c877089b870b421c8462ac5820",
+      "to": "0x938bae50a210b80EA233112800Cd5Bc2e7644300",
+      "value": null,
+      "tokenId": "1316",
+      "tokenAddress": "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF",
+      "tokenInfo": {
+        "type": "ERC721",
+        "address": "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF",
+        "name": "CryptoKitties",
+        "symbol": "CK",
+        "decimals": 0,
+        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png"
+      },
+      "from": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b"
+    }
+  ],
+  "txType": "MULTISIG_TRANSACTION"
+}

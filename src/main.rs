@@ -20,6 +20,9 @@ mod models;
 mod utils;
 mod providers;
 
+#[cfg(test)]
+mod json;
+
 use dotenv::dotenv;
 use utils::cache::{ServiceCache};
 use utils::cors::{CORS};

@@ -30,7 +30,7 @@ impl Transaction {
 }
 
 impl MultisigTransaction {
-    fn to_transaction_summary(
+    pub(super) fn to_transaction_summary(
         &self,
         info_provider: &mut dyn InfoProvider,
     ) -> Result<Vec<TransactionSummary>> {

@@ -1,0 +1,8 @@
+{
+  "type": "ERC20",
+  "address": "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02",
+  "name": "Compound USDT",
+  "symbol": "USDT",
+  "decimals": 18,
+  "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png"
+}

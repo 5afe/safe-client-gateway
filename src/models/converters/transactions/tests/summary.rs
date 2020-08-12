@@ -3,7 +3,7 @@ use crate::models::backend::transactions::{Transaction as TransactionDto, Module
 use crate::providers::info::*;
 use chrono::Utc;
 use crate::models::commons::Operation;
-use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_MULTISIG_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_CREATION_TX, ID_PREFIX_MODULE_TX, Transfer, TransferDirection, TransferInfo, EtherTransfer, Creation, Erc20Transfer};
+use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_MULTISIG_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_CREATION_TX, ID_PREFIX_MODULE_TX, Transfer, TransferDirection, TransferInfo, EtherTransfer, Creation, Erc20Transfer, Erc721Transfer};
 use crate::models::service::transactions::summary::{TransactionSummary, ExecutionInfo};
 use crate::utils::hex_hash;
 use crate::models::backend::transfers::{EtherTransfer as EtherTransferDto, Transfer as TransferDto};
@@ -240,6 +240,50 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 178,
+            confirmations_required: 3,
+            confirmations_submitted: 3,
+        }),
+    };
+
+    let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
+
+    assert_eq!(&expected, actual.unwrap().get(0).unwrap());
+}
+
+#[test]
+fn multisig_transaction_to_erc721_transfer_summary() {
+    let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER).unwrap();
+    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_CRYPTO_KITTIES).unwrap();
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(1)
+        .return_once(move |_| Ok(safe_info));
+    mock_info_provider
+        .expect_token_info()
+        .times(1)
+        .return_once(move |_| Ok(token_info));
+
+    let expected = TransactionSummary {
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"),
+        timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::Transfer(Transfer {
+            sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            direction: TransferDirection::Outgoing,
+            transfer_info: TransferInfo::Erc721(Erc721Transfer {
+                token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
+                token_id: "1316".to_string(),
+                token_name: Some("CryptoKitties".to_string()),
+                token_symbol: Some("CK".to_string()),
+                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string()),
+            }),
+        }),
+        execution_info: Some(ExecutionInfo {
+            nonce: 177,
             confirmations_required: 3,
             confirmations_submitted: 3,
         }),

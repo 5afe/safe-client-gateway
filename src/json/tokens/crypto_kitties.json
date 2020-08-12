@@ -1,0 +1,8 @@
+{
+  "type": "ERC721",
+  "address": "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF",
+  "name": "CryptoKitties",
+  "symbol": "CK",
+  "decimals": 0,
+  "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png"
+}

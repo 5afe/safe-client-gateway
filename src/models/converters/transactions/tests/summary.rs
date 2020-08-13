@@ -335,7 +335,7 @@ fn multisig_transaction_to_ether_transfer_summary() {
 }
 
 #[test]
-fn multisig_transaction_to_setttins_change_summary() {
+fn multisig_transaction_to_settings_change_summary() {
     let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
 

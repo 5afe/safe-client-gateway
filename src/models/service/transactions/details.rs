@@ -2,7 +2,7 @@ use serde::Serialize;
 use super::*;
 use crate::models::commons::{Operation, DataDecoded};
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionDetails {
     pub executed_at: Option<i64>,
@@ -13,14 +13,14 @@ pub struct TransactionDetails {
     pub tx_hash: Option<String>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum DetailedExecutionInfo {
     Multisig(MultisigExecutionDetails),
     Module(ModuleExecutionDetails),
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigExecutionDetails {
     pub submitted_at: i64,
@@ -31,20 +31,20 @@ pub struct MultisigExecutionDetails {
     pub confirmations: Vec<MultisigConfirmation>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigConfirmation {
     pub signer: String,
     pub signature: Option<String>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleExecutionDetails {
     pub address: String,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionData {
     pub hex_data: Option<String>,

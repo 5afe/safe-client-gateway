@@ -67,7 +67,7 @@ impl EthereumTransaction {
                     id: create_id!(
                         ID_PREFIX_ETHEREUM_TX,
                         safe,
-                        self.block_number,
+                        self.tx_hash,
                         hex_hash(transfer)
                     ),
                     timestamp: self.execution_date.timestamp_millis(),
@@ -87,7 +87,7 @@ impl ModuleTransaction {
             id: create_id!(
                 ID_PREFIX_MODULE_TX,
                 self.safe,
-                self.block_number,
+                self.transaction_hash,
                 hex_hash(self)
             ),
             timestamp: self.execution_date.timestamp_millis(),

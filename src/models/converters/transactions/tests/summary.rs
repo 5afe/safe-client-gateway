@@ -55,7 +55,7 @@ fn module_tx_to_summary_transaction() {
             id: create_id!(
                 ID_PREFIX_MODULE_TX,
                 module_tx.safe,
-                module_tx.block_number,
+                module_tx.transaction_hash,
                 hex_hash(&module_tx)
             ),
             timestamp: expected_date_in_millis,
@@ -131,7 +131,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
             id: create_id!(
                     ID_PREFIX_ETHEREUM_TX,
                     safe_address,
-                    ethereum_tx.block_number,
+                    ethereum_tx.tx_hash,
                     hex_hash(&ethereum_tx.transfers.as_ref().unwrap().get(0).unwrap())
                 ),
             timestamp: timestamp_millis,
@@ -150,7 +150,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
             id: create_id!(
                     ID_PREFIX_ETHEREUM_TX,
                     safe_address,
-                    ethereum_tx.block_number,
+                    ethereum_tx.tx_hash,
                     hex_hash(&ethereum_tx.transfers.as_ref().unwrap().get(1).unwrap())
                 ),
             timestamp: timestamp_millis,

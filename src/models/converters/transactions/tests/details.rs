@@ -56,6 +56,7 @@ fn multisig_custom_transaction_to_transaction_details() {
                 submitted_at: multisig_tx.submission_date.timestamp_millis(),
                 nonce: 84,
                 safe_tx_hash: "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621".to_string(),
+                executor: Some("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string()),
                 signers: vec![
                     String::from("0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"),
                     String::from("0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"),

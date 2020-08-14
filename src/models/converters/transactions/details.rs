@@ -33,6 +33,7 @@ impl MultisigTransaction {
                     submitted_at: self.submission_date.timestamp_millis(),
                     nonce: self.nonce,
                     safe_tx_hash: self.safe_tx_hash.to_owned(),
+                    executor: self.executor.to_owned(),
                     signers: safe_info.owners,
                     confirmations_required: self
                         .confirmations_required

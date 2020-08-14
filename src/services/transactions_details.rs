@@ -37,15 +37,15 @@ fn get_multisig_transaction_details(
 fn get_ethereum_transaction_details(
     context: &Context,
     safe: &str,
-    block_number: u64,
+    tx_hash: &str,
     detail_hash: &str,
 ) -> Result<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
-        "{}/safes/{}/transfers/?block_number={}&limit=1000",
+        "{}/safes/{}/transfers/?transaction_hash={}&limit=1000",
         base_transaction_service_url(),
         safe,
-        block_number
+        tx_hash
     );
     debug!("url: {}", url);
     let body = context
@@ -70,14 +70,14 @@ fn get_ethereum_transaction_details(
 fn get_module_transaction_details(
     context: &Context,
     safe: &str,
-    block_number: u64,
+    tx_hash: &str,
     detail_hash: &str,
 ) -> Result<TransactionDetails> {
     let url = format!(
-        "{}/safes/{}/module-transactions/?block_number={}&limit=1000",
+        "{}/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
         base_transaction_service_url(),
         safe,
-        block_number
+        tx_hash
     );
     debug!("url: {}", url);
     let body = context
@@ -113,8 +113,7 @@ pub fn get_transactions_details(
             id_parts.get(1).ok_or(anyhow::anyhow!("No safe address"))?,
             id_parts
                 .get(2)
-                .ok_or(anyhow::anyhow!("No module tx block"))?
-                .parse()?,
+                .ok_or(anyhow::anyhow!("No module tx hash"))?,
             id_parts
                 .get(3)
                 .ok_or(anyhow::anyhow!("No module tx details hash"))?,
@@ -124,8 +123,7 @@ pub fn get_transactions_details(
             id_parts.get(1).ok_or(anyhow::anyhow!("No safe address"))?,
             id_parts
                 .get(2)
-                .ok_or(anyhow::anyhow!("No module tx block"))?
-                .parse()?,
+                .ok_or(anyhow::anyhow!("No module tx hash"))?,
             id_parts
                 .get(3)
                 .ok_or(anyhow::anyhow!("No module tx details hash"))?,

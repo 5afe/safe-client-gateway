@@ -26,6 +26,7 @@ pub struct MultisigExecutionDetails {
     pub submitted_at: i64,
     pub nonce: u64,
     pub safe_tx_hash: String,
+    pub executor: Option<String>,
     pub signers: Vec<String>,
     pub confirmations_required: u64,
     pub confirmations: Vec<MultisigConfirmation>,

@@ -57,9 +57,12 @@ impl ServiceCache {
         let data: String = match self.fetch(&url) {
             Some(cached) => cached,
             None => {
-                let response = client.get(url).send()?.text()?;
-                self.create(&url, &response, timeout);
-                response
+                let response = client.get(url).send()?;
+                // Don't cache if it is a Server error
+                 if response.status().is_server_error() { anyhow::bail!("Got server error for {}", url); };
+                let raw_data = response.text()?;
+                self.create(&url, &raw_data, timeout);
+                raw_data
             }
         };
         Ok(data)

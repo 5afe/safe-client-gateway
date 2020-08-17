@@ -9,8 +9,8 @@ env:
 services:
   - docker
 script:
-  - cargo build --verbose --all
-  - cargo test --verbose --all
+  - cargo build --verbose --all --locked
+  - cargo test --verbose --all --locked
 deploy:
   - provider: script
     script: bash scripts/deploy_docker.sh staging

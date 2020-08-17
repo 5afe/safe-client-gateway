@@ -33,6 +33,7 @@ fn multisig_custom_transaction_to_transaction_details() {
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000")),
             data_decoded: Some(DataDecoded {
+                data_decoded: None,
                 method: "approve".to_string(),
                 parameters: Some(vec![
                     Parameter {

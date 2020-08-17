@@ -13,6 +13,8 @@ pub enum Operation {
 pub struct DataDecoded {
     pub method: String,
     pub parameters: Option<Vec<Parameter>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub data_decoded: Option<Box<DataDecoded>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]

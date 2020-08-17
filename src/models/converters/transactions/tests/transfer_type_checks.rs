@@ -16,6 +16,7 @@ fn multisig_tx_check_erc721_transfer() {
         value: Some(String::from("0")),
         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e76443000000000000000000000000000000000000000000000000000000000000000466")),
         data_decoded: Some(DataDecoded {
+            data_decoded: None,
             method: String::from("transfer"),
             parameters: Some(vec!(
                 Parameter { name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300").into() },
@@ -92,6 +93,7 @@ fn multisig_tx_check_erc20_transfer() {
         value: Some(String::from("0")),
         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000002d79883d2000")),
         data_decoded: Some(DataDecoded {
+            data_decoded: None,
             method: String::from("transfer"),
             parameters: Some(vec!(
                 Parameter { name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300").into() },

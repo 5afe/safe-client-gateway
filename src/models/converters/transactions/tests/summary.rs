@@ -354,6 +354,7 @@ fn multisig_transaction_to_settings_change_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::SettingsChange(SettingsChange {
             data_decoded: DataDecoded {
+                data_decoded: None,
                 method: "addOwnerWithThreshold".to_string(),
                 parameters: Some(vec!(
                     Parameter {

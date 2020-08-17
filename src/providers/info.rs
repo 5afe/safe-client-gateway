@@ -19,8 +19,8 @@ pub trait InfoProvider {
 pub struct DefaultInfoProvider<'p> {
     client: &'p reqwest::blocking::Client,
     cache: &'p ServiceCache,
-    safe_cache: HashMap<String, SafeInfo>,
-    token_cache: HashMap<String, TokenInfo>,
+    safe_cache: HashMap<String, Option<SafeInfo>>,
+    token_cache: HashMap<String, Option<TokenInfo>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -76,7 +76,7 @@ impl DefaultInfoProvider<'_> {
 
     fn cached<T>(
         &mut self,
-        local_cache: impl Fn(&mut Self) -> &mut HashMap<String, T>,
+        local_cache: impl Fn(&mut Self) -> &mut HashMap<String, Option<T>>,
         url: impl Into<String>,
     ) -> Result<T>
         where
@@ -84,14 +84,14 @@ impl DefaultInfoProvider<'_> {
     {
         let url = url.into();
         match local_cache(self).get(&url) {
-            Some(value) => Ok(value.clone()),
+            Some(value) => value.clone().ok_or(anyhow::anyhow!("Could not decode cached")),
             None => {
                 let data =
                     self.cache
                         .request_cached(self.client, &url, info_cache_duration())?;
-                let value: T = serde_json::from_str(&data)?;
+                let value: Option<T> = serde_json::from_str(&data).unwrap_or(None);
                 local_cache(self).insert(url, value.clone());
-                Ok(value)
+                value.ok_or(anyhow::anyhow!("Could not decode response"))
             }
         }
     }

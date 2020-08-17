@@ -16,6 +16,7 @@ fn deserialise_params_value_as_string() {
         name: "_threshold".to_string(),
         param_type: "uint256".to_string(),
         value: "2".to_string().into(),
+        value_decoded: None,
     };
 
     assert!(actual.is_ok());
@@ -40,6 +41,7 @@ fn deserialise_params_value_as_array() {
     let expected = Parameter {
         name: "_owners".to_string(),
         param_type: "address[]".to_string(),
+        value_decoded: None,
         value: ParamValue::ArrayValue(
             vec!(
                 "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string().into(),

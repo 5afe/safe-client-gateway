@@ -33,18 +33,19 @@ fn multisig_custom_transaction_to_transaction_details() {
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000")),
             data_decoded: Some(DataDecoded {
-                data_decoded: None,
                 method: "approve".to_string(),
                 parameters: Some(vec![
                     Parameter {
                         name: "spender".to_string(),
                         param_type: "address".to_string(),
                         value: SingleValue(String::from("0xae9844F89D98c150F5e61bfC676D68b492155990")),
+                        value_decoded: None,
                     },
                     Parameter {
                         name: "value".to_string(),
                         param_type: "uint256".to_string(),
                         value: SingleValue(String::from("500000000000000")),
+                        value_decoded: None,
                     }
                 ]),
             }),

@@ -10,3 +10,5 @@ pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transact
 
 pub const TOKEN_USDT: &str = include_str!("tokens/USDT.json");
 pub const TOKEN_CRYPTO_KITTIES: &str = include_str!("tokens/crypto_kitties.json");
+
+pub const DATA_DECODED_MULTI_SEND: &str = include_str!("commons/data_decoded_multi_send.json");

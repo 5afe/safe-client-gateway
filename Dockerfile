@@ -12,7 +12,8 @@ WORKDIR "/app"
 # Cache dependencies
 RUN cargo init
 COPY Cargo.toml Cargo.toml
-RUN cargo build --release
+COPY Cargo.lock Cargo.lock
+RUN cargo build --release --locked
 
 COPY . .
 
@@ -20,7 +21,7 @@ ARG VERSION
 ARG BUILD_NUMBER
 # Remove fingerprint of app to force recompile (without dependency recompile)
 RUN rm -rf target/release/.fingerprint/safe-client-gateway*
-RUN cargo build --release
+RUN cargo build --release --locked
 
 # Image Stage
 FROM debian:buster-slim

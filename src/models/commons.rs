@@ -24,7 +24,7 @@ pub struct Parameter {
     pub value: ParamValue,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename(deserialize = "decodedValue"))]
-    pub value_decoded: Option<Vec<ValueDecoded>>,
+    pub value_decoded: Option<Vec<InternalTransaction>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
@@ -36,12 +36,12 @@ pub enum ParamValue {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct ValueDecoded {
-    pub operation: String, //TODO use operation, usually this is received as 0 or 1 but here it is `CALL`, etc. as a string
+pub struct InternalTransaction {
+    pub operation: String,
     pub to: String,
     pub value: Option<u64>,
     pub data: Option<String>,
-    #[serde(rename(deserialize = "decodedData"))] //TODO maybe we can also open an issue for this to have names consistent across structs
+    #[serde(rename(deserialize = "decodedData"))]
     pub data_decoded: Option<DataDecoded>,
 }
 

@@ -22,6 +22,9 @@ pub struct Parameter {
     #[serde(rename = "type")]
     pub param_type: String,
     pub value: ParamValue,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename(deserialize = "decodedValue"))]
+    pub value_decoded: Option<Vec<InternalTransaction>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
@@ -29,6 +32,17 @@ pub struct Parameter {
 pub enum ParamValue {
     SingleValue(String),
     ArrayValue(Vec<ParamValue>),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct InternalTransaction {
+    pub operation: String,
+    pub to: String,
+    pub value: Option<u64>,
+    pub data: Option<String>,
+    #[serde(rename(deserialize = "decodedData"))]
+    pub data_decoded: Option<DataDecoded>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

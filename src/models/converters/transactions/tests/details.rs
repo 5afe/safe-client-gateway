@@ -39,11 +39,13 @@ fn multisig_custom_transaction_to_transaction_details() {
                         name: "spender".to_string(),
                         param_type: "address".to_string(),
                         value: SingleValue(String::from("0xae9844F89D98c150F5e61bfC676D68b492155990")),
+                        value_decoded: None,
                     },
                     Parameter {
                         name: "value".to_string(),
                         param_type: "uint256".to_string(),
                         value: SingleValue(String::from("500000000000000")),
+                        value_decoded: None,
                     }
                 ]),
             }),

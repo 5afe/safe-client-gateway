@@ -360,11 +360,13 @@ fn multisig_transaction_to_settings_change_summary() {
                         name: "owner".to_string(),
                         param_type: "address".to_string(),
                         value: SingleValue("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string()),
+                        value_decoded: None,
                     },
                     Parameter {
                         name: "_threshold".to_string(),
                         param_type: "uint256".to_string(),
                         value: SingleValue("2".to_string()),
+                        value_decoded: None,
                     })),
             }
         }),

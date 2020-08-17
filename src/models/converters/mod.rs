@@ -5,9 +5,12 @@ pub mod data_decoded;
 #[cfg(test)]
 mod tests;
 
+#[cfg(test)]
+mod tests;
+
 use crate::models::service::transactions::TransferDirection;
 
-fn get_transfer_direction(safe: &String, from: &String, to: &String) -> TransferDirection {
+pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> TransferDirection {
     if safe == from {
         TransferDirection::Outgoing
     } else if safe == to {

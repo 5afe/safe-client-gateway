@@ -142,7 +142,7 @@ impl Erc721TransferDto {
 }
 
 impl EtherTransferDto {
-    fn to_transfer_transaction(&self, safe: &String) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(&self, safe: &str) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -173,7 +173,7 @@ fn token_info_with_fallback<T>(
             } else {
                 None
             }
-        },
+        }
         Err(_) => None,
     }
 }

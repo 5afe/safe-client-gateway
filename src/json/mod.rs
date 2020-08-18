@@ -8,6 +8,8 @@ pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json")
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
+pub const ETHER_TRANSFER: &str = include_str!("transfers/ether_transfer.json");
+
 pub const TOKEN_USDT: &str = include_str!("tokens/USDT.json");
 pub const TOKEN_CRYPTO_KITTIES: &str = include_str!("tokens/crypto_kitties.json");
 

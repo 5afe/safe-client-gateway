@@ -85,7 +85,14 @@ pub struct EtherTransfer {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct SettingsChange {
-    pub data_decoded: DataDecoded
+    pub data_decoded: DataDecoded,
+    pub settings_info: SettingsInfo,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum SettingsInfo {
+
 }
 
 #[derive(Serialize, Debug, PartialEq)]

@@ -12,3 +12,11 @@ pub const TOKEN_USDT: &str = include_str!("tokens/USDT.json");
 pub const TOKEN_CRYPTO_KITTIES: &str = include_str!("tokens/crypto_kitties.json");
 
 pub const DATA_DECODED_MULTI_SEND: &str = include_str!("commons/data_decoded_multi_send.json");
+pub const DATA_DECODED_ADD_OWNER_WITH_THRESHOLD: &str = include_str!("commons/data_decoded_add_owner_with_threshold.json");
+pub const DATA_DECODED_CHANGE_MASTER_COPY: &str = include_str!("commons/data_decoded_change_master_copy.json");
+pub const DATA_DECODED_CHANGE_THRESHOLD: &str = include_str!("commons/data_decoded_change_threshold.json");
+pub const DATA_DECODED_DISABLE_MODULE: &str = include_str!("commons/data_decoded_disable_module.json");
+pub const DATA_DECODED_ENABLE_MODULE: &str = include_str!("commons/data_decoded_enable_module.json");
+pub const DATA_DECODED_REMOVE_OWNER: &str = include_str!("commons/data_decoded_remove_owner.json");
+pub const DATA_DECODED_SET_FALLBACK_HANDLER: &str = include_str!("commons/data_decoded_set_fallback_handler.json");
+pub const DATA_DECODED_SWAP_OWNER: &str = include_str!("commons/data_decoded_swap_owner.json");

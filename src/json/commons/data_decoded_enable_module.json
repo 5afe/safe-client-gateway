@@ -1,0 +1,10 @@
+{
+  "method": "enableModule",
+  "parameters": [
+    {
+      "name": "module",
+      "type": "address",
+      "value": "0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d"
+    }
+  ]
+}

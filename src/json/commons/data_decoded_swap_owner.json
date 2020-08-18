@@ -1,0 +1,20 @@
+{
+  "method": "swapOwner",
+  "parameters": [
+    {
+      "name": "prevOwner",
+      "type": "address",
+      "value": "0x0000000000000000000000000000000000000001"
+    },
+    {
+      "name": "oldOwner",
+      "type": "address",
+      "value": "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"
+    },
+    {
+      "name": "newOwner",
+      "type": "address",
+      "value": "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"
+    }
+  ]
+}

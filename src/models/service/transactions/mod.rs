@@ -91,8 +91,16 @@ pub struct SettingsChange {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[serde(tag = "type")]
 pub enum SettingsInfo {
-
+    SetFallbackHandler { handler: String },
+    AddOwnerWithThreshold { owner: String, threshold: u64 },
+    RemoveOwner { prev_owner: String, owner: String, threshold: u64 },
+    SwapOwner { prev_owner: String, old_owner: String, new_owner: String },
+    ChangeThreshold { threshold: u64 },
+    ChangeMasterCopy { master_copy: String },
+    EnableModule { module: String },
+    DisableModule { prev_module: String, module: String },
 }
 
 #[derive(Serialize, Debug, PartialEq)]

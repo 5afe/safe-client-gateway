@@ -194,7 +194,7 @@ fn creation_transaction_to_summary() {
             Creation {
                 creator: creator,
                 transaction_hash: transaction_hash,
-                master_copy: Some(master_copy),
+                implementation: Some(master_copy),
                 factory: Some(factory_address),
             }
         ),

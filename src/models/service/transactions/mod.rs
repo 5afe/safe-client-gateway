@@ -101,6 +101,6 @@ pub struct Custom {
 pub struct Creation {
     pub creator: String,
     pub transaction_hash: String,
-    pub master_copy: Option<String>,
+    pub implementation: Option<String>,
     pub factory: Option<String>,
 }

@@ -170,7 +170,7 @@ impl MultisigTransaction {
     fn to_settings_change(&self) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
-            settings_info: self.data_decoded.as_ref().unwrap().to_settings_info(),
+            settings_info: self.data_decoded.as_ref().and_then(|it| it.to_settings_info()),
         }
     }
 

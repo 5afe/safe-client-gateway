@@ -93,14 +93,40 @@ pub struct SettingsChange {
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "type")]
 pub enum SettingsInfo {
-    SetFallbackHandler { handler: String },
-    AddOwnerWithThreshold { owner: String, threshold: u64 },
-    RemoveOwner { prev_owner: String, owner: String, threshold: u64 },
-    SwapOwner { prev_owner: String, old_owner: String, new_owner: String },
-    ChangeThreshold { threshold: u64 },
-    ChangeMasterCopy { master_copy: String },
-    EnableModule { module: String },
-    DisableModule { prev_module: String, module: String },
+    SetFallbackHandler {
+        handler: String
+    },
+    AddOwnerWithThreshold {
+        owner: String,
+        threshold: u64,
+    },
+    RemoveOwner {
+        #[serde(skip_serializing)]
+        prev_owner: String,
+        owner: String,
+        threshold: u64,
+    },
+    SwapOwner {
+        #[serde(skip_serializing)]
+        prev_owner: String,
+        old_owner: String,
+        new_owner: String,
+    },
+    ChangeThreshold {
+        threshold: u64
+    },
+    ChangeImplementation {
+        implementation: String
+    },
+    EnableModule {
+        module: String
+    },
+    DisableModule {
+        #[serde(skip_serializing)]
+        prev_module: String,
+        module: String,
+    },
+    Unknown,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

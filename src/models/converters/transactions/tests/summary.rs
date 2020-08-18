@@ -353,10 +353,10 @@ fn multisig_transaction_to_settings_change_summary() {
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::SettingsChange(SettingsChange {
-            settings_info: SettingsInfo::AddOwnerWithThreshold {
+            settings_info: Some(SettingsInfo::AddOwner {
                 owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
                 threshold: 2,
-            },
+            }),
             data_decoded: DataDecoded {
                 method: "addOwnerWithThreshold".to_string(),
                 parameters: Some(vec!(

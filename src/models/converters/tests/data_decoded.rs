@@ -7,9 +7,9 @@ fn data_decoded_set_fallback_handler_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::SetFallbackHandler {
+        settings_info: Some(SettingsInfo::SetFallbackHandler {
             handler: "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44".to_string(),
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -23,10 +23,10 @@ fn data_decoded_add_owner_with_threshold_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::AddOwnerWithThreshold {
+        settings_info: Some(SettingsInfo::AddOwner {
             owner: "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23".to_string(),
             threshold: 1,
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -40,11 +40,10 @@ fn data_decoded_remove_owner_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::RemoveOwner {
-            prev_owner: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
+        settings_info: Some(SettingsInfo::RemoveOwner {
             owner: "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string(),
             threshold: 2,
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -58,11 +57,10 @@ fn data_decoded_swap_owner_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::SwapOwner {
-            prev_owner: "0x0000000000000000000000000000000000000001".to_string(),
+        settings_info: Some(SettingsInfo::SwapOwner {
             old_owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
             new_owner: "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string(),
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -76,9 +74,9 @@ fn data_decoded_change_threshold_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::ChangeThreshold {
+        settings_info: Some(SettingsInfo::ChangeThreshold {
             threshold: 2
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -92,9 +90,9 @@ fn data_decoded_change_implementation_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::ChangeImplementation {
+        settings_info: Some(SettingsInfo::ChangeImplementation {
             implementation: "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string()
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -108,9 +106,9 @@ fn data_decoded_enable_module_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::EnableModule {
+        settings_info: Some(SettingsInfo::EnableModule {
             module: "0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d".to_string()
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -124,10 +122,9 @@ fn data_decoded_disable_module_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::DisableModule {
-            prev_module: "0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d".to_string(),
+        settings_info: Some(SettingsInfo::DisableModule {
             module: "0x25F73b24B866963B0e560fFF9bbA7908be0263E8".to_string(),
-        },
+        }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -141,7 +138,7 @@ fn data_decoded_unknown_to_settings_info() {
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: SettingsInfo::Unknown,
+        settings_info: None,
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);

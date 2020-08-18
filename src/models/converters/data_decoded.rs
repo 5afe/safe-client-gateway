@@ -6,48 +6,48 @@ impl DataDecoded {
         match self.method.as_str() {
             "setFallbackHandler" => {
                 SettingsInfo::SetFallbackHandler {
-                    handler: self.get_parameter_single_value("handler").unwrap()
+                    handler: self.get_parameter_single_value_at(0).unwrap()
                 }
             }
             "addOwnerWithThreshold" => {
                 SettingsInfo::AddOwnerWithThreshold {
-                    owner: self.get_parameter_single_value("owner").unwrap(),
-                    threshold: self.get_parameter_single_value("_threshold").unwrap().parse().unwrap(),
+                    owner: self.get_parameter_single_value_at(0).unwrap(),
+                    threshold: self.get_parameter_single_value_at(1).unwrap().parse().unwrap(),
                 }
             }
             "removeOwner" => {
                 SettingsInfo::RemoveOwner {
-                    prev_owner: self.get_parameter_single_value("prevOwner").unwrap(),
-                    owner: self.get_parameter_single_value("owner").unwrap(),
-                    threshold: self.get_parameter_single_value("_threshold").unwrap().parse().unwrap(),
+                    prev_owner: self.get_parameter_single_value_at(0).unwrap(),
+                    owner: self.get_parameter_single_value_at(1).unwrap(),
+                    threshold: self.get_parameter_single_value_at(2).unwrap().parse().unwrap(),
                 }
             }
             "swapOwner" => {
                 SettingsInfo::SwapOwner {
-                    prev_owner: self.get_parameter_single_value("prevOwner").unwrap(),
-                    new_owner: self.get_parameter_single_value("newOwner").unwrap(),
-                    old_owner: self.get_parameter_single_value("oldOwner").unwrap(),
+                    prev_owner: self.get_parameter_single_value_at(0).unwrap(),
+                    old_owner: self.get_parameter_single_value_at(1).unwrap(),
+                    new_owner: self.get_parameter_single_value_at(2).unwrap(),
                 }
             }
             "changeThreshold" => {
                 SettingsInfo::ChangeThreshold {
-                    threshold: self.get_parameter_single_value("_threshold").unwrap().parse().unwrap(),
+                    threshold: self.get_parameter_single_value_at(0).unwrap().parse().unwrap(),
                 }
             }
             "changeMasterCopy" => {
                 SettingsInfo::ChangeImplementation {
-                    implementation: self.get_parameter_single_value("_masterCopy").unwrap(),
+                    implementation: self.get_parameter_single_value_at(0).unwrap(),
                 }
             }
             "enableModule" => {
                 SettingsInfo::EnableModule {
-                    module: self.get_parameter_single_value("module").unwrap()
+                    module: self.get_parameter_single_value_at(0).unwrap()
                 }
             }
             "disableModule" => {
                 SettingsInfo::DisableModule {
-                    prev_module: self.get_parameter_single_value("prevModule").unwrap(),
-                    module: self.get_parameter_single_value("module").unwrap(),
+                    prev_module: self.get_parameter_single_value_at(0).unwrap(),
+                    module: self.get_parameter_single_value_at(1).unwrap(),
                 }
             }
             _ => {

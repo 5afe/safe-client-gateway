@@ -25,12 +25,24 @@ impl DataDecoded {
         self.parameters.as_ref()?.iter()
             .find_map(|param| {
                 match &param.value {
-                    ParamValue::SingleValue (value) => {
+                    ParamValue::SingleValue(value) => {
                         if param.name == some_name { Some(value.clone()) } else { None }
                     }
                     _ => None
                 }
             })
+    }
+
+    pub fn get_parameter_single_value_at(&self, position: usize) -> Option<String> {
+        self.parameters.as_ref().and_then(|parameters|
+            parameters.get(position).and_then(|parameter|
+                match &parameter.value {
+                    ParamValue::SingleValue(value) => {
+                        Some(value.clone())
+                    }
+                    _ => None
+                }
+            ))
     }
 
     pub fn is_erc20_transfer_method(&self) -> bool {

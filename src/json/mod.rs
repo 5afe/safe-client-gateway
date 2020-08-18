@@ -20,3 +20,4 @@ pub const DATA_DECODED_ENABLE_MODULE: &str = include_str!("commons/data_decoded_
 pub const DATA_DECODED_REMOVE_OWNER: &str = include_str!("commons/data_decoded_remove_owner.json");
 pub const DATA_DECODED_SET_FALLBACK_HANDLER: &str = include_str!("commons/data_decoded_set_fallback_handler.json");
 pub const DATA_DECODED_SWAP_OWNER: &str = include_str!("commons/data_decoded_swap_owner.json");
+pub const DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE: &str = include_str!("commons/data_decoded_exec_transaction_from_module.json");

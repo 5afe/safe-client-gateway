@@ -136,4 +136,15 @@ fn data_decoded_disable_module_to_settings_info() {
 }
 
 #[test]
-fn data_decoded_unknown_to_settings_info() {}
+fn data_decoded_unknown_to_settings_info() {
+    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE).unwrap();
+
+    let expected = SettingsChange {
+        data_decoded: data_decoded.clone(),
+        settings_info: SettingsInfo::Unknown,
+    };
+
+    let actual = DataDecoded::to_settings_info(&data_decoded);
+
+    assert_eq!(expected.settings_info, actual);
+}

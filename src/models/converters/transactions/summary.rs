@@ -108,7 +108,7 @@ impl CreationTransaction {
                 Creation {
                     creator: self.creator.clone(),
                     transaction_hash: self.transaction_hash.clone(),
-                    master_copy: self.master_copy.clone(),
+                    implementation: self.master_copy.clone(),
                     factory: self.factory_address.clone(),
                 }
             ),

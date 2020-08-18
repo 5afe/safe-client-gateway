@@ -10,17 +10,17 @@ use crate::providers::info::DefaultInfoProvider;
 use anyhow::Result;
 use log::debug;
 
-pub fn get_all_transactions(context: &Context, safe_address: &String, next: &Option<String>) -> Result<Page<TransactionSummary>> {
+pub fn get_all_transactions(context: &Context, safe_address: &String, page_url: &Option<String>) -> Result<Page<TransactionSummary>> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
         "{}/safes/{}/all-transactions/?{}",
         base_transaction_service_url(),
         safe_address,
-        next.as_ref().unwrap_or(&String::new())
+        page_url.as_ref().unwrap_or(&String::new())
     );
     let body = context.cache().request_cached(&context.client(), &url, request_cache_duration())?;
     debug!("request URL: {}", &url);
-    debug!("next: {:#?}", next);
+    debug!("page_url: {:#?}", page_url);
     debug!("{:#?}", body);
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions.results.into_iter()

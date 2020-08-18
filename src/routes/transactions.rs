@@ -5,10 +5,10 @@ use crate::services::transactions_list;
 use rocket::response::content;
 use anyhow::Result;
 
-#[get("/v1/safes/<safe_address>/transactions?<next>")]
-pub fn all(context: Context, safe_address: String, next: Option<String>) -> Result<content::Json<String>> {
+#[get("/v1/safes/<safe_address>/transactions?<page_url>")]
+pub fn all(context: Context, safe_address: String, page_url: Option<String>) -> Result<content::Json<String>> {
     context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
-        transactions_list::get_all_transactions(&context, &safe_address, &next)
+        transactions_list::get_all_transactions(&context, &safe_address, &page_url)
     })
 }
 

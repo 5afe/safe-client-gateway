@@ -1,0 +1,15 @@
+{
+  "method": "addOwnerWithThreshold",
+  "parameters": [
+    {
+      "name": "owner",
+      "type": "address",
+      "value": "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"
+    },
+    {
+      "name": "_threshold",
+      "type": "uint256",
+      "value": "1"
+    }
+  ]
+}

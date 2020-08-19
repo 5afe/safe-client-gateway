@@ -85,7 +85,41 @@ pub struct EtherTransfer {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct SettingsChange {
-    pub data_decoded: DataDecoded
+    pub data_decoded: DataDecoded,
+    pub settings_info: Option<SettingsInfo>,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+#[serde(tag = "type")]
+pub enum SettingsInfo {
+    SetFallbackHandler {
+        handler: String
+    },
+    AddOwner {
+        owner: String,
+        threshold: u64,
+    },
+    RemoveOwner {
+        owner: String,
+        threshold: u64,
+    },
+    SwapOwner {
+        old_owner: String,
+        new_owner: String,
+    },
+    ChangeThreshold {
+        threshold: u64
+    },
+    ChangeImplementation {
+        implementation: String
+    },
+    EnableModule {
+        module: String
+    },
+    DisableModule {
+        module: String,
+    },
 }
 
 #[derive(Serialize, Debug, PartialEq)]

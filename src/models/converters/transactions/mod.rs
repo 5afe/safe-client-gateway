@@ -64,30 +64,30 @@ impl MultisigTransaction {
     fn is_erc20_transfer(&self, token: &Option<TokenInfo>) -> bool {
         self.operation.contains(&Operation::CALL)
             && token
-                .as_ref()
-                .and_then(|t| Some(matches!(t.token_type, TokenType::Erc20)))
-                .unwrap_or(false)
+            .as_ref()
+            .and_then(|t| Some(matches!(t.token_type, TokenType::Erc20)))
+            .unwrap_or(false)
             && self.data_decoded.is_some()
             && self
-                .data_decoded
-                .as_ref()
-                .unwrap()
-                .is_erc20_transfer_method()
+            .data_decoded
+            .as_ref()
+            .unwrap()
+            .is_erc20_transfer_method()
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
     }
 
     fn is_erc721_transfer(&self, token: &Option<TokenInfo>) -> bool {
         self.operation.contains(&Operation::CALL)
             && token
-                .as_ref()
-                .and_then(|t| Some(matches!(t.token_type, TokenType::Erc721)))
-                .unwrap_or(false)
+            .as_ref()
+            .and_then(|t| Some(matches!(t.token_type, TokenType::Erc721)))
+            .unwrap_or(false)
             && self.data_decoded.is_some()
             && self
-                .data_decoded
-                .as_ref()
-                .unwrap()
-                .is_erc721_transfer_method()
+            .data_decoded
+            .as_ref()
+            .unwrap()
+            .is_erc721_transfer_method()
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
     }
 
@@ -95,10 +95,10 @@ impl MultisigTransaction {
         self.operation.contains(&Operation::CALL)
             && self.data.is_none()
             && self
-                .value
-                .as_ref()
-                .and_then(|v| Some(v.parse::<u128>().unwrap_or(0) > 0))
-                .unwrap_or(false)
+            .value
+            .as_ref()
+            .and_then(|v| Some(v.parse::<u128>().unwrap_or(0) > 0))
+            .unwrap_or(false)
     }
 
     fn is_settings_change(&self) -> bool {
@@ -170,6 +170,7 @@ impl MultisigTransaction {
     fn to_settings_change(&self) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
+            settings_info: self.data_decoded.as_ref().and_then(|it| it.to_settings_info()),
         }
     }
 
@@ -202,8 +203,7 @@ fn data_size(data: &Option<String>) -> String {
             }
         }
         None => 0,
-    }
-    .to_string()
+    }.to_string()
 }
 
 fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {
@@ -227,7 +227,7 @@ fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String 
 }
 
 fn check_sender_or_receiver(data_decoded: &Option<DataDecoded>, expected: &String) -> bool {
-    if data_decoded.is_none() { return false };
+    if data_decoded.is_none() { return false; };
     let data = data_decoded.as_ref().unwrap();
     data.method == TRANSFER_METHOD
         || &get_from_param(data_decoded, "".to_owned()) == expected

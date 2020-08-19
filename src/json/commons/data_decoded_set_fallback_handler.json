@@ -1,0 +1,10 @@
+{
+  "method": "setFallbackHandler",
+  "parameters": [
+    {
+      "name": "handler",
+      "type": "address",
+      "value": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44"
+    }
+  ]
+}

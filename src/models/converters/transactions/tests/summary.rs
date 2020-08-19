@@ -3,7 +3,7 @@ use crate::models::backend::transactions::{Transaction as TransactionDto, Module
 use crate::providers::info::*;
 use chrono::Utc;
 use crate::models::commons::{Operation, DataDecoded, Parameter};
-use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_MULTISIG_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_CREATION_TX, ID_PREFIX_MODULE_TX, Transfer, TransferDirection, TransferInfo, EtherTransfer, Creation, Erc20Transfer, Erc721Transfer, SettingsChange};
+use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom, ID_PREFIX_MULTISIG_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_CREATION_TX, ID_PREFIX_MODULE_TX, Transfer, TransferDirection, TransferInfo, EtherTransfer, Creation, Erc20Transfer, Erc721Transfer, SettingsChange, SettingsInfo};
 use crate::models::service::transactions::summary::{TransactionSummary, ExecutionInfo};
 use crate::utils::hex_hash;
 use crate::models::backend::transfers::{EtherTransfer as EtherTransferDto, Transfer as TransferDto};
@@ -353,6 +353,10 @@ fn multisig_transaction_to_settings_change_summary() {
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::SettingsChange(SettingsChange {
+            settings_info: Some(SettingsInfo::AddOwner {
+                owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
+                threshold: 2,
+            }),
             data_decoded: DataDecoded {
                 method: "addOwnerWithThreshold".to_string(),
                 parameters: Some(vec!(
@@ -368,7 +372,7 @@ fn multisig_transaction_to_settings_change_summary() {
                         value: SingleValue("2".to_string()),
                         value_decoded: None,
                     })),
-            }
+            },
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 135,

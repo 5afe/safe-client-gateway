@@ -90,7 +90,7 @@ pub struct SettingsChange {
 }
 
 #[derive(Serialize, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[serde(tag = "type")]
 pub enum SettingsInfo {
     SetFallbackHandler {
@@ -104,6 +104,7 @@ pub enum SettingsInfo {
         owner: String,
         threshold: u64,
     },
+    #[serde(rename_all = "camelCase")]
     SwapOwner {
         old_owner: String,
         new_owner: String,

@@ -11,14 +11,24 @@ pub mod cache;
 pub const TRANSFER_METHOD: &str = "transfer";
 pub const ERC20_TRANSFER_METHODS: &[&str] = &[TRANSFER_METHOD, "transferFrom"];
 pub const ERC721_TRANSFER_METHODS: &[&str] = &[TRANSFER_METHOD, "transferFrom", "safeTransferFrom"];
-pub const SETTINGS_CHANGE_METHODS: &[&str] = &["setFallbackHandler",
-    "addOwnerWithThreshold",
-    "removeOwner",
-    "swapOwner",
-    "changeThreshold",
-    "changeMasterCopy",
-    "enableModule",
-    "disableModule"];
+
+pub const SET_FALLBACK_HANDLER: &'static str = "setFallbackHandler";
+pub const ADD_OWNER_WITH_THRESHOLD: &'static str = "addOwnerWithThreshold";
+pub const REMOVE_OWNER: &'static str = "removeOwner";
+pub const SWAP_OWNER: &'static str = "swapOwner";
+pub const CHANGE_THRESHOLD: &'static str = "changeThreshold";
+pub const CHANGE_MASTER_COPY: &'static str = "changeMasterCopy";
+pub const ENABLE_MODULE: &'static str = "enableModule";
+pub const DISABLE_MODULE: &'static str = "disableModule";
+pub const SETTINGS_CHANGE_METHODS: &[&str] = &[
+    SET_FALLBACK_HANDLER,
+    ADD_OWNER_WITH_THRESHOLD,
+    REMOVE_OWNER,
+    SWAP_OWNER,
+    CHANGE_THRESHOLD,
+    CHANGE_MASTER_COPY,
+    ENABLE_MODULE,
+    DISABLE_MODULE];
 
 impl DataDecoded {
     pub fn get_parameter_single_value(&self, some_name: &str) -> Option<String> {

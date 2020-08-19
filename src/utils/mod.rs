@@ -6,6 +6,7 @@ use rocket::http::uri::Absolute;
 pub mod cors;
 pub mod context;
 pub mod cache;
+pub mod json;
 
 //TODO think of a better impl, using enums as per Nick's suggestion
 pub const TRANSFER_METHOD: &str = "transfer";

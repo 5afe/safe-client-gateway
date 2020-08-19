@@ -1,0 +1,65 @@
+{
+  "method": "execTransaction",
+  "parameters": [
+    {
+      "name": "to",
+      "type": "address",
+      "value": "0x441E604Ad49602c0B9C0B08D0781eCF96740786a"
+    },
+    {
+      "name": "value",
+      "type": "uint256",
+      "value": "0"
+    },
+    {
+      "name": "data",
+      "type": "bytes",
+      "value": "0x610b592500000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f",
+      "decodedValue": {
+        "method": "enableModule",
+        "parameters": [
+          {
+            "name": "module",
+            "type": "address",
+            "value": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
+          }
+        ]
+      }
+    },
+    {
+      "name": "operation",
+      "type": "uint8",
+      "value": "0"
+    },
+    {
+      "name": "safeTxGas",
+      "type": "uint256",
+      "value": "53036"
+    },
+    {
+      "name": "baseGas",
+      "type": "uint256",
+      "value": "0"
+    },
+    {
+      "name": "gasPrice",
+      "type": "uint256",
+      "value": "0"
+    },
+    {
+      "name": "gasToken",
+      "type": "address",
+      "value": "0x0000000000000000000000000000000000000000"
+    },
+    {
+      "name": "refundReceiver",
+      "type": "address",
+      "value": "0x0000000000000000000000000000000000000000"
+    },
+    {
+      "name": "signatures",
+      "type": "bytes",
+      "value": "0x0000000000000000000000000e24b6e3beff0b44b773f068343bc2cb56cb37690000000000000000000000000000000000000000000000000000000000000000017e86d3185b70c297e33c7691d537fb9f11601ceb3a34f3c7b50fc7a3086380451c0924eac2e1bdd9cab77a96ced513f4c9df0432a19e9b61859261cdfb7dd6b41b"
+    }
+  ]
+}

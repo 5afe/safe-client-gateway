@@ -1,5 +1,6 @@
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde::{Deserialize, Serialize};
+use crate::utils::json;
 
 #[derive(Serialize_repr, Deserialize_repr, PartialEq, Debug, Clone, Copy, Hash)]
 #[repr(u8)]
@@ -23,8 +24,10 @@ pub struct Parameter {
     pub param_type: String,
     pub value: ParamValue,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(deserialize_with = "json::try_deserialize")]
+    #[serde(default)]
     #[serde(rename(deserialize = "decodedValue"))]
-    pub value_decoded: Option<Vec<InternalTransaction>>,
+    pub value_decoded: Option<ValueDecodedType>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
@@ -32,6 +35,12 @@ pub struct Parameter {
 pub enum ParamValue {
     SingleValue(String),
     ArrayValue(Vec<ParamValue>),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
+#[serde(untagged)]
+pub enum ValueDecodedType {
+    InternalTransaction(Vec<InternalTransaction>),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]

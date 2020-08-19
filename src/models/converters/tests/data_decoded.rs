@@ -1,4 +1,4 @@
-use crate::models::commons::DataDecoded;
+use crate::models::commons::{DataDecoded, Parameter, ParamValue};
 use crate::models::service::transactions::{SettingsChange, SettingsInfo};
 
 #[test]
@@ -144,4 +144,79 @@ fn data_decoded_unknown_to_settings_info() {
     let actual = DataDecoded::to_settings_info(&data_decoded);
 
     assert_eq!(expected.settings_info, actual);
+}
+
+#[test]
+fn data_decoded_with_nested_safe_transaction() {
+    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED).unwrap();
+
+
+    println!("{:#?}", data_decoded);
+    let expected = DataDecoded {
+        method: "execTransaction".to_string(),
+        parameters: Some(vec![
+            Parameter {
+                name: "to".to_string(),
+                param_type: "address".to_string(),
+                value: ParamValue::SingleValue("0x441E604Ad49602c0B9C0B08D0781eCF96740786a".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "value".to_string(),
+                param_type: "uint256".to_string(),
+                value: ParamValue::SingleValue("0".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "data".to_string(),
+                param_type: "bytes".to_string(),
+                value: ParamValue::SingleValue("0x610b592500000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f".to_string()),
+                value_decoded: None
+            },
+            Parameter {
+                name: "operation".to_string(),
+                param_type: "uint8".to_string(),
+                value: ParamValue::SingleValue("0".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "safeTxGas".to_string(),
+                param_type: "uint256".to_string(),
+                value: ParamValue::SingleValue("53036".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "baseGas".to_string(),
+                param_type: "uint256".to_string(),
+                value: ParamValue::SingleValue("0".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "gasPrice".to_string(),
+                param_type: "uint256".to_string(),
+                value: ParamValue::SingleValue("0".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "gasToken".to_string(),
+                param_type: "address".to_string(),
+                value: ParamValue::SingleValue("0x0000000000000000000000000000000000000000".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "refundReceiver".to_string(),
+                param_type: "address".to_string(),
+                value: ParamValue::SingleValue("0x0000000000000000000000000000000000000000".to_string()),
+                value_decoded: None,
+            },
+            Parameter {
+                name: "signatures".to_string(),
+                param_type: "bytes".to_string(),
+                value: ParamValue::SingleValue("0x0000000000000000000000000e24b6e3beff0b44b773f068343bc2cb56cb37690000000000000000000000000000000000000000000000000000000000000000017e86d3185b70c297e33c7691d537fb9f11601ceb3a34f3c7b50fc7a3086380451c0924eac2e1bdd9cab77a96ced513f4c9df0432a19e9b61859261cdfb7dd6b41b".to_string()),
+                value_decoded: None,
+            },
+        ]),
+    };
+
+    assert_eq!(expected, data_decoded);
 }

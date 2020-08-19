@@ -45,7 +45,8 @@ impl MultisigTransaction {
                         .into_iter()
                         .map(|confirmation| MultisigConfirmation {
                             signer: confirmation.owner.to_owned(),
-                            signature: confirmation.signature.to_owned()
+                            signature: confirmation.signature.to_owned(),
+                            submission_time: confirmation.submission_date.timestamp_millis(),
                         })
                         .collect(),
                 },

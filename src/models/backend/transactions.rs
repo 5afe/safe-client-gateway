@@ -83,7 +83,7 @@ pub struct ModuleTransaction {
 #[serde(rename_all = "camelCase")]
 pub struct Confirmation {
     pub owner: String,
-    pub submission_date: Option<DateTime<Utc>>,
+    pub submission_date: DateTime<Utc>,
     pub transaction_hash: Option<String>,
     pub signature_type: String,
     pub signature: Option<String>,

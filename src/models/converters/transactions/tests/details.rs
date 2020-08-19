@@ -72,12 +72,12 @@ fn multisig_custom_transaction_to_transaction_details() {
                     MultisigConfirmation {
                         signer: String::from("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
                         signature: Some(String::from("0x83b1506c409918f21031e93ed2f62310a5e0c05b1be89242a6a266a7de4af7bc6094e206b33387b8d4465af6087a4d2158815e613aeb186d88d9a1973e00bbe81b")),
-                        submission_time: timestamp_confirmation0,
+                        submitted_at: timestamp_confirmation0,
                     },
                     MultisigConfirmation {
                         signer: String::from("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"),
                         signature: Some(String::from("0x000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001")),
-                        submission_time: timestamp_confirmation1,
+                        submitted_at: timestamp_confirmation1,
                     },
                 ],
             })),

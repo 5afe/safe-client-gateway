@@ -37,6 +37,7 @@ pub struct MultisigExecutionDetails {
 pub struct MultisigConfirmation {
     pub signer: String,
     pub signature: Option<String>,
+    pub submission_time: Option<i64>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

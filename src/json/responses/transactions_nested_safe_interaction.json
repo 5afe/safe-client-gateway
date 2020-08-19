@@ -1,0 +1,122 @@
+{
+  "count": 416,
+  "next": "https://safe-transaction.staging.gnosisdev.com/api/v1/safes/0x441E604Ad49602c0B9C0B08D0781eCF96740786a/all-transactions/?limit=1&offset=13",
+  "previous": "https://safe-transaction.staging.gnosisdev.com/api/v1/safes/0x441E604Ad49602c0B9C0B08D0781eCF96740786a/all-transactions/?limit=1&offset=11",
+  "results": [
+    {
+      "safe": "0x441E604Ad49602c0B9C0B08D0781eCF96740786a",
+      "to": "0x441E604Ad49602c0B9C0B08D0781eCF96740786a",
+      "value": "0",
+      "data": "0x6a761202000000000000000000000000441e604ad49602c0b9c0b08d0781ecf96740786a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000cf2c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001a00000000000000000000000000000000000000000000000000000000000000024610b592500000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000820000000000000000000000000e24b6e3beff0b44b773f068343bc2cb56cb37690000000000000000000000000000000000000000000000000000000000000000017e86d3185b70c297e33c7691d537fb9f11601ceb3a34f3c7b50fc7a3086380451c0924eac2e1bdd9cab77a96ced513f4c9df0432a19e9b61859261cdfb7dd6b41b000000000000000000000000000000000000000000000000000000000000",
+      "operation": 0,
+      "gasToken": "0x0000000000000000000000000000000000000000",
+      "safeTxGas": 0,
+      "baseGas": 0,
+      "gasPrice": "0",
+      "refundReceiver": "0x0000000000000000000000000000000000000000",
+      "nonce": 252,
+      "executionDate": "2020-07-17T14:19:59Z",
+      "submissionDate": "2020-07-17T14:16:58.666649Z",
+      "modified": "2020-07-17T14:16:58.666649Z",
+      "blockNumber": 6856004,
+      "transactionHash": "0x29ec39bfdabe77b087ff218f592b73d3866485b8dd3896b2f186a1f801a0f5da",
+      "safeTxHash": "0xc095e260ccedb79b5de0372ee17b03cf48d1b1b424bb7277bfcd52ddd27aeaaf",
+      "executor": "0x19433c47bF16f0D6E14Ff68ec4f5fafA2d9C8756",
+      "isExecuted": true,
+      "isSuccessful": false,
+      "ethGasPrice": "1000000000",
+      "gasUsed": 61096,
+      "fee": "61096000000000",
+      "origin": null,
+      "dataDecoded": {
+        "method": "execTransaction",
+        "parameters": [
+          {
+            "name": "to",
+            "type": "address",
+            "value": "0x441E604Ad49602c0B9C0B08D0781eCF96740786a"
+          },
+          {
+            "name": "value",
+            "type": "uint256",
+            "value": "0"
+          },
+          {
+            "name": "data",
+            "type": "bytes",
+            "value": "0x610b592500000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f",
+            "decodedValue": {
+              "method": "enableModule",
+              "parameters": [
+                {
+                  "name": "module",
+                  "type": "address",
+                  "value": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
+                }
+              ]
+            }
+          },
+          {
+            "name": "operation",
+            "type": "uint8",
+            "value": "0"
+          },
+          {
+            "name": "safeTxGas",
+            "type": "uint256",
+            "value": "53036"
+          },
+          {
+            "name": "baseGas",
+            "type": "uint256",
+            "value": "0"
+          },
+          {
+            "name": "gasPrice",
+            "type": "uint256",
+            "value": "0"
+          },
+          {
+            "name": "gasToken",
+            "type": "address",
+            "value": "0x0000000000000000000000000000000000000000"
+          },
+          {
+            "name": "refundReceiver",
+            "type": "address",
+            "value": "0x0000000000000000000000000000000000000000"
+          },
+          {
+            "name": "signatures",
+            "type": "bytes",
+            "value": "0x0000000000000000000000000e24b6e3beff0b44b773f068343bc2cb56cb37690000000000000000000000000000000000000000000000000000000000000000017e86d3185b70c297e33c7691d537fb9f11601ceb3a34f3c7b50fc7a3086380451c0924eac2e1bdd9cab77a96ced513f4c9df0432a19e9b61859261cdfb7dd6b41b"
+          }
+        ]
+      },
+      "confirmationsRequired": 2,
+      "confirmations": [
+        {
+          "owner": "0x19433c47bF16f0D6E14Ff68ec4f5fafA2d9C8756",
+          "submissionDate": "2020-07-17T14:20:18.542814Z",
+          "transactionHash": null,
+          "confirmationType": "CONFIRMATION",
+          "signature": "0x00000000000000000000000019433c47bf16f0d6e14ff68ec4f5fafa2d9c8756000000000000000000000000000000000000000000000000000000000000000001",
+          "signatureType": "APPROVED_HASH"
+        },
+        {
+          "owner": "0x0E24B6e3BefF0b44b773F068343Bc2CB56cB3769",
+          "submissionDate": "2020-07-17T14:16:58.678378Z",
+          "transactionHash": null,
+          "confirmationType": "CONFIRMATION",
+          "signature": "0x008b169af6b7f9f44785286c2baa1c88f4f8013d137c967d518a9743e34358a16c4b37112e45200edd1511d41019f0f3e98883854b315b76647a46e2293afca61c",
+          "signatureType": "EOA"
+        }
+      ],
+      "signatures": "0x008b169af6b7f9f44785286c2baa1c88f4f8013d137c967d518a9743e34358a16c4b37112e45200edd1511d41019f0f3e98883854b315b76647a46e2293afca61c00000000000000000000000019433c47bf16f0d6e14ff68ec4f5fafa2d9c8756000000000000000000000000000000000000000000000000000000000000000001",
+      "transfers": [
+        
+      ],
+      "txType": "MULTISIG_TRANSACTION"
+    }
+  ]
+}

@@ -14,6 +14,8 @@ pub const ERC_721_TRANSFER: &str = include_str!("transfers/erc_721_transfer.json
 
 pub const TOKEN_USDT: &str = include_str!("tokens/usdt.json");
 pub const TOKEN_CRYPTO_KITTIES: &str = include_str!("tokens/crypto_kitties.json");
+pub const TOKEN_DAT: &str = include_str!("tokens/dai.json");
+pub const TOKEN_PV_MEMORIAL_TOKEN: &str = include_str!("tokens/pv_memorial_token.json");
 
 pub const DATA_DECODED_MULTI_SEND: &str = include_str!("commons/data_decoded_multi_send.json");
 pub const DATA_DECODED_ADD_OWNER_WITH_THRESHOLD: &str = include_str!("commons/data_decoded_add_owner_with_threshold.json");

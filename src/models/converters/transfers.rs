@@ -45,7 +45,7 @@ impl TransferDto {
         })
     }
 
-    fn get_execution_time(&self) -> Option<i64> {
+    pub(super) fn get_execution_time(&self) -> Option<i64> {
         match self {
             TransferDto::Erc721(transfer) => Some(transfer.execution_date.timestamp_millis()),
             TransferDto::Erc20(transfer) => Some(transfer.execution_date.timestamp_millis()),
@@ -54,7 +54,7 @@ impl TransferDto {
         }
     }
 
-    fn get_transaction_hash(&self) -> Option<String> {
+    pub(super) fn get_transaction_hash(&self) -> Option<String> {
         match self {
             TransferDto::Erc721(transfer) => Some(transfer.transaction_hash.to_owned()),
             TransferDto::Erc20(transfer) => Some(transfer.transaction_hash.to_owned()),
@@ -151,7 +151,7 @@ impl EtherTransferDto {
         }
     }
 
-    fn to_transfer_info(&self) -> TransferInfo {
+    pub(super) fn to_transfer_info(&self) -> TransferInfo {
         TransferInfo::Ether(EtherTransfer {
             value: self.value.clone(),
         })

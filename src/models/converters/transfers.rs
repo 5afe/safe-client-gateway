@@ -65,7 +65,7 @@ impl TransferDto {
 }
 
 impl Erc20TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -74,7 +74,7 @@ impl Erc20TransferDto {
         }
     }
 
-    fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
+    pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info = self.get_token_info(info_provider);
         let info_ref = token_info.as_ref();
         TransferInfo::Erc20(Erc20Transfer {

@@ -15,7 +15,7 @@ use crate::providers::info::{
 use anyhow::Result;
 
 impl TransferDto {
-    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> TransactionInfo {
+    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> TransactionInfo {
         match self {
             TransferDto::Erc721(transfer) => {
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))

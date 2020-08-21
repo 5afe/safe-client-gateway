@@ -105,7 +105,7 @@ impl Erc20TransferDto {
 }
 
 impl Erc721TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -114,7 +114,7 @@ impl Erc721TransferDto {
         }
     }
 
-    fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
+    pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info = self.get_token_info(info_provider);
         let info_ref = token_info.as_ref();
         TransferInfo::Erc721(Erc721Transfer {
@@ -126,7 +126,7 @@ impl Erc721TransferDto {
         })
     }
 
-    fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc721TokenInfo> {
+    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc721TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,

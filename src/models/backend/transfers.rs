@@ -15,7 +15,7 @@ pub enum Transfer {
     Unknown,
 }
 
-#[derive(Derivative, Deserialize, Debug, Clone)]
+#[derive(Derivative, Deserialize, Debug, PartialEq, Clone)]
 #[derivative(Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc721Transfer {
@@ -30,7 +30,7 @@ pub struct Erc721Transfer {
     pub from: String,
 }
 
-#[derive(Deserialize, Debug, Hash, Clone)]
+#[derive(Deserialize, Debug, Hash, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc721TokenInfo {
     pub name: String,

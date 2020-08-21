@@ -87,7 +87,7 @@ impl Erc20TransferDto {
         })
     }
 
-    fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc20TokenInfo> {
+    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc20TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,

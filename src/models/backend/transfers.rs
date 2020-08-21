@@ -53,7 +53,7 @@ pub struct Erc20Transfer {
     pub from: String,
 }
 
-#[derive(Deserialize, Debug, Hash, Clone)]
+#[derive(Deserialize, Debug, Hash, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc20TokenInfo {
     pub address: String,

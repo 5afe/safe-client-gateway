@@ -40,7 +40,7 @@ pub struct SafeInfo {
     pub owners: Vec<String>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenInfo {
     #[serde(rename = "type")]

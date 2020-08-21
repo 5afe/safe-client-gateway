@@ -14,7 +14,7 @@ fn erc721_transfer_dto_get_token_info_unavailable() {}
 
 #[test]
 fn erc721_transfer_dto_get_transaction_hash() {
-    let ether_transfer_dto = TransferDto::Erc721(serde_json::from_str::<Erc721Transfer>(crate::json::ERC_721_TRANSFER).unwrap());
+    let ether_transfer_dto = TransferDto::Erc721(serde_json::from_str::<Erc721Transfer>(crate::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO).unwrap());
 
     let actual = TransferDto::get_transaction_hash(&ether_transfer_dto);
 
@@ -23,7 +23,7 @@ fn erc721_transfer_dto_get_transaction_hash() {
 
 #[test]
 fn erc721_transfer_dto_get_execution_time() {
-    let ether_transfer_dto = TransferDto::Erc721(serde_json::from_str::<Erc721Transfer>(crate::json::ERC_721_TRANSFER).unwrap());
+    let ether_transfer_dto = TransferDto::Erc721(serde_json::from_str::<Erc721Transfer>(crate::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO).unwrap());
 
     let actual = TransferDto::get_execution_time(&ether_transfer_dto);
 

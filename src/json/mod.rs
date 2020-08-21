@@ -9,12 +9,14 @@ pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
 pub const ETHER_TRANSFER: &str = include_str!("transfers/ether_transfer.json");
-pub const ERC_20_TRANSFER: &str = include_str!("transfers/erc_20_transfer.json");
-pub const ERC_721_TRANSFER: &str = include_str!("transfers/erc_721_transfer.json");
+pub const ERC_20_TRANSFER_WITHOUT_TOKEN_INFO: &str = include_str!("transfers/erc_20_transfer_without_token_info.json");
+pub const ERC_20_TRANSFER_WITH_TOKEN_INFO: &str = include_str!("transfers/erc_20_transfer_with_token_info.json");
+pub const ERC_721_TRANSFER_WITHOUT_TOKEN_INFO: &str = include_str!("transfers/erc_721_transfer_without_token_info.json");
+pub const ERC_721_TRANSFER_WITH_TOKEN_INFO: &str = include_str!("transfers/erc_721_transfer_with_token_info.json");
 
 pub const TOKEN_USDT: &str = include_str!("tokens/usdt.json");
 pub const TOKEN_CRYPTO_KITTIES: &str = include_str!("tokens/crypto_kitties.json");
-pub const TOKEN_DAT: &str = include_str!("tokens/dai.json");
+pub const TOKEN_DAI: &str = include_str!("tokens/dai.json");
 pub const TOKEN_PV_MEMORIAL_TOKEN: &str = include_str!("tokens/pv_memorial_token.json");
 
 pub const DATA_DECODED_MULTI_SEND: &str = include_str!("commons/data_decoded_multi_send.json");

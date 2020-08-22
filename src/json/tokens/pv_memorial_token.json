@@ -1,0 +1,8 @@
+{
+  "type": "ERC721",
+  "address": "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98",
+  "name": "PV Memorial Token",
+  "symbol": "PVT",
+  "decimals": 0,
+  "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png"
+}

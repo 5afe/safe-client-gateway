@@ -15,7 +15,7 @@ use crate::providers::info::{
 use anyhow::Result;
 
 impl TransferDto {
-    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> TransactionInfo {
+    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> TransactionInfo {
         match self {
             TransferDto::Erc721(transfer) => {
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
@@ -33,7 +33,7 @@ impl TransferDto {
     pub fn to_transaction_details(
         &self,
         info_provider: &mut dyn InfoProvider,
-        safe: &String,
+        safe: &str,
     ) -> Result<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),
@@ -45,7 +45,7 @@ impl TransferDto {
         })
     }
 
-    fn get_execution_time(&self) -> Option<i64> {
+    pub(super) fn get_execution_time(&self) -> Option<i64> {
         match self {
             TransferDto::Erc721(transfer) => Some(transfer.execution_date.timestamp_millis()),
             TransferDto::Erc20(transfer) => Some(transfer.execution_date.timestamp_millis()),
@@ -54,7 +54,7 @@ impl TransferDto {
         }
     }
 
-    fn get_transaction_hash(&self) -> Option<String> {
+    pub(super) fn get_transaction_hash(&self) -> Option<String> {
         match self {
             TransferDto::Erc721(transfer) => Some(transfer.transaction_hash.to_owned()),
             TransferDto::Erc20(transfer) => Some(transfer.transaction_hash.to_owned()),
@@ -65,7 +65,7 @@ impl TransferDto {
 }
 
 impl Erc20TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -74,7 +74,7 @@ impl Erc20TransferDto {
         }
     }
 
-    fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
+    pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info = self.get_token_info(info_provider);
         let info_ref = token_info.as_ref();
         TransferInfo::Erc20(Erc20Transfer {
@@ -87,7 +87,7 @@ impl Erc20TransferDto {
         })
     }
 
-    fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc20TokenInfo> {
+    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc20TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
@@ -105,7 +105,7 @@ impl Erc20TransferDto {
 }
 
 impl Erc721TransferDto {
-    fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &String) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -114,7 +114,7 @@ impl Erc721TransferDto {
         }
     }
 
-    fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
+    pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info = self.get_token_info(info_provider);
         let info_ref = token_info.as_ref();
         TransferInfo::Erc721(Erc721Transfer {
@@ -126,7 +126,7 @@ impl Erc721TransferDto {
         })
     }
 
-    fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc721TokenInfo> {
+    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc721TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
@@ -142,7 +142,7 @@ impl Erc721TransferDto {
 }
 
 impl EtherTransferDto {
-    fn to_transfer_transaction(&self, safe: &String) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(&self, safe: &str) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -151,7 +151,7 @@ impl EtherTransferDto {
         }
     }
 
-    fn to_transfer_info(&self) -> TransferInfo {
+    pub(super) fn to_transfer_info(&self) -> TransferInfo {
         TransferInfo::Ether(EtherTransfer {
             value: self.value.clone(),
         })
@@ -173,7 +173,7 @@ fn token_info_with_fallback<T>(
             } else {
                 None
             }
-        },
+        }
         Err(_) => None,
     }
 }

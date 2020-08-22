@@ -33,7 +33,7 @@ impl TransferDto {
     pub fn to_transaction_details(
         &self,
         info_provider: &mut dyn InfoProvider,
-        safe: &String,
+        safe: &str,
     ) -> Result<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),

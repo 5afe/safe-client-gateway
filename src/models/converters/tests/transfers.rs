@@ -1,6 +1,7 @@
 use crate::models::backend::transfers::{EtherTransfer as EtherTransferDto, Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto, Transfer as TransferDto};
-use crate::models::service::transactions::{TransferInfo, TransactionInfo, TransferDirection, EtherTransfer, Transfer, Erc20Transfer, Erc721Transfer};
+use crate::models::service::transactions::{TransferInfo, TransactionInfo, TransferDirection, EtherTransfer, Transfer, Erc20Transfer, Erc721Transfer, TransactionStatus};
 use crate::providers::info::*;
+use crate::models::service::transactions::details::TransactionDetails;
 
 #[test]
 fn erc_20_transfer_dto_to_transaction_info() {
@@ -132,4 +133,35 @@ fn unknown_transfer_dto_get_transaction_hash() {
 }
 
 #[test]
-fn transfer_dto_to_transaction_details() {}
+fn transfer_dto_to_transaction_details() {
+    let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
+    let ether_transfer_dto = TransferDto::Ether(serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap());
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(0);
+    mock_info_provider
+        .expect_token_info()
+        .times(0);
+
+    let expected = TransactionDetails {
+        executed_at: Some(1597733631000),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::Transfer(Transfer {
+            sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
+            recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            direction: TransferDirection::Incoming,
+            transfer_info: (TransferInfo::Ether(EtherTransfer {
+                value: "1000000000000000".to_string(),
+            })),
+        }),
+        tx_data: None,
+        detailed_execution_info: None,
+        tx_hash: Some("0x41b610e8cce50bbe3aa06d6953ecc5f92a838aedc024a265c0afca7ec4f33bdf".to_string()),
+    };
+
+    let actual = ether_transfer_dto.to_transaction_details(&mut mock_info_provider, safe_address).unwrap();
+
+    assert_eq!(expected, actual)
+}

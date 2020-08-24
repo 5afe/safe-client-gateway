@@ -10,5 +10,5 @@ pub fn update(context: Context, token: String, update: Json<Payload>) -> Result<
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    invalidate_caches(&context, &update.address)
+    invalidate_caches(&context, &update)
 }

@@ -5,7 +5,7 @@ use anyhow::Result;
 pub fn invalidate_caches(context: &Context, payload: &Payload) -> Result<()> {
     let cache = context.cache();
     cache.invalidate_pattern(&format!("*{}*", &payload.address));
-    payload.details.map(|d| {
+    payload.details.as_ref().map(|d| {
         match d {
             PayloadDetails::NewConfirmation(data) => {
                 cache.invalidate_pattern(&format!("*{}*", data.safe_tx_hash));

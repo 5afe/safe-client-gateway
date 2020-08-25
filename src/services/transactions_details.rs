@@ -105,7 +105,7 @@ pub fn get_transactions_details(
         ID_PREFIX_MULTISIG_TX => get_multisig_transaction_details(
             context,
             id_parts
-                .get(1)
+                .get(2)
                 .ok_or(anyhow::anyhow!("No safe tx hash provided"))?,
         ),
         ID_PREFIX_ETHEREUM_TX => get_ethereum_transaction_details(

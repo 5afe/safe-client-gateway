@@ -34,7 +34,7 @@ impl<'a, 'r> Context<'a, 'r> {
         self.get::<State<reqwest::blocking::Client>>().inner()
     }
 
-    pub fn cache(&self) -> &ServiceCache {
+    pub fn cache(&self) -> &impl Cache {
         &self.cache
     }
 

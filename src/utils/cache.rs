@@ -3,17 +3,29 @@ use rocket::response::content;
 use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
 use serde::ser::Serialize;
 use serde_json;
-use mockall::automock;
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
 
-#[automock]
 pub trait Cache {
     fn fetch(&self, id: &str) -> Option<String>;
     fn create(&self, id: &String, dest: &String, timeout: usize);
     fn invalidate_pattern(&self, pattern: &String);
     fn _invalidate(&self, id: &String);
+    fn cache_resp<R>(
+        &self,
+        key: &String,
+        timeout: usize,
+        resp: impl Fn() -> Result<R>,
+    ) -> Result<content::Json<String>>
+        where R: Serialize;
+
+    fn request_cached(
+        &self,
+        client: &reqwest::blocking::Client,
+        url: &String,
+        timeout: usize,
+    ) -> Result<String>;
 }
 
 impl Cache for ServiceCache {
@@ -35,10 +47,8 @@ impl Cache for ServiceCache {
     fn _invalidate(&self, id: &String) {
         let _: () = self.del(id).unwrap();
     }
-}
 
-impl ServiceCache {
-    pub fn cache_resp<R>(
+    fn cache_resp<R>(
         &self,
         key: &String,
         timeout: usize,
@@ -58,7 +68,7 @@ impl ServiceCache {
         }
     }
 
-    pub fn request_cached(
+    fn request_cached(
         &self,
         client: &reqwest::blocking::Client,
         url: &String,

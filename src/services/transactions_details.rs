@@ -11,6 +11,7 @@ use crate::models::service::transactions::{
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::context::Context;
 use crate::utils::hex_hash;
+use crate::utils::cache::CacheExt;
 use anyhow::Result;
 use log::debug;
 

@@ -2,6 +2,7 @@ use crate::config::{request_cache_duration};
 use crate::utils::context::Context;
 use crate::services::transactions_details;
 use crate::services::transactions_list;
+use crate::utils::cache::CacheExt;
 use rocket::response::content;
 use anyhow::Result;
 

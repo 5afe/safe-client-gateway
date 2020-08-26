@@ -4,6 +4,7 @@ use crate::services::about;
 use rocket::response::content;
 use anyhow::Result;
 use crate::config::{base_transaction_service_url};
+use crate::utils::cache::CacheExt;
 
 #[get("/about")]
 pub fn info(context: Context) -> Result<content::Json<String>> {

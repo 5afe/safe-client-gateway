@@ -6,6 +6,7 @@ use crate::models::service::transactions::summary::TransactionSummary;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
 use crate::utils::extract_query_string;
+use crate::utils::cache::CacheExt;
 use crate::providers::info::DefaultInfoProvider;
 use anyhow::Result;
 use log::debug;

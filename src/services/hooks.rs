@@ -1,16 +1,12 @@
-use crate::utils::context::Context;
+use crate::utils::context::{Context, ContextCache};
 use crate::models::backend::webhooks::{Payload, PayloadDetails};
 use anyhow::Result;
 use crate::utils::cache::Cache;
 
-pub fn invalidate_caches(context: &Context, payload: &Payload) -> Result<()> {
+pub fn invalidate_caches(context: &impl ContextCache, payload: &Payload) -> Result<()> {
     let cache = context.cache();
-    invalidate(payload, cache);
-    Ok(())
-}
-
-pub fn invalidate(payload: &Payload, cache: &impl Cache) {
     cache.invalidate_pattern(&format!("*{}*", &payload.address));
+
     payload.details.as_ref().map(|d| {
         match d {
             PayloadDetails::NewConfirmation(data) => {
@@ -25,4 +21,6 @@ pub fn invalidate(payload: &Payload, cache: &impl Cache) {
             _ => {}
         }
     });
+    Ok(())
 }
+

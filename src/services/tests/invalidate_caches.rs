@@ -1,7 +1,18 @@
 use crate::models::backend::webhooks::Payload;
-use crate::services::hooks::invalidate;
+use crate::services::hooks::invalidate_caches;
 use mockall::predicate::*;
 use crate::utils::cache::*;
+use crate::utils::context::ContextCache;
+
+struct TestContext(MockCache);
+
+impl ContextCache for TestContext {
+    type Cache = MockCache;
+
+    fn cache(&self) -> &Self::Cache {
+        &self.0
+    }
+}
 
 #[test]
 fn invalidate_with_empty_payload() {
@@ -25,5 +36,7 @@ fn invalidate_with_empty_payload() {
         .expect__invalidate()
         .times(0);
 
-    invalidate(&payload, &mock_cache);
+    let context = TestContext(mock_cache);
+
+    invalidate_caches(&context, &payload);
 }

@@ -44,8 +44,7 @@ impl ServiceCache {
         timeout: usize,
         resp: impl Fn() -> Result<R>,
     ) -> Result<content::Json<String>>
-        where
-            R: Serialize,
+        where R: Serialize
     {
         let cached = self.fetch(key);
         match cached {

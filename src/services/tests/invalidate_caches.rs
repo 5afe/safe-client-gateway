@@ -71,7 +71,6 @@ fn invalidate_new_confirmation_payload() {
         .return_const(())
         .with(eq(String::from("*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*")))
         .in_sequence(&mut sequence);
-
     mock_cache
         .expect_invalidate_pattern()
         .times(1)
@@ -112,7 +111,6 @@ fn invalidate_executed_multisig_transaction_payload() {
         .return_const(())
         .with(eq(String::from("*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*")))
         .in_sequence(&mut sequence);
-
     mock_cache
         .expect_invalidate_pattern()
         .times(1)
@@ -152,7 +150,6 @@ fn invalidate_pending_multisig_transaction_payload() {
         .return_const(())
         .with(eq(String::from("*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*")))
         .in_sequence(&mut sequence);
-
     mock_cache
         .expect_invalidate_pattern()
         .times(1)

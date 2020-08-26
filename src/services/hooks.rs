@@ -11,7 +11,6 @@ pub fn invalidate_caches(context: &impl ContextCache, payload: &Payload) -> Resu
     payload.details.as_ref().map(|d| {
         match d {
             PayloadDetails::NewConfirmation(data) => {
-                println!("{:#?}", &data);
                 cache.invalidate_pattern(&format!("*{}*", data.safe_tx_hash));
             }
             PayloadDetails::ExecutedMultisigTransaction(data) => {

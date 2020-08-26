@@ -3,7 +3,7 @@ use rocket::Outcome;
 use rocket::State;
 use rocket::http::uri::Origin;
 
-use crate::utils::cache::{ServiceCache};
+use crate::utils::cache::ServiceCache;
 use crate::config::scheme;
 
 pub struct Context<'a, 'r> {

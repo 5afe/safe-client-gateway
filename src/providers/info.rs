@@ -1,7 +1,5 @@
 use crate::utils::cache::ServiceCache;
-use crate::config::{
-    base_transaction_service_url, info_cache_duration,
-};
+use crate::config::{base_transaction_service_url, info_cache_duration};
 use crate::utils::context::Context;
 use anyhow::Result;
 use serde::de::DeserializeOwned;

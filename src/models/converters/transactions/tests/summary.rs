@@ -223,7 +223,7 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         .return_once(move |_| Ok(token_info));
 
     let expected = TransactionSummary {
-        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"),
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"),
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
@@ -268,7 +268,7 @@ fn multisig_transaction_to_erc721_transfer_summary() {
         .return_once(move |_| Ok(token_info));
 
     let expected = TransactionSummary {
-        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"),
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"),
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
@@ -311,7 +311,7 @@ fn multisig_transaction_to_ether_transfer_summary() {
         .return_once(move |_| Err(anyhow::anyhow!("No token info")));
 
     let expected = TransactionSummary {
-        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x6e631d27c638458329ba95cc17961e74b8146c46886545cd1984bb2bcf4eccd3"),
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x6e631d27c638458329ba95cc17961e74b8146c46886545cd1984bb2bcf4eccd3"),
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
@@ -349,7 +349,7 @@ fn multisig_transaction_to_settings_change_summary() {
         .times(0);
 
     let expected = TransactionSummary {
-        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x57d94fe21bbee8f6646c420ee23126cd1ba1b9a53a6c9b10099a043da8f32eea"),
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x57d94fe21bbee8f6646c420ee23126cd1ba1b9a53a6c9b10099a043da8f32eea"),
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::SettingsChange(SettingsChange {
@@ -402,7 +402,7 @@ fn multisig_transaction_to_custom_summary() {
         .return_once(move |_| Err(anyhow::anyhow!("No token info")));
 
     let expected = TransactionSummary {
-        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621"),
+        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621"),
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Custom(Custom {

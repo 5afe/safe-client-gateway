@@ -37,7 +37,7 @@ impl MultisigTransaction {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         Ok(vec![TransactionSummary {
             id: create_id!(
-                ID_PREFIX_MULTISIG_TX, self.safe_tx_hash
+                ID_PREFIX_MULTISIG_TX, &self.safe, self.safe_tx_hash
             ),
             timestamp: self
                 .execution_date

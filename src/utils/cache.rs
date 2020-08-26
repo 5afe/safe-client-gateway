@@ -3,10 +3,12 @@ use rocket::response::content;
 use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
 use serde::ser::Serialize;
 use serde_json;
+use mockall::automock;
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
 
+#[automock]
 pub trait Cache {
     fn fetch(&self, id: &str) -> Option<String>;
     fn create(&self, id: &String, dest: &String, timeout: usize);

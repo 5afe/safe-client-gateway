@@ -1,39 +1,29 @@
 use crate::models::backend::webhooks::Payload;
 use crate::services::hooks::invalidate;
-use anyhow::Result;
-use crate::utils::cache::Cache;
-use reqwest::blocking::Client;
-use rocket::response::content::Json;
-
-struct TestCache;
-
-impl Cache for TestCache {
-    fn fetch(&self, id: &str) -> Option<String> {
-        None
-    }
-
-    fn create(&self, id: &String, dest: &String, timeout: usize) {
-        println!("unimplemented");
-    }
-
-    fn invalidate_pattern(&self, pattern: &String) {
-        println!("unimplemented");
-    }
-
-    fn _invalidate(&self, id: &String) {
-        println!("unimplemented");
-    }
-}
+use mockall::predicate::*;
+use crate::utils::cache::*;
 
 #[test]
-fn some_test() -> Result<()> {
+fn invalidate_with_empty_payload() {
     let payload = Payload {
-        address: "".to_string(),
+        address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         details: None,
     };
 
+    let mut mock_cache = MockCache::new();
+    mock_cache
+        .expect_fetch()
+        .times(0);
+    mock_cache
+        .expect_create()
+        .times(0);
+    mock_cache
+        .expect_invalidate_pattern()
+        .with(eq(String::from("*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*")))
+        .return_const(());
+    mock_cache
+        .expect__invalidate()
+        .times(0);
 
-    let cache = TestCache;
-    invalidate(&payload, &cache);
-    Ok(())
+    invalidate(&payload, &mock_cache);
 }

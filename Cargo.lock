@@ -1775,7 +1775,6 @@ dependencies = [
  "env_logger",
  "log 0.4.11",
  "mockall",
- "redis",
  "reqwest",
  "rocket",
  "rocket_codegen",

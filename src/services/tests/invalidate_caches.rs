@@ -2,18 +2,7 @@ use crate::models::backend::webhooks::{Payload, PayloadDetails, NewConfirmation,
 use crate::services::hooks::invalidate_caches;
 use mockall::predicate::*;
 use crate::utils::cache::*;
-use crate::utils::context::ContextCache;
 use mockall::Sequence;
-
-struct TestContext(MockCache);
-
-impl ContextCache for TestContext {
-    type Cache = MockCache;
-
-    fn cache(&self) -> &Self::Cache {
-        &self.0
-    }
-}
 
 #[test]
 fn invalidate_with_empty_payload() {
@@ -38,9 +27,7 @@ fn invalidate_with_empty_payload() {
         .return_const(())
         .times(1);
 
-    let context = TestContext(mock_cache);
-
-    invalidate_caches(&context, &payload).unwrap();
+    invalidate_caches(&mock_cache, &payload).unwrap();
 }
 
 #[test]
@@ -78,9 +65,7 @@ fn invalidate_new_confirmation_payload() {
         .with(eq(String::from("*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*")))
         .in_sequence(&mut sequence);
 
-    let context = TestContext(mock_cache);
-
-    invalidate_caches(&context, &payload).unwrap();
+    invalidate_caches(&mock_cache, &payload).unwrap();
 }
 
 #[test]
@@ -118,9 +103,7 @@ fn invalidate_executed_multisig_transaction_payload() {
         .with(eq(String::from("*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*")))
         .in_sequence(&mut sequence);
 
-    let context = TestContext(mock_cache);
-
-    invalidate_caches(&context, &payload).unwrap();
+    invalidate_caches(&mock_cache, &payload).unwrap();
 }
 
 #[test]
@@ -157,7 +140,5 @@ fn invalidate_pending_multisig_transaction_payload() {
         .with(eq(String::from("*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*")))
         .in_sequence(&mut sequence);
 
-    let context = TestContext(mock_cache);
-
-    invalidate_caches(&context, &payload).unwrap();
+    invalidate_caches(&mut mock_cache, &payload).unwrap();
 }

@@ -6,23 +6,9 @@ use rocket::http::uri::Origin;
 use crate::utils::cache::{ServiceCache, Cache};
 use crate::config::scheme;
 
-pub trait ContextCache {
-    type Cache: Cache;
-
-    fn cache(&self) -> &Self::Cache;
-}
-
 pub struct Context<'a, 'r> {
     request: &'a Request<'r>,
     cache: ServiceCache,
-}
-
-impl ContextCache for Context<'_, '_> {
-    type Cache = ServiceCache;
-
-    fn cache(&self) -> &Self::Cache {
-        &self.cache
-    }
 }
 
 impl<'a, 'r> Context<'a, 'r> {

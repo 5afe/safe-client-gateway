@@ -1,13 +1,9 @@
-use crate::utils::context::ContextCache;
 use crate::models::backend::webhooks::{Payload, PayloadDetails};
 use anyhow::Result;
 use crate::utils::cache::Cache;
 
-pub fn invalidate_caches(context: &impl ContextCache, payload: &Payload) -> Result<()> {
-    let cache = context.cache();
+pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> Result<()> {
     cache.invalidate_pattern(&format!("*{}*", &payload.address));
-    println!("{:#?}", &payload);
-
     payload.details.as_ref().map(|d| {
         match d {
             PayloadDetails::NewConfirmation(data) => {

@@ -1,12 +1,10 @@
-use crate::utils::cache::ServiceCache;
-use crate::config::{
-    base_transaction_service_url, info_cache_duration,
-};
+use crate::utils::cache::{Cache, CacheExt};
+use crate::config::{base_transaction_service_url, info_cache_duration};
 use crate::utils::context::Context;
+use serde_json;
 use anyhow::Result;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
-use serde_json;
 use std::collections::HashMap;
 use mockall::automock;
 
@@ -18,7 +16,7 @@ pub trait InfoProvider {
 
 pub struct DefaultInfoProvider<'p> {
     client: &'p reqwest::blocking::Client,
-    cache: &'p ServiceCache,
+    cache: &'p dyn Cache,
     safe_cache: HashMap<String, Option<SafeInfo>>,
     token_cache: HashMap<String, Option<TokenInfo>>,
 }
@@ -86,9 +84,7 @@ impl DefaultInfoProvider<'_> {
         match local_cache(self).get(&url) {
             Some(value) => value.clone().ok_or(anyhow::anyhow!("Could not decode cached")),
             None => {
-                let data =
-                    self.cache
-                        .request_cached(self.client, &url, info_cache_duration())?;
+                let data = self.cache.request_cached(self.client, &url, info_cache_duration())?;
                 let value: Option<T> = serde_json::from_str(&data).unwrap_or(None);
                 local_cache(self).insert(url, value.clone());
                 value.ok_or(anyhow::anyhow!("Could not decode response"))

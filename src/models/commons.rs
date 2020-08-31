@@ -26,7 +26,6 @@ pub struct Parameter {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(deserialize_with = "json::try_deserialize")]
     #[serde(default)]
-    #[serde(rename(deserialize = "decodedValue"))]
     pub value_decoded: Option<ValueDecodedType>,
 }
 
@@ -46,11 +45,10 @@ pub enum ValueDecodedType {
 #[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct InternalTransaction {
-    pub operation: String,
+    pub operation: Operation,
     pub to: String,
     pub value: Option<u64>,
     pub data: Option<String>,
-    #[serde(rename(deserialize = "decodedData"))]
     pub data_decoded: Option<DataDecoded>,
 }
 

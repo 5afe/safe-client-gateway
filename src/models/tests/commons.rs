@@ -1,4 +1,4 @@
-use crate::models::commons::{Parameter, ParamValue, DataDecoded, InternalTransaction, ValueDecodedType};
+use crate::models::commons::{Parameter, ParamValue, DataDecoded, InternalTransaction, ValueDecodedType, Operation};
 
 #[test]
 fn deserialise_params_value_as_string() {
@@ -67,7 +67,7 @@ fn deserialize_decoded_value() {
                 value: ParamValue::SingleValue(String::from("0x00d9ba894e0097f8cc2bbc9d24d308b98e36dc6d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c6800000d9ba894e0097f8cc2bbc9d24d308b98e36dc6d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c6800000d9ba894e0097f8cc2bbc9d24d308b98e36dc6d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000")),
                 value_decoded: Some(ValueDecodedType::InternalTransaction(vec![
                     InternalTransaction {
-                        operation: String::from("CALL"),
+                        operation: Operation::CALL,
                         to: String::from("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
                         value: Some(0),
                         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000")),
@@ -90,7 +90,7 @@ fn deserialize_decoded_value() {
                         }),
                     },
                     InternalTransaction {
-                        operation: String::from("CALL"),
+                        operation: Operation::CALL,
                         to: String::from("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
                         value: Some(0),
                         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000")),
@@ -113,7 +113,7 @@ fn deserialize_decoded_value() {
                         }),
                     },
                     InternalTransaction {
-                        operation: String::from("CALL"),
+                        operation: Operation::CALL,
                         to: String::from("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
                         value: Some(0),
                         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000")),

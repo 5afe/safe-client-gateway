@@ -1,39 +1,40 @@
 use rocket::local::Client;
-use rocket::http::Status;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiError;
+use rocket::response::Responder;
+use crate::models::backend::transactions::MultisigTransaction;
 
-#[get("/not_found")]
-fn not_found() -> ApiResult<()> {
-    Err(ApiError {
-        status: 404,
-        message: Some("Not found".to_string()),
-    })
-}
+#[test]
+fn api_error_responder_json() {
+    let api_error = ApiError { status: 404, message: Some(String::from("Not found")) };
+    let rocket = rocket::ignite();
+    let client = Client::new(rocket).expect("valid rocket instance");
 
-#[get("/reqwest_error")]
-fn reqwest_error() -> ApiResult<String> {
-    let invalid_request = "http://";
-    Ok(reqwest::blocking::get(invalid_request)?.text()?)
-}
+    let local_request = client.get("/");
+    let request = local_request.inner();
+    let mut response = api_error.respond_to(&request).unwrap();
+    let body_json = response.body().unwrap().into_string().unwrap();
 
-fn rocket() -> rocket::Rocket {
-    rocket::ignite().mount("/", routes![not_found, reqwest_error])
+    assert_eq!(response.status().code, 404);
+    assert_eq!(body_json, "{\"status\":404,\"message\":\"Not found\"}");
 }
 
 #[test]
-fn api_error_not_found() {
-    let client = Client::new(rocket()).expect("valid rocket instance");
-    let mut response = client.get("/not_found").dispatch();
-    assert_eq!(response.status(), Status::from_code(404).unwrap());
-    assert_eq!(response.body_string(), Some("{\"status\":404,\"message\":\"Not found\"}".into()));
+fn api_error_from_anyhow_error() {
+    let error = anyhow::anyhow!("Error message");
+
+    let actual = ApiError::from(error);
+
+    assert_eq!(actual.status, 500);
+    assert_eq!(actual.message.unwrap(), "Error message");
 }
 
 #[test]
-fn api_error_reqwest_error() {
-    let client = Client::new(rocket()).expect("valid rocket instance");
-    let mut response = client.get("/reqwest_error").dispatch();
-    assert_eq!(response.status(), Status::from_code(500).unwrap());
-    assert_eq!(response.body_string(), Some("{\"status\":500,\"message\":\"reqwest::Error { kind: Builder, source: EmptyHost }\"}".into()));
+fn api_error_from_serde_error() {
+    let error = serde_json::from_str::<MultisigTransaction>("{").expect_err("Error message");
+    let error_message = format!("{:?}", &error);
+
+    let actual = ApiError::from(error);
+
+    assert_eq!(actual.status, 500);
+    assert_eq!(actual.message.unwrap(), error_message);
 }
-
-

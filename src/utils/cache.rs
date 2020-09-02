@@ -1,9 +1,9 @@
-use anyhow::Result;
 use rocket::response::content;
 use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
 use serde::ser::Serialize;
 use serde_json;
 use mockall::automock;
+use crate::utils::errors::ApiResult;
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -42,8 +42,8 @@ pub trait CacheExt: Cache {
         &self,
         key: &String,
         timeout: usize,
-        resp: impl Fn() -> Result<R>,
-    ) -> Result<content::Json<String>>
+        resp: impl Fn() -> ApiResult<R>,
+    ) -> ApiResult<content::Json<String>>
         where R: Serialize {
         let cached = self.fetch(key);
         match cached {
@@ -62,14 +62,17 @@ pub trait CacheExt: Cache {
         client: &reqwest::blocking::Client,
         url: &String,
         timeout: usize,
-    ) -> Result<String> {
+    ) -> ApiResult<String> {
         let data: String =
             match self.fetch(&url) {
                 Some(cached) => cached,
                 None => {
                     let response = client.get(url).send()?;
                     // Don't cache if it is a Server error
-                    if response.status().is_server_error() { anyhow::bail!("Got server error for {}", url); };
+                    if response.status().is_server_error() {
+                        println!("STATUS CODE: {:#?}", &response.status());
+                        anyhow::anyhow!("Got server error for {}", url);
+                    };
                     let raw_data = response.text()?;
                     self.create(&url, &raw_data, timeout);
                     raw_data

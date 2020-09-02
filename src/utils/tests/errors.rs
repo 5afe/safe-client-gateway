@@ -1,11 +1,11 @@
 use rocket::local::Client;
-use crate::utils::errors::ApiError;
+use crate::utils::errors::{ApiError, ApiErrorMessage};
 use rocket::response::Responder;
 use crate::models::backend::transactions::MultisigTransaction;
 
 #[test]
 fn api_error_responder_json() {
-    let api_error = ApiError { status: 418, message: Some(String::from("Not found")) };
+    let api_error = ApiError { status: 418, message: ApiErrorMessage::SingleLine(String::from("Not found")) };
     let rocket = rocket::ignite();
     let client = Client::new(rocket).expect("valid rocket instance");
 
@@ -25,7 +25,7 @@ fn api_error_from_anyhow_error() {
     let actual = ApiError::from(error);
 
     assert_eq!(actual.status, 500);
-    assert_eq!(actual.message.unwrap(), "Error message");
+    assert_eq!(actual.message, ApiErrorMessage::SingleLine(String::from("Error message")));
 }
 
 #[test]
@@ -36,5 +36,5 @@ fn api_error_from_serde_error() {
     let actual = ApiError::from(error);
 
     assert_eq!(actual.status, 500);
-    assert_eq!(actual.message.unwrap(), error_message);
+    assert_eq!(actual.message, ApiErrorMessage::SingleLine(error_message));
 }

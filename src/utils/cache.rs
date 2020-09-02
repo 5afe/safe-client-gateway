@@ -3,7 +3,7 @@ use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineComma
 use serde::ser::Serialize;
 use serde_json;
 use mockall::automock;
-use crate::utils::errors::{ApiResult, ApiError};
+use crate::utils::errors::{ApiResult, ApiError, BackendError, ApiErrorMessage};
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -69,7 +69,11 @@ pub trait CacheExt: Cache {
                 if !cached_with_code.is_error() {
                     Ok(String::from(cached_with_code.data))
                 } else {
-                    Err(ApiError { status: cached_with_code.code, message: Some(cached_with_code.data) })
+                    return if let Ok(backend_error) = serde_json::from_str::<BackendError>(&cached_with_code.data) {
+                        Err(ApiError { status: cached_with_code.code, message: ApiErrorMessage::BackendError(backend_error) })
+                    } else {
+                        Err(ApiError { status: cached_with_code.code, message: ApiErrorMessage::SingleLine(cached_with_code.data) })
+                    };
                 }
             }
             None => {
@@ -81,10 +85,13 @@ pub trait CacheExt: Cache {
                 let status_code = response.status().as_u16();
                 let is_client_error = response.status().is_client_error();
                 let raw_data = response.text()?;
-                // Add status code + data to cache ... currently it is only data
                 self.create(&url, CachedWithCode::join(status_code, &raw_data).as_str(), timeout);
                 if is_client_error {
-                    return Err(ApiError { status: status_code, message: Some(raw_data) });
+                    return if let Ok(backend_error) = serde_json::from_str::<BackendError>(&raw_data) {
+                        Err(ApiError { status: status_code, message: ApiErrorMessage::BackendError(backend_error) })
+                    } else {
+                        Err(ApiError { status: status_code, message: ApiErrorMessage::SingleLine(raw_data) })
+                    };
                 }
                 Ok(raw_data)
             }

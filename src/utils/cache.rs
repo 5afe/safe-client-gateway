@@ -79,7 +79,6 @@ pub trait CacheExt: Cache {
             None => {
                 let response = client.get(url).send()?;
                 if response.status().is_server_error() {
-                    // This should panic or be refactored to return an error
                     return Err(anyhow::anyhow!("Got server error for {}", url).into());
                 }
                 let status_code = response.status().as_u16();

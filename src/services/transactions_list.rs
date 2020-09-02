@@ -51,7 +51,7 @@ pub fn get_all_transactions(context: &Context, safe_address: &String, page_url: 
 fn get_creation_transaction_summary(
     context: &Context,
     safe: &String,
-) -> anyhow::Result<TransactionSummary> {
+) -> ApiResult<TransactionSummary> {
     let url = format!(
         "{}/safes/{}/creation/",
         base_transaction_service_url(),

@@ -5,7 +5,7 @@ use crate::models::backend::transactions::MultisigTransaction;
 
 #[test]
 fn api_error_responder_json() {
-    let api_error = ApiError { status: 404, message: Some(String::from("Not found")) };
+    let api_error = ApiError { status: 418, message: Some(String::from("Not found")) };
     let rocket = rocket::ignite();
     let client = Client::new(rocket).expect("valid rocket instance");
 
@@ -14,8 +14,8 @@ fn api_error_responder_json() {
     let mut response = api_error.respond_to(&request).unwrap();
     let body_json = response.body().unwrap().into_string().unwrap();
 
-    assert_eq!(response.status().code, 404);
-    assert_eq!(body_json, "{\"status\":404,\"message\":\"Not found\"}");
+    assert_eq!(response.status().code, 418);
+    assert_eq!(body_json, "{\"status\":418,\"message\":\"Not found\"}");
 }
 
 #[test]

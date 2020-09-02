@@ -38,7 +38,7 @@ impl From<anyhow::Error> for ApiError {
     fn from(err: anyhow::Error) -> Self {
         Self {
             status: 500,
-            message: Some(format!("ANYHOW: {:?}", err)),
+            message: Some(format!("{:?}", err)),
         }
     }
 }
@@ -47,7 +47,7 @@ impl From<reqwest::Error> for ApiError {
     fn from(err: reqwest::Error) -> Self {
         Self {
             status: 500,
-            message: Some(format!("REQWEST: {:?}", err)),
+            message: Some(format!("{:?}", err)),
         }
     }
 }
@@ -56,7 +56,7 @@ impl From<serde_json::error::Error> for ApiError {
     fn from(err: serde_json::error::Error) -> Self {
         Self {
             status: 500,
-            message: Some(format!("SERDE: {:?}", err)),
+            message: Some(format!("{:?}", err)),
         }
     }
 }

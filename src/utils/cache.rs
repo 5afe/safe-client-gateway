@@ -3,7 +3,7 @@ use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineComma
 use serde::ser::Serialize;
 use serde_json;
 use mockall::automock;
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiResult, ApiError};
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -11,9 +11,9 @@ pub struct ServiceCache(redis::Connection);
 #[automock]
 pub trait Cache {
     fn fetch(&self, id: &str) -> Option<String>;
-    fn create(&self, id: &String, dest: &String, timeout: usize);
-    fn invalidate_pattern(&self, pattern: &String);
-    fn invalidate(&self, id: &String);
+    fn create(&self, id: &str, dest: &str, timeout: usize);
+    fn invalidate_pattern(&self, pattern: &str);
+    fn invalidate(&self, id: &str);
 }
 
 impl Cache for ServiceCache {
@@ -24,15 +24,15 @@ impl Cache for ServiceCache {
         }
     }
 
-    fn create(&self, id: &String, dest: &String, timeout: usize) {
+    fn create(&self, id: &str, dest: &str, timeout: usize) {
         let _: () = self.set_ex(id, dest, timeout).unwrap();
     }
 
-    fn invalidate_pattern(&self, pattern: &String) {
+    fn invalidate_pattern(&self, pattern: &str) {
         pipeline_delete(self, self.scan_match(pattern).unwrap());
     }
 
-    fn invalidate(&self, id: &String) {
+    fn invalidate(&self, id: &str) {
         let _: () = self.del(id).unwrap();
     }
 }
@@ -63,22 +63,55 @@ pub trait CacheExt: Cache {
         url: &String,
         timeout: usize,
     ) -> ApiResult<String> {
-        let data: String =
-            match self.fetch(&url) {
-                Some(cached) => cached,
-                None => {
-                    let response = client.get(url).send()?;
-                    // Don't cache if it is a Server error
-                    if response.status().is_server_error() {
-                        println!("STATUS CODE: {:#?}", &response.status());
-                        anyhow::anyhow!("Got server error for {}", url);
-                    };
-                    let raw_data = response.text()?;
-                    self.create(&url, &raw_data, timeout);
-                    raw_data
+        match self.fetch(&url) {
+            Some(cached) => {
+                let cached_with_code = CachedWithCode::split(&cached);
+                if cached_with_code.is_error() {
+                    Ok(String::from(cached_with_code.data))
+                } else {
+                    Err(ApiError { status: cached_with_code.code, message: Some(cached_with_code.data) })
                 }
-            };
-        Ok(data)
+            }
+            None => {
+                let response = client.get(url).send()?;
+                if response.status().is_server_error() {
+                    // This should panic or be refactored to return an error
+                    return Err(anyhow::anyhow!("Got server error for {}", url).into());
+                }
+                let status_code = response.status().as_u16();
+                let is_client_error = response.status().is_client_error();
+                let raw_data = response.text()?;
+                // Add status code + data to cache ... currently it is only data
+                self.create(&url, CachedWithCode::join(status_code, &raw_data).as_str(), timeout);
+                if is_client_error {
+                    return Err(ApiError { status: status_code, message: None });
+                }
+                Ok(raw_data)
+            }
+        }
+    }
+}
+
+struct CachedWithCode {
+    code: u16,
+    data: String,
+}
+
+impl CachedWithCode {
+    pub(super) fn split(cached: &str) -> Self {
+        let cached_with_code: Vec<&str> = cached.split(";").collect();
+        CachedWithCode {
+            code: cached_with_code.get(0).expect("Must have a status code").parse().expect("Not a valid Http code"),
+            data: cached_with_code.get(1).expect("Must have data").to_string(),
+        }
+    }
+
+    pub(super) fn join(code: u16, data: &str) -> String {
+        format!("{};{}", code, data)
+    }
+
+    pub(super) fn is_error(&self) -> bool {
+        500 > self.code && self.code >= 400
     }
 }
 

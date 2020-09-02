@@ -66,7 +66,7 @@ pub trait CacheExt: Cache {
         match self.fetch(&url) {
             Some(cached) => {
                 let cached_with_code = CachedWithCode::split(&cached);
-                if cached_with_code.is_error() {
+                if !cached_with_code.is_error() {
                     Ok(String::from(cached_with_code.data))
                 } else {
                     Err(ApiError { status: cached_with_code.code, message: Some(cached_with_code.data) })
@@ -84,7 +84,7 @@ pub trait CacheExt: Cache {
                 // Add status code + data to cache ... currently it is only data
                 self.create(&url, CachedWithCode::join(status_code, &raw_data).as_str(), timeout);
                 if is_client_error {
-                    return Err(ApiError { status: status_code, message: None });
+                    return Err(ApiError { status: status_code, message: Some(raw_data) });
                 }
                 Ok(raw_data)
             }
@@ -92,14 +92,17 @@ pub trait CacheExt: Cache {
     }
 }
 
-struct CachedWithCode {
-    code: u16,
-    data: String,
+#[derive(Debug, PartialEq)]
+pub(super) struct CachedWithCode {
+    pub(super) code: u16,
+    pub(super) data: String,
 }
 
 impl CachedWithCode {
+    const SEPARATOR: &'static str = ";";
+
     pub(super) fn split(cached: &str) -> Self {
-        let cached_with_code: Vec<&str> = cached.split(";").collect();
+        let cached_with_code: Vec<&str> = cached.split(CachedWithCode::SEPARATOR).collect();
         CachedWithCode {
             code: cached_with_code.get(0).expect("Must have a status code").parse().expect("Not a valid Http code"),
             data: cached_with_code.get(1).expect("Must have data").to_string(),
@@ -107,7 +110,7 @@ impl CachedWithCode {
     }
 
     pub(super) fn join(code: u16, data: &str) -> String {
-        format!("{};{}", code, data)
+        format!("{}{}{}", code, CachedWithCode::SEPARATOR, data)
     }
 
     pub(super) fn is_error(&self) -> bool {

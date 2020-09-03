@@ -2,12 +2,9 @@ extern crate chrono;
 
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::Operation;
-use crate::models::service::transactions::details::{
-    DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
-    TransactionData, TransactionDetails,
-};
+use crate::models::service::transactions::details::{DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails, TransactionData, TransactionDetails, SignatureInfo};
 use crate::models::service::transactions::TransactionStatus;
-use crate::providers::info::InfoProvider;
+use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use anyhow::Result;
 
 impl MultisigTransaction {
@@ -16,6 +13,7 @@ impl MultisigTransaction {
         info_provider: &mut dyn InfoProvider,
     ) -> Result<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
+        let gas_token = self.gas_token.as_ref().map(|token_address| info_provider.token_info(&token_address).ok()).flatten();
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
@@ -28,30 +26,44 @@ impl MultisigTransaction {
                 operation: self.operation.unwrap_or(Operation::CALL),
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
-            detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
-                MultisigExecutionDetails {
-                    submitted_at: self.submission_date.timestamp_millis(),
-                    nonce: self.nonce,
-                    safe_tx_hash: self.safe_tx_hash.to_owned(),
-                    executor: self.executor.to_owned(),
-                    signers: safe_info.owners,
-                    confirmations_required: self
-                        .confirmations_required
-                        .unwrap_or(safe_info.threshold),
-                    confirmations: self
-                        .confirmations
-                        .as_ref()
-                        .unwrap_or(&vec![])
-                        .into_iter()
-                        .map(|confirmation| MultisigConfirmation {
-                            signer: confirmation.owner.to_owned(),
-                            signature: confirmation.signature.to_owned(),
-                            submitted_at: confirmation.submission_date.timestamp_millis(),
-                        })
-                        .collect(),
-                },
-            )),
+            detailed_execution_info: Some(DetailedExecutionInfo::Multisig(self.build_execution_details(safe_info, gas_token))),
         })
+    }
+
+    fn build_execution_details(&self, safe_info: SafeInfo, gas_token: Option<TokenInfo>) -> MultisigExecutionDetails {
+        MultisigExecutionDetails {
+            submitted_at: self.submission_date.timestamp_millis(),
+            nonce: self.nonce,
+            safe_tx_hash: self.safe_tx_hash.to_owned(),
+            executor: self.executor.to_owned(),
+            signers: safe_info.owners,
+            confirmations_required: self
+                .confirmations_required
+                .unwrap_or(safe_info.threshold),
+            confirmations: self
+                .confirmations
+                .as_ref()
+                .unwrap_or(&vec![])
+                .into_iter()
+                .map(|confirmation| MultisigConfirmation {
+                    signer: confirmation.owner.to_owned(),
+                    signature: confirmation.signature.to_owned(),
+                    submitted_at: confirmation.submission_date.timestamp_millis(),
+                })
+                .collect(),
+            signature_info: Some(self.build_signature_info(gas_token)),
+        }
+    }
+
+    fn build_signature_info(&self, gas_token: Option<TokenInfo>) -> SignatureInfo {
+        SignatureInfo {
+            refund_receiver: self.refund_receiver.to_owned(),
+            base_gas: self.base_gas,
+            safe_tx_gas: self.safe_tx_gas,
+            gas_limit: self.gas_price.to_owned(),
+            gas_token: gas_token.as_ref().map(|it| it.address.to_owned()).unwrap_or(String::from("0x0000000000000000000000000000000000000000")),
+            gas_token_info: gas_token,
+        }
     }
 }
 

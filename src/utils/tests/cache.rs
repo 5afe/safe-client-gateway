@@ -27,6 +27,22 @@ fn cache_with_code_split_failure_not_enough_parts() {
 }
 
 #[test]
+fn cache_with_code_split_multiple_separators() {
+    let expected = CachedWithCode{ code: 404, data: String::from("foo;bar") };
+    let actual = CachedWithCode::split("404;foo;bar");
+
+    assert_eq!(actual, expected);
+}
+
+#[test]
+fn cache_with_code_split_data_is_only_separators() {
+    let expected = CachedWithCode{ code: 404, data: String::from(";;;;;") };
+    let actual = CachedWithCode::split("404;;;;;;");
+
+    assert_eq!(actual, expected);
+}
+
+#[test]
 fn cache_with_code_join() {
     let actual = CachedWithCode::join(400, "data");
     let expected = String::from("400;data");

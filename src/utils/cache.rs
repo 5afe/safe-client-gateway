@@ -66,35 +66,40 @@ pub trait CacheExt: Cache {
         match self.fetch(&url) {
             Some(cached) => {
                 let cached_with_code = CachedWithCode::split(&cached);
-                if !cached_with_code.is_error() {
+                return if !cached_with_code.is_error() {
                     Ok(String::from(cached_with_code.data))
                 } else {
-                    return if let Ok(backend_error) = serde_json::from_str::<BackendError>(&cached_with_code.data) {
-                        Err(ApiError { status: cached_with_code.code, message: ApiErrorMessage::BackendError(backend_error) })
-                    } else {
-                        Err(ApiError { status: cached_with_code.code, message: ApiErrorMessage::SingleLine(cached_with_code.data) })
-                    };
-                }
+                    deserialise_backend_error(cached_with_code.code, &cached_with_code.data)
+                };
             }
             None => {
                 let response = client.get(url).send()?;
-                if response.status().is_server_error() {
-                    return Err(anyhow::anyhow!("Got server error for {}", url).into());
-                }
                 let status_code = response.status().as_u16();
+
+                if response.status().is_server_error() {
+                    return Err(ApiError {
+                        status: status_code,
+                        message: ApiErrorMessage::SingleLine(String::from("Got server error for {}")),
+                    });
+                }
                 let is_client_error = response.status().is_client_error();
                 let raw_data = response.text()?;
                 self.create(&url, CachedWithCode::join(status_code, &raw_data).as_str(), timeout);
-                if is_client_error {
-                    return if let Ok(backend_error) = serde_json::from_str::<BackendError>(&raw_data) {
-                        Err(ApiError { status: status_code, message: ApiErrorMessage::BackendError(backend_error) })
-                    } else {
-                        Err(ApiError { status: status_code, message: ApiErrorMessage::SingleLine(raw_data) })
-                    };
-                }
-                Ok(raw_data)
+                return if is_client_error {
+                    deserialise_backend_error(status_code, &raw_data)
+                } else {
+                    Ok(raw_data)
+                };
             }
         }
+    }
+}
+
+fn deserialise_backend_error(status_code: u16, raw_data: &str) -> ApiResult<String> {
+    if let Ok(backend_error) = serde_json::from_str::<BackendError>(&raw_data) {
+        Err(ApiError { status: status_code, message: ApiErrorMessage::BackendError(backend_error) })
+    } else {
+        Err(ApiError { status: status_code, message: ApiErrorMessage::SingleLine(raw_data.to_owned()) })
     }
 }
 
@@ -108,7 +113,7 @@ impl CachedWithCode {
     const SEPARATOR: &'static str = ";";
 
     pub(super) fn split(cached: &str) -> Self {
-        let cached_with_code: Vec<&str> = cached.split(CachedWithCode::SEPARATOR).collect();
+        let cached_with_code: Vec<&str> = cached.splitn(2, CachedWithCode::SEPARATOR).collect();
         CachedWithCode {
             code: cached_with_code.get(0).expect("Must have a status code").parse().expect("Not a valid Http code"),
             data: cached_with_code.get(1).expect("Must have data").to_string(),
@@ -120,7 +125,7 @@ impl CachedWithCode {
     }
 
     pub(super) fn is_error(&self) -> bool {
-        500 > self.code && self.code >= 400
+        200 < self.code && self.code >= 400
     }
 }
 

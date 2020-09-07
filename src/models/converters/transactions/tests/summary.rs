@@ -66,7 +66,7 @@ fn module_tx_to_summary_transaction() {
                     to: expected_to,
                     data_size: String::from("0"),
                     value: String::from("0"),
-                    data_decoded: None,
+                    method_name: None,
                 }),
         });
     assert_eq!(actual, expected);
@@ -410,25 +410,10 @@ fn multisig_transaction_to_custom_summary() {
             to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
             data_size: "68".to_string(),
             value: "0".to_string(),
-            data_decoded: Some(DataDecoded {
-                method: "approve".to_string(),
-                parameters: Some(vec![
-                    Parameter {
-                        name: "spender".to_string(),
-                        param_type: "address".to_string(),
-                        value: SingleValue(String::from("0xae9844F89D98c150F5e61bfC676D68b492155990")),
-                        value_decoded: None,
-                    },
-                    Parameter {
-                        name: "value".to_string(),
-                        param_type: "uint256".to_string(),
-                        value: SingleValue(String::from("500000000000000")),
-                        value_decoded: None,
-                    }
-                ]),
-            }),
+            method_name: Some("approve".to_string()),
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo
+        {
             nonce: 84,
             confirmations_required: 2,
             confirmations_submitted: 2,

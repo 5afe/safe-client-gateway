@@ -13,17 +13,8 @@ impl MultisigTransaction {
         info_provider: &mut dyn InfoProvider,
     ) -> Result<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
-        let gas_token = if let Some(gas_token) = &self.gas_token {
-            if gas_token != "0x0000000000000000000000000000000000000000" {
-                info_provider.token_info(gas_token).ok()
-            } else {
-                None
-            }
-        } else {
-            None
-        };
+        let gas_token = self.gas_token.as_ref().map(|it| info_provider.token_info(it).ok()).flatten();
 
-        //self.gas_token.as_ref().map(|token_address| info_provider.token_info(&token_address).ok()).flatten();
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
@@ -63,9 +54,9 @@ impl MultisigTransaction {
                 .collect(),
             refund_receiver: self.refund_receiver.as_ref().unwrap_or(&String::from("0x0000000000000000000000000000000000000000")).to_owned(),
             gas_token: self.gas_token.as_ref().unwrap_or(&String::from("0x0000000000000000000000000000000000000000")).to_owned(),
-            base_gas: self.base_gas,
-            safe_tx_gas: self.safe_tx_gas,
-            gas_price: self.gas_price.to_owned(),
+            base_gas: self.base_gas.unwrap_or(0),
+            safe_tx_gas: self.safe_tx_gas.unwrap_or(0),
+            gas_price: self.gas_price.as_ref().unwrap_or(&String::from("0")).to_owned(),
             gas_token_info: gas_token_info,
         }
     }

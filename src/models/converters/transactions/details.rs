@@ -2,7 +2,7 @@ extern crate chrono;
 
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::Operation;
-use crate::models::service::transactions::details::{DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails, TransactionData, TransactionDetails, SignatureInfo};
+use crate::models::service::transactions::details::{DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails, TransactionData, TransactionDetails};
 use crate::models::service::transactions::TransactionStatus;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use anyhow::Result;
@@ -13,7 +13,17 @@ impl MultisigTransaction {
         info_provider: &mut dyn InfoProvider,
     ) -> Result<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
-        let gas_token = self.gas_token.as_ref().map(|token_address| info_provider.token_info(&token_address).ok()).flatten();
+        let gas_token = if let Some(gas_token) = &self.gas_token {
+            if gas_token != "0x0000000000000000000000000000000000000000" {
+                info_provider.token_info(gas_token).ok()
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
+        //self.gas_token.as_ref().map(|token_address| info_provider.token_info(&token_address).ok()).flatten();
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
@@ -30,7 +40,7 @@ impl MultisigTransaction {
         })
     }
 
-    fn build_execution_details(&self, safe_info: SafeInfo, gas_token: Option<TokenInfo>) -> MultisigExecutionDetails {
+    fn build_execution_details(&self, safe_info: SafeInfo, gas_token_info: Option<TokenInfo>) -> MultisigExecutionDetails {
         MultisigExecutionDetails {
             submitted_at: self.submission_date.timestamp_millis(),
             nonce: self.nonce,
@@ -51,18 +61,12 @@ impl MultisigTransaction {
                     submitted_at: confirmation.submission_date.timestamp_millis(),
                 })
                 .collect(),
-            signature_info: Some(self.build_signature_info(gas_token)),
-        }
-    }
-
-    fn build_signature_info(&self, gas_token: Option<TokenInfo>) -> SignatureInfo {
-        SignatureInfo {
-            refund_receiver: self.refund_receiver.to_owned(),
+            refund_receiver: self.refund_receiver.as_ref().unwrap_or(&String::from("0x0000000000000000000000000000000000000000")).to_owned(),
+            gas_token: self.gas_token.as_ref().unwrap_or(&String::from("0x0000000000000000000000000000000000000000")).to_owned(),
             base_gas: self.base_gas,
             safe_tx_gas: self.safe_tx_gas,
-            gas_limit: self.gas_price.to_owned(),
-            gas_token: gas_token.as_ref().map(|it| it.address.to_owned()).unwrap_or(String::from("0x0000000000000000000000000000000000000000")),
-            gas_token_info: gas_token,
+            gas_price: self.gas_price.to_owned(),
+            gas_token_info: gas_token_info,
         }
     }
 }

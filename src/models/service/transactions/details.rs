@@ -1,6 +1,7 @@
 use serde::Serialize;
 use super::*;
 use crate::models::commons::{Operation, DataDecoded};
+use crate::providers::info::TokenInfo;
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -25,11 +26,18 @@ pub enum DetailedExecutionInfo {
 pub struct MultisigExecutionDetails {
     pub submitted_at: i64,
     pub nonce: u64,
+    pub safe_tx_gas: usize,
+    pub base_gas: usize,
+    pub gas_price: String,
+    pub gas_token: String,
+    pub refund_receiver: String,
     pub safe_tx_hash: String,
     pub executor: Option<String>,
     pub signers: Vec<String>,
     pub confirmations_required: u64,
     pub confirmations: Vec<MultisigConfirmation>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gas_token_info: Option<TokenInfo>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

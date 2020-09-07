@@ -20,8 +20,8 @@ fn multisig_custom_transaction_to_transaction_details() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
-        .times(1)
-        .return_once(move |_| Err(anyhow::anyhow!("No token info")));
+        .times(2)
+        .returning(move |_| anyhow::bail!("Token Address 0x0"));
 
     let expected = TransactionDetails {
         executed_at: multisig_tx.execution_date.map(|it| it.timestamp_millis()),
@@ -59,6 +59,11 @@ fn multisig_custom_transaction_to_transaction_details() {
             MultisigExecutionDetails {
                 submitted_at: multisig_tx.submission_date.timestamp_millis(),
                 nonce: 84,
+                safe_tx_gas: 43485,
+                base_gas: 0,
+                gas_price: "0".to_string(),
+                gas_token: "0x0000000000000000000000000000000000000000".to_string(),
+                refund_receiver: "0x0000000000000000000000000000000000000000".to_string(),
                 safe_tx_hash: "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621".to_string(),
                 executor: Some("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string()),
                 signers: vec![
@@ -80,6 +85,7 @@ fn multisig_custom_transaction_to_transaction_details() {
                         submitted_at: timestamp_confirmation1,
                     },
                 ],
+                gas_token_info: None
             })),
     };
 

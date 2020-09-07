@@ -129,6 +129,7 @@ pub struct Custom {
     pub to: String,
     pub data_size: String,
     pub value: String,
+    pub data_decoded: Option<DataDecoded>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

@@ -31,6 +31,23 @@ fn multisig_custom_transaction_to_transaction_details() {
             to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
             data_size: "68".to_string(),
             value: "0".to_string(),
+            data_decoded: Some(DataDecoded {
+                method: "approve".to_string(),
+                parameters: Some(vec![
+                    Parameter {
+                        name: "spender".to_string(),
+                        param_type: "address".to_string(),
+                        value: SingleValue(String::from("0xae9844F89D98c150F5e61bfC676D68b492155990")),
+                        value_decoded: None,
+                    },
+                    Parameter {
+                        name: "value".to_string(),
+                        param_type: "uint256".to_string(),
+                        value: SingleValue(String::from("500000000000000")),
+                        value_decoded: None,
+                    }
+                ]),
+            }),
         }),
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000")),
@@ -100,6 +117,7 @@ fn module_transaction_to_transaction_details() {
             to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
             data_size: "132".to_string(),
             value: "0".to_string(),
+            data_decoded: None
         }),
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x59f96ae500000000000000000000000000df91984582e6e96288307e9c2f20b38c8fece9000000000000000000000000c778417e063141139fce010982780140aa0cd5ab0000000000000000000000000000000000000000000000000000000000000475000000000000000000000000000000000000000000000003d962c8be3053def2")),

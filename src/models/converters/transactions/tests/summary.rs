@@ -66,6 +66,7 @@ fn module_tx_to_summary_transaction() {
                     to: expected_to,
                     data_size: String::from("0"),
                     value: String::from("0"),
+                    method_name: None,
                 }),
         });
     assert_eq!(actual, expected);
@@ -409,8 +410,10 @@ fn multisig_transaction_to_custom_summary() {
             to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
             data_size: "68".to_string(),
             value: "0".to_string(),
+            method_name: Some("approve".to_string()),
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo
+        {
             nonce: 84,
             confirmations_required: 2,
             confirmations_submitted: 2,

@@ -179,6 +179,7 @@ impl MultisigTransaction {
             to: self.to.to_owned(),
             data_size: data_size(&self.data),
             value: self.value.as_ref().unwrap().into(),
+            method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
         }
     }
 }
@@ -189,6 +190,7 @@ impl ModuleTransaction {
             to: self.to.to_owned(),
             data_size: data_size(&self.data),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
+            method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
         })
     }
 }

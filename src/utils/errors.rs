@@ -31,6 +31,20 @@ pub struct BackendError {
     pub arguments: Option<Vec<String>>,
 }
 
+impl ApiError {
+     fn new(status_code: u16, message: ApiErrorMessage) -> ApiError {
+        ApiError { status: status_code, message }
+    }
+
+    pub fn from_backend_error(status_code: u16, raw_error: &str) -> ApiError{
+        if let Ok(backend_error) = serde_json::from_str::<BackendError>(&raw_error){
+            ApiError::new(status_code, ApiErrorMessage::BackendError(backend_error))
+        }else{
+            ApiError::new(1337, ApiErrorMessage::SingleLine(raw_error.to_owned()))
+        }
+    }
+}
+
 impl fmt::Display for ApiErrorMessage {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {

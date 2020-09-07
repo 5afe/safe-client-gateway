@@ -3,7 +3,7 @@ use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineComma
 use serde::ser::Serialize;
 use serde_json;
 use mockall::automock;
-use crate::utils::errors::{ApiResult, ApiError, BackendError, ApiErrorMessage};
+use crate::utils::errors::{ApiResult, ApiError, ApiErrorMessage};
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -69,7 +69,7 @@ pub trait CacheExt: Cache {
                 return if !cached_with_code.is_error() {
                     Ok(String::from(cached_with_code.data))
                 } else {
-                    deserialise_backend_error(cached_with_code.code, &cached_with_code.data)
+                    Err(ApiError::from_backend_error(cached_with_code.code, &cached_with_code.data))
                 };
             }
             None => {
@@ -86,20 +86,12 @@ pub trait CacheExt: Cache {
                 let raw_data = response.text()?;
                 self.create(&url, CachedWithCode::join(status_code, &raw_data).as_str(), timeout);
                 return if is_client_error {
-                    deserialise_backend_error(status_code, &raw_data)
+                    Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {
                     Ok(raw_data)
                 };
             }
         }
-    }
-}
-
-fn deserialise_backend_error(status_code: u16, raw_data: &str) -> ApiResult<String> {
-    if let Ok(backend_error) = serde_json::from_str::<BackendError>(&raw_data) {
-        Err(ApiError { status: status_code, message: ApiErrorMessage::BackendError(backend_error) })
-    } else {
-        Err(ApiError { status: status_code, message: ApiErrorMessage::SingleLine(raw_data.to_owned()) })
     }
 }
 
@@ -125,7 +117,7 @@ impl CachedWithCode {
     }
 
     pub(super) fn is_error(&self) -> bool {
-        200 < self.code && self.code >= 400
+        200 > self.code || self.code >= 400
     }
 }
 

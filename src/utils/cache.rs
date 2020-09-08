@@ -3,7 +3,7 @@ use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineComma
 use serde::ser::Serialize;
 use serde_json;
 use mockall::automock;
-use crate::utils::errors::{ApiResult, ApiError, ApiErrorMessage};
+use crate::utils::errors::{ApiResult, ApiError};
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -77,10 +77,7 @@ pub trait CacheExt: Cache {
                 let status_code = response.status().as_u16();
 
                 if response.status().is_server_error() {
-                    return Err(ApiError {
-                        status: status_code,
-                        message: ApiErrorMessage::SingleLine(String::from("Got server error for {}")),
-                    });
+                    return Err(ApiError::from_backend_error(42, format!("Got server error for {}", response.text()?).as_str()));
                 }
                 let is_client_error = response.status().is_client_error();
                 let raw_data = response.text()?;

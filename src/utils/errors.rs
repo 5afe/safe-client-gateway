@@ -14,56 +14,52 @@ pub type ApiResult<T, E = ApiError> = Result<T, E>;
 #[derive(Error, Debug, Serialize)]
 pub struct ApiError {
     pub status: u16,
-    pub message: ApiErrorMessage,
-}
-
-#[derive(Debug, Serialize, PartialEq)]
-#[serde(untagged)]
-pub enum ApiErrorMessage {
-    SingleLine(String),
-    BackendError(BackendError),
+    pub details: ErrorDetails,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct BackendError {
+pub struct ErrorDetails {
     pub code: u64,
     pub message: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arguments: Option<Vec<String>>,
 }
 
 impl ApiError {
-     fn new(status_code: u16, message: ApiErrorMessage) -> ApiError {
-        ApiError { status: status_code, message }
+    pub fn from_backend_error(status_code: u16, raw_error: &str) -> ApiError {
+        match serde_json::from_str::<ErrorDetails>(&raw_error) {
+            Ok(backend_error) => {
+                ApiError::new(status_code, backend_error)
+            }
+            Err(error) => {
+                let error_details = ErrorDetails {
+                    code: 1337,
+                    message: Some(format!("Serde serialization error: {}", error.to_string())),
+                    arguments: None,
+                };
+                ApiError::new(status_code, error_details)
+            }
+        }
     }
 
-    pub fn from_backend_error(status_code: u16, raw_error: &str) -> ApiError{
-        if let Ok(backend_error) = serde_json::from_str::<BackendError>(&raw_error){
-            ApiError::new(status_code, ApiErrorMessage::BackendError(backend_error))
-        }else{
-            ApiError::new(1337, ApiErrorMessage::SingleLine(raw_error.to_owned()))
-        }
+    fn new(status_code: u16, message: ErrorDetails) -> ApiError {
+        ApiError { status: status_code, details: message }
     }
 }
 
-impl fmt::Display for ApiErrorMessage {
+impl fmt::Display for ErrorDetails {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            ApiErrorMessage::SingleLine(line) => {
-                write!(f, "ApiErrorMessage:{}", line)
-            }
-            ApiErrorMessage::BackendError(backend_error) => {
-                write!(f, "ApiErrorMessage: code:{:?}; message:{:?}; arguments:{:?}",
-                       &backend_error.code, &backend_error.message,
-                       &backend_error.arguments
-                )
-            }
-        }
+        write!(f, "ApiErrorMessage: code:{:?}; message:{:?}; arguments:{:?}",
+               &self.code,
+               &self.message,
+               &self.arguments
+        )
     }
 }
 
 impl fmt::Display for ApiError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ApiError({}: {})", self.status, self.message)
+        write!(f, "ApiError({}: {})", self.status, self.details)
     }
 }
 
@@ -82,7 +78,11 @@ impl From<anyhow::Error> for ApiError {
     fn from(err: anyhow::Error) -> Self {
         Self {
             status: 500,
-            message: ApiErrorMessage::SingleLine(format!("{:?}", err)),
+            details: ErrorDetails {
+                code: 42,
+                message: Some(format!("{:?}", err)),
+                arguments: None,
+            },
         }
     }
 }
@@ -91,7 +91,11 @@ impl From<reqwest::Error> for ApiError {
     fn from(err: reqwest::Error) -> Self {
         Self {
             status: 500,
-            message: ApiErrorMessage::SingleLine(format!("{:?}", err)),
+            details: ErrorDetails {
+                code: 42,
+                message: Some(format!("{:?}", err)),
+                arguments: None,
+            },
         }
     }
 }
@@ -100,7 +104,11 @@ impl From<serde_json::error::Error> for ApiError {
     fn from(err: serde_json::error::Error) -> Self {
         Self {
             status: 500,
-            message: ApiErrorMessage::SingleLine(format!("{:?}", err)),
+            details: ErrorDetails {
+                code: 1337,
+                message: Some(format!("{:?}", err)),
+                arguments: None,
+            },
         }
     }
 }

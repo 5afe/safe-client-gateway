@@ -7,6 +7,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use mockall::automock;
+use crate::utils::json::default_if_null;
 
 #[automock]
 pub trait InfoProvider {
@@ -44,6 +45,7 @@ pub struct TokenInfo {
     #[serde(rename = "type")]
     pub token_type: TokenType,
     pub address: String,
+    #[serde(deserialize_with = "default_if_null")]
     pub decimals: u64,
     pub symbol: String,
     pub name: String,

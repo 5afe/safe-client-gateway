@@ -25,7 +25,7 @@ pub struct ErrorDetails {
 }
 
 impl ApiError {
-    pub fn from_backend_error(status_code: u16, raw_error: &str) -> ApiError {
+    pub fn from_backend_error(status_code: u16, raw_error: &str) -> Self {
         let error_details = match serde_json::from_str::<ErrorDetails>(&raw_error) {
             Ok(backend_error) => backend_error,
             Err(_) => ErrorDetails {
@@ -37,8 +37,19 @@ impl ApiError {
         ApiError::new(status_code, error_details)
     }
 
-    fn new(status_code: u16, message: ErrorDetails) -> ApiError {
+    fn new(status_code: u16, message: ErrorDetails) -> Self {
         ApiError { status: status_code, details: message }
+    }
+
+    fn new_internal(message: String) -> Self {
+        Self {
+            status: 500,
+            details: ErrorDetails {
+                code: 1337,
+                message: Some(message),
+                arguments: None,
+            },
+        }
     }
 }
 
@@ -70,39 +81,18 @@ impl<'r> Responder<'r> for ApiError {
 
 impl From<anyhow::Error> for ApiError {
     fn from(err: anyhow::Error) -> Self {
-        Self {
-            status: 500,
-            details: ErrorDetails {
-                code: 1337,
-                message: Some(format!("{:?}", err)),
-                arguments: None,
-            },
-        }
+        Self::new_internal(format!("{:?}", err))
     }
 }
 
 impl From<reqwest::Error> for ApiError {
     fn from(err: reqwest::Error) -> Self {
-        Self {
-            status: 500,
-            details: ErrorDetails {
-                code: 1337,
-                message: Some(format!("{:?}", err)),
-                arguments: None,
-            },
-        }
+        Self::new_internal(format!("{:?}", err))
     }
 }
 
 impl From<serde_json::error::Error> for ApiError {
     fn from(err: serde_json::error::Error) -> Self {
-        Self {
-            status: 500,
-            details: ErrorDetails {
-                code: 1337,
-                message: Some(format!("{:?}", err)),
-                arguments: None,
-            },
-        }
+        Self::new_internal(format!("{:?}", err))
     }
 }

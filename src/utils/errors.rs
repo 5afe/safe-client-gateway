@@ -34,11 +34,11 @@ impl ApiError {
                 arguments: None,
             },
         };
-        ApiError::new(status_code, error_details)
+        Self::new(status_code, error_details)
     }
 
     fn new(status_code: u16, message: ErrorDetails) -> Self {
-        ApiError { status: status_code, details: message }
+        Self { status: status_code, details: message }
     }
 
     fn new_internal(message: String) -> Self {

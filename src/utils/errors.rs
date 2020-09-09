@@ -42,14 +42,11 @@ impl ApiError {
     }
 
     fn new_internal(message: String) -> Self {
-        Self {
-            status: 500,
-            details: ErrorDetails {
-                code: 1337,
-                message: Some(message),
-                arguments: None,
-            },
-        }
+        Self::new(500, ErrorDetails {
+            code: 1337,
+            message: Some(message),
+            arguments: None,
+        })
     }
 }
 

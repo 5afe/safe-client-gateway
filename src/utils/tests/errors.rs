@@ -8,18 +8,19 @@ fn api_error_responder_json() {
     let api_error = ApiError {
         status: 418,
         details: ErrorDetails {
-            code: 42,
+            code: 1337,
             message: Some("Not found".to_string()),
             arguments: None,
         },
     };
-    let expected_error_json = r#"{"status":418,"details":{"code":42,"message":"Not found"}}"#;
+    let expected_error_json = r#"{"code":1337,"message":"Not found"}"#;
+
     let rocket = rocket::ignite();
     let client = Client::new(rocket).expect("valid rocket instance");
-
     let local_request = client.get("/");
     let request = local_request.inner();
     let mut response = api_error.respond_to(&request).unwrap();
+
     let body_json = response.body().unwrap().into_string().unwrap();
 
     assert_eq!(response.status().code, 418);
@@ -30,7 +31,7 @@ fn api_error_responder_json() {
 fn api_error_from_anyhow_error() {
     let error = anyhow::anyhow!("Error message");
     let error_details = ErrorDetails {
-        code: 42,
+        code: 1337,
         message: Some("Error message".to_string()),
         arguments: None,
     };
@@ -86,10 +87,9 @@ fn api_error_unknown_error_json_structure() {
           "0x1230b3d59858296A31053C1b8562Ecf89A2f888b"
         ]
     }"#;
-    let json_error = serde_json::from_str::<ErrorDetails>(&expected_error_json).expect_err("New unknown structure");
     let expected_error = ErrorDetails {
-        code: 1337,
-        message: Some(format!("Serde serialization error: {}", json_error.to_string())),
+        code: 42,
+        message: Some(expected_error_json.to_owned()),
         arguments: None,
     };
 

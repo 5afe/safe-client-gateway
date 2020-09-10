@@ -113,10 +113,10 @@ impl CachedWithCode {
     }
 
     pub(super) fn to_result(&self) -> Result<String, ApiError> {
-        if !self.is_error() {
-            Ok(String::from(&self.data))
-        } else {
+        if self.is_error() {
             Err(ApiError::from_backend_error(self.code, &self.data))
+        } else {
+            Ok(String::from(&self.data))
         }
     }
 }

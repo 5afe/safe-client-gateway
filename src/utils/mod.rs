@@ -12,9 +12,6 @@ pub mod errors;
 #[cfg(test)]
 mod tests;
 
-#[cfg(test)]
-mod tests;
-
 //TODO think of a better impl, using enums as per Nick's suggestion
 pub const TRANSFER_METHOD: &str = "transfer";
 pub const ERC20_TRANSFER_METHODS: &[&str] = &[TRANSFER_METHOD, "transferFrom"];

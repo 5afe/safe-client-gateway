@@ -1,6 +1,7 @@
 use crate::utils::cache::{Cache, CacheExt};
 use crate::config::{base_transaction_service_url, info_cache_duration};
 use crate::utils::context::Context;
+use crate::utils::json::default_if_null;
 use serde_json;
 use anyhow::Result;
 use serde::de::DeserializeOwned;
@@ -44,6 +45,7 @@ pub struct TokenInfo {
     #[serde(rename = "type")]
     pub token_type: TokenType,
     pub address: String,
+    #[serde(deserialize_with = "default_if_null")]
     pub decimals: u64,
     pub symbol: String,
     pub name: String,

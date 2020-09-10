@@ -5,7 +5,7 @@ use serde::Deserialize;
 #[derive(PartialEq, Deserialize, Debug)]
 struct ExpectedStruct {
     #[serde(deserialize_with = "default_if_null")]
-    field: String,
+    field: u64,
     other_field: String,
     #[serde(deserialize_with = "default_if_null")]
     with_custom_default: WithCustomDefault,
@@ -39,7 +39,7 @@ fn deserialize_expected_field_null() {
     });
 
     let expected = ExpectedStruct {
-        field: "".to_string(),
+        field: 0,
         other_field: "other value".to_string(),
         with_custom_default: WithCustomDefault("different value".to_string()),
     };
@@ -52,13 +52,13 @@ fn deserialize_expected_field_null() {
 #[test]
 fn deserialize_expected_field_with_value() {
     let test_json = json!({
-        "field" : "value",
+        "field" : 42,
         "other_field":"other value",
         "with_custom_default": "different value"
     });
 
     let expected = ExpectedStruct {
-        field: "value".to_string(),
+        field: 42,
         other_field: "other value".to_string(),
         with_custom_default: WithCustomDefault("different value".to_string()),
     };
@@ -71,13 +71,13 @@ fn deserialize_expected_field_with_value() {
 #[test]
 fn deserialize_expected_field_with_custom_default() {
     let test_json = json!({
-        "field" : "value",
+        "field" : 42,
         "other_field":"other value",
         "with_custom_default": null
     });
 
     let expected = ExpectedStruct {
-        field: "value".to_string(),
+        field: 42,
         other_field: "other value".to_string(),
         with_custom_default: WithCustomDefault("custom default".to_string()),
     };

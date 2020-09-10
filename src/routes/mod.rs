@@ -7,9 +7,10 @@ use rocket_contrib::json::JsonValue;
 pub mod about;
 pub mod transactions;
 pub mod hooks;
+pub mod health;
 
 pub fn active_routes() -> Vec<Route> {
-    routes![about::backbone, about::info, transactions::details, transactions::all, hooks::update]
+    routes![about::backbone, about::info, transactions::details, transactions::all, hooks::update, health::health]
 }
 
 pub fn error_catchers() -> Vec<Catcher> {
@@ -23,6 +24,7 @@ fn not_found() -> JsonValue {
         "reason": "Resource was not found."
     })
 }
+
 #[catch(500)]
 fn panic() -> JsonValue {
     json!({

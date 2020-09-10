@@ -7,6 +7,10 @@ pub mod cors;
 pub mod context;
 pub mod cache;
 pub mod json;
+pub mod errors;
+
+#[cfg(test)]
+mod tests;
 
 #[cfg(test)]
 mod tests;

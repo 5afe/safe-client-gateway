@@ -12,13 +12,13 @@ use crate::providers::info::DefaultInfoProvider;
 use crate::utils::context::Context;
 use crate::utils::hex_hash;
 use crate::utils::cache::CacheExt;
-use anyhow::Result;
 use log::debug;
+use crate::utils::errors::ApiResult;
 
 fn get_multisig_transaction_details(
     context: &Context,
     safe_tx_hash: &str,
-) -> Result<TransactionDetails> {
+) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
         "{}/transactions/{}",
@@ -40,7 +40,7 @@ fn get_ethereum_transaction_details(
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
-) -> Result<TransactionDetails> {
+) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
         "{}/safes/{}/transfers/?transaction_hash={}&limit=1000",
@@ -73,7 +73,7 @@ fn get_module_transaction_details(
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
-) -> Result<TransactionDetails> {
+) -> ApiResult<TransactionDetails> {
     let url = format!(
         "{}/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
         base_transaction_service_url(),
@@ -98,7 +98,7 @@ fn get_module_transaction_details(
 pub fn get_transactions_details(
     context: &Context,
     details_id: &String,
-) -> Result<TransactionDetails> {
+) -> ApiResult<TransactionDetails> {
     let id_parts: Vec<&str> = details_id.split(ID_SEPARATOR).collect();
     let tx_type = id_parts.get(0).ok_or(anyhow::anyhow!("Invalid id"))?;
 
@@ -129,7 +129,6 @@ pub fn get_transactions_details(
                 .get(3)
                 .ok_or(anyhow::anyhow!("No module tx details hash"))?,
         ),
-        &_ => get_multisig_transaction_details(context, tx_type)
-            .map_err(|_| anyhow::anyhow!("Invalid details type or Id")),
+        &_ => get_multisig_transaction_details(context, tx_type),
     }
 }

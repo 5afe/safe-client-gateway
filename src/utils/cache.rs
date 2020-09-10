@@ -65,12 +65,7 @@ pub trait CacheExt: Cache {
     ) -> ApiResult<String> {
         match self.fetch(&url) {
             Some(cached) => {
-                let cached_with_code = CachedWithCode::split(&cached);
-                return if !cached_with_code.is_error() {
-                    Ok(String::from(cached_with_code.data))
-                } else {
-                    Err(ApiError::from_backend_error(cached_with_code.code, &cached_with_code.data))
-                };
+                CachedWithCode::split(&cached).to_result()
             }
             None => {
                 let response = client.get(url).send()?;
@@ -115,6 +110,14 @@ impl CachedWithCode {
 
     pub(super) fn is_error(&self) -> bool {
         200 > self.code || self.code >= 400
+    }
+
+    pub(super) fn to_result(&self) -> Result<String, ApiError> {
+        if !self.is_error() {
+            Ok(String::from(&self.data))
+        } else {
+            Err(ApiError::from_backend_error(self.code, &self.data))
+        }
     }
 }
 

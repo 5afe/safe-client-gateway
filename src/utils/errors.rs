@@ -10,7 +10,7 @@ use anyhow::Result;
 
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq)]
 pub struct ApiError {
     pub status: u16,
     pub details: ErrorDetails,

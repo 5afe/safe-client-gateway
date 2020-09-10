@@ -1,9 +1,9 @@
-use anyhow::Result;
 use rocket::response::content;
 use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
 use serde::ser::Serialize;
 use serde_json;
 use mockall::automock;
+use crate::utils::errors::{ApiResult, ApiError};
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -11,9 +11,9 @@ pub struct ServiceCache(redis::Connection);
 #[automock]
 pub trait Cache {
     fn fetch(&self, id: &str) -> Option<String>;
-    fn create(&self, id: &String, dest: &String, timeout: usize);
-    fn invalidate_pattern(&self, pattern: &String);
-    fn invalidate(&self, id: &String);
+    fn create(&self, id: &str, dest: &str, timeout: usize);
+    fn invalidate_pattern(&self, pattern: &str);
+    fn invalidate(&self, id: &str);
 }
 
 impl Cache for ServiceCache {
@@ -24,15 +24,15 @@ impl Cache for ServiceCache {
         }
     }
 
-    fn create(&self, id: &String, dest: &String, timeout: usize) {
+    fn create(&self, id: &str, dest: &str, timeout: usize) {
         let _: () = self.set_ex(id, dest, timeout).unwrap();
     }
 
-    fn invalidate_pattern(&self, pattern: &String) {
+    fn invalidate_pattern(&self, pattern: &str) {
         pipeline_delete(self, self.scan_match(pattern).unwrap());
     }
 
-    fn invalidate(&self, id: &String) {
+    fn invalidate(&self, id: &str) {
         let _: () = self.del(id).unwrap();
     }
 }
@@ -42,8 +42,8 @@ pub trait CacheExt: Cache {
         &self,
         key: &String,
         timeout: usize,
-        resp: impl Fn() -> Result<R>,
-    ) -> Result<content::Json<String>>
+        resp: impl Fn() -> ApiResult<R>,
+    ) -> ApiResult<content::Json<String>>
         where R: Serialize {
         let cached = self.fetch(key);
         match cached {
@@ -62,20 +62,62 @@ pub trait CacheExt: Cache {
         client: &reqwest::blocking::Client,
         url: &String,
         timeout: usize,
-    ) -> Result<String> {
-        let data: String =
-            match self.fetch(&url) {
-                Some(cached) => cached,
-                None => {
-                    let response = client.get(url).send()?;
-                    // Don't cache if it is a Server error
-                    if response.status().is_server_error() { anyhow::bail!("Got server error for {}", url); };
-                    let raw_data = response.text()?;
-                    self.create(&url, &raw_data, timeout);
-                    raw_data
+    ) -> ApiResult<String> {
+        match self.fetch(&url) {
+            Some(cached) => {
+                CachedWithCode::split(&cached).to_result()
+            }
+            None => {
+                let response = client.get(url).send()?;
+                let status_code = response.status().as_u16();
+
+                if response.status().is_server_error() {
+                    return Err(ApiError::from_backend_error(42, format!("Got server error for {}", response.text()?).as_str()));
                 }
-            };
-        Ok(data)
+                let is_client_error = response.status().is_client_error();
+                let raw_data = response.text()?;
+                self.create(&url, CachedWithCode::join(status_code, &raw_data).as_str(), timeout);
+                return if is_client_error {
+                    Err(ApiError::from_backend_error(status_code, &raw_data))
+                } else {
+                    Ok(raw_data)
+                };
+            }
+        }
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub(super) struct CachedWithCode {
+    pub(super) code: u16,
+    pub(super) data: String,
+}
+
+impl CachedWithCode {
+    const SEPARATOR: &'static str = ";";
+
+    pub(super) fn split(cached: &str) -> Self {
+        let cached_with_code: Vec<&str> = cached.splitn(2, CachedWithCode::SEPARATOR).collect();
+        CachedWithCode {
+            code: cached_with_code.get(0).expect("Must have a status code").parse().expect("Not a valid Http code"),
+            data: cached_with_code.get(1).expect("Must have data").to_string(),
+        }
+    }
+
+    pub(super) fn join(code: u16, data: &str) -> String {
+        format!("{}{}{}", code, CachedWithCode::SEPARATOR, data)
+    }
+
+    pub(super) fn is_error(&self) -> bool {
+        200 > self.code || self.code >= 400
+    }
+
+    pub(super) fn to_result(&self) -> Result<String, ApiError> {
+        if self.is_error() {
+            Err(ApiError::from_backend_error(self.code, &self.data))
+        } else {
+            Ok(String::from(&self.data))
+        }
     }
 }
 

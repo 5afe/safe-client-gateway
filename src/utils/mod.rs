@@ -7,6 +7,10 @@ pub mod cors;
 pub mod context;
 pub mod cache;
 pub mod json;
+pub mod errors;
+
+#[cfg(test)]
+mod tests;
 
 //TODO think of a better impl, using enums as per Nick's suggestion
 pub const TRANSFER_METHOD: &str = "transfer";

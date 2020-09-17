@@ -85,22 +85,6 @@ pub trait CacheExt: Cache {
             }
         }
     }
-
-    fn cache_string(
-        &self,
-        key: &str,
-        timeout: usize,
-    ) -> ApiResult<String> {
-        let cached = self.fetch(key);
-        match cached {
-            Some(value) => Ok(value),
-            None => {
-                let to_cache = String::new();
-                self.create(key, to_cache.as_str(), timeout);
-                Ok(to_cache)
-            }
-        }
-    }
 }
 
 #[derive(Debug, PartialEq)]

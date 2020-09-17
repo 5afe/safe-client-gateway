@@ -40,7 +40,7 @@ impl Cache for ServiceCache {
 pub trait CacheExt: Cache {
     fn cache_resp<R>(
         &self,
-        key: &String,
+        key: &str,
         timeout: usize,
         resp: impl Fn() -> ApiResult<R>,
     ) -> ApiResult<content::Json<String>>
@@ -60,7 +60,7 @@ pub trait CacheExt: Cache {
     fn request_cached(
         &self,
         client: &reqwest::blocking::Client,
-        url: &String,
+        url: &str,
         timeout: usize,
     ) -> ApiResult<String> {
         match self.fetch(&url) {

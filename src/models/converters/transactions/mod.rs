@@ -45,17 +45,37 @@ impl MultisigTransaction {
     }
 
     fn transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
-        if self.is_settings_change() {
-            // Early exit if it is a setting change
-            return TransactionInfo::SettingsChange(self.to_settings_change());
-        }
-        let token = info_provider.token_info(&self.to).ok();
-        if self.is_erc20_transfer(&token) {
-            TransactionInfo::Transfer(self.to_erc20_transfer(&token.as_ref().unwrap()))
-        } else if self.is_erc721_transfer(&token) {
-            TransactionInfo::Transfer(self.to_erc721_transfer(&token.as_ref().unwrap()))
-        } else if self.is_ether_transfer() {
+        // if self.is_settings_change() {
+        //     // Early exit if it is a setting change
+        //     return TransactionInfo::SettingsChange(self.to_settings_change());
+        // }
+        // let token = info_provider.token_info(&self.to).ok();
+        // if self.is_erc20_transfer(&token) {
+        //     TransactionInfo::Transfer(self.to_erc20_transfer(&token.as_ref().unwrap()))
+        // } else if self.is_erc721_transfer(&token) {
+        //     TransactionInfo::Transfer(self.to_erc721_transfer(&token.as_ref().unwrap()))
+        // } else if self.is_ether_transfer() {
+        //     TransactionInfo::Transfer(self.to_ether_transfer())
+        // } else {
+        //     TransactionInfo::Custom(self.to_custom())
+        // }
+
+        if (self.value_as_uint() > 0 && data_size(&self.data) > 0) || !self.operation.contains(&Operation::CALL) {
+            TransactionInfo::Custom(self.to_custom())
+        } else if self.value_as_uint() > 0 && data_size(&self.data) == 0 {
             TransactionInfo::Transfer(self.to_ether_transfer())
+        } else if self.value_as_uint() == 0 && data_size(&self.data) > 0 && self.safe == self.to {
+            TransactionInfo::SettingsChange(self.to_settings_change())
+        } else if self.data_decoded.as_ref().map(|it| it.is_erc20_transfer_method() || it.is_erc721_transfer_method()).unwrap_or(false) {
+            if let Ok(token) = info_provider.token_info(&self.to) {
+                match token.token_type {
+                    TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
+                    TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
+                    TokenType::Unknown => TransactionInfo::Custom(self.to_custom()),
+                }
+            } else {
+                TransactionInfo::Custom(self.to_custom())
+            }
         } else {
             TransactionInfo::Custom(self.to_custom())
         }
@@ -68,11 +88,7 @@ impl MultisigTransaction {
             .and_then(|t| Some(matches!(t.token_type, TokenType::Erc20)))
             .unwrap_or(false)
             && self.data_decoded.is_some()
-            && self
-            .data_decoded
-            .as_ref()
-            .unwrap()
-            .is_erc20_transfer_method()
+            && self.data_decoded.as_ref().unwrap().is_erc20_transfer_method()
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
     }
 
@@ -83,22 +99,14 @@ impl MultisigTransaction {
             .and_then(|t| Some(matches!(t.token_type, TokenType::Erc721)))
             .unwrap_or(false)
             && self.data_decoded.is_some()
-            && self
-            .data_decoded
-            .as_ref()
-            .unwrap()
-            .is_erc721_transfer_method()
+            && self.data_decoded.as_ref().unwrap().is_erc721_transfer_method()
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
     }
 
     fn is_ether_transfer(&self) -> bool {
         self.operation.contains(&Operation::CALL)
             && self.data.is_none()
-            && self
-            .value
-            .as_ref()
-            .and_then(|v| Some(v.parse::<u128>().unwrap_or(0) > 0))
-            .unwrap_or(false)
+            && self.value.as_ref().and_then(|v| Some(v.parse::<u128>().unwrap_or(0) > 0)).unwrap_or(false)
     }
 
     fn is_settings_change(&self) -> bool {
@@ -177,10 +185,14 @@ impl MultisigTransaction {
     fn to_custom(&self) -> Custom {
         Custom {
             to: self.to.to_owned(),
-            data_size: data_size(&self.data),
+            data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap().into(),
             method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
         }
+    }
+
+    fn value_as_uint(&self) -> u128 {
+        self.value.as_ref().map(|it| it.parse::<u128>().unwrap_or(0)).unwrap_or(0)
     }
 }
 
@@ -188,14 +200,14 @@ impl ModuleTransaction {
     fn to_transaction_info(&self) -> TransactionInfo {
         TransactionInfo::Custom(Custom {
             to: self.to.to_owned(),
-            data_size: data_size(&self.data),
+            data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
             method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
         })
     }
 }
 
-fn data_size(data: &Option<String>) -> String {
+fn data_size(data: &Option<String>) -> usize {
     match data {
         Some(actual_data) => {
             let length = actual_data.len();
@@ -205,7 +217,7 @@ fn data_size(data: &Option<String>) -> String {
             }
         }
         None => 0,
-    }.to_string()
+    }
 }
 
 fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: String) -> String {

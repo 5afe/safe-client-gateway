@@ -103,17 +103,18 @@ impl MultisigTransaction {
             direction,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: token.address.to_owned(),
+                logo_uri: token.logo_uri.to_owned(),
                 token_name: Some(token.name.to_owned()),
                 token_symbol: Some(token.symbol.to_owned()),
                 token_id: self
                     .data_decoded
                     .as_ref()
-                    .and_then(|it| match it.get_parameter_single_value("tokenId") {
-                        Some(e) => Some(e),
-                        None => it.get_parameter_single_value("value"),
-                    })
+                    .and_then(|it|
+                        match it.get_parameter_single_value("tokenId") {
+                            Some(e) => Some(e),
+                            None => it.get_parameter_single_value("value"),
+                        })
                     .unwrap_or(String::from("0")),
-                logo_uri: token.logo_uri.to_owned(),
             }),
         }
     }

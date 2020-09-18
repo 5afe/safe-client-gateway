@@ -3,7 +3,6 @@ use crate::models::converters::transactions::data_size;
 mod data_size_calculation;
 mod summary;
 mod details;
-mod transfer_type_checks;
 
 #[test]
 fn data_size_none() {

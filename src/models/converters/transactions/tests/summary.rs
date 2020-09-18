@@ -308,8 +308,7 @@ fn multisig_transaction_to_ether_transfer_summary() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
-        .times(1)
-        .return_once(move |_| Err(anyhow::anyhow!("No token info")));
+        .times(0);
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x6e631d27c638458329ba95cc17961e74b8146c46886545cd1984bb2bcf4eccd3"),
@@ -399,8 +398,7 @@ fn multisig_transaction_to_custom_summary() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
-        .times(1)
-        .return_once(move |_| Err(anyhow::anyhow!("No token info")));
+        .times(0);
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621"),

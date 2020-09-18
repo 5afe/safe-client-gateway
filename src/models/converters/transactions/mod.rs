@@ -146,7 +146,7 @@ impl MultisigTransaction {
     }
 
     fn value_as_uint(&self) -> u128 {
-        self.value.as_ref().map(|it| it.parse::<u128>().unwrap_or(0)).unwrap_or(0)
+        self.value.as_ref().map(|it| it.parse::<u128>().ok()).flatten().unwrap_or(0)
     }
 }
 

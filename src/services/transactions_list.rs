@@ -14,7 +14,7 @@ use crate::utils::errors::ApiResult;
 pub fn get_all_transactions(context: &Context, safe_address: &String, page_url: &Option<String>) -> ApiResult<Page<TransactionSummary>> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
-        "{}/safes/{}/all-transactions/?{}",
+        "{}/v1/safes/{}/all-transactions/?{}",
         base_transaction_service_url(),
         safe_address,
         page_url.as_ref().unwrap_or(&String::new())
@@ -53,7 +53,7 @@ fn get_creation_transaction_summary(
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
     let url = format!(
-        "{}/safes/{}/creation/",
+        "{}/v1/safes/{}/creation/",
         base_transaction_service_url(),
         safe
     );

@@ -54,13 +54,13 @@ pub struct TokenInfo {
 
 impl InfoProvider for DefaultInfoProvider<'_> {
     fn safe_info(&mut self, safe: &str) -> Result<SafeInfo> {
-        let url = format!("{}/safes/{}/", base_transaction_service_url(), safe);
+        let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
         self.cached(|this| &mut this.safe_cache, url)
     }
 
     fn token_info(&mut self, token: &str) -> Result<TokenInfo> {
         if token != "0x0000000000000000000000000000000000000000" {
-            let url = format!("{}/tokens/{}/", base_transaction_service_url(), token);
+            let url = format!("{}/v1/tokens/{}/", base_transaction_service_url(), token);
             self.cached(|this| &mut this.token_cache, url)
         } else {
             anyhow::bail!("Token Address is 0x0")

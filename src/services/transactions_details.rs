@@ -21,7 +21,7 @@ fn get_multisig_transaction_details(
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
-        "{}/transactions/{}",
+        "{}/v1/transactions/{}",
         base_transaction_service_url(),
         safe_tx_hash
     );
@@ -43,7 +43,7 @@ fn get_ethereum_transaction_details(
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
-        "{}/safes/{}/transfers/?transaction_hash={}&limit=1000",
+        "{}/v1/safes/{}/transfers/?transaction_hash={}&limit=1000",
         base_transaction_service_url(),
         safe,
         tx_hash
@@ -75,7 +75,7 @@ fn get_module_transaction_details(
     detail_hash: &str,
 ) -> ApiResult<TransactionDetails> {
     let url = format!(
-        "{}/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
+        "{}/v1/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
         base_transaction_service_url(),
         safe,
         tx_hash

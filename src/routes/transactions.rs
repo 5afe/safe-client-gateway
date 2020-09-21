@@ -3,8 +3,8 @@ use crate::utils::context::Context;
 use crate::services::transactions_details;
 use crate::services::transactions_list;
 use crate::utils::cache::CacheExt;
-use rocket::response::content;
 use crate::utils::errors::ApiResult;
+use rocket::response::content;
 
 #[get("/v1/safes/<safe_address>/transactions?<page_url>")]
 pub fn all(context: Context, safe_address: String, page_url: Option<String>) -> ApiResult<content::Json<String>> {

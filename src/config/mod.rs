@@ -1,7 +1,7 @@
 use std::env;
 
 pub fn base_transaction_service_url() -> String {
-    format!("{}{}", env::var("TRANSACTION_SERVICE_URL").unwrap(), "/api/v1")
+    format!("{}{}", env::var("TRANSACTION_SERVICE_URL").unwrap(), "/api")
 }
 
 pub fn webhook_token() -> String {

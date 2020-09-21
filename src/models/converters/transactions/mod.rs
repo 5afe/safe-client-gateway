@@ -50,27 +50,26 @@ impl MultisigTransaction {
         // let method_name = self.data_decoded.as_ref().map(|it| it.method);
 
         if (value > 0 && data_size > 0) || !self.operation.contains(&Operation::CALL) {
-            None
+            TransactionInfo::Custom(self.to_custom())
         } else if value > 0 && data_size == 0 {
-            Some(TransactionInfo::Transfer(self.to_ether_transfer()))
+            TransactionInfo::Transfer(self.to_ether_transfer())
         } else if value == 0 && data_size > 0 && self.safe == self.to {
-            Some(TransactionInfo::SettingsChange(self.to_settings_change()))
+            TransactionInfo::SettingsChange(self.to_settings_change())
         } else if self.data_decoded.as_ref().map(|data_decoded|
-            data_decoded.is_erc20_transfer_method() || data_decoded.is_erc721_transfer_method())
-            .unwrap_or(false) &&
+            data_decoded.is_erc20_transfer_method() || data_decoded.is_erc721_transfer_method()).unwrap_or(false) &&
             check_sender_or_receiver(&self.data_decoded, &self.safe) {
-            Some(info_provider.token_info(&self.to)
+            info_provider.token_info(&self.to)
                 .map_or(TransactionInfo::Custom(self.to_custom()),
                         |token|
                             match token.token_type {
                                 TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
                                 TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
-                                _ => panic!("TokenInfo not available"),
+                                _ => TransactionInfo::Custom(self.to_custom()),
                             },
-                ))
+                )
         } else {
-            None
-        }.unwrap_or(TransactionInfo::Custom(self.to_custom()))
+            TransactionInfo::Custom(self.to_custom())
+        }
     }
 
     fn to_erc20_transfer(&self, token: &TokenInfo) -> Transfer {

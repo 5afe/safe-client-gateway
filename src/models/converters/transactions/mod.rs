@@ -45,29 +45,32 @@ impl MultisigTransaction {
     }
 
     fn transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
-        if (self.value_as_uint() > 0 && data_size(&self.data) > 0) || !self.operation.contains(&Operation::CALL) {
-            TransactionInfo::Custom(self.to_custom())
-        } else if self.value_as_uint() > 0 && data_size(&self.data) == 0 {
-            TransactionInfo::Transfer(self.to_ether_transfer())
-        } else if self.value_as_uint() == 0 && data_size(&self.data) > 0 && self.safe == self.to {
-            TransactionInfo::SettingsChange(self.to_settings_change())
-        } else if self.data_decoded.as_ref().map(|it| it.is_erc20_transfer_method() || it.is_erc721_transfer_method()).unwrap_or(false) {
-            if !check_sender_or_receiver(&self.data_decoded, &self.safe) {
-                TransactionInfo::Custom(self.to_custom())
-            } else {
-                if let Ok(token) = info_provider.token_info(&self.to) {
-                    match token.token_type {
-                        TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
-                        TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
-                        TokenType::Unknown => TransactionInfo::Custom(self.to_custom()),
-                    }
-                } else {
-                    TransactionInfo::Custom(self.to_custom())
-                }
-            }
+        let value = self.value_as_uint();
+        let data_size = data_size(&self.data);
+        // let method_name = self.data_decoded.as_ref().map(|it| it.method);
+
+        if (value > 0 && data_size > 0) || !self.operation.contains(&Operation::CALL) {
+            None
+        } else if value > 0 && data_size == 0 {
+            Some(TransactionInfo::Transfer(self.to_ether_transfer()))
+        } else if value == 0 && data_size > 0 && self.safe == self.to {
+            Some(TransactionInfo::SettingsChange(self.to_settings_change()))
+        } else if self.data_decoded.as_ref().map(|data_decoded|
+            data_decoded.is_erc20_transfer_method() || data_decoded.is_erc721_transfer_method())
+            .unwrap_or(false) &&
+            check_sender_or_receiver(&self.data_decoded, &self.safe) {
+            Some(info_provider.token_info(&self.to)
+                .map_or(TransactionInfo::Custom(self.to_custom()),
+                        |token|
+                            match token.token_type {
+                                TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
+                                TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
+                                _ => panic!("TokenInfo not available"),
+                            },
+                ))
         } else {
-            TransactionInfo::Custom(self.to_custom())
-        }
+            None
+        }.unwrap_or(TransactionInfo::Custom(self.to_custom()))
     }
 
     fn to_erc20_transfer(&self, token: &TokenInfo) -> Transfer {

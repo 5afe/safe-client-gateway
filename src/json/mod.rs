@@ -1,5 +1,6 @@
 pub const MULTISIG_TX_ERC20_TRANSFER: &str = include_str!("transactions/multisig_erc20_transfer.json");
 pub const MULTISIG_TX_ERC721_TRANSFER: &str = include_str!("transactions/multisig_erc721_transfer.json");
+pub const MULTISIG_TX_ERC721_TRANSFER_CANCELLED: &str = include_str!("transactions/multisig_erc721_transfer_cancelled.json");
 pub const MULTISIG_TX_ETHER_TRANSFER: &str = include_str!("transactions/multisig_ether_transfer.json");
 pub const MULTISIG_TX_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_addOwnerWithThreshold_settings_change.json");
 pub const MULTISIG_TX_CUSTOM: &str = include_str!("transactions/multisig_approve_custom.json");
@@ -7,6 +8,7 @@ pub const MULTISIG_FAILED_TX: &str = include_str!("transactions/multisig_failed_
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
+pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str = include_str!("safes/with_modules_and_high_nonce.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
 pub const ETHER_TRANSFER: &str = include_str!("transfers/ether_transfer.json");

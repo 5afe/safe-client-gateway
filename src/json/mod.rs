@@ -9,6 +9,9 @@ pub const MULTISIG_TX_AWAITING_EXECUTION: &str = include_str!("transactions/mult
 pub const MULTISIG_TX_AWAITING_CONFIRMATIONS: &str = include_str!("transactions/multisig_awaiting_confirmations.json");
 pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL: &str = include_str!("transactions/multisig_awaiting_confirmations_required_null.json");
 pub const MULTISIG_TX_CONFIRMATIONS_NULL: &str = include_str!("transactions/multisig_confirmations_null.json");
+pub const MULTISIG_TX_ERC20_TRANSFER_DELEGATE: &str = include_str!("transactions/multisig_erc20_transfer_delegate.json");
+pub const MULTISIG_TX_ERC20_TRANSFER_WITH_VALUE: &str = include_str!("transactions/multisig_erc20_transfer_with_value.json");
+
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");

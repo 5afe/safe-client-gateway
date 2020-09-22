@@ -4,10 +4,14 @@ pub const MULTISIG_TX_ERC721_TRANSFER_CANCELLED: &str = include_str!("transactio
 pub const MULTISIG_TX_ETHER_TRANSFER: &str = include_str!("transactions/multisig_ether_transfer.json");
 pub const MULTISIG_TX_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_addOwnerWithThreshold_settings_change.json");
 pub const MULTISIG_TX_CUSTOM: &str = include_str!("transactions/multisig_approve_custom.json");
-pub const MULTISIG_FAILED_TX: &str = include_str!("transactions/multisig_failed_transfer.json");
+pub const MULTISIG_TX_FAILED: &str = include_str!("transactions/multisig_failed_transfer.json");
+pub const MULTISIG_TX_AWAITING_EXECUTION: &str = include_str!("transactions/multisig_awaiting_execution.json");
+pub const MULTISIG_TX_AWAITING_CONFIRMATIONS: &str = include_str!("transactions/multisig_awaiting_confirmations.json");
+pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL: &str = include_str!("transactions/multisig_awaiting_confirmations_required_null.json");
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
+pub const SAFE_WITH_THRESHOLD_TWO: &str = include_str!("safes/with_threshold_two.json");
 pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str = include_str!("safes/with_modules_and_high_nonce.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 

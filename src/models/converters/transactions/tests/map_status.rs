@@ -13,7 +13,7 @@ fn map_status_to_success() {
 
 #[test]
 fn map_status_to_failed() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_FAILED_TX).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_FAILED).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let actual = tx.map_status(&safe_info);
 
@@ -27,4 +27,31 @@ fn map_status_to_cancelled() {
     let actual = tx.map_status(&safe_info);
 
     assert_eq!(TransactionStatus::Cancelled, actual);
+}
+
+#[test]
+fn map_status_awaiting_execution() {
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_EXECUTION).unwrap();
+    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let actual = tx.map_status(&safe_info);
+
+    assert_eq!(TransactionStatus::AwaitingExecution, actual);
+}
+
+#[test]
+fn map_status_awaiting_confirmations_required_field_none() {
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL).unwrap();
+    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_THRESHOLD_TWO).unwrap();
+    let actual = tx.map_status(&safe_info);
+
+    assert_eq!(TransactionStatus::AwaitingConfirmations, actual);
+}
+
+#[test]
+fn map_status_awaiting_confirmations_required_field_some() {
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS).unwrap();
+    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_THRESHOLD_TWO).unwrap();
+    let actual = tx.map_status(&safe_info);
+
+    assert_eq!(TransactionStatus::AwaitingConfirmations, actual);
 }

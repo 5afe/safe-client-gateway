@@ -3,6 +3,7 @@ pub const MULTISIG_TX_ERC721_TRANSFER: &str = include_str!("transactions/multisi
 pub const MULTISIG_TX_ERC721_TRANSFER_CANCELLED: &str = include_str!("transactions/multisig_erc721_transfer_cancelled.json");
 pub const MULTISIG_TX_ETHER_TRANSFER: &str = include_str!("transactions/multisig_ether_transfer.json");
 pub const MULTISIG_TX_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_addOwnerWithThreshold_settings_change.json");
+pub const MULTISIG_TX_UNKNOWN_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_newAndDifferentAddOwnerWithThreshold_settings_change.json");
 pub const MULTISIG_TX_CUSTOM: &str = include_str!("transactions/multisig_approve_custom.json");
 pub const MULTISIG_TX_FAILED: &str = include_str!("transactions/multisig_failed_transfer.json");
 pub const MULTISIG_TX_AWAITING_EXECUTION: &str = include_str!("transactions/multisig_awaiting_execution.json");

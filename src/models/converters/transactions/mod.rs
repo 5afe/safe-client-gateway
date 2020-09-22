@@ -47,13 +47,12 @@ impl MultisigTransaction {
     fn transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
         let value = self.value_as_uint();
         let data_size = data_size(&self.data);
-        // let method_name = self.data_decoded.as_ref().map(|it| it.method);
 
         if (value > 0 && data_size > 0) || !self.operation.contains(&Operation::CALL) {
             TransactionInfo::Custom(self.to_custom())
         } else if value > 0 && data_size == 0 {
             TransactionInfo::Transfer(self.to_ether_transfer())
-        } else if value == 0 && data_size > 0 && self.safe == self.to {
+        } else if value == 0 && data_size > 0 && self.safe == self.to && self.data_decoded.as_ref().map_or_else(|| false, |it| it.is_settings_change()) {
             TransactionInfo::SettingsChange(self.to_settings_change())
         } else if self.data_decoded.as_ref().map(|data_decoded|
             data_decoded.is_erc20_transfer_method() || data_decoded.is_erc721_transfer_method()).unwrap_or(false) &&

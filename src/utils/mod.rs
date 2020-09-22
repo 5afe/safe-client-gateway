@@ -25,6 +25,15 @@ pub const CHANGE_THRESHOLD: &'static str = "changeThreshold";
 pub const CHANGE_MASTER_COPY: &'static str = "changeMasterCopy";
 pub const ENABLE_MODULE: &'static str = "enableModule";
 pub const DISABLE_MODULE: &'static str = "disableModule";
+pub const SETTINGS_CHANGE_METHODS: &[&str] = &[
+    SET_FALLBACK_HANDLER,
+    ADD_OWNER_WITH_THRESHOLD,
+    REMOVE_OWNER,
+    SWAP_OWNER,
+    CHANGE_THRESHOLD,
+    CHANGE_MASTER_COPY,
+    ENABLE_MODULE,
+    DISABLE_MODULE];
 
 impl DataDecoded {
     pub fn get_parameter_single_value(&self, some_name: &str) -> Option<String> {
@@ -57,6 +66,10 @@ impl DataDecoded {
 
     pub fn is_erc721_transfer_method(&self) -> bool {
         ERC721_TRANSFER_METHODS.iter().any(|&value| value == self.method)
+    }
+
+    pub fn is_settings_change(&self) -> bool {
+        SETTINGS_CHANGE_METHODS.iter().any(|&value| value == self.method)
     }
 }
 

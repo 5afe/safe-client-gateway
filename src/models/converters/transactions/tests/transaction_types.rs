@@ -239,16 +239,57 @@ fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
 }
 
 #[test]
-fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() {}
+fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() {
+    let token_info = TokenInfo {
+        token_type: TokenType::Unknown,
+        address: "".to_string(),
+        decimals: 0,
+        symbol: "".to_string(),
+        name: "".to_string(),
+        logo_uri: None,
+    };
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(0);
+    mock_info_provider
+        .expect_token_info()
+        .times(1)
+        .return_once(move |_| Ok(token_info));
+
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER).unwrap();
+    let expected = TransactionInfo::Custom(Custom {
+        to: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
+        data_size: "68".to_string(),
+        value: "0".to_string(),
+        method_name: Some("transfer".to_string()),
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
+}
 
 #[test]
-fn transaction_data_decoded_is_erc20_receiver_ok_token_not_found() {}
+fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(0);
+    mock_info_provider
+        .expect_token_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No token info"));
 
-#[test]
-fn transaction_data_decoded_is_erc721_receiver_ok_token_not_found() {}
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER).unwrap();
+    let expected = TransactionInfo::Custom(Custom {
+        to: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
+        data_size: "68".to_string(),
+        value: "0".to_string(),
+        method_name: Some("transfer".to_string()),
+    });
 
-#[test]
-fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {}
+    let actual = tx.transaction_info(&mut mock_info_provider);
 
-#[test]
-fn transaction_data_decoded_is_other_method_method() {}
+    assert_eq!(expected, actual);
+}

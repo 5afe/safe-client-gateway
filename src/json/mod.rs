@@ -8,6 +8,7 @@ pub const MULTISIG_TX_FAILED: &str = include_str!("transactions/multisig_failed_
 pub const MULTISIG_TX_AWAITING_EXECUTION: &str = include_str!("transactions/multisig_awaiting_execution.json");
 pub const MULTISIG_TX_AWAITING_CONFIRMATIONS: &str = include_str!("transactions/multisig_awaiting_confirmations.json");
 pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL: &str = include_str!("transactions/multisig_awaiting_confirmations_required_null.json");
+pub const MULTISIG_TX_CONFIRMATIONS_NULL: &str = include_str!("transactions/multisig_confirmations_null.json");
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");

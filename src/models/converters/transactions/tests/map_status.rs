@@ -55,3 +55,35 @@ fn map_status_awaiting_confirmations_required_field_some() {
 
     assert_eq!(TransactionStatus::AwaitingConfirmations, actual);
 }
+
+#[test]
+fn confirmations_required_none() {
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL).unwrap();
+    let actual = tx.confirmation_required(11);
+
+    assert_eq!(11, actual);
+}
+
+#[test]
+fn confirmations_required_some() {
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS).unwrap();
+    let actual = tx.confirmation_required(11);
+
+    assert_eq!(2, actual);
+}
+
+#[test]
+fn confirmation_count_none() {
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CONFIRMATIONS_NULL).unwrap();
+
+    let actual = tx.confirmation_count();
+    assert_eq!(0, actual)
+}
+
+#[test]
+fn confirmation_count_some() {
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS).unwrap();
+
+    let actual = tx.confirmation_count();
+    assert_eq!(1, actual)
+}

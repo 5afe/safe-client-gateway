@@ -4,6 +4,7 @@ pub const MULTISIG_TX_ERC20_TRANSFER_WITH_VALUE: &str = include_str!("transactio
 pub const MULTISIG_TX_ERC20_TRANSFER_INVALID_TO_AND_FROM: &str = include_str!("transactions/multisig_erc20_transfer_invalid_to_and_from.json");
 pub const MULTISIG_TX_ERC721_TRANSFER: &str = include_str!("transactions/multisig_erc721_transfer.json");
 pub const MULTISIG_TX_ERC721_TRANSFER_CANCELLED: &str = include_str!("transactions/multisig_erc721_transfer_cancelled.json");
+pub const MULTISIG_TX_ERC721_TRANSFER_INVALID_TO_AND_FROM: &str = include_str!("transactions/multisig_erc721_transfer_invalid_to_and_from.json");
 pub const MULTISIG_TX_ETHER_TRANSFER: &str = include_str!("transactions/multisig_ether_transfer.json");
 pub const MULTISIG_TX_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_addOwnerWithThreshold_settings_change.json");
 pub const MULTISIG_TX_UNKNOWN_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_newAndDifferentAddOwnerWithThreshold_settings_change.json");

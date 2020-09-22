@@ -193,7 +193,7 @@ fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
         .unwrap_or(String::from(fallback))
 }
 
-fn check_sender_or_receiver(data_decoded: &Option<DataDecoded>, expected: &String) -> bool {
+fn check_sender_or_receiver(data_decoded: &Option<DataDecoded>, expected: &str) -> bool {
     if data_decoded.is_none() { return false; };
     let data = data_decoded.as_ref().unwrap();
     data.method == TRANSFER_METHOD

@@ -91,7 +91,9 @@ fn check_sender_or_receiver_safe_invalid_receiver() {
 fn check_sender_or_receiver_data_decoded_none() {
     let data_decoded: Option<DataDecoded> = Option::None;
 
-    check_sender_or_receiver(&data_decoded, "");
+    let actual = check_sender_or_receiver(&data_decoded, "");
+
+    assert!(!actual);
 }
 
 #[test]

@@ -40,5 +40,5 @@ jobs:
       # message which made the build fail (probably travis related).
       - env CARGO_INCREMENTAL=0 RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings" cargo +nightly test
       # Ignore untested cargo files in travis root and auto-generated eth-contract code
-      - ./grcov --branch --ignore-not-existing --llvm --excl-start "test" --excl-line "#\[cfg_attr\(test, mockall::automock\)\]|#\[derive" --ignore "/*" --ignore "target/debug/build/**" target/debug/ --output-path coveralls.json --output-type "coveralls+" --source-dir . --service-name travis-ci --service-job-id $TRAVIS_JOB_ID
+      - ./grcov --branch --ignore-not-existing --llvm --ignore "*test*" --excl-line "#\[cfg_attr\(test, mockall::automock\)\]|#\[derive" --ignore "/*" --ignore "target/debug/build/**" target/debug/ --output-path coveralls.json --output-type "coveralls+" --source-dir . --service-name travis-ci --service-job-id $TRAVIS_JOB_ID
       - curl --form json_file=@coveralls.json https://coveralls.io/api/v1/jobs

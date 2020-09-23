@@ -1,4 +1,8 @@
 language: rust
+
+before-install:
+  - curl --location https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
+
 rust:
   - nightly
 cache: cargo
@@ -9,7 +13,6 @@ env:
 services:
   - docker
 script:
-  - curl --location https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
   # These flags are recommended by https://github.com/mozilla/grcov#grcov-with-travis .
   # vk: I had to remove `-Zpanic_abort_tests -Cpanic=abort` because this would cause compilation
   # to fail but I haven't investigated more into why.

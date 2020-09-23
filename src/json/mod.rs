@@ -1,11 +1,25 @@
 pub const MULTISIG_TX_ERC20_TRANSFER: &str = include_str!("transactions/multisig_erc20_transfer.json");
+pub const MULTISIG_TX_ERC20_TRANSFER_DELEGATE: &str = include_str!("transactions/multisig_erc20_transfer_delegate.json");
+pub const MULTISIG_TX_ERC20_TRANSFER_WITH_VALUE: &str = include_str!("transactions/multisig_erc20_transfer_with_value.json");
+pub const MULTISIG_TX_ERC20_TRANSFER_INVALID_TO_AND_FROM: &str = include_str!("transactions/multisig_erc20_transfer_invalid_to_and_from.json");
 pub const MULTISIG_TX_ERC721_TRANSFER: &str = include_str!("transactions/multisig_erc721_transfer.json");
+pub const MULTISIG_TX_ERC721_TRANSFER_CANCELLED: &str = include_str!("transactions/multisig_erc721_transfer_cancelled.json");
+pub const MULTISIG_TX_ERC721_TRANSFER_INVALID_TO_AND_FROM: &str = include_str!("transactions/multisig_erc721_transfer_invalid_to_and_from.json");
 pub const MULTISIG_TX_ETHER_TRANSFER: &str = include_str!("transactions/multisig_ether_transfer.json");
 pub const MULTISIG_TX_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_addOwnerWithThreshold_settings_change.json");
+pub const MULTISIG_TX_UNKNOWN_SETTINGS_CHANGE: &str = include_str!("transactions/multisig_newAndDifferentAddOwnerWithThreshold_settings_change.json");
 pub const MULTISIG_TX_CUSTOM: &str = include_str!("transactions/multisig_approve_custom.json");
+pub const MULTISIG_TX_FAILED: &str = include_str!("transactions/multisig_failed_transfer.json");
+pub const MULTISIG_TX_AWAITING_EXECUTION: &str = include_str!("transactions/multisig_awaiting_execution.json");
+pub const MULTISIG_TX_AWAITING_CONFIRMATIONS: &str = include_str!("transactions/multisig_awaiting_confirmations.json");
+pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL: &str = include_str!("transactions/multisig_awaiting_confirmations_required_null.json");
+pub const MULTISIG_TX_CONFIRMATIONS_NULL: &str = include_str!("transactions/multisig_confirmations_null.json");
+
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
+pub const SAFE_WITH_THRESHOLD_TWO: &str = include_str!("safes/with_threshold_two.json");
+pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str = include_str!("safes/with_modules_and_high_nonce.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
 pub const ETHER_TRANSFER: &str = include_str!("transfers/ether_transfer.json");

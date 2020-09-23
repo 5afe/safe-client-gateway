@@ -1,4 +1,7 @@
 mod data_size_calculation;
 mod summary;
 mod details;
-mod transfer_type_checks;
+pub(super) mod transaction_types;
+pub(super) mod map_status;
+pub(super) mod check_sender_or_receiver;
+pub(super) mod transfer_type_checks;

@@ -20,7 +20,7 @@ fn multisig_custom_transaction_to_transaction_details() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
-        .times(2)
+        .times(1)
         .returning(move |_| anyhow::bail!("Token Address 0x0"));
 
     let expected = TransactionDetails {

@@ -3,15 +3,32 @@ use crate::models::commons::{DataDecoded, Parameter};
 use crate::providers::info::*;
 use chrono::Utc;
 use crate::models::commons::Operation;
-
+use crate::models::service::transactions::{TransactionInfo, Transfer, TransferInfo, Erc721Transfer, TransferDirection, Erc20Transfer, EtherTransfer};
 
 #[test]
 fn multisig_tx_check_erc721_transfer() {
+    let token_info = TokenInfo {
+        token_type: TokenType::Erc721,
+        address: String::from("0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF"),
+        name: String::from("CryptoKitties"),
+        symbol: String::from("CK"),
+        decimals: 0,
+        logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png")),
+    };
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(0);
+    mock_info_provider
+        .expect_token_info()
+        .times(1)
+        .return_once(move |_| Ok(token_info));
+
     let expected_date = Utc::now();
-    let safe = String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b");
+    let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let to = String::from("0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF");
     let multisig_tx = MultisigTransaction {
-        safe,
+        safe: safe.to_string(),
         to,
         value: Some(String::from("0")),
         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e76443000000000000000000000000000000000000000000000000000000000000000466")),
@@ -68,26 +85,49 @@ fn multisig_tx_check_erc721_transfer() {
         )),
         signatures: Some(String::from("0x6722a6772c15dd72851593c69e521729be5f6e86cbe6881498885b6efb02f6a61638976cf12bb113d8a1f7cea776e9d5c4949dde7d8015ca03e433acc6f9435b1b75aa624315ed8a72e1fcf396fe8d7a50d6d71f18c3b6bddb025bf426b7e4de3f52ead25cef15c9b35feaeefb2b81f2b5333ed949035f948fbe0a9aec56f7ac5b1b000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001")),
     };
-    let token_info = Some(TokenInfo {
-        token_type: TokenType::Erc721,
-        address: String::from("0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF"),
-        name: String::from("CryptoKitties"),
-        symbol: String::from("CK"),
-        decimals: 0,
-        logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png")),
+
+    let expected = TransactionInfo::Transfer(Transfer {
+        sender: safe.to_string(),
+        recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        direction: TransferDirection::Outgoing,
+        transfer_info: TransferInfo::Erc721(Erc721Transfer {
+            token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
+            token_id: "1126".to_string(),
+            token_name: Some(String::from("CryptoKitties")),
+            token_symbol: Some(String::from("CK")),
+            logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png")),
+        }),
     });
-    assert!(!multisig_tx.is_erc20_transfer(&token_info));
-    assert!(!multisig_tx.is_ether_transfer());
-    assert!(multisig_tx.is_erc721_transfer(&token_info));
+
+    let actual = multisig_tx.transaction_info(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
 }
 
 #[test]
 fn multisig_tx_check_erc20_transfer() {
+    let token_info = TokenInfo {
+        token_type: TokenType::Erc20,
+        address: String::from("0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85"),
+        name: String::from("Maker"),
+        symbol: String::from("MKR"),
+        decimals: 18,
+        logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png")),
+    };
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(0);
+    mock_info_provider
+        .expect_token_info()
+        .times(1)
+        .return_once(move |_| Ok(token_info));
+
     let expected_date = Utc::now();
-    let safe = String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b");
+    let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let to = String::from("0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85");
     let multisig_tx = MultisigTransaction {
-        safe,
+        safe: safe.to_string(),
         to,
         value: Some(String::from("0")),
         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000002d79883d2000")),
@@ -144,26 +184,41 @@ fn multisig_tx_check_erc20_transfer() {
         )),
         signatures: Some(String::from("0x00000000000000000000000065f8236309e5a99ff0d129d04e486ebce20dc7b0000000000000000000000000000000000000000000000000000000000000000001ccbf629ad44c41c39e397d4c3c199593be908edf57d728204c2ebd5f384ad5c90f1e7fca86dab291e406724b99d7d956acaa01cb78d146e410a7accd1ffe0df01b9b3733a7018e90ca4ebb1504e1c230260f8d41d0542180e915fa10af694f18b360f5fe6c9dc252e257b3d45071b32977224122165ff771a018a392bb62dbf1491b")),
     };
-    let token_info = Some(TokenInfo {
-        token_type: TokenType::Erc20,
-        address: String::from("0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85"),
-        name: String::from("Maker"),
-        symbol: String::from("MKR"),
-        decimals: 18,
-        logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png")),
+
+    let expected = TransactionInfo::Transfer(Transfer {
+        sender: safe.to_string(),
+        recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        direction: TransferDirection::Outgoing,
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85".to_string(),
+            token_name: Some(String::from("Maker")),
+            token_symbol: Some(String::from("MKR")),
+            logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png")),
+            decimals: Some(18),
+            value: "50000000000000".to_string(),
+        }),
     });
-    assert!(multisig_tx.is_erc20_transfer(&token_info));
-    assert!(!multisig_tx.is_ether_transfer());
-    assert!(!multisig_tx.is_erc721_transfer(&token_info));
+
+    let actual = multisig_tx.transaction_info(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
 }
 
 #[test]
 fn multisig_tx_check_ether_transfer() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(0);
+    mock_info_provider
+        .expect_token_info()
+        .times(0);
+
     let expected_date = Utc::now();
-    let safe = String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300");
+    let safe = "0x938bae50a210b80EA233112800Cd5Bc2e7644300";
     let to = String::from("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0");
     let multisig_tx = MultisigTransaction {
-        safe,
+        safe: safe.to_string(),
         to,
         value: Some(String::from("50000000000000")),
         data: None,
@@ -207,7 +262,17 @@ fn multisig_tx_check_ether_transfer() {
         )),
         signatures: Some(String::from("0x8b841f4b1b24c4db687bed9d9754253f94cd543d05447b31d32d945be6967a636a454fb210e058f783115c84fd141adf0e8d2fedb17df19419858cbb03fdddb31c000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001")),
     };
-    assert!(!multisig_tx.is_erc20_transfer(&None));
-    assert!(multisig_tx.is_ether_transfer());
-    assert!(!multisig_tx.is_erc721_transfer(&None));
+
+    let expected = TransactionInfo::Transfer(Transfer {
+        sender: safe.to_string(),
+        recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
+        direction: TransferDirection::Outgoing,
+        transfer_info: TransferInfo::Ether(EtherTransfer {
+            value: "50000000000000".to_string(),
+        }),
+    });
+
+    let actual = multisig_tx.transaction_info(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
 }

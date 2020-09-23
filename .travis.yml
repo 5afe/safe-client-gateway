@@ -1,16 +1,30 @@
-anguage: rust
+language: rust
 rust:
   - nightly
 cache: cargo
 env:
   global:
-    - DOCKERHUB_ORG=gnosispm
-    - DOCKERHUB_PROJECT=safe-client-gateway
+      - DOCKERHUB_ORG=gnosispm
+      - DOCKERHUB_PROJECT=safe-client-gateway
 services:
   - docker
 script:
+  - curl --location https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
+  # These flags are recommended by https://github.com/mozilla/grcov#grcov-with-travis .
+  # vk: I had to remove `-Zpanic_abort_tests -Cpanic=abort` because this would cause compilation
+  # to fail but I haven't investigated more into why.
+  # I added `-Awarnings` which allows all warnings. This was necessary because nightly can
+  # introduce some new warnings and when testing one such warning appeared in the ethcontract
+  # generated contract code which caused the whole file to be printed as part of the warning
+  # message which made the build fail (probably travis related).
+  - env CARGO_INCREMENTAL=0
+  - env RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings"
   - cargo build --verbose --all --locked
   - cargo test --verbose --all --locked
+  # Ignore untested cargo files in travis root and auto-generated eth-contract code
+  - ./grcov --branch --ignore-not-existing --llvm --excl-line "#\[derive|#\[serde|#\[automock" --ignore "/*" --ignore "target/debug/build/**" target/debug/ --output-path coveralls.json --output-type "coveralls+" --source-dir . --service-name travis-ci --service-job-id $TRAVIS_JOB_ID
+  - curl --form json_file=@coveralls.json https://coveralls.io/api/v1/jobs
+
 deploy:
   - provider: script
     script: bash scripts/deploy_docker.sh staging
@@ -25,20 +39,3 @@ deploy:
     on:
       tags: true
       branch: main
-
-jobs:
-  - name: Coverage
-    rust: nightly
-    script:
-      - curl --location https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
-      # These flags are recommended by https://github.com/mozilla/grcov#grcov-with-travis .
-      # vk: I had to remove `-Zpanic_abort_tests -Cpanic=abort` because this would cause compilation
-      # to fail but I haven't investigated more into why.
-      # I added `-Awarnings` which allows all warnings. This was necessary because nightly can
-      # introduce some new warnings and when testing one such warning appeared in the ethcontract
-      # generated contract code which caused the whole file to be printed as part of the warning
-      # message which made the build fail (probably travis related).
-      - env CARGO_INCREMENTAL=0 RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings" cargo +nightly test
-      # Ignore untested cargo files in travis root and auto-generated eth-contract code
-      - ./grcov --branch --ignore-not-existing --llvm --excl-line "#\[derive|#\[serde|#\[automock" --ignore "/*" --ignore "target/debug/build/**" target/debug/ --output-path coveralls.json --output-type "coveralls+" --source-dir . --service-name travis-ci --service-job-id $TRAVIS_JOB_ID
-      - curl --form json_file=@coveralls.json https://coveralls.io/api/v1/jobs

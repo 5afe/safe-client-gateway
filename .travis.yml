@@ -5,13 +5,14 @@ before-install:
 
 rust:
   - nightly
-cache: cargo
+
 env:
   global:
       - DOCKERHUB_ORG=gnosispm
       - DOCKERHUB_PROJECT=safe-client-gateway
 services:
   - docker
+
 script:
   # These flags are recommended by https://github.com/mozilla/grcov#grcov-with-travis .
   # vk: I had to remove `-Zpanic_abort_tests -Cpanic=abort` because this would cause compilation

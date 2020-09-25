@@ -1,6 +1,6 @@
 # Safe Client Gateway
 [![Build Status](https://travis-ci.com/gnosis/safe-client-gateway.svg?branch=main)](https://travis-ci.com/gnosis/safe-client-gateway)
-
+[![Coverage Status](https://coveralls.io/repos/github/gnosis/safe-client-gateway/badge.svg)](https://coveralls.io/github/gnosis/safe-client-gateway)
 ## Motivation
 
 This project is a gateway between the Safe clients ([Android](https://github.com/gnosis/safe-android)/ [iOS](https://github.com/gnosis/safe-ios)/ [web](https://github.com/gnosis/safe-react)) and the Safe backend services ([transaction service](https://github.com/gnosis/safe-transaction-service) and Ethereum nodes). It is providing a more UI-oriented mapping and multi-sourced data structures for ease of integration and rendering.

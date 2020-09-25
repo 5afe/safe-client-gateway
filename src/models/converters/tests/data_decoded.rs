@@ -171,7 +171,7 @@ fn data_decoded_with_nested_safe_transaction() {
                 name: "data".to_string(),
                 param_type: "bytes".to_string(),
                 value: ParamValue::SingleValue("0x610b592500000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f".to_string()),
-                value_decoded: None
+                value_decoded: None,
             },
             Parameter {
                 name: "operation".to_string(),

@@ -24,8 +24,8 @@ fn ether_transfer_dto_ether_transfer_transaction() {
 fn ether_transfer_dto_to_transfer_info() {
     let ether_transfer_dto = serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap();
     let expected = TransferInfo::Ether(EtherTransfer {
-            value: "1000000000000000".to_string(),
-        });
+        value: "1000000000000000".to_string(),
+    });
 
     let actual = EtherTransferDto::to_transfer_info(&ether_transfer_dto);
 

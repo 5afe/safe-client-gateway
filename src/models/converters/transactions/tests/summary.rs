@@ -259,7 +259,7 @@ fn multisig_transaction_to_erc20_transfer_summary() {
             nonce: 178,
             confirmations_required: 3,
             confirmations_submitted: 3,
-            missing_signers: vec![],
+            missing_signers: None,
         }),
     };
 
@@ -306,7 +306,7 @@ fn multisig_transaction_to_erc721_transfer_summary() {
             nonce: 177,
             confirmations_required: 3,
             confirmations_submitted: 3,
-            missing_signers: vec![],
+            missing_signers: None,
         }),
     };
 
@@ -349,7 +349,7 @@ fn multisig_transaction_to_ether_transfer_summary() {
             nonce: 147,
             confirmations_required: 2,
             confirmations_submitted: 2,
-            missing_signers: vec![],
+            missing_signers: None,
         }),
     };
 
@@ -409,7 +409,7 @@ fn multisig_transaction_to_settings_change_summary() {
             nonce: 135,
             confirmations_required: 2,
             confirmations_submitted: 2,
-            missing_signers: vec![],
+            missing_signers: None,
         }),
     };
 
@@ -449,7 +449,7 @@ fn multisig_transaction_to_custom_summary() {
             nonce: 84,
             confirmations_required: 2,
             confirmations_submitted: 2,
-            missing_signers: vec![],
+            missing_signers: None,
         }),
     };
 
@@ -495,12 +495,12 @@ fn multisig_transaction_with_missing_signers() {
             nonce: 147,
             confirmations_required: 2,
             confirmations_submitted: 1,
-            missing_signers: vec![
+            missing_signers: Some(vec![
                 "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23".to_owned(),
                 "0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72".to_owned(),
                 "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_owned(),
                 "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_owned(),
-            ],
+            ]),
         }),
     };
 

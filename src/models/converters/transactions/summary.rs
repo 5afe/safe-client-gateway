@@ -1,11 +1,14 @@
 extern crate chrono;
 
-use crate::models::backend::transactions::{Transaction, CreationTransaction};
+use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
-use crate::models::service::transactions::{TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, Creation, TransactionInfo};
+use crate::models::service::transactions::{
+    Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
+    ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
+};
 use crate::providers::info::InfoProvider;
 use crate::utils::hex_hash;
 use anyhow::{Error, Result};
@@ -36,11 +39,13 @@ impl MultisigTransaction {
     ) -> Result<Vec<TransactionSummary>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         let tx_status = self.map_status(&safe_info);
-        let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations { self.missing_signers(&safe_info.owners) } else { vec![] };
+        let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations {
+            Some(self.missing_signers(&safe_info.owners))
+        } else {
+            None
+        };
         Ok(vec![TransactionSummary {
-            id: create_id!(
-                ID_PREFIX_MULTISIG_TX, &self.safe, self.safe_tx_hash
-            ),
+            id: create_id!(ID_PREFIX_MULTISIG_TX, &self.safe, self.safe_tx_hash),
             timestamp: self
                 .execution_date
                 .unwrap_or(self.submission_date)
@@ -107,14 +112,12 @@ impl CreationTransaction {
             id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
             timestamp: self.created.timestamp_millis(),
             tx_status: TransactionStatus::Success,
-            tx_info: TransactionInfo::Creation(
-                Creation {
-                    creator: self.creator.clone(),
-                    transaction_hash: self.transaction_hash.clone(),
-                    implementation: self.master_copy.clone(),
-                    factory: self.factory_address.clone(),
-                }
-            ),
+            tx_info: TransactionInfo::Creation(Creation {
+                creator: self.creator.clone(),
+                transaction_hash: self.transaction_hash.clone(),
+                implementation: self.master_copy.clone(),
+                factory: self.factory_address.clone(),
+            }),
             execution_info: None,
         }
     }

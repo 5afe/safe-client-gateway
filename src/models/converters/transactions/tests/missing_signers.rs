@@ -3,7 +3,6 @@ use crate::providers::info::SafeInfo;
 
 #[test]
 fn missing_signers_on_awaiting_confirmation_empty() {
-    // This Safe has 5 owners and the transaction has 2 signatures
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_EMPTY).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     
@@ -20,7 +19,6 @@ fn missing_signers_on_awaiting_confirmation_empty() {
 
 #[test]
 fn missing_signers_on_awaiting_confirmation_null() {
-    // This Safe has 5 owners and the transaction has 2 signatures
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_NULL).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     
@@ -37,7 +35,6 @@ fn missing_signers_on_awaiting_confirmation_null() {
 
 #[test]
 fn missing_signers_on_awaiting_confirmation() {
-    // This Safe has 5 owners and the transaction has 1 signatures
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
 

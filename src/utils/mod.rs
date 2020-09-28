@@ -9,9 +9,6 @@ pub mod cache;
 pub mod json;
 pub mod errors;
 
-#[cfg(test)]
-mod tests;
-
 //TODO think of a better impl, using enums as per Nick's suggestion
 pub const TRANSFER_METHOD: &str = "transfer";
 pub const ERC20_TRANSFER_METHODS: &[&str] = &[TRANSFER_METHOD, "transferFrom"];
@@ -84,3 +81,7 @@ pub fn extract_query_string(raw_link: &String) -> Option<String> {
     let parsed = Absolute::parse(raw_link).ok()?;
     parsed.origin()?.query().map(|it| it.to_string())
 }
+
+
+#[cfg(test)]
+mod tests;

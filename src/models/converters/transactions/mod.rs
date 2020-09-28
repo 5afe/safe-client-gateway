@@ -3,9 +3,6 @@ extern crate chrono;
 pub mod details;
 pub mod summary;
 
-#[cfg(test)]
-mod tests;
-
 use super::get_transfer_direction;
 use crate::utils::TRANSFER_METHOD;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
@@ -215,3 +212,6 @@ fn check_sender_or_receiver(data_decoded: &Option<DataDecoded>, expected: &str) 
         || &get_from_param(data_decoded, "") == expected
         || &get_to_param(data_decoded, "") == expected
 }
+
+#[cfg(test)]
+mod tests;

@@ -28,6 +28,21 @@ impl MultisigTransaction {
         self.confirmations_required.unwrap_or(threshold)
     }
 
+    fn missing_signers(&self, owners: &Vec<String>) -> Vec<String> {
+        match &self.confirmations {
+            Some(confirmations) => {
+                let mut missing_signers = vec![];
+                for owner in owners {
+                    if !confirmations.iter().any(|c| &c.owner == owner) {
+                        missing_signers.push(owner.to_owned());
+                    }
+                }
+                missing_signers
+            },
+            None => owners.clone(),
+        }
+    }
+
     fn map_status(&self, safe_info: &SafeInfo) -> TransactionStatus {
         if self.is_executed {
             if self.is_successful.unwrap_or(false) {

@@ -12,6 +12,8 @@ pub const MULTISIG_TX_CUSTOM: &str = include_str!("transactions/multisig_approve
 pub const MULTISIG_TX_FAILED: &str = include_str!("transactions/multisig_failed_transfer.json");
 pub const MULTISIG_TX_AWAITING_EXECUTION: &str = include_str!("transactions/multisig_awaiting_execution.json");
 pub const MULTISIG_TX_AWAITING_CONFIRMATIONS: &str = include_str!("transactions/multisig_awaiting_confirmations.json");
+pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_EMPTY: &str = include_str!("transactions/multisig_awaiting_confirmations_empty.json");
+pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_NULL: &str = include_str!("transactions/multisig_awaiting_confirmations_null.json");
 pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL: &str = include_str!("transactions/multisig_awaiting_confirmations_required_null.json");
 pub const MULTISIG_TX_CONFIRMATIONS_NULL: &str = include_str!("transactions/multisig_confirmations_null.json");
 

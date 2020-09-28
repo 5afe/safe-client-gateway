@@ -35,6 +35,8 @@ impl MultisigTransaction {
         info_provider: &mut dyn InfoProvider,
     ) -> Result<Vec<TransactionSummary>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
+        let tx_status = self.map_status(&safe_info);
+        let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations { self.missing_signers(&safe_info.owners) } else { vec![] };
         Ok(vec![TransactionSummary {
             id: create_id!(
                 ID_PREFIX_MULTISIG_TX, &self.safe, self.safe_tx_hash
@@ -43,11 +45,12 @@ impl MultisigTransaction {
                 .execution_date
                 .unwrap_or(self.submission_date)
                 .timestamp_millis(),
-            tx_status: self.map_status(&safe_info),
+            tx_status,
             execution_info: Some(ExecutionInfo {
                 nonce: self.nonce,
                 confirmations_submitted: self.confirmation_count(),
                 confirmations_required: self.confirmation_required(safe_info.threshold),
+                missing_signers,
             }),
             tx_info: self.transaction_info(info_provider),
         }])

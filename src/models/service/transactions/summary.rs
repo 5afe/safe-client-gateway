@@ -17,4 +17,5 @@ pub struct ExecutionInfo {
     pub nonce: u64,
     pub confirmations_required: u64,
     pub confirmations_submitted: u64,
+    pub missing_signers: Vec<String>,
 }

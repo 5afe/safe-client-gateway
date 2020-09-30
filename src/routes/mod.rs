@@ -5,6 +5,7 @@ use rocket::Catcher;
 use rocket_contrib::json::JsonValue;
 
 pub mod about;
+pub mod balances;
 pub mod collectibles;
 pub mod transactions;
 pub mod hooks;

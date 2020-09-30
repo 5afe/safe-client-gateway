@@ -7,7 +7,6 @@ pub mod summary;
 mod tests;
 
 use super::get_transfer_direction;
-use crate::utils::TRANSFER_METHOD;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::{DataDecoded, Operation};
 use crate::models::service::transactions::{
@@ -15,6 +14,7 @@ use crate::models::service::transactions::{
     TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
+use crate::utils::TRANSFER_METHOD;
 
 impl MultisigTransaction {
     fn confirmation_count(&self) -> u64 {
@@ -26,6 +26,24 @@ impl MultisigTransaction {
 
     fn confirmation_required(&self, threshold: u64) -> u64 {
         self.confirmations_required.unwrap_or(threshold)
+    }
+
+    fn missing_signers(&self, owners: &Vec<String>) -> Vec<String> {
+        self.confirmations.as_ref().map_or_else(
+            || owners.to_owned(),
+            |confirmations| {
+                owners
+                    .iter()
+                    .filter_map(|owner| {
+                        if !confirmations.iter().any(|c| &c.owner == owner) {
+                            Some(owner.to_owned())
+                        } else {
+                            None
+                        }
+                    })
+                    .collect()
+            },
+        )
     }
 
     fn map_status(&self, safe_info: &SafeInfo) -> TransactionStatus {
@@ -52,20 +70,32 @@ impl MultisigTransaction {
             TransactionInfo::Custom(self.to_custom())
         } else if value > 0 && data_size == 0 {
             TransactionInfo::Transfer(self.to_ether_transfer())
-        } else if value == 0 && data_size > 0 && self.safe == self.to && self.data_decoded.as_ref().map_or_else(|| false, |it| it.is_settings_change()) {
+        } else if value == 0
+            && data_size > 0
+            && self.safe == self.to
+            && self
+                .data_decoded
+                .as_ref()
+                .map_or_else(|| false, |it| it.is_settings_change())
+        {
             TransactionInfo::SettingsChange(self.to_settings_change())
-        } else if self.data_decoded.as_ref().map(|data_decoded|
-            data_decoded.is_erc20_transfer_method() || data_decoded.is_erc721_transfer_method()).unwrap_or(false) &&
-            check_sender_or_receiver(&self.data_decoded, &self.safe) {
-            info_provider.token_info(&self.to)
-                .map_or(TransactionInfo::Custom(self.to_custom()),
-                        |token|
-                            match token.token_type {
-                                TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
-                                TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
-                                _ => TransactionInfo::Custom(self.to_custom()),
-                            },
-                )
+        } else if self
+            .data_decoded
+            .as_ref()
+            .map(|data_decoded| {
+                data_decoded.is_erc20_transfer_method() || data_decoded.is_erc721_transfer_method()
+            })
+            .unwrap_or(false)
+            && check_sender_or_receiver(&self.data_decoded, &self.safe)
+        {
+            info_provider.token_info(&self.to).map_or(
+                TransactionInfo::Custom(self.to_custom()),
+                |token| match token.token_type {
+                    TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
+                    TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
+                    _ => TransactionInfo::Custom(self.to_custom()),
+                },
+            )
         } else {
             TransactionInfo::Custom(self.to_custom())
         }
@@ -110,11 +140,10 @@ impl MultisigTransaction {
                 token_id: self
                     .data_decoded
                     .as_ref()
-                    .and_then(|it|
-                        match it.get_parameter_single_value("tokenId") {
-                            Some(e) => Some(e),
-                            None => it.get_parameter_single_value("value"),
-                        })
+                    .and_then(|it| match it.get_parameter_single_value("tokenId") {
+                        Some(e) => Some(e),
+                        None => it.get_parameter_single_value("value"),
+                    })
                     .unwrap_or(String::from("0")),
             }),
         }
@@ -134,7 +163,10 @@ impl MultisigTransaction {
     fn to_settings_change(&self) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
-            settings_info: self.data_decoded.as_ref().and_then(|it| it.to_settings_info()),
+            settings_info: self
+                .data_decoded
+                .as_ref()
+                .and_then(|it| it.to_settings_info()),
         }
     }
 
@@ -148,7 +180,11 @@ impl MultisigTransaction {
     }
 
     fn value_as_uint(&self) -> u128 {
-        self.value.as_ref().map(|it| it.parse::<u128>().ok()).flatten().unwrap_or(0)
+        self.value
+            .as_ref()
+            .map(|it| it.parse::<u128>().ok())
+            .flatten()
+            .unwrap_or(0)
     }
 }
 
@@ -177,15 +213,18 @@ fn data_size(data: &Option<String>) -> usize {
 }
 
 fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
-    data_decoded.as_ref()
+    data_decoded
+        .as_ref()
         .and_then(|it| match it.get_parameter_single_value("from") {
             Some(e) => Some(e),
             None => it.get_parameter_single_value("_from"),
-        }).unwrap_or(String::from(fallback))
+        })
+        .unwrap_or(String::from(fallback))
 }
 
 fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
-    data_decoded.as_ref()
+    data_decoded
+        .as_ref()
         .and_then(|it| match it.get_parameter_single_value("to") {
             Some(e) => Some(e),
             None => it.get_parameter_single_value("_to"),
@@ -194,7 +233,9 @@ fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
 }
 
 fn check_sender_or_receiver(data_decoded: &Option<DataDecoded>, expected: &str) -> bool {
-    if data_decoded.is_none() { return false; };
+    if data_decoded.is_none() {
+        return false;
+    };
     let data = data_decoded.as_ref().unwrap();
     data.method == TRANSFER_METHOD
         || &get_from_param(data_decoded, "") == expected

@@ -3,5 +3,6 @@ mod summary;
 mod details;
 pub(super) mod transaction_types;
 pub(super) mod map_status;
+pub(super) mod missing_signers;
 pub(super) mod check_sender_or_receiver;
 pub(super) mod transfer_type_checks;

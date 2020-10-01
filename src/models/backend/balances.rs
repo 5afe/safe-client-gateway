@@ -1,11 +1,10 @@
-use crate::providers::info::TokenInfo;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct Balance {
-    pub token_address: String,
-    pub token: BalanceToken,
+    pub token_address: Option<String>,
+    pub token: Option<BalanceToken>,
     pub balance: String,
     pub balance_usd: String,
     pub usd_conversion: String,

@@ -27,6 +27,7 @@ pub struct DefaultInfoProvider<'p> {
 pub enum TokenType {
     Erc721,
     Erc20,
+    Ether,
     #[serde(other)]
     Unknown,
 }
@@ -37,6 +38,12 @@ pub struct SafeInfo {
     pub nonce: u64,
     pub threshold: u64,
     pub owners: Vec<String>,
+}
+
+#[derive(Deserialize, Clone, Debug)]
+pub struct Exchange {
+    pub rates: HashMap<String, f64>,
+    pub base: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
@@ -65,6 +72,16 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         } else {
             anyhow::bail!("Token Address is 0x0")
         }
+    }
+}
+
+impl DefaultInfoProvider<'_> {
+    pub fn exchange_usd_to_eur(&self) -> Result<f64> {
+        let url = String::from("https://api.exchangeratesapi.io/latest?base=USD&symbols=EUR");
+        let request = self.client.get(&url).send()?;
+        let body = request.text()?;
+        let exchange = serde_json::from_str::<Exchange>(&body)?;
+        return Ok(exchange.rates.get("EUR").cloned().unwrap_or(0.0));
     }
 }
 

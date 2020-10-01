@@ -1,21 +1,22 @@
-use crate::utils::errors::ApiResult;
 use crate::models::service::balances::Balance;
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::providers::info::{TokenInfo, TokenType};
 
 impl BalanceDto {
-    pub fn to_balance(&self, conversion_rate: u64) -> ApiResult<Balance> {
-        Ok(Balance {
+    pub fn to_balance(&self, conversion_rate: &f64) -> Balance {
+        let fiat_amount = self.balance_usd.parse::<f64>().unwrap_or(0.0) * conversion_rate;
+        let token_type = self.token_address.as_ref().map(|_| TokenType::Erc20).unwrap_or(TokenType::Ether);
+        Balance {
             token_info: TokenInfo {
-                token_type: TokenType::Erc20,
-                address: self.token_address.to_owned(),
-                decimals: self.token.decimals,
-                symbol: self.token.symbol.to_owned(),
-                name: self.token.name.to_owned(),
-                logo_uri: Some(self.token.logo_uri.to_owned()),
+                token_type,
+                address: self.token_address.to_owned().unwrap_or(String::from("0x0000000000000000000000000000000000000000")),
+                decimals: self.token.as_ref().map(|it| it.decimals).unwrap_or(0),
+                symbol: self.token.as_ref().map(|it| it.symbol.to_string()).unwrap_or(String::from("ETH")),
+                name: self.token.as_ref().map(|it| it.name.to_string()).unwrap_or(String::from("Ether")),
+                logo_uri: self.token.as_ref().map(|it| it.logo_uri.to_string()),
             },
             amount: self.balance.to_owned(),
-            fiat_amount: self.balance_usd.to_string(),
-        })
+            fiat_amount: fiat_amount.to_string(),
+        }
     }
 }

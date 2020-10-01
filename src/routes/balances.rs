@@ -6,9 +6,9 @@ use rocket::response::content;
 use crate::utils::cache::CacheExt;
 use crate::services::balances::*;
 
-#[get("/v1/safes/<safe_address>/balances/usd")]
-pub fn get_balances_usd(context: Context, safe_address: String) -> ApiResult<content::Json<String>> {
+#[get("/v1/safes/<safe_address>/balances/<fiat>")]
+pub fn get_balances(context: Context, safe_address: String, fiat: String) -> ApiResult<content::Json<String>> {
     context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
-        balances_usd(safe_address.as_str())
+        balances(safe_address.as_str(), fiat.as_str())
     })
 }

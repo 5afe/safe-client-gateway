@@ -5,10 +5,12 @@ use crate::config::request_cache_duration;
 use rocket::response::content;
 use crate::utils::cache::CacheExt;
 use crate::services::balances::*;
+use crate::models::service::balances::Fiat;
 
 #[get("/v1/safes/<safe_address>/balances/<fiat>")]
 pub fn get_balances(context: Context, safe_address: String, fiat: String) -> ApiResult<content::Json<String>> {
+    let fiat: Fiat = fiat.into();
     context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
-        balances(safe_address.as_str(), fiat.as_str())
+        balances(safe_address.as_str(), &fiat)
     })
 }

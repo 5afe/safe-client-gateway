@@ -9,7 +9,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use mockall::automock;
 use log::debug;
-use crate::utils::errors::ApiError;
 
 #[automock]
 pub trait InfoProvider {
@@ -86,7 +85,7 @@ impl DefaultInfoProvider<'_> {
         let body = request.text()?;
         let exchange = serde_json::from_str::<Exchange>(&body)?;
         match exchange.rates {
-            Some(rate) => rate.get(&currency_code).cloned().ok_or(anyhow::anyhow!("Currency not found")),
+            Some(rates) => rates.get(&currency_code).cloned().ok_or(anyhow::anyhow!("Currency not found")),
             None => Err(anyhow::anyhow!("Currency not found")),
         }
     }

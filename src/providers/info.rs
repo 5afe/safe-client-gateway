@@ -8,6 +8,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use mockall::automock;
+use log::debug;
 
 #[automock]
 pub trait InfoProvider {
@@ -76,12 +77,14 @@ impl InfoProvider for DefaultInfoProvider<'_> {
 }
 
 impl DefaultInfoProvider<'_> {
-    pub fn exchange_usd_to_eur(&self) -> Result<f64> {
-        let url = String::from("https://api.exchangeratesapi.io/latest?base=USD&symbols=EUR");
+    pub fn exchange_usd_to(&self, currency_code: &str) -> Result<f64> {
+        let currency_code = currency_code.to_uppercase();
+        let url = format!("https://api.exchangeratesapi.io/latest?base=USD&symbols={}", &currency_code);
+        debug!("exchange url: {}", &url);
         let request = self.client.get(&url).send()?;
         let body = request.text()?;
         let exchange = serde_json::from_str::<Exchange>(&body)?;
-        return Ok(exchange.rates.get("EUR").cloned().unwrap_or(0.0));
+        return Ok(exchange.rates.get(&currency_code).cloned().unwrap_or(0.0));
     }
 }
 

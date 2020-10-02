@@ -3,8 +3,8 @@ use crate::models::backend::balances::Balance as BalanceDto;
 use crate::providers::info::{TokenInfo, TokenType};
 
 impl BalanceDto {
-    pub fn to_balance(&self, conversion_rate: &f64) -> Balance {
-        let fiat_amount = self.balance_usd.parse::<f64>().unwrap_or(0.0) * conversion_rate;
+    pub fn to_balance(&self, usd_to_fiat: f64) -> Balance {
+        let fiat_amount = self.balance_usd.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
         let token_type = self.token_address.as_ref().map(|_| TokenType::Erc20).unwrap_or(TokenType::Ether);
         Balance {
             token_info: TokenInfo {

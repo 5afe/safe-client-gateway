@@ -23,6 +23,10 @@ pub fn info_cache_duration() -> usize {
     usize_with_default("INFO_CACHE_DURATION", 60 * 15)
 }
 
+pub fn exchange_api_cache_duration() -> usize {
+    usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12)
+}
+
 pub fn request_cache_duration() -> usize {
     usize_with_default("REQUEST_CACHE_DURATION", 60 * 15)
 }

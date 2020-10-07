@@ -46,3 +46,6 @@ pub const DATA_DECODED_SET_FALLBACK_HANDLER: &str = include_str!("commons/data_d
 pub const DATA_DECODED_SWAP_OWNER: &str = include_str!("commons/data_decoded_swap_owner.json");
 pub const DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE: &str = include_str!("commons/data_decoded_exec_transaction_from_module.json");
 pub const DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED: &str = include_str!("commons/data_decoded_nested_safe_interaction.json");
+
+pub const BALANCE_ETHER: &str = include_str!("balances/balance_ether.json");
+pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound_ether.json");

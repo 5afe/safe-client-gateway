@@ -1,5 +1,5 @@
 use crate::utils::cache::{Cache, CacheExt};
-use crate::config::{base_transaction_service_url, info_cache_duration};
+use crate::config::{base_transaction_service_url, info_cache_duration, exchange_api_cache_duration};
 use crate::utils::context::Context;
 use crate::utils::json::default_if_null;
 use serde_json;
@@ -27,6 +27,7 @@ pub struct DefaultInfoProvider<'p> {
 pub enum TokenType {
     Erc721,
     Erc20,
+    Ether,
     #[serde(other)]
     Unknown,
 }
@@ -37,6 +38,12 @@ pub struct SafeInfo {
     pub nonce: u64,
     pub threshold: u64,
     pub owners: Vec<String>,
+}
+
+#[derive(Deserialize, Clone, Debug)]
+pub struct Exchange {
+    pub rates: Option<HashMap<String, f64>>,
+    pub base: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
@@ -64,6 +71,19 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             self.cached(|this| &mut this.token_cache, url)
         } else {
             anyhow::bail!("Token Address is 0x0")
+        }
+    }
+}
+
+impl DefaultInfoProvider<'_> {
+    pub fn exchange_usd_to(&self, currency_code: &str) -> Result<f64> {
+        let currency_code = currency_code.to_uppercase();
+        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
+        let body = self.cache.request_cached(self.client, &url, exchange_api_cache_duration())?;
+        let exchange = serde_json::from_str::<Exchange>(&body)?;
+        match exchange.rates {
+            Some(rates) => rates.get(&currency_code).cloned().ok_or(anyhow::anyhow!("Currency not found")),
+            None => Err(anyhow::anyhow!("Currency not found")),
         }
     }
 }

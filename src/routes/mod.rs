@@ -5,13 +5,14 @@ use rocket::Catcher;
 use rocket_contrib::json::JsonValue;
 
 pub mod about;
+pub mod balances;
 pub mod collectibles;
 pub mod transactions;
 pub mod hooks;
 pub mod health;
 
 pub fn active_routes() -> Vec<Route> {
-    routes![about::backbone, about::info, collectibles::list, transactions::details, transactions::all, hooks::update, health::health]
+    routes![about::backbone, about::info, balances::get_balances, collectibles::list, transactions::details, transactions::all, hooks::update, health::health]
 }
 
 pub fn error_catchers() -> Vec<Catcher> {

@@ -5,7 +5,6 @@ use crate::utils::context::Context;
 use crate::utils::cache::CacheExt;
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::providers::info::DefaultInfoProvider;
-use log::debug;
 
 pub fn balances(context: &Context, safe_address: &str, fiat: &str) -> ApiResult<Vec<Balance>> {
     let url = format!(
@@ -19,8 +18,6 @@ pub fn balances(context: &Context, safe_address: &str, fiat: &str) -> ApiResult<
 
     let info_provider = DefaultInfoProvider::new(&context);
     let usd_to_fiat = info_provider.exchange_usd_to(fiat)?;
-
-    debug!("usd_to_fiat: {}", usd_to_fiat);
 
     let service_balances: Vec<Balance> = backend_balances.into_iter().map(|it| it.to_balance(usd_to_fiat)).collect();
 

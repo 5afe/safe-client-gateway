@@ -1,7 +1,7 @@
 use crate::providers::info::TokenInfo;
 use serde::Serialize;
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Balance {
     pub token_info: TokenInfo,

@@ -18,6 +18,7 @@ fn ether_balance() {
         },
         balance: "7457594371050000001".to_string(),
         fiat_balance: "2523.7991".to_string(),
+        fiat_conversion: "338.42".to_string(),
     };
 
     let usd_to_fiat = 1.0;
@@ -41,6 +42,7 @@ fn erc20_token_balance_usd_balance() {
         },
         balance: "5002".to_string(),
         fiat_balance: "0.0014".to_string(),
+        fiat_conversion: "28.5462".to_string(),
     };
 
     let usd_to_fiat = 1.0;
@@ -64,6 +66,7 @@ fn erc20_token_balance_fiat_is_twice_usd() {
         },
         balance: "5002".to_string(),
         fiat_balance: "0.0028".to_string(),
+        fiat_conversion: "57.0924".to_string(),
     };
 
     let usd_to_fiat = 2.0;

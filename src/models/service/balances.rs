@@ -7,4 +7,5 @@ pub struct Balance {
     pub token_info: TokenInfo,
     pub balance: String,
     pub fiat_balance: String,
+    pub fiat_conversion: String,
 }

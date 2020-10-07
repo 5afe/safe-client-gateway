@@ -4,7 +4,7 @@ use crate::providers::info::{TokenInfo, TokenType};
 
 impl BalanceDto {
     pub fn to_balance(&self, usd_to_fiat: f64) -> Balance {
-        let fiat_amount = self.balance_usd.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
+        let fiat_amount = self.fiat_balance.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
         let token_type = self.token_address.as_ref().map(|_| TokenType::Erc20).unwrap_or(TokenType::Ether);
         Balance {
             token_info: TokenInfo {
@@ -15,8 +15,8 @@ impl BalanceDto {
                 name: self.token.as_ref().map(|it| it.name.to_string()).unwrap_or(String::from("Ether")),
                 logo_uri: self.token.as_ref().map(|it| it.logo_uri.to_string()),
             },
-            amount: self.balance.to_owned(),
-            fiat_amount: fiat_amount.to_string(),
+            balance: self.balance.to_owned(),
+            fiat_balance: fiat_amount.to_string(),
         }
     }
 }

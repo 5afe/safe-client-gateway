@@ -8,7 +8,6 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use mockall::automock;
-use log::debug;
 
 #[automock]
 pub trait InfoProvider {
@@ -80,7 +79,6 @@ impl DefaultInfoProvider<'_> {
     pub fn exchange_usd_to(&self, currency_code: &str) -> Result<f64> {
         let currency_code = currency_code.to_uppercase();
         let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
-        debug!("exchange url: {}", &url);
         let body = self.cache.request_cached(self.client, &url, exchange_api_cache_duration())?;
         let exchange = serde_json::from_str::<Exchange>(&body)?;
         match exchange.rates {

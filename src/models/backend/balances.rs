@@ -6,8 +6,8 @@ pub struct Balance {
     pub token_address: Option<String>,
     pub token: Option<BalanceToken>,
     pub balance: String,
-    pub balance_usd: String,
-    pub usd_conversion: String,
+    pub fiat_balance: String,
+    pub fiat_conversion: String,
 }
 
 #[derive(Deserialize, Debug, Hash)]

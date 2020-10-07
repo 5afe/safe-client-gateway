@@ -5,6 +5,6 @@ use serde::Serialize;
 #[serde(rename_all = "camelCase")]
 pub struct Balance {
     pub token_info: TokenInfo,
-    pub amount: String,
-    pub fiat_amount: String,
+    pub balance: String,
+    pub fiat_balance: String,
 }

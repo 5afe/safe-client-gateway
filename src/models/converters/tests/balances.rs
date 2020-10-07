@@ -16,8 +16,8 @@ fn ether_balance() {
             name: "Ether".to_string(),
             logo_uri: None,
         },
-        amount: "7457594371050000001".to_string(),
-        fiat_amount: "2523.7991".to_string(),
+        balance: "7457594371050000001".to_string(),
+        fiat_balance: "2523.7991".to_string(),
     };
 
     let usd_to_fiat = 1.0;
@@ -39,8 +39,8 @@ fn erc20_token_balance_usd_balance() {
             name: "Compound Ether 📈".to_string(),
             logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png".to_string()),
         },
-        amount: "5002".to_string(),
-        fiat_amount: "0.0014".to_string(),
+        balance: "5002".to_string(),
+        fiat_balance: "0.0014".to_string(),
     };
 
     let usd_to_fiat = 1.0;
@@ -62,8 +62,8 @@ fn erc20_token_balance_fiat_is_twice_usd() {
             name: "Compound Ether 📈".to_string(),
             logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png".to_string()),
         },
-        amount: "5002".to_string(),
-        fiat_amount: "0.0028".to_string(),
+        balance: "5002".to_string(),
+        fiat_balance: "0.0028".to_string(),
     };
 
     let usd_to_fiat = 2.0;

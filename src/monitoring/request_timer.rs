@@ -21,10 +21,10 @@ impl Fairing for RequestTimer {
     }
 
     fn on_response(&self, request: &Request, _response: &mut Response) {
-        let h = request.headers().get("requested_timestamp").next().unwrap().parse::<i64>().unwrap();
-        let instant = Utc::now().timestamp_millis();
-
-        let delta = instant - h;
-        log::debug!("For endpoint {} the request processing duration was {} [ms]", request.uri().path(), delta)
+        if let Some(requested_timestamp) = request.headers().get("requested_timestamp").next().map(|it| it.parse::<i64>().ok()).flatten() {
+            let instant = Utc::now().timestamp_millis();
+            let delta = instant - requested_timestamp;
+            log::debug!("For endpoint {} the request processing duration was {} [ms]", request.uri().path(), delta)
+        }
     }
 }

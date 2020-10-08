@@ -14,13 +14,15 @@ impl Fairing for RequestTimer {
 
     fn on_request(&self, request: &mut Request, _data: &Data) {
         let instant = Utc::now().timestamp_millis();
-        log::debug!("on_request: {}", &instant);
-        request.local_cache(|| Utc::now().timestamp_millis());
+        log::info!("on_request: {}", &instant);
+        request.local_cache(|| instant);
     }
 
     fn on_response(&self, request: &Request, _response: &mut Response) {
-        let cached = request.local_cache(|| Utc::now().timestamp_millis()).to_owned();
+        let instant = Utc::now().timestamp_millis();
+        log::info!("on_response: {}", &instant);
+        let cached = request.local_cache(|| instant).to_owned();
         let delta = Utc::now().timestamp_millis() - cached;
-        log::debug!("For endpoint {} the request processing duration was {} [ms]", request.uri().path(), delta)
+        log::info!("For endpoint {} the request processing duration was {} [ms]", request.uri().path(), delta)
     }
 }

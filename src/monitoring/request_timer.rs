@@ -20,6 +20,6 @@ impl Fairing for RequestTimer {
         let path_data = request.route().map(|route| route.uri.to_string()).unwrap_or(String::from(request.uri().path()));
         let cached = request.local_cache(|| Utc::now().timestamp_millis()).to_owned();
         let delta = Utc::now().timestamp_millis() - cached;
-        log::info!("request_time::{}::{}",path_data , delta)
+        log::info!("response_time::{}::{}",path_data , delta)
     }
 }

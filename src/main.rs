@@ -17,6 +17,7 @@ mod config;
 mod routes;
 mod services;
 mod models;
+mod monitoring;
 mod utils;
 mod providers;
 
@@ -32,10 +33,11 @@ use crate::routes::error_catchers;
 fn main() {
     dotenv().ok();
     env_logger::init();
-    
+
     rocket::ignite()
         .mount("/", active_routes())
         .manage(reqwest::blocking::Client::new())
+        .attach(monitoring::request_timer::RequestTimer())
         .attach(CORS())
         .attach(ServiceCache::fairing())
         .register(error_catchers())

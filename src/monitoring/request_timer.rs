@@ -17,8 +17,9 @@ impl Fairing for RequestTimer {
     }
 
     fn on_response(&self, request: &Request, _response: &mut Response) {
+        let path_data = request.route().map(|route| route.uri.to_string()).unwrap_or(String::from(request.uri().path()));
         let cached = request.local_cache(|| Utc::now().timestamp_millis()).to_owned();
         let delta = Utc::now().timestamp_millis() - cached;
-        log::info!("For endpoint {} the request processing duration was {} [ms]", request.uri().path(), delta)
+        log::info!("request_time::{}::{}",path_data , delta)
     }
 }

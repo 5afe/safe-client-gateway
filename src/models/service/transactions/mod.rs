@@ -3,12 +3,29 @@ use serde::Serialize;
 
 pub mod details;
 pub mod summary;
+pub mod tx_requests;
 
 pub const ID_SEPARATOR: &str = "_";
 pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
 pub const ID_PREFIX_MODULE_TX: &str = "module";
 pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
 pub const ID_PREFIX_CREATION_TX: &str = "creation";
+
+pub(crate) enum TransactionIdParts {
+    //TODO think of better name
+    Multisig { safe_tx_hash: String },
+    Module {
+        safe_address: String,
+        transaction_hash: String,
+        details_hash: String,
+    },
+    Ethereum {
+        safe_address: String,
+        transaction_hash: String,
+        details_hash: String,
+    },
+    TransactionHash(String),
+}
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]

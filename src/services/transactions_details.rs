@@ -5,15 +5,14 @@ use crate::models::backend::transactions::{ModuleTransaction, MultisigTransactio
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
 use crate::models::service::transactions::details::TransactionDetails;
-use crate::models::service::transactions::{
-    ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
-};
+use crate::models::service::transactions::{ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPARATOR, TransactionIdParts};
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
 use log::debug;
+use anyhow::Result;
 
 fn get_multisig_transaction_details(
     context: &Context,
@@ -131,4 +130,33 @@ pub fn get_transactions_details(
         ),
         &_ => get_multisig_transaction_details(context, tx_type),
     }
+}
+
+fn parse_id(details_id: &str) -> Result<TransactionIdParts> {
+    let id_parts: Vec<&str> = details_id.split(ID_SEPARATOR).collect();
+    let tx_type = id_parts.get(0).ok_or(anyhow::anyhow!("Invalid id"))?;
+
+    Ok(match tx_type.to_owned() {
+        ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig {
+            safe_tx_hash: id_parts.get(2)
+                .ok_or(anyhow::anyhow!("No safe tx hash provided"))?.to_string(),
+        },
+        ID_PREFIX_ETHEREUM_TX => TransactionIdParts::Ethereum {
+            safe_address: id_parts.get(1)
+                .ok_or(anyhow::anyhow!("No safe address"))?.to_string(),
+            transaction_hash: id_parts.get(2)
+                .ok_or(anyhow::anyhow!("No module tx hash"))?.to_string(),
+            details_hash: id_parts.get(3)
+                .ok_or(anyhow::anyhow!("No module tx details hash"))?.to_string(),
+        },
+        ID_PREFIX_MODULE_TX => TransactionIdParts::Module {
+            safe_address: id_parts.get(1)
+                .ok_or(anyhow::anyhow!("No safe address"))?.to_string(),
+            transaction_hash: id_parts.get(2)
+                .ok_or(anyhow::anyhow!("No module tx hash"))?.to_string(),
+            details_hash: id_parts.get(3)
+                .ok_or(anyhow::anyhow!("No module tx details hash"))?.to_string(),
+        },
+        &_ => TransactionIdParts::TransactionHash(tx_type.to_string()),
+    })
 }

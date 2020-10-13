@@ -5,15 +5,15 @@ use crate::models::backend::transactions::{ModuleTransaction, MultisigTransactio
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
 use crate::models::service::transactions::details::TransactionDetails;
-use crate::models::service::transactions::{ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPARATOR, TransactionIdParts};
+use crate::models::service::transactions::{ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_PREFIX_CREATION_TX, ID_SEPARATOR, TransactionIdParts};
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiResult, ApiError, ErrorDetails};
 use crate::utils::hex_hash;
 use log::debug;
-use anyhow::Result;
 use crate::models::service::transactions::TransactionIdParts::Multisig;
+use anyhow::Result;
 
 fn get_multisig_transaction_details(
     context: &Context,
@@ -113,8 +113,8 @@ pub fn get_transactions_details(
             details_hash
         } => get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash),
         TransactionIdParts::Multisig(safe_tx_hash) => get_multisig_transaction_details(context, &safe_tx_hash),
-        TransactionIdParts::TransactionHash(safe_tx_hash) =>
-            get_multisig_transaction_details(context, &safe_tx_hash)
+        TransactionIdParts::TransactionHash(safe_tx_hash) => get_multisig_transaction_details(context, &safe_tx_hash),
+        _ => Err(ApiError::new_from_message(String::from("Bad transaction id"))),
     }
 }
 
@@ -143,6 +143,10 @@ pub(super) fn parse_id(details_id: &str) -> Result<TransactionIdParts> {
             details_hash: id_parts.get(3)
                 .ok_or(anyhow::anyhow!("No module tx details hash"))?.to_string(),
         },
+        ID_PREFIX_CREATION_TX => TransactionIdParts::Creation(
+            id_parts.get(1)
+                .ok_or(anyhow::anyhow!("No safe address provided"))?.to_string(),
+        ),
         &_ => TransactionIdParts::TransactionHash(tx_type.to_string()),
     })
 }

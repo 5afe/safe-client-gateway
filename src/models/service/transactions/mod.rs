@@ -13,6 +13,7 @@ pub const ID_PREFIX_CREATION_TX: &str = "creation";
 
 #[derive(PartialEq, Debug)]
 pub(crate) enum TransactionIdParts {
+    Creation(String),
     Multisig(String),
     Module {
         safe_address: String,

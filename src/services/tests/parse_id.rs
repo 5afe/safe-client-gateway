@@ -51,6 +51,16 @@ fn transaction_hash_details_id() {
 }
 
 #[test]
+fn creation_details_id() {
+    let details_id = "creation_0x83eC7B0506556a7749306D69681aDbDbd08f0769";
+    let expected = TransactionIdParts::Creation(String::from("0x83eC7B0506556a7749306D69681aDbDbd08f0769"));
+
+    let actual = parse_id(details_id).unwrap();
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
 #[should_panic]
 fn failure_details_id() {
     let malformed_details_id = "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x4071662b18fb425db9a516b8472b4f545decb4bb6f6873af098b123b544e3cf4";

@@ -132,22 +132,22 @@ pub fn get_transactions_details(
     }
 }
 
-fn parse_id(details_id: &str) -> Result<TransactionIdParts> {
+pub(super) fn parse_id(details_id: &str) -> Result<TransactionIdParts> {
     let id_parts: Vec<&str> = details_id.split(ID_SEPARATOR).collect();
     let tx_type = id_parts.get(0).ok_or(anyhow::anyhow!("Invalid id"))?;
 
     Ok(match tx_type.to_owned() {
-        ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig {
-            safe_tx_hash: id_parts.get(2)
+        ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig(
+            id_parts.get(2)
                 .ok_or(anyhow::anyhow!("No safe tx hash provided"))?.to_string(),
-        },
+        ),
         ID_PREFIX_ETHEREUM_TX => TransactionIdParts::Ethereum {
             safe_address: id_parts.get(1)
                 .ok_or(anyhow::anyhow!("No safe address"))?.to_string(),
             transaction_hash: id_parts.get(2)
-                .ok_or(anyhow::anyhow!("No module tx hash"))?.to_string(),
+                .ok_or(anyhow::anyhow!("No ethereum tx hash"))?.to_string(),
             details_hash: id_parts.get(3)
-                .ok_or(anyhow::anyhow!("No module tx details hash"))?.to_string(),
+                .ok_or(anyhow::anyhow!("No ethereum tx details hash"))?.to_string(),
         },
         ID_PREFIX_MODULE_TX => TransactionIdParts::Module {
             safe_address: id_parts.get(1)

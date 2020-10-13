@@ -11,9 +11,9 @@ pub const ID_PREFIX_MODULE_TX: &str = "module";
 pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
 pub const ID_PREFIX_CREATION_TX: &str = "creation";
 
+#[derive(PartialEq, Debug)]
 pub(crate) enum TransactionIdParts {
-    //TODO think of better name
-    Multisig { safe_tx_hash: String },
+    Multisig(String),
     Module {
         safe_address: String,
         transaction_hash: String,

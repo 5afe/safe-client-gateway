@@ -15,7 +15,7 @@ use log::debug;
 use crate::models::service::transactions::TransactionIdParts::Multisig;
 use anyhow::Result;
 
-fn get_multisig_transaction_details(
+pub(super) fn get_multisig_transaction_details(
     context: &Context,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {

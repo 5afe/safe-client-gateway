@@ -13,6 +13,7 @@ use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
 use log::debug;
 use anyhow::Result;
+use crate::models::service::transactions::TransactionIdParts::Multisig;
 
 fn get_multisig_transaction_details(
     context: &Context,
@@ -98,37 +99,22 @@ pub fn get_transactions_details(
     context: &Context,
     details_id: &String,
 ) -> ApiResult<TransactionDetails> {
-    let id_parts: Vec<&str> = details_id.split(ID_SEPARATOR).collect();
-    let tx_type = id_parts.get(0).ok_or(anyhow::anyhow!("Invalid id"))?;
+    let id_parts = parse_id(details_id)?;
 
-    match tx_type.to_owned() {
-        ID_PREFIX_MULTISIG_TX => get_multisig_transaction_details(
-            context,
-            id_parts
-                .get(2)
-                .ok_or(anyhow::anyhow!("No safe tx hash provided"))?,
-        ),
-        ID_PREFIX_ETHEREUM_TX => get_ethereum_transaction_details(
-            context,
-            id_parts.get(1).ok_or(anyhow::anyhow!("No safe address"))?,
-            id_parts
-                .get(2)
-                .ok_or(anyhow::anyhow!("No module tx hash"))?,
-            id_parts
-                .get(3)
-                .ok_or(anyhow::anyhow!("No module tx details hash"))?,
-        ),
-        ID_PREFIX_MODULE_TX => get_module_transaction_details(
-            context,
-            id_parts.get(1).ok_or(anyhow::anyhow!("No safe address"))?,
-            id_parts
-                .get(2)
-                .ok_or(anyhow::anyhow!("No module tx hash"))?,
-            id_parts
-                .get(3)
-                .ok_or(anyhow::anyhow!("No module tx details hash"))?,
-        ),
-        &_ => get_multisig_transaction_details(context, tx_type),
+    match id_parts {
+        TransactionIdParts::Ethereum {
+            safe_address,
+            transaction_hash,
+            details_hash
+        } => get_ethereum_transaction_details(context, &safe_address, &transaction_hash, &details_hash),
+        TransactionIdParts::Module {
+            safe_address,
+            transaction_hash,
+            details_hash
+        } => get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash),
+        TransactionIdParts::Multisig(safe_tx_hash) => get_multisig_transaction_details(context, &safe_tx_hash),
+        TransactionIdParts::TransactionHash(safe_tx_hash) =>
+            get_multisig_transaction_details(context, &safe_tx_hash)
     }
 }
 

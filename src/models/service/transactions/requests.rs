@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TxConfirmationRequest {
-    pub safe_tx_hash: String,
+pub struct ConfirmationRequest {
+    pub signer: String,
+    pub signature: String,
 }

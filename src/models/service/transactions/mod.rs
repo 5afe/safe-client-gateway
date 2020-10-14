@@ -3,7 +3,7 @@ use serde::Serialize;
 
 pub mod details;
 pub mod summary;
-pub mod tx_requests;
+pub mod requests;
 
 pub const ID_SEPARATOR: &str = "_";
 pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";

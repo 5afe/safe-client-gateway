@@ -1,4 +1,3 @@
-use crate::routes::transactions::details;
 use crate::models::service::transactions::TransactionIdParts;
 use crate::services::transactions_details::parse_id;
 

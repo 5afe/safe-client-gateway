@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-#[derive(Serialize, Debug, Hash)]
+#[derive(Serialize, Debug, PartialEq, Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct ConfirmationRequest {
     pub safe: String,
@@ -14,7 +14,7 @@ pub struct ConfirmationRequest {
     pub gas_price: String,
     pub refund_receiver: String,
     pub nonce: String,
-    pub contract_transaction_hash: String,// safe_tx_hash
+    pub contract_transaction_hash: String, // safe_tx_hash
     pub sender: String,
     pub signature: String,
     pub origin: String,

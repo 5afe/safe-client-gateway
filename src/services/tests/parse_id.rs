@@ -5,7 +5,10 @@ use crate::services::transactions_details::parse_id;
 #[test]
 fn multisig_details_id() {
     let details_id = "multisig_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x8bde30060a1e4d8383efa9b666654b31771c93325f905088c91f58803b4433b5";
-    let expected = TransactionIdParts::Multisig(String::from("0x8bde30060a1e4d8383efa9b666654b31771c93325f905088c91f58803b4433b5"));
+    let expected = TransactionIdParts::Multisig {
+        safe_address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        safe_tx_hash: "0x8bde30060a1e4d8383efa9b666654b31771c93325f905088c91f58803b4433b5".to_string(),
+    };
 
     let actual = parse_id(details_id).unwrap();
 

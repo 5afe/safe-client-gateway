@@ -112,7 +112,7 @@ pub fn get_transactions_details(
             transaction_hash,
             details_hash
         } => get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash),
-        TransactionIdParts::Multisig(safe_tx_hash) => get_multisig_transaction_details(context, &safe_tx_hash),
+        TransactionIdParts::Multisig { safe_tx_hash, .. } => get_multisig_transaction_details(context, &safe_tx_hash),
         TransactionIdParts::TransactionHash(safe_tx_hash) => get_multisig_transaction_details(context, &safe_tx_hash),
         _ => Err(ApiError::new_from_message(String::from("Bad transaction id"))),
     }
@@ -123,10 +123,12 @@ pub(super) fn parse_id(details_id: &str) -> Result<TransactionIdParts> {
     let tx_type = id_parts.get(0).ok_or(anyhow::anyhow!("Invalid id"))?;
 
     Ok(match tx_type.to_owned() {
-        ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig(
-            id_parts.get(2)
+        ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig {
+            safe_address: id_parts.get(1)
+                .ok_or(anyhow::anyhow!("No safe address provided"))?.to_string(),
+            safe_tx_hash: id_parts.get(2)
                 .ok_or(anyhow::anyhow!("No safe tx hash provided"))?.to_string(),
-        ),
+        },
         ID_PREFIX_ETHEREUM_TX => TransactionIdParts::Ethereum {
             safe_address: id_parts.get(1)
                 .ok_or(anyhow::anyhow!("No safe address"))?.to_string(),

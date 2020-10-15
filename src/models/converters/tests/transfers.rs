@@ -1,20 +1,25 @@
-use crate::models::backend::transfers::{EtherTransfer as EtherTransferDto, Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto, Transfer as TransferDto};
-use crate::models::service::transactions::{TransferInfo, TransactionInfo, TransferDirection, EtherTransfer, Transfer, Erc20Transfer, Erc721Transfer, TransactionStatus};
-use crate::providers::info::*;
+use crate::models::backend::transfers::{
+    Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto,
+    EtherTransfer as EtherTransferDto, Transfer as TransferDto,
+};
 use crate::models::service::transactions::details::TransactionDetails;
+use crate::models::service::transactions::{
+    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, Transfer,
+    TransferDirection, TransferInfo,
+};
+use crate::providers::info::*;
 
 #[test]
 fn erc_20_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
-    let erc_20_transfer = TransferDto::Erc20(serde_json::from_str::<Erc20TransferDto>(crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO).unwrap());
+    let erc_20_transfer = TransferDto::Erc20(
+        serde_json::from_str::<Erc20TransferDto>(crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO)
+            .unwrap(),
+    );
 
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
-    mock_info_provider
-        .expect_token_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
@@ -40,15 +45,14 @@ fn erc_20_transfer_dto_to_transaction_info() {
 #[test]
 fn erc_721_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
-    let erc_721_transfer = TransferDto::Erc721(serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO).unwrap());
+    let erc_721_transfer = TransferDto::Erc721(
+        serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO)
+            .unwrap(),
+    );
 
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
-    mock_info_provider
-        .expect_token_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
@@ -73,15 +77,13 @@ fn erc_721_transfer_dto_to_transaction_info() {
 #[test]
 fn ether_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
-    let ether_transfer_dto = TransferDto::Ether(serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap());
+    let ether_transfer_dto = TransferDto::Ether(
+        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap(),
+    );
 
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
-    mock_info_provider
-        .expect_token_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
@@ -102,12 +104,8 @@ fn unknown_transfer_dto_to_transaction_info() {
     let unknown_transfer_dto = TransferDto::Unknown;
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
-    mock_info_provider
-        .expect_token_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
 
     let actual = unknown_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
 
@@ -135,15 +133,13 @@ fn unknown_transfer_dto_get_transaction_hash() {
 #[test]
 fn transfer_dto_to_transaction_details() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
-    let ether_transfer_dto = TransferDto::Ether(serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap());
+    let ether_transfer_dto = TransferDto::Ether(
+        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap(),
+    );
 
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
-    mock_info_provider
-        .expect_token_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionDetails {
         executed_at: Some(1597733631000),
@@ -158,10 +154,14 @@ fn transfer_dto_to_transaction_details() {
         }),
         tx_data: None,
         detailed_execution_info: None,
-        tx_hash: Some("0x41b610e8cce50bbe3aa06d6953ecc5f92a838aedc024a265c0afca7ec4f33bdf".to_string()),
+        tx_hash: Some(
+            "0x41b610e8cce50bbe3aa06d6953ecc5f92a838aedc024a265c0afca7ec4f33bdf".to_string(),
+        ),
     };
 
-    let actual = ether_transfer_dto.to_transaction_details(&mut mock_info_provider, safe_address).unwrap();
+    let actual = ether_transfer_dto
+        .to_transaction_details(&mut mock_info_provider, safe_address)
+        .unwrap();
 
     assert_eq!(expected, actual)
 }

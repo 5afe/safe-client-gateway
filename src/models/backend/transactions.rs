@@ -1,8 +1,8 @@
 use super::super::commons::Operation;
-use chrono::{DateTime, Utc};
-use serde::{Serialize, Deserialize};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::DataDecoded;
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Debug)]
 #[serde(tag = "txType")]

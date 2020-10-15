@@ -1,7 +1,7 @@
-use rocket::local::Client;
-use crate::utils::errors::{ApiError, ErrorDetails};
-use rocket::response::Responder;
 use crate::models::backend::transactions::MultisigTransaction;
+use crate::utils::errors::{ApiError, ErrorDetails};
+use rocket::local::Client;
+use rocket::response::Responder;
 
 #[test]
 fn api_error_responder_json() {
@@ -69,7 +69,9 @@ fn api_error_known_error_json_structure() {
     let expected_error = ErrorDetails {
         code: 1,
         message: Some("Checksum address validation failed".to_string()),
-        arguments: Some(vec!["0x1230b3d59858296A31053C1b8562Ecf89A2f888b".to_string()]),
+        arguments: Some(vec![
+            "0x1230b3d59858296A31053C1b8562Ecf89A2f888b".to_string()
+        ]),
     };
 
     let actual = ApiError::from_backend_error(422, &expected_error_json);
@@ -92,7 +94,6 @@ fn api_error_unknown_error_json_structure() {
         message: Some(expected_error_json.to_owned()),
         arguments: None,
     };
-
 
     let actual = ApiError::from_backend_error(422, &expected_error_json);
 

@@ -9,9 +9,7 @@ use crate::models::service::transactions::Transfer as ServiceTransfer;
 use crate::models::service::transactions::{
     Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, TransferInfo,
 };
-use crate::providers::info::{
-    InfoProvider, TokenInfo, TokenType,
-};
+use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use anyhow::Result;
 
 impl TransferDto {
@@ -65,7 +63,11 @@ impl TransferDto {
 }
 
 impl Erc20TransferDto {
-    pub(super) fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+        safe: &str,
+    ) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -87,7 +89,10 @@ impl Erc20TransferDto {
         })
     }
 
-    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc20TokenInfo> {
+    pub(super) fn get_token_info(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+    ) -> Option<Erc20TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
@@ -105,7 +110,11 @@ impl Erc20TransferDto {
 }
 
 impl Erc721TransferDto {
-    pub(super) fn to_transfer_transaction(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+        safe: &str,
+    ) -> ServiceTransfer {
         ServiceTransfer {
             sender: self.from.to_owned(),
             recipient: self.to.to_owned(),
@@ -126,7 +135,10 @@ impl Erc721TransferDto {
         })
     }
 
-    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<Erc721TokenInfo> {
+    pub(super) fn get_token_info(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+    ) -> Option<Erc721TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
@@ -165,7 +177,9 @@ fn token_info_with_fallback<T>(
     expected_type: TokenType,
     fallback_mapper: impl Fn(&TokenInfo) -> T,
 ) -> Option<T> {
-    if token_info.is_some() { return token_info; }
+    if token_info.is_some() {
+        return token_info;
+    }
     match info_provider.token_info(token_address) {
         Ok(token) => {
             if token.token_type == expected_type {

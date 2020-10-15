@@ -1,4 +1,4 @@
-use crate::models::converters::transactions::{data_size};
+use crate::models::converters::transactions::data_size;
 
 #[test]
 fn data_size_calculation() {

@@ -1,6 +1,6 @@
-use serde::Deserialize;
-use derivative::Derivative;
 use chrono::{DateTime, Utc};
+use derivative::Derivative;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone, Hash)]
 #[serde(tag = "type")]

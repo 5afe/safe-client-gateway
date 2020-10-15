@@ -1,4 +1,6 @@
-use crate::models::commons::{Parameter, ParamValue, DataDecoded, InternalTransaction, ValueDecodedType, Operation};
+use crate::models::commons::{
+    DataDecoded, InternalTransaction, Operation, ParamValue, Parameter, ValueDecodedType,
+};
 
 #[test]
 fn deserialise_params_value_as_string() {
@@ -42,12 +44,14 @@ fn deserialise_params_value_as_array() {
         name: "_owners".to_string(),
         param_type: "address[]".to_string(),
         value_decoded: None,
-        value: ParamValue::ArrayValue(
-            vec!(
-                "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string().into(),
-                "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string().into()
-            )
-        ),
+        value: ParamValue::ArrayValue(vec![
+            "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"
+                .to_string()
+                .into(),
+            "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"
+                .to_string()
+                .into(),
+        ]),
     };
 
     assert!(actual.is_ok());

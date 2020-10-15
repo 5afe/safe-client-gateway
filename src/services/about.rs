@@ -1,6 +1,6 @@
 extern crate reqwest;
 
-use crate::config::{base_transaction_service_url, version, build_number};
+use crate::config::{base_transaction_service_url, build_number, version};
 use crate::models::service::about::About;
 use crate::utils::errors::ApiResult;
 

@@ -1,7 +1,7 @@
-use serde::Serialize;
 use super::*;
-use crate::models::commons::{Operation, DataDecoded};
+use crate::models::commons::{DataDecoded, Operation};
 use crate::providers::info::TokenInfo;
+use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]

@@ -1,14 +1,18 @@
-use crate::models::backend::transactions::{MultisigTransaction, ModuleTransaction};
+use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
+use crate::models::commons::ParamValue::SingleValue;
+use crate::models::commons::{DataDecoded, Operation, Parameter};
+use crate::models::service::transactions::details::{
+    DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
+    TransactionData, TransactionDetails,
+};
+use crate::models::service::transactions::{Custom, TransactionInfo, TransactionStatus};
 use crate::providers::info::SafeInfo;
 use crate::providers::info::*;
-use crate::models::service::transactions::details::{TransactionDetails, TransactionData, MultisigExecutionDetails, DetailedExecutionInfo, MultisigConfirmation, ModuleExecutionDetails};
-use crate::models::service::transactions::{TransactionStatus, TransactionInfo, Custom};
-use crate::models::commons::{Operation, DataDecoded, Parameter};
-use crate::models::commons::ParamValue::SingleValue;
 
 #[test]
 fn multisig_custom_transaction_to_transaction_details() {
-    let multisig_tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CUSTOM).unwrap();
+    let multisig_tx =
+        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CUSTOM).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let timestamp_confirmation0: i64 = 1592837914055;
     let timestamp_confirmation1: i64 = 1592838142231;
@@ -97,7 +101,8 @@ fn multisig_custom_transaction_to_transaction_details() {
 
 #[test]
 fn module_transaction_to_transaction_details() {
-    let module_transaction = serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+    let module_transaction =
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
@@ -121,7 +126,6 @@ fn module_transaction_to_transaction_details() {
                 address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
             })),
     };
-
 
     let actual = ModuleTransaction::to_transaction_details(&module_transaction);
 

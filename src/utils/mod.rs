@@ -1,13 +1,13 @@
 use crate::models::commons::{DataDecoded, ParamValue};
+use rocket::http::uri::Absolute;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
-use rocket::http::uri::Absolute;
 
-pub mod cors;
-pub mod context;
 pub mod cache;
-pub mod json;
+pub mod context;
+pub mod cors;
 pub mod errors;
+pub mod json;
 
 #[cfg(test)]
 mod tests;
@@ -33,43 +33,53 @@ pub const SETTINGS_CHANGE_METHODS: &[&str] = &[
     CHANGE_THRESHOLD,
     CHANGE_MASTER_COPY,
     ENABLE_MODULE,
-    DISABLE_MODULE];
+    DISABLE_MODULE,
+];
 
 impl DataDecoded {
     pub fn get_parameter_single_value(&self, some_name: &str) -> Option<String> {
-        self.parameters.as_ref()?.iter()
-            .find_map(|param| {
-                match &param.value {
-                    ParamValue::SingleValue(value) => {
-                        if param.name == some_name { Some(value.clone()) } else { None }
+        self.parameters
+            .as_ref()?
+            .iter()
+            .find_map(|param| match &param.value {
+                ParamValue::SingleValue(value) => {
+                    if param.name == some_name {
+                        Some(value.clone())
+                    } else {
+                        None
                     }
-                    _ => None
                 }
+                _ => None,
             })
     }
 
     pub fn get_parameter_single_value_at(&self, position: usize) -> Option<String> {
-        self.parameters.as_ref().and_then(|parameters|
-            parameters.get(position).and_then(|parameter|
-                match &parameter.value {
-                    ParamValue::SingleValue(value) => {
-                        Some(value.clone())
-                    }
-                    _ => None
-                }
-            ))
+        self.parameters.as_ref().and_then(|parameters| {
+            parameters
+                .get(position)
+                .and_then(|parameter| match &parameter.value {
+                    ParamValue::SingleValue(value) => Some(value.clone()),
+                    _ => None,
+                })
+        })
     }
 
     pub fn is_erc20_transfer_method(&self) -> bool {
-        ERC20_TRANSFER_METHODS.iter().any(|&value| value == self.method)
+        ERC20_TRANSFER_METHODS
+            .iter()
+            .any(|&value| value == self.method)
     }
 
     pub fn is_erc721_transfer_method(&self) -> bool {
-        ERC721_TRANSFER_METHODS.iter().any(|&value| value == self.method)
+        ERC721_TRANSFER_METHODS
+            .iter()
+            .any(|&value| value == self.method)
     }
 
     pub fn is_settings_change(&self) -> bool {
-        SETTINGS_CHANGE_METHODS.iter().any(|&value| value == self.method)
+        SETTINGS_CHANGE_METHODS
+            .iter()
+            .any(|&value| value == self.method)
     }
 }
 

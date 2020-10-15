@@ -1,7 +1,7 @@
+pub mod balances;
+pub mod data_decoded;
 pub mod transactions;
 pub mod transfers;
-pub mod data_decoded;
-pub mod balances;
 
 #[cfg(test)]
 mod tests;

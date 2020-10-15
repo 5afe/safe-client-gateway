@@ -1,7 +1,7 @@
-use crate::config::{request_cache_duration};
-use crate::utils::context::Context;
-use crate::config::{base_transaction_service_url};
+use crate::config::base_transaction_service_url;
+use crate::config::request_cache_duration;
 use crate::utils::cache::CacheExt;
+use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
@@ -12,5 +12,9 @@ pub fn list(context: Context, safe_address: String) -> ApiResult<content::Json<S
         base_transaction_service_url(),
         safe_address
     );
-    Ok(content::Json(context.cache().request_cached(&context.client(), url.as_str(), request_cache_duration())?))
+    Ok(content::Json(context.cache().request_cached(
+        &context.client(),
+        url.as_str(),
+        request_cache_duration(),
+    )?))
 }

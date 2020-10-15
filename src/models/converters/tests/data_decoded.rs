@@ -1,9 +1,11 @@
-use crate::models::commons::{DataDecoded, Parameter, ParamValue};
+use crate::models::commons::{DataDecoded, ParamValue, Parameter};
 use crate::models::service::transactions::{SettingsChange, SettingsInfo};
 
 #[test]
 fn data_decoded_set_fallback_handler_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SET_FALLBACK_HANDLER).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SET_FALLBACK_HANDLER)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -19,7 +21,9 @@ fn data_decoded_set_fallback_handler_to_settings_info() {
 
 #[test]
 fn data_decoded_add_owner_with_threshold_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -36,7 +40,8 @@ fn data_decoded_add_owner_with_threshold_to_settings_info() {
 
 #[test]
 fn data_decoded_remove_owner_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -53,7 +58,8 @@ fn data_decoded_remove_owner_to_settings_info() {
 
 #[test]
 fn data_decoded_swap_owner_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -70,13 +76,12 @@ fn data_decoded_swap_owner_to_settings_info() {
 
 #[test]
 fn data_decoded_change_threshold_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_THRESHOLD).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_THRESHOLD).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
-        settings_info: Some(SettingsInfo::ChangeThreshold {
-            threshold: 2
-        }),
+        settings_info: Some(SettingsInfo::ChangeThreshold { threshold: 2 }),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded);
@@ -86,12 +91,13 @@ fn data_decoded_change_threshold_to_settings_info() {
 
 #[test]
 fn data_decoded_change_implementation_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
         settings_info: Some(SettingsInfo::ChangeImplementation {
-            implementation: "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string()
+            implementation: "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string(),
         }),
     };
 
@@ -102,12 +108,13 @@ fn data_decoded_change_implementation_to_settings_info() {
 
 #[test]
 fn data_decoded_enable_module_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ENABLE_MODULE).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ENABLE_MODULE).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
         settings_info: Some(SettingsInfo::EnableModule {
-            module: "0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d".to_string()
+            module: "0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d".to_string(),
         }),
     };
 
@@ -118,7 +125,8 @@ fn data_decoded_enable_module_to_settings_info() {
 
 #[test]
 fn data_decoded_disable_module_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_DISABLE_MODULE).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_DISABLE_MODULE).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -134,7 +142,9 @@ fn data_decoded_disable_module_to_settings_info() {
 
 #[test]
 fn data_decoded_unknown_to_settings_info() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE).unwrap();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -148,8 +158,10 @@ fn data_decoded_unknown_to_settings_info() {
 
 #[test]
 fn data_decoded_with_nested_safe_transaction() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED).unwrap();
-
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+    )
+    .unwrap();
 
     println!("{:#?}", data_decoded);
     let expected = DataDecoded {

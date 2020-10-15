@@ -1,9 +1,9 @@
+use crate::utils::errors::{ApiError, ApiResult};
+use mockall::automock;
 use rocket::response::content;
 use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
 use serde::ser::Serialize;
 use serde_json;
-use mockall::automock;
-use crate::utils::errors::{ApiResult, ApiError};
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -44,7 +44,9 @@ pub trait CacheExt: Cache {
         timeout: usize,
         resp: impl Fn() -> ApiResult<R>,
     ) -> ApiResult<content::Json<String>>
-        where R: Serialize {
+    where
+        R: Serialize,
+    {
         let cached = self.fetch(key);
         match cached {
             Some(value) => Ok(content::Json(value)),
@@ -64,19 +66,24 @@ pub trait CacheExt: Cache {
         timeout: usize,
     ) -> ApiResult<String> {
         match self.fetch(&url) {
-            Some(cached) => {
-                CachedWithCode::split(&cached).to_result()
-            }
+            Some(cached) => CachedWithCode::split(&cached).to_result(),
             None => {
                 let response = client.get(url).send()?;
                 let status_code = response.status().as_u16();
 
                 if response.status().is_server_error() {
-                    return Err(ApiError::from_backend_error(42, format!("Got server error for {}", response.text()?).as_str()));
+                    return Err(ApiError::from_backend_error(
+                        42,
+                        format!("Got server error for {}", response.text()?).as_str(),
+                    ));
                 }
                 let is_client_error = response.status().is_client_error();
                 let raw_data = response.text()?;
-                self.create(&url, CachedWithCode::join(status_code, &raw_data).as_str(), timeout);
+                self.create(
+                    &url,
+                    CachedWithCode::join(status_code, &raw_data).as_str(),
+                    timeout,
+                );
                 return if is_client_error {
                     Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {
@@ -99,7 +106,11 @@ impl CachedWithCode {
     pub(super) fn split(cached: &str) -> Self {
         let cached_with_code: Vec<&str> = cached.splitn(2, CachedWithCode::SEPARATOR).collect();
         CachedWithCode {
-            code: cached_with_code.get(0).expect("Must have a status code").parse().expect("Not a valid Http code"),
+            code: cached_with_code
+                .get(0)
+                .expect("Must have a status code")
+                .parse()
+                .expect("Not a valid Http code"),
             data: cached_with_code.get(1).expect("Must have data").to_string(),
         }
     }

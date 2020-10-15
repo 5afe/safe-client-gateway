@@ -53,7 +53,6 @@ fn build_confirmation_tx_data_is_none() {
     actual.unwrap();
 }
 
-
 #[test]
 fn build_confirmation_tx_data_value_and_data_are_none() {
     let transaction_details = TransactionDetails {

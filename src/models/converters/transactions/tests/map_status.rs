@@ -1,10 +1,11 @@
 use crate::models::backend::transactions::MultisigTransaction;
-use crate::providers::info::SafeInfo;
 use crate::models::service::transactions::TransactionStatus;
+use crate::providers::info::SafeInfo;
 
 #[test]
 fn map_status_to_success() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ETHER_TRANSFER).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ETHER_TRANSFER)
+        .unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let actual = tx.map_status(&safe_info);
 
@@ -22,8 +23,12 @@ fn map_status_to_failed() {
 
 #[test]
 fn map_status_to_cancelled() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER_CANCELLED).unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES_AND_HIGH_NONCE).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::json::MULTISIG_TX_ERC721_TRANSFER_CANCELLED,
+    )
+    .unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES_AND_HIGH_NONCE).unwrap();
     let actual = tx.map_status(&safe_info);
 
     assert_eq!(TransactionStatus::Cancelled, actual);
@@ -31,7 +36,9 @@ fn map_status_to_cancelled() {
 
 #[test]
 fn map_status_awaiting_execution() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_EXECUTION).unwrap();
+    let tx =
+        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_EXECUTION)
+            .unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let actual = tx.map_status(&safe_info);
 
@@ -40,7 +47,10 @@ fn map_status_awaiting_execution() {
 
 #[test]
 fn map_status_awaiting_confirmations_required_field_none() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL,
+    )
+    .unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_THRESHOLD_TWO).unwrap();
     let actual = tx.map_status(&safe_info);
 
@@ -49,7 +59,10 @@ fn map_status_awaiting_confirmations_required_field_none() {
 
 #[test]
 fn map_status_awaiting_confirmations_required_field_some() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS,
+    )
+    .unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_THRESHOLD_TWO).unwrap();
     let actual = tx.map_status(&safe_info);
 
@@ -58,7 +71,10 @@ fn map_status_awaiting_confirmations_required_field_some() {
 
 #[test]
 fn confirmations_required_none() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL,
+    )
+    .unwrap();
     let actual = tx.confirmation_required(11);
 
     assert_eq!(11, actual);
@@ -66,7 +82,10 @@ fn confirmations_required_none() {
 
 #[test]
 fn confirmations_required_some() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS,
+    )
+    .unwrap();
     let actual = tx.confirmation_required(11);
 
     assert_eq!(2, actual);
@@ -74,7 +93,9 @@ fn confirmations_required_some() {
 
 #[test]
 fn confirmation_count_none() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CONFIRMATIONS_NULL).unwrap();
+    let tx =
+        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CONFIRMATIONS_NULL)
+            .unwrap();
 
     let actual = tx.confirmation_count();
     assert_eq!(0, actual)
@@ -82,7 +103,10 @@ fn confirmation_count_none() {
 
 #[test]
 fn confirmation_count_some() {
-    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS).unwrap();
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS,
+    )
+    .unwrap();
 
     let actual = tx.confirmation_count();
     assert_eq!(1, actual)

@@ -14,6 +14,8 @@ services:
   - docker
 
 script:
+  - rustup component add rustfmt
+  - cargo fmt --all -- --check || travis_terminate 1;  # Check formatting
   # These flags are recommended by https://github.com/mozilla/grcov#grcov-with-travis .
   # vk: I had to remove `-Zpanic_abort_tests -Cpanic=abort` because this would cause compilation
   # to fail but I haven't investigated more into why.

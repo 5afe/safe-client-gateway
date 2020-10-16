@@ -14,11 +14,19 @@ This project is a gateway between the Safe clients ([Android](https://github.com
 
 This project requires `rustup` and `redis`
 
-- Clone project and go to project folder
-- `rustup default nightly` (Rocket currently requires a nightly version)
-- `cp .env.sample .env`
-- `redis-server`
-- `cargo run`
+```bash
+rustup default nightly # (Rocket currently requires a nightly version)
+git clone https://github.com/gnosis/safe-client-gateway.git
+cd safe-client-gateway
+cp .env.sample .env
+redis-server
+cargo run
+./add_rustfmt_hook.sh  # It installs a git precommit hook that will autoformat the code on every commit
+```
+
+After doing any change code must be formatted using [Rustfmt](https://github.com/rust-lang/rustfmt)
+- `cargo fmt --all`
+Auto formatting can also [be configured in the most common code editors](https://github.com/rust-lang/rustfmt#running-rustfmt-from-your-editor)
 
 ## Configuration
 

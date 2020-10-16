@@ -1,5 +1,5 @@
-use serde::Serialize;
 use crate::models::commons::DataDecoded;
+use serde::Serialize;
 
 pub mod details;
 pub mod summary;
@@ -94,7 +94,7 @@ pub struct SettingsChange {
 #[serde(tag = "type")]
 pub enum SettingsInfo {
     SetFallbackHandler {
-        handler: String
+        handler: String,
     },
     AddOwner {
         owner: String,
@@ -110,13 +110,13 @@ pub enum SettingsInfo {
         new_owner: String,
     },
     ChangeThreshold {
-        threshold: u64
+        threshold: u64,
     },
     ChangeImplementation {
-        implementation: String
+        implementation: String,
     },
     EnableModule {
-        module: String
+        module: String,
     },
     DisableModule {
         module: String,

@@ -1,9 +1,12 @@
-use crate::models::backend::transactions::{MultisigTransaction, Confirmation};
+use crate::models::backend::transactions::{Confirmation, MultisigTransaction};
+use crate::models::commons::Operation;
 use crate::models::commons::{DataDecoded, Parameter};
+use crate::models::service::transactions::{
+    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, Transfer, TransferDirection,
+    TransferInfo,
+};
 use crate::providers::info::*;
 use chrono::Utc;
-use crate::models::commons::Operation;
-use crate::models::service::transactions::{TransactionInfo, Transfer, TransferInfo, Erc721Transfer, TransferDirection, Erc20Transfer, EtherTransfer};
 
 #[test]
 fn multisig_tx_check_erc721_transfer() {
@@ -16,9 +19,7 @@ fn multisig_tx_check_erc721_transfer() {
         logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png")),
     };
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
         .expect_token_info()
         .times(1)
@@ -115,9 +116,7 @@ fn multisig_tx_check_erc20_transfer() {
         logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png")),
     };
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
         .expect_token_info()
         .times(1)
@@ -207,12 +206,8 @@ fn multisig_tx_check_erc20_transfer() {
 #[test]
 fn multisig_tx_check_ether_transfer() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_safe_info()
-        .times(0);
-    mock_info_provider
-        .expect_token_info()
-        .times(0);
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
 
     let expected_date = Utc::now();
     let safe = "0x938bae50a210b80EA233112800Cd5Bc2e7644300";

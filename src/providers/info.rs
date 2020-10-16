@@ -1,13 +1,15 @@
+use crate::config::{
+    base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
+};
 use crate::utils::cache::{Cache, CacheExt};
-use crate::config::{base_transaction_service_url, info_cache_duration, exchange_api_cache_duration};
 use crate::utils::context::Context;
 use crate::utils::json::default_if_null;
-use serde_json;
 use anyhow::Result;
+use mockall::automock;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
+use serde_json;
 use std::collections::HashMap;
-use mockall::automock;
 
 #[automock]
 pub trait InfoProvider {
@@ -79,10 +81,15 @@ impl DefaultInfoProvider<'_> {
     pub fn exchange_usd_to(&self, currency_code: &str) -> Result<f64> {
         let currency_code = currency_code.to_uppercase();
         let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
-        let body = self.cache.request_cached(self.client, &url, exchange_api_cache_duration())?;
+        let body = self
+            .cache
+            .request_cached(self.client, &url, exchange_api_cache_duration())?;
         let exchange = serde_json::from_str::<Exchange>(&body)?;
         match exchange.rates {
-            Some(rates) => rates.get(&currency_code).cloned().ok_or(anyhow::anyhow!("Currency not found")),
+            Some(rates) => rates
+                .get(&currency_code)
+                .cloned()
+                .ok_or(anyhow::anyhow!("Currency not found")),
             None => Err(anyhow::anyhow!("Currency not found")),
         }
     }
@@ -103,14 +110,18 @@ impl DefaultInfoProvider<'_> {
         local_cache: impl Fn(&mut Self) -> &mut HashMap<String, Option<T>>,
         url: impl Into<String>,
     ) -> Result<T>
-        where
-            T: Clone + DeserializeOwned,
+    where
+        T: Clone + DeserializeOwned,
     {
         let url = url.into();
         match local_cache(self).get(&url) {
-            Some(value) => value.clone().ok_or(anyhow::anyhow!("Could not decode cached")),
+            Some(value) => value
+                .clone()
+                .ok_or(anyhow::anyhow!("Could not decode cached")),
             None => {
-                let data = self.cache.request_cached(self.client, &url, info_cache_duration())?;
+                let data = self
+                    .cache
+                    .request_cached(self.client, &url, info_cache_duration())?;
                 let value: Option<T> = serde_json::from_str(&data).unwrap_or(None);
                 local_cache(self).insert(url, value.clone());
                 value.ok_or(anyhow::anyhow!("Could not decode response"))

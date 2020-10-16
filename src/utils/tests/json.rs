@@ -1,7 +1,6 @@
 use crate::utils::json::default_if_null;
 use serde::Deserialize;
 
-
 #[derive(PartialEq, Deserialize, Debug)]
 struct ExpectedStruct {
     #[serde(deserialize_with = "default_if_null")]

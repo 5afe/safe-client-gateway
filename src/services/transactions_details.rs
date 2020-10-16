@@ -9,11 +9,11 @@ use crate::models::service::transactions::{
     ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
 };
 use crate::providers::info::DefaultInfoProvider;
-use crate::utils::context::Context;
-use crate::utils::hex_hash;
 use crate::utils::cache::CacheExt;
-use log::debug;
+use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use crate::utils::hex_hash;
+use log::debug;
 
 fn get_multisig_transaction_details(
     context: &Context,

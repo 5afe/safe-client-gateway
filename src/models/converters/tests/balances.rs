@@ -1,4 +1,4 @@
-use crate::json::{BALANCE_ETHER, BALANCE_COMPOUND_ETHER};
+use crate::json::{BALANCE_COMPOUND_ETHER, BALANCE_ETHER};
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};

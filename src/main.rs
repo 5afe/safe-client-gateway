@@ -14,21 +14,21 @@ extern crate dotenv;
 pub mod macros;
 
 mod config;
-mod routes;
-mod services;
 mod models;
 mod monitoring;
-mod utils;
 mod providers;
+mod routes;
+mod services;
+mod utils;
 
 #[cfg(test)]
 mod json;
 
-use dotenv::dotenv;
-use utils::cache::{ServiceCache};
-use utils::cors::{CORS};
-use routes::active_routes;
 use crate::routes::error_catchers;
+use dotenv::dotenv;
+use routes::active_routes;
+use utils::cache::ServiceCache;
+use utils::cors::CORS;
 
 fn main() {
     dotenv().ok();

@@ -1,10 +1,10 @@
+use rocket::http::uri::Origin;
 use rocket::request::{self, FromRequest, Request};
 use rocket::Outcome;
 use rocket::State;
-use rocket::http::uri::Origin;
 
-use crate::utils::cache::{ServiceCache, Cache};
 use crate::config::scheme;
+use crate::utils::cache::{Cache, ServiceCache};
 
 pub struct Context<'a, 'r> {
     request: &'a Request<'r>,
@@ -33,9 +33,10 @@ impl<'a, 'r> Context<'a, 'r> {
     }
 
     fn host(&self) -> Option<String> {
-        self.request.headers().get_one("Host").map(|host| {
-            format!("{}://{}", scheme(), host)
-        })
+        self.request
+            .headers()
+            .get_one("Host")
+            .map(|host| format!("{}://{}", scheme(), host))
     }
 }
 

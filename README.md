@@ -21,6 +21,7 @@ cd safe-client-gateway
 cp .env.sample .env
 redis-server
 cargo run
+./add_rustfmt_hook.sh  # It installs a git precommit hook that will autoformat the code on every commit
 ```
 
 After doing any change code must be formatted using [Rustfmt](https://github.com/rust-lang/rustfmt)

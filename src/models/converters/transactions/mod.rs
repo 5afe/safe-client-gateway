@@ -2,7 +2,6 @@ extern crate chrono;
 
 pub mod details;
 pub mod summary;
-pub mod request;
 
 #[cfg(test)]
 mod tests;

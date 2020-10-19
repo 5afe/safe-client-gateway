@@ -4,5 +4,4 @@ mod details;
 pub(super) mod map_status;
 pub(super) mod missing_signers;
 pub(super) mod transaction_types;
-pub(super) mod request;
 pub(super) mod transfer_type_checks;

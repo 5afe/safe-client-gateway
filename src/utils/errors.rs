@@ -37,14 +37,7 @@ impl ApiError {
         Self::new(status_code, error_details)
     }
 
-    fn new(status_code: u16, message: ErrorDetails) -> Self {
-        Self {
-            status: status_code,
-            details: message,
-        }
-    }
-
-    fn new_internal(message: String) -> Self {
+    pub fn new_from_message(message: String) -> Self {
         Self::new(
             500,
             ErrorDetails {
@@ -53,6 +46,13 @@ impl ApiError {
                 arguments: None,
             },
         )
+    }
+
+    fn new(status_code: u16, message: ErrorDetails) -> Self {
+        Self {
+            status: status_code,
+            details: message,
+        }
     }
 }
 

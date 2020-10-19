@@ -9,10 +9,9 @@ use crate::models::service::transactions::{ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODU
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiResult, ApiError, ErrorDetails};
+use crate::utils::errors::{ApiResult, ApiError};
 use crate::utils::hex_hash;
 use log::debug;
-use crate::models::service::transactions::TransactionIdParts::Multisig;
 use anyhow::Result;
 
 pub(super) fn get_multisig_transaction_details(

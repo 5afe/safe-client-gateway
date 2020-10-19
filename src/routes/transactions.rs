@@ -31,9 +31,11 @@ pub fn details(context: Context, details_id: String) -> ApiResult<content::Json<
         })
 }
 
-#[post("/v1/transactions/<tx_id>/confirmations", format = "json", data = "<confirmation_request>")]
-pub fn submit_confirmation(context: Context, tx_id: String, confirmation_request: Json<ConfirmationRequest>) -> ApiResult<content::Json<String>> {
-    context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
-        tx_confirmation::submit_confirmation(&context, &tx_id, &confirmation_request)
+#[post("/v1/transactions/<safe_tx_hash>/confirmations")]
+pub fn submit_confirmation(context: Context, safe_tx_hash: String) -> ApiResult<content::Json<String>> {
+    tx_confirmation::submit_confirmation(&context, &safe_tx_hash).and_then(|_| {
+        context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
+            transactions_details::get_transactions_details(&context, &safe_tx_hash)
+        })
     })
 }

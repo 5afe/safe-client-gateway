@@ -113,7 +113,7 @@ pub fn get_transactions_details(
         } => get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash),
         TransactionIdParts::Multisig { safe_tx_hash, .. } => get_multisig_transaction_details(context, &safe_tx_hash),
         TransactionIdParts::TransactionHash(safe_tx_hash) => get_multisig_transaction_details(context, &safe_tx_hash),
-        _ => Err(ApiError::new_from_message(String::from("Bad transaction id"))),
+        _ => Err(ApiError::new_from_message_with_code(422, String::from("Bad transaction id"))),
     }
 }
 

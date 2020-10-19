@@ -48,6 +48,17 @@ impl ApiError {
         )
     }
 
+    pub fn new_from_message_with_code(status_code: u16, message: String) -> Self {
+        Self::new(
+            status_code,
+            ErrorDetails {
+                code: 1337,
+                message: Some(message),
+                arguments: None,
+            },
+        )
+    }
+
     fn new(status_code: u16, message: ErrorDetails) -> Self {
         Self {
             status: status_code,

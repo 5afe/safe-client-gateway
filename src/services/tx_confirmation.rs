@@ -8,7 +8,7 @@ pub fn submit_confirmation(context: &Context, safe_tx_hash: &str, signature: &st
     context.cache().invalidate_pattern(&format!("*{}*", &safe_tx_hash));
 
     let url = format!("{}/v1/multisig-transactions/{}/confirmations/", base_transaction_service_url(), &safe_tx_hash);
-    let mut json = HashMap::new();//json!("{"signature":"{}"}", signature);
+    let mut json = HashMap::new();
     json.insert("signature", signature);
 
     let result = context.client().post(&url)

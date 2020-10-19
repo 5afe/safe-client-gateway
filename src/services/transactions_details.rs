@@ -5,14 +5,17 @@ use crate::models::backend::transactions::{ModuleTransaction, MultisigTransactio
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
 use crate::models::service::transactions::details::TransactionDetails;
-use crate::models::service::transactions::{ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX, ID_PREFIX_CREATION_TX, ID_SEPARATOR, TransactionIdParts};
+use crate::models::service::transactions::{
+    TransactionIdParts, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX,
+    ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
+};
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiResult, ApiError};
+use crate::utils::errors::{ApiError, ApiResult};
 use crate::utils::hex_hash;
-use log::debug;
 use anyhow::Result;
+use log::debug;
 
 pub(super) fn get_multisig_transaction_details(
     context: &Context,
@@ -104,16 +107,30 @@ pub fn get_transactions_details(
         TransactionIdParts::Ethereum {
             safe_address,
             transaction_hash,
-            details_hash
-        } => get_ethereum_transaction_details(context, &safe_address, &transaction_hash, &details_hash),
+            details_hash,
+        } => get_ethereum_transaction_details(
+            context,
+            &safe_address,
+            &transaction_hash,
+            &details_hash,
+        ),
         TransactionIdParts::Module {
             safe_address,
             transaction_hash,
-            details_hash
-        } => get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash),
-        TransactionIdParts::Multisig { safe_tx_hash, .. } => get_multisig_transaction_details(context, &safe_tx_hash),
-        TransactionIdParts::TransactionHash(safe_tx_hash) => get_multisig_transaction_details(context, &safe_tx_hash),
-        _ => Err(ApiError::new_from_message_with_code(422, String::from("Bad transaction id"))),
+            details_hash,
+        } => {
+            get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash)
+        }
+        TransactionIdParts::Multisig { safe_tx_hash, .. } => {
+            get_multisig_transaction_details(context, &safe_tx_hash)
+        }
+        TransactionIdParts::TransactionHash(safe_tx_hash) => {
+            get_multisig_transaction_details(context, &safe_tx_hash)
+        }
+        _ => Err(ApiError::new_from_message_with_code(
+            422,
+            String::from("Bad transaction id"),
+        )),
     }
 }
 
@@ -123,30 +140,48 @@ pub(super) fn parse_id(details_id: &str) -> Result<TransactionIdParts> {
 
     Ok(match tx_type.to_owned() {
         ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig {
-            safe_address: id_parts.get(1)
-                .ok_or(anyhow::anyhow!("No safe address provided"))?.to_string(),
-            safe_tx_hash: id_parts.get(2)
-                .ok_or(anyhow::anyhow!("No safe tx hash provided"))?.to_string(),
+            safe_address: id_parts
+                .get(1)
+                .ok_or(anyhow::anyhow!("No safe address provided"))?
+                .to_string(),
+            safe_tx_hash: id_parts
+                .get(2)
+                .ok_or(anyhow::anyhow!("No safe tx hash provided"))?
+                .to_string(),
         },
         ID_PREFIX_ETHEREUM_TX => TransactionIdParts::Ethereum {
-            safe_address: id_parts.get(1)
-                .ok_or(anyhow::anyhow!("No safe address"))?.to_string(),
-            transaction_hash: id_parts.get(2)
-                .ok_or(anyhow::anyhow!("No ethereum tx hash"))?.to_string(),
-            details_hash: id_parts.get(3)
-                .ok_or(anyhow::anyhow!("No ethereum tx details hash"))?.to_string(),
+            safe_address: id_parts
+                .get(1)
+                .ok_or(anyhow::anyhow!("No safe address"))?
+                .to_string(),
+            transaction_hash: id_parts
+                .get(2)
+                .ok_or(anyhow::anyhow!("No ethereum tx hash"))?
+                .to_string(),
+            details_hash: id_parts
+                .get(3)
+                .ok_or(anyhow::anyhow!("No ethereum tx details hash"))?
+                .to_string(),
         },
         ID_PREFIX_MODULE_TX => TransactionIdParts::Module {
-            safe_address: id_parts.get(1)
-                .ok_or(anyhow::anyhow!("No safe address"))?.to_string(),
-            transaction_hash: id_parts.get(2)
-                .ok_or(anyhow::anyhow!("No module tx hash"))?.to_string(),
-            details_hash: id_parts.get(3)
-                .ok_or(anyhow::anyhow!("No module tx details hash"))?.to_string(),
+            safe_address: id_parts
+                .get(1)
+                .ok_or(anyhow::anyhow!("No safe address"))?
+                .to_string(),
+            transaction_hash: id_parts
+                .get(2)
+                .ok_or(anyhow::anyhow!("No module tx hash"))?
+                .to_string(),
+            details_hash: id_parts
+                .get(3)
+                .ok_or(anyhow::anyhow!("No module tx details hash"))?
+                .to_string(),
         },
         ID_PREFIX_CREATION_TX => TransactionIdParts::Creation(
-            id_parts.get(1)
-                .ok_or(anyhow::anyhow!("No safe address provided"))?.to_string(),
+            id_parts
+                .get(1)
+                .ok_or(anyhow::anyhow!("No safe address provided"))?
+                .to_string(),
         ),
         &_ => TransactionIdParts::TransactionHash(tx_type.to_string()),
     })

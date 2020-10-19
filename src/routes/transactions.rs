@@ -1,11 +1,11 @@
 use crate::config::request_cache_duration;
+use crate::models::service::transactions::requests::ConfirmationRequest;
 use crate::services::transactions_details;
 use crate::services::transactions_list;
 use crate::services::tx_confirmation;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use crate::models::service::transactions::requests::ConfirmationRequest;
 use rocket::response::content;
 use rocket_contrib::json::Json;
 
@@ -31,11 +31,25 @@ pub fn details(context: Context, details_id: String) -> ApiResult<content::Json<
         })
 }
 
-#[post("/v1/transactions/<safe_tx_hash>/confirmations", data = "<tx_confirmation_request>")]
-pub fn submit_confirmation(context: Context, safe_tx_hash: String, tx_confirmation_request: Json<ConfirmationRequest>) -> ApiResult<content::Json<String>> {
-    tx_confirmation::submit_confirmation(&context, &safe_tx_hash, &tx_confirmation_request.signed_safe_tx_hash).and_then(|_| {
-        context.cache().cache_resp(&context.uri(), request_cache_duration(), || {
-            transactions_details::get_transactions_details(&context, &safe_tx_hash)
-        })
+#[post(
+    "/v1/transactions/<safe_tx_hash>/confirmations",
+    data = "<tx_confirmation_request>"
+)]
+pub fn submit_confirmation(
+    context: Context,
+    safe_tx_hash: String,
+    tx_confirmation_request: Json<ConfirmationRequest>,
+) -> ApiResult<content::Json<String>> {
+    tx_confirmation::submit_confirmation(
+        &context,
+        &safe_tx_hash,
+        &tx_confirmation_request.signed_safe_tx_hash,
+    )
+    .and_then(|_| {
+        context
+            .cache()
+            .cache_resp(&context.uri(), request_cache_duration(), || {
+                transactions_details::get_transactions_details(&context, &safe_tx_hash)
+            })
     })
 }

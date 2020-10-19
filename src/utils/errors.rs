@@ -86,7 +86,9 @@ impl fmt::Display for ApiError {
 impl<'r> Responder<'r> for ApiError {
     fn respond_to(self, _: &Request) -> response::Result<'r> {
         Response::build()
-            .sized_body(Cursor::new(serde_json::to_string(&self.details).expect("Couldn't serialize error")))
+            .sized_body(Cursor::new(
+                serde_json::to_string(&self.details).expect("Couldn't serialize error"),
+            ))
             .header(ContentType::JSON)
             .status(Status::from_code(self.status).expect("Unknown status code"))
             .ok()

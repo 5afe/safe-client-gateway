@@ -1,4 +1,5 @@
 use anyhow::Result;
+use reqwest::blocking::Response as ReqwestResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
@@ -35,6 +36,13 @@ impl ApiError {
             },
         };
         Self::new(status_code, error_details)
+    }
+
+    pub fn from_http_response(response: ReqwestResponse, default_message: String) -> Self {
+        Self::new_from_message_with_code(
+            response.status().as_u16(),
+            response.text().unwrap_or(default_message),
+        )
     }
 
     pub fn new_from_message(message: String) -> Self {

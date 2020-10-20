@@ -9,10 +9,6 @@ pub fn submit_confirmation(
     safe_tx_hash: &str,
     signature: &str,
 ) -> ApiResult<()> {
-    context
-        .cache()
-        .invalidate_pattern(&format!("*{}*", &safe_tx_hash));
-
     let url = format!(
         "{}/v1/multisig-transactions/{}/confirmations/",
         base_transaction_service_url(),
@@ -21,17 +17,17 @@ pub fn submit_confirmation(
     let mut json = HashMap::new();
     json.insert("signature", signature);
 
-    let result = context.client().post(&url).json(&json).send()?;
+    let response = context.client().post(&url).json(&json).send()?;
 
-    if result.status().is_success() {
+    if response.status().is_success() {
+        context
+            .cache()
+            .invalidate_pattern(&format!("*{}*", &safe_tx_hash));
         Ok(())
     } else {
-        Err(ApiError::from_backend_error(
-            result.status().as_u16(),
-            result
-                .text()
-                .unwrap_or(String::from("Unexpected tx confirmation error"))
-                .as_str(),
+        Err(ApiError::from_http_response(
+            response,
+            String::from("Unexpected tx confirmation error"),
         ))
     }
 }

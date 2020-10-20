@@ -1,4 +1,5 @@
 use anyhow::Result;
+use reqwest::blocking::Response as ReqwestResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
@@ -37,14 +38,14 @@ impl ApiError {
         Self::new(status_code, error_details)
     }
 
-    fn new(status_code: u16, message: ErrorDetails) -> Self {
-        Self {
-            status: status_code,
-            details: message,
-        }
+    pub fn from_http_response(response: ReqwestResponse, default_message: String) -> Self {
+        Self::new_from_message_with_code(
+            response.status().as_u16(),
+            response.text().unwrap_or(default_message),
+        )
     }
 
-    fn new_internal(message: String) -> Self {
+    pub fn new_from_message(message: String) -> Self {
         Self::new(
             500,
             ErrorDetails {
@@ -53,6 +54,24 @@ impl ApiError {
                 arguments: None,
             },
         )
+    }
+
+    pub fn new_from_message_with_code(status_code: u16, message: String) -> Self {
+        Self::new(
+            status_code,
+            ErrorDetails {
+                code: 1337,
+                message: Some(message),
+                arguments: None,
+            },
+        )
+    }
+
+    fn new(status_code: u16, message: ErrorDetails) -> Self {
+        Self {
+            status: status_code,
+            details: message,
+        }
     }
 }
 
@@ -86,18 +105,18 @@ impl<'r> Responder<'r> for ApiError {
 
 impl From<anyhow::Error> for ApiError {
     fn from(err: anyhow::Error) -> Self {
-        Self::new_internal(format!("{:?}", err))
+        Self::new_from_message(format!("{:?}", err))
     }
 }
 
 impl From<reqwest::Error> for ApiError {
     fn from(err: reqwest::Error) -> Self {
-        Self::new_internal(format!("{:?}", err))
+        Self::new_from_message(format!("{:?}", err))
     }
 }
 
 impl From<serde_json::error::Error> for ApiError {
     fn from(err: serde_json::error::Error) -> Self {
-        Self::new_internal(format!("{:?}", err))
+        Self::new_from_message(format!("{:?}", err))
     }
 }

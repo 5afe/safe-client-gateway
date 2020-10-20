@@ -15,7 +15,7 @@ dotenv_codegen = "0.15.0"
 
 rocket = "0.4.5"
 rocket_codegen = "0.4.5"
-reqwest = { version = "0.10.6", features = ["blocking"] }
+reqwest = { version = "0.10.6", features = ["blocking", "json"] }
 
 # Ethereum types does not support checksummed addresses
 # ethereum-types= { version = "0.8.0", features = ["serialize"]}

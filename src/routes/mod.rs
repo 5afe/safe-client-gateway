@@ -19,6 +19,7 @@ pub fn active_routes() -> Vec<Route> {
         collectibles::list,
         transactions::details,
         transactions::all,
+        transactions::submit_confirmation,
         hooks::update,
         health::health
     ]

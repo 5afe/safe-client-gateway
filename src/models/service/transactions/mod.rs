@@ -2,6 +2,7 @@ use crate::models::commons::DataDecoded;
 use serde::Serialize;
 
 pub mod details;
+pub mod requests;
 pub mod summary;
 
 pub const ID_SEPARATOR: &str = "_";
@@ -9,6 +10,26 @@ pub const ID_PREFIX_MULTISIG_TX: &str = "multisig";
 pub const ID_PREFIX_MODULE_TX: &str = "module";
 pub const ID_PREFIX_ETHEREUM_TX: &str = "ethereum";
 pub const ID_PREFIX_CREATION_TX: &str = "creation";
+
+#[derive(PartialEq, Debug)]
+pub(crate) enum TransactionIdParts {
+    Creation(String),
+    Multisig {
+        safe_address: String,
+        safe_tx_hash: String,
+    },
+    Module {
+        safe_address: String,
+        transaction_hash: String,
+        details_hash: String,
+    },
+    Ethereum {
+        safe_address: String,
+        transaction_hash: String,
+        details_hash: String,
+    },
+    TransactionHash(String),
+}
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]

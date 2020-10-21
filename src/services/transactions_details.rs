@@ -23,7 +23,7 @@ pub(super) fn get_multisig_transaction_details(
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
-        "{}/v1/transactions/{}",
+        "{}/v1/multisig-transactions/{}",
         base_transaction_service_url(),
         safe_tx_hash
     );

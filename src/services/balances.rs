@@ -6,11 +6,19 @@ use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 
-pub fn balances(context: &Context, safe_address: &str, fiat: &str) -> ApiResult<Vec<Balance>> {
+pub fn balances(
+    context: &Context,
+    safe_address: &str,
+    fiat: &str,
+    trusted: bool,
+    exclude_spam: bool,
+) -> ApiResult<Vec<Balance>> {
     let url = format!(
-        "{}/v1/safes/{}/balances/usd/",
+        "{}/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
         base_transaction_service_url(),
         safe_address,
+        trusted,
+        exclude_spam
     );
 
     let body = context

@@ -14,7 +14,7 @@ pub fn get_balances(
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
     let trusted = trusted.unwrap_or(false);
-    let exclude_spam = exclude_spam.unwrap_or(false);
+    let exclude_spam = exclude_spam.unwrap_or(true);
     context
         .cache()
         .cache_resp(&context.uri(), request_cache_duration(), || {

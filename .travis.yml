@@ -1,7 +1,7 @@
 language: rust
 
 rust:
-  - nightly
+  - nightly-2020-10-24
 
 cache:
   - cargo
@@ -14,7 +14,7 @@ services:
   - docker
 
 script:
-  - rustup component add rustfmt --allow-downgrade
+  - rustup component add rustfmt
   - cargo fmt --all -- --check || travis_terminate 1;  # Check formatting
   # These flags are recommended by https://github.com/mozilla/grcov#grcov-with-travis .
   # vk: I had to remove `-Zpanic_abort_tests -Cpanic=abort` because this would cause compilation

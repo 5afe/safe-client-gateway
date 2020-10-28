@@ -29,9 +29,15 @@ pub fn balances(
     let info_provider = DefaultInfoProvider::new(&context);
     let usd_to_fiat = info_provider.exchange_usd_to(fiat)?;
 
+    let mut total_fiat = 0.0;
+
     let service_balances: Vec<Balance> = backend_balances
         .into_iter()
-        .map(|it| it.to_balance(usd_to_fiat))
+        .map(|it| {
+            let balance = it.to_balance(usd_to_fiat);
+            total_fiat += balance.fiat_balance.parse::<f64>().unwrap_or(0.0);
+            balance
+        })
         .collect();
 
     Ok(service_balances)

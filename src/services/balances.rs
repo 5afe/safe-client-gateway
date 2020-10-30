@@ -1,6 +1,6 @@
 use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::balances::Balance as BalanceDto;
-use crate::models::service::balances::Balance;
+use crate::models::service::balances::{Balance, Balances};
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
@@ -12,7 +12,7 @@ pub fn balances(
     fiat: &str,
     trusted: bool,
     exclude_spam: bool,
-) -> ApiResult<Vec<Balance>> {
+) -> ApiResult<Balances> {
     let url = format!(
         "{}/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
         base_transaction_service_url(),
@@ -29,10 +29,19 @@ pub fn balances(
     let info_provider = DefaultInfoProvider::new(&context);
     let usd_to_fiat = info_provider.exchange_usd_to(fiat)?;
 
+    let mut total_fiat = 0.0;
+
     let service_balances: Vec<Balance> = backend_balances
         .into_iter()
-        .map(|it| it.to_balance(usd_to_fiat))
+        .map(|it| {
+            let balance = it.to_balance(usd_to_fiat);
+            total_fiat += balance.fiat_balance.parse::<f64>().unwrap_or(0.0);
+            balance
+        })
         .collect();
 
-    Ok(service_balances)
+    Ok(Balances {
+        fiat_total: total_fiat.to_string(),
+        items: service_balances,
+    })
 }

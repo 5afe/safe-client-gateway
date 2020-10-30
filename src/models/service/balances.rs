@@ -9,3 +9,10 @@ pub struct Balance {
     pub fiat_balance: String,
     pub fiat_conversion: String,
 }
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct Balances {
+    pub fiat_total: String,
+    pub items: Vec<Balance>,
+}

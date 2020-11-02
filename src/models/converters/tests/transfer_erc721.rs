@@ -97,10 +97,13 @@ fn erc721_transfer_dto_get_token_info_present() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = Erc721TokenInfo {
+    let expected = TokenInfo {
+        token_type: TokenType::Erc721,
+        address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
         name: "PV Memorial Token".to_string(),
         symbol: "PVT".to_string(),
         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
+        decimals: 0
     };
     let actual =
         Erc721TransferDto::get_token_info(&erc721_transfer, &mut mock_info_provider).unwrap();
@@ -122,10 +125,13 @@ fn erc721_transfer_dto_get_token_info_not_present() {
         .times(1)
         .return_once(move |_| Ok(token_info));
 
-    let expected = Erc721TokenInfo {
+    let expected = TokenInfo {
+        token_type: TokenType::Erc721,
+        address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
         name: "PV Memorial Token".to_string(),
         symbol: "PVT".to_string(),
         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
+        decimals: 0
     };
 
     let actual = Erc721TransferDto::get_token_info(&erc721_transfer, &mut mock_info_provider);

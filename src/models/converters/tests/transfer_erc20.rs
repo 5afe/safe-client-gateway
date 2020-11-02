@@ -100,7 +100,8 @@ fn erc20_transfer_dto_get_token_info_present() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = Erc20TokenInfo {
+    let expected = TokenInfo {
+        token_type: TokenType::Erc20,
         address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
         name: "Dai".to_string(),
         symbol: "DAI".to_string(),
@@ -126,7 +127,8 @@ fn erc20_transfer_dto_get_token_info_not_present() {
         .times(1)
         .return_once(move |_| Ok(token_info));
 
-    let expected = Erc20TokenInfo {
+    let expected = TokenInfo {
+        token_type: TokenType::Erc20,
         address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
         name: "Dai".to_string(),
         symbol: "DAI".to_string(),

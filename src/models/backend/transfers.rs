@@ -1,3 +1,4 @@
+use crate::providers::info::TokenInfo;
 use crate::utils::json::default_if_null;
 use chrono::{DateTime, Utc};
 use derivative::Derivative;
@@ -27,7 +28,7 @@ pub struct Erc721Transfer {
     pub token_id: String,
     pub token_address: String,
     #[derivative(Hash = "ignore")]
-    pub token_info: Option<Erc721TokenInfo>,
+    pub token_info: Option<TokenInfo>,
     pub from: String,
 }
 
@@ -50,7 +51,7 @@ pub struct Erc20Transfer {
     pub value: String,
     pub token_address: String,
     #[derivative(Hash = "ignore")]
-    pub token_info: Option<Erc20TokenInfo>,
+    pub token_info: Option<TokenInfo>,
     pub from: String,
 }
 
@@ -60,7 +61,7 @@ pub struct Erc20TokenInfo {
     pub address: String,
     pub name: String,
     pub symbol: String,
-    #[serde(deserialize_with = "default_if_null")]
+    // #[serde(deserialize_with = "default_if_null")]
     pub decimals: u64,
     pub logo_uri: Option<String>,
 }

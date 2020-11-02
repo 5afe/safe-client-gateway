@@ -89,16 +89,14 @@ impl Erc20TransferDto {
         })
     }
 
-    pub(super) fn get_token_info(
-        &self,
-        info_provider: &mut dyn InfoProvider,
-    ) -> Option<Erc20TokenInfo> {
+    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
             self.token_info.clone(),
             TokenType::Erc20,
-            |token| Erc20TokenInfo {
+            |token| TokenInfo {
+                token_type: TokenType::Erc20,
                 address: token.address.to_owned(),
                 name: token.name.to_owned(),
                 symbol: token.symbol.to_owned(),
@@ -135,19 +133,19 @@ impl Erc721TransferDto {
         })
     }
 
-    pub(super) fn get_token_info(
-        &self,
-        info_provider: &mut dyn InfoProvider,
-    ) -> Option<Erc721TokenInfo> {
+    pub(super) fn get_token_info(&self, info_provider: &mut dyn InfoProvider) -> Option<TokenInfo> {
         token_info_with_fallback(
             info_provider,
             &self.token_address,
             self.token_info.clone(),
             TokenType::Erc721,
-            |token| Erc721TokenInfo {
+            |token| TokenInfo {
+                token_type: TokenType::Erc721,
+                address: token.address.to_owned(),
                 name: token.name.to_owned(),
                 symbol: token.symbol.to_owned(),
                 logo_uri: token.logo_uri.to_owned(),
+                decimals: 0,
             },
         )
     }

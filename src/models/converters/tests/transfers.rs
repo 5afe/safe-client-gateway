@@ -175,4 +175,17 @@ fn transfer_erc721_with_null_id() {
         crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
     )
     .unwrap();
+
+    let actual = tx.to_transfer_info(&mut mock_info_provider);
+
+    let expected = TransferInfo::Erc20(Erc20Transfer {
+        token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),
+        token_name: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
+        token_symbol: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
+        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xa9517B2E61a57350D6555665292dBC632C76adFe.png".to_string()),
+        decimals: Some(0),
+        value: "856420144564".to_string(),
+    });
+
+    assert_eq!(expected, actual);
 }

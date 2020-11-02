@@ -1,3 +1,4 @@
+use crate::utils::json::default_if_null;
 use chrono::{DateTime, Utc};
 use derivative::Derivative;
 use serde::Deserialize;
@@ -59,6 +60,7 @@ pub struct Erc20TokenInfo {
     pub address: String,
     pub name: String,
     pub symbol: String,
+    #[serde(deserialize_with = "default_if_null")]
     pub decimals: u64,
     pub logo_uri: Option<String>,
 }

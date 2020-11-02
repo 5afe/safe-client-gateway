@@ -35,7 +35,7 @@ pub struct MultisigTransaction {
     pub execution_date: Option<DateTime<Utc>>,
     pub submission_date: DateTime<Utc>,
     pub modified: Option<DateTime<Utc>>,
-    pub block_number: Option<usize>,
+    pub block_number: Option<u64>,
     pub transaction_hash: Option<String>,
     pub safe_tx_hash: String,
     pub executor: Option<String>,
@@ -57,7 +57,7 @@ pub struct EthereumTransaction {
     pub to: String,
     pub data: Option<String>,
     pub tx_hash: String,
-    pub block_number: usize,
+    pub block_number: u64,
     pub transfers: Option<Vec<Transfer>>,
     pub from: String,
 }

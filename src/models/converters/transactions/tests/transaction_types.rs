@@ -1,4 +1,4 @@
-use crate::models::backend::transactions::MultisigTransaction;
+use crate::models::backend::transactions::{EthereumTransaction, MultisigTransaction};
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Parameter};
 use crate::models::service::transactions::{
@@ -283,4 +283,20 @@ fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
     let actual = tx.transaction_info(&mut mock_info_provider);
 
     assert_eq!(expected, actual);
+}
+
+#[test]
+fn transaction_contains_inconsistent_token_types() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    let tx =
+        serde_json::from_str::<EthereumTransaction>(crate::json::ETHEREUM_TX_INCONSISTENT_TOKENS)
+            .unwrap();
+    // let expected = TransactionInfo::Transfer(Transfer{
+    //     sender: "".to_string(),
+    //     recipient: "".to_string(),
+    //     direction: TransferDirection::Incoming,
+    //     // transfer_info: TransferInfo::Erc20()
+    // });
 }

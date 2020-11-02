@@ -39,7 +39,7 @@ fn erc_20_transfer_dto_to_transaction_info() {
 
     let actual = erc_20_transfer.to_transfer(&mut mock_info_provider, safe_address);
 
-    assert_eq!(expected, actual);
+    assert_eq!(expected, actual.unwrap());
 }
 
 #[test]
@@ -71,7 +71,7 @@ fn erc_721_transfer_dto_to_transaction_info() {
 
     let actual = erc_721_transfer.to_transfer(&mut mock_info_provider, safe_address);
 
-    assert_eq!(expected, actual);
+    assert_eq!(expected, actual.unwrap());
 }
 
 #[test]
@@ -96,7 +96,7 @@ fn ether_transfer_dto_to_transaction_info() {
 
     let actual = ether_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
 
-    assert_eq!(expected, actual);
+    assert_eq!(expected, actual.unwrap());
 }
 
 #[test]
@@ -109,7 +109,7 @@ fn unknown_transfer_dto_to_transaction_info() {
 
     let actual = unknown_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
 
-    assert_eq!(TransactionInfo::Unknown, actual);
+    assert_eq!(TransactionInfo::Unknown, actual.unwrap());
 }
 
 #[test]
@@ -179,5 +179,7 @@ fn transfer_erc20_transfer_with_erc721_token_info() {
 
     let transfer = TransferDto::Erc20(erc_20_transfer);
 
-    println!("{:#?}", &transfer);
+    transfer
+        .to_transfer(&mut mock_info_provider, "some_safe_address")
+        .unwrap();
 }

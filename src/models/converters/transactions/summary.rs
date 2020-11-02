@@ -81,7 +81,9 @@ impl EthereumTransaction {
                     timestamp: self.execution_date.timestamp_millis(),
                     tx_status: TransactionStatus::Success,
                     execution_info: None,
-                    tx_info: transfer.to_transfer(info_provider, safe),
+                    tx_info: transfer
+                        .to_transfer(info_provider, safe)
+                        .unwrap_or(TransactionInfo::Unknown),
                 })
                 .collect(),
             _ => vec![],

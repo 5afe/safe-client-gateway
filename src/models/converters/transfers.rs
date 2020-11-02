@@ -12,25 +12,25 @@ use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use anyhow::Result;
 
 impl TransferDto {
-    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> TransactionInfo {
-        match self {
+    pub fn to_transfer(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+        safe: &str,
+    ) -> Result<TransactionInfo> {
+        Ok(match self {
             TransferDto::Erc721(transfer) => {
                 if let Some(token_info) = &transfer.token_info {
-                    assert_eq!(
-                        token_info.token_type,
-                        TokenType::Erc721,
-                        "Transfer type and token type should match"
-                    );
+                    if token_info.token_type != TokenType::Erc721 {
+                        anyhow::bail!("Transfer type and token type should match");
+                    }
                 }
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
             TransferDto::Erc20(transfer) => {
                 if let Some(token_info) = &transfer.token_info {
-                    assert_eq!(
-                        token_info.token_type,
-                        TokenType::Erc20,
-                        "Transfer type and token type should match"
-                    );
+                    if token_info.token_type != TokenType::Erc20 {
+                        anyhow::bail!("Transfer type and token type should match");
+                    }
                 }
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
@@ -38,7 +38,7 @@ impl TransferDto {
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(safe))
             }
             _ => TransactionInfo::Unknown,
-        }
+        })
     }
 
     pub fn to_transaction_details(
@@ -49,7 +49,7 @@ impl TransferDto {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,
-            tx_info: self.to_transfer(info_provider, safe),
+            tx_info: self.to_transfer(info_provider, safe)?,
             tx_data: None,
             tx_hash: self.get_transaction_hash(),
             detailed_execution_info: None,

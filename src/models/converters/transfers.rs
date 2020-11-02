@@ -15,9 +15,23 @@ impl TransferDto {
     pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> TransactionInfo {
         match self {
             TransferDto::Erc721(transfer) => {
+                if let Some(token_info) = &transfer.token_info {
+                    assert_eq!(
+                        token_info.token_type,
+                        TokenType::Erc721,
+                        "Transfer type and token type should match"
+                    );
+                }
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
             TransferDto::Erc20(transfer) => {
+                if let Some(token_info) = &transfer.token_info {
+                    assert_eq!(
+                        token_info.token_type,
+                        TokenType::Erc20,
+                        "Transfer type and token type should match"
+                    );
+                }
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
             TransferDto::Ether(transfer) => {

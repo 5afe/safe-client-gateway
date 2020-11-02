@@ -167,25 +167,17 @@ fn transfer_dto_to_transaction_details() {
 }
 
 #[test]
-fn transfer_erc721_with_null_id() {
+#[should_panic]
+fn transfer_erc20_transfer_with_erc721_token_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
-    let tx = serde_json::from_str::<Erc20TransferDto>(
+    let erc_20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
     )
     .unwrap();
 
-    let actual = tx.to_transfer_info(&mut mock_info_provider);
+    let transfer = TransferDto::Erc20(erc_20_transfer);
 
-    let expected = TransferInfo::Erc20(Erc20Transfer {
-        token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),
-        token_name: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
-        token_symbol: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
-        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xa9517B2E61a57350D6555665292dBC632C76adFe.png".to_string()),
-        decimals: Some(0),
-        value: "856420144564".to_string(),
-    });
-
-    assert_eq!(expected, actual);
+    println!("{:#?}", &transfer);
 }

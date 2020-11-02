@@ -1,5 +1,5 @@
 use crate::models::backend::transfers::{
-    Erc20TokenInfo, Erc20Transfer as Erc20TransferDto, Transfer as TransferDto,
+    Erc20Transfer as Erc20TransferDto, Transfer as TransferDto,
 };
 use crate::models::service::transactions::TransferInfo;
 use crate::models::service::transactions::{Erc20Transfer, Transfer, TransferDirection};

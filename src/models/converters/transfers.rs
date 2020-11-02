@@ -1,8 +1,7 @@
 use super::get_transfer_direction;
 use crate::models::backend::transfers::{
-    Erc20TokenInfo, Erc20Transfer as Erc20TransferDto, Erc721TokenInfo,
-    Erc721Transfer as Erc721TransferDto, EtherTransfer as EtherTransferDto,
-    Transfer as TransferDto,
+    Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto,
+    EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
 use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::Transfer as ServiceTransfer;

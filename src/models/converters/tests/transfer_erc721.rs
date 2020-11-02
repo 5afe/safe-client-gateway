@@ -1,5 +1,5 @@
 use crate::models::backend::transfers::{
-    Erc721TokenInfo, Erc721Transfer as Erc721TransferDto, Transfer as TransferDto,
+    Erc721Transfer as Erc721TransferDto, Transfer as TransferDto,
 };
 use crate::models::service::transactions::TransferInfo;
 use crate::models::service::transactions::{Erc721Transfer, Transfer, TransferDirection};

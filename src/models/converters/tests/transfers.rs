@@ -165,3 +165,14 @@ fn transfer_dto_to_transaction_details() {
 
     assert_eq!(expected, actual)
 }
+
+#[test]
+fn transfer_erc721_with_null_id() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    let tx = serde_json::from_str::<Erc20TransferDto>(
+        crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
+    )
+    .unwrap();
+}

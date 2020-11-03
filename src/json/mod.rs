@@ -35,6 +35,9 @@ pub const MULTISIG_TX_CONFIRMATIONS_NULL: &str =
 
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 
+pub const ETHEREUM_TX_INCONSISTENT_TOKEN_TYPES: &str =
+    include_str!("transactions/ethereum_inconsistent_token_types.json");
+
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
 
 pub const SAFE_WITH_THRESHOLD_TWO: &str = include_str!("safes/with_threshold_two.json");

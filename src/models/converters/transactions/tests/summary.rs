@@ -508,3 +508,36 @@ fn multisig_transaction_with_missing_signers() {
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
+
+#[test]
+fn ethereum_transaction_with_inconsistent_token_types() {
+    let ethereum_tx = serde_json::from_str::<EthereumTransaction>(
+        crate::json::ETHEREUM_TX_INCONSISTENT_TOKEN_TYPES,
+    )
+    .unwrap();
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+
+    let actual = EthereumTransaction::to_transaction_summary(
+        &ethereum_tx,
+        &mut mock_info_provider,
+        "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+    );
+    let expected = TransactionSummary {
+        id: create_id!(
+            ID_PREFIX_ETHEREUM_TX,
+            "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+            ethereum_tx.tx_hash,
+            hex_hash(ethereum_tx.transfers.unwrap().first().unwrap())
+        ),
+        timestamp: ethereum_tx.execution_date.timestamp_millis(),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::Unknown,
+        execution_info: None,
+    };
+
+    assert_eq!(1, actual.len());
+    assert_eq!(&expected, actual.first().unwrap());
+}

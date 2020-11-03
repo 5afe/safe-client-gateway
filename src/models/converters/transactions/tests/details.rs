@@ -1,4 +1,5 @@
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
+use crate::models::backend::transfers::Transfer as TransferDto;
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::service::transactions::details::{
@@ -130,4 +131,23 @@ fn module_transaction_to_transaction_details() {
     let actual = ModuleTransaction::to_transaction_details(&module_transaction);
 
     assert_eq!(expected, actual.unwrap());
+}
+
+#[test]
+#[should_panic]
+fn ethereum_tx_transfer_to_transaction_details() {
+    let transfer =
+        serde_json::from_str::<TransferDto>(crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO)
+            .unwrap();
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+
+    let actual = TransferDto::to_transaction_details(
+        &transfer,
+        &mut mock_info_provider,
+        "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+    );
+    actual.unwrap();
 }

@@ -534,7 +534,18 @@ fn ethereum_transaction_with_inconsistent_token_types() {
         ),
         timestamp: ethereum_tx.execution_date.timestamp_millis(),
         tx_status: TransactionStatus::Success,
-        tx_info: TransactionInfo::Unknown,
+        tx_info: TransactionInfo::Transfer(Transfer {
+            sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
+            recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+            direction: TransferDirection::Incoming,
+            transfer_info: TransferInfo::Erc721(Erc721Transfer {
+                token_address: "0xb07de4b2989E180F8907B8C7e617637C26cE2776".to_string(),
+                token_id: "856420144564".to_string(),
+                token_name: Some("A! WWW.SPACESWAP.APP ! TOP DEFI AGGREGATOR !".to_string()),
+                token_symbol: Some("A! WWW.SPACESWAP.APP ! TOP DEFI AGGREGATOR !".to_string()),
+                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xb07de4b2989E180F8907B8C7e617637C26cE2776.png".to_string()),
+            }),
+        }),
         execution_info: None,
     };
 

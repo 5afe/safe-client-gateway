@@ -97,18 +97,17 @@ fn erc721_transfer_dto_get_token_info_present() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = TokenInfo {
-        token_type: TokenType::Erc721,
-        address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
-        name: "PV Memorial Token".to_string(),
-        symbol: "PVT".to_string(),
-        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
-        decimals: 0
-    };
-    let actual =
-        Erc721TransferDto::get_token_info(&erc721_transfer, &mut mock_info_provider).unwrap();
+    let expected = TransferInfo::Erc721(Erc721Transfer{
+        token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+        token_id: "37".to_string(),
+        token_name: Some("PV Memorial Token".to_string()),
+        token_symbol: Some("PVT".to_string()),
+        logo_uri:  Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string())
+    }) ;
 
-    assert_eq!(actual, expected);
+    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider);
+
+    assert_eq!(expected, actual);
 }
 
 #[test]
@@ -125,18 +124,17 @@ fn erc721_transfer_dto_get_token_info_not_present() {
         .times(1)
         .return_once(move |_| Ok(token_info));
 
-    let expected = TokenInfo {
-        token_type: TokenType::Erc721,
-        address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
-        name: "PV Memorial Token".to_string(),
-        symbol: "PVT".to_string(),
+    let expected = TransferInfo::Erc721 (Erc721Transfer{
+        token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+        token_id: "37".to_string(),
+        token_name: Some("PV Memorial Token".to_string()),
+        token_symbol: Some("PVT".to_string()),
         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
-        decimals: 0
-    };
+    });
 
-    let actual = Erc721TransferDto::get_token_info(&erc721_transfer, &mut mock_info_provider);
+    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider);
 
-    assert_eq!(expected, actual.unwrap());
+    assert_eq!(expected, actual);
 }
 
 #[test]
@@ -150,10 +148,17 @@ fn erc721_transfer_dto_get_info_provider_error() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| anyhow::bail!("No token info"));
+    let expected = TransferInfo::Erc721(Erc721Transfer {
+        token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+        token_id: "37".to_string(),
+        token_name: None,
+        token_symbol: None,
+        logo_uri: None,
+    });
 
-    let actual = Erc721TransferDto::get_token_info(&erc721_transfer, &mut mock_info_provider);
+    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider);
 
-    assert_eq!(None, actual);
+    assert_eq!(expected, actual);
 }
 
 #[test]

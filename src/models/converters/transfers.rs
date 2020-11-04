@@ -12,12 +12,8 @@ use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use anyhow::Result;
 
 impl TransferDto {
-    pub fn to_transfer(
-        &self,
-        info_provider: &mut dyn InfoProvider,
-        safe: &str,
-    ) -> Result<TransactionInfo> {
-        Ok(match self {
+    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> TransactionInfo {
+        match self {
             TransferDto::Erc721(transfer) => {
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
@@ -28,7 +24,7 @@ impl TransferDto {
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(safe))
             }
             _ => TransactionInfo::Unknown,
-        })
+        }
     }
 
     pub fn to_transaction_details(
@@ -39,7 +35,7 @@ impl TransferDto {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,
-            tx_info: self.to_transfer(info_provider, safe)?,
+            tx_info: self.to_transfer(info_provider, safe),
             tx_data: None,
             tx_hash: self.get_transaction_hash(),
             detailed_execution_info: None,
@@ -82,7 +78,12 @@ impl Erc20TransferDto {
     pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info =
             token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone());
-        build_transfer_info(token_info.as_ref(), &self.token_address, &self.value).unwrap()
+        build_transfer_info(
+            token_info.as_ref(),
+            TokenType::Erc20,
+            &self.token_address,
+            &self.value,
+        )
     }
 }
 
@@ -103,7 +104,12 @@ impl Erc721TransferDto {
     pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
         let token_info =
             token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone());
-        build_transfer_info(token_info.as_ref(), &self.token_address, &self.token_id).unwrap()
+        build_transfer_info(
+            token_info.as_ref(),
+            TokenType::Erc721,
+            &self.token_address,
+            &self.token_id,
+        )
     }
 }
 
@@ -126,30 +132,30 @@ impl EtherTransferDto {
 
 fn build_transfer_info(
     token_info: Option<&TokenInfo>,
+    default_token_type: TokenType,
     token_address: &str,
     element: &str,
-) -> Result<TransferInfo> {
-    if let Some(token_info) = token_info {
-        match token_info.token_type {
-            TokenType::Erc20 => Ok(TransferInfo::Erc20(Erc20Transfer {
-                token_address: token_address.to_owned(),
-                token_name: Some(token_info.name.to_owned()),
-                token_symbol: Some(token_info.symbol.to_owned()),
-                logo_uri: token_info.logo_uri.to_owned(),
-                decimals: Some(token_info.decimals.to_owned()),
-                value: element.to_owned(),
-            })),
-            TokenType::Erc721 => Ok(TransferInfo::Erc721(Erc721Transfer {
-                token_address: token_address.to_owned(),
-                token_id: element.to_owned(),
-                token_name: Some(token_info.name.to_owned()),
-                token_symbol: Some(token_info.symbol.to_owned()),
-                logo_uri: token_info.logo_uri.to_owned(),
-            })),
-            _ => anyhow::bail!("Unsupported transfer token type"),
-        }
-    } else {
-        anyhow::bail!("Token Info not found for transfer")
+) -> TransferInfo {
+    match token_info
+        .map(|it| it.token_type.to_owned())
+        .unwrap_or(default_token_type)
+    {
+        TokenType::Erc20 => TransferInfo::Erc20(Erc20Transfer {
+            token_address: token_address.to_owned(),
+            token_name: token_info.map(|it| it.name.to_owned()),
+            token_symbol: token_info.map(|it| it.symbol.to_owned()),
+            logo_uri: token_info.map(|it| it.logo_uri.to_owned()).flatten(),
+            decimals: token_info.map(|it| it.decimals.to_owned()),
+            value: element.to_owned(),
+        }),
+        TokenType::Erc721 => TransferInfo::Erc721(Erc721Transfer {
+            token_address: token_address.to_owned(),
+            token_id: element.to_owned(),
+            token_name: token_info.map(|it| it.name.to_owned()),
+            token_symbol: token_info.map(|it| it.symbol.to_owned()),
+            logo_uri: token_info.map(|it| it.logo_uri.to_owned()).flatten(),
+        }),
+        _ => panic!("Transfer token type not supported"),
     }
 }
 
@@ -158,5 +164,5 @@ fn token_info_with_fallback(
     token_address: &str,
     token_info: Option<TokenInfo>,
 ) -> Option<TokenInfo> {
-    token_info.or(info_provider.token_info(token_address).ok())
+    token_info.or_else(|| info_provider.token_info(token_address).ok())
 }

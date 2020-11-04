@@ -100,16 +100,15 @@ fn erc20_transfer_dto_get_token_info_present() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = TokenInfo {
-        token_type: TokenType::Erc20,
-        address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
-        name: "Dai".to_string(),
-        symbol: "DAI".to_string(),
-        decimals: 18,
+    let expected = TransferInfo::Erc20 (Erc20Transfer{
+        token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+        token_name: Some("Dai".to_string()),
+        token_symbol: Some("DAI".to_string()),
+        decimals: Some(18),
         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-    };
-    let actual =
-        Erc20TransferDto::get_token_info(&erc20_transfer, &mut mock_info_provider).unwrap();
+        value: "1000000000000000000".to_string()
+    });
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
 
     assert_eq!(actual, expected);
 }
@@ -127,18 +126,18 @@ fn erc20_transfer_dto_get_token_info_not_present() {
         .times(1)
         .return_once(move |_| Ok(token_info));
 
-    let expected = TokenInfo {
-        token_type: TokenType::Erc20,
-        address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
-        name: "Dai".to_string(),
-        symbol: "DAI".to_string(),
-        decimals: 18,
+    let expected = TransferInfo::Erc20 (Erc20Transfer{
+        token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+        token_name: Some("Dai".to_string()),
+        token_symbol: Some("DAI".to_string()),
+        decimals: Some(18),
         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-    };
+        value: "1000000000000000000".to_string()
+    });
 
-    let actual = Erc20TransferDto::get_token_info(&erc20_transfer, &mut mock_info_provider);
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
 
-    assert_eq!(expected, actual.unwrap());
+    assert_eq!(expected, actual);
 }
 
 #[test]
@@ -152,10 +151,18 @@ fn erc20_transfer_dto_get_info_provider_error() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| anyhow::bail!("No token info"));
+    let expected = TransferInfo::Erc20(Erc20Transfer {
+        token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+        token_name: None,
+        token_symbol: None,
+        decimals: None,
+        logo_uri: None,
+        value: "1000000000000000000".to_string(),
+    });
 
-    let actual = Erc20TransferDto::get_token_info(&erc20_transfer, &mut mock_info_provider);
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
 
-    assert_eq!(None, actual);
+    assert_eq!(expected, actual);
 }
 
 #[test]

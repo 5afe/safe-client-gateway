@@ -1,11 +1,15 @@
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
+use crate::models::backend::transfers::Transfer as TransferDto;
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
 };
-use crate::models::service::transactions::{Custom, TransactionInfo, TransactionStatus};
+use crate::models::service::transactions::{
+    Custom, Erc721Transfer, TransactionInfo, TransactionStatus, Transfer, TransferDirection,
+    TransferInfo,
+};
 use crate::providers::info::SafeInfo;
 use crate::providers::info::*;
 
@@ -128,6 +132,47 @@ fn module_transaction_to_transaction_details() {
     };
 
     let actual = ModuleTransaction::to_transaction_details(&module_transaction);
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[test]
+fn ethereum_tx_transfer_to_transaction_details() {
+    let transfer =
+        serde_json::from_str::<TransferDto>(crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO)
+            .unwrap();
+
+    let expected = TransactionDetails {
+        executed_at: Some(transfer.get_execution_time().unwrap()),
+        tx_status: TransactionStatus::Success,
+        tx_hash: Some(
+            "0x317db9d079e46fef2f758e37bd20efb14d5c83e2510307079207bc6f04cdee48".to_string(),
+        ),
+        tx_info: TransactionInfo::Transfer(Transfer {
+            sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
+            recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+            direction: TransferDirection::Incoming,
+            transfer_info: TransferInfo::Erc721(Erc721Transfer {
+                token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),
+                token_id: "856420144564".to_string(),
+                token_name: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
+                token_symbol: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
+                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xa9517B2E61a57350D6555665292dBC632C76adFe.png".to_string()),
+            }),
+        }),
+        tx_data: None,
+        detailed_execution_info: None,
+    };
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+
+    let actual = TransferDto::to_transaction_details(
+        &transfer,
+        &mut mock_info_provider,
+        "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+    );
 
     assert_eq!(expected, actual.unwrap());
 }

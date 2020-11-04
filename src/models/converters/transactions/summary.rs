@@ -66,7 +66,7 @@ impl EthereumTransaction {
     pub(super) fn to_transaction_summary(
         &self,
         info_provider: &mut dyn InfoProvider,
-        safe: &String,
+        safe: &str,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
             Some(transfers) => transfers

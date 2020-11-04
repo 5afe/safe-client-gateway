@@ -1,3 +1,4 @@
+use crate::providers::info::TokenInfo;
 use chrono::{DateTime, Utc};
 use derivative::Derivative;
 use serde::Deserialize;
@@ -26,16 +27,8 @@ pub struct Erc721Transfer {
     pub token_id: String,
     pub token_address: String,
     #[derivative(Hash = "ignore")]
-    pub token_info: Option<Erc721TokenInfo>,
+    pub token_info: Option<TokenInfo>,
     pub from: String,
-}
-
-#[derive(Deserialize, Debug, Hash, PartialEq, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct Erc721TokenInfo {
-    pub name: String,
-    pub symbol: String,
-    pub logo_uri: Option<String>,
 }
 
 #[derive(Derivative, Deserialize, Debug, Clone)]
@@ -49,18 +42,8 @@ pub struct Erc20Transfer {
     pub value: String,
     pub token_address: String,
     #[derivative(Hash = "ignore")]
-    pub token_info: Option<Erc20TokenInfo>,
+    pub token_info: Option<TokenInfo>,
     pub from: String,
-}
-
-#[derive(Deserialize, Debug, Hash, PartialEq, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct Erc20TokenInfo {
-    pub address: String,
-    pub name: String,
-    pub symbol: String,
-    pub decimals: u64,
-    pub logo_uri: Option<String>,
 }
 
 #[derive(Derivative, Deserialize, Debug, Clone)]

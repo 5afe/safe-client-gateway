@@ -165,3 +165,35 @@ fn transfer_dto_to_transaction_details() {
 
     assert_eq!(expected, actual)
 }
+
+#[test]
+fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    let erc_20_transfer = serde_json::from_str::<Erc20TransferDto>(
+        crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
+    )
+    .unwrap();
+
+    let transfer = TransferDto::Erc20(erc_20_transfer);
+    let expected = TransactionInfo::Transfer(Transfer {
+        sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
+        recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+        direction: TransferDirection::Incoming,
+        transfer_info: TransferInfo::Erc721(Erc721Transfer {
+            token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),
+            token_id: "856420144564".to_string(),
+            token_name: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
+            token_symbol: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
+            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xa9517B2E61a57350D6555665292dBC632C76adFe.png".to_string()),
+        }),
+    });
+
+    let actual = transfer.to_transfer(
+        &mut mock_info_provider,
+        "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+    );
+
+    assert_eq!(expected, actual)
+}

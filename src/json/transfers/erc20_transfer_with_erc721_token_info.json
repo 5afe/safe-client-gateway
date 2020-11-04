@@ -1,0 +1,19 @@
+{
+  "type": "ERC20_TRANSFER",
+  "executionDate": "2020-10-31T09:31:21Z",
+  "blockNumber": 11163817,
+  "transactionHash": "0x317db9d079e46fef2f758e37bd20efb14d5c83e2510307079207bc6f04cdee48",
+  "to": "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+  "value": "856420144564",
+  "tokenId": null,
+  "tokenAddress": "0xa9517B2E61a57350D6555665292dBC632C76adFe",
+  "tokenInfo": {
+    "type": "ERC721",
+    "address": "0xa9517B2E61a57350D6555665292dBC632C76adFe",
+    "name": "a!NEVER VISIT www.168pools.com to check DeFi ROi !",
+    "symbol": "a!NEVER VISIT www.168pools.com to check DeFi ROi !",
+    "decimals": null,
+    "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xa9517B2E61a57350D6555665292dBC632C76adFe.png"
+  },
+  "from": "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2"
+}

@@ -11,7 +11,7 @@ fn ether_balance() {
         token_info: TokenInfo {
             token_type: TokenType::Ether,
             address: "0x0000000000000000000000000000000000000000".to_string(),
-            decimals: 0,
+            decimals: 18,
             symbol: "ETH".to_string(),
             name: "Ether".to_string(),
             logo_uri: None,

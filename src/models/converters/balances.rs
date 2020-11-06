@@ -18,7 +18,7 @@ impl BalanceDto {
                     .token_address
                     .to_owned()
                     .unwrap_or(String::from("0x0000000000000000000000000000000000000000")),
-                decimals: self.token.as_ref().map(|it| it.decimals).unwrap_or(0),
+                decimals: self.token.as_ref().map(|it| it.decimals).unwrap_or(18),
                 symbol: self
                     .token
                     .as_ref()

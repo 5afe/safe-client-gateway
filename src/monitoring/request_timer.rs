@@ -24,7 +24,8 @@ impl Fairing for RequestTimer {
         let cached = request
             .local_cache(|| Utc::now().timestamp_millis())
             .to_owned();
+        let method = request.method().as_str();
         let delta = Utc::now().timestamp_millis() - cached;
-        log::info!("response_time_ms::{}::{}", path_data, delta)
+        log::info!("MT::{}::{}::{}", method, path_data, delta)
     }
 }

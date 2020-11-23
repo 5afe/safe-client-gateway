@@ -37,7 +37,7 @@ fn main() {
     rocket::ignite()
         .mount("/", active_routes())
         .manage(reqwest::blocking::Client::new())
-        .attach(monitoring::request_timer::RequestTimer())
+        .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
         .attach(ServiceCache::fairing())
         .register(error_catchers())

@@ -23,10 +23,17 @@ pub struct ExecutionInfo {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[serde(tag = "tx_item_type")]
 pub enum TransactionListItem {
-    Transaction(TransactionSummary, ConflictType),
-    DateLabel(u64),
-    StringLabel(String),
+    #[serde(rename(serialize = "TRANSACTION"))]
+    Transaction {
+        transaction_summary: TransactionSummary,
+        conflict_type: ConflictType,
+    },
+    #[serde(rename(serialize = "DATE_LABEL"))]
+    DateLabel { timestamp: u64 },
+    #[serde(rename(serialize = "STRING_LABEL"))]
+    StringLabel { label: String },
 }
 
 #[derive(Serialize, Debug, PartialEq)]

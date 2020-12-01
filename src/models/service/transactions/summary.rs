@@ -20,3 +20,20 @@ pub struct ExecutionInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub missing_signers: Option<Vec<String>>,
 }
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum TransactionListItem {
+    Transaction(TransactionSummary, ConflictType),
+    DateLabel(u64),
+    StringLabel(String),
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum ConflictType {
+    None,
+    Start { nonce: u64 },
+    HasNext,
+    End,
+}

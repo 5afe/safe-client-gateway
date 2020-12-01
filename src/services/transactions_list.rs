@@ -3,7 +3,7 @@ extern crate reqwest;
 use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::Page;
-use crate::models::service::transactions::summary::TransactionSummary;
+use crate::models::service::transactions::summary::{TransactionListItem, TransactionSummary};
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
@@ -83,4 +83,34 @@ fn get_creation_transaction_summary(
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
     let transaction_summary = creation_transaction_dto.to_transaction_summary(safe);
     Ok(transaction_summary)
+}
+
+pub fn get_history_transactions(
+    context: &Context,
+    safe_address: &String,
+    page_url: &Option<String>,
+    timezone_offset: &Option<String>,
+) -> ApiResult<Page<TransactionListItem>> {
+    Ok(Page {
+        next: None,
+        previous: None,
+        results: vec![TransactionListItem::StringLabel(String::from(
+            "touched history endpoint",
+        ))],
+    })
+}
+
+pub fn get_queued_transactions(
+    context: &Context,
+    safe_address: &String,
+    page_url: &Option<String>,
+    timezone_offset: &Option<String>,
+) -> ApiResult<Page<TransactionListItem>> {
+    Ok(Page {
+        next: None,
+        previous: None,
+        results: vec![TransactionListItem::StringLabel(String::from(
+            "touched queued endpoint",
+        ))],
+    })
 }

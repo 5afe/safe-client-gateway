@@ -171,6 +171,21 @@ pub fn get_queued_transactions(
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
+    let mut info_provider = DefaultInfoProvider::new(context);
+    let url = format!(
+        "{}/v1/safes/{}/multisig-transactions/?{}&executed=false",
+        base_transaction_service_url(),
+        safe_address,
+        page_url.as_ref().unwrap_or(&String::new())
+    );
+    let body = context
+        .cache()
+        .request_cached(&context.client(), &url, request_cache_duration())?;
+    debug!("request URL: {}", &url);
+    debug!("page_url: {:#?}", page_url);
+    debug!("{:#?}", body);
+    let _backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
+
     Ok(Page {
         next: None,
         previous: None,

@@ -11,6 +11,8 @@ use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::extract_query_string;
+use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
+use itertools::Itertools;
 use log::debug;
 
 pub fn get_all_transactions(
@@ -107,7 +109,7 @@ pub fn get_history_transactions(
     debug!("page_url: {:#?}", page_url);
     debug!("{:#?}", body);
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
-    let mut service_transactions: Vec<TransactionListItem> = backend_transactions
+    let mut service_transactions: Vec<TransactionSummary> = backend_transactions
         .results
         .into_iter()
         .flat_map(|transaction| {
@@ -115,20 +117,32 @@ pub fn get_history_transactions(
                 .to_transaction_summary(&mut info_provider, safe_address)
                 .unwrap_or(vec![])
         })
-        .map(|it| TransactionListItem::Transaction {
-            transaction_summary: it,
-            conflict_type: ConflictType::None,
-        })
         .collect();
+
     if backend_transactions.next.is_none() {
         if let Ok(creation_transaction) = get_creation_transaction_summary(context, safe_address) {
-            service_transactions.push(TransactionListItem::Transaction {
-                transaction_summary: creation_transaction,
-                conflict_type: ConflictType::None,
-            });
+            service_transactions.push(creation_transaction)
         }
     }
 
+    let mut service_transactions_with_dates = Vec::new();
+    for (date, transaction_group) in &service_transactions.into_iter().group_by(|transaction| {
+        let date_time = DateTime::<Utc>::from_utc(
+            NaiveDateTime::from_timestamp(transaction.timestamp / 1000, 0),
+            Utc,
+        );
+        NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap()
+    }) {
+        service_transactions_with_dates.push(TransactionListItem::StringLabel {
+            label: date.to_string(),
+        });
+        transaction_group.for_each(|tx| {
+            service_transactions_with_dates.push(TransactionListItem::Transaction {
+                transaction_summary: tx,
+                conflict_type: ConflictType::None,
+            })
+        });
+    }
     Ok(Page {
         next: backend_transactions
             .next
@@ -146,10 +160,11 @@ pub fn get_history_transactions(
                 context
                     .build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
             }),
-        results: service_transactions,
+        results: service_transactions_with_dates,
     })
 }
 
+// use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
 pub fn get_queued_transactions(
     context: &Context,
     safe_address: &String,

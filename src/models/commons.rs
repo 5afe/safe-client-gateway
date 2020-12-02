@@ -60,6 +60,12 @@ pub struct Page<T> {
     pub results: Vec<T>,
 }
 
+#[derive(Debug, PartialEq)]
+pub struct PageMetadata {
+    pub offset: i64,
+    pub limit: i64,
+}
+
 impl From<String> for ParamValue {
     fn from(item: String) -> Self {
         ParamValue::SingleValue(item)

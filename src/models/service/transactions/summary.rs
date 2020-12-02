@@ -31,7 +31,7 @@ pub enum TransactionListItem {
         conflict_type: ConflictType,
     },
     #[serde(rename(serialize = "DATE_LABEL"))]
-    DateLabel { timestamp: u64 },
+    DateLabel { timestamp: i64 },
     #[serde(rename(serialize = "STRING_LABEL"))]
     StringLabel { label: String },
 }

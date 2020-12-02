@@ -14,6 +14,7 @@ use crate::utils::extract_query_string;
 use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 use log::debug;
+use rocket::http::Cookie;
 
 pub fn get_all_transactions(
     context: &Context,
@@ -94,6 +95,7 @@ pub fn get_history_transactions(
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
+    mut last_timestamp_cookie: Option<Cookie>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
@@ -107,7 +109,6 @@ pub fn get_history_transactions(
         .request_cached(&context.client(), &url, request_cache_duration())?;
     debug!("request URL: {}", &url);
     debug!("page_url: {:#?}", page_url);
-    debug!("{:#?}", body);
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions
         .results
@@ -125,6 +126,9 @@ pub fn get_history_transactions(
         }
     }
 
+    let last_timestamp = last_timestamp_cookie
+        .as_ref()
+        .map(|it| it.value().to_owned());
     let mut service_transactions_with_dates = Vec::new();
     for (date, transaction_group) in &service_transactions.into_iter().group_by(|transaction| {
         let date_time = DateTime::<Utc>::from_utc(
@@ -133,9 +137,35 @@ pub fn get_history_transactions(
         );
         NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap()
     }) {
-        service_transactions_with_dates.push(TransactionListItem::StringLabel {
-            label: date.to_string(),
-        });
+        let date_timestamp = date.and_hms_milli(0, 0, 0, 0).timestamp();
+        if let Some(last_timestamp_str) = last_timestamp.as_ref() {
+            log::info!("THE LAST TIMESTAMP: {:#?}", &last_timestamp_str);
+            if last_timestamp_str.parse::<i64>().unwrap() < date_timestamp {
+                service_transactions_with_dates.push(TransactionListItem::DateLabel {
+                    timestamp: date_timestamp * 1000,
+                });
+                // last_timestamp_cookie
+                //     .as_mut()
+                //     .map(|cookie| cookie.set_value(date_timestamp.to_string()));
+            }
+        } else {
+            service_transactions_with_dates.push(TransactionListItem::DateLabel {
+                timestamp: date_timestamp * 1000,
+            });
+            // last_timestamp_cookie
+            //     .as_mut()
+            //     .map(|cookie| cookie.set_value(date_timestamp.to_string()));
+        }
+
+        log::error!("THE LAST TIMESTAMP: {:#?}", &last_timestamp_cookie);
+
+        last_timestamp_cookie
+            .as_mut()
+            .map(|cookie| cookie.set_value(date_timestamp.to_string()));
+        //naive approach, no pagination awareness
+        // service_transactions_with_dates.push(TransactionListItem::DateLabel {
+        //     timestamp: date_timestamp,
+        // });
         transaction_group.for_each(|tx| {
             service_transactions_with_dates.push(TransactionListItem::Transaction {
                 transaction_summary: tx,
@@ -149,16 +179,22 @@ pub fn get_history_transactions(
             .as_ref()
             .and_then(|link| extract_query_string(link))
             .map(|link| {
-                context
-                    .build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
+                context.build_absolute_url(uri!(
+                    crate::routes::transactions::history_transactions: safe_address,
+                    link,
+                    "" // timezone_offset
+                ))
             }),
         previous: backend_transactions
             .previous
             .as_ref()
             .and_then(|link| extract_query_string(link))
             .map(|link| {
-                context
-                    .build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
+                context.build_absolute_url(uri!(
+                    crate::routes::transactions::history_transactions: safe_address,
+                    link,
+                    "" // timezone_offset
+                ))
             }),
         results: service_transactions_with_dates,
     })

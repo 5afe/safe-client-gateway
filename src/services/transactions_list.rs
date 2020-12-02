@@ -95,11 +95,10 @@ pub fn get_history_transactions(
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
-    mut last_timestamp_cookie: Option<Cookie>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let url = format!(
-        "{}/v1/safes/{}/all-transactions/?{}&queued=true",
+        "{}/v1/safes/{}/all-transactions/?{}&queued=false",
         base_transaction_service_url(),
         safe_address,
         page_url.as_ref().unwrap_or(&String::new())
@@ -126,46 +125,14 @@ pub fn get_history_transactions(
         }
     }
 
-    let last_timestamp = last_timestamp_cookie
-        .as_ref()
-        .map(|it| it.value().to_owned());
     let mut service_transactions_with_dates = Vec::new();
-    for (date, transaction_group) in &service_transactions.into_iter().group_by(|transaction| {
-        let date_time = DateTime::<Utc>::from_utc(
-            NaiveDateTime::from_timestamp(transaction.timestamp / 1000, 0),
-            Utc,
-        );
-        NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap()
-    }) {
-        let date_timestamp = date.and_hms_milli(0, 0, 0, 0).timestamp();
-        if let Some(last_timestamp_str) = last_timestamp.as_ref() {
-            log::info!("THE LAST TIMESTAMP: {:#?}", &last_timestamp_str);
-            if last_timestamp_str.parse::<i64>().unwrap() < date_timestamp {
-                service_transactions_with_dates.push(TransactionListItem::DateLabel {
-                    timestamp: date_timestamp * 1000,
-                });
-                // last_timestamp_cookie
-                //     .as_mut()
-                //     .map(|cookie| cookie.set_value(date_timestamp.to_string()));
-            }
-        } else {
-            service_transactions_with_dates.push(TransactionListItem::DateLabel {
-                timestamp: date_timestamp * 1000,
-            });
-            // last_timestamp_cookie
-            //     .as_mut()
-            //     .map(|cookie| cookie.set_value(date_timestamp.to_string()));
-        }
-
-        log::error!("THE LAST TIMESTAMP: {:#?}", &last_timestamp_cookie);
-
-        last_timestamp_cookie
-            .as_mut()
-            .map(|cookie| cookie.set_value(date_timestamp.to_string()));
-        //naive approach, no pagination awareness
-        // service_transactions_with_dates.push(TransactionListItem::DateLabel {
-        //     timestamp: date_timestamp,
-        // });
+    for (date_timestamp, transaction_group) in &service_transactions
+        .into_iter()
+        .group_by(|transaction| get_day_timestamp_millis(transaction.timestamp / 1000))
+    {
+        service_transactions_with_dates.push(TransactionListItem::DateLabel {
+            timestamp: date_timestamp,
+        });
         transaction_group.for_each(|tx| {
             service_transactions_with_dates.push(TransactionListItem::Transaction {
                 transaction_summary: tx,
@@ -232,4 +199,12 @@ pub fn get_queued_transactions(
             TransactionListItem::DateLabel { timestamp: 12378 },
         ],
     })
+}
+
+fn get_day_timestamp_millis(timestamp_in_secs: i64) -> i64 {
+    let date_time =
+        DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp(timestamp_in_secs, 0), Utc);
+    let date =
+        NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap();
+    date.and_hms_milli(0, 0, 0, 0).timestamp() * 1000
 }

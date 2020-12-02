@@ -61,9 +61,7 @@ pub fn history_transactions(
     safe_address: String,
     page_url: Option<String>,
     timezone_offset: Option<String>,
-    mut cookies: Cookies,
 ) -> ApiResult<content::Json<String>> {
-    let mut last_timestamp_cookie = cookies.get_private("last_timestamp");
     context
         .cache()
         .cache_resp(&context.uri(), request_cache_duration(), || {
@@ -72,7 +70,6 @@ pub fn history_transactions(
                 &safe_address,
                 &page_url,
                 &timezone_offset,
-                last_timestamp_cookie.to_owned(),
             )
         })
 }

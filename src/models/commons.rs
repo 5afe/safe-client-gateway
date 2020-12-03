@@ -62,8 +62,8 @@ pub struct Page<T> {
 
 #[derive(Debug, PartialEq)]
 pub struct PageMetadata {
-    pub offset: i64,
-    pub limit: i64,
+    pub offset: u64,
+    pub limit: u64,
 }
 
 impl From<String> for ParamValue {

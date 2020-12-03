@@ -180,7 +180,7 @@ fn build_page_url(
 
 fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
     PageMetadata {
-        offset: (meta.offset + (offset as i64) as u64),
+        offset: ((meta.offset as i64) + offset) as u64,
         limit: meta.limit,
     }
     .to_url_string()

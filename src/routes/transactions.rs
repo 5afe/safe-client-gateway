@@ -74,12 +74,13 @@ pub fn history_transactions(
         })
 }
 
-#[get("/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>")]
+#[get("/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
 pub fn queued_transactions(
     context: Context,
     safe_address: String,
     page_url: Option<String>,
     timezone_offset: Option<String>,
+    trusted: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
     context
         .cache()
@@ -89,6 +90,7 @@ pub fn queued_transactions(
                 &safe_address,
                 &page_url,
                 &timezone_offset,
+                &trusted,
             )
         })
 }

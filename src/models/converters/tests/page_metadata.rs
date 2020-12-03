@@ -4,7 +4,7 @@ use crate::models::commons::PageMetadata;
 fn page_metadata_with_valid_non_zero_data() {
     let input = "limit=20&offset=20&queued=false";
 
-    let actual = PageMetadata::from_url_string(input).unwrap();
+    let actual = PageMetadata::from_url_string(input);
     let expected = PageMetadata {
         offset: 20,
         limit: 20,
@@ -16,7 +16,7 @@ fn page_metadata_with_valid_non_zero_data() {
 fn page_metadata_with_zeros() {
     let input = "limit=0&offset=0";
 
-    let actual = PageMetadata::from_url_string(input).unwrap();
+    let actual = PageMetadata::from_url_string(input);
     let expected = PageMetadata {
         offset: 0,
         limit: 0,
@@ -28,10 +28,10 @@ fn page_metadata_with_zeros() {
 fn page_metadata_with_missing_optional_args() {
     let input = "offset=50";
 
-    let actual = PageMetadata::from_url_string(input).unwrap();
+    let actual = PageMetadata::from_url_string(input);
     let expected = PageMetadata {
         offset: 50,
-        limit: 0,
+        limit: 20,
     };
     assert_eq!(expected, actual);
 }

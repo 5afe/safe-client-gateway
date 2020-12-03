@@ -1,7 +1,4 @@
 use crate::models::commons::PageMetadata;
-use anyhow::Result;
-use itertools::Itertools;
-use rocket::http::ext::IntoCollection;
 use std::ops::Deref;
 
 impl PageMetadata {
@@ -12,7 +9,7 @@ impl PageMetadata {
     pub fn from_url_string(encoded: &str) -> Self {
         let mut output = Self {
             offset: 0,
-            limit: 0,
+            limit: 20,
         };
 
         let chunked: Vec<Vec<&str>> = encoded

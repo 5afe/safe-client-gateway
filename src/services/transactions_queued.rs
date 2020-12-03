@@ -2,7 +2,7 @@ use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
-    ConflictType, TransactionListItem, TransactionSummary, Label
+    ConflictType, Label, TransactionListItem, TransactionSummary,
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::cache::CacheExt;
@@ -40,25 +40,32 @@ pub fn get_queued_transactions(
     debug!("page_url: {:#?}", page_url);
 
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
-    let after_tx = if backend_transactions.next.is_some() { backend_transactions.results.pop() } else { None };
+    let after_tx = if backend_transactions.next.is_some() {
+        backend_transactions.results.pop()
+    } else {
+        None
+    };
     let mut tx_iter = backend_transactions.results.into_iter();
-    let before_tx = if page_meta.offset == 0 { None } else { tx_iter.next() };
+    let before_tx = if page_meta.offset == 0 {
+        None
+    } else {
+        tx_iter.next()
+    };
 
     let edge_nonce = after_tx.map_or(-1, |tx| tx.nonce as i64);
     let previous_page_nonce = before_tx.map_or(-1, |tx| tx.nonce as i64);
     let mut late_proccessed_nonce = previous_page_nonce;
 
     let mut service_transactions: Vec<TransactionListItem> = Vec::new();
-    for (group_nonce, transaction_group) in &tx_iter.group_by(|transaction| transaction.nonce as i64 )
+    for (group_nonce, transaction_group) in
+        &tx_iter.group_by(|transaction| transaction.nonce as i64)
     {
         let mut group_iter = transaction_group.peekable();
         if late_proccessed_nonce < safe_nonce && group_nonce == safe_nonce {
-            service_transactions.push(TransactionListItem::Label {
-                label: Label::Next
-            })
+            service_transactions.push(TransactionListItem::Label { label: Label::Next })
         } else if late_proccessed_nonce == safe_nonce && group_nonce > safe_nonce {
             service_transactions.push(TransactionListItem::Label {
-                label: Label::Queued
+                label: Label::Queued,
             })
         }
         late_proccessed_nonce = group_nonce as i64;
@@ -68,28 +75,37 @@ pub fn get_queued_transactions(
         let conflict_from_previous_page = previous_page_nonce == group_nonce;
         if (has_conflicts) {
             service_transactions.push(TransactionListItem::ConflictHeader {
-                nonce: group_nonce as u64
+                nonce: group_nonce as u64,
             })
         }
         add_transation_as_summary(
-            &mut info_provider, 
-            &mut service_transactions, 
-            &group_start_tx, 
-            if has_conflicts { 
-                ConflictType::HasNext 
+            &mut info_provider,
+            &mut service_transactions,
+            &group_start_tx,
+            if has_conflicts {
+                ConflictType::HasNext
             } else if conflict_from_previous_page {
-                ConflictType::End 
-            } else { 
-                ConflictType::None 
-            }
+                ConflictType::End
+            } else {
+                ConflictType::None
+            },
         );
         if (has_conflicts || conflict_from_previous_page) {
             while let Some(tx) = group_iter.next() {
-                let conflict_type = if group_iter.peek().is_some() { ConflictType::HasNext } else { ConflictType::End };
-                add_transation_as_summary(&mut info_provider, &mut service_transactions, &tx, conflict_type);
+                let conflict_type = if group_iter.peek().is_some() {
+                    ConflictType::HasNext
+                } else {
+                    ConflictType::End
+                };
+                add_transation_as_summary(
+                    &mut info_provider,
+                    &mut service_transactions,
+                    &tx,
+                    conflict_type,
+                );
             }
         }
-        /* 
+        /*
         transaction
                 .to_transaction_summary(&mut info_provider)
                 .unwrap_or(vec![])
@@ -103,15 +119,38 @@ pub fn get_queued_transactions(
     }
 
     Ok(Page {
-        next: build_page_url(context, &safe_address, &page_meta, timezone_offset, displayTrustedOnly, backend_transactions.next, 1),
-        previous: build_page_url(context, &safe_address, &page_meta, timezone_offset, displayTrustedOnly, backend_transactions.previous, -1),
+        next: build_page_url(
+            context,
+            &safe_address,
+            &page_meta,
+            timezone_offset,
+            displayTrustedOnly,
+            backend_transactions.next,
+            1,
+        ),
+        previous: build_page_url(
+            context,
+            &safe_address,
+            &page_meta,
+            timezone_offset,
+            displayTrustedOnly,
+            backend_transactions.previous,
+            -1,
+        ),
         results: service_transactions,
     })
 }
 
-fn build_page_url(context: &Context, safe_address: &String, page_meta: &PageMetadata, timezone_offset: &Option<String>, displayTrustedOnly: bool, url: Option<String>, direction: i64) -> Option<String> {
-    url
-        .as_ref()
+fn build_page_url(
+    context: &Context,
+    safe_address: &String,
+    page_meta: &PageMetadata,
+    timezone_offset: &Option<String>,
+    displayTrustedOnly: bool,
+    url: Option<String>,
+    direction: i64,
+) -> Option<String> {
+    url.as_ref()
         .and_then(|link| extract_query_string(link))
         .map(|link| {
             context.build_absolute_url(uri!(
@@ -126,32 +165,43 @@ fn build_page_url(context: &Context, safe_address: &String, page_meta: &PageMeta
 fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
     PageMetadata {
         offset: (meta.offset + (offset as i64) as u64),
-        limit: meta.limit
-    }.to_url_string()
+        limit: meta.limit,
+    }
+    .to_url_string()
 }
 
 fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     if meta.offset == 0 {
         PageMetadata {
             offset: 0,
-            limit: meta.limit + 1
+            limit: meta.limit + 1,
         }
     } else {
         PageMetadata {
             offset: meta.offset - 1,
-            limit: meta.limit + 2
+            limit: meta.limit + 2,
         }
     }
 }
 
-fn add_transation_as_summary(info_provider: &mut InfoProvider, items: &mut Vec<TransactionListItem>, transaction: &MultisigTransaction, conflict_type: ConflictType) {
+fn add_transation_as_summary(
+    info_provider: &mut InfoProvider,
+    items: &mut Vec<TransactionListItem>,
+    transaction: &MultisigTransaction,
+    conflict_type: ConflictType,
+) {
     let mut tx_summary_iter = transaction
         .to_transaction_summary(info_provider)
         .unwrap_or(vec![])
         .into_iter()
         .peekable();
     while let Some(summary) = tx_summary_iter.next() {
-        let tx_conflict_type = if conflict_type == ConflictType::End && tx_summary_iter.peek().is_some() { ConflictType::HasNext } else { conflict_type.clone() };
+        let tx_conflict_type =
+            if conflict_type == ConflictType::End && tx_summary_iter.peek().is_some() {
+                ConflictType::HasNext
+            } else {
+                conflict_type.clone()
+            };
         items.push(TransactionListItem::Transaction {
             transaction_summary: summary,
             conflict_type: tx_conflict_type,

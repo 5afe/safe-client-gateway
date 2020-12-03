@@ -64,9 +64,9 @@ fn fetch_backend_paged_txs(
     let body = context
         .cache()
         .request_cached(&context.client(), &url, request_cache_duration())?;
-    log::error!("request URL: {}", &url);
-    log::error!("page_url: {:#?}", page_url);
-    log::error!("page_metadata: {:#?}", page_metadata);
+    log::debug!("request URL: {}", &url);
+    log::debug!("page_url: {:#?}", page_url);
+    log::debug!("page_metadata: {:#?}", page_metadata);
     Ok(serde_json::from_str::<Page<Transaction>>(&body)?)
 }
 
@@ -105,22 +105,6 @@ fn service_txs_to_tx_list_items(txs: Vec<TransactionSummary>) -> Result<Vec<Tran
     Ok(tx_list_items)
 }
 
-fn build_page_metadata_extended_size(page_url: &Option<String>) -> PageMetadata {
-    if let Some(page_url_str) = page_url {
-        let page_metadata = PageMetadata::from_url_string(page_url_str);
-        PageMetadata {
-            limit: page_metadata.limit + 1,
-            offset: page_metadata.offset - 1,
-        }
-    } else {
-        // first page
-        PageMetadata {
-            limit: 21,
-            offset: 0,
-        }
-    }
-}
-
 // TODO too side-effect-y
 // borrows list, removes first item, converts gets first of everything and evaluates timestamp
 fn remove_first_and_peek_timestamp(
@@ -152,19 +136,6 @@ fn prepare_page_url(
                 "" // timezone_offset
             ))
         })
-}
-
-fn restore_page_size(link: String, is_first_page: bool) -> String {
-    let page_metadata = PageMetadata::from_url_string(&link);
-    let page_metadata = PageMetadata {
-        offset: if is_first_page {
-            20
-        } else {
-            page_metadata.offset
-        },
-        limit: 20,
-    };
-    page_metadata.to_url_string()
 }
 
 fn get_day_timestamp_millis(timestamp_in_secs: i64) -> i64 {

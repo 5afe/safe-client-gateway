@@ -32,15 +32,23 @@ pub enum TransactionListItem {
     },
     #[serde(rename(serialize = "DATE_LABEL"))]
     DateLabel { timestamp: i64 },
-    #[serde(rename(serialize = "STRING_LABEL"))]
-    StringLabel { label: String },
+    #[serde(rename(serialize = "LABEL"))]
+    Label { label: Label },
+    #[serde(rename(serialize = "CONFLICT_HEADER"))]
+    ConflictHeader { nonce: u64 },
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum Label {
+    Next,
+    Queued,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum ConflictType {
     None,
-    Start { nonce: u64 },
     HasNext,
     End,
 }

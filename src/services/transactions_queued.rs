@@ -2,7 +2,7 @@ use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
-    ConflictType, TransactionListItem, TransactionSummary,
+    ConflictType, TransactionListItem, TransactionSummary, Label
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::cache::CacheExt;
@@ -21,7 +21,7 @@ pub fn get_queued_transactions(
     trusted: &Option<bool>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let mut info_provider = DefaultInfoProvider::new(context);
-    let page_meta = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string())).unwrap();
+    let page_meta = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
     let adjusted_page_meta = adjust_page_meta(&page_meta);
     let displayTrustedOnly = trusted.unwrap_or(true);
     let safe_nonce = info_provider.safe_info(safe_address)?.nonce as i64;
@@ -53,12 +53,12 @@ pub fn get_queued_transactions(
     {
         let mut group_iter = transaction_group.peekable();
         if late_proccessed_nonce < safe_nonce && group_nonce == safe_nonce {
-            service_transactions.push(TransactionListItem::StringLabel {
-                label: "Next".to_string()
+            service_transactions.push(TransactionListItem::Label {
+                label: Label::Next
             })
         } else if late_proccessed_nonce == safe_nonce && group_nonce > safe_nonce {
-            service_transactions.push(TransactionListItem::StringLabel {
-                label: "Queue".to_string()
+            service_transactions.push(TransactionListItem::Label {
+                label: Label::Queued
             })
         }
         late_proccessed_nonce = group_nonce as i64;
@@ -67,8 +67,8 @@ pub fn get_queued_transactions(
         let has_conflicts = group_iter.peek().is_some() || is_edge_group;
         let conflict_from_previous_page = previous_page_nonce == group_nonce;
         if (has_conflicts) {
-            service_transactions.push(TransactionListItem::StringLabel {
-                label: format!("Conflict {}", group_nonce)
+            service_transactions.push(TransactionListItem::ConflictHeader {
+                nonce: group_nonce as u64
             })
         }
         add_transation_as_summary(
@@ -116,7 +116,7 @@ fn build_page_url(context: &Context, safe_address: &String, page_meta: &PageMeta
         .map(|link| {
             context.build_absolute_url(uri!(
                 crate::routes::transactions::queued_transactions: safe_address,
-                offset_page_meta(page_meta, direction * page_meta.limit),
+                offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
                 timezone_offset.clone().unwrap_or("0".to_string()),
                 displayTrustedOnly
             ))
@@ -125,7 +125,7 @@ fn build_page_url(context: &Context, safe_address: &String, page_meta: &PageMeta
 
 fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
     PageMetadata {
-        offset: meta.offset + offset,
+        offset: (meta.offset + (offset as i64) as u64),
         limit: meta.limit
     }.to_url_string()
 }

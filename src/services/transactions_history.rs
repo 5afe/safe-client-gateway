@@ -101,7 +101,7 @@ pub fn get_history_transactions(
 
 fn build_page_metadata_extended_size(page_url: &Option<String>) -> PageMetadata {
     if let Some(page_url_str) = page_url {
-        let page_metadata = PageMetadata::from_url_string(page_url_str).unwrap();
+        let page_metadata = PageMetadata::from_url_string(page_url_str);
         PageMetadata {
             limit: page_metadata.limit + 1,
             offset: page_metadata.offset - 1,
@@ -116,7 +116,7 @@ fn build_page_metadata_extended_size(page_url: &Option<String>) -> PageMetadata 
 }
 
 fn restore_page_size(link: String, is_first_page: bool) -> String {
-    let page_metadata = PageMetadata::from_url_string(&link).unwrap();
+    let page_metadata = PageMetadata::from_url_string(&link);
     let page_metadata = PageMetadata {
         offset: if is_first_page {
             20

@@ -17,7 +17,7 @@ impl Transaction {
     pub fn to_transaction_summary(
         &self,
         info_provider: &mut dyn InfoProvider,
-        safe: &String,
+        safe: &str,
     ) -> Result<Vec<TransactionSummary>> {
         match self {
             Transaction::Multisig(transaction) => {

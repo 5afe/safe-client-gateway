@@ -1,12 +1,12 @@
 use crate::config::request_cache_duration;
 use crate::models::service::transactions::requests::ConfirmationRequest;
-use crate::services::transactions_details;
-use crate::services::transactions_list;
 use crate::services::tx_confirmation;
+use crate::services::{
+    transactions_details, transactions_history, transactions_list, transactions_queued,
+};
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use rocket::http::Cookies;
 use rocket::response::content;
 use rocket_contrib::json::Json;
 
@@ -65,7 +65,7 @@ pub fn history_transactions(
     context
         .cache()
         .cache_resp(&context.uri(), request_cache_duration(), || {
-            transactions_list::get_history_transactions(
+            transactions_history::get_history_transactions(
                 &context,
                 &safe_address,
                 &page_url,
@@ -84,7 +84,7 @@ pub fn queued_transactions(
     context
         .cache()
         .cache_resp(&context.uri(), request_cache_duration(), || {
-            transactions_list::get_queued_transactions(
+            transactions_queued::get_queued_transactions(
                 &context,
                 &safe_address,
                 &page_url,

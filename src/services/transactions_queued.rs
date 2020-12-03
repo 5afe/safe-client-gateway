@@ -80,6 +80,7 @@ pub fn get_queued_transactions(
                 label: Label::Queued,
             })
         } // Else: If the last proccessed nonce is higher than the current Safe nonce then all headers should already be present
+
         // Update last proccessed nonce
         last_proccessed_nonce = group_nonce as i64;
 

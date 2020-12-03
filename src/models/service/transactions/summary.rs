@@ -45,7 +45,7 @@ pub enum Label {
     Queued,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum ConflictType {
     None,

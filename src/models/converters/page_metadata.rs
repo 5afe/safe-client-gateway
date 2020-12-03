@@ -1,7 +1,4 @@
 use crate::models::commons::PageMetadata;
-use anyhow::Result;
-use itertools::Itertools;
-use rocket::http::ext::IntoCollection;
 use std::ops::Deref;
 
 impl PageMetadata {

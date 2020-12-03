@@ -2,15 +2,13 @@ use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
-    ConflictType, Label, TransactionListItem, TransactionSummary,
+    ConflictType, Label, TransactionListItem,
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use crate::utils::extract_query_string;
 use itertools::Itertools;
-use log::debug;
 
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
 pub fn get_queued_transactions(
@@ -28,7 +26,7 @@ pub fn get_queued_transactions(
     let adjusted_page_meta = adjust_page_meta(&page_meta);
 
     // Allow to also query queued transactions that are not submitted by an owner or delegate
-    let displayTrustedOnly = trusted.unwrap_or(true);
+    let display_trusted_only = trusted.unwrap_or(true);
 
     // As we require the Safe nonce later we use it here explicitely to query transaction that are in the future
     let safe_nonce = info_provider.safe_info(safe_address)?.nonce as i64;
@@ -38,7 +36,7 @@ pub fn get_queued_transactions(
         safe_address,
         adjusted_page_meta.to_url_string(),
         safe_nonce,
-        displayTrustedOnly
+        display_trusted_only
     );
 
     let body = context
@@ -95,7 +93,7 @@ pub fn get_queued_transactions(
         // If there is more than 1 item in this group or we are in an edge group then we have a conflict
         let has_conflicts = group_iter.peek().is_some() || is_edge_group;
         // If we start a new conflict group then we should render the conflict header
-        if (has_conflicts && !conflict_from_previous_page) {
+        if has_conflicts && !conflict_from_previous_page {
             service_transactions.push(TransactionListItem::ConflictHeader {
                 nonce: group_nonce as u64,
             })
@@ -140,7 +138,7 @@ pub fn get_queued_transactions(
             &safe_address,
             &page_meta,
             timezone_offset,
-            displayTrustedOnly,
+            display_trusted_only,
             backend_transactions.next,
             1, // Direction forward
         ),
@@ -149,7 +147,7 @@ pub fn get_queued_transactions(
             &safe_address,
             &page_meta,
             timezone_offset,
-            displayTrustedOnly,
+            display_trusted_only,
             backend_transactions.previous,
             -1, // Direction backwards
         ),
@@ -162,18 +160,17 @@ fn build_page_url(
     safe_address: &String,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
-    displayTrustedOnly: bool,
+    display_trusted_only: bool,
     url: Option<String>,
     direction: i64,
 ) -> Option<String> {
     url.as_ref()
-        .and_then(|link| extract_query_string(link))
-        .map(|link| {
+        .map(|_| {
             context.build_absolute_url(uri!(
                 crate::routes::transactions::queued_transactions: safe_address,
                 offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
                 timezone_offset.clone().unwrap_or("0".to_string()),
-                displayTrustedOnly
+                display_trusted_only
             ))
         })
 }
@@ -201,7 +198,7 @@ fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 }
 
 fn add_transation_as_summary(
-    info_provider: &mut InfoProvider,
+    info_provider: &mut dyn InfoProvider,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,
     conflict_type: ConflictType,

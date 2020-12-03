@@ -14,13 +14,12 @@ use crate::utils::errors::ApiResult;
 use crate::utils::extract_query_string;
 use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
-use std::cmp::max;
 
 pub fn get_history_transactions(
     context: &Context,
     safe_address: &String,
     page_url: &Option<String>,
-    timezone_offset: &Option<String>,
+    _timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let is_first_page = page_url.is_none();
     let page_metadata = build_page_metadata_extended_size(page_url);

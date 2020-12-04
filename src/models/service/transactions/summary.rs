@@ -22,7 +22,6 @@ pub struct ExecutionInfo {
 }
 
 #[derive(Serialize, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
 #[serde(tag = "type")]
 pub enum TransactionListItem {
     #[serde(rename_all = "camelCase")]

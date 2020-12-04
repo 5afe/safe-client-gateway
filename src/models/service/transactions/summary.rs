@@ -23,19 +23,22 @@ pub struct ExecutionInfo {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
-#[serde(tag = "tx_item_type")]
+#[serde(tag = "type")]
 pub enum TransactionListItem {
-    #[serde(rename(serialize = "TRANSACTION"))]
+    #[serde(rename_all = "camelCase")]
     Transaction {
         transaction_summary: TransactionSummary,
         conflict_type: ConflictType,
     },
-    #[serde(rename(serialize = "DATE_LABEL"))]
-    DateLabel { timestamp: i64 },
-    #[serde(rename(serialize = "LABEL"))]
-    Label { label: Label },
-    #[serde(rename(serialize = "CONFLICT_HEADER"))]
-    ConflictHeader { nonce: u64 },
+    DateLabel {
+        timestamp: i64,
+    },
+    Label {
+        label: Label,
+    },
+    ConflictHeader {
+        nonce: u64,
+    },
 }
 
 #[derive(Serialize, Debug, PartialEq)]

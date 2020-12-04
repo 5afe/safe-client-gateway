@@ -19,7 +19,7 @@ use std::cmp::max;
 
 pub fn get_history_transactions(
     context: &Context,
-    safe_address: &str,
+    safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
@@ -42,8 +42,12 @@ pub fn get_history_transactions(
         -1
     };
 
-    let service_txs =
+    let mut service_txs =
         backend_txs_to_summary_txs(backend_paged_txs.results, &mut info_provider, safe_address)?;
+    if backend_paged_txs.next.is_none() {
+        let creation_tx = get_creation_transaction_summary(context, safe_address)?;
+        service_txs.push(creation_tx);
+    }
 
     let tx_list_items = service_txs_to_tx_list_items(service_txs, prev_page_timestamp)?;
 

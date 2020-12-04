@@ -45,8 +45,8 @@ pub fn get_history_transactions(
         let page_url = page_url.as_ref().unwrap();
         let incoming_page_metadata = PageMetadata::from_url_string(&page_url);
         let page_metadata = PageMetadata {
-            offset: incoming_page_metadata.offset - 1,
-            limit: 21,
+            offset: max(0, incoming_page_metadata.offset - 1),
+            limit: incoming_page_metadata.limit + 1,
         };
         let extended_page_url = Some(page_metadata.to_url_string());
 

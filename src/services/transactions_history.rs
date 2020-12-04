@@ -15,7 +15,6 @@ use crate::utils::errors::ApiResult;
 use anyhow::Result;
 use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
-use std::cmp::max;
 
 pub fn get_history_transactions(
     context: &Context,
@@ -31,19 +30,17 @@ pub fn get_history_transactions(
     let page_metadata = adjust_page_meta(&incoming_page_metadata);
     let extended_page_url = Some(page_metadata.to_url_string());
 
-    let mut backend_paged_txs = fetch_backend_paged_txs(context, safe_address, &extended_page_url)?;
+    let backend_paged_txs = fetch_backend_paged_txs(context, safe_address, &extended_page_url)?;
+    let mut backend_txs_iter = backend_paged_txs.results.into_iter();
     let prev_page_timestamp = if page_metadata.offset != 0 {
-        peek_timestamp_and_remove_item(
-            &mut backend_paged_txs.results,
-            &mut info_provider,
-            safe_address,
-        )?
+        peek_timestamp_and_remove_item(&mut backend_txs_iter, &mut info_provider, safe_address)
+            .unwrap_or(-1)
     } else {
         -1
     };
 
     let mut service_txs =
-        backend_txs_to_summary_txs(backend_paged_txs.results, &mut info_provider, safe_address)?;
+        backend_txs_to_summary_txs(&mut backend_txs_iter, &mut info_provider, safe_address)?;
     if backend_paged_txs.next.is_none() {
         let creation_tx = get_creation_transaction_summary(context, safe_address)?;
         service_txs.push(creation_tx);
@@ -125,12 +122,11 @@ fn fetch_backend_paged_txs(
 }
 
 fn backend_txs_to_summary_txs(
-    txs: Vec<Transaction>,
+    txs: &mut dyn Iterator<Item = Transaction>,
     info_provider: &mut dyn InfoProvider,
     safe_address: &str,
 ) -> Result<Vec<TransactionSummary>> {
     Ok(txs
-        .into_iter()
         .flat_map(|transaction| {
             transaction
                 .to_transaction_summary(info_provider, safe_address)
@@ -163,17 +159,16 @@ fn service_txs_to_tx_list_items(
     Ok(tx_list_items)
 }
 
-// TODO too side-effect-y
-// borrows list, removes first item, converts gets first of everything and evaluates timestamp
 fn peek_timestamp_and_remove_item(
-    transactions: &mut Vec<Transaction>,
+    transactions: &mut dyn Iterator<Item = Transaction>,
     info_provider: &mut DefaultInfoProvider,
     safe_address: &str,
 ) -> Result<i64> {
     let timestamp = transactions
-        .remove(0)
+        .next()
+        .ok_or(anyhow::anyhow!("empty transactions"))?
         .to_transaction_summary(info_provider, safe_address)?
-        .get(0)
+        .last()
         .ok_or(anyhow::anyhow!("empty transactions"))?
         .timestamp;
 

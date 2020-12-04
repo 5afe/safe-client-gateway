@@ -66,7 +66,7 @@ pub fn get_all_transactions(
     })
 }
 
-fn get_creation_transaction_summary(
+pub(super) fn get_creation_transaction_summary(
     context: &Context,
     safe: &String,
 ) -> ApiResult<TransactionSummary> {

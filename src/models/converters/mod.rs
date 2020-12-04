@@ -1,5 +1,6 @@
 pub mod balances;
 pub mod data_decoded;
+pub mod page_metadata;
 pub mod transactions;
 pub mod transfers;
 

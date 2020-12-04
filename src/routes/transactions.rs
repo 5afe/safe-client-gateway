@@ -1,8 +1,9 @@
 use crate::config::request_cache_duration;
 use crate::models::service::transactions::requests::ConfirmationRequest;
-use crate::services::transactions_details;
-use crate::services::transactions_list;
 use crate::services::tx_confirmation;
+use crate::services::{
+    transactions_details, transactions_history, transactions_list, transactions_queued,
+};
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -52,4 +53,44 @@ pub fn submit_confirmation(
                 transactions_details::get_transactions_details(&context, &safe_tx_hash)
             })
     })
+}
+
+#[get("/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>")]
+pub fn history_transactions(
+    context: Context,
+    safe_address: String,
+    page_url: Option<String>,
+    timezone_offset: Option<String>,
+) -> ApiResult<content::Json<String>> {
+    context
+        .cache()
+        .cache_resp(&context.uri(), request_cache_duration(), || {
+            transactions_history::get_history_transactions(
+                &context,
+                &safe_address,
+                &page_url,
+                &timezone_offset,
+            )
+        })
+}
+
+#[get("/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
+pub fn queued_transactions(
+    context: Context,
+    safe_address: String,
+    page_url: Option<String>,
+    timezone_offset: Option<String>,
+    trusted: Option<bool>,
+) -> ApiResult<content::Json<String>> {
+    context
+        .cache()
+        .cache_resp(&context.uri(), request_cache_duration(), || {
+            transactions_queued::get_queued_transactions(
+                &context,
+                &safe_address,
+                &page_url,
+                &timezone_offset,
+                &trusted,
+            )
+        })
 }

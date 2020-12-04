@@ -20,7 +20,7 @@ impl PageMetadata {
         chunked.into_iter().for_each(|it| {
             let first = it.first().unwrap_or(&"").deref();
             if first == "limit" {
-                output.limit = it.get(1).unwrap_or(&"0").parse::<u64>().unwrap_or(0);
+                output.limit = it.get(1).unwrap_or(&"0").parse::<u64>().unwrap_or(20);
             } else if first == "offset" {
                 output.offset = it.get(1).unwrap_or(&"0").parse::<u64>().unwrap_or(0);
             }

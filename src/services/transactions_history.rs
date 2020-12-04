@@ -7,11 +7,11 @@ use crate::models::service::transactions::summary::{
     ConflictType, TransactionListItem, TransactionSummary,
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::services::offset_page_meta;
 use crate::services::transactions_list::get_creation_transaction_summary;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use crate::utils::extract_query_string;
 use anyhow::Result;
 use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
@@ -21,97 +21,82 @@ pub fn get_history_transactions(
     context: &Context,
     safe_address: &str,
     page_url: &Option<String>,
-    _timezone_offset: &Option<String>,
+    timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
-    let is_first_page = page_url.is_none();
     let mut info_provider = DefaultInfoProvider::new(context);
 
-    if is_first_page {
-        let backend_paged_txs = fetch_backend_paged_txs(context, safe_address, page_url)?;
-        let service_txs = backend_txs_to_summary_txs(
-            backend_paged_txs.results,
-            &mut info_provider,
-            safe_address,
-        )?;
+    let incoming_page_metadata =
+        PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
 
-        let tx_list_items = service_txs_to_tx_list_items(service_txs, -1)?; // we use an invalid timestamp
+    let page_metadata = adjust_page_meta(&incoming_page_metadata);
+    let extended_page_url = Some(page_metadata.to_url_string());
 
-        Ok(Page {
-            next: prepare_page_url(context, backend_paged_txs.next.as_ref(), safe_address),
-            previous: None,
-            results: tx_list_items,
-        })
-    } else {
-        let page_url = page_url.as_ref().unwrap();
-        let incoming_page_metadata = PageMetadata::from_url_string(&page_url);
-        let page_metadata = PageMetadata {
-            offset: max(0, incoming_page_metadata.offset - 1),
-            limit: incoming_page_metadata.limit + 1,
-        };
-        let extended_page_url = Some(page_metadata.to_url_string());
-
-        let mut backend_paged_txs =
-            fetch_backend_paged_txs(context, safe_address, &extended_page_url)?;
-        let prev_page_timestamp = peek_timestamp_and_remove_item(
+    let mut backend_paged_txs = fetch_backend_paged_txs(context, safe_address, &extended_page_url)?;
+    let prev_page_timestamp = if page_metadata.offset != 0 {
+        peek_timestamp_and_remove_item(
             &mut backend_paged_txs.results,
             &mut info_provider,
             safe_address,
-        )?;
+        )?
+    } else {
+        -1
+    };
 
-        let service_txs = backend_txs_to_summary_txs(
-            backend_paged_txs.results,
-            &mut info_provider,
+    let service_txs =
+        backend_txs_to_summary_txs(backend_paged_txs.results, &mut info_provider, safe_address)?;
+
+    let tx_list_items = service_txs_to_tx_list_items(service_txs, prev_page_timestamp)?;
+
+    Ok(Page {
+        next: build_page_url(
+            context,
             safe_address,
-        )?;
+            &incoming_page_metadata,
+            timezone_offset,
+            backend_paged_txs.next,
+            1, // Direction forward
+        ),
+        previous: build_page_url(
+            context,
+            safe_address,
+            &incoming_page_metadata,
+            timezone_offset,
+            backend_paged_txs.previous,
+            -1, // Direction backwards
+        ),
+        results: tx_list_items,
+    })
+}
 
-        let tx_list_items = service_txs_to_tx_list_items(service_txs, prev_page_timestamp)?;
+fn build_page_url(
+    context: &Context,
+    safe_address: &str,
+    page_meta: &PageMetadata,
+    timezone_offset: &Option<String>,
+    url: Option<String>,
+    direction: i64,
+) -> Option<String> {
+    url.as_ref().map(|_| {
+        context.build_absolute_url(uri!(
+            crate::routes::transactions::history_transactions: safe_address,
+            offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
+            timezone_offset.clone().unwrap_or("0".to_string()),
+        ))
+    })
+}
 
-        let backend_link_chunks: Vec<&str> = backend_paged_txs
-            .previous
-            .as_ref()
-            .unwrap()
-            .split("?")
-            .collect();
-        let backend_url_prefix = backend_link_chunks[0];
-
-        let next = quick_page_metadata_restore_next(backend_url_prefix, &incoming_page_metadata);
-        let prev = quick_page_metadata_restore_prev(backend_url_prefix, &incoming_page_metadata);
-
-        Ok(Page {
-            next: prepare_page_url(context, next.as_ref(), safe_address),
-            previous: prepare_page_url(context, prev.as_ref(), safe_address),
-            results: tx_list_items,
-        })
+fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
+    if meta.offset == 0 {
+        PageMetadata {
+            offset: 0,
+            limit: meta.limit,
+        }
+    } else {
+        PageMetadata {
+            offset: meta.offset - 1,
+            limit: meta.limit + 1,
+        }
     }
-}
-
-fn quick_page_metadata_restore_next(
-    backend_url_prefix: &str,
-    page_metadata: &PageMetadata,
-) -> Option<String> {
-    Some(format!(
-        "{}?{}",
-        backend_url_prefix,
-        PageMetadata {
-            offset: page_metadata.offset + 20,
-            limit: 20,
-        }
-        .to_url_string()
-    ))
-}
-fn quick_page_metadata_restore_prev(
-    backend_url_prefix: &str,
-    page_metadata: &PageMetadata,
-) -> Option<String> {
-    Some(format!(
-        "{}?{}",
-        backend_url_prefix,
-        PageMetadata {
-            offset: max(0, page_metadata.offset - 20),
-            limit: 20,
-        }
-        .to_url_string()
-    ))
 }
 
 fn fetch_backend_paged_txs(
@@ -150,7 +135,6 @@ fn backend_txs_to_summary_txs(
         .collect())
 }
 
-//TODO include last page flag for creation tx
 fn service_txs_to_tx_list_items(
     txs: Vec<TransactionSummary>,
     last_timestamp: i64,
@@ -158,9 +142,9 @@ fn service_txs_to_tx_list_items(
     let mut tx_list_items = Vec::new();
     for (date_timestamp, transaction_group) in &txs
         .into_iter()
-        .group_by(|transaction| get_day_timestamp_millis(transaction.timestamp / 1000))
+        .group_by(|transaction| get_day_timestamp_millis(transaction.timestamp))
     {
-        if last_timestamp < 0 || date_timestamp < last_timestamp {
+        if date_timestamp != last_timestamp {
             tx_list_items.push(TransactionListItem::DateLabel {
                 timestamp: date_timestamp,
             });
@@ -192,25 +176,11 @@ fn peek_timestamp_and_remove_item(
     Ok(get_day_timestamp_millis(timestamp))
 }
 
-fn prepare_page_url(
-    context: &Context,
-    query_params: Option<&String>,
-    safe_address: &str,
-) -> Option<String> {
-    query_params
-        .and_then(|link| extract_query_string(link))
-        .map(|link| {
-            context.build_absolute_url(uri!(
-                crate::routes::transactions::history_transactions: safe_address,
-                link,
-                "" // timezone_offset
-            ))
-        })
-}
-
-fn get_day_timestamp_millis(timestamp_in_secs: i64) -> i64 {
-    let date_time =
-        DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp(timestamp_in_secs, 0), Utc);
+fn get_day_timestamp_millis(timestamp_in_millis: i64) -> i64 {
+    let date_time = DateTime::<Utc>::from_utc(
+        NaiveDateTime::from_timestamp(timestamp_in_millis / 1000, 0),
+        Utc,
+    );
     let date =
         NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap();
     date.and_hms_milli(0, 0, 0, 0).timestamp() * 1000

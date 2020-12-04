@@ -1,10 +1,9 @@
 use crate::config::{base_transaction_service_url, request_cache_duration};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
-use crate::models::service::transactions::summary::{
-    ConflictType, Label, TransactionListItem,
-};
+use crate::models::service::transactions::summary::{ConflictType, Label, TransactionListItem};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::services::offset_page_meta;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -164,23 +163,14 @@ fn build_page_url(
     url: Option<String>,
     direction: i64,
 ) -> Option<String> {
-    url.as_ref()
-        .map(|_| {
-            context.build_absolute_url(uri!(
-                crate::routes::transactions::queued_transactions: safe_address,
-                offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
-                timezone_offset.clone().unwrap_or("0".to_string()),
-                display_trusted_only
-            ))
-        })
-}
-
-fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
-    PageMetadata {
-        offset: ((meta.offset as i64) + offset) as u64,
-        limit: meta.limit,
-    }
-    .to_url_string()
+    url.as_ref().map(|_| {
+        context.build_absolute_url(uri!(
+            crate::routes::transactions::queued_transactions: safe_address,
+            offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
+            timezone_offset.clone().unwrap_or("0".to_string()),
+            display_trusted_only
+        ))
+    })
 }
 
 fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {

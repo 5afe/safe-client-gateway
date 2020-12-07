@@ -86,7 +86,7 @@ fn build_page_url(
     })
 }
 
-fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
+pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     if meta.offset == 0 {
         PageMetadata {
             offset: 0,
@@ -121,7 +121,7 @@ fn fetch_backend_paged_txs(
     Ok(serde_json::from_str::<Page<Transaction>>(&body)?)
 }
 
-fn backend_txs_to_summary_txs(
+pub(super) fn backend_txs_to_summary_txs(
     txs: &mut dyn Iterator<Item = Transaction>,
     info_provider: &mut dyn InfoProvider,
     safe_address: &str,
@@ -135,7 +135,7 @@ fn backend_txs_to_summary_txs(
         .collect())
 }
 
-fn service_txs_to_tx_list_items(
+pub(super) fn service_txs_to_tx_list_items(
     txs: Vec<TransactionSummary>,
     last_timestamp: i64,
 ) -> Result<Vec<TransactionListItem>> {
@@ -159,9 +159,9 @@ fn service_txs_to_tx_list_items(
     Ok(tx_list_items)
 }
 
-fn peek_timestamp_and_remove_item(
+pub(super) fn peek_timestamp_and_remove_item(
     transactions: &mut dyn Iterator<Item = Transaction>,
-    info_provider: &mut DefaultInfoProvider,
+    info_provider: &mut dyn InfoProvider,
     safe_address: &str,
 ) -> Result<i64> {
     let timestamp = transactions

@@ -10,8 +10,8 @@ use crate::models::service::transactions::{Custom, TransactionInfo, Transfer};
 use crate::models::service::transactions::{Erc20Transfer, TransferInfo};
 use crate::providers::info::*;
 use crate::services::transactions_history::{
-    adjust_page_meta, backend_txs_to_summary_txs, peek_timestamp_and_remove_item,
-    service_txs_to_tx_list_items,
+    adjust_page_meta, backend_txs_to_summary_txs, get_day_timestamp_millis,
+    peek_timestamp_and_remove_item, service_txs_to_tx_list_items,
 };
 
 #[test]
@@ -407,7 +407,14 @@ fn peek_timestamp_and_remove_item_with_items() {
 }
 
 #[test]
-fn get_day_timestamp_millis() {}
+fn get_day_timestamp_millis_for_02_12_2020_00_00_01() {
+    let input = 1606867201000; // 1 second past the 2nd of December 2020 UTC
+
+    let actual = get_day_timestamp_millis(input);
+    let expected = 1606867200000;
+
+    assert_eq!(expected, actual);
+}
 
 fn get_service_txs(mock_info_provider: &mut MockInfoProvider) -> Vec<TransactionSummary> {
     let backend_txs =

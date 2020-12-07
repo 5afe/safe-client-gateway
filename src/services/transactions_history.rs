@@ -175,7 +175,7 @@ pub(super) fn peek_timestamp_and_remove_item(
     Ok(get_day_timestamp_millis(timestamp))
 }
 
-fn get_day_timestamp_millis(timestamp_in_millis: i64) -> i64 {
+pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64) -> i64 {
     let date_time = DateTime::<Utc>::from_utc(
         NaiveDateTime::from_timestamp(timestamp_in_millis / 1000, 0),
         Utc,

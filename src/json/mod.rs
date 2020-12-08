@@ -57,6 +57,9 @@ pub const ERC_721_TRANSFER_WITHOUT_TOKEN_INFO: &str =
 pub const ERC_721_TRANSFER_WITH_TOKEN_INFO: &str =
     include_str!("transfers/erc_721_transfer_with_token_info.json");
 
+pub const BACKEND_TRANSACTION_LIST_PAGE: &str =
+    include_str!("transactions/backend_transaction_list_page.json");
+
 pub const TOKEN_USDT: &str = include_str!("tokens/usdt.json");
 pub const TOKEN_CRYPTO_KITTIES: &str = include_str!("tokens/crypto_kitties.json");
 pub const TOKEN_DAI: &str = include_str!("tokens/dai.json");

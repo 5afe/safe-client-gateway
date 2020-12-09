@@ -52,7 +52,13 @@ pub fn get_queued_transactions(
     // Nonce of the last item in the previous page (-1 if not present)
     let previous_page_nonce = get_previous_page_nonce(&page_meta, &mut tx_iter);
 
-    let service_transactions = process_transactions(&mut info_provider, safe_nonce, &mut tx_iter, previous_page_nonce, edge_nonce);
+    let service_transactions = process_transactions(
+        &mut info_provider,
+        safe_nonce,
+        &mut tx_iter,
+        previous_page_nonce,
+        edge_nonce,
+    );
 
     Ok(Page {
         next: build_page_url(
@@ -84,20 +90,31 @@ fn get_edge_nonce(backend_transactions: &mut Page<MultisigTransaction>) -> i64 {
         backend_transactions.results.pop()
     } else {
         None
-    }.map_or(-1, |tx| tx.nonce as i64)
+    }
+    .map_or(-1, |tx| tx.nonce as i64)
 }
 
 // Nonce of the last item in the previous page (-1 if not present)
-fn get_previous_page_nonce(page_meta: &PageMetadata, tx_iter: &mut dyn Iterator<Item = MultisigTransaction>) -> i64 {
+fn get_previous_page_nonce(
+    page_meta: &PageMetadata,
+    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+) -> i64 {
     // If we are not on the first page then we take the first item to get information on the previous page
     if page_meta.offset == 0 {
         None
     } else {
         tx_iter.next()
-    }.map_or(-1, |tx| tx.nonce as i64)
+    }
+    .map_or(-1, |tx| tx.nonce as i64)
 }
 
-fn process_transactions(info_provider: &mut dyn InfoProvider, safe_nonce: i64, tx_iter: &mut dyn Iterator<Item = MultisigTransaction>, previous_page_nonce: i64, edge_nonce: i64) -> Vec<TransactionListItem> {
+fn process_transactions(
+    info_provider: &mut dyn InfoProvider,
+    safe_nonce: i64,
+    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+    previous_page_nonce: i64,
+    edge_nonce: i64,
+) -> Vec<TransactionListItem> {
     let mut last_proccessed_nonce = previous_page_nonce;
     let mut service_transactions: Vec<TransactionListItem> = Vec::new();
     for (group_nonce, transaction_group) in
@@ -158,15 +175,10 @@ fn process_transactions(info_provider: &mut dyn InfoProvider, safe_nonce: i64, t
             } else {
                 ConflictType::End
             };
-            add_transation_as_summary(
-                info_provider,
-                &mut service_transactions,
-                &tx,
-                conflict_type,
-            );
+            add_transation_as_summary(info_provider, &mut service_transactions, &tx, conflict_type);
         }
     }
-    
+
     service_transactions
 }
 

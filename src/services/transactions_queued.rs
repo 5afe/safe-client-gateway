@@ -84,7 +84,7 @@ pub fn get_queued_transactions(
 }
 
 // Nonce of the first item in the next page (-1 if not present)
-fn get_edge_nonce(backend_transactions: &mut Page<MultisigTransaction>) -> i64 {
+pub(super) fn get_edge_nonce(backend_transactions: &mut Page<MultisigTransaction>) -> i64 {
     // If there is a next url we remove the last item for information on the next page
     if backend_transactions.next.is_some() {
         backend_transactions.results.pop()
@@ -95,7 +95,7 @@ fn get_edge_nonce(backend_transactions: &mut Page<MultisigTransaction>) -> i64 {
 }
 
 // Nonce of the last item in the previous page (-1 if not present)
-fn get_previous_page_nonce(
+pub(super) fn get_previous_page_nonce(
     page_meta: &PageMetadata,
     tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
 ) -> i64 {
@@ -108,7 +108,7 @@ fn get_previous_page_nonce(
     .map_or(-1, |tx| tx.nonce as i64)
 }
 
-fn process_transactions(
+pub(super) fn process_transactions(
     info_provider: &mut dyn InfoProvider,
     safe_nonce: i64,
     tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
@@ -201,7 +201,7 @@ fn build_page_url(
     })
 }
 
-fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
+pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     if meta.offset == 0 {
         PageMetadata {
             offset: 0,
@@ -215,7 +215,7 @@ fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     }
 }
 
-fn add_transation_as_summary(
+pub(super) fn add_transation_as_summary(
     info_provider: &mut dyn InfoProvider,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,

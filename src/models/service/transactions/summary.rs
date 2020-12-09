@@ -26,7 +26,7 @@ pub struct ExecutionInfo {
 pub enum TransactionListItem {
     #[serde(rename_all = "camelCase")]
     Transaction {
-        transaction_summary: TransactionSummary,
+        transaction: TransactionSummary,
         conflict_type: ConflictType,
     },
     DateLabel {
@@ -41,14 +41,12 @@ pub enum TransactionListItem {
 }
 
 #[derive(Serialize, Debug, PartialEq)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum Label {
     Next,
     Queued,
 }
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
-#[serde(rename_all = "camelCase")]
 pub enum ConflictType {
     None,
     HasNext,

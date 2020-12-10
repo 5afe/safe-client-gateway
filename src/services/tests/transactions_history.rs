@@ -240,30 +240,30 @@ fn service_txs_to_tx_list_items_last_timestamp_undefined() {
             timestamp: 1606780800000,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::DateLabel {
             timestamp: 1606694400000,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
     ];
@@ -289,30 +289,30 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
             timestamp: 1606780800000,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::DateLabel {
             timestamp: 1606694400000,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
     ];
@@ -335,30 +335,30 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
 
     let expected = vec![
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::DateLabel {
             timestamp: 1606694400000,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
         TransactionListItem::Transaction {
-            transaction_summary: service_txs_inter.next().unwrap(),
+            transaction: service_txs_inter.next().unwrap(),
             conflict_type: ConflictType::None,
         },
     ];

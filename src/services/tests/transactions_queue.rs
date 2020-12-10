@@ -1,13 +1,6 @@
 use crate::json::{MULTISIG_TX_AWAITING_EXECUTION, MULTISIG_TX_SETTINGS_CHANGE};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
-use crate::models::service::transactions::summary::{
-    ConflictType, TransactionListItem, TransactionSummary,
-};
-use crate::models::service::transactions::TransactionStatus::Success;
-use crate::models::service::transactions::TransferDirection::{Incoming, Outgoing};
-use crate::models::service::transactions::{Custom, TransactionInfo, Transfer};
-use crate::models::service::transactions::{Erc20Transfer, TransferInfo};
 use crate::providers::info::*;
 use crate::services::transactions_queued::{
     adjust_page_meta, get_edge_nonce, get_previous_page_nonce,
@@ -90,17 +83,17 @@ fn get_edge_nonce_without_next() {
 
 #[test]
 fn get_previous_page_nonce_offset_0() {
-    let pageMeta = PageMetadata {
+    let page_meta = PageMetadata {
         offset: 0,
         limit: 20,
     };
-    let mut results = vec![
+    let results = vec![
         get_multisig_tx(MULTISIG_TX_AWAITING_EXECUTION),
         get_multisig_tx(MULTISIG_TX_SETTINGS_CHANGE),
     ];
     let mut results_iter = results.into_iter();
 
-    let actual = get_previous_page_nonce(&pageMeta, &mut results_iter);
+    let actual = get_previous_page_nonce(&page_meta, &mut results_iter);
 
     assert_eq!(-1, actual);
     assert_eq!(
@@ -111,19 +104,19 @@ fn get_previous_page_nonce_offset_0() {
 
 #[test]
 fn get_previous_page_nonce_offset_greater_than_0() {
-    let pageMeta = PageMetadata {
+    let page_meta = PageMetadata {
         offset: 20,
         limit: 20,
     };
     let previous_page_tx = get_multisig_tx(MULTISIG_TX_AWAITING_EXECUTION);
     let expected = previous_page_tx.nonce as i64;
-    let mut results = vec![
+    let results = vec![
         previous_page_tx,
         get_multisig_tx(MULTISIG_TX_SETTINGS_CHANGE),
     ];
     let mut results_iter = results.into_iter();
 
-    let actual = get_previous_page_nonce(&pageMeta, &mut results_iter);
+    let actual = get_previous_page_nonce(&page_meta, &mut results_iter);
 
     assert_eq!(expected, actual);
     assert_eq!(

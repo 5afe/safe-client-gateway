@@ -1,4 +1,4 @@
-use crate::json::BACKEND_TRANSACTION_LIST_PAGE;
+use crate::json::BACKEND_HISTORY_TRANSACTION_LIST_PAGE;
 use crate::models::backend::transactions::Transaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
@@ -66,7 +66,7 @@ fn backend_txs_to_summary_txs_empty() {
 #[test]
 fn backend_txs_to_summary_txs_with_values() {
     let backend_txs =
-        serde_json::from_str::<Page<Transaction>>(BACKEND_TRANSACTION_LIST_PAGE).unwrap();
+        serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -391,9 +391,10 @@ fn peek_timestamp_and_remove_item_with_items() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
-    let backend_txs = serde_json::from_str::<Page<Transaction>>(BACKEND_TRANSACTION_LIST_PAGE)
-        .unwrap()
-        .results;
+    let backend_txs =
+        serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE)
+            .unwrap()
+            .results;
     let mut backend_txs_iter = backend_txs.into_iter();
 
     let actual_timestamp = peek_timestamp_and_remove_item(
@@ -418,7 +419,7 @@ fn get_day_timestamp_millis_for_02_12_2020_00_00_01() {
 
 fn get_service_txs(mock_info_provider: &mut MockInfoProvider) -> Vec<TransactionSummary> {
     let backend_txs =
-        serde_json::from_str::<Page<Transaction>>(BACKEND_TRANSACTION_LIST_PAGE).unwrap();
+        serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE).unwrap();
     backend_txs
         .results
         .into_iter()

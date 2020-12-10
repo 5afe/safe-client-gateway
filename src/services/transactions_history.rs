@@ -151,7 +151,7 @@ pub(super) fn service_txs_to_tx_list_items(
         }
         transaction_group.for_each(|tx| {
             tx_list_items.push(TransactionListItem::Transaction {
-                transaction_summary: tx,
+                transaction: tx,
                 conflict_type: ConflictType::None,
             })
         });

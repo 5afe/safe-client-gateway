@@ -208,7 +208,7 @@ fn add_transation_as_summary(
                 conflict_type.clone()
             };
         items.push(TransactionListItem::Transaction {
-            transaction_summary: summary,
+            transaction: summary,
             conflict_type: tx_conflict_type,
         });
     }

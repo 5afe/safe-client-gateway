@@ -59,9 +59,12 @@ pub const ERC_721_TRANSFER_WITH_TOKEN_INFO: &str =
 
 pub const BACKEND_HISTORY_TRANSACTION_LIST_PAGE: &str =
     include_str!("transactions/backend_history_transaction_list_page.json");
-
 pub const BACKEND_QUEUED_TRANSACTION_LIST_PAGE_NO_CONFLICTS: &str =
     include_str!("transactions/backend_queued_transaction_list_page_no_conflicts.json");
+pub const BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_393: &str =
+    include_str!("transactions/backend_queued_transaction_list_page_conflicts_393.json");
+pub const BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_394: &str =
+    include_str!("transactions/backend_queued_transaction_list_page_conflicts_394.json");
 
 pub const TOKEN_USDT: &str = include_str!("tokens/usdt.json");
 pub const TOKEN_CRYPTO_KITTIES: &str = include_str!("tokens/crypto_kitties.json");

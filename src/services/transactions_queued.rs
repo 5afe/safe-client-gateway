@@ -151,7 +151,7 @@ pub(super) fn process_transactions(
             })
         }
         // Add the one transaction that is always present
-        add_transation_as_summary(
+        add_transaction_as_summary(
             info_provider,
             &mut service_transactions,
             &group_start_tx,
@@ -175,7 +175,12 @@ pub(super) fn process_transactions(
             } else {
                 ConflictType::End
             };
-            add_transation_as_summary(info_provider, &mut service_transactions, &tx, conflict_type);
+            add_transaction_as_summary(
+                info_provider,
+                &mut service_transactions,
+                &tx,
+                conflict_type,
+            );
         }
     }
 
@@ -215,7 +220,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     }
 }
 
-pub(super) fn add_transation_as_summary(
+pub(super) fn add_transaction_as_summary(
     info_provider: &mut dyn InfoProvider,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,

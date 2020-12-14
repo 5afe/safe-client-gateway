@@ -17,7 +17,7 @@ pub enum Transaction {
     Unknown,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigTransaction {
     pub safe: String,
@@ -79,7 +79,7 @@ pub struct ModuleTransaction {
     // pub transfers: Option<Vec<Transfer>>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Confirmation {
     pub owner: String,

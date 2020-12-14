@@ -43,26 +43,79 @@ pub fn get_queued_transactions(
         .request_cached(&context.client(), &url, request_cache_duration())?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
+    // We need to do this before we create the iterator
+    // Nonce of the first item in the next page (-1 if not present)
+    let edge_nonce = get_edge_nonce(&mut backend_transactions);
+
+    // Use an iterator to avoid shifting the result vector (would potentially trigger copies)
+    let mut tx_iter = backend_transactions.results.into_iter();
+    // Nonce of the last item in the previous page (-1 if not present)
+    let previous_page_nonce = get_previous_page_nonce(&page_meta, &mut tx_iter);
+
+    let service_transactions = process_transactions(
+        &mut info_provider,
+        safe_nonce,
+        &mut tx_iter,
+        previous_page_nonce,
+        edge_nonce,
+    );
+
+    Ok(Page {
+        next: build_page_url(
+            context,
+            &safe_address,
+            &page_meta,
+            timezone_offset,
+            display_trusted_only,
+            backend_transactions.next,
+            1, // Direction forward
+        ),
+        previous: build_page_url(
+            context,
+            &safe_address,
+            &page_meta,
+            timezone_offset,
+            display_trusted_only,
+            backend_transactions.previous,
+            -1, // Direction backwards
+        ),
+        results: service_transactions,
+    })
+}
+
+// Nonce of the first item in the next page (-1 if not present)
+pub(super) fn get_edge_nonce(backend_transactions: &mut Page<MultisigTransaction>) -> i64 {
     // If there is a next url we remove the last item for information on the next page
-    let after_tx = if backend_transactions.next.is_some() {
+    if backend_transactions.next.is_some() {
         backend_transactions.results.pop()
     } else {
         None
-    };
-    // Use an iterator to avoid shifting the result vector (would potentially trigger copies)
-    let mut tx_iter = backend_transactions.results.into_iter();
+    }
+    .map_or(-1, |tx| tx.nonce as i64)
+}
+
+// Nonce of the last item in the previous page (-1 if not present)
+pub(super) fn get_previous_page_nonce(
+    page_meta: &PageMetadata,
+    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+) -> i64 {
     // If we are not on the first page then we take the first item to get information on the previous page
-    let before_tx = if page_meta.offset == 0 {
+    if page_meta.offset == 0 {
         None
     } else {
         tx_iter.next()
-    };
-    // Nonce of the first item in the next page (-1 if not present)
-    let edge_nonce = after_tx.map_or(-1, |tx| tx.nonce as i64);
-    // Nonce of the last item in the previous page (-1 if not present)
-    let previous_page_nonce = before_tx.map_or(-1, |tx| tx.nonce as i64);
-    let mut last_proccessed_nonce = previous_page_nonce;
+    }
+    .map_or(-1, |tx| tx.nonce as i64)
+}
 
+pub(super) fn process_transactions(
+    info_provider: &mut dyn InfoProvider,
+    safe_nonce: i64,
+    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+    previous_page_nonce: i64,
+    edge_nonce: i64,
+) -> Vec<TransactionListItem> {
+    let mut last_proccessed_nonce = previous_page_nonce;
     let mut service_transactions: Vec<TransactionListItem> = Vec::new();
     for (group_nonce, transaction_group) in
         &tx_iter.group_by(|transaction| transaction.nonce as i64)
@@ -98,8 +151,8 @@ pub fn get_queued_transactions(
             })
         }
         // Add the one transaction that is always present
-        add_transation_as_summary(
-            &mut info_provider,
+        add_transaction_as_summary(
+            info_provider,
             &mut service_transactions,
             &group_start_tx,
             if has_conflicts {
@@ -122,8 +175,8 @@ pub fn get_queued_transactions(
             } else {
                 ConflictType::End
             };
-            add_transation_as_summary(
-                &mut info_provider,
+            add_transaction_as_summary(
+                info_provider,
                 &mut service_transactions,
                 &tx,
                 conflict_type,
@@ -131,27 +184,7 @@ pub fn get_queued_transactions(
         }
     }
 
-    Ok(Page {
-        next: build_page_url(
-            context,
-            &safe_address,
-            &page_meta,
-            timezone_offset,
-            display_trusted_only,
-            backend_transactions.next,
-            1, // Direction forward
-        ),
-        previous: build_page_url(
-            context,
-            &safe_address,
-            &page_meta,
-            timezone_offset,
-            display_trusted_only,
-            backend_transactions.previous,
-            -1, // Direction backwards
-        ),
-        results: service_transactions,
-    })
+    service_transactions
 }
 
 fn build_page_url(
@@ -173,7 +206,7 @@ fn build_page_url(
     })
 }
 
-fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
+pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     if meta.offset == 0 {
         PageMetadata {
             offset: 0,
@@ -187,7 +220,7 @@ fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     }
 }
 
-fn add_transation_as_summary(
+pub(super) fn add_transaction_as_summary(
     info_provider: &mut dyn InfoProvider,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,

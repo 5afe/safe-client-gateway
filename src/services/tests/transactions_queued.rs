@@ -636,8 +636,8 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
 
     let mut tx_iter = input_list.into_iter();
 
-    let safe_nonce = 393;
-    let previous_page_nonce = -1;
+    let safe_nonce = 392;
+    let previous_page_nonce = 393;
     let edge_nonce = 394;
 
     let actual = process_transactions(
@@ -648,10 +648,8 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
         edge_nonce,
     );
 
+    //The first item expected is just a a transaction because we are not in the first page of data
     let expected: Vec<TransactionListItem> = vec![
-        TransactionListItem::Label {
-            label: Label::Next,
-        },
         TransactionListItem::Transaction {
             transaction: TransactionSummary {
                 id: "multisig_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x0fe072e76498e0db46fc79113662026a4f8fb34e840491aefeff6dec21c766cb".to_string(),
@@ -677,10 +675,7 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
                 })
             },
-            conflict_type: ConflictType::None,
-        },
-        TransactionListItem::Label {
-            label: Label::Queued,
+            conflict_type: ConflictType::End,
         },
         TransactionListItem::ConflictHeader {
             nonce: 394

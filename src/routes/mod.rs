@@ -16,6 +16,7 @@ pub fn active_routes() -> Vec<Route> {
         about::backbone,
         about::info,
         balances::get_balances,
+        balances::get_supported_fiat,
         collectibles::list,
         transactions::details,
         transactions::all,

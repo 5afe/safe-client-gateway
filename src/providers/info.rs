@@ -3,6 +3,7 @@ use crate::config::{
 };
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
+use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
 use anyhow::Result;
 use mockall::automock;
@@ -80,11 +81,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
 impl DefaultInfoProvider<'_> {
     pub fn exchange_usd_to(&self, currency_code: &str) -> Result<f64> {
         let currency_code = currency_code.to_uppercase();
-        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
-        let body = self
-            .cache
-            .request_cached(self.client, &url, exchange_api_cache_duration())?;
-        let exchange = serde_json::from_str::<Exchange>(&body)?;
+        let exchange = self.fetch_exchange()?;
         match exchange.rates {
             Some(rates) => rates
                 .get(&currency_code)
@@ -92,6 +89,21 @@ impl DefaultInfoProvider<'_> {
                 .ok_or(anyhow::anyhow!("Currency not found")),
             None => Err(anyhow::anyhow!("Currency not found")),
         }
+    }
+
+    pub fn available_currency_codes(&self) -> ApiResult<Vec<String>> {
+        let exchange = self.fetch_exchange()?;
+        Ok(exchange
+            .rates
+            .map_or(vec![], |s| s.keys().cloned().collect::<Vec<_>>()))
+    }
+
+    fn fetch_exchange(&self) -> Result<Exchange> {
+        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
+        let body = self
+            .cache
+            .request_cached(self.client, &url, exchange_api_cache_duration())?;
+        Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }
 

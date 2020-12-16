@@ -1,4 +1,5 @@
 use crate::providers::info::TokenInfo;
+use crate::utils::json::default_if_null;
 use chrono::{DateTime, Utc};
 use derivative::Derivative;
 use serde::Deserialize;
@@ -39,7 +40,23 @@ pub struct Erc20Transfer {
     pub block_number: u64,
     pub transaction_hash: String,
     pub to: String,
+    #[serde(deserialize_with = "default_if_null")]
     pub value: String,
+    pub token_address: String,
+    #[derivative(Hash = "ignore")]
+    pub token_info: Option<TokenInfo>,
+    pub from: String,
+}
+
+#[derive(Derivative, Deserialize, Debug, Clone)]
+#[derivative(Hash)]
+#[serde(rename_all = "camelCase")]
+pub struct Erc20TransferMalformed {
+    pub execution_date: DateTime<Utc>,
+    pub block_number: u64,
+    pub transaction_hash: String,
+    pub to: String,
+    pub token_id: String,
     pub token_address: String,
     #[derivative(Hash = "ignore")]
     pub token_info: Option<TokenInfo>,

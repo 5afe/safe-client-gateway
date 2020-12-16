@@ -76,13 +76,19 @@ impl Erc20TransferDto {
     }
 
     pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
+        let element = if self.value.trim().is_empty() {
+            "0"
+        } else {
+            &self.value
+        }
+        .to_string();
         let token_info =
             token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone());
         build_transfer_info(
             token_info.as_ref(),
             TokenType::Erc20,
             &self.token_address,
-            &self.value,
+            &element,
         )
     }
 }

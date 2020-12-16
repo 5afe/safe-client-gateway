@@ -552,3 +552,87 @@ fn ethereum_transaction_with_inconsistent_token_types() {
     assert_eq!(1, actual.len());
     assert_eq!(&expected, actual.first().unwrap());
 }
+
+#[test]
+fn erc20_transfer_with_token_id_instead_of_value() {
+    let ethereum_transaction =
+        serde_json::from_str::<EthereumTransaction>(crate::json::ERC_20_TRANSFER_WITH_TOKEN_ID)
+            .unwrap();
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+
+    let expected = vec![
+        TransactionSummary {
+            id: "ethereum_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0xf4f5581090ee12768a2f8bad50a068ae031723864aa5fe217364d708474d442d_0x565d7f0f3c53e386".to_string(),
+            timestamp: 1601144162000,
+            tx_status: TransactionStatus::Success,
+            tx_info: TransactionInfo::Transfer(
+                Transfer {
+                    sender: "0x0000000000000000000000000000000000000000".to_string(),
+                    recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    direction: TransferDirection::Incoming,
+                    transfer_info: TransferInfo::Erc20(
+                        Erc20Transfer {
+                            token_address: "0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE".to_string(),
+                            token_name: Some(
+                                "Aave Interest bearing SNX".to_string(),
+                            ),
+                            token_symbol: Some(
+                                "aSNX".to_string(),
+                            ),
+                            logo_uri: Some(
+                                "https://gnosis-safe-token-logos.s3.amazonaws.com/0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE.png".to_string(),
+                            ),
+                            decimals: Some(
+                                18,
+                            ),
+                            value: "0".to_string(),
+                        },
+                    ),
+                },
+            ),
+            execution_info: None,
+        },
+        TransactionSummary {
+            id: "ethereum_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0xf4f5581090ee12768a2f8bad50a068ae031723864aa5fe217364d708474d442d_0xc12cf38e468e16d1".to_string(),
+            timestamp: 1601144162000,
+            tx_status: TransactionStatus::Success,
+            tx_info: TransactionInfo::Transfer(
+                Transfer {
+                    sender: "0x8fe8F5815835f5d08E115C7523D8Db9Bd160F56B".to_string(),
+                    recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    direction: TransferDirection::Incoming,
+                    transfer_info: TransferInfo::Erc20(
+                        Erc20Transfer {
+                            token_address: "0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE".to_string(),
+                            token_name: Some(
+                                "Aave Interest bearing SNX".to_string(),
+                            ),
+                            token_symbol: Some(
+                                "aSNX".to_string(),
+                            ),
+                            logo_uri: Some(
+                                "https://gnosis-safe-token-logos.s3.amazonaws.com/0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE.png".to_string(),
+                            ),
+                            decimals: Some(
+                                18,
+                            ),
+                            value: "1427100094192394400000".to_string(),
+                        },
+                    ),
+                },
+            ),
+            execution_info: None,
+        },
+    ] ;
+
+    let actual = EthereumTransaction::to_transaction_summary(
+        &ethereum_transaction,
+        &mut mock_info_provider,
+        "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+    );
+
+    assert_eq!(expected, actual);
+}

@@ -1,0 +1,49 @@
+{
+  "executionDate": "2020-09-26T18:16:02Z",
+  "to": "0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE",
+  "data": "0xa9059cbb000000000000000000000000cb4755ea7c0c05b6041c2a58f07bd922a37401fd00000000000000000000000000000000000000000000004d5cfe0691502b7100",
+  "txHash": "0xf4f5581090ee12768a2f8bad50a068ae031723864aa5fe217364d708474d442d",
+  "blockNumber": 10939803,
+  "transfers": [
+    {
+      "type": "ERC20_TRANSFER",
+      "executionDate": "2020-09-26T18:16:02Z",
+      "blockNumber": 10939803,
+      "transactionHash": "0xf4f5581090ee12768a2f8bad50a068ae031723864aa5fe217364d708474d442d",
+      "to": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+      "value": null,
+      "tokenId": "0",
+      "tokenAddress": "0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE",
+      "tokenInfo": {
+        "type": "ERC20",
+        "address": "0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE",
+        "name": "Aave Interest bearing SNX",
+        "symbol": "aSNX",
+        "decimals": 18,
+        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE.png"
+      },
+      "from": "0x0000000000000000000000000000000000000000"
+    },
+    {
+      "type": "ERC20_TRANSFER",
+      "executionDate": "2020-09-26T18:16:02Z",
+      "blockNumber": 10939803,
+      "transactionHash": "0xf4f5581090ee12768a2f8bad50a068ae031723864aa5fe217364d708474d442d",
+      "to": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+      "value": "1427100094192394400000",
+      "tokenId": null,
+      "tokenAddress": "0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE",
+      "tokenInfo": {
+        "type": "ERC20",
+        "address": "0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE",
+        "name": "Aave Interest bearing SNX",
+        "symbol": "aSNX",
+        "decimals": 18,
+        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x328C4c80BC7aCa0834Db37e6600A6c49E12Da4DE.png"
+      },
+      "from": "0x8fe8F5815835f5d08E115C7523D8Db9Bd160F56B"
+    }
+  ],
+  "txType": "ETHEREUM_TRANSACTION",
+  "from": "0x8fe8F5815835f5d08E115C7523D8Db9Bd160F56B"
+}

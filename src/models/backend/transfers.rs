@@ -51,21 +51,6 @@ pub struct Erc20Transfer {
 #[derive(Derivative, Deserialize, Debug, Clone)]
 #[derivative(Hash)]
 #[serde(rename_all = "camelCase")]
-pub struct Erc20TransferMalformed {
-    pub execution_date: DateTime<Utc>,
-    pub block_number: u64,
-    pub transaction_hash: String,
-    pub to: String,
-    pub token_id: String,
-    pub token_address: String,
-    #[derivative(Hash = "ignore")]
-    pub token_info: Option<TokenInfo>,
-    pub from: String,
-}
-
-#[derive(Derivative, Deserialize, Debug, Clone)]
-#[derivative(Hash)]
-#[serde(rename_all = "camelCase")]
 pub struct EtherTransfer {
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,

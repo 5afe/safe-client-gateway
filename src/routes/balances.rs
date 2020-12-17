@@ -1,4 +1,5 @@
 use crate::config::request_cache_duration;
+use crate::providers::info::DefaultInfoProvider;
 use crate::services::balances::*;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
@@ -25,5 +26,15 @@ pub fn get_balances(
                 trusted,
                 exclude_spam,
             )
+        })
+}
+
+#[get("/v1/balances/supported-fiat-codes")]
+pub fn get_supported_fiat(context: Context) -> ApiResult<content::Json<String>> {
+    context
+        .cache()
+        .cache_resp(&context.uri(), request_cache_duration(), || {
+            let info_provider = DefaultInfoProvider::new(&context);
+            Ok(info_provider.available_currency_codes()?)
         })
 }

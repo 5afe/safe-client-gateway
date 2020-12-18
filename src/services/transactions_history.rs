@@ -107,7 +107,7 @@ fn fetch_backend_paged_txs(
 ) -> Result<Page<Transaction>> {
     let page_metadata = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
     let url = format!(
-        "{}/v1/safes/{}/all-transactions/?{}&queued=false",
+        "{}/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",
         base_transaction_service_url(),
         safe_address,
         page_metadata.to_url_string()

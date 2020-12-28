@@ -2,6 +2,7 @@ extern crate chrono;
 
 pub mod details;
 pub mod safe_app_info;
+pub mod send_eth_request;
 pub mod summary;
 
 #[cfg(test)]

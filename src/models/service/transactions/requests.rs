@@ -11,6 +11,7 @@ pub struct ConfirmationRequest {
 pub enum SendFundsRequest {
     Ether(SendEthRequest),
     Erc20(SendErc20Request),
+    Erc721(SendErc721Request),
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
@@ -27,6 +28,17 @@ pub struct SendEthRequest {
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct SendErc20Request {
+    pub receiver: String,
+    pub sender: String,
+    pub data: String,
+    pub transaction_hash: String,
+    pub signed_transaction_hash: String,
+    pub nonce: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SendErc721Request {
     pub receiver: String,
     pub sender: String,
     pub data: String,

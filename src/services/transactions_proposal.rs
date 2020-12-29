@@ -1,12 +1,12 @@
 use crate::config::base_transaction_service_url;
-use crate::models::service::transactions::requests::SendEthRequest;
+use crate::models::service::transactions::requests::SendFundsRequest;
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
 
-pub fn send_eth(
+pub fn send_funds(
     context: &Context,
     safe_address: &str,
-    send_eth_request: &SendEthRequest,
+    send_eth_request: &SendFundsRequest,
 ) -> ApiResult<()> {
     let url = format!(
         "{}/v1/safes/{}/transactions/",

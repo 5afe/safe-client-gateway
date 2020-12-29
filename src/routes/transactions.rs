@@ -1,5 +1,5 @@
 use crate::config::request_cache_duration;
-use crate::models::service::transactions::requests::{ConfirmationRequest, SendEthRequest};
+use crate::models::service::transactions::requests::{ConfirmationRequest, SendFundsRequest};
 use crate::services::tx_confirmation;
 use crate::services::{
     transactions_details, transactions_history, transactions_list, transactions_proposal,
@@ -103,7 +103,7 @@ pub fn queued_transactions(
 pub fn send_eth(
     context: Context,
     safe_address: String,
-    send_eth_request: Json<SendEthRequest>,
+    send_eth_request: Json<SendFundsRequest>,
 ) -> ApiResult<()> {
-    transactions_proposal::send_eth(&context, &safe_address, &send_eth_request)
+    transactions_proposal::send_funds(&context, &safe_address, &send_eth_request)
 }

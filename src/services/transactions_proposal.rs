@@ -6,14 +6,14 @@ use crate::utils::errors::{ApiError, ApiResult};
 pub fn send_funds(
     context: &Context,
     safe_address: &str,
-    send_eth_request: &SendFundsRequest,
+    send_funds_request: &SendFundsRequest,
 ) -> ApiResult<()> {
     let url = format!(
         "{}/v1/safes/{}/transactions/",
         base_transaction_service_url(),
         &safe_address
     );
-    let core_service_request = send_eth_request.to_multisig_transaction_request();
+    let core_service_request = send_funds_request.to_multisig_transaction_request();
 
     let response = context
         .client()

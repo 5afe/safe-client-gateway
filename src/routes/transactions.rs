@@ -97,13 +97,13 @@ pub fn queued_transactions(
 }
 
 #[post(
-    "/v1/transactions/<safe_address>/eth_transfers",
-    data = "<send_eth_request>"
+    "/v1/transactions/<safe_address>/transfers",
+    data = "<send_funds_request>"
 )]
 pub fn send_eth(
     context: Context,
     safe_address: String,
-    send_eth_request: Json<SendFundsRequest>,
+    send_funds_request: Json<SendFundsRequest>,
 ) -> ApiResult<()> {
-    transactions_proposal::send_funds(&context, &safe_address, &send_eth_request)
+    transactions_proposal::send_funds(&context, &safe_address, &send_funds_request)
 }

@@ -9,6 +9,7 @@ pub struct TransactionSummary {
     pub tx_status: TransactionStatus,
     pub tx_info: TransactionInfo,
     pub execution_info: Option<ExecutionInfo>,
+    pub safe_app_info: Option<SafeAppInfo>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -19,6 +20,14 @@ pub struct ExecutionInfo {
     pub confirmations_submitted: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub missing_signers: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SafeAppInfo {
+    pub name: String,
+    pub url: String,
+    pub logo_url: String,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

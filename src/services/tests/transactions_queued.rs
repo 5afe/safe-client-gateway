@@ -240,9 +240,12 @@ fn process_transactions_no_conflicts_everything_queued() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
+
             conflict_type: ConflictType::None,
+
         },
         TransactionListItem::Transaction {
             transaction: TransactionSummary {
@@ -267,7 +270,8 @@ fn process_transactions_no_conflicts_everything_queued() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::None,
         },
@@ -294,7 +298,8 @@ fn process_transactions_no_conflicts_everything_queued() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::None,
         },
@@ -381,7 +386,8 @@ fn process_transactions_conflicts_in_queued() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::None,
         },
@@ -414,7 +420,8 @@ fn process_transactions_conflicts_in_queued() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
         },
@@ -441,7 +448,8 @@ fn process_transactions_conflicts_in_queued() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::End,
         }
@@ -524,14 +532,16 @@ fn process_transactions_conflicts_in_next() {
                         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "10".to_string()
-                    })
+                    }),
+
                 }),
                 execution_info: Some(ExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
         },
@@ -558,7 +568,8 @@ fn process_transactions_conflicts_in_next() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::End,
         },
@@ -588,7 +599,8 @@ fn process_transactions_conflicts_in_next() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::None,
         }
@@ -673,7 +685,8 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::End,
         },
@@ -703,7 +716,8 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
         },
@@ -730,7 +744,8 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                     confirmations_required: 3,
                     confirmations_submitted:1,
                     missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                })
+                }),
+                safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
         }

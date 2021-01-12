@@ -75,6 +75,7 @@ fn module_tx_to_summary_transaction() {
             value: String::from("0"),
             method_name: None,
         }),
+        safe_app_info: None,
     }];
     assert_eq!(actual, expected);
 }
@@ -161,6 +162,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
                 }),
             }),
             execution_info: None,
+            safe_app_info: None,
         },
         TransactionSummary {
             id: create_id!(
@@ -180,6 +182,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
                 }),
             }),
             execution_info: None,
+            safe_app_info: None,
         },
     ];
     assert_eq!(actual, expected);
@@ -213,6 +216,7 @@ fn creation_transaction_to_summary() {
             factory: Some(factory_address),
         }),
         execution_info: None,
+        safe_app_info: None,
     };
 
     let actual = creation_tx.to_transaction_summary(&safe_address);
@@ -261,6 +265,7 @@ fn multisig_transaction_to_erc20_transfer_summary() {
             confirmations_submitted: 3,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -308,6 +313,7 @@ fn multisig_transaction_to_erc721_transfer_summary() {
             confirmations_submitted: 3,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -351,6 +357,7 @@ fn multisig_transaction_to_ether_transfer_summary() {
             confirmations_submitted: 2,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -411,6 +418,7 @@ fn multisig_transaction_to_settings_change_summary() {
             confirmations_submitted: 2,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -451,6 +459,7 @@ fn multisig_transaction_to_custom_summary() {
             confirmations_submitted: 2,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -502,6 +511,7 @@ fn multisig_transaction_with_missing_signers() {
                 "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_owned(),
             ]),
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -547,6 +557,7 @@ fn ethereum_transaction_with_inconsistent_token_types() {
             }),
         }),
         execution_info: None,
+        safe_app_info: None,
     };
 
     assert_eq!(1, actual.len());

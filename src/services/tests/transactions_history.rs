@@ -85,6 +85,7 @@ fn backend_txs_to_summary_txs_with_values() {
              },
          ),
          execution_info: None,
+         safe_app_info: None,
      },
      TransactionSummary {
          id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x1cf24abdb39bb7b156677a128e709cea55c6991b12708904d1f0f3664ad6646e_0x16afbdc14cd51775".into(),
@@ -99,6 +100,7 @@ fn backend_txs_to_summary_txs_with_values() {
              },
          ),
          execution_info: None,
+         safe_app_info: None,
      },
      TransactionSummary {
          id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x3f12bb74cd91ef09d553f66e3623bceaf879ba3dcb325227b1fbf2455757891a_0x65c5d0bb2d9a7b14".into(),
@@ -113,6 +115,7 @@ fn backend_txs_to_summary_txs_with_values() {
              },
          ),
          execution_info: None,
+         safe_app_info: None,
      },
      TransactionSummary {
          id: "ethereum_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x021d4d8cb68f3f772906b58f97b66c6ead228c252627c5b1aff4b496d4ff0c2d_0xfd0dbbc7700a140f".into(),
@@ -144,6 +147,7 @@ fn backend_txs_to_summary_txs_with_values() {
              },
          ),
          execution_info: None,
+         safe_app_info: None,
      },
      TransactionSummary {
          id: "ethereum_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x5f4b7555f8e977ae302ab4125de685ccfacf52ac70e6f0aa2939bcb347f9a732_0xb7ceaac0cd5a85c5".into(),
@@ -173,6 +177,7 @@ fn backend_txs_to_summary_txs_with_values() {
              },
          ),
          execution_info: None,
+         safe_app_info: None,
      },
      TransactionSummary {
          id: "ethereum_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0xaafed95936f9d71eb8d9612e83f3f93f9decf33f11bbb4aa79cae98966ffa7fe_0x11bd3d64559a0af7".into(),
@@ -204,6 +209,7 @@ fn backend_txs_to_summary_txs_with_values() {
              },
          ),
          execution_info: None,
+         safe_app_info: None,
      },
  ];
     let actual = backend_txs_to_summary_txs(

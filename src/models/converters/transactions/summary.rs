@@ -58,6 +58,7 @@ impl MultisigTransaction {
                 missing_signers,
             }),
             tx_info: self.transaction_info(info_provider),
+            safe_app_info: None, // TODO conver origin
         }])
     }
 }
@@ -81,6 +82,7 @@ impl EthereumTransaction {
                     timestamp: self.execution_date.timestamp_millis(),
                     tx_status: TransactionStatus::Success,
                     execution_info: None,
+                    safe_app_info: None,
                     tx_info: transfer.to_transfer(info_provider, safe),
                 })
                 .collect(),
@@ -101,6 +103,7 @@ impl ModuleTransaction {
             timestamp: self.execution_date.timestamp_millis(),
             tx_status: TransactionStatus::Success,
             execution_info: None,
+            safe_app_info: None,
             tx_info: self.to_transaction_info(),
         }]
     }
@@ -119,6 +122,7 @@ impl CreationTransaction {
                 factory: self.factory_address.clone(),
             }),
             execution_info: None,
+            safe_app_info: None,
         }
     }
 }

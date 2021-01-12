@@ -4,6 +4,7 @@ use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
+use crate::models::converters::transactions::safe_app_info::to_safe_app_info;
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
     Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
@@ -58,7 +59,10 @@ impl MultisigTransaction {
                 missing_signers,
             }),
             tx_info: self.transaction_info(info_provider),
-            safe_app_info: None, // TODO conver origin
+            safe_app_info: self
+                .origin
+                .as_ref()
+                .and_then(|origin| to_safe_app_info(origin, info_provider)),
         }])
     }
 }

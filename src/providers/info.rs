@@ -16,6 +16,7 @@ use std::collections::HashMap;
 pub trait InfoProvider {
     fn safe_info(&mut self, safe: &str) -> Result<SafeInfo>;
     fn token_info(&mut self, token: &str) -> Result<TokenInfo>;
+    fn raw_request(&mut self, url: &str) -> ApiResult<String>;
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -75,6 +76,11 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         } else {
             anyhow::bail!("Token Address is 0x0")
         }
+    }
+
+    fn raw_request(&mut self, url: &str) -> ApiResult<String> {
+        self.cache
+            .request_cached(self.client, &url, exchange_api_cache_duration())
     }
 }
 

@@ -2,7 +2,10 @@ use crate::models::service::transactions::summary::SafeAppInfo;
 use crate::providers::info::InfoProvider;
 use serde::Deserialize;
 
-pub fn to_safe_app_info(origin: &str, info_provider: &mut dyn InfoProvider) -> Option<SafeAppInfo> {
+pub fn safe_app_info_from(
+    origin: &str,
+    info_provider: &mut dyn InfoProvider,
+) -> Option<SafeAppInfo> {
     let origin_internal = serde_json::from_str::<OriginInternal>(origin).ok();
     origin_internal
         .as_ref()

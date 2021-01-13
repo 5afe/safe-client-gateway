@@ -1,5 +1,6 @@
 use super::*;
 use crate::models::commons::{DataDecoded, Operation};
+use crate::models::service::transactions::summary::SafeAppInfo;
 use crate::providers::info::TokenInfo;
 use serde::Serialize;
 
@@ -12,6 +13,7 @@ pub struct TransactionDetails {
     pub tx_data: Option<TransactionData>,
     pub detailed_execution_info: Option<DetailedExecutionInfo>,
     pub tx_hash: Option<String>,
+    pub safe_app_info: Option<SafeAppInfo>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

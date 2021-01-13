@@ -1,4 +1,4 @@
-use crate::models::converters::transactions::safe_app_info::{to_safe_app_info, OriginInternal};
+use crate::models::converters::transactions::safe_app_info::{safe_app_info_from, OriginInternal};
 use crate::models::service::transactions::summary::SafeAppInfo;
 use crate::providers::info::*;
 use crate::utils::errors::{ApiError, ErrorDetails};
@@ -84,7 +84,7 @@ fn to_safe_app_info_bad_url() {
             })
         });
 
-    let actual = to_safe_app_info(origin, &mut mock_info_provider);
+    let actual = safe_app_info_from(origin, &mut mock_info_provider);
     assert!(actual.is_none());
 }
 
@@ -112,7 +112,7 @@ fn to_safe_app_info_correct() {
         logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
     };
 
-    let actual = to_safe_app_info(origin, &mut mock_info_provider);
+    let actual = safe_app_info_from(origin, &mut mock_info_provider);
     assert!(actual.is_some());
     assert_eq!(expected, actual.unwrap());
 }

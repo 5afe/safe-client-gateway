@@ -2,6 +2,7 @@ extern crate chrono;
 
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::Operation;
+use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
 use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
@@ -37,6 +38,10 @@ impl MultisigTransaction {
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
                 self.build_execution_details(safe_info, gas_token),
             )),
+            safe_app_info: self
+                .origin
+                .as_ref()
+                .and_then(|origin| safe_app_info_from(origin, info_provider)),
         })
     }
 
@@ -102,6 +107,7 @@ impl ModuleTransaction {
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {
                 address: self.module.to_owned(),
             })),
+            safe_app_info: None,
         })
     }
 }

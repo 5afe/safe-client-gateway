@@ -1,7 +1,6 @@
 use super::*;
 use crate::models::commons::{DataDecoded, Operation};
-use crate::models::service::transactions::summary::SafeAppInfo;
-use crate::providers::info::TokenInfo;
+use crate::providers::info::{SafeAppInfo, TokenInfo};
 use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq)]

@@ -8,9 +8,7 @@ use crate::models::backend::transfers::{
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::converters::transactions::data_size;
-use crate::models::service::transactions::summary::{
-    ExecutionInfo, SafeAppInfo, TransactionSummary,
-};
+use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
     Creation, Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, SettingsInfo,
     TransactionInfo, TransactionStatus, Transfer, TransferDirection, TransferInfo,
@@ -580,17 +578,14 @@ fn multisig_transaction_with_origin() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
-        .expect_raw_request()
+        .expect_safe_app_info()
         .times(1)
         .return_once(move |_| {
-            Ok(json!({
-                "name": "WalletConnect".to_string(),
-                "description":
-                    "Allows your Gnosis Safe Multisig to connect to dapps via WalletConnect."
-                        .to_string(),
-                "iconPath": "walletConnect.jpg".to_string(),
+            Ok(SafeAppInfo {
+                name: "WalletConnect".to_string(),
+                url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
+                logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
             })
-            .to_string())
         });
     mock_info_provider.expect_token_info().times(0);
 

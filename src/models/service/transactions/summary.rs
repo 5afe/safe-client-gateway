@@ -1,4 +1,5 @@
 use super::*;
+use crate::providers::info::SafeAppInfo;
 use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -20,14 +21,6 @@ pub struct ExecutionInfo {
     pub confirmations_submitted: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub missing_signers: Option<Vec<String>>,
-}
-
-#[derive(Serialize, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct SafeAppInfo {
-    pub name: String,
-    pub url: String,
-    pub logo_url: String,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

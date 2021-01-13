@@ -1,7 +1,5 @@
 use crate::models::converters::transactions::safe_app_info::{safe_app_info_from, OriginInternal};
-use crate::models::service::transactions::summary::SafeAppInfo;
 use crate::providers::info::*;
-use crate::utils::errors::{ApiError, ErrorDetails};
 
 #[test]
 fn valid_full_origin_data() {
@@ -71,18 +69,9 @@ fn to_safe_app_info_bad_url() {
     let origin = "{\"url\":\"https://apps.gnosis-safe.io/walletConnect\"}";
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_raw_request()
+        .expect_safe_app_info()
         .times(1)
-        .return_once(move |_| {
-            Err(ApiError {
-                status: 404,
-                details: ErrorDetails {
-                    code: 42,
-                    message: None,
-                    arguments: None,
-                },
-            })
-        });
+        .return_once(move |_| anyhow::bail!("Some http error"));
 
     let actual = safe_app_info_from(origin, &mut mock_info_provider);
     assert!(actual.is_none());
@@ -93,17 +82,14 @@ fn to_safe_app_info_correct() {
     let origin = "{\"url\":\"https://apps.gnosis-safe.io/walletConnect\"}";
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_raw_request()
+        .expect_safe_app_info()
         .times(1)
         .return_once(move |_| {
-            Ok(json!({
-                "name": "WalletConnect".to_string(),
-                "description":
-                    "Allows your Gnosis Safe Multisig to connect to dapps via WalletConnect."
-                        .to_string(),
-                "iconPath": "walletConnect.jpg".to_string(),
+            Ok(SafeAppInfo {
+                name: "WalletConnect".to_string(),
+                url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
+                logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
             })
-            .to_string())
         });
 
     let expected = SafeAppInfo {

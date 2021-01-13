@@ -7,12 +7,10 @@ use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
 };
-use crate::models::service::transactions::summary::SafeAppInfo;
 use crate::models::service::transactions::{
     Custom, Erc721Transfer, TransactionInfo, TransactionStatus, Transfer, TransferDirection,
     TransferInfo,
 };
-use crate::providers::info::SafeInfo;
 use crate::providers::info::*;
 
 #[test]
@@ -200,17 +198,14 @@ fn multisig_transaction_with_origin() {
         .times(1)
         .return_once(move |_| anyhow::bail!("No token info"));
     mock_info_provider
-        .expect_raw_request()
+        .expect_safe_app_info()
         .times(1)
         .return_once(move |_| {
-            Ok(json!({
-                "name": "WalletConnect".to_string(),
-                "description":
-                    "Allows your Gnosis Safe Multisig to connect to dapps via WalletConnect."
-                        .to_string(),
-                "iconPath": "walletConnect.jpg".to_string(),
+            Ok(SafeAppInfo {
+                name: "WalletConnect".to_string(),
+                url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
+                logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
             })
-            .to_string())
         });
     mock_info_provider.expect_token_info().times(0);
 
@@ -265,13 +260,6 @@ fn multisig_transaction_with_origin() {
                      }
                 ],
                 gas_token_info: None,
-                // gas_token_info: Some(TokenInfo {
-                //     token_type: TokenType::Erc20,
-                //     address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
-                //     decimals: 18, symbol: "USDT".to_string(),
-                //     name: "Compound USDT".to_string(),
-                //     logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png".to_string())
-                // }), 
             })),
         safe_app_info: Some(SafeAppInfo {
             name: "WalletConnect".to_string(),

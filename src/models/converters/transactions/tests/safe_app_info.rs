@@ -1,6 +1,4 @@
-use crate::models::converters::transactions::safe_app_info::{
-    to_safe_app_info, Manifest, OriginInternal,
-};
+use crate::models::converters::transactions::safe_app_info::{to_safe_app_info, OriginInternal};
 use crate::models::service::transactions::summary::SafeAppInfo;
 use crate::providers::info::*;
 use crate::utils::errors::{ApiError, ErrorDetails};

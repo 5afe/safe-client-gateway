@@ -176,3 +176,82 @@ fn ethereum_tx_transfer_to_transaction_details() {
 
     assert_eq!(expected, actual.unwrap());
 }
+
+// #[test]
+// fn multisig_transaction_with_origin() {
+//     let multisig_tx =
+//         serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_WITH_ORIGIN).unwrap();
+//     let mut safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+//     // Lower nonce so that transaction is pending again
+//     safe_info.nonce = 140;
+//
+//     let mut mock_info_provider = MockInfoProvider::new();
+//     mock_info_provider
+//         .expect_safe_info()
+//         .times(1)
+//         .return_once(move |_| Ok(safe_info));
+//     mock_info_provider
+//         .expect_raw_request()
+//         .times(1)
+//         .return_once(move |_| {
+//             Ok(json!({
+//                 "name": "WalletConnect".to_string(),
+//                 "description":
+//                     "Allows your Gnosis Safe Multisig to connect to dapps via WalletConnect."
+//                         .to_string(),
+//                 "iconPath": "walletConnect.jpg".to_string(),
+//             })
+//             .to_string())
+//         });
+//     mock_info_provider.expect_token_info().times(0);
+//
+//     let expected = TransactionDetails {
+//         executed_at: Some(multisig_tx.execution_date.unwrap().timestamp_millis()),
+//         tx_status: TransactionStatus::Success,
+//         tx_info: TransactionInfo::Custom(Custom {
+//             to: "0x8D29bE29923b68abfDD21e541b9374737B49cdAD".to_string(),
+//             data_size: "3108".to_string(),
+//             value: "0".to_string(),
+//             method_name: Some("multiSend".to_string()),
+//         }),
+//         tx_data: Some(TransactionData {
+//             hex_data: None,
+//             data_decoded: None,
+//             to: "".to_string(),
+//             value: None,
+//             operation: Operation::CALL,
+//         }),
+//         detailed_execution_info: Some(MultisigExecutionDetails {
+//             nonce: 160,
+//             confirmations_required: 2,
+//             submitted_at: 0,
+//             safe_tx_gas: 0,
+//             base_gas: 0,
+//             gas_price: "".to_string(),
+//             gas_token: "".to_string(),
+//             refund_receiver: "".to_string(),
+//             safe_tx_hash: "".to_string(),
+//             executor: None,
+//             signers: vec![],
+//             confirmations_required: 0,
+//             confirmations: vec![],
+//             gas_token_info: None,
+//         }),
+//         execution_info: Some(ExecutionInfo {
+//             nonce: 160,
+//             confirmations_required: 2,
+//             confirmations_submitted: 2,
+//             missing_signers: None,
+//         }),
+//         safe_app_info: Some(SafeAppInfo {
+//             name: "WalletConnect".to_string(),
+//             url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
+//             logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+//         }),
+//         tx_hash: None,
+//     };
+//
+//     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
+//
+//     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
+// }

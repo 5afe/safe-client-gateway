@@ -9,9 +9,9 @@ pub fn to_safe_app_info(origin: &str, info_provider: &mut dyn InfoProvider) -> O
         .map(|origin| origin.to_safe_app_info(info_provider))
 }
 
-#[derive(Deserialize, Debug)]
-struct OriginInternal {
-    url: String,
+#[derive(Deserialize, Debug, PartialEq)]
+pub(super) struct OriginInternal {
+    pub(super) url: String,
 }
 
 impl OriginInternal {

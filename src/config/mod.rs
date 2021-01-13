@@ -35,6 +35,10 @@ pub fn about_cache_duration() -> usize {
     usize_with_default("ABOUT_CACHE_DURATION", request_cache_duration())
 }
 
+pub fn long_cache() -> usize {
+    usize_with_default("REQUEST_CACHE_DURATION", 60 * 60 * 24 * 7) // is a week good?
+}
+
 pub fn build_number() -> Option<String> {
     option_env!("BUILD_NUMBER").map(|it| it.to_string())
 }

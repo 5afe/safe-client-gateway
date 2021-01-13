@@ -1,5 +1,5 @@
 use crate::config::{
-    base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
+    base_transaction_service_url, exchange_api_cache_duration, info_cache_duration, long_cache,
 };
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
@@ -79,8 +79,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     fn raw_request(&mut self, url: &str) -> ApiResult<String> {
-        self.cache
-            .request_cached(self.client, &url, exchange_api_cache_duration())
+        self.cache.request_cached(self.client, &url, long_cache())
     }
 }
 

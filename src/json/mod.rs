@@ -32,6 +32,7 @@ pub const MULTISIG_TX_AWAITING_CONFIRMATIONS_REQUIRED_NULL: &str =
     include_str!("transactions/multisig_awaiting_confirmations_required_null.json");
 pub const MULTISIG_TX_CONFIRMATIONS_NULL: &str =
     include_str!("transactions/multisig_confirmations_null.json");
+pub const MULTISIG_TX_WITH_ORIGIN: &str = include_str!("transactions/multisig_with_origin.json");
 
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 

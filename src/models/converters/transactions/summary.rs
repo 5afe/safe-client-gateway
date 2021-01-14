@@ -4,6 +4,7 @@ use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
+use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
     Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
@@ -58,6 +59,10 @@ impl MultisigTransaction {
                 missing_signers,
             }),
             tx_info: self.transaction_info(info_provider),
+            safe_app_info: self
+                .origin
+                .as_ref()
+                .and_then(|origin| safe_app_info_from(origin, info_provider)),
         }])
     }
 }
@@ -81,6 +86,7 @@ impl EthereumTransaction {
                     timestamp: self.execution_date.timestamp_millis(),
                     tx_status: TransactionStatus::Success,
                     execution_info: None,
+                    safe_app_info: None,
                     tx_info: transfer.to_transfer(info_provider, safe),
                 })
                 .collect(),
@@ -101,6 +107,7 @@ impl ModuleTransaction {
             timestamp: self.execution_date.timestamp_millis(),
             tx_status: TransactionStatus::Success,
             execution_info: None,
+            safe_app_info: None,
             tx_info: self.to_transaction_info(),
         }]
     }
@@ -119,6 +126,7 @@ impl CreationTransaction {
                 factory: self.factory_address.clone(),
             }),
             execution_info: None,
+            safe_app_info: None,
         }
     }
 }

@@ -1,4 +1,5 @@
 use super::*;
+use crate::providers::info::SafeAppInfo;
 use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -9,6 +10,7 @@ pub struct TransactionSummary {
     pub tx_status: TransactionStatus,
     pub tx_info: TransactionInfo,
     pub execution_info: Option<ExecutionInfo>,
+    pub safe_app_info: Option<SafeAppInfo>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

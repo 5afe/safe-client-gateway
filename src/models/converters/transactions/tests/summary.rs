@@ -75,6 +75,7 @@ fn module_tx_to_summary_transaction() {
             value: String::from("0"),
             method_name: None,
         }),
+        safe_app_info: None,
     }];
     assert_eq!(actual, expected);
 }
@@ -161,6 +162,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
                 }),
             }),
             execution_info: None,
+            safe_app_info: None,
         },
         TransactionSummary {
             id: create_id!(
@@ -180,6 +182,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
                 }),
             }),
             execution_info: None,
+            safe_app_info: None,
         },
     ];
     assert_eq!(actual, expected);
@@ -213,6 +216,7 @@ fn creation_transaction_to_summary() {
             factory: Some(factory_address),
         }),
         execution_info: None,
+        safe_app_info: None,
     };
 
     let actual = creation_tx.to_transaction_summary(&safe_address);
@@ -261,6 +265,7 @@ fn multisig_transaction_to_erc20_transfer_summary() {
             confirmations_submitted: 3,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -308,6 +313,7 @@ fn multisig_transaction_to_erc721_transfer_summary() {
             confirmations_submitted: 3,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -351,6 +357,7 @@ fn multisig_transaction_to_ether_transfer_summary() {
             confirmations_submitted: 2,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -411,6 +418,7 @@ fn multisig_transaction_to_settings_change_summary() {
             confirmations_submitted: 2,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -451,6 +459,7 @@ fn multisig_transaction_to_custom_summary() {
             confirmations_submitted: 2,
             missing_signers: None,
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -502,6 +511,7 @@ fn multisig_transaction_with_missing_signers() {
                 "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_owned(),
             ]),
         }),
+        safe_app_info: None,
     };
 
     let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
@@ -547,8 +557,66 @@ fn ethereum_transaction_with_inconsistent_token_types() {
             }),
         }),
         execution_info: None,
+        safe_app_info: None,
     };
 
     assert_eq!(1, actual.len());
     assert_eq!(&expected, actual.first().unwrap());
+}
+
+#[test]
+fn multisig_transaction_with_origin() {
+    let multisig_tx =
+        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_WITH_ORIGIN).unwrap();
+    let mut safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    // Lower nonce so that transaction is pending again
+    safe_info.nonce = 140;
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(1)
+        .return_once(move |_| Ok(safe_info));
+    mock_info_provider
+        .expect_safe_app_info()
+        .times(1)
+        .return_once(move |_| {
+            Ok(SafeAppInfo {
+                name: "WalletConnect".to_string(),
+                url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
+                logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+            })
+        });
+    mock_info_provider.expect_token_info().times(0);
+
+    let expected = TransactionSummary {
+        id: create_id!(
+            ID_PREFIX_MULTISIG_TX,
+            "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+            "0x728e6dec56dc61523b56dc440e34c1c4c39c66895df8e5d3499ed1f7d4fcfe80"
+        ),
+        timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::Custom(Custom {
+            to: "0x8D29bE29923b68abfDD21e541b9374737B49cdAD".to_string(),
+            data_size: "3108".to_string(),
+            value: "0".to_string(),
+            method_name: Some("multiSend".to_string()),
+        }),
+        execution_info: Some(ExecutionInfo {
+            nonce: 160,
+            confirmations_required: 2,
+            confirmations_submitted: 2,
+            missing_signers: None,
+        }),
+        safe_app_info: Some(SafeAppInfo {
+            name: "WalletConnect".to_string(),
+            url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
+            logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+        }),
+    };
+
+    let actual = MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider);
+
+    assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }

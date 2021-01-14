@@ -157,6 +157,7 @@ fn transfer_dto_to_transaction_details() {
         tx_hash: Some(
             "0x41b610e8cce50bbe3aa06d6953ecc5f92a838aedc024a265c0afca7ec4f33bdf".to_string(),
         ),
+        safe_app_info: None,
     };
 
     let actual = ether_transfer_dto

@@ -1,5 +1,6 @@
 use crate::config::{
     base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
+    safe_app_manifest_cache,
 };
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
@@ -16,6 +17,7 @@ use std::collections::HashMap;
 pub trait InfoProvider {
     fn safe_info(&mut self, safe: &str) -> Result<SafeInfo>;
     fn token_info(&mut self, token: &str) -> Result<TokenInfo>;
+    fn safe_app_info(&mut self, url: &str) -> Result<SafeAppInfo>;
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -41,6 +43,22 @@ pub struct SafeInfo {
     pub nonce: u64,
     pub threshold: u64,
     pub owners: Vec<String>,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SafeAppInfo {
+    pub name: String,
+    pub url: String,
+    pub logo_url: String,
+}
+
+#[derive(Deserialize, Debug, PartialEq)]
+struct Manifest {
+    pub(super) name: String,
+    pub(super) description: String,
+    #[serde(rename(deserialize = "iconPath"))]
+    pub(super) icon_path: String,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -75,6 +93,19 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         } else {
             anyhow::bail!("Token Address is 0x0")
         }
+    }
+
+    fn safe_app_info(&mut self, url: &str) -> Result<SafeAppInfo> {
+        let manifest_url = format!("{}/manifest.json", url);
+        let manifest_json =
+            self.cache
+                .request_cached(self.client, &manifest_url, safe_app_manifest_cache())?;
+        let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
+        Ok(SafeAppInfo {
+            name: manifest.name.to_owned(),
+            url: url.to_owned(),
+            logo_url: format!("{}/{}", url, manifest.icon_path),
+        })
     }
 }
 

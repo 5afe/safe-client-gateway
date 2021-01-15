@@ -1,4 +1,5 @@
-use crate::models::commons::{DataDecoded, ParamValue};
+use crate::models::commons::ValueDecodedType::InternalTransaction;
+use crate::models::commons::{DataDecoded, ParamValue, ValueDecodedType};
 use rocket::http::uri::Absolute;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
@@ -51,6 +52,37 @@ impl DataDecoded {
                 }
                 _ => None,
             })
+    }
+
+    pub fn get_parameter_array_value_decoded(
+        &self,
+        parameter_name: &str,
+    ) -> Option<ValueDecodedType> {
+        self.parameters
+            .as_ref()?
+            .iter()
+            .find_map(|param| match &param.value {
+                ParamValue::SingleValue(_) => {
+                    if param.name == parameter_name {
+                        param.value_decoded.to_owned()
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            })
+    }
+
+    pub fn get_action_count(&self) -> Option<usize> {
+        if self.method == "multiSend" {
+            self.get_parameter_array_value_decoded("transactions")
+                .as_ref()
+                .map(|value_decoded| match value_decoded {
+                    InternalTransaction(internal_transactions) => internal_transactions.len(),
+                })
+        } else {
+            None
+        }
     }
 
     pub fn get_parameter_single_value_at(&self, position: usize) -> Option<String> {

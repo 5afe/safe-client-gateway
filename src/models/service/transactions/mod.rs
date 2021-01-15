@@ -151,6 +151,8 @@ pub struct Custom {
     pub data_size: String,
     pub value: String,
     pub method_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub action_count: Option<usize>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

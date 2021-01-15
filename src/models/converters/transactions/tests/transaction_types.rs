@@ -21,6 +21,7 @@ fn transaction_operation_not_call() {
         data_size: "68".to_string(),
         value: "0".to_string(),
         method_name: Some("transfer".to_string()),
+        action_count: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -42,6 +43,7 @@ fn transaction_data_size_and_value_greater_than_0() {
         data_size: "68".to_string(),
         value: "100000000000000000".to_string(),
         method_name: Some("transfer".to_string()),
+        action_count: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -120,6 +122,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method(
         data_size: "68".to_string(),
         value: "0".to_string(),
         method_name: Some("newAndDifferentAddOwnerWithThreshold".to_string()),
+        action_count: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -203,6 +206,7 @@ fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
         data_size: "68".to_string(),
         value: "0".to_string(),
         method_name: Some("transferFrom".to_string()),
+        action_count: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -224,6 +228,7 @@ fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
         data_size: "68".to_string(),
         value: "0".to_string(),
         method_name: Some("safeTransferFrom".to_string()),
+        action_count: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -255,6 +260,7 @@ fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() 
         data_size: "68".to_string(),
         value: "0".to_string(),
         method_name: Some("transfer".to_string()),
+        action_count: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -278,6 +284,7 @@ fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
         data_size: "68".to_string(),
         value: "0".to_string(),
         method_name: Some("transfer".to_string()),
+        action_count: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);

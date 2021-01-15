@@ -26,6 +26,10 @@ pub const CHANGE_THRESHOLD: &'static str = "changeThreshold";
 pub const CHANGE_MASTER_COPY: &'static str = "changeMasterCopy";
 pub const ENABLE_MODULE: &'static str = "enableModule";
 pub const DISABLE_MODULE: &'static str = "disableModule";
+
+pub const MULTI_SEND: &'static str = "multiSend";
+pub const MULTI_SEND_TRANSACTIONS_PARAM: &'static str = "transactions";
+
 pub const SETTINGS_CHANGE_METHODS: &[&str] = &[
     SET_FALLBACK_HANDLER,
     ADD_OWNER_WITH_THRESHOLD,
@@ -71,8 +75,8 @@ impl DataDecoded {
     }
 
     pub fn get_action_count(&self) -> Option<usize> {
-        if self.method == "multiSend" {
-            self.get_parameter_value_decoded("transactions")
+        if self.method == MULTI_SEND {
+            self.get_parameter_value_decoded(MULTI_SEND_TRANSACTIONS_PARAM)
                 .as_ref()
                 .map(|value_decoded| match value_decoded {
                     InternalTransaction(internal_transactions) => internal_transactions.len(),

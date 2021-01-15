@@ -74,6 +74,7 @@ fn module_tx_to_summary_transaction() {
             data_size: String::from("0"),
             value: String::from("0"),
             method_name: None,
+            action_count: None,
         }),
         safe_app_info: None,
     }];
@@ -452,6 +453,7 @@ fn multisig_transaction_to_custom_summary() {
             data_size: "68".to_string(),
             value: "0".to_string(),
             method_name: Some("approve".to_string()),
+            action_count: None,
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 84,
@@ -602,6 +604,7 @@ fn multisig_transaction_with_origin() {
             data_size: "3108".to_string(),
             value: "0".to_string(),
             method_name: Some("multiSend".to_string()),
+            action_count: Some(1),
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 160,

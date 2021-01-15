@@ -54,10 +54,7 @@ impl DataDecoded {
             })
     }
 
-    pub fn get_parameter_array_value_decoded(
-        &self,
-        parameter_name: &str,
-    ) -> Option<ValueDecodedType> {
+    pub fn get_parameter_value_decoded(&self, parameter_name: &str) -> Option<ValueDecodedType> {
         self.parameters
             .as_ref()?
             .iter()
@@ -75,7 +72,7 @@ impl DataDecoded {
 
     pub fn get_action_count(&self) -> Option<usize> {
         if self.method == "multiSend" {
-            self.get_parameter_array_value_decoded("transactions")
+            self.get_parameter_value_decoded("transactions")
                 .as_ref()
                 .map(|value_decoded| match value_decoded {
                     InternalTransaction(internal_transactions) => internal_transactions.len(),

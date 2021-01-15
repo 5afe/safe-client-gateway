@@ -92,6 +92,10 @@ pub const DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE: &str =
     include_str!("commons/data_decoded_exec_transaction_from_module.json");
 pub const DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED: &str =
     include_str!("commons/data_decoded_nested_safe_interaction.json");
+pub const DATA_DECODED_SWAP_ARRAY_VALUES: &str =
+    include_str!("commons/data_decoded_swap_array_values.json");
+pub const DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION: &str =
+    include_str!("commons/data_decoded_multi_send_single_inner_transaction.json");
 
 pub const BALANCE_ETHER: &str = include_str!("balances/balance_ether.json");
 pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound_ether.json");

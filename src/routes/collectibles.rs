@@ -15,7 +15,7 @@ pub fn list(
     let trusted = trusted.unwrap_or(false);
     let exclude_spam = exclude_spam.unwrap_or(true);
     let url = format!(
-        "{}/v1/safes/{}/collectibles?trusted={}&exclude_spam={}",
+        "{}/v1/safes/{}/collectibles/?trusted={}&exclude_spam={}",
         base_transaction_service_url(),
         safe_address,
         trusted,

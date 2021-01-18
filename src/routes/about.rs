@@ -15,6 +15,6 @@ pub fn info(context: Context) -> ApiResult<content::Json<String>> {
 
 #[get("/about/backbone")]
 pub fn backbone(context: Context) -> ApiResult<content::Json<String>> {
-    let url = format!("{}/v1/about", base_transaction_service_url());
+    let url = format!("{}/v1/about/", base_transaction_service_url());
     Ok(content::Json(context.client().get(&url).send()?.text()?))
 }

@@ -13,7 +13,7 @@ use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use anyhow::Result;
-use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
+use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 
 pub fn get_history_transactions(
@@ -23,6 +23,11 @@ pub fn get_history_transactions(
     timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let mut info_provider = DefaultInfoProvider::new(context);
+    let request_timezone_offset = timezone_offset
+        .as_ref()
+        .and_then(|it| it.parse::<i32>().ok())
+        .unwrap_or(0)
+        / 1000;
 
     let incoming_page_metadata =
         PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
@@ -33,8 +38,13 @@ pub fn get_history_transactions(
     let backend_paged_txs = fetch_backend_paged_txs(context, safe_address, &extended_page_url)?;
     let mut backend_txs_iter = backend_paged_txs.results.into_iter();
     let prev_page_timestamp = if page_metadata.offset != 0 {
-        peek_timestamp_and_remove_item(&mut backend_txs_iter, &mut info_provider, safe_address)
-            .unwrap_or(-1)
+        peek_timestamp_and_remove_item(
+            &mut backend_txs_iter,
+            &mut info_provider,
+            safe_address,
+            request_timezone_offset,
+        )
+        .unwrap_or(-1)
     } else {
         -1
     };
@@ -46,7 +56,8 @@ pub fn get_history_transactions(
         service_txs.push(creation_tx);
     }
 
-    let tx_list_items = service_txs_to_tx_list_items(service_txs, prev_page_timestamp)?;
+    let tx_list_items =
+        service_txs_to_tx_list_items(service_txs, prev_page_timestamp, request_timezone_offset)?;
 
     Ok(Page {
         next: build_page_url(
@@ -138,11 +149,12 @@ pub(super) fn backend_txs_to_summary_txs(
 pub(super) fn service_txs_to_tx_list_items(
     txs: Vec<TransactionSummary>,
     last_timestamp: i64,
+    timezone_offset: i32,
 ) -> Result<Vec<TransactionListItem>> {
     let mut tx_list_items = Vec::new();
     for (date_timestamp, transaction_group) in &txs
         .into_iter()
-        .group_by(|transaction| get_day_timestamp_millis(transaction.timestamp))
+        .group_by(|transaction| get_day_timestamp_millis(transaction.timestamp, timezone_offset))
     {
         if date_timestamp != last_timestamp {
             tx_list_items.push(TransactionListItem::DateLabel {
@@ -163,6 +175,7 @@ pub(super) fn peek_timestamp_and_remove_item(
     transactions: &mut dyn Iterator<Item = Transaction>,
     info_provider: &mut dyn InfoProvider,
     safe_address: &str,
+    timezone_offset: i32,
 ) -> Result<i64> {
     let timestamp = transactions
         .next()
@@ -172,14 +185,16 @@ pub(super) fn peek_timestamp_and_remove_item(
         .ok_or(anyhow::anyhow!("empty transactions"))?
         .timestamp;
 
-    Ok(get_day_timestamp_millis(timestamp))
+    Ok(get_day_timestamp_millis(timestamp, timezone_offset))
 }
 
-pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64) -> i64 {
+pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64, timezone_offset: i32) -> i64 {
     let date_time = DateTime::<Utc>::from_utc(
         NaiveDateTime::from_timestamp(timestamp_in_millis / 1000, 0),
         Utc,
-    );
+    )
+    .with_timezone(&FixedOffset::east(timezone_offset));
+
     let date =
         NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap();
     date.and_hms_milli(0, 0, 0, 0).timestamp() * 1000

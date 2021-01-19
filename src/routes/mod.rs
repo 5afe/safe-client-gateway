@@ -1,5 +1,6 @@
 extern crate rocket;
 
+use rocket::response::Redirect;
 use rocket::Catcher;
 use rocket::Route;
 use rocket_contrib::json::JsonValue;
@@ -13,6 +14,7 @@ pub mod transactions;
 
 pub fn active_routes() -> Vec<Route> {
     routes![
+        root,
         about::backbone,
         about::info,
         balances::get_balances,
@@ -46,4 +48,9 @@ fn panic() -> JsonValue {
         "status": "error",
         "reason": "Server error occurred."
     })
+}
+
+#[get("/")]
+pub fn root() -> Redirect {
+    Redirect::temporary("https://github.com/gnosis/safe-client-gateway/wiki")
 }

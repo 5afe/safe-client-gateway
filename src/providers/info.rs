@@ -2,6 +2,7 @@ use crate::config::{
     base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
     safe_app_manifest_cache,
 };
+use crate::providers::address_info::AddressInfo;
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -18,6 +19,7 @@ pub trait InfoProvider {
     fn safe_info(&mut self, safe: &str) -> Result<SafeInfo>;
     fn token_info(&mut self, token: &str) -> Result<TokenInfo>;
     fn safe_app_info(&mut self, url: &str) -> Result<SafeAppInfo>;
+    fn address_info(&mut self, address: &str) -> Result<AddressInfo>;
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -106,6 +108,12 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             url: url.to_owned(),
             logo_url: format!("{}/{}", url, manifest.icon_path),
         })
+    }
+
+    fn address_info(&mut self, address: &str) -> Result<AddressInfo> {
+        self.token_info(address)
+            .map(|it| AddressInfo::TokenInfo(it))
+            .or_else(|_| anyhow::bail!("No impl for known address yet"))
     }
 }
 

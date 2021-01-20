@@ -228,9 +228,9 @@ fn backend_txs_to_summary_txs_with_values() {
 #[test]
 fn service_txs_to_tx_list_items_empty() {
     let service_tx: Vec<TransactionSummary> = vec![];
-    let berlin_timezone_offset = 3600;
+    let utc_timezone_offset = 0;
 
-    let actual = service_txs_to_tx_list_items(service_tx, -1, berlin_timezone_offset).unwrap();
+    let actual = service_txs_to_tx_list_items(service_tx, -1, utc_timezone_offset).unwrap();
 
     assert_eq!(actual.is_empty(), true);
 }
@@ -242,7 +242,7 @@ fn service_txs_to_tx_list_items_last_timestamp_undefined() {
     mock_info_provider.expect_token_info().times(0);
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
-    let berlin_timezone_offset = 3600;
+    let utc_timezone_offset = 0;
 
     let mut service_txs_inter = service_txs.into_iter();
 
@@ -279,15 +279,14 @@ fn service_txs_to_tx_list_items_last_timestamp_undefined() {
         },
     ];
 
-    let actual =
-        service_txs_to_tx_list_items(service_txs_copy, -1, berlin_timezone_offset).unwrap();
+    let actual = service_txs_to_tx_list_items(service_txs_copy, -1, utc_timezone_offset).unwrap();
     assert_eq!(expected, actual);
 }
 
 #[test]
 fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
     let last_timestamp = 1606867200000;
-    let berlin_timezone_offset = 3600;
+    let utc_timezone_offset = 0;
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -331,7 +330,7 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
     ];
 
     let actual =
-        service_txs_to_tx_list_items(service_txs_copy, last_timestamp, berlin_timezone_offset)
+        service_txs_to_tx_list_items(service_txs_copy, last_timestamp, utc_timezone_offset)
             .unwrap();
     assert_eq!(expected, actual);
 }
@@ -339,7 +338,7 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
 #[test]
 fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     let last_timestamp = 1606780800000;
-    let berlin_timezone_offset = 3600;
+    let utc_timezone_offset = 0;
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -380,7 +379,7 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     ];
 
     let actual =
-        service_txs_to_tx_list_items(service_txs_copy, last_timestamp, berlin_timezone_offset)
+        service_txs_to_tx_list_items(service_txs_copy, last_timestamp, utc_timezone_offset)
             .unwrap();
     assert_eq!(expected, actual);
 }
@@ -393,13 +392,13 @@ fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
 
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
-    let berlin_timezone_offset = 3600; // + 1 hours
+    let berlin_timezone_offset = 3600; // + 1 hours Germany/Berlin
 
     let mut service_txs_inter = service_txs.into_iter();
 
     let expected = vec![
         TransactionListItem::DateLabel {
-            timestamp: 1606780800000,
+            timestamp: 1606777200000,
         },
         TransactionListItem::Transaction {
             transaction: service_txs_inter.next().unwrap(),
@@ -414,7 +413,7 @@ fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
             conflict_type: ConflictType::None,
         },
         TransactionListItem::DateLabel {
-            timestamp: 1606694400000,
+            timestamp: 1606690800000,
         },
         TransactionListItem::Transaction {
             transaction: service_txs_inter.next().unwrap(),
@@ -436,20 +435,20 @@ fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
 }
 
 #[test]
-fn service_txs_to_tx_list_items_date_label_someplace_else_timezone() {
+fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
-    let berlin_timezone_offset = 39600; // + 11 hours Melbourne/Australia
+    let melbourne_timezone_offset = 39600; // + 11 hours Melbourne/Australia
 
     let mut service_txs_inter = service_txs.into_iter();
 
     let expected = vec![
         TransactionListItem::DateLabel {
-            timestamp: 1606867200000, // 2020/12/02
+            timestamp: 1606827600000, // 2020/12/02
         },
         TransactionListItem::Transaction {
             transaction: service_txs_inter.next().unwrap(),
@@ -464,7 +463,7 @@ fn service_txs_to_tx_list_items_date_label_someplace_else_timezone() {
             conflict_type: ConflictType::None,
         },
         TransactionListItem::DateLabel {
-            timestamp: 1606780800000, // 2020/12/01
+            timestamp: 1606741200000, // 2020/12/01
         },
         TransactionListItem::Transaction {
             transaction: service_txs_inter.next().unwrap(),
@@ -475,7 +474,7 @@ fn service_txs_to_tx_list_items_date_label_someplace_else_timezone() {
             conflict_type: ConflictType::None,
         },
         TransactionListItem::DateLabel {
-            timestamp: 1606694400000, // 2020/11/30
+            timestamp: 1606654800000, // 2020/11/30
         },
         TransactionListItem::Transaction {
             transaction: service_txs_inter.next().unwrap(),
@@ -484,7 +483,58 @@ fn service_txs_to_tx_list_items_date_label_someplace_else_timezone() {
     ];
 
     let actual =
-        service_txs_to_tx_list_items(service_txs_copy, -1, berlin_timezone_offset).unwrap();
+        service_txs_to_tx_list_items(service_txs_copy, -1, melbourne_timezone_offset).unwrap();
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+
+    let service_txs = get_service_txs(&mut mock_info_provider);
+    let service_txs_copy = get_service_txs(&mut mock_info_provider);
+    let buenos_aires_timezone_offset = -10800; // -3 hours Argentina/Buenos Aires
+
+    let mut service_txs_inter = service_txs.into_iter();
+
+    let expected = vec![
+        TransactionListItem::DateLabel {
+            timestamp: 1606791600000,
+        },
+        TransactionListItem::Transaction {
+            transaction: service_txs_inter.next().unwrap(),
+            conflict_type: ConflictType::None,
+        },
+        TransactionListItem::Transaction {
+            transaction: service_txs_inter.next().unwrap(),
+            conflict_type: ConflictType::None,
+        },
+        TransactionListItem::Transaction {
+            transaction: service_txs_inter.next().unwrap(),
+            conflict_type: ConflictType::None,
+        },
+        TransactionListItem::DateLabel {
+            timestamp: 1606705200000,
+        },
+        TransactionListItem::Transaction {
+            transaction: service_txs_inter.next().unwrap(),
+            conflict_type: ConflictType::None,
+        },
+        TransactionListItem::Transaction {
+            transaction: service_txs_inter.next().unwrap(),
+            conflict_type: ConflictType::None,
+        },
+        TransactionListItem::Transaction {
+            transaction: service_txs_inter.next().unwrap(),
+            conflict_type: ConflictType::None,
+        },
+    ];
+
+    let actual =
+        service_txs_to_tx_list_items(service_txs_copy, -1, buenos_aires_timezone_offset).unwrap();
 
     assert_eq!(expected, actual);
 }
@@ -492,7 +542,7 @@ fn service_txs_to_tx_list_items_date_label_someplace_else_timezone() {
 #[test]
 #[should_panic]
 fn peek_timestamp_and_remove_item_empty() {
-    let berlin_timezone_offset = 3600;
+    let utc_timezone_offset = 3600;
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -503,7 +553,7 @@ fn peek_timestamp_and_remove_item_empty() {
         &mut backend_txs_iter,
         &mut mock_info_provider,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
-        berlin_timezone_offset,
+        utc_timezone_offset,
     )
     .unwrap();
 }
@@ -511,7 +561,7 @@ fn peek_timestamp_and_remove_item_empty() {
 #[test]
 fn peek_timestamp_and_remove_item_with_items() {
     let expected_timestamp = 1606780800000;
-    let berlin_timezone_offset = 3600;
+    let utc_timezone_offset = 0;
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -526,7 +576,7 @@ fn peek_timestamp_and_remove_item_with_items() {
         &mut backend_txs_iter,
         &mut mock_info_provider,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
-        berlin_timezone_offset,
+        utc_timezone_offset,
     )
     .unwrap();
 
@@ -536,9 +586,9 @@ fn peek_timestamp_and_remove_item_with_items() {
 #[test]
 fn get_day_timestamp_millis_for_02_12_2020_00_00_01() {
     let input = 1606867201000; // 1 second past the 2nd of December 2020 UTC
-    let berlin_timezone_offset = 3600;
+    let utc_timezone_offset = 0;
 
-    let actual = get_day_timestamp_millis(input, berlin_timezone_offset);
+    let actual = get_day_timestamp_millis(input, utc_timezone_offset);
     let expected = 1606867200000;
 
     assert_eq!(expected, actual);

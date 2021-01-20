@@ -189,13 +189,16 @@ pub(super) fn peek_timestamp_and_remove_item(
 }
 
 pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64, timezone_offset: i32) -> i64 {
+    log::info!("Timezone offset: {:#?}", timezone_offset);
     let date_time = DateTime::<Utc>::from_utc(
         NaiveDateTime::from_timestamp(timestamp_in_millis / 1000, 0),
         Utc,
     )
     .with_timezone(&FixedOffset::east(timezone_offset));
 
+    // we remove the client's timezone offset of the day timestamp so we return the day timestamp at 00:00:00.0000
+    // this is particularly important for negative timezone offset.
     let date =
         NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap();
-    date.and_hms_milli(0, 0, 0, 0).timestamp() * 1000
+    (date.and_hms_milli(0, 0, 0, 0).timestamp() - timezone_offset as i64) * 1000
 }

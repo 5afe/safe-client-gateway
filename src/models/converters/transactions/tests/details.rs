@@ -32,6 +32,10 @@ fn multisig_custom_transaction_to_transaction_details() {
         .expect_token_info()
         .times(1)
         .returning(move |_| anyhow::bail!("Token Address 0x0"));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .returning(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionDetails {
         executed_at: multisig_tx.execution_date.map(|it| it.timestamp_millis()),
@@ -213,7 +217,10 @@ fn multisig_transaction_with_origin() {
                 logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
             })
         });
-    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("no address info"));
 
     let expected = TransactionDetails {
         executed_at: Some(multisig_tx.execution_date.unwrap().timestamp_millis()),

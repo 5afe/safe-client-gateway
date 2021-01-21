@@ -243,6 +243,7 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider.expect_address_info().times(0);
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"),
@@ -379,6 +380,10 @@ fn multisig_transaction_to_settings_change_summary() {
         .expect_safe_info()
         .times(1)
         .return_once(move |_| Ok(safe_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
     mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionSummary {
@@ -441,6 +446,10 @@ fn multisig_transaction_to_custom_summary() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -582,6 +591,10 @@ fn multisig_transaction_with_origin() {
         .expect_safe_info()
         .times(1)
         .return_once(move |_| Ok(safe_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
     mock_info_provider
         .expect_safe_app_info()
         .times(1)

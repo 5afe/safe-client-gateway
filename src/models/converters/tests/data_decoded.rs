@@ -83,8 +83,8 @@ fn data_decoded_swap_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_info()
-        .times(1)
-        .return_once(move |_| anyhow::bail!("Some http error"));
+        .times(2)
+        .returning(move |_| anyhow::bail!("Some http error"));
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
@@ -107,10 +107,7 @@ fn data_decoded_swap_owner_to_settings_info() {
 #[test]
 fn data_decoded_change_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_address_info()
-        .times(1)
-        .return_once(move |_| anyhow::bail!("Some http error"));
+    mock_info_provider.expect_address_info().times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_THRESHOLD).unwrap();
@@ -200,10 +197,6 @@ fn data_decoded_disable_module_to_settings_info() {
 #[test]
 fn data_decoded_unknown_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_address_info()
-        .times(1)
-        .return_once(move |_| anyhow::bail!("Some http error"));
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE)

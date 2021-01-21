@@ -89,14 +89,14 @@ impl MultisigTransaction {
             .unwrap_or(false)
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
         {
-            info_provider.token_info(&self.to).map_or(
-                TransactionInfo::Custom(self.to_custom(info_provider)),
-                |token| match token.token_type {
+            match info_provider.token_info(&self.to) {
+                Ok(token) => match token.token_type {
                     TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
                     TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
                     _ => TransactionInfo::Custom(self.to_custom(info_provider)),
                 },
-            )
+                _ => TransactionInfo::Custom(self.to_custom(info_provider)),
+            }
         } else {
             TransactionInfo::Custom(self.to_custom(info_provider))
         }

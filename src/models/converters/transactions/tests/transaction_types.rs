@@ -12,6 +12,11 @@ fn transaction_operation_not_call() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let tx = serde_json::from_str::<MultisigTransaction>(
         crate::json::MULTISIG_TX_ERC20_TRANSFER_DELEGATE,
     )
@@ -35,6 +40,11 @@ fn transaction_data_size_and_value_greater_than_0() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let tx = serde_json::from_str::<MultisigTransaction>(
         crate::json::MULTISIG_TX_ERC20_TRANSFER_WITH_VALUE,
     )
@@ -79,6 +89,11 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE)
         .unwrap();
     let expected = TransactionInfo::SettingsChange(SettingsChange {
@@ -116,6 +131,11 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method(
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let tx = serde_json::from_str::<MultisigTransaction>(
         crate::json::MULTISIG_TX_UNKNOWN_SETTINGS_CHANGE,
     )
@@ -201,6 +221,11 @@ fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("no address info"));
+
     let tx = serde_json::from_str::<MultisigTransaction>(
         crate::json::MULTISIG_TX_ERC20_TRANSFER_INVALID_TO_AND_FROM,
     )
@@ -224,6 +249,11 @@ fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let tx = serde_json::from_str::<MultisigTransaction>(
         crate::json::MULTISIG_TX_ERC721_TRANSFER_INVALID_TO_AND_FROM,
     )
@@ -258,6 +288,10 @@ fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() 
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER)
         .unwrap();
@@ -283,6 +317,10 @@ fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| anyhow::bail!("No token info"));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER)
         .unwrap();

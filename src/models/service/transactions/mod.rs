@@ -1,4 +1,5 @@
 use crate::models::commons::DataDecoded;
+use crate::providers::address_info::AddressInfo;
 use serde::Serialize;
 
 pub mod details;
@@ -116,31 +117,39 @@ pub struct SettingsChange {
 pub enum SettingsInfo {
     SetFallbackHandler {
         handler: String,
+        handler_info: Option<AddressInfo>,
     },
     AddOwner {
         owner: String,
+        owner_info: Option<AddressInfo>,
         threshold: u64,
     },
     RemoveOwner {
         owner: String,
+        owner_info: Option<AddressInfo>,
         threshold: u64,
     },
     #[serde(rename_all = "camelCase")]
     SwapOwner {
         old_owner: String,
+        old_owner_info: Option<AddressInfo>,
         new_owner: String,
+        new_owner_info: Option<AddressInfo>,
     },
     ChangeThreshold {
         threshold: u64,
     },
     ChangeImplementation {
         implementation: String,
+        implementation_info: Option<AddressInfo>,
     },
     EnableModule {
         module: String,
+        module_info: Option<AddressInfo>,
     },
     DisableModule {
         module: String,
+        module_info: Option<AddressInfo>,
     },
 }
 
@@ -153,6 +162,8 @@ pub struct Custom {
     pub method_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub action_count: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub to_info: Option<AddressInfo>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

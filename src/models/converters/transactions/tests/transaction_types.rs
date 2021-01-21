@@ -22,6 +22,7 @@ fn transaction_operation_not_call() {
         value: "0".to_string(),
         method_name: Some("transfer".to_string()),
         action_count: None,
+        to_info: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -44,6 +45,7 @@ fn transaction_data_size_and_value_greater_than_0() {
         value: "100000000000000000".to_string(),
         method_name: Some("transfer".to_string()),
         action_count: None,
+        to_info: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -82,6 +84,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
     let expected = TransactionInfo::SettingsChange(SettingsChange {
         settings_info: Some(SettingsInfo::AddOwner {
             owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
+            owner_info: None,
             threshold: 2,
         }),
         data_decoded: DataDecoded {
@@ -123,6 +126,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method(
         value: "0".to_string(),
         method_name: Some("newAndDifferentAddOwnerWithThreshold".to_string()),
         action_count: None,
+        to_info: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -207,6 +211,7 @@ fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
         value: "0".to_string(),
         method_name: Some("transferFrom".to_string()),
         action_count: None,
+        to_info: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -229,6 +234,7 @@ fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
         value: "0".to_string(),
         method_name: Some("safeTransferFrom".to_string()),
         action_count: None,
+        to_info: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -261,6 +267,7 @@ fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() 
         value: "0".to_string(),
         method_name: Some("transfer".to_string()),
         action_count: None,
+        to_info: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -285,6 +292,7 @@ fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
         value: "0".to_string(),
         method_name: Some("transfer".to_string()),
         action_count: None,
+        to_info: None,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);

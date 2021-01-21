@@ -68,7 +68,7 @@ impl MultisigTransaction {
         let data_size = data_size(&self.data);
 
         if (value > 0 && data_size > 0) || !self.operation.contains(&Operation::CALL) {
-            TransactionInfo::Custom(self.to_custom())
+            TransactionInfo::Custom(self.to_custom(info_provider))
         } else if value > 0 && data_size == 0 {
             TransactionInfo::Transfer(self.to_ether_transfer())
         } else if value == 0
@@ -79,7 +79,7 @@ impl MultisigTransaction {
                 .as_ref()
                 .map_or_else(|| false, |it| it.is_settings_change())
         {
-            TransactionInfo::SettingsChange(self.to_settings_change())
+            TransactionInfo::SettingsChange(self.to_settings_change(info_provider))
         } else if self
             .data_decoded
             .as_ref()
@@ -90,15 +90,15 @@ impl MultisigTransaction {
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
         {
             info_provider.token_info(&self.to).map_or(
-                TransactionInfo::Custom(self.to_custom()),
+                TransactionInfo::Custom(self.to_custom(info_provider)),
                 |token| match token.token_type {
                     TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
                     TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
-                    _ => TransactionInfo::Custom(self.to_custom()),
+                    _ => TransactionInfo::Custom(self.to_custom(info_provider)),
                 },
             )
         } else {
-            TransactionInfo::Custom(self.to_custom())
+            TransactionInfo::Custom(self.to_custom(info_provider))
         }
     }
 
@@ -161,17 +161,17 @@ impl MultisigTransaction {
         }
     }
 
-    fn to_settings_change(&self) -> SettingsChange {
+    fn to_settings_change(&self, info_provider: &mut dyn InfoProvider) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
             settings_info: self
                 .data_decoded
                 .as_ref()
-                .and_then(|it| it.to_settings_info()),
+                .and_then(|it| it.to_settings_info(info_provider)),
         }
     }
 
-    fn to_custom(&self) -> Custom {
+    fn to_custom(&self, info_provider: &mut dyn InfoProvider) -> Custom {
         Custom {
             to: self.to.to_owned(),
             data_size: data_size(&self.data).to_string(),
@@ -181,6 +181,7 @@ impl MultisigTransaction {
                 .data_decoded
                 .as_ref()
                 .and_then(|it| it.get_action_count()),
+            to_info: info_provider.address_info(&self.to).ok(), //TODO test
         }
     }
 
@@ -204,6 +205,7 @@ impl ModuleTransaction {
                 .data_decoded
                 .as_ref()
                 .and_then(|it| it.get_action_count()),
+            to_info: None, //TODO
         })
     }
 }

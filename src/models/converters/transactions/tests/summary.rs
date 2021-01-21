@@ -75,6 +75,7 @@ fn module_tx_to_summary_transaction() {
             value: String::from("0"),
             method_name: None,
             action_count: None,
+            to_info: None,
         }),
         safe_app_info: None,
     }];
@@ -391,6 +392,7 @@ fn multisig_transaction_to_settings_change_summary() {
         tx_info: TransactionInfo::SettingsChange(SettingsChange {
             settings_info: Some(SettingsInfo::AddOwner {
                 owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
+                owner_info: None,
                 threshold: 2,
             }),
             data_decoded: DataDecoded {
@@ -454,6 +456,7 @@ fn multisig_transaction_to_custom_summary() {
             value: "0".to_string(),
             method_name: Some("approve".to_string()),
             action_count: None,
+            to_info: None,
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 84,
@@ -605,6 +608,7 @@ fn multisig_transaction_with_origin() {
             value: "0".to_string(),
             method_name: Some("multiSend".to_string()),
             action_count: Some(1),
+            to_info: None,
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 160,

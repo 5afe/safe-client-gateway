@@ -254,6 +254,11 @@ fn service_txs_to_tx_list_items_last_timestamp_undefined() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(12)
+        .returning(move |_| anyhow::bail!("No address info"));
+
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
     let utc_timezone_offset = 0;
@@ -305,6 +310,11 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(12)
+        .returning(move |_| anyhow::bail!("No address info"));
+
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
 
@@ -357,6 +367,11 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(12)
+        .returning(move |_| anyhow::bail!("No address info"));
+
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
 
@@ -403,6 +418,10 @@ fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(12)
+        .returning(move |_| anyhow::bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
@@ -453,6 +472,10 @@ fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(12)
+        .returning(move |_| anyhow::bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider);
     let service_txs_copy = get_service_txs(&mut mock_info_provider);
@@ -509,7 +532,7 @@ fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
         .expect_address_info()
-        .times(6)
+        .times(12)
         .returning(move |_| anyhow::bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider);
@@ -586,8 +609,8 @@ fn peek_timestamp_and_remove_item_with_items() {
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
         .expect_address_info()
-        .times(6)
-        .returning(move |_| anyhow::bail!("No address info"));
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let backend_txs =
         serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE)

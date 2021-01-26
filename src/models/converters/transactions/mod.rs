@@ -10,6 +10,7 @@ mod tests;
 use super::get_transfer_direction;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::commons::{DataDecoded, Operation};
+use crate::models::converters::get_address_info;
 use crate::models::service::transactions::{
     Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, TransactionInfo,
     TransactionStatus, Transfer, TransferDirection, TransferInfo,
@@ -115,9 +116,9 @@ impl MultisigTransaction {
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: info_provider.address_info(&sender).ok(),
+            sender_info: get_address_info(&self.safe, &sender, info_provider),
             sender,
-            recipient_info: info_provider.address_info(&recipient).ok(),
+            recipient_info: get_address_info(&self.safe, &recipient, info_provider),
             recipient,
             direction,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
@@ -144,9 +145,9 @@ impl MultisigTransaction {
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: info_provider.address_info(&sender).ok(),
+            sender_info: get_address_info(&self.safe, &sender, info_provider),
             sender,
-            recipient_info: info_provider.address_info(&recipient).ok(),
+            recipient_info: get_address_info(&self.safe, &recipient, info_provider),
             recipient,
             direction,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {

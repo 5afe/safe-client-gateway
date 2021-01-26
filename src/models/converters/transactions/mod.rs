@@ -70,7 +70,7 @@ impl MultisigTransaction {
         if (value > 0 && data_size > 0) || !self.operation.contains(&Operation::CALL) {
             TransactionInfo::Custom(self.to_custom(info_provider))
         } else if value > 0 && data_size == 0 {
-            TransactionInfo::Transfer(self.to_ether_transfer())
+            TransactionInfo::Transfer(self.to_ether_transfer(info_provider))
         } else if value == 0
             && data_size > 0
             && self.safe == self.to
@@ -91,8 +91,12 @@ impl MultisigTransaction {
         {
             match info_provider.token_info(&self.to) {
                 Ok(token) => match token.token_type {
-                    TokenType::Erc20 => TransactionInfo::Transfer(self.to_erc20_transfer(&token)),
-                    TokenType::Erc721 => TransactionInfo::Transfer(self.to_erc721_transfer(&token)),
+                    TokenType::Erc20 => {
+                        TransactionInfo::Transfer(self.to_erc20_transfer(&token, info_provider))
+                    }
+                    TokenType::Erc721 => {
+                        TransactionInfo::Transfer(self.to_erc721_transfer(&token, info_provider))
+                    }
                     _ => TransactionInfo::Custom(self.to_custom(info_provider)),
                 },
                 _ => TransactionInfo::Custom(self.to_custom(info_provider)),
@@ -102,12 +106,18 @@ impl MultisigTransaction {
         }
     }
 
-    fn to_erc20_transfer(&self, token: &TokenInfo) -> Transfer {
+    fn to_erc20_transfer(
+        &self,
+        token: &TokenInfo,
+        info_provider: &mut dyn InfoProvider,
+    ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
+            sender_info: info_provider.address_info(&sender).ok(),
             sender,
+            recipient_info: info_provider.address_info(&recipient).ok(),
             recipient,
             direction,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
@@ -125,12 +135,18 @@ impl MultisigTransaction {
         }
     }
 
-    fn to_erc721_transfer(&self, token: &TokenInfo) -> Transfer {
+    fn to_erc721_transfer(
+        &self,
+        token: &TokenInfo,
+        info_provider: &mut dyn InfoProvider,
+    ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
+            sender_info: info_provider.address_info(&sender).ok(),
             sender,
+            recipient_info: info_provider.address_info(&recipient).ok(),
             recipient,
             direction,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
@@ -150,9 +166,11 @@ impl MultisigTransaction {
         }
     }
 
-    fn to_ether_transfer(&self) -> Transfer {
+    fn to_ether_transfer(&self, info_provider: &mut dyn InfoProvider) -> Transfer {
         Transfer {
             sender: self.safe.to_owned(),
+            sender_info: None,
+            recipient_info: info_provider.address_info(&self.to).ok(),
             recipient: self.to.to_owned(),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {

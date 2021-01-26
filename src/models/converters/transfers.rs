@@ -21,7 +21,7 @@ impl TransferDto {
                 TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
             TransferDto::Ether(transfer) => {
-                TransactionInfo::Transfer(transfer.to_transfer_transaction(safe))
+                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
             }
             _ => TransactionInfo::Unknown,
         }
@@ -69,7 +69,9 @@ impl Erc20TransferDto {
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
+            sender_info: info_provider.address_info(&self.from).ok(),
             sender: self.from.to_owned(),
+            recipient_info: info_provider.address_info(&self.from).ok(),
             recipient: self.to.to_owned(),
             direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(info_provider),
@@ -95,7 +97,9 @@ impl Erc721TransferDto {
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
+            sender_info: info_provider.address_info(&self.from).ok(),
             sender: self.from.to_owned(),
+            recipient_info: info_provider.address_info(&self.to).ok(),
             recipient: self.to.to_owned(),
             direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(info_provider),
@@ -115,9 +119,15 @@ impl Erc721TransferDto {
 }
 
 impl EtherTransferDto {
-    pub(super) fn to_transfer_transaction(&self, safe: &str) -> ServiceTransfer {
+    pub(super) fn to_transfer_transaction(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+        safe: &str,
+    ) -> ServiceTransfer {
         ServiceTransfer {
+            sender_info: info_provider.address_info(&self.from).ok(),
             sender: self.from.to_owned(),
+            recipient_info: info_provider.address_info(&self.to).ok(),
             recipient: self.to.to_owned(),
             direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(),

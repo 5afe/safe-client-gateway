@@ -112,7 +112,10 @@ impl InfoProvider for DefaultInfoProvider<'_> {
 
     fn address_info(&mut self, address: &str) -> Result<AddressInfo> {
         self.token_info(address)
-            .map(|it| AddressInfo::TokenInfo(it))
+            .map(|it| AddressInfo {
+                name: it.name,
+                logo_uri: it.logo_uri.to_owned(),
+            })
             .or_else(|_| anyhow::bail!("No impl for known address yet"))
     }
 }

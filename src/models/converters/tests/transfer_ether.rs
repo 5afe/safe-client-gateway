@@ -4,9 +4,17 @@ use crate::models::backend::transfers::{
 use crate::models::service::transactions::{
     EtherTransfer, Transfer, TransferDirection, TransferInfo,
 };
+use crate::providers::address_info::AddressInfo;
+use crate::providers::info::*;
 
 #[test]
 fn ether_transfer_dto_ether_transfer_transaction() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("no address info"));
+
     let ether_transfer_dto =
         serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap();
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
@@ -21,7 +29,11 @@ fn ether_transfer_dto_ether_transfer_transaction() {
         })),
     };
 
-    let actual = EtherTransferDto::to_transfer_transaction(&ether_transfer_dto, safe);
+    let actual = EtherTransferDto::to_transfer_transaction(
+        &ether_transfer_dto,
+        &mut mock_info_provider,
+        safe,
+    );
 
     assert_eq!(expected, actual);
 }

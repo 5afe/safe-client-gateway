@@ -198,6 +198,10 @@ fn process_transactions_no_conflicts_everything_queued() {
         .expect_token_info()
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
+    mock_info_provider
+        .expect_address_info()
+        .times(3)
+        .returning(move |_| anyhow::bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 
@@ -350,6 +354,10 @@ fn process_transactions_conflicts_in_queued() {
         .expect_token_info()
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
+    mock_info_provider
+        .expect_address_info()
+        .times(3)
+        .returning(move |_| anyhow::bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 
@@ -506,6 +514,10 @@ fn process_transactions_conflicts_in_next() {
         .expect_token_info()
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
+    mock_info_provider
+        .expect_address_info()
+        .times(3)
+        .returning(move |_| anyhow::bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 
@@ -663,6 +675,10 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
         .expect_token_info()
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
+    mock_info_provider
+        .expect_address_info()
+        .times(3)
+        .returning(move |_| anyhow::bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 

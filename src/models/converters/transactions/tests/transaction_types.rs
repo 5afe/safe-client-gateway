@@ -68,6 +68,11 @@ fn transaction_data_size_0_value_greater_than_0() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ETHER_TRANSFER)
         .unwrap();
     let expected = TransactionInfo::Transfer(Transfer {
@@ -165,6 +170,10 @@ fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC20_TRANSFER)
         .unwrap();
@@ -199,6 +208,10 @@ fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER)
         .unwrap();

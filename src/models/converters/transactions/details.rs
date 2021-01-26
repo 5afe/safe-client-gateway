@@ -91,11 +91,14 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    pub fn to_transaction_details(&self) -> Result<TransactionDetails> {
+    pub fn to_transaction_details(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+    ) -> Result<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: TransactionStatus::Success,
-            tx_info: self.to_transaction_info(),
+            tx_info: self.to_transaction_info(info_provider),
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),

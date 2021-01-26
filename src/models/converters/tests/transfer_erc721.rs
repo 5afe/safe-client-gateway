@@ -14,6 +14,10 @@ fn erc721_transfer_dto_to_transfer_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = Transfer {
         sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),

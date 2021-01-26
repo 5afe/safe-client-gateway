@@ -27,7 +27,9 @@ impl Transaction {
             Transaction::Ethereum(transaction) => {
                 Ok(transaction.to_transaction_summary(info_provider, safe))
             }
-            Transaction::Module(transaction) => Ok(transaction.to_transaction_summary()),
+            Transaction::Module(transaction) => {
+                Ok(transaction.to_transaction_summary(info_provider))
+            }
             Transaction::Unknown => Err(Error::msg("Unknown transaction type from backend")),
         }
     }
@@ -96,7 +98,10 @@ impl EthereumTransaction {
 }
 
 impl ModuleTransaction {
-    pub(super) fn to_transaction_summary(&self) -> Vec<TransactionSummary> {
+    pub(super) fn to_transaction_summary(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+    ) -> Vec<TransactionSummary> {
         vec![TransactionSummary {
             id: create_id!(
                 ID_PREFIX_MODULE_TX,
@@ -108,7 +113,7 @@ impl ModuleTransaction {
             tx_status: TransactionStatus::Success,
             execution_info: None,
             safe_app_info: None,
-            tx_info: self.to_transaction_info(),
+            tx_info: self.to_transaction_info(info_provider),
         }]
     }
 }

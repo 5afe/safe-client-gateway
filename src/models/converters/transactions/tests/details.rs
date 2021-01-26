@@ -114,6 +114,14 @@ fn multisig_custom_transaction_to_transaction_details() {
 
 #[test]
 fn module_transaction_to_transaction_details() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .returning(move |_| anyhow::bail!("No address info"));
+
     let module_transaction =
         serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
 
@@ -143,7 +151,8 @@ fn module_transaction_to_transaction_details() {
         safe_app_info: None
     };
 
-    let actual = ModuleTransaction::to_transaction_details(&module_transaction);
+    let actual =
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider);
 
     assert_eq!(expected, actual.unwrap());
 }
@@ -182,6 +191,10 @@ fn ethereum_tx_transfer_to_transaction_details() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let actual = TransferDto::to_transaction_details(
         &transfer,

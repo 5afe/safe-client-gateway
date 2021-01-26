@@ -41,6 +41,14 @@ fn unknown_tx_to_summary_transaction() {
 
 #[test]
 fn module_tx_to_summary_transaction() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .returning(move |_| anyhow::bail!("No address info"));
+
     let expected_to = String::from("0x12345789");
     let expected_date = Utc::now();
     let expected_date_in_millis = expected_date.timestamp_millis();
@@ -58,7 +66,7 @@ fn module_tx_to_summary_transaction() {
         operation: Operation::CALL,
     };
 
-    let actual = ModuleTransaction::to_transaction_summary(&module_tx);
+    let actual = ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider);
     let expected = vec![TransactionSummary {
         id: create_id!(
             ID_PREFIX_MODULE_TX,
@@ -109,6 +117,10 @@ fn ethereum_tx_to_summary_transaction_no_transfers() {
 fn ethereum_tx_to_summary_transaction_with_transfers() {
     let safe_address = String::from("0x2323");
     let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_address_info()
+        .times(4)
+        .returning(move |_| anyhow::bail!("No address info"));
     let timestamp = Utc::now();
     let timestamp_millis = timestamp.timestamp_millis();
 
@@ -247,7 +259,10 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"),
@@ -299,6 +314,10 @@ fn multisig_transaction_to_erc721_transfer_summary() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"),
@@ -345,6 +364,10 @@ fn multisig_transaction_to_ether_transfer_summary() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -507,6 +530,10 @@ fn multisig_transaction_with_missing_signers() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -555,6 +582,10 @@ fn ethereum_transaction_with_inconsistent_token_types() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let actual = EthereumTransaction::to_transaction_summary(
         &ethereum_tx,

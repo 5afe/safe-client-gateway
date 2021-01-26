@@ -214,8 +214,9 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    fn to_transaction_info(&self) -> TransactionInfo {
+    fn to_transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
         TransactionInfo::Custom(Custom {
+            to_info: info_provider.address_info(&self.to).ok(),
             to: self.to.to_owned(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
@@ -224,7 +225,6 @@ impl ModuleTransaction {
                 .data_decoded
                 .as_ref()
                 .and_then(|it| it.get_action_count()),
-            to_info: None, //TODO
         })
     }
 }

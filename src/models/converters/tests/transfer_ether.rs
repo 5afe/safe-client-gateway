@@ -10,9 +10,9 @@ use crate::providers::info::*;
 fn ether_transfer_dto_ether_transfer_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_safe_info()
-        .times(2)
-        .returning(move |_| anyhow::bail!("no address info"));
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("no address info"));
 
     let ether_transfer_dto =
         serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap();

@@ -20,6 +20,10 @@ fn erc_20_transfer_dto_to_transaction_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
@@ -55,6 +59,10 @@ fn erc_721_transfer_dto_to_transaction_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
@@ -88,6 +96,10 @@ fn ether_transfer_dto_to_transaction_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
@@ -109,9 +121,11 @@ fn ether_transfer_dto_to_transaction_info() {
 fn unknown_transfer_dto_to_transaction_info() {
     let unknown_transfer_dto = TransferDto::Unknown;
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
+
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider.expect_address_info().times(0);
 
     let actual = unknown_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
 
@@ -146,6 +160,10 @@ fn transfer_dto_to_transaction_details() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionDetails {
         executed_at: Some(1597733631000),
@@ -180,6 +198,11 @@ fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let erc_20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
     )

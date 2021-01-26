@@ -12,7 +12,9 @@ fn ether_transfer_dto_ether_transfer_transaction() {
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let expected = Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
+        sender_info: None,
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Incoming,
         transfer_info: (TransferInfo::Ether(EtherTransfer {
             value: "1000000000000000".to_string(),

@@ -157,7 +157,9 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Transfer(Transfer {
                 sender: "".to_string(),
+                sender_info: None,
                 recipient: "".to_string(),
+                recipient_info: None,
                 direction: TransferDirection::Unknown,
                 transfer_info: TransferInfo::Ether(EtherTransfer {
                     value: "1".to_string(),
@@ -177,7 +179,9 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Transfer(Transfer {
                 sender: "".to_string(),
+                sender_info: None,
                 recipient: "".to_string(),
+                recipient_info: None,
                 direction: TransferDirection::Unknown,
                 transfer_info: TransferInfo::Ether(EtherTransfer {
                     value: "1".to_string(),
@@ -251,7 +255,9 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
                 token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
@@ -300,7 +306,9 @@ fn multisig_transaction_to_erc721_transfer_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
@@ -348,7 +356,9 @@ fn multisig_transaction_to_ether_transfer_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
                 value: "100000000000000000".to_string(),
@@ -508,7 +518,9 @@ fn multisig_transaction_with_missing_signers() {
         tx_status: TransactionStatus::AwaitingConfirmations,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
                 value: "100000000000000000".to_string(),
@@ -560,7 +572,9 @@ fn ethereum_transaction_with_inconsistent_token_types() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
+            sender_info: None,
             recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Incoming,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0xb07de4b2989E180F8907B8C7e617637C26cE2776".to_string(),

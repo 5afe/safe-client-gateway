@@ -224,7 +224,9 @@ fn process_transactions_no_conflicts_everything_queued() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -254,7 +256,9 @@ fn process_transactions_no_conflicts_everything_queued() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -282,7 +286,9 @@ fn process_transactions_no_conflicts_everything_queued() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -370,7 +376,9 @@ fn process_transactions_conflicts_in_queued() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -404,7 +412,9 @@ fn process_transactions_conflicts_in_queued() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -432,7 +442,9 @@ fn process_transactions_conflicts_in_queued() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -523,7 +535,9 @@ fn process_transactions_conflicts_in_next() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -552,7 +566,9 @@ fn process_transactions_conflicts_in_next() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -583,7 +599,9 @@ fn process_transactions_conflicts_in_next() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -669,7 +687,9 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -700,7 +720,9 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -728,7 +750,9 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
                     sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+                    sender_info: None,
                     recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
+                    recipient_info: None,
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),

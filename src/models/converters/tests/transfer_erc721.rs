@@ -17,7 +17,9 @@ fn erc721_transfer_dto_to_transfer_transaction() {
 
     let expected = Transfer {
         sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        sender_info: None,
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(
             Erc721Transfer {

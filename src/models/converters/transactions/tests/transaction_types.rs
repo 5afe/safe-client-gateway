@@ -72,7 +72,9 @@ fn transaction_data_size_0_value_greater_than_0() {
         .unwrap();
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        sender_info: None,
         recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Ether(EtherTransfer {
             value: "100000000000000000".to_string(),
@@ -168,7 +170,9 @@ fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
         .unwrap();
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        sender_info: None,
         recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc20(
             Erc20Transfer {
@@ -200,7 +204,9 @@ fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
         .unwrap();
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        sender_info: None,
         recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc721(Erc721Transfer {
             token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),

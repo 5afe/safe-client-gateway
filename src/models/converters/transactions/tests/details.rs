@@ -162,7 +162,9 @@ fn ethereum_tx_transfer_to_transaction_details() {
         ),
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
+            sender_info: None,
             recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Incoming,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),

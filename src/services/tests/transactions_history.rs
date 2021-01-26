@@ -130,7 +130,9 @@ fn backend_txs_to_summary_txs_with_values() {
          tx_info: TransactionInfo::Transfer(
              Transfer {
                  sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".into(),
+                 sender_info: None,
                  recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".into(),
+                 recipient_info: None,
                  direction: Outgoing,
                  transfer_info:  TransferInfo::Erc20(
                      Erc20Transfer {
@@ -162,7 +164,9 @@ fn backend_txs_to_summary_txs_with_values() {
          tx_info: TransactionInfo::Transfer(
              Transfer {
                  sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".into(),
+                 sender_info: None,
                  recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".into(),
+                 recipient_info: None,
                  direction: Outgoing,
                  transfer_info:  TransferInfo::Erc20(
                      Erc20Transfer {
@@ -192,7 +196,9 @@ fn backend_txs_to_summary_txs_with_values() {
          tx_info: TransactionInfo::Transfer(
              Transfer {
                  sender: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".into(),
+                 sender_info: None,
                  recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".into(),
+                 recipient_info: None,
                  direction: Incoming,
                  transfer_info: TransferInfo::Erc20(
                      Erc20Transfer {

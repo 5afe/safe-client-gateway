@@ -51,8 +51,10 @@ pub const ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO: &str =
     include_str!("transfers/erc20_transfer_with_erc721_token_info.json");
 pub const ERC_20_TRANSFER_WITHOUT_TOKEN_INFO: &str =
     include_str!("transfers/erc_20_transfer_without_token_info.json");
-pub const ERC_20_TRANSFER_WITH_TOKEN_INFO: &str =
-    include_str!("transfers/erc_20_transfer_with_token_info.json");
+pub const ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING: &str =
+    include_str!("transfers/erc_20_transfer_with_token_info_incoming.json");
+pub const ERC_20_TRANSFER_WITH_TOKEN_INFO_OUTGOING: &str =
+    include_str!("transfers/erc_20_transfer_with_token_info_outgoing.json");
 pub const ERC_721_TRANSFER_WITHOUT_TOKEN_INFO: &str =
     include_str!("transfers/erc_721_transfer_without_token_info.json");
 pub const ERC_721_TRANSFER_WITH_TOKEN_INFO: &str =

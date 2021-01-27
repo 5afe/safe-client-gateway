@@ -13,8 +13,10 @@ use crate::providers::info::*;
 fn erc_20_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc_20_transfer = TransferDto::Erc20(
-        serde_json::from_str::<Erc20TransferDto>(crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO)
-            .unwrap(),
+        serde_json::from_str::<Erc20TransferDto>(
+            crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+        )
+        .unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();

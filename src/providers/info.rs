@@ -126,11 +126,11 @@ impl InfoProvider for DefaultInfoProvider<'_> {
                     self.cache
                         .request_cached(self.client, &url, safe_app_manifest_cache())?;
                 let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
-                if contract_info.display_name.is_none() || contract_info.display_name.contains("") {
+                if contract_info.display_name.trim().is_empty() {
                     anyhow::bail!("No display name")
                 } else {
                     Ok(AddressInfo {
-                        name: contract_info.name.unwrap(),
+                        name: contract_info.display_name.to_owned(),
                         logo_uri: contract_info.logo_uri.to_owned(),
                     })
                 }

@@ -94,7 +94,7 @@ fn erc_721_transfer_dto_to_transaction_info() {
 fn ether_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
-        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap(),
+        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();
@@ -158,7 +158,7 @@ fn unknown_transfer_dto_get_transaction_hash() {
 fn transfer_dto_to_transaction_details() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
-        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap(),
+        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();

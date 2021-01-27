@@ -46,7 +46,8 @@ pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str =
     include_str!("safes/with_modules_and_high_nonce.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
-pub const ETHER_TRANSFER: &str = include_str!("transfers/ether_transfer.json");
+pub const ETHER_TRANSFER_INCOMING: &str = include_str!("transfers/ether_transfer_incoming.json");
+pub const ETHER_TRANSFER_OUTGOING: &str = include_str!("transfers/ether_transfer_outgoing.json");
 pub const ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO: &str =
     include_str!("transfers/erc20_transfer_with_erc721_token_info.json");
 pub const ERC_20_TRANSFER_WITHOUT_TOKEN_INFO: &str =

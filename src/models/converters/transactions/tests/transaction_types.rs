@@ -5,6 +5,7 @@ use crate::models::service::transactions::{
     Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, SettingsInfo,
     TransactionInfo, Transfer, TransferDirection, TransferInfo,
 };
+use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
 #[test]
@@ -64,6 +65,42 @@ fn transaction_data_size_and_value_greater_than_0() {
 }
 
 #[test]
+fn transaction_data_size_and_value_greater_than_0_with_address_info() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| {
+            Ok(AddressInfo {
+                name: "".to_string(),
+                logo_uri: None,
+            })
+        });
+
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::json::MULTISIG_TX_ERC20_TRANSFER_WITH_VALUE,
+    )
+    .unwrap();
+    let expected = TransactionInfo::Custom(Custom {
+        to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
+        data_size: "68".to_string(),
+        value: "100000000000000000".to_string(),
+        method_name: Some("transfer".to_string()),
+        action_count: None,
+        to_info: Some(AddressInfo {
+            name: "".to_string(),
+            logo_uri: None,
+        }),
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
 fn transaction_data_size_0_value_greater_than_0() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -107,6 +144,56 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
         settings_info: Some(SettingsInfo::AddOwner {
             owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
             owner_info: None,
+            threshold: 2,
+        }),
+        data_decoded: DataDecoded {
+            method: "addOwnerWithThreshold".to_string(),
+            parameters: Some(vec![
+                Parameter {
+                    name: "owner".to_string(),
+                    param_type: "address".to_string(),
+                    value: SingleValue("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string()),
+                    value_decoded: None,
+                },
+                Parameter {
+                    name: "_threshold".to_string(),
+                    param_type: "uint256".to_string(),
+                    value: SingleValue("2".to_string()),
+                    value_decoded: None,
+                },
+            ]),
+        },
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method_with_address_info() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| {
+            Ok(AddressInfo {
+                name: "".to_string(),
+                logo_uri: None,
+            })
+        });
+
+    let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE)
+        .unwrap();
+    let expected = TransactionInfo::SettingsChange(SettingsChange {
+        settings_info: Some(SettingsInfo::AddOwner {
+            owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
+            owner_info: Some(AddressInfo {
+                name: "".to_string(),
+                logo_uri: None,
+            }),
             threshold: 2,
         }),
         data_decoded: DataDecoded {

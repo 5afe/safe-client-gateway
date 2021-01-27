@@ -10,6 +10,7 @@ pub struct TransactionSummary {
     pub tx_status: TransactionStatus,
     pub tx_info: TransactionInfo,
     pub execution_info: Option<ExecutionInfo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub safe_app_info: Option<SafeAppInfo>,
 }
 

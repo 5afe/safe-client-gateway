@@ -2,7 +2,7 @@ use crate::config::{
     base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
     safe_app_manifest_cache,
 };
-use crate::providers::address_info::AddressInfo;
+use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -116,7 +116,25 @@ impl InfoProvider for DefaultInfoProvider<'_> {
                 name: it.name,
                 logo_uri: it.logo_uri.to_owned(),
             })
-            .or_else(|_| anyhow::bail!("No impl for known address yet"))
+            .or_else(|_| {
+                let url = format!(
+                    "{}/v1/contracts/{}/",
+                    base_transaction_service_url(),
+                    address
+                );
+                let contract_info_json =
+                    self.cache
+                        .request_cached(self.client, &url, safe_app_manifest_cache())?;
+                let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
+                if contract_info.display_name.is_none() || contract_info.display_name.contains("") {
+                    anyhow::bail!("No display name")
+                } else {
+                    Ok(AddressInfo {
+                        name: contract_info.name.unwrap(),
+                        logo_uri: contract_info.logo_uri.to_owned(),
+                    })
+                }
+            })
     }
 }
 

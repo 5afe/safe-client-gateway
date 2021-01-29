@@ -169,8 +169,8 @@ impl MultisigTransaction {
 
     fn to_ether_transfer(&self, info_provider: &mut dyn InfoProvider) -> Transfer {
         Transfer {
-            sender: self.safe.to_owned(),
             sender_info: None,
+            sender: self.safe.to_owned(),
             recipient_info: info_provider.address_info(&self.to).ok(),
             recipient: self.to.to_owned(),
             direction: TransferDirection::Outgoing,
@@ -193,6 +193,7 @@ impl MultisigTransaction {
     fn to_custom(&self, info_provider: &mut dyn InfoProvider) -> Custom {
         Custom {
             to: self.to.to_owned(),
+            to_info: info_provider.address_info(&self.to).ok(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap().into(),
             method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
@@ -200,7 +201,6 @@ impl MultisigTransaction {
                 .data_decoded
                 .as_ref()
                 .and_then(|it| it.get_action_count()),
-            to_info: info_provider.address_info(&self.to).ok(), //TODO test
         }
     }
 

@@ -1,0 +1,19 @@
+{
+  "type": "ERC20_TRANSFER",
+  "executionDate": "2020-08-11T16:12:33Z",
+  "blockNumber": 7000442,
+  "transactionHash": "0x3663ae11e5414620b0fd7fe7c8175e4356070a0a403e6e6516d7aece29b7680d",
+  "to": "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F",
+  "value": "1000000000000000000",
+  "tokenId": null,
+  "tokenAddress": "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
+  "from": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+  "tokenInfo": {
+    "type": "ERC20",
+    "address": "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
+    "name": "Dai",
+    "symbol": "DAI",
+    "decimals": 18,
+    "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png"
+  }
+}

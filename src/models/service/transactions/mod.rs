@@ -1,4 +1,5 @@
 use crate::models::commons::DataDecoded;
+use crate::providers::address_info::AddressInfo;
 use serde::Serialize;
 
 pub mod details;
@@ -55,7 +56,11 @@ pub enum TransactionInfo {
 #[serde(rename_all = "camelCase")]
 pub struct Transfer {
     pub sender: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sender_info: Option<AddressInfo>,
     pub recipient: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub recipient_info: Option<AddressInfo>,
     pub direction: TransferDirection,
     pub transfer_info: TransferInfo,
 }
@@ -116,31 +121,47 @@ pub struct SettingsChange {
 pub enum SettingsInfo {
     SetFallbackHandler {
         handler: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        handler_info: Option<AddressInfo>,
     },
     AddOwner {
         owner: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        owner_info: Option<AddressInfo>,
         threshold: u64,
     },
     RemoveOwner {
         owner: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        owner_info: Option<AddressInfo>,
         threshold: u64,
     },
     #[serde(rename_all = "camelCase")]
     SwapOwner {
         old_owner: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        old_owner_info: Option<AddressInfo>,
         new_owner: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        new_owner_info: Option<AddressInfo>,
     },
     ChangeThreshold {
         threshold: u64,
     },
     ChangeImplementation {
         implementation: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        implementation_info: Option<AddressInfo>,
     },
     EnableModule {
         module: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        module_info: Option<AddressInfo>,
     },
     DisableModule {
         module: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        module_info: Option<AddressInfo>,
     },
 }
 
@@ -153,6 +174,8 @@ pub struct Custom {
     pub method_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub action_count: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub to_info: Option<AddressInfo>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

@@ -1,39 +1,73 @@
 use crate::models::commons::DataDecoded;
 use crate::models::service::transactions::SettingsInfo;
+use crate::providers::info::InfoProvider;
 use crate::utils::{
     ADD_OWNER_WITH_THRESHOLD, CHANGE_MASTER_COPY, CHANGE_THRESHOLD, DISABLE_MODULE, ENABLE_MODULE,
     REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
 };
 
 impl DataDecoded {
-    pub(super) fn to_settings_info(&self) -> Option<SettingsInfo> {
+    pub(super) fn to_settings_info(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+    ) -> Option<SettingsInfo> {
         match self.method.as_str() {
-            SET_FALLBACK_HANDLER => Some(SettingsInfo::SetFallbackHandler {
-                handler: self.get_parameter_single_value_at(0)?,
-            }),
-            ADD_OWNER_WITH_THRESHOLD => Some(SettingsInfo::AddOwner {
-                owner: self.get_parameter_single_value_at(0)?,
-                threshold: self.get_parameter_single_value_at(1)?.parse().ok()?,
-            }),
-            REMOVE_OWNER => Some(SettingsInfo::RemoveOwner {
-                owner: self.get_parameter_single_value_at(1)?,
-                threshold: self.get_parameter_single_value_at(2)?.parse().ok()?,
-            }),
-            SWAP_OWNER => Some(SettingsInfo::SwapOwner {
-                old_owner: self.get_parameter_single_value_at(1)?,
-                new_owner: self.get_parameter_single_value_at(2)?,
-            }),
+            SET_FALLBACK_HANDLER => {
+                let handler = self.get_parameter_single_value_at(0)?;
+                Some(SettingsInfo::SetFallbackHandler {
+                    handler_info: info_provider.address_info(&handler).ok(),
+                    handler,
+                })
+            }
+            ADD_OWNER_WITH_THRESHOLD => {
+                let owner = self.get_parameter_single_value_at(0)?;
+                Some(SettingsInfo::AddOwner {
+                    owner_info: info_provider.address_info(&owner).ok(),
+                    owner,
+                    threshold: self.get_parameter_single_value_at(1)?.parse().ok()?,
+                })
+            }
+            REMOVE_OWNER => {
+                let owner = self.get_parameter_single_value_at(1)?;
+                Some(SettingsInfo::RemoveOwner {
+                    owner_info: info_provider.address_info(&owner).ok(),
+                    owner,
+                    threshold: self.get_parameter_single_value_at(2)?.parse().ok()?,
+                })
+            }
+            SWAP_OWNER => {
+                let old_owner = self.get_parameter_single_value_at(1)?;
+                let new_owner = self.get_parameter_single_value_at(2)?;
+                Some(SettingsInfo::SwapOwner {
+                    old_owner_info: info_provider.address_info(&old_owner).ok(),
+                    old_owner,
+                    new_owner_info: info_provider.address_info(&new_owner).ok(),
+                    new_owner,
+                })
+            }
+            CHANGE_MASTER_COPY => {
+                let implementation = self.get_parameter_single_value_at(0)?;
+                Some(SettingsInfo::ChangeImplementation {
+                    implementation_info: info_provider.address_info(&implementation).ok(),
+                    implementation,
+                })
+            }
+            ENABLE_MODULE => {
+                let module = self.get_parameter_single_value_at(0)?;
+                Some(SettingsInfo::EnableModule {
+                    module_info: info_provider.address_info(&module).ok(),
+                    module,
+                })
+            }
+            DISABLE_MODULE => {
+                let module = self.get_parameter_single_value_at(1)?;
+                Some(SettingsInfo::DisableModule {
+                    module_info: info_provider.address_info(&module).ok(),
+                    module,
+                })
+            }
             CHANGE_THRESHOLD => Some(SettingsInfo::ChangeThreshold {
                 threshold: self.get_parameter_single_value_at(0)?.parse().ok()?,
-            }),
-            CHANGE_MASTER_COPY => Some(SettingsInfo::ChangeImplementation {
-                implementation: self.get_parameter_single_value_at(0)?,
-            }),
-            ENABLE_MODULE => Some(SettingsInfo::EnableModule {
-                module: self.get_parameter_single_value_at(0)?,
-            }),
-            DISABLE_MODULE => Some(SettingsInfo::DisableModule {
-                module: self.get_parameter_single_value_at(1)?,
             }),
             _ => None,
         }

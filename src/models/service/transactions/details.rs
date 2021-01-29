@@ -12,6 +12,7 @@ pub struct TransactionDetails {
     pub tx_data: Option<TransactionData>,
     pub detailed_execution_info: Option<DetailedExecutionInfo>,
     pub tx_hash: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub safe_app_info: Option<SafeAppInfo>,
 }
 

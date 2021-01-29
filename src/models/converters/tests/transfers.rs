@@ -13,17 +13,25 @@ use crate::providers::info::*;
 fn erc_20_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc_20_transfer = TransferDto::Erc20(
-        serde_json::from_str::<Erc20TransferDto>(crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO)
-            .unwrap(),
+        serde_json::from_str::<Erc20TransferDto>(
+            crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+        )
+        .unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
+        sender_info: None,
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc20(
             Erc20Transfer {
@@ -46,17 +54,25 @@ fn erc_20_transfer_dto_to_transaction_info() {
 fn erc_721_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc_721_transfer = TransferDto::Erc721(
-        serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO)
-            .unwrap(),
+        serde_json::from_str::<Erc721TransferDto>(
+            crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+        )
+        .unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        sender_info: None,
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(
             Erc721Transfer {
@@ -78,16 +94,22 @@ fn erc_721_transfer_dto_to_transaction_info() {
 fn ether_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
-        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap(),
+        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
+        sender_info: None,
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Incoming,
         transfer_info: (TransferInfo::Ether(EtherTransfer {
             value: "1000000000000000".to_string(),
@@ -103,9 +125,11 @@ fn ether_transfer_dto_to_transaction_info() {
 fn unknown_transfer_dto_to_transaction_info() {
     let unknown_transfer_dto = TransferDto::Unknown;
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
+
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider.expect_address_info().times(0);
 
     let actual = unknown_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
 
@@ -134,19 +158,25 @@ fn unknown_transfer_dto_get_transaction_hash() {
 fn transfer_dto_to_transaction_details() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
-        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER).unwrap(),
+        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionDetails {
         executed_at: Some(1597733631000),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
+            sender_info: None,
             recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Incoming,
             transfer_info: (TransferInfo::Ether(EtherTransfer {
                 value: "1000000000000000".to_string(),
@@ -172,6 +202,11 @@ fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
     let erc_20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
     )
@@ -180,7 +215,9 @@ fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     let transfer = TransferDto::Erc20(erc_20_transfer);
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
+        sender_info: None,
         recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(Erc721Transfer {
             token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),

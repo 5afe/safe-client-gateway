@@ -24,6 +24,10 @@ fn multisig_tx_check_erc721_transfer() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
@@ -89,7 +93,9 @@ fn multisig_tx_check_erc721_transfer() {
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: safe.to_string(),
+        sender_info: None,
         recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc721(Erc721Transfer {
             token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
@@ -121,6 +127,10 @@ fn multisig_tx_check_erc20_transfer() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
@@ -186,7 +196,9 @@ fn multisig_tx_check_erc20_transfer() {
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: safe.to_string(),
+        sender_info: None,
         recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc20(Erc20Transfer {
             token_address: "0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85".to_string(),
@@ -208,6 +220,10 @@ fn multisig_tx_check_ether_transfer() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x938bae50a210b80EA233112800Cd5Bc2e7644300";
@@ -260,7 +276,9 @@ fn multisig_tx_check_ether_transfer() {
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: safe.to_string(),
+        sender_info: None,
         recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
+        recipient_info: None,
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Ether(EtherTransfer {
             value: "50000000000000".to_string(),

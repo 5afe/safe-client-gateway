@@ -76,6 +76,8 @@ fn get_module_transaction_details(
     tx_hash: &str,
     detail_hash: &str,
 ) -> ApiResult<TransactionDetails> {
+    let mut info_provider = DefaultInfoProvider::new(context);
+
     let url = format!(
         "{}/v1/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
         base_transaction_service_url(),
@@ -92,7 +94,7 @@ fn get_module_transaction_details(
         .into_iter()
         .find(|tx| hex_hash(tx) == detail_hash)
         .ok_or(anyhow::anyhow!("No transfer found"))?;
-    let details = transaction.to_transaction_details()?;
+    let details = transaction.to_transaction_details(&mut info_provider)?;
 
     Ok(details)
 }

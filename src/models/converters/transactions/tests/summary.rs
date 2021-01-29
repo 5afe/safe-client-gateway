@@ -41,6 +41,14 @@ fn unknown_tx_to_summary_transaction() {
 
 #[test]
 fn module_tx_to_summary_transaction() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .returning(move |_| anyhow::bail!("No address info"));
+
     let expected_to = String::from("0x12345789");
     let expected_date = Utc::now();
     let expected_date_in_millis = expected_date.timestamp_millis();
@@ -58,7 +66,7 @@ fn module_tx_to_summary_transaction() {
         operation: Operation::CALL,
     };
 
-    let actual = ModuleTransaction::to_transaction_summary(&module_tx);
+    let actual = ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider);
     let expected = vec![TransactionSummary {
         id: create_id!(
             ID_PREFIX_MODULE_TX,
@@ -75,6 +83,7 @@ fn module_tx_to_summary_transaction() {
             value: String::from("0"),
             method_name: None,
             action_count: None,
+            to_info: None,
         }),
         safe_app_info: None,
     }];
@@ -108,6 +117,10 @@ fn ethereum_tx_to_summary_transaction_no_transfers() {
 fn ethereum_tx_to_summary_transaction_with_transfers() {
     let safe_address = String::from("0x2323");
     let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_address_info()
+        .times(4)
+        .returning(move |_| anyhow::bail!("No address info"));
     let timestamp = Utc::now();
     let timestamp_millis = timestamp.timestamp_millis();
 
@@ -156,7 +169,9 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Transfer(Transfer {
                 sender: "".to_string(),
+                sender_info: None,
                 recipient: "".to_string(),
+                recipient_info: None,
                 direction: TransferDirection::Unknown,
                 transfer_info: TransferInfo::Ether(EtherTransfer {
                     value: "1".to_string(),
@@ -176,7 +191,9 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Transfer(Transfer {
                 sender: "".to_string(),
+                sender_info: None,
                 recipient: "".to_string(),
+                recipient_info: None,
                 direction: TransferDirection::Unknown,
                 transfer_info: TransferInfo::Ether(EtherTransfer {
                     value: "1".to_string(),
@@ -242,6 +259,10 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"),
@@ -249,7 +270,9 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
                 token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
@@ -291,6 +314,10 @@ fn multisig_transaction_to_erc721_transfer_summary() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"),
@@ -298,7 +325,9 @@ fn multisig_transaction_to_erc721_transfer_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
@@ -335,6 +364,10 @@ fn multisig_transaction_to_ether_transfer_summary() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -346,7 +379,9 @@ fn multisig_transaction_to_ether_transfer_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
                 value: "100000000000000000".to_string(),
@@ -378,6 +413,10 @@ fn multisig_transaction_to_settings_change_summary() {
         .expect_safe_info()
         .times(1)
         .return_once(move |_| Ok(safe_info));
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
     mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionSummary {
@@ -391,6 +430,7 @@ fn multisig_transaction_to_settings_change_summary() {
         tx_info: TransactionInfo::SettingsChange(SettingsChange {
             settings_info: Some(SettingsInfo::AddOwner {
                 owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
+                owner_info: None,
                 threshold: 2,
             }),
             data_decoded: DataDecoded {
@@ -439,6 +479,10 @@ fn multisig_transaction_to_custom_summary() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -454,6 +498,7 @@ fn multisig_transaction_to_custom_summary() {
             value: "0".to_string(),
             method_name: Some("approve".to_string()),
             action_count: None,
+            to_info: None,
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 84,
@@ -485,6 +530,10 @@ fn multisig_transaction_with_missing_signers() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -496,7 +545,9 @@ fn multisig_transaction_with_missing_signers() {
         tx_status: TransactionStatus::AwaitingConfirmations,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+            sender_info: None,
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
                 value: "100000000000000000".to_string(),
@@ -531,6 +582,10 @@ fn ethereum_transaction_with_inconsistent_token_types() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
 
     let actual = EthereumTransaction::to_transaction_summary(
         &ethereum_tx,
@@ -548,7 +603,9 @@ fn ethereum_transaction_with_inconsistent_token_types() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
             sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
+            sender_info: None,
             recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+            recipient_info: None,
             direction: TransferDirection::Incoming,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0xb07de4b2989E180F8907B8C7e617637C26cE2776".to_string(),
@@ -580,6 +637,10 @@ fn multisig_transaction_with_origin() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+    mock_info_provider
         .expect_safe_app_info()
         .times(1)
         .return_once(move |_| {
@@ -605,6 +666,7 @@ fn multisig_transaction_with_origin() {
             value: "0".to_string(),
             method_name: Some("multiSend".to_string()),
             action_count: Some(1),
+            to_info: None,
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 160,

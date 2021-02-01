@@ -1,6 +1,6 @@
 [package]
 name = "safe-client-gateway"
-version = "1.6.1"
+version = "1.6.2"
 authors = ["jpalvarezl <jose.alvarez@gnosis.io>"]
 edition = "2018"
 

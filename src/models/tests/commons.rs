@@ -73,7 +73,7 @@ fn deserialize_decoded_value() {
                     InternalTransaction {
                         operation: Operation::CALL,
                         to: String::from("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
-                        value: Some(0),
+                        value: Some(0.to_string()),
                         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000")),
                         data_decoded: Some(DataDecoded {
                             method: String::from("transfer"),
@@ -96,7 +96,7 @@ fn deserialize_decoded_value() {
                     InternalTransaction {
                         operation: Operation::CALL,
                         to: String::from("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
-                        value: Some(0),
+                        value: Some(0.to_string()),
                         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000")),
                         data_decoded: Some(DataDecoded {
                             method: String::from("transfer"),
@@ -119,7 +119,7 @@ fn deserialize_decoded_value() {
                     InternalTransaction {
                         operation: Operation::CALL,
                         to: String::from("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
-                        value: Some(0),
+                        value: Some(0.to_string()),
                         data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000")),
                         data_decoded: Some(DataDecoded {
                             method: String::from("transfer"),

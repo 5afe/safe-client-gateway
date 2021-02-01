@@ -47,7 +47,7 @@ pub enum ValueDecodedType {
 pub struct InternalTransaction {
     pub operation: Operation,
     pub to: String,
-    pub value: Option<u64>,
+    pub value: Option<String>,
     pub data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
 }

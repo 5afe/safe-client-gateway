@@ -22,7 +22,7 @@ script:
   # introduce some new warnings and when testing one such warning appeared in the ethcontract
   # generated contract code which caused the whole file to be printed as part of the warning
   # message which made the build fail (probably travis related).
-  - find . -name "*.gcda" -print0 | xargs -0 rm
+  - find . -name "*.gcda" -print0 | xargs -r -0 rm
   - curl --location https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
   - export CARGO_INCREMENTAL=0
   - export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings"

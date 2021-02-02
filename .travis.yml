@@ -3,16 +3,7 @@ language: rust
 rust:
   - nightly-2020-12-09
 
-# trying out: https://levans.fr/rust_travis_cache.html
-# Need to cache the whole `.cargo` directory to keep .crates.toml for
-# cargo-update to work
-cache:
-  directories:
-    - /home/travis/.cargo
-
-# But don't cache the cargo registry
-before_cache:
-  - rm -rf /home/travis/.cargo/registry
+cache: false
 
 env:
   global:

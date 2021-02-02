@@ -2,8 +2,6 @@
   "tokenAddress": null,
   "token": null,
   "balance": "7457594371050000001",
-  "balanceUsd": "2523.7991",
-  "usdConversion": "338.42",
   "fiatBalance": "2523.7991",
   "fiatConversion": "338.42",
   "fiatCode": "USD"

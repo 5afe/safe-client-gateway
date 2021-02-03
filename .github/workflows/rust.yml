@@ -1,6 +1,10 @@
 name: safe-clien-gateway-github-actions
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, github.base_ref ]
+  pull_request:
+    branches: [ github.base_ref ]
 
 env:
   CARGO_TERM_COLOR: always

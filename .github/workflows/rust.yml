@@ -7,6 +7,8 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
+    types: [opened]
 
 env:
   CARGO_TERM_COLOR: always

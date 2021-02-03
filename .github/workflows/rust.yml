@@ -1,10 +1,6 @@
 name: safe-clien-gateway-github-actions
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 env:
   CARGO_TERM_COLOR: always
@@ -12,10 +8,28 @@ env:
   DOCKERHUB_PROJECT: safe-client-gateway
 
 jobs:
-  build:
-
+  clippy:
+    name: Clippy
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings
 
+  build:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: rust-rustfmt-check

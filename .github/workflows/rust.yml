@@ -1,6 +1,9 @@
 name: safe-clien-gateway-github-actions
 
 on:
+  create:
+    tags:
+      - v*
   push:
     branches: [ main ]
   pull_request:

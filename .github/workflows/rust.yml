@@ -8,6 +8,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  DOCKERHUB_ORG: gnosispm
+  DOCKERHUB_PROJECT: safe-client-gateway
 
 jobs:
   build:
@@ -16,6 +18,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: rust-rustfmt-check
+          # You may pin to the exact commit or the version.
+          # uses: mbrobbel/rustfmt-check@b8caf241958773f7f6b0fba68879316da6be821d
+        uses: mbrobbel/rustfmt-check@0.3.0
+        with:
+        # GitHub token
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
         run: cargo build --verbose
       - name: Run tests

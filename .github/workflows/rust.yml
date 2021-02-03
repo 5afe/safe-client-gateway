@@ -35,7 +35,7 @@ jobs:
         run: cargo build --verbose -- all --locked
       - name: Run tests
         run: cargo test --verbose --all --locked
-      env:
-        CARGO_INCREMENTAL: '0'
-        RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
+        env:
+          CARGO_INCREMENTAL: '0'
+          RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
       - uses: actions-rs/grcov@v0.1

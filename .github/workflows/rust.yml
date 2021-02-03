@@ -30,7 +30,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
       - name: Run tests
         uses: actions-rs/cargo@v1
         with:
@@ -39,4 +40,10 @@ jobs:
         env:
           CARGO_INCREMENTAL: '0'
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
-      - uses: actions-rs/grcov@v0.1
+      - name: Run grcov
+        uses: actions-rs/grcov@v0.1
+      - name: Coveralls upload
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ${{ steps.coverage.outputs.report }}

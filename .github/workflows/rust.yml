@@ -17,7 +17,6 @@ env:
 
 jobs:
   rustfmt:
-    name: rustfmt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -62,3 +61,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel: true
           path-to-lcov: ${{ github.workspace }}/lcov.info
+
+  deploy:
+    needs: [rustfmt, build]
+    steps:
+      if: github.event_name == 'pull_request'
+      steps:
+        - run: echo "pull request"

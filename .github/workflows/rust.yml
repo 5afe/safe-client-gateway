@@ -24,7 +24,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: nightly-2020-12-09
           override: true
           components: rustfmt
       - uses: actions-rs/cargo@v1

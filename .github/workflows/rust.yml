@@ -64,7 +64,6 @@ jobs:
 
   deploy:
     needs: [rustfmt, build]
+    if: github.event_name == 'pull_request'
     steps:
-      if: github.event_name == 'pull_request'
-      steps:
-        - run: echo "pull request"
+      - run: echo "pull request"

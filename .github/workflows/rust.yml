@@ -38,7 +38,14 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v2
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-cargo-modules
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-build-${{ env.cache-name }} }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Run tests
         uses: actions-rs/cargo@v1

@@ -47,7 +47,7 @@ jobs:
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
 
       - name: Debug
-        run: ls -al .
+        run: ls -al ./.github/*/*
 
       - name: Run grcov
         id: coverage

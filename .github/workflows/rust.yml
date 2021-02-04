@@ -63,7 +63,7 @@ jobs:
 
       - name: Run grcov
         id: coverage
-        uses: actions-rs/grcov@macisamuele:maci-install-from-releases
+        uses: actions-rs/grcov@maci-install-from-releases
         with:
           config: ./.github/action-rs/grcov.yml
           coveralls-token: ${{ secrets.COVERALLS_TOKEN }}

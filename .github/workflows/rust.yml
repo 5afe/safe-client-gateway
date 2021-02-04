@@ -54,16 +54,16 @@ jobs:
           CARGO_INCREMENTAL: '0'
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
 
-#      - name: Pre-fetch grcov
-#        uses: actions-rs/install@v0.1
-#        with:
-#          crate: grcov
-#          use-tool-cache: true
-#          version: 0.7.1
+      - name: Pre-fetch grcov
+        uses: actions-rs/install@v0.1
+        with:
+          crate: grcov
+          use-tool-cache: true
+          version: latest
 
       - name: Run grcov
         id: coverage
-        uses: actions-rs/grcov@maci-install-from-releases
+        uses: actions-rs/grcov@v0.1
         with:
           config: ./.github/action-rs/grcov.yml
           coveralls-token: ${{ secrets.COVERALLS_TOKEN }}

@@ -41,9 +41,9 @@ jobs:
           cache-name: cache-cargo-modules
         with:
           path: ~/.cargo
-          key: ${{ runner.os }}-build-${{ env.cache-name }} }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-${{ env.cache-name }}
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 

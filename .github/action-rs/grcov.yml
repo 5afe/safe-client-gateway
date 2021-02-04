@@ -14,7 +14,3 @@ excl-line: "#\\[cfg\\(test\\)\\]|#\\[derive|#\\[serde"
 excl-br-line: "#\\[derive\\("
 excl-start: "mod tests \\{"
 excl-br-start: "mod tests \\{"
-#  - "../*"
-#path-mapping:
-#  - "/path1"
-#  - "/path2"

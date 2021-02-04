@@ -35,6 +35,11 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
 
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+
       - name: Run tests
         uses: actions-rs/cargo@v1
         with:

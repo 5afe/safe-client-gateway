@@ -63,6 +63,7 @@ jobs:
           path-to-lcov: ${{ github.workspace }}/lcov.info
 
   deploy:
+    runs-on: ubuntu-latest
     needs: [rustfmt, build]
     if: github.event_name == 'pull_request'
     steps:

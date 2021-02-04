@@ -33,10 +33,13 @@ jobs:
           args: --all -- --check
 
   build:
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+
       - name: Run tests
         uses: actions-rs/cargo@v1
         with:
@@ -46,13 +49,11 @@ jobs:
           CARGO_INCREMENTAL: '0'
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
 
-      - name: Debug
-        run: ls -al ./.github/*/*
-
       - name: Run grcov
         id: coverage
         uses: actions-rs/grcov@v0.1
         with:
+          config: ./.github/action-rs/grcov.yml
           coveralls-token: ${{ secrets.COVERALLS_TOKEN }}
 
       - name: Debug 2

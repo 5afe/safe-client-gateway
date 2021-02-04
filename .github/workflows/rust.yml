@@ -8,6 +8,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    types: [review_requested, ready_for_review]
 
 env:
   CARGO_TERM_COLOR: always
@@ -40,10 +41,13 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --verbose --all --locked
+          args: --verbose --all --locked get_parameter_value_decoded_wrong_name
         env:
           CARGO_INCREMENTAL: '0'
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
+
+      - name: Debug
+        run: pwd
 
       - name: Run grcov
         id: coverage
@@ -51,6 +55,8 @@ jobs:
         with:
           coveralls-token: ${{ secrets.COVERALLS_TOKEN }}
 
+      - name: Debug 2
+        run: ls -la ${{ github.workspace }}/*/*
       - name: Coveralls upload
         uses: coverallsapp/github-action@master
         with:

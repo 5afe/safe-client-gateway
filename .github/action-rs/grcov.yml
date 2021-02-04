@@ -9,6 +9,12 @@ ignore:
   - "/*"
   - "/**/tests/**"
   - "target/debug/build/**"
+
+excl-line: "#\[cfg\(test\)\]|#\[derive|#\[serde"
+#excl-line: "#\\[derive\\("
+excl-br-line: "#\\[derive\\("
+excl-start: "mod tests \\{"
+excl-br-start: "mod tests \\{"
 #  - "../*"
 #path-mapping:
 #  - "/path1"

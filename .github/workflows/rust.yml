@@ -24,6 +24,7 @@ jobs:
           toolchain: nightly-2020-12-09
           override: true
           components: rustfmt
+      - uses: Swatinem/rust-cache@v1
       - uses: actions-rs/cargo@v1
         with:
           command: fmt
@@ -35,17 +36,14 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-cargo-modules
+      - uses: actions-rs/toolchain@v1
         with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          profile: minimal
+          toolchain: nightly-2020-12-09
+          override: true
+          components: rustfmt
+          
+      - uses: Swatinem/rust-cache@v1
 
       - name: Run tests
         uses: actions-rs/cargo@v1

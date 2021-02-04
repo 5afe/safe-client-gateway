@@ -1,4 +1,4 @@
-name: safe-clien-gateway-github-actions
+name: safe-client-gateway
 
 on:
   create:

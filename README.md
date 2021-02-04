@@ -1,5 +1,5 @@
 # Safe Client Gateway
-![example branch parameter](https://github.com/actions/gnosis/safe-client-gateway/safe-clien-gateway-github-actions/GitHub%20Action/badge.svg?branch=main)
+[![Actions Status](https://github.com/gnosis/safe-client-gateway/workflows/safe-client-gateway/badge.svg)](https://github.com/gnosis/safe-client-gateway/actions)
 [![Coverage Status](https://coveralls.io/repos/github/gnosis/safe-client-gateway/badge.svg)](https://coveralls.io/github/gnosis/safe-client-gateway)
 ## Motivation
 

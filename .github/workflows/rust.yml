@@ -24,7 +24,6 @@ jobs:
           toolchain: nightly-2020-12-09
           override: true
           components: rustfmt
-      - uses: Swatinem/rust-cache@v1
       - uses: actions-rs/cargo@v1
         with:
           command: fmt
@@ -43,7 +42,8 @@ jobs:
           override: true
           components: rustfmt
 
-      - uses: Swatinem/rust-cache@v1
+      - name: Cargo cache
+        uses: Swatinem/rust-cache@v1
 
       - name: Run tests
         uses: actions-rs/cargo@v1
@@ -53,6 +53,11 @@ jobs:
         env:
           CARGO_INCREMENTAL: '0'
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
+
+      - name: Pre-fetch grcov
+        uses: actions-rs/install@v0.1
+        with:
+          crate: grcov
 
       - name: Run grcov
         id: coverage

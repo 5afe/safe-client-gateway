@@ -1,5 +1,5 @@
 # Safe Client Gateway
-[![Build Status](https://travis-ci.com/gnosis/safe-client-gateway.svg?branch=main)](https://travis-ci.com/gnosis/safe-client-gateway)
+![example branch parameter](https://github.com/actions/gnosis/safe-client-gateway/safe-clien-gateway-github-actions/GitHub%20Action/badge.svg?branch=main)
 [![Coverage Status](https://coveralls.io/repos/github/gnosis/safe-client-gateway/badge.svg)](https://coveralls.io/github/gnosis/safe-client-gateway)
 ## Motivation
 

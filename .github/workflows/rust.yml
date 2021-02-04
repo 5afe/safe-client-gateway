@@ -59,6 +59,7 @@ jobs:
         with:
           crate: grcov
           use-tool-cache: true
+          version: 0.7.1
 
       - name: Run grcov
         id: coverage

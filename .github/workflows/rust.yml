@@ -58,6 +58,7 @@ jobs:
         uses: actions-rs/install@v0.1
         with:
           crate: grcov
+          use-tool-cache: true
 
       - name: Run grcov
         id: coverage

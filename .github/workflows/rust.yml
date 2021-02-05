@@ -14,23 +14,14 @@ env:
 
 jobs:
 
-  toolchain:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v2
-      - uses: pCYSl5EDgo/cat@master
-        id: toolchain
-        with:
-          path: rust-toolchain
-      - run: echo $TOOLCHAIN
-        env:
-          TOOLCHAIN: ${{ steps.toolchain.outputs.text }}
-
   rustfmt:
-    needs: [toolchain]
     runs-on: ubuntu-latest
     steps:
+      - name: Set variables
+        run: |
+          TOOLCHAIN=$(cat rust-toolchain)
+          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
@@ -47,6 +38,11 @@ jobs:
     needs: [ toolchain ]
     runs-on: ubuntu-latest
     steps:
+      - name: Set variables
+        run: |
+          TOOLCHAIN=$(cat rust-toolchain)
+          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+          
       - name: Checkout branch
         uses: actions/checkout@v2
 

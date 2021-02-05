@@ -1,13 +1,6 @@
 name: safe-client-gateway
 
-on:
-  create:
-    tags:
-      - v*
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 env:
   CARGO_TERM_COLOR: always

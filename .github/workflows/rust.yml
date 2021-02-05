@@ -54,12 +54,16 @@ jobs:
           CARGO_INCREMENTAL: '0'
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
 
-      - name: Pre-fetch grcov
-        uses: actions-rs/install@v0.1
+      - name: Cache grcov
+        id: grcov-cache
+        uses: actions/cache@v2
         with:
-          crate: grcov
-          use-tool-cache: true
-          version: latest
+          path: .
+          key: ${{ runner.os }}-grcov-latest
+
+      - name: Fetch grcov
+        if: steps.grcov-cache.outputs.cache-hit != 'true'
+        run: curl --location https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
 
       - name: Run grcov
         id: coverage

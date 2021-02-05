@@ -22,13 +22,16 @@ jobs:
           TOOLCHAIN=$(cat rust-toolchain)
           echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
 
-      - uses: actions-rs/toolchain@v1
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: ${{ env.TOOLCHAIN }}
           override: true
           components: rustfmt
-      - uses: actions-rs/cargo@v1
+
+      - name: Run rustfmt
+        uses: actions-rs/cargo@v1
         with:
           command: fmt
           args: --all -- --check

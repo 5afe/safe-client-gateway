@@ -1,6 +1,10 @@
 name: safe-client-gateway
 
-on: [push, pull_request]
+on:
+  create:
+    tags:
+      - v*
+  push:
 
 env:
   CARGO_TERM_COLOR: always

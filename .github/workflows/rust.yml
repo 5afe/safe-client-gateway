@@ -35,14 +35,13 @@ jobs:
           args: --all -- --check
 
   build:
-    needs: [ toolchain ]
     runs-on: ubuntu-latest
     steps:
       - name: Set variables
         run: |
           TOOLCHAIN=$(cat rust-toolchain)
           echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
-          
+
       - name: Checkout branch
         uses: actions/checkout@v2
 

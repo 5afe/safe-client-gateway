@@ -1,10 +1,6 @@
 name: safe-client-gateway
 
-on:
-  create:
-    tags:
-      - v*
-  push:
+on: [ release, push ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -99,17 +95,19 @@ jobs:
     needs: [ rustfmt, build ]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Dockerhub login
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+#      - name: Dockerhub login
+#        uses: docker/login-action@v1
+#        with:
+#          username: ${{ secrets.DOCKER_USER }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Deploy main
         if: github.ref == 'refs/heads/main'
-        run: bash scripts/deploy_docker.sh staging
+#        run: bash scripts/deploy_docker.sh staging
+        run: echo "main push run"
       - name: Deploy tag
         if: startsWith(github.ref, 'refs/tags/')
-        run: bash scripts/deploy_docker.sh ${GITHUB_REF##*/}
+#        run: bash scripts/deploy_docker.sh ${GITHUB_REF##*/}
+        run: echo "tag run"
       - name: Deploy Develop # unused
         if: github.ref == 'refs/heads/develop'
         run: bash scripts/deploy_docker_github.sh develop

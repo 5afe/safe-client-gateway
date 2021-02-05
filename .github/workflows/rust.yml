@@ -1,6 +1,10 @@
 name: safe-client-gateway
 
-on: [ release, push ]
+on:
+  create:
+    tags:
+      - v*
+  push:
 
 env:
   CARGO_TERM_COLOR: always

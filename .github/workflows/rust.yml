@@ -23,7 +23,8 @@ jobs:
         id: toolchain
         with:
           path: rust-toolchain
-      - env:
+      - run: echo $TOOLCHAIN
+        env:
           TOOLCHAIN: ${{ steps.toolchain.outputs.text }}
 
   rustfmt:

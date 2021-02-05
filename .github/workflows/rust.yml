@@ -1,10 +1,6 @@
 name: safe-client-gateway
 
-on:
-  create:
-    tags:
-      - v*
-  push:
+on: [ push ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -97,21 +93,19 @@ jobs:
       DOCKERHUB_ORG: gnosispm
       DOCKERHUB_PROJECT: safe-client-gateway
     needs: [ rustfmt, build ]
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
     steps:
-#      - name: Dockerhub login
-#        uses: docker/login-action@v1
-#        with:
-#          username: ${{ secrets.DOCKER_USER }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Dockerhub login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Deploy main
         if: github.ref == 'refs/heads/main'
-#        run: bash scripts/deploy_docker.sh staging
-        run: echo "main push run"
+        run: bash scripts/deploy_docker.sh staging
       - name: Deploy tag
         if: startsWith(github.ref, 'refs/tags/')
-#        run: bash scripts/deploy_docker.sh ${GITHUB_REF##*/}
-        run: echo "tag run"
+        run: bash scripts/deploy_docker.sh ${GITHUB_REF##*/}
       - name: Deploy Develop # unused
         if: github.ref == 'refs/heads/develop'
         run: bash scripts/deploy_docker_github.sh develop

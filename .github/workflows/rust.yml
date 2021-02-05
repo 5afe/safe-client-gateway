@@ -58,7 +58,7 @@ jobs:
         id: grcov-cache
         uses: actions/cache@v2
         with:
-          path: .
+          path: /home/runner/.cargo/bin/
           key: ${{ runner.os }}-grcov-latest
 
       - name: Fetch grcov

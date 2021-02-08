@@ -92,6 +92,7 @@ jobs:
     env:
       DOCKERHUB_ORG: gnosispm
       DOCKERHUB_PROJECT: safe-client-gateway
+      PULL_REQUEST_NUMBER: ${{ github.event.number }}
     needs: [ rustfmt, tests ]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
     steps:

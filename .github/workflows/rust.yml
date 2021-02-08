@@ -6,7 +6,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-
+  
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2

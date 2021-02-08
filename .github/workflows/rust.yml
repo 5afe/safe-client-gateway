@@ -15,7 +15,7 @@ jobs:
 
       - name: Git description
         run: |
-          echo $(git describe --tags --always)"
+          echo "$(git describe --tags --always)"
 
 #  rustfmt:
 #    runs-on: ubuntu-latest

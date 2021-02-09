@@ -92,7 +92,14 @@ impl fmt::Display for ApiError {
 }
 
 impl<'r> Responder<'r> for ApiError {
-    fn respond_to(self, _: &Request) -> response::Result<'r> {
+    fn respond_to(self, request: &Request) -> response::Result<'r> {
+        log::error!(
+            "ERR::{}::{}::{}",
+            self.status,
+            request.uri().to_string(),
+            self.details
+        );
+
         Response::build()
             .sized_body(Cursor::new(
                 serde_json::to_string(&self.details).expect("Couldn't serialize error"),

@@ -1,3 +1,4 @@
+use crate::models::commons::Operation;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -7,42 +8,19 @@ pub struct ConfirmationRequest {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
-#[serde(tag = "type")]
-pub enum SendFundsRequest {
-    Ether(SendEthRequest),
-    Erc20(SendErc20Request),
-    Erc721(SendErc721Request),
-}
-
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct SendEthRequest {
-    pub receiver: String,
-    pub sender: String,
+pub struct MultisigTransactionRequest {
+    pub to: String,
     pub value: String,
-    pub transaction_hash: String,
-    pub signed_transaction_hash: String,
-    pub nonce: String,
-}
-
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct SendErc20Request {
-    pub receiver: String,
-    pub sender: String,
     pub data: String,
-    pub transaction_hash: String,
-    pub signed_transaction_hash: String,
     pub nonce: String,
-}
-
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct SendErc721Request {
-    pub receiver: String,
+    pub operation: Operation,
+    pub safe_tx_gas: String,
+    pub base_gas: String,
+    pub gas_price: String,
+    pub gas_token: String,
+    pub refund_receiver: String,
+    pub contract_transaction_hash: String,
     pub sender: String,
-    pub data: String,
-    pub transaction_hash: String,
-    pub signed_transaction_hash: String,
-    pub nonce: String,
+    pub signature: String,
 }

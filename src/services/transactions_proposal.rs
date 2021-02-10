@@ -44,18 +44,15 @@ pub fn propose_transaction(
         base_transaction_service_url(),
         &safe_address
     );
-    let core_service_request = serde_json::to_string(&transaction_request)?;
-
     let response = context
         .client()
         .post(&url)
-        .json(&core_service_request)
+        .json(&transaction_request)
         .send()?;
 
     if response.status().is_success() {
-        // context
-        //     .cache()
-        //     .invalidate_pattern("*{}_{}*", &ID_PREFIX_MULTISIG_TX, &safe_address);
+        let pattern = format!("*{}_{}*", &ID_PREFIX_MULTISIG_TX, &safe_address);
+        context.cache().invalidate_pattern(&pattern);
         Ok(())
     } else {
         Err(ApiError::from_http_response(

@@ -39,7 +39,7 @@ pub fn propose_transaction(
     transaction_request: &MultisigTransactionRequest,
 ) -> ApiResult<()> {
     let url = format!(
-        "{}/v1/safes/{}/transactions/",
+        "{}/v1/safes/{}/multisig-transactions/",
         base_transaction_service_url(),
         &safe_address
     );

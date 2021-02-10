@@ -1,5 +1,6 @@
 use crate::config::base_transaction_service_url;
 use crate::models::service::transactions::requests::MultisigTransactionRequest;
+use crate::models::service::transactions::ID_PREFIX_MULTISIG_TX;
 use crate::utils::cache::Cache;
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
@@ -52,6 +53,9 @@ pub fn propose_transaction(
         .send()?;
 
     if response.status().is_success() {
+        // context
+        //     .cache()
+        //     .invalidate_pattern("*{}_{}*", &ID_PREFIX_MULTISIG_TX, &safe_address);
         Ok(())
     } else {
         Err(ApiError::from_http_response(

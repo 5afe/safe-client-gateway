@@ -89,6 +89,7 @@ fn backend_txs_to_summary_txs_with_values() {
                  method_name: Some("transfer".into()),
                  action_count: None,
                  to_info: None,
+                 is_cancellation: false
              },
          ),
          execution_info: None,
@@ -106,6 +107,7 @@ fn backend_txs_to_summary_txs_with_values() {
                  method_name: Some("transfer".into()),
                  action_count: None,
                  to_info: None,
+                 is_cancellation: false
              },
          ),
          execution_info: None,
@@ -123,6 +125,7 @@ fn backend_txs_to_summary_txs_with_values() {
                  method_name: Some("transfer".into()),
                  action_count: None,
                  to_info: None,
+                 is_cancellation: false
              },
          ),
          execution_info: None,

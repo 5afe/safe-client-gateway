@@ -1,0 +1,49 @@
+{
+  "safe": "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67",
+  "to": "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67",
+  "value": "0",
+  "data": null,
+  "operation": 0,
+  "gasToken": "0x0000000000000000000000000000000000000000",
+  "safeTxGas": 43837,
+  "baseGas": 0,
+  "gasPrice": "0",
+  "refundReceiver": "0x0000000000000000000000000000000000000000",
+  "nonce": 38,
+  "executionDate": "2021-02-10T16:42:19Z",
+  "submissionDate": "2021-02-10T16:41:52.348029Z",
+  "modified": "2021-02-10T16:42:44.011477Z",
+  "blockNumber": 8049783,
+  "transactionHash": "0x2f09090bca0b5409d4dc797c603acd226249999d1d17932fc5a6e71900365823",
+  "safeTxHash": "0x2115301e6a038946deffb702ac192ad5d9cc769845fda4dfe0ed5a4b3d893f13",
+  "executor": "0x4d3101d77Aac1B90aE42Efa38d235A81aF270d40",
+  "isExecuted": true,
+  "isSuccessful": true,
+  "ethGasPrice": "275000000000",
+  "gasUsed": 48469,
+  "fee": "13328975000000000",
+  "origin": null,
+  "dataDecoded": null,
+  "confirmationsRequired": 2,
+  "confirmations": [
+    {
+      "owner": "0xBe8C10Dbf4c6148f9834C56C3331f8191f355552",
+      "submissionDate": "2021-02-10T16:41:52.365573Z",
+      "transactionHash": null,
+      "confirmationType": "CONFIRMATION",
+      "signature": "0x014635a679fe314e59f33cd0c325726cd2ded2ab968d1328b3de17a5d70cd8ac456da7ddc4c2ecf16cd84214f831ebf7fa534fa5345efa3f9c13abff2463e2121c",
+      "signatureType": "EOA"
+    },
+    {
+      "owner": "0x4d3101d77Aac1B90aE42Efa38d235A81aF270d40",
+      "submissionDate": "2021-02-10T16:42:19Z",
+      "transactionHash": null,
+      "confirmationType": "CONFIRMATION",
+      "signature": "0x0000000000000000000000004d3101d77aac1b90ae42efa38d235a81af270d40000000000000000000000000000000000000000000000000000000000000000001",
+      "signatureType": "APPROVED_HASH"
+    }
+  ],
+  "signatures": "0x0000000000000000000000004d3101d77aac1b90ae42efa38d235a81af270d40000000000000000000000000000000000000000000000000000000000000000001014635a679fe314e59f33cd0c325726cd2ded2ab968d1328b3de17a5d70cd8ac456da7ddc4c2ecf16cd84214f831ebf7fa534fa5345efa3f9c13abff2463e2121c",
+  "transfers": [],
+  "txType": "MULTISIG_TRANSACTION"
+}

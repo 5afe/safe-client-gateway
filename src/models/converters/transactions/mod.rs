@@ -197,10 +197,7 @@ impl MultisigTransaction {
         Custom {
             to: self.to.to_owned(),
             to_info: info_provider.address_info(&self.to).ok(),
-            is_cancellation: &self.to == &self.safe
-                && &data_size == "0"
-                && &value == "0"
-                && method_name.is_none(),
+            is_cancellation: self.is_cancellation(),
             data_size,
             value,
             method_name,
@@ -218,6 +215,34 @@ impl MultisigTransaction {
             .flatten()
             .unwrap_or(0)
     }
+
+    fn is_cancellation(&self) -> bool {
+        self.to == self.safe
+            && data_size(&self.data) == 0
+            && self.value.as_ref().map_or(true, |value| value == "0")
+            && self
+                .operation
+                .map_or(true, |operation| operation == Operation::CALL)
+            && self
+                .base_gas
+                .as_ref()
+                .map_or(true, |base_gas| base_gas.eq(&0))
+            && self
+                .gas_price
+                .as_ref()
+                .map_or(true, |gas_price| gas_price == "0")
+            && self.gas_token.as_ref().map_or(true, |gas_token| {
+                gas_token.len() < 2 || gas_token == "0x0000000000000000000000000000000000000000"
+            })
+            && self.refund_receiver.as_ref().map_or(true, |gas_token| {
+                gas_token.len() < 2 || gas_token == "0x0000000000000000000000000000000000000000"
+            })
+            && self
+                .data_decoded
+                .as_ref()
+                .map(|it| it.method.to_owned())
+                .is_none()
+    }
 }
 
 impl ModuleTransaction {
@@ -232,7 +257,7 @@ impl ModuleTransaction {
                 .data_decoded
                 .as_ref()
                 .and_then(|it| it.get_action_count()),
-            is_cancellation: false, // assumption: Module transactions can't be cancellation txs
+            is_cancellation: false,
         })
     }
 }

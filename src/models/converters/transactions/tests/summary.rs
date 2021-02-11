@@ -84,7 +84,7 @@ fn module_tx_to_summary_transaction() {
             method_name: None,
             action_count: None,
             to_info: None,
-            is_cancellation: false, //module transactions are assumed to never be cancellation transactions
+            is_cancellation: false,
         }),
         safe_app_info: None,
     }];

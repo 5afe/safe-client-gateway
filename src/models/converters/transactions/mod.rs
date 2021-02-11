@@ -191,16 +191,13 @@ impl MultisigTransaction {
     }
 
     fn to_custom(&self, info_provider: &mut dyn InfoProvider) -> Custom {
-        let data_size = data_size(&self.data).to_string();
-        let value = self.value.as_ref().unwrap().to_owned();
-        let method_name = self.data_decoded.as_ref().map(|it| it.method.to_owned());
         Custom {
             to: self.to.to_owned(),
             to_info: info_provider.address_info(&self.to).ok(),
             is_cancellation: self.is_cancellation(),
-            data_size,
-            value,
-            method_name,
+            data_size: data_size(&self.data).to_string(),
+            value: self.value.as_ref().unwrap().to_owned(),
+            method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
             action_count: self
                 .data_decoded
                 .as_ref()

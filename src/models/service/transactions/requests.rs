@@ -20,6 +20,7 @@ pub struct MultisigTransactionRequest {
     pub gas_price: String,
     pub gas_token: String,
     pub refund_receiver: Option<String>,
+    #[serde(rename(serialize = "contractTransactionHash"))]
     pub safe_tx_hash: String,
     pub sender: String,
     pub signature: String,

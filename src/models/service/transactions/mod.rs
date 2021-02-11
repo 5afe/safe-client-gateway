@@ -181,6 +181,7 @@ pub struct Custom {
     pub action_count: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub to_info: Option<AddressInfo>,
+    pub is_cancellation: bool,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

@@ -191,12 +191,19 @@ impl MultisigTransaction {
     }
 
     fn to_custom(&self, info_provider: &mut dyn InfoProvider) -> Custom {
+        let data_size = data_size(&self.data).to_string();
+        let value = self.value.as_ref().unwrap().to_owned();
+        let method_name = self.data_decoded.as_ref().map(|it| it.method.to_owned());
         Custom {
             to: self.to.to_owned(),
             to_info: info_provider.address_info(&self.to).ok(),
-            data_size: data_size(&self.data).to_string(),
-            value: self.value.as_ref().unwrap().into(),
-            method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
+            is_cancellation: &self.to == &self.safe
+                && &data_size == "0"
+                && &value == "0"
+                && method_name.is_none(),
+            data_size,
+            value,
+            method_name,
             action_count: self
                 .data_decoded
                 .as_ref()
@@ -225,6 +232,7 @@ impl ModuleTransaction {
                 .data_decoded
                 .as_ref()
                 .and_then(|it| it.get_action_count()),
+            is_cancellation: false, // assumption: Module transactions can't be cancellation txs
         })
     }
 }

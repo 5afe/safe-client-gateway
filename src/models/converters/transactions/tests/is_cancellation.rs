@@ -18,6 +18,14 @@ fn is_cancellation_has_0x_data_result_true() {
 }
 
 #[test]
+fn is_cancellation_has_safe_tx_gas_result_true() {
+    let mut tx = build_multisig_tx();
+    tx.safe_tx_gas = Some(1);
+
+    assert_eq!(true, tx.is_cancellation());
+}
+
+#[test]
 fn is_cancellation_has_value_result_false() {
     let mut tx = build_multisig_tx();
     tx.value = Some(String::from("1"));
@@ -60,7 +68,7 @@ fn is_cancellation_has_gas_price_result_false() {
 #[test]
 fn is_cancellation_has_gas_token_result_false() {
     let mut tx = build_multisig_tx();
-    tx.gas_price = Some(String::from("0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46"));
+    tx.gas_token = Some(String::from("0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46"));
 
     assert_eq!(false, tx.is_cancellation());
 }
@@ -68,7 +76,7 @@ fn is_cancellation_has_gas_token_result_false() {
 #[test]
 fn is_cancellation_has_refund_receiver_result_false() {
     let mut tx = build_multisig_tx();
-    tx.gas_price = Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"));
+    tx.refund_receiver = Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"));
 
     assert_eq!(false, tx.is_cancellation());
 }

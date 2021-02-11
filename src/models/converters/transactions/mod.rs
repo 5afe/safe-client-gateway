@@ -248,7 +248,7 @@ impl ModuleTransaction {
             to_info: info_provider.address_info(&self.to).ok(),
             to: self.to.to_owned(),
             data_size: data_size(&self.data).to_string(),
-            value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
+            value: self.value.as_ref().unwrap_or(&String::from("0")).into(),
             method_name: self.data_decoded.as_ref().map(|it| it.method.to_owned()),
             action_count: self
                 .data_decoded

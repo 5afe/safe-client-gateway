@@ -38,6 +38,11 @@ impl Cache for ServiceCache {
 }
 
 pub trait CacheExt: Cache {
+    fn invalidate_caches(&self, key: &str) {
+        self.invalidate_pattern(&format!("c_resp_*{}*", &key));
+        self.invalidate_pattern(&format!("c_reqs_*{}*", &key));
+    }
+
     fn cache_resp<R>(
         &self,
         key: &str,
@@ -47,13 +52,14 @@ pub trait CacheExt: Cache {
     where
         R: Serialize,
     {
-        let cached = self.fetch(key);
+        let cache_key = format!("c_resp_{}", &key);
+        let cached = self.fetch(&cache_key);
         match cached {
             Some(value) => Ok(content::Json(value)),
             None => {
                 let resp = resp()?;
                 let resp_string = serde_json::to_string(&resp)?;
-                self.create(key, &resp_string, timeout);
+                self.create(&cache_key, &resp_string, timeout);
                 Ok(content::Json(resp_string))
             }
         }
@@ -66,7 +72,8 @@ pub trait CacheExt: Cache {
         timeout: usize,
         error_timeout: usize,
     ) -> ApiResult<String> {
-        match self.fetch(&url) {
+        let cache_key = format!("c_reqs_{}", &url);
+        match self.fetch(&cache_key) {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
             None => {
                 let response = client.get(url).send()?;
@@ -85,14 +92,14 @@ pub trait CacheExt: Cache {
 
                 if is_client_error {
                     self.create(
-                        &url,
+                        &cache_key,
                         CachedWithCode::join(status_code, &raw_data).as_str(),
                         error_timeout,
                     );
                     Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {
                     self.create(
-                        &url,
+                        &cache_key,
                         CachedWithCode::join(status_code, &raw_data).as_str(),
                         timeout,
                     );

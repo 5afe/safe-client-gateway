@@ -2,6 +2,7 @@ use crate::config::{
     base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
     info_error_cache_timeout, safe_app_manifest_cache,
 };
+use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
@@ -12,21 +13,6 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
-
-#[automock]
-pub trait InfoProvider {
-    fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo>;
-    fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo>;
-    fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
-    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
-}
-
-pub struct DefaultInfoProvider<'p> {
-    client: &'p reqwest::blocking::Client,
-    cache: &'p dyn Cache,
-    safe_cache: HashMap<String, Option<SafeInfo>>,
-    token_cache: HashMap<String, Option<TokenInfo>>,
-}
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
@@ -81,16 +67,90 @@ pub struct TokenInfo {
     pub logo_uri: Option<String>,
 }
 
+#[automock]
+pub trait InfoProvider {
+    fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo>;
+    fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo>;
+    fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
+    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
+}
+
+pub struct DefaultInfoProvider<'p> {
+    client: &'p reqwest::blocking::Client,
+    cache: &'p dyn Cache,
+    safe_cache: HashMap<String, Option<SafeInfo>>,
+    token_cache: HashMap<String, Option<TokenInfo>>,
+}
+
+// TODO: we have 3 time `impl DefaultInfoProvider` maybe combine them
+impl DefaultInfoProvider<'_> {
+    fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
+        let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
+        let data: String = self
+            .cache
+            .request_cached(self.client, &url, info_cache_duration())?;
+        Ok(serde_json::from_str(&data).unwrap_or(None))
+    }
+
+    fn populate_token_cache(&mut self) -> ApiResult<()> {
+        let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
+        let response = self.client.get(&url).send()?;
+        let data: Page<TokenInfo> = response.json()?;
+        for token in data.results.iter() {
+            self.cache.create(
+                &format!("dip_ti_{}", token.address),
+                &serde_json::to_string(&token)?,
+                info_cache_duration(),
+            )
+        }
+        Ok(())
+    }
+
+    fn check_token_cache(&mut self) -> ApiResult<()> {
+        if self.cache.fetch("dip_tcl").is_some() {
+            // Cache is still up to data
+            return Ok(());
+        }
+        let result = self.populate_token_cache();
+        // If error we use a shorter cache timeout (we do not want to DoS our service in case of an error)
+        self.cache.create(
+            "dip_tcl",
+            "",
+            if result.is_ok() {
+                info_cache_duration()
+            } else {
+                10000
+            },
+        );
+        result
+    }
+
+    // TODO: Check Eviction policies: https://redis.io/topics/lru-cache
+    fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
+        self.check_token_cache()?;
+        match self.cache.fetch(&format!("dip_ti_{}", token)) {
+            Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
+            None => Ok(None),
+        }
+    }
+}
+
 impl InfoProvider for DefaultInfoProvider<'_> {
     fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo> {
-        let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
-        self.cached(|this| &mut this.safe_cache, url)
+        self.cached(
+            |this| &mut this.safe_cache,
+            DefaultInfoProvider::load_safe_info,
+            safe,
+        )
     }
 
     fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo> {
         if token != "0x0000000000000000000000000000000000000000" {
-            let url = format!("{}/v1/tokens/{}/", base_transaction_service_url(), token);
-            self.cached(|this| &mut this.token_cache, url)
+            self.cached(
+                |this| &mut this.token_cache,
+                DefaultInfoProvider::load_token_info,
+                token,
+            )
         } else {
             bail!("Token Address is 0x0")
         }
@@ -188,24 +248,21 @@ impl DefaultInfoProvider<'_> {
     fn cached<T>(
         &mut self,
         local_cache: impl Fn(&mut Self) -> &mut HashMap<String, Option<T>>,
-        url: impl Into<String>,
+        generator: impl Fn(&mut Self, &String) -> ApiResult<Option<T>>,
+        key: impl Into<String>,
     ) -> ApiResult<T>
     where
         T: Clone + DeserializeOwned,
     {
-        let url = url.into();
-        match local_cache(self).get(&url) {
-            Some(value) => value.clone().ok_or(api_error!("Could not decode cached")),
+        let key = key.into();
+        match local_cache(self).get(&key) {
+            Some(value) => value
+                .clone()
+                .ok_or(api_error!("Cached value not available")),
             None => {
-                let data = self.cache.request_cached(
-                    self.client,
-                    &url,
-                    info_cache_duration(),
-                    info_error_cache_timeout(),
-                )?;
-                let value: Option<T> = serde_json::from_str(&data).unwrap_or(None);
-                local_cache(self).insert(url, value.clone());
-                value.ok_or(api_error!("Could not decode response"))
+                let value: Option<T> = generator(self, &key)?;
+                local_cache(self).insert(key, value.clone());
+                value.ok_or(api_error!("Could not generate value"))
             }
         }
     }

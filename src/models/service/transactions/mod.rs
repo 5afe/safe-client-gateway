@@ -119,17 +119,20 @@ pub struct SettingsChange {
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[serde(tag = "type")]
 pub enum SettingsInfo {
+    #[serde(rename_all = "camelCase")]
     SetFallbackHandler {
         handler: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         handler_info: Option<AddressInfo>,
     },
+    #[serde(rename_all = "camelCase")]
     AddOwner {
         owner: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         owner_info: Option<AddressInfo>,
         threshold: u64,
     },
+    #[serde(rename_all = "camelCase")]
     RemoveOwner {
         owner: String,
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -145,19 +148,21 @@ pub enum SettingsInfo {
         #[serde(skip_serializing_if = "Option::is_none")]
         new_owner_info: Option<AddressInfo>,
     },
-    ChangeThreshold {
-        threshold: u64,
-    },
+    #[serde(rename_all = "camelCase")]
+    ChangeThreshold { threshold: u64 },
+    #[serde(rename_all = "camelCase")]
     ChangeImplementation {
         implementation: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         implementation_info: Option<AddressInfo>,
     },
+    #[serde(rename_all = "camelCase")]
     EnableModule {
         module: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         module_info: Option<AddressInfo>,
     },
+    #[serde(rename_all = "camelCase")]
     DisableModule {
         module: String,
         #[serde(skip_serializing_if = "Option::is_none")]

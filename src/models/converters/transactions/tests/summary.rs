@@ -84,6 +84,7 @@ fn module_tx_to_summary_transaction() {
             method_name: None,
             action_count: None,
             to_info: None,
+            is_cancellation: false, //module transactions are assumed to never be cancellation transactions
         }),
         safe_app_info: None,
     }];
@@ -499,6 +500,7 @@ fn multisig_transaction_to_custom_summary() {
             method_name: Some("approve".to_string()),
             action_count: None,
             to_info: None,
+            is_cancellation: false,
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 84,
@@ -667,6 +669,7 @@ fn multisig_transaction_with_origin() {
             method_name: Some("multiSend".to_string()),
             action_count: Some(1),
             to_info: None,
+            is_cancellation: false,
         }),
         execution_info: Some(ExecutionInfo {
             nonce: 160,

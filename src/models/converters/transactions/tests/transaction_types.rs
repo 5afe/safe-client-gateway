@@ -29,6 +29,7 @@ fn transaction_operation_not_call() {
         method_name: Some("transfer".to_string()),
         action_count: None,
         to_info: None,
+        is_cancellation: false,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -57,6 +58,7 @@ fn transaction_data_size_and_value_greater_than_0() {
         method_name: Some("transfer".to_string()),
         action_count: None,
         to_info: None,
+        is_cancellation: false,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -93,6 +95,7 @@ fn transaction_data_size_and_value_greater_than_0_with_address_info() {
             name: "".to_string(),
             logo_uri: None,
         }),
+        is_cancellation: false,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -241,6 +244,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method(
         method_name: Some("newAndDifferentAddOwnerWithThreshold".to_string()),
         action_count: None,
         to_info: None,
+        is_cancellation: false,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -343,6 +347,7 @@ fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
         method_name: Some("transferFrom".to_string()),
         action_count: None,
         to_info: None,
+        is_cancellation: false,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -371,6 +376,7 @@ fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
         method_name: Some("safeTransferFrom".to_string()),
         action_count: None,
         to_info: None,
+        is_cancellation: false,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -408,6 +414,7 @@ fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() 
         method_name: Some("transfer".to_string()),
         action_count: None,
         to_info: None,
+        is_cancellation: false,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);
@@ -437,6 +444,34 @@ fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
         method_name: Some("transfer".to_string()),
         action_count: None,
         to_info: None,
+        is_cancellation: false,
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn cancellation_transaction() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_info()
+        .times(1)
+        .return_once(move |_| anyhow::bail!("No address info"));
+
+    let tx =
+        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CANCELLATION).unwrap();
+    let expected = TransactionInfo::Custom(Custom {
+        to: "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
+        data_size: "0".to_string(),
+        value: "0".to_string(),
+        method_name: None,
+        action_count: None,
+        to_info: None,
+        is_cancellation: true,
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider);

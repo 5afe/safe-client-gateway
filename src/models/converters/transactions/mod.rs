@@ -237,11 +237,6 @@ impl MultisigTransaction {
                 .map_or(true, |refund_receiver| {
                     refund_receiver == "0x0000000000000000000000000000000000000000"
                 })
-            && self
-                .data_decoded
-                .as_ref()
-                .map(|it| it.method.to_owned())
-                .is_none()
     }
 }
 

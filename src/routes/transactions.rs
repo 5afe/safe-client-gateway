@@ -1,8 +1,10 @@
 use crate::config::request_cache_duration;
-use crate::models::service::transactions::requests::ConfirmationRequest;
-use crate::services::tx_confirmation;
+use crate::models::service::transactions::requests::{
+    ConfirmationRequest, MultisigTransactionRequest,
+};
 use crate::services::{
-    transactions_details, transactions_history, transactions_list, transactions_queued,
+    transactions_details, transactions_history, transactions_list, transactions_proposal,
+    transactions_queued,
 };
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
@@ -41,7 +43,7 @@ pub fn submit_confirmation(
     safe_tx_hash: String,
     tx_confirmation_request: Json<ConfirmationRequest>,
 ) -> ApiResult<content::Json<String>> {
-    tx_confirmation::submit_confirmation(
+    transactions_proposal::submit_confirmation(
         &context,
         &safe_tx_hash,
         &tx_confirmation_request.signed_safe_tx_hash,
@@ -93,4 +95,20 @@ pub fn queued_transactions(
                 &trusted,
             )
         })
+}
+
+#[post(
+    "/v1/transactions/<safe_address>/propose",
+    data = "<multisig_transaction_request>"
+)]
+pub fn propose_transaction(
+    context: Context,
+    safe_address: String,
+    multisig_transaction_request: Json<MultisigTransactionRequest>,
+) -> ApiResult<()> {
+    transactions_proposal::propose_transaction(
+        &context,
+        &safe_address,
+        &multisig_transaction_request,
+    )
 }

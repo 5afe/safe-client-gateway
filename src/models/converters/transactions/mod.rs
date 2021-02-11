@@ -229,11 +229,14 @@ impl MultisigTransaction {
                 .as_ref()
                 .map_or(true, |gas_price| gas_price == "0")
             && self.gas_token.as_ref().map_or(true, |gas_token| {
-                gas_token.len() < 2 || gas_token == "0x0000000000000000000000000000000000000000"
+                gas_token == "0x0000000000000000000000000000000000000000"
             })
-            && self.refund_receiver.as_ref().map_or(true, |gas_token| {
-                gas_token.len() < 2 || gas_token == "0x0000000000000000000000000000000000000000"
-            })
+            && self
+                .refund_receiver
+                .as_ref()
+                .map_or(true, |refund_receiver| {
+                    refund_receiver == "0x0000000000000000000000000000000000000000"
+                })
             && self
                 .data_decoded
                 .as_ref()

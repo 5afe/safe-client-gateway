@@ -54,7 +54,6 @@ pub struct MultisigTransaction {
 #[serde(rename_all = "camelCase")]
 pub struct EthereumTransaction {
     pub execution_date: DateTime<Utc>,
-    pub to: String,
     pub data: Option<String>,
     pub tx_hash: String,
     pub block_number: u64,

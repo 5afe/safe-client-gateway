@@ -98,7 +98,6 @@ fn ethereum_tx_to_summary_transaction_no_transfers() {
 
     let ethereum_tx = EthereumTransaction {
         execution_date: Utc::now(),
-        to: String::from("0x1234"),
         data: None,
         tx_hash: String::from("0x4321"),
         block_number: 0,
@@ -145,7 +144,6 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
     ];
     let ethereum_tx = EthereumTransaction {
         execution_date: timestamp,
-        to: String::from("0x1234"),
         data: None,
         tx_hash: String::from("0x4321"),
         block_number: 0,

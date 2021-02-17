@@ -29,14 +29,20 @@ use dotenv::dotenv;
 use routes::active_routes;
 use utils::cache::ServiceCache;
 use utils::cors::CORS;
+use std::time::Duration;
 
 fn main() {
     dotenv().ok();
     env_logger::init();
 
+    let client = reqwest::blocking::Client::builder()
+        .connect_timeout(Duration::from_millis(config::internal_client_connect_timeout()))
+        .build()
+        .unwrap();
+        
     rocket::ignite()
         .mount("/", active_routes())
-        .manage(reqwest::blocking::Client::new())
+        .manage(client)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
         .attach(ServiceCache::fairing())

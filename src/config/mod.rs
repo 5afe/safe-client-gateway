@@ -19,6 +19,13 @@ fn usize_with_default(key: &str, default: usize) -> usize {
     }
 }
 
+fn u64_with_default(key: &str, default: u64) -> u64 {
+    match env::var(key) {
+        Ok(value) => value.parse().unwrap(),
+        Err(_) => default,
+    }
+}
+
 pub fn info_cache_duration() -> usize {
     usize_with_default("INFO_CACHE_DURATION", 60 * 15)
 }
@@ -36,7 +43,11 @@ pub fn about_cache_duration() -> usize {
 }
 
 pub fn safe_app_manifest_cache() -> usize {
-    usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", 60 * 60 * 24 * 7) // is a week good?
+    usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", 60 * 60 * 24 * 7)
+}
+
+pub fn internal_client_connect_timeout() -> u64 {
+    u64_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)
 }
 
 pub fn build_number() -> Option<String> {

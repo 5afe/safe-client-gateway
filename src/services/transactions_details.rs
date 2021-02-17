@@ -44,7 +44,7 @@ pub(super) fn get_multisig_transaction_details(
 }
 
 fn get_rejections(
-    context: &&Context,
+    context: &Context,
     multisig_tx: &MultisigTransaction,
 ) -> Option<Vec<MultisigConfirmation>> {
     let url = format!(

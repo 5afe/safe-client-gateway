@@ -6,7 +6,7 @@ use crate::config::{
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
-use crate::models::service::transactions::details::TransactionDetails;
+use crate::models::service::transactions::details::{MultisigConfirmation, TransactionDetails};
 use crate::models::service::transactions::{
     TransactionIdParts, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX,
     ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
@@ -35,9 +35,46 @@ pub(super) fn get_multisig_transaction_details(
         request_error_cache_timeout(),
     )?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
-    let details = multisig_tx.to_transaction_details(&mut info_provider)?;
+
+    let rejections = get_rejections(&context, &multisig_tx);
+
+    let details = multisig_tx.to_transaction_details(rejections, &mut info_provider)?;
 
     Ok(details)
+}
+
+fn get_rejections(
+    context: &&Context,
+    multisig_tx: &MultisigTransaction,
+) -> Option<Vec<MultisigConfirmation>> {
+    let url = format!(
+        "{}/v1/safes/{}/multisig-transactions/?nonce={}",
+        base_transaction_service_url(),
+        &multisig_tx.safe,
+        &multisig_tx.nonce
+    );
+
+    let body = context
+        .cache()
+        .request_cached(&context.client(), &url, request_cache_duration())
+        .ok()?;
+    let backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body).ok()?;
+    backend_transactions
+        .results
+        .iter()
+        .find(|tx| tx.is_cancellation())
+        .map(|tx| {
+            tx.confirmations.as_ref().map(|it| {
+                it.iter()
+                    .map(|confirmation| MultisigConfirmation {
+                        signer: confirmation.owner.to_owned(),
+                        signature: confirmation.signature.to_owned(),
+                        submitted_at: confirmation.submission_date.timestamp_millis(),
+                    })
+                    .collect()
+            })
+        })
+        .flatten()
 }
 
 fn get_ethereum_transaction_details(

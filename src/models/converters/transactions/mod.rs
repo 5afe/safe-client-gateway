@@ -213,7 +213,7 @@ impl MultisigTransaction {
             .unwrap_or(0)
     }
 
-    pub(crate) fn is_cancellation(&self) -> bool {
+    fn is_cancellation(&self) -> bool {
         self.to == self.safe
             && data_size(&self.data) == 0
             && self.value.as_ref().map_or(true, |value| value == "0")

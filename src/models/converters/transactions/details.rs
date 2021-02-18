@@ -14,7 +14,7 @@ use crate::utils::errors::ApiResult;
 impl MultisigTransaction {
     pub fn to_transaction_details(
         &self,
-        rejections: Option<Vec<MultisigConfirmation>>,
+        conflicting_txs: Vec<MultisigTransaction>,
         info_provider: &mut dyn InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
@@ -37,7 +37,7 @@ impl MultisigTransaction {
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
-                self.build_execution_details(safe_info, gas_token, rejections),
+                self.build_execution_details(safe_info, gas_token, conflicting_txs),
             )),
             safe_app_info: self
                 .origin
@@ -50,7 +50,7 @@ impl MultisigTransaction {
         &self,
         safe_info: SafeInfo,
         gas_token_info: Option<TokenInfo>,
-        rejections: Option<Vec<MultisigConfirmation>>,
+        conflicting_txs: Vec<MultisigTransaction>,
     ) -> MultisigExecutionDetails {
         MultisigExecutionDetails {
             submitted_at: self.submission_date.timestamp_millis(),
@@ -88,7 +88,32 @@ impl MultisigTransaction {
                 .unwrap_or(&String::from("0"))
                 .to_owned(),
             gas_token_info,
-            rejections,
+            rejections: self.get_rejections(conflicting_txs),
+        }
+    }
+
+    fn get_rejections(
+        &self,
+        conflicting_txs: Vec<MultisigTransaction>,
+    ) -> Option<Vec<MultisigConfirmation>> {
+        if self.is_cancellation() {
+            None
+        } else {
+            conflicting_txs
+                .iter()
+                .find(|tx| tx.is_cancellation())
+                .map(|tx| {
+                    tx.confirmations.as_ref().map(|it| {
+                        it.iter()
+                            .map(|confirmation| MultisigConfirmation {
+                                signer: confirmation.owner.to_owned(),
+                                signature: confirmation.signature.to_owned(),
+                                submitted_at: confirmation.submission_date.timestamp_millis(),
+                            })
+                            .collect()
+                    })
+                })
+                .flatten()
         }
     }
 }

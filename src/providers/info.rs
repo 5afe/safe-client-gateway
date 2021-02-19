@@ -82,89 +82,6 @@ pub struct DefaultInfoProvider<'p> {
     token_cache: HashMap<String, Option<TokenInfo>>,
 }
 
-// TODO: we have 3 time `impl DefaultInfoProvider` maybe combine them
-impl DefaultInfoProvider<'_> {
-    fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
-        let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
-        let data: String = self
-            .cache
-            .request_cached(self.client, &url, info_cache_duration())?;
-        Ok(serde_json::from_str(&data).unwrap_or(None))
-    }
-
-    fn populate_token_cache(&mut self) -> ApiResult<()> {
-        let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
-        let response = self.client.get(&url).send()?;
-        let data: Page<TokenInfo> = response.json()?;
-        for token in data.results.iter() {
-            self.cache.create(
-                &format!("dip_ti_{}", token.address),
-                &serde_json::to_string(&token)?,
-                info_cache_duration(),
-            )
-        }
-        Ok(())
-    }
-
-    fn check_token_cache(&mut self) -> ApiResult<()> {
-        if self.cache.fetch("dip_tcl").is_some() {
-            // Cache is still up to data
-            return Ok(());
-        }
-        let result = self.populate_token_cache();
-        // If error we use a shorter cache timeout (we do not want to DoS our service in case of an error)
-        self.cache.create(
-            "dip_tcl",
-            "",
-            if result.is_ok() {
-                info_cache_duration()
-            } else {
-                10000
-            },
-        );
-        result
-    }
-
-    // TODO: Check Eviction policies: https://redis.io/topics/lru-cache
-    fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
-        self.check_token_cache()?;
-        match self.cache.fetch(&format!("dip_ti_{}", token)) {
-            Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
-            None => Ok(None),
-        }
-    }
-
-    pub fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
-        let currency_code = currency_code.to_uppercase();
-        let exchange = self.fetch_exchange()?;
-        match exchange.rates {
-            Some(rates) => rates
-                .get(&currency_code)
-                .cloned()
-                .ok_or(api_error!("Currency not found")),
-            None => Err(bail!("Currency not found")),
-        }
-    }
-
-    pub fn available_currency_codes(&self) -> ApiResult<Vec<String>> {
-        let exchange = self.fetch_exchange()?;
-        Ok(exchange
-            .rates
-            .map_or(vec![], |s| s.keys().cloned().collect::<Vec<_>>()))
-    }
-
-    fn fetch_exchange(&self) -> ApiResult<Exchange> {
-        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
-        let body = self.cache.request_cached(
-            self.client,
-            &url,
-            exchange_api_cache_duration(),
-            info_error_cache_timeout(),
-        )?;
-        Ok(serde_json::from_str::<Exchange>(&body)?)
-    }
-}
-
 impl InfoProvider for DefaultInfoProvider<'_> {
     fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo> {
         self.cached(
@@ -263,5 +180,82 @@ impl DefaultInfoProvider<'_> {
                 value.ok_or(api_error!("Could not generate value"))
             }
         }
+    }
+
+    fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
+        let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
+        let data: String = self
+            .cache
+            .request_cached(self.client, &url, info_cache_duration())?;
+        Ok(serde_json::from_str(&data).unwrap_or(None))
+    }
+
+    fn populate_token_cache(&mut self) -> ApiResult<()> {
+        let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
+        let response = self.client.get(&url).send()?;
+        let data: Page<TokenInfo> = response.json()?;
+        for token in data.results.iter() {
+            self.cache.create(
+                &format!("dip_ti_{}", token.address),
+                &serde_json::to_string(&token)?,
+                info_cache_duration(),
+            )
+        }
+        Ok(())
+    }
+
+    fn check_token_cache(&mut self) -> ApiResult<()> {
+        if self.cache.fetch("dip_tcl").is_some() {
+            // Cache is still up to data
+            return Ok(());
+        }
+        let result = self.populate_token_cache();
+        // If error we use a shorter cache timeout (we do not want to DoS our service in case of an error)
+        self.cache.create(
+            "dip_tcl",
+            "",
+            if result.is_ok() {
+                info_cache_duration()
+            } else {
+                10000
+            },
+        );
+        result
+    }
+
+    // TODO: Check Eviction policies: https://redis.io/topics/lru-cache
+    fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
+        self.check_token_cache()?;
+        match self.cache.fetch(&format!("dip_ti_{}", token)) {
+            Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
+            None => Ok(None),
+        }
+    }
+
+    pub fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
+        let currency_code = currency_code.to_uppercase();
+        let exchange = self.fetch_exchange()?;
+        match exchange.rates {
+            Some(rates) => rates
+                .get(&currency_code)
+                .cloned()
+                .ok_or(api_error!("Currency not found")),
+            None => Err(bail!("Currency not found")),
+        }
+    }
+
+    pub fn available_currency_codes(&self) -> ApiResult<Vec<String>> {
+        let exchange = self.fetch_exchange()?;
+        Ok(exchange
+            .rates
+            .map_or(vec![], |s| s.keys().cloned().collect::<Vec<_>>()))
+    }
+
+    fn fetch_exchange(&self) -> ApiResult<Exchange> {
+        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
+        let body = self
+            .cache
+            .request_cached(self.client, &url, exchange_api_cache_duration())?;
+        Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }

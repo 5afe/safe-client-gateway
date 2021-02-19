@@ -133,6 +133,36 @@ impl DefaultInfoProvider<'_> {
             None => Ok(None),
         }
     }
+
+    pub fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
+        let currency_code = currency_code.to_uppercase();
+        let exchange = self.fetch_exchange()?;
+        match exchange.rates {
+            Some(rates) => rates
+                .get(&currency_code)
+                .cloned()
+                .ok_or(api_error!("Currency not found")),
+            None => Err(bail!("Currency not found")),
+        }
+    }
+
+    pub fn available_currency_codes(&self) -> ApiResult<Vec<String>> {
+        let exchange = self.fetch_exchange()?;
+        Ok(exchange
+            .rates
+            .map_or(vec![], |s| s.keys().cloned().collect::<Vec<_>>()))
+    }
+
+    fn fetch_exchange(&self) -> ApiResult<Exchange> {
+        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
+        let body = self.cache.request_cached(
+            self.client,
+            &url,
+            exchange_api_cache_duration(),
+            info_error_cache_timeout(),
+        )?;
+        Ok(serde_json::from_str::<Exchange>(&body)?)
+    }
 }
 
 impl InfoProvider for DefaultInfoProvider<'_> {
@@ -200,38 +230,6 @@ impl InfoProvider for DefaultInfoProvider<'_> {
                     })
                 }
             })
-    }
-}
-
-impl DefaultInfoProvider<'_> {
-    pub fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
-        let currency_code = currency_code.to_uppercase();
-        let exchange = self.fetch_exchange()?;
-        match exchange.rates {
-            Some(rates) => rates
-                .get(&currency_code)
-                .cloned()
-                .ok_or(api_error!("Currency not found")),
-            None => bail!("Currency not found"),
-        }
-    }
-
-    pub fn available_currency_codes(&self) -> ApiResult<Vec<String>> {
-        let exchange = self.fetch_exchange()?;
-        Ok(exchange
-            .rates
-            .map_or(vec![], |s| s.keys().cloned().collect::<Vec<_>>()))
-    }
-
-    fn fetch_exchange(&self) -> ApiResult<Exchange> {
-        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
-        let body = self.cache.request_cached(
-            self.client,
-            &url,
-            exchange_api_cache_duration(),
-            info_error_cache_timeout(),
-        )?;
-        Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }
 

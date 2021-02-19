@@ -55,9 +55,12 @@ fn get_conflicting_txs(
     );
     debug!("{:#?}", &url);
 
-    let body = context
-        .cache()
-        .request_cached(&context.client(), &url, request_cache_duration())?;
+    let body = context.cache().request_cached(
+        &context.client(),
+        &url,
+        request_cache_duration(),
+        request_error_cache_timeout(),
+    )?;
     let backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
     Ok(backend_transactions.results)
 }

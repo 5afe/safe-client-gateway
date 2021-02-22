@@ -84,7 +84,7 @@ pub fn queued_transactions(
     timezone_offset: Option<String>,
     trusted: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    let resp = context
+    context
         .cache()
         .cache_resp(&context.uri(), request_cache_duration(), || {
             transactions_queued::get_queued_transactions(
@@ -94,8 +94,7 @@ pub fn queued_transactions(
                 &timezone_offset,
                 &trusted,
             )
-        });
-    resp
+        })
 }
 
 #[post(

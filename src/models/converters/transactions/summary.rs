@@ -30,7 +30,7 @@ impl Transaction {
             Transaction::Module(transaction) => {
                 Ok(transaction.to_transaction_summary(info_provider))
             }
-            Transaction::Unknown => Err(api_error!("Unknown transaction type from backend")),
+            Transaction::Unknown => bail!("Unknown transaction type from backend"),
         }
     }
 }

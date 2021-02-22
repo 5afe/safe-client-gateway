@@ -5,7 +5,7 @@ use crate::config::{
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::{ApiResult};
 use crate::utils::json::default_if_null;
 use mockall::automock;
 use serde::de::DeserializeOwned;
@@ -92,7 +92,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             let url = format!("{}/v1/tokens/{}/", base_transaction_service_url(), token);
             self.cached(|this| &mut this.token_cache, url)
         } else {
-            Err(ApiError::new_from_message("Token Address is 0x0"))
+            bail!("Token Address is 0x0")
         }
     }
 
@@ -126,7 +126,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
                         .request_cached(self.client, &url, safe_app_manifest_cache())?;
                 let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
                 if contract_info.display_name.trim().is_empty() {
-                    Err(ApiError::new_from_message("No display name"))
+                    bail!("No display name")
                 } else {
                     Ok(AddressInfo {
                         name: contract_info.display_name.to_owned(),
@@ -145,8 +145,8 @@ impl DefaultInfoProvider<'_> {
             Some(rates) => rates
                 .get(&currency_code)
                 .cloned()
-                .ok_or(ApiError::new_from_message("Currency not found")),
-            None => Err(ApiError::new_from_message("Currency not found")),
+                .ok_or(api_error!("Currency not found")),
+            None => bail!("Currency not found"),
         }
     }
 
@@ -188,14 +188,14 @@ impl DefaultInfoProvider<'_> {
         match local_cache(self).get(&url) {
             Some(value) => value
                 .clone()
-                .ok_or(ApiError::new_from_message("Could not decode cached")),
+                .ok_or(api_error!("Could not decode cached")),
             None => {
                 let data = self
                     .cache
                     .request_cached(self.client, &url, info_cache_duration())?;
                 let value: Option<T> = serde_json::from_str(&data).unwrap_or(None);
                 local_cache(self).insert(url, value.clone());
-                value.ok_or(ApiError::new_from_message("Could not decode response"))
+                value.ok_or(api_error!("Could not decode response"))
             }
         }
     }

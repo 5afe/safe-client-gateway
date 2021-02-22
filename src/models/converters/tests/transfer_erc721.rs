@@ -19,7 +19,7 @@ fn erc721_transfer_dto_to_incoming_transfer_transaction() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected = Transfer {
         sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
@@ -174,7 +174,7 @@ fn erc721_transfer_dto_to_transfer_info_token_unavailable() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No token info"));
+        .return_once(move |_| bail!("No token info"));
 
     let expected = TransferInfo::Erc721(Erc721Transfer {
         token_id: "37".to_string(),
@@ -249,7 +249,7 @@ fn erc721_transfer_dto_get_info_provider_error() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No token info"));
+        .return_once(move |_| bail!("No token info"));
     let expected = TransferInfo::Erc721(Erc721Transfer {
         token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
         token_id: "37".to_string(),

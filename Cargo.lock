@@ -74,12 +74,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anyhow"
-version = "1.0.35"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c0df63cb2955042487fad3aefd2c6e3ae7389ac5dc1beb28921de0b69f779d4"
-
-[[package]]
 name = "ascii"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1828,7 +1822,6 @@ checksum = "71d301d4193d031abdd79ff7e3dd721168a9572ef3fe51a1517aba235bd8f86e"
 name = "safe-client-gateway"
 version = "1.8.2"
 dependencies = [
- "anyhow",
  "cargo-watch",
  "chrono",
  "derivative",

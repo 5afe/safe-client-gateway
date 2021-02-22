@@ -201,7 +201,7 @@ fn process_transactions_no_conflicts_everything_queued() {
     mock_info_provider
         .expect_address_info()
         .times(3)
-        .returning(move |_| anyhow::bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 
@@ -357,7 +357,7 @@ fn process_transactions_conflicts_in_queued() {
     mock_info_provider
         .expect_address_info()
         .times(3)
-        .returning(move |_| anyhow::bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 
@@ -517,7 +517,7 @@ fn process_transactions_conflicts_in_next() {
     mock_info_provider
         .expect_address_info()
         .times(3)
-        .returning(move |_| anyhow::bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 
@@ -678,7 +678,7 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
     mock_info_provider
         .expect_address_info()
         .times(3)
-        .returning(move |_| anyhow::bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let mut tx_iter = input_list.into_iter();
 

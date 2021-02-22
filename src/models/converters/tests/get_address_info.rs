@@ -37,7 +37,7 @@ fn get_address_info_address_diff_than_safe_error() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let actual = get_address_info(safe, address, &mut mock_info_provider);
     assert!(actual.is_none());

@@ -13,7 +13,7 @@ fn ether_transfer_dto_ether_incoming_transfer_transaction() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("no address info"));
+        .return_once(move |_| bail!("no address info"));
 
     let ether_transfer_dto =
         serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap();

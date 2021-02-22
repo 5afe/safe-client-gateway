@@ -27,7 +27,7 @@ fn multisig_tx_check_erc721_transfer() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
@@ -130,7 +130,7 @@ fn multisig_tx_check_erc20_transfer() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
@@ -223,7 +223,7 @@ fn multisig_tx_check_ether_transfer() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x938bae50a210b80EA233112800Cd5Bc2e7644300";

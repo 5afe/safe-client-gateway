@@ -12,14 +12,14 @@ use crate::models::service::transactions::{
 };
 use crate::providers::info::InfoProvider;
 use crate::utils::hex_hash;
-use anyhow::{Error, Result};
+use crate::utils::errors::{ApiResult};
 
 impl Transaction {
     pub fn to_transaction_summary(
         &self,
         info_provider: &mut dyn InfoProvider,
         safe: &str,
-    ) -> Result<Vec<TransactionSummary>> {
+    ) -> ApiResult<Vec<TransactionSummary>> {
         match self {
             Transaction::Multisig(transaction) => {
                 Ok(transaction.to_transaction_summary(info_provider)?)
@@ -30,7 +30,7 @@ impl Transaction {
             Transaction::Module(transaction) => {
                 Ok(transaction.to_transaction_summary(info_provider))
             }
-            Transaction::Unknown => Err(Error::msg("Unknown transaction type from backend")),
+            Transaction::Unknown => Err(api_error!("Unknown transaction type from backend")),
         }
     }
 }
@@ -39,7 +39,7 @@ impl MultisigTransaction {
     pub fn to_transaction_summary(
         &self,
         info_provider: &mut dyn InfoProvider,
-    ) -> Result<Vec<TransactionSummary>> {
+    ) -> ApiResult<Vec<TransactionSummary>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         let tx_status = self.map_status(&safe_info);
         let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations {

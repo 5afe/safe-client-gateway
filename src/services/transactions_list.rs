@@ -28,7 +28,6 @@ pub fn get_all_transactions(
         .request_cached(&context.client(), &url, request_cache_duration())?;
     debug!("request URL: {}", &url);
     debug!("page_url: {:#?}", page_url);
-    debug!("{:#?}", body);
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions
         .results

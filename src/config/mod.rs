@@ -26,6 +26,13 @@ fn u64_with_default(key: &str, default: u64) -> u64 {
     }
 }
 
+fn bool_with_default(key: &str, default: bool) -> bool {
+    match env::var(key) {
+        Ok(value) => value.parse().unwrap(),
+        Err(_) => default,
+    }
+}
+
 pub fn info_cache_duration() -> usize {
     usize_with_default("INFO_CACHE_DURATION", 60 * 15)
 }
@@ -48,6 +55,10 @@ pub fn safe_app_manifest_cache() -> usize {
 
 pub fn internal_client_connect_timeout() -> u64 {
     u64_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)
+}
+
+pub fn log_all_error_responses() -> bool {
+    bool_with_default("LOG_ALL_ERROR_RESPONSES", false)
 }
 
 pub fn build_number() -> Option<String> {

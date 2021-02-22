@@ -1,6 +1,6 @@
 use crate::config::{
     base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
-    safe_app_manifest_cache,
+    info_error_cache_timeout, safe_app_manifest_cache,
 };
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::cache::{Cache, CacheExt};
@@ -98,9 +98,12 @@ impl InfoProvider for DefaultInfoProvider<'_> {
 
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = format!("{}/manifest.json", url);
-        let manifest_json =
-            self.cache
-                .request_cached(self.client, &manifest_url, safe_app_manifest_cache())?;
+        let manifest_json = self.cache.request_cached(
+            self.client,
+            &manifest_url,
+            safe_app_manifest_cache(),
+            info_error_cache_timeout(),
+        )?;
         let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
         Ok(SafeAppInfo {
             name: manifest.name.to_owned(),
@@ -121,9 +124,12 @@ impl InfoProvider for DefaultInfoProvider<'_> {
                     base_transaction_service_url(),
                     address
                 );
-                let contract_info_json =
-                    self.cache
-                        .request_cached(self.client, &url, safe_app_manifest_cache())?;
+                let contract_info_json = self.cache.request_cached(
+                    self.client,
+                    &url,
+                    safe_app_manifest_cache(),
+                    info_error_cache_timeout(),
+                )?;
                 let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
                 if contract_info.display_name.trim().is_empty() {
                     bail!("No display name")
@@ -159,9 +165,12 @@ impl DefaultInfoProvider<'_> {
 
     fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
-        let body = self
-            .cache
-            .request_cached(self.client, &url, exchange_api_cache_duration())?;
+        let body = self.cache.request_cached(
+            self.client,
+            &url,
+            exchange_api_cache_duration(),
+            info_error_cache_timeout(),
+        )?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }
@@ -188,9 +197,12 @@ impl DefaultInfoProvider<'_> {
         match local_cache(self).get(&url) {
             Some(value) => value.clone().ok_or(api_error!("Could not decode cached")),
             None => {
-                let data = self
-                    .cache
-                    .request_cached(self.client, &url, info_cache_duration())?;
+                let data = self.cache.request_cached(
+                    self.client,
+                    &url,
+                    info_cache_duration(),
+                    info_error_cache_timeout(),
+                )?;
                 let value: Option<T> = serde_json::from_str(&data).unwrap_or(None);
                 local_cache(self).insert(url, value.clone());
                 value.ok_or(api_error!("Could not decode response"))

@@ -1,6 +1,8 @@
 extern crate reqwest;
 
-use crate::config::{base_transaction_service_url, request_cache_duration};
+use crate::config::{
+    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+};
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
@@ -26,9 +28,12 @@ pub(super) fn get_multisig_transaction_details(
         base_transaction_service_url(),
         safe_tx_hash
     );
-    let body = context
-        .cache()
-        .request_cached(&context.client(), &url, request_cache_duration())?;
+    let body = context.cache().request_cached(
+        &context.client(),
+        &url,
+        request_cache_duration(),
+        request_error_cache_timeout(),
+    )?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
     let details = multisig_tx.to_transaction_details(&mut info_provider)?;
 
@@ -49,9 +54,12 @@ fn get_ethereum_transaction_details(
         tx_hash
     );
     debug!("url: {}", url);
-    let body = context
-        .cache()
-        .request_cached(&context.client(), &url, request_cache_duration())?;
+    let body = context.cache().request_cached(
+        &context.client(),
+        &url,
+        request_cache_duration(),
+        request_error_cache_timeout(),
+    )?;
     let transfers: Page<Transfer> = serde_json::from_str(&body)?;
     let transfer = transfers
         .results
@@ -82,9 +90,12 @@ fn get_module_transaction_details(
         tx_hash
     );
     debug!("url: {}", url);
-    let body = context
-        .cache()
-        .request_cached(&context.client(), &url, request_cache_duration())?;
+    let body = context.cache().request_cached(
+        &context.client(),
+        &url,
+        request_cache_duration(),
+        request_error_cache_timeout(),
+    )?;
     let transactions: Page<ModuleTransaction> = serde_json::from_str(&body)?;
     let transaction = transactions
         .results

@@ -1,4 +1,3 @@
-use crate::config::client_error_cache_duration;
 use crate::utils::errors::{ApiError, ApiResult};
 use mockall::automock;
 use rocket::response::content;
@@ -65,6 +64,7 @@ pub trait CacheExt: Cache {
         client: &reqwest::blocking::Client,
         url: &str,
         timeout: usize,
+        error_timeout: usize,
     ) -> ApiResult<String> {
         match self.fetch(&url) {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
@@ -87,7 +87,7 @@ pub trait CacheExt: Cache {
                     self.create(
                         &url,
                         CachedWithCode::join(status_code, &raw_data).as_str(),
-                        client_error_cache_duration(),
+                        error_timeout,
                     );
                     Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {

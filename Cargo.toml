@@ -1,7 +1,7 @@
 [package]
 name = "safe-client-gateway"
-version = "1.8.2"
-authors = ["jpalvarezl <jose.alvarez@gnosis.io>"]
+version = "1.8.3"
+authors = ["jpalvarezl <jose.alvarez@gnosis.io>", "rmeissner <richard@gnosis.io>"]
 edition = "2018"
 
 [profile.release]

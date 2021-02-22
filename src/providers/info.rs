@@ -5,7 +5,7 @@ use crate::config::{
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiResult, ApiError};
+use crate::utils::errors::{ApiError, ApiResult};
 use crate::utils::json::default_if_null;
 use mockall::automock;
 use serde::de::DeserializeOwned;

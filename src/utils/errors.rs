@@ -1,4 +1,4 @@
-use std::result::Result;
+use crate::config::log_all_error_responses;
 use reqwest::blocking::Response as ReqwestResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
@@ -7,8 +7,8 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::fmt;
 use std::io::Cursor;
+use std::result::Result;
 use thiserror::Error;
-use crate::config::log_all_error_responses;
 
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 

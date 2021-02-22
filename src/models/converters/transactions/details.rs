@@ -9,7 +9,7 @@ use crate::models::service::transactions::details::{
 };
 use crate::models::service::transactions::TransactionStatus;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
-use crate::utils::errors::{ApiResult};
+use crate::utils::errors::ApiResult;
 
 impl MultisigTransaction {
     pub fn to_transaction_details(

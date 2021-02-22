@@ -11,8 +11,8 @@ use crate::models::service::transactions::{
     ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
 };
 use crate::providers::info::InfoProvider;
+use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
-use crate::utils::errors::{ApiResult};
 
 impl Transaction {
     pub fn to_transaction_summary(

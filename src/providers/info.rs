@@ -7,7 +7,6 @@ use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
-use anyhow::Result;
 use mockall::automock;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -16,10 +15,10 @@ use std::collections::HashMap;
 
 #[automock]
 pub trait InfoProvider {
-    fn safe_info(&mut self, safe: &str) -> Result<SafeInfo>;
-    fn token_info(&mut self, token: &str) -> Result<TokenInfo>;
-    fn safe_app_info(&mut self, url: &str) -> Result<SafeAppInfo>;
-    fn address_info(&mut self, address: &str) -> Result<AddressInfo>;
+    fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo>;
+    fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo>;
+    fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
+    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -83,21 +82,21 @@ pub struct TokenInfo {
 }
 
 impl InfoProvider for DefaultInfoProvider<'_> {
-    fn safe_info(&mut self, safe: &str) -> Result<SafeInfo> {
+    fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo> {
         let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
         self.cached(|this| &mut this.safe_cache, url)
     }
 
-    fn token_info(&mut self, token: &str) -> Result<TokenInfo> {
+    fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo> {
         if token != "0x0000000000000000000000000000000000000000" {
             let url = format!("{}/v1/tokens/{}/", base_transaction_service_url(), token);
             self.cached(|this| &mut this.token_cache, url)
         } else {
-            anyhow::bail!("Token Address is 0x0")
+            bail!("Token Address is 0x0")
         }
     }
 
-    fn safe_app_info(&mut self, url: &str) -> Result<SafeAppInfo> {
+    fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = format!("{}/manifest.json", url);
         let manifest_json =
             self.cache
@@ -110,7 +109,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         })
     }
 
-    fn address_info(&mut self, address: &str) -> Result<AddressInfo> {
+    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
         self.token_info(address)
             .map(|it| AddressInfo {
                 name: it.name,
@@ -127,7 +126,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
                         .request_cached(self.client, &url, safe_app_manifest_cache())?;
                 let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
                 if contract_info.display_name.trim().is_empty() {
-                    anyhow::bail!("No display name")
+                    bail!("No display name")
                 } else {
                     Ok(AddressInfo {
                         name: contract_info.display_name.to_owned(),
@@ -139,15 +138,15 @@ impl InfoProvider for DefaultInfoProvider<'_> {
 }
 
 impl DefaultInfoProvider<'_> {
-    pub fn exchange_usd_to(&self, currency_code: &str) -> Result<f64> {
+    pub fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
         let currency_code = currency_code.to_uppercase();
         let exchange = self.fetch_exchange()?;
         match exchange.rates {
             Some(rates) => rates
                 .get(&currency_code)
                 .cloned()
-                .ok_or(anyhow::anyhow!("Currency not found")),
-            None => Err(anyhow::anyhow!("Currency not found")),
+                .ok_or(api_error!("Currency not found")),
+            None => bail!("Currency not found"),
         }
     }
 
@@ -158,7 +157,7 @@ impl DefaultInfoProvider<'_> {
             .map_or(vec![], |s| s.keys().cloned().collect::<Vec<_>>()))
     }
 
-    fn fetch_exchange(&self) -> Result<Exchange> {
+    fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
         let body = self
             .cache
@@ -181,22 +180,20 @@ impl DefaultInfoProvider<'_> {
         &mut self,
         local_cache: impl Fn(&mut Self) -> &mut HashMap<String, Option<T>>,
         url: impl Into<String>,
-    ) -> Result<T>
+    ) -> ApiResult<T>
     where
         T: Clone + DeserializeOwned,
     {
         let url = url.into();
         match local_cache(self).get(&url) {
-            Some(value) => value
-                .clone()
-                .ok_or(anyhow::anyhow!("Could not decode cached")),
+            Some(value) => value.clone().ok_or(api_error!("Could not decode cached")),
             None => {
                 let data = self
                     .cache
                     .request_cached(self.client, &url, info_cache_duration())?;
                 let value: Option<T> = serde_json::from_str(&data).unwrap_or(None);
                 local_cache(self).insert(url, value.clone());
-                value.ok_or(anyhow::anyhow!("Could not decode response"))
+                value.ok_or(api_error!("Could not decode response"))
             }
         }
     }

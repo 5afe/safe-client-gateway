@@ -31,11 +31,11 @@ fn multisig_custom_transaction_to_transaction_details() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .returning(move |_| anyhow::bail!("Token Address 0x0"));
+        .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .returning(move |_| anyhow::bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
         executed_at: multisig_tx.execution_date.map(|it| it.timestamp_millis()),
@@ -121,7 +121,7 @@ fn module_transaction_to_transaction_details() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .returning(move |_| anyhow::bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let module_transaction =
         serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
@@ -196,7 +196,7 @@ fn ethereum_tx_transfer_to_transaction_details() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let actual = TransferDto::to_transaction_details(
         &transfer,
@@ -223,7 +223,7 @@ fn multisig_transaction_with_origin() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("No token info"));
+        .return_once(move |_| bail!("No token info"));
     mock_info_provider
         .expect_safe_app_info()
         .times(1)
@@ -237,7 +237,7 @@ fn multisig_transaction_with_origin() {
     mock_info_provider
         .expect_address_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("no address info"));
+        .return_once(move |_| bail!("no address info"));
 
     let expected = TransactionDetails {
         executed_at: Some(multisig_tx.execution_date.unwrap().timestamp_millis()),

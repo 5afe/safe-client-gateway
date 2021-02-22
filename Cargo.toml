@@ -1,11 +1,8 @@
 [package]
 name = "safe-client-gateway"
-version = "1.8.2"
-authors = ["jpalvarezl <jose.alvarez@gnosis.io>"]
+version = "1.8.3"
+authors = ["jpalvarezl <jose.alvarez@gnosis.io>", "rmeissner <richard@gnosis.io>"]
 edition = "2018"
-
-[profile.release]
-debug = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -30,7 +27,6 @@ derivative = "2.1.1"
 
 chrono = { version = "0.4", features = ["serde"] }
 
-anyhow = "1.0"
 thiserror = "1.0.20"
 
 mockall = "0.7.2"

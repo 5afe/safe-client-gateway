@@ -29,7 +29,7 @@ fn api_error_responder_json() {
 
 #[test]
 fn api_error_from_anyhow_error() {
-    let error = anyhow::anyhow!("Error message");
+    let error = api_error!("Error message");
     let error_details = ErrorDetails {
         code: 1337,
         message: Some("Error message".to_string()),

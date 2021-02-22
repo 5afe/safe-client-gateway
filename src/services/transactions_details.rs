@@ -14,7 +14,6 @@ use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
 use crate::utils::hex_hash;
-use anyhow::Result;
 use log::debug;
 
 pub(super) fn get_multisig_transaction_details(
@@ -30,7 +29,6 @@ pub(super) fn get_multisig_transaction_details(
     let body = context
         .cache()
         .request_cached(&context.client(), &url, request_cache_duration())?;
-    debug!("{:#?}", body);
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
     let details = multisig_tx.to_transaction_details(&mut info_provider)?;
 
@@ -54,7 +52,6 @@ fn get_ethereum_transaction_details(
     let body = context
         .cache()
         .request_cached(&context.client(), &url, request_cache_duration())?;
-    debug!("{:#?}", body);
     let transfers: Page<Transfer> = serde_json::from_str(&body)?;
     let transfer = transfers
         .results
@@ -64,7 +61,7 @@ fn get_ethereum_transaction_details(
             debug!("actual: {}", hex_hash(transfer));
             hex_hash(transfer) == detail_hash
         })
-        .ok_or(anyhow::anyhow!("No transfer found"))?;
+        .ok_or(api_error!("No transfer found"))?;
     let details = transfer.to_transaction_details(&mut info_provider, &safe.to_owned())?;
 
     Ok(details)
@@ -93,7 +90,7 @@ fn get_module_transaction_details(
         .results
         .into_iter()
         .find(|tx| hex_hash(tx) == detail_hash)
-        .ok_or(anyhow::anyhow!("No transfer found"))?;
+        .ok_or(api_error!("No transfer found"))?;
     let details = transaction.to_transaction_details(&mut info_provider)?;
 
     Ok(details)
@@ -136,53 +133,53 @@ pub fn get_transactions_details(
     }
 }
 
-pub(super) fn parse_id(details_id: &str) -> Result<TransactionIdParts> {
+pub(super) fn parse_id(details_id: &str) -> ApiResult<TransactionIdParts> {
     let id_parts: Vec<&str> = details_id.split(ID_SEPARATOR).collect();
-    let tx_type = id_parts.get(0).ok_or(anyhow::anyhow!("Invalid id"))?;
+    let tx_type = id_parts.get(0).ok_or(api_error!("Invalid id"))?;
 
     Ok(match tx_type.to_owned() {
         ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig {
             safe_address: id_parts
                 .get(1)
-                .ok_or(anyhow::anyhow!("No safe address provided"))?
+                .ok_or(api_error!("No safe address provided"))?
                 .to_string(),
             safe_tx_hash: id_parts
                 .get(2)
-                .ok_or(anyhow::anyhow!("No safe tx hash provided"))?
+                .ok_or(api_error!("No safe tx hash provided"))?
                 .to_string(),
         },
         ID_PREFIX_ETHEREUM_TX => TransactionIdParts::Ethereum {
             safe_address: id_parts
                 .get(1)
-                .ok_or(anyhow::anyhow!("No safe address"))?
+                .ok_or(api_error!("No safe address"))?
                 .to_string(),
             transaction_hash: id_parts
                 .get(2)
-                .ok_or(anyhow::anyhow!("No ethereum tx hash"))?
+                .ok_or(api_error!("No ethereum tx hash"))?
                 .to_string(),
             details_hash: id_parts
                 .get(3)
-                .ok_or(anyhow::anyhow!("No ethereum tx details hash"))?
+                .ok_or(api_error!("No ethereum tx details hash"))?
                 .to_string(),
         },
         ID_PREFIX_MODULE_TX => TransactionIdParts::Module {
             safe_address: id_parts
                 .get(1)
-                .ok_or(anyhow::anyhow!("No safe address"))?
+                .ok_or(api_error!("No safe address"))?
                 .to_string(),
             transaction_hash: id_parts
                 .get(2)
-                .ok_or(anyhow::anyhow!("No module tx hash"))?
+                .ok_or(api_error!("No module tx hash"))?
                 .to_string(),
             details_hash: id_parts
                 .get(3)
-                .ok_or(anyhow::anyhow!("No module tx details hash"))?
+                .ok_or(api_error!("No module tx details hash"))?
                 .to_string(),
         },
         ID_PREFIX_CREATION_TX => TransactionIdParts::Creation(
             id_parts
                 .get(1)
-                .ok_or(anyhow::anyhow!("No safe address provided"))?
+                .ok_or(api_error!("No safe address provided"))?
                 .to_string(),
         ),
         &_ => TransactionIdParts::TransactionHash(tx_type.to_string()),

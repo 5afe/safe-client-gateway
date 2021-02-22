@@ -10,7 +10,7 @@ use crate::models::service::transactions::{
     Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, TransferInfo,
 };
 use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
-use anyhow::Result;
+use crate::utils::errors::ApiResult;
 
 impl TransferDto {
     pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> TransactionInfo {
@@ -32,7 +32,7 @@ impl TransferDto {
         &self,
         info_provider: &mut dyn InfoProvider,
         safe: &str,
-    ) -> Result<TransactionDetails> {
+    ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,

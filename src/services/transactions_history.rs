@@ -12,7 +12,6 @@ use crate::services::transactions_list::get_creation_transaction_summary;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use anyhow::Result;
 use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 
@@ -115,7 +114,7 @@ fn fetch_backend_paged_txs(
     context: &Context,
     safe_address: &str,
     page_url: &Option<String>,
-) -> Result<Page<Transaction>> {
+) -> ApiResult<Page<Transaction>> {
     let page_metadata = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
     let url = format!(
         "{}/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",
@@ -136,7 +135,7 @@ pub(super) fn backend_txs_to_summary_txs(
     txs: &mut dyn Iterator<Item = Transaction>,
     info_provider: &mut dyn InfoProvider,
     safe_address: &str,
-) -> Result<Vec<TransactionSummary>> {
+) -> ApiResult<Vec<TransactionSummary>> {
     Ok(txs
         .flat_map(|transaction| {
             transaction
@@ -150,7 +149,7 @@ pub(super) fn service_txs_to_tx_list_items(
     txs: Vec<TransactionSummary>,
     last_timestamp: i64,
     timezone_offset: i32,
-) -> Result<Vec<TransactionListItem>> {
+) -> ApiResult<Vec<TransactionListItem>> {
     let mut tx_list_items = Vec::new();
     for (date_timestamp, transaction_group) in &txs
         .into_iter()
@@ -176,13 +175,13 @@ pub(super) fn peek_timestamp_and_remove_item(
     info_provider: &mut dyn InfoProvider,
     safe_address: &str,
     timezone_offset: i32,
-) -> Result<i64> {
+) -> ApiResult<i64> {
     let timestamp = transactions
         .next()
-        .ok_or(anyhow::anyhow!("empty transactions"))?
+        .ok_or(api_error!("empty transactions"))?
         .to_transaction_summary(info_provider, safe_address)?
         .last()
-        .ok_or(anyhow::anyhow!("empty transactions"))?
+        .ok_or(api_error!("empty transactions"))?
         .timestamp;
 
     Ok(get_day_timestamp_millis(timestamp, timezone_offset))

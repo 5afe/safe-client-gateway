@@ -1,4 +1,4 @@
-use anyhow::Result;
+use crate::config::log_all_error_responses;
 use reqwest::blocking::Response as ReqwestResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::fmt;
 use std::io::Cursor;
+use std::result::Result;
 use thiserror::Error;
 
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
@@ -45,12 +46,12 @@ impl ApiError {
         )
     }
 
-    pub fn new_from_message(message: String) -> Self {
+    pub fn new_from_message(message: impl Into<String>) -> Self {
         Self::new(
             500,
             ErrorDetails {
                 code: 1337,
-                message: Some(message),
+                message: Some(message.into()),
                 arguments: None,
             },
         )
@@ -93,13 +94,14 @@ impl fmt::Display for ApiError {
 
 impl<'r> Responder<'r> for ApiError {
     fn respond_to(self, request: &Request) -> response::Result<'r> {
-        log::error!(
-            "ERR::{}::{}::{}",
-            self.status,
-            request.uri().to_string(),
-            self.details
-        );
-
+        if log_all_error_responses() || (self.status >= 500 && self.status < 600) {
+            log::error!(
+                "ERR::{}::{}::{}",
+                self.status,
+                request.uri().to_string(),
+                self.details
+            );
+        }
         Response::build()
             .sized_body(Cursor::new(
                 serde_json::to_string(&self.details).expect("Couldn't serialize error"),
@@ -107,12 +109,6 @@ impl<'r> Responder<'r> for ApiError {
             .header(ContentType::JSON)
             .status(Status::from_code(self.status).expect("Unknown status code"))
             .ok()
-    }
-}
-
-impl From<anyhow::Error> for ApiError {
-    fn from(err: anyhow::Error) -> Self {
-        Self::new_from_message(format!("{:?}", err))
     }
 }
 

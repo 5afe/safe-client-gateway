@@ -71,7 +71,7 @@ fn to_safe_app_info_bad_url() {
     mock_info_provider
         .expect_safe_app_info()
         .times(1)
-        .return_once(move |_| anyhow::bail!("Some http error"));
+        .return_once(move |_| bail!("Some http error"));
 
     let actual = safe_app_info_from(origin, &mut mock_info_provider);
     assert!(actual.is_none());

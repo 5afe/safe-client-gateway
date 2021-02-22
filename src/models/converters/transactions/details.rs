@@ -9,13 +9,13 @@ use crate::models::service::transactions::details::{
 };
 use crate::models::service::transactions::TransactionStatus;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
-use anyhow::Result;
+use crate::utils::errors::ApiResult;
 
 impl MultisigTransaction {
     pub fn to_transaction_details(
         &self,
         info_provider: &mut dyn InfoProvider,
-    ) -> Result<TransactionDetails> {
+    ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         let gas_token = self
             .gas_token
@@ -94,7 +94,7 @@ impl ModuleTransaction {
     pub fn to_transaction_details(
         &self,
         info_provider: &mut dyn InfoProvider,
-    ) -> Result<TransactionDetails> {
+    ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: TransactionStatus::Success,

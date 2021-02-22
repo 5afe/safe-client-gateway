@@ -58,7 +58,7 @@ pub fn internal_client_connect_timeout() -> u64 {
 }
 
 pub fn client_error_cache_duration() -> usize {
-    usize_with_default("CLIENT_ERROR_CACHE_DURATION", 3 * 10)
+    usize_with_default("CLIENT_ERROR_CACHE_DURATION", 60 * 3)
 }
 
 pub fn log_all_error_responses() -> bool {

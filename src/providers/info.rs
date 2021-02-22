@@ -240,7 +240,7 @@ impl DefaultInfoProvider<'_> {
                 .get(&currency_code)
                 .cloned()
                 .ok_or(api_error!("Currency not found")),
-            None => Err(bail!("Currency not found")),
+            None => Err(api_error!("Currency not found")),
         }
     }
 

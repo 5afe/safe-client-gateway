@@ -5,7 +5,7 @@ use crate::config::{
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiResult};
+use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
 use mockall::automock;
 use serde::de::DeserializeOwned;
@@ -186,9 +186,7 @@ impl DefaultInfoProvider<'_> {
     {
         let url = url.into();
         match local_cache(self).get(&url) {
-            Some(value) => value
-                .clone()
-                .ok_or(api_error!("Could not decode cached")),
+            Some(value) => value.clone().ok_or(api_error!("Could not decode cached")),
             None => {
                 let data = self
                     .cache

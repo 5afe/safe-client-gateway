@@ -184,9 +184,12 @@ impl DefaultInfoProvider<'_> {
 
     fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
         let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
-        let data: String = self
-            .cache
-            .request_cached(self.client, &url, info_cache_duration())?;
+        let data: String = self.cache.request_cached(
+            self.client,
+            &url,
+            info_cache_duration(),
+            info_cache_duration(),
+        )?;
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
@@ -217,7 +220,7 @@ impl DefaultInfoProvider<'_> {
             if result.is_ok() {
                 info_cache_duration()
             } else {
-                10000
+                info_error_cache_timeout()
             },
         );
         result
@@ -253,9 +256,12 @@ impl DefaultInfoProvider<'_> {
 
     fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
-        let body = self
-            .cache
-            .request_cached(self.client, &url, exchange_api_cache_duration())?;
+        let body = self.cache.request_cached(
+            self.client,
+            &url,
+            exchange_api_cache_duration(),
+            info_cache_duration(),
+        )?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }

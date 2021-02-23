@@ -5,6 +5,9 @@ use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineComma
 use serde::ser::Serialize;
 use serde_json;
 
+pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
+pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
+
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
 
@@ -39,8 +42,8 @@ impl Cache for ServiceCache {
 
 pub trait CacheExt: Cache {
     fn invalidate_caches(&self, key: &str) {
-        self.invalidate_pattern(&format!("c_resp_*{}*", &key));
-        self.invalidate_pattern(&format!("c_reqs_*{}*", &key));
+        self.invalidate_pattern(&format!("{}_*{}*", CACHE_RESP_PREFIX, &key));
+        self.invalidate_pattern(&format!("{}_*{}*", CACHE_REQS_PREFIX, &key));
     }
 
     fn cache_resp<R>(

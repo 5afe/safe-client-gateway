@@ -1,6 +1,8 @@
 extern crate reqwest;
 
-use crate::config::{base_transaction_service_url, request_cache_duration};
+use crate::config::{
+    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+};
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::Page;
 use crate::models::service::transactions::summary::TransactionSummary;
@@ -23,9 +25,12 @@ pub fn get_all_transactions(
         safe_address,
         page_url.as_ref().unwrap_or(&String::new())
     );
-    let body = context
-        .cache()
-        .request_cached(&context.client(), &url, request_cache_duration())?;
+    let body = context.cache().request_cached(
+        &context.client(),
+        &url,
+        request_cache_duration(),
+        request_error_cache_timeout(),
+    )?;
     debug!("request URL: {}", &url);
     debug!("page_url: {:#?}", page_url);
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
@@ -75,9 +80,12 @@ pub(super) fn get_creation_transaction_summary(
         safe
     );
     debug!("{}", &url);
-    let body = context
-        .cache()
-        .request_cached(&context.client(), &url, request_cache_duration())?;
+    let body = context.cache().request_cached(
+        &context.client(),
+        &url,
+        request_cache_duration(),
+        request_error_cache_timeout(),
+    )?;
 
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
     let transaction_summary = creation_transaction_dto.to_transaction_summary(safe);

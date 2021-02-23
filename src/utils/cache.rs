@@ -64,6 +64,7 @@ pub trait CacheExt: Cache {
         client: &reqwest::blocking::Client,
         url: &str,
         timeout: usize,
+        error_timeout: usize,
     ) -> ApiResult<String> {
         match self.fetch(&url) {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
@@ -71,24 +72,32 @@ pub trait CacheExt: Cache {
                 let response = client.get(url).send()?;
                 let status_code = response.status().as_u16();
 
+                // Early return and no caching if the error is a 500 or greater
                 if response.status().is_server_error() {
                     return Err(ApiError::from_backend_error(
                         42,
                         format!("Got server error for {}", response.text()?).as_str(),
                     ));
                 }
+
                 let is_client_error = response.status().is_client_error();
                 let raw_data = response.text()?;
-                self.create(
-                    &url,
-                    CachedWithCode::join(status_code, &raw_data).as_str(),
-                    timeout,
-                );
-                return if is_client_error {
+
+                if is_client_error {
+                    self.create(
+                        &url,
+                        CachedWithCode::join(status_code, &raw_data).as_str(),
+                        error_timeout,
+                    );
                     Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {
-                    Ok(raw_data)
-                };
+                    self.create(
+                        &url,
+                        CachedWithCode::join(status_code, &raw_data).as_str(),
+                        timeout,
+                    );
+                    Ok(raw_data.to_string())
+                }
             }
         }
     }

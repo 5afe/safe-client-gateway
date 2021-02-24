@@ -16,6 +16,7 @@ use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
 use crate::utils::hex_hash;
+use crate::utils::transactions::fetch_rejections;
 use log::debug;
 
 pub(super) fn get_multisig_transaction_details(
@@ -36,33 +37,11 @@ pub(super) fn get_multisig_transaction_details(
     )?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 
-    let conflicting_txs = get_conflicting_txs(&context, &multisig_tx).unwrap_or(vec![]);
+    let rejections = fetch_rejections(context, &multisig_tx.safe, &multisig_tx.nonce);
 
-    let details = multisig_tx.to_transaction_details(conflicting_txs, &mut info_provider)?;
+    let details = multisig_tx.to_transaction_details(rejections, &mut info_provider)?;
 
     Ok(details)
-}
-
-fn get_conflicting_txs(
-    context: &Context,
-    multisig_tx: &MultisigTransaction,
-) -> ApiResult<Vec<MultisigTransaction>> {
-    let url = format!(
-        "{}/v1/safes/{}/multisig-transactions/?nonce={}",
-        base_transaction_service_url(),
-        &multisig_tx.safe,
-        &multisig_tx.nonce
-    );
-    debug!("{:#?}", &url);
-
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
-    let backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
-    Ok(backend_transactions.results)
 }
 
 fn get_ethereum_transaction_details(

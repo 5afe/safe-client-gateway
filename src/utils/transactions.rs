@@ -4,6 +4,7 @@ use crate::config::{
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
+use ethabi::Bytes;
 use ethcontract_common::hash::keccak256;
 use ethereum_types::{Address, H256, U256};
 use std::str::FromStr;
@@ -29,7 +30,7 @@ pub fn fetch_rejections(
         serde_json::from_value(serde_json::value::Value::String(to.to_string())).unwrap();
 
     let domain_separator: H256 = serde_json::from_value(serde_json::value::Value::String(
-        DOMAIN_SEPARATOR_TYPEHASH.to_string(),
+        SAFE_TX_TYPEHASH.to_string(),
     ))
     .unwrap();
 
@@ -37,21 +38,23 @@ pub fn fetch_rejections(
         ethabi::Token::Bytes(ERC191_BYTE.into()),
         ethabi::Token::Bytes(ERC191_VERSION.into()),
         ethabi::Token::Bytes(domain_hash.into()),
+        ethabi::Token::Bytes(keccak256(domain_separator).into()),
         ethabi::Token::Address(safe_address),
         ethabi::Token::Address(to),
-        ethabi::Token::Uint(U256::zero()),       //value
-        ethabi::Token::Bytes(vec![0]),           //data, should calculate Keccak
-        ethabi::Token::Uint(U256::zero()),       //operation
-        ethabi::Token::Uint(U256::zero()),       //tx_gas
-        ethabi::Token::Uint(U256::zero()),       //base_gas
-        ethabi::Token::Address(Address::zero()), //gas_token
-        ethabi::Token::Address(Address::zero()), //refund_receiver
+        ethabi::Token::Uint(U256::zero()),               //value
+        ethabi::Token::Bytes(keccak256(vec![0]).into()), //data, should calculate Keccak
+        ethabi::Token::Uint(U256::zero()),               //operation
+        ethabi::Token::Uint(U256::zero()),               //tx_gas
+        ethabi::Token::Uint(U256::zero()),               //base_gas
+        ethabi::Token::Address(Address::zero()),         //gas_token
+        ethabi::Token::Address(Address::zero()),         //refund_receiver
         ethabi::Token::Uint(U256::from(nonce)),
     ]);
 
     let hash = H256::from(keccak256(tx_encoded));
     log::error!("{:#?}", hash.to_string());
 
+    // correct safe_tx_hash 0x931e3e46c1c06ad4449ae193d159dab9e24c50112682ffea083e0052ba53900b
     None
     // let url = format!(
     //     "{}/v1/multisig-transactions/{}/",
@@ -86,7 +89,12 @@ pub fn fetch_rejections(
 }
 
 fn domain_hash(safe_address: &str) -> [u8; 32] {
-    let input = format!("{}{}", DOMAIN_SEPARATOR_TYPEHASH, safe_address);
-    let input_in_bytes: H256 = serde_json::from_value(serde_json::Value::String(input)).unwrap();
-    keccak256(input_in_bytes)
+    let domain_separator_hex =
+        &DOMAIN_SEPARATOR_TYPEHASH[2..DOMAIN_SEPARATOR_TYPEHASH.len()].to_string();
+    let safe_address_hex = &safe_address[2..safe_address.len()].to_string();
+    let input = format!("{}{}", domain_separator_hex, safe_address_hex);
+    log::error!("DOMAIN HASH: {}", &input);
+    // let input_in_bytes:  =
+    //     serde_json::from_value(serde_json::Value::String(input.to_string())).unwrap();
+    keccak256(input)
 }

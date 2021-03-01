@@ -37,6 +37,14 @@ fn indefinite_timeout() -> usize {
     usize_with_default("INDEFINITE_TIMEOUT", 60 * 60 * 24 * 7)
 }
 
+pub fn short_error_duration() -> usize {
+    usize_with_default("SHORT_ERROR_DURATION", 60)
+}
+
+pub fn long_error_duration() -> usize {
+    usize_with_default("LONG_ERROR_DURATION", 60 * 60 * 24)
+}
+
 // FUNCTIONAL TIMEOUTS
 pub fn safe_info_cache_duration() -> usize {
     usize_with_default("SAFE_INFO_CACHE_DURATION", indefinite_timeout())
@@ -73,14 +81,6 @@ pub fn internal_client_connect_timeout() -> u64 {
 
 pub fn request_error_cache_timeout() -> usize {
     usize_with_default("REQS_ERROR_CACHE_DURATION", short_error_duration())
-}
-
-pub fn short_error_duration() -> usize {
-    usize_with_default("SHORT_ERROR_DURATION", 60)
-}
-
-pub fn long_error_duration() -> usize {
-    usize_with_default("LONG_ERROR_DURATION", 60 * 60 * 24)
 }
 
 pub fn log_all_error_responses() -> bool {

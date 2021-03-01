@@ -1,6 +1,7 @@
 use crate::config::{
-    base_transaction_service_url, exchange_api_cache_duration, info_cache_duration,
-    info_error_cache_timeout, safe_app_manifest_cache,
+    address_info_cache_duration, base_transaction_service_url, exchange_api_cache_duration,
+    long_error_duration, request_cache_duration, safe_app_manifest_cache_duration,
+    safe_info_cache_duration, short_error_duration, token_info_cache_duration,
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
@@ -108,8 +109,8 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         let manifest_json = self.cache.request_cached(
             self.client,
             &manifest_url,
-            safe_app_manifest_cache(),
-            info_error_cache_timeout(),
+            safe_app_manifest_cache_duration(),
+            long_error_duration(),
         )?;
         let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
         Ok(SafeAppInfo {
@@ -134,8 +135,8 @@ impl InfoProvider for DefaultInfoProvider<'_> {
                 let contract_info_json = self.cache.request_cached(
                     self.client,
                     &url,
-                    safe_app_manifest_cache(),
-                    info_error_cache_timeout(),
+                    address_info_cache_duration(),
+                    long_error_duration(),
                 )?;
                 let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
                 if contract_info.display_name.trim().is_empty() {
@@ -187,8 +188,8 @@ impl DefaultInfoProvider<'_> {
         let data: String = self.cache.request_cached(
             self.client,
             &url,
-            info_cache_duration(),
-            info_cache_duration(),
+            safe_info_cache_duration(),
+            short_error_duration(),
         )?;
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
@@ -201,7 +202,7 @@ impl DefaultInfoProvider<'_> {
             self.cache.create(
                 &format!("dip_ti_{}", token.address),
                 &serde_json::to_string(&token)?,
-                info_cache_duration(),
+                request_cache_duration(),
             )
         }
         Ok(())
@@ -218,9 +219,9 @@ impl DefaultInfoProvider<'_> {
             "dip_tcl",
             "",
             if result.is_ok() {
-                info_cache_duration()
+                token_info_cache_duration()
             } else {
-                info_error_cache_timeout()
+                short_error_duration()
             },
         );
         result
@@ -260,7 +261,7 @@ impl DefaultInfoProvider<'_> {
             self.client,
             &url,
             exchange_api_cache_duration(),
-            info_cache_duration(),
+            short_error_duration(),
         )?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }

@@ -4,6 +4,7 @@ use crate::config::{
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
+use ethabi::{Bytes, Uint};
 use ethcontract_common::hash::keccak256;
 use ethereum_types::{Address, H256};
 
@@ -19,7 +20,7 @@ pub fn fetch_rejections(context: &Context, safe_address: &str, nonce: u64) -> Op
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
-    let safe_tx_hash = hash(&safe_address, nonce).to_vec();
+    let safe_tx_hash = hash(safe_address, nonce).to_vec();
     let safe_tx_hash = to_hex_string!(safe_tx_hash);
 
     let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash);
@@ -36,35 +37,35 @@ pub fn fetch_rejections(context: &Context, safe_address: &str, nonce: u64) -> Op
         .flatten()
 }
 
-pub(super) fn hash(safe_address: &Address, nonce: u64) -> [u8; 32] {
+pub(super) fn hash(safe_address: Address, nonce: u64) -> [u8; 32] {
     let erc_191_byte = u8::from_str_radix(ERC191_BYTE, 16).unwrap();
     let erc_191_version = u8::from_str_radix(ERC191_VERSION, 16).unwrap();
-    let type_hash: H256 =
-        serde_json::from_value(serde_json::Value::String(SAFE_TX_TYPEHASH.into())).unwrap();
 
     let mut hashable = vec![erc_191_byte, erc_191_version];
-
     hashable.extend(domain_hash(&safe_address).iter());
+    hashable.extend(cancellation_parts_hash(safe_address, nonce).iter());
 
-    let mut parts: Vec<u8> = vec![];
-    let nonce = nonce.to_be_bytes();
-    // let safe_tx_gas = 43837.to_be_bytes();
-    parts.extend(type_hash.0.iter());
-    parts.extend(zero_pad(safe_address.0.into(), 32).iter()); // to
-    parts.extend(zero_pad(vec![], 32).iter()); //value
-                                               // 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
-                                               // should be the value of keccak256 of emtpy data, if not try without padding
-    parts.extend(keccak256(vec![]).iter()); //data hashed should be
-    parts.extend(zero_pad(vec![], 32).iter()); // operation
-                                               //TODO make safe_tx_gas 0
-    parts.extend(zero_pad(43837_i32.to_be_bytes().to_vec(), 32).iter()); // safe_tx_gas
-    parts.extend(zero_pad(vec![], 32).iter()); // base_gas
-    parts.extend(zero_pad(vec![], 32).iter()); // gas_price
-    parts.extend(zero_pad(vec![], 32).iter()); // gas_token
-    parts.extend(zero_pad(vec![], 32).iter()); // refund_receiver
-    parts.extend(zero_pad(nonce.to_vec(), 32).iter()); // nonce
-
-    hashable.extend(keccak256(parts).iter());
+    // let _encoded_parts = &ethabi::encode(&[
+    //     ethabi::Token::Bytes(Bytes::from(SAFE_TX_TYPEHASH)),
+    //     ethabi::Token::Address(Address::from(safe_address)), //to
+    //     ethabi::Token::Uint(Uint::zero()),                   // value
+    //     ethabi::Token::Bytes(Bytes::from(keccak256(vec![]))), //data
+    //     ethabi::Token::Uint(Uint::zero()),                   //operation
+    //     ethabi::Token::Uint(Uint::zero()),                   //safe_tx_gas
+    //     ethabi::Token::Uint(Uint::zero()),                   //base_gas
+    //     ethabi::Token::Address(Address::zero()),             //gas_token
+    //     ethabi::Token::Address(Address::zero()),             //refund_receiver
+    //     ethabi::Token::Uint(Uint::from(nonce)),              //base_gas
+    // ]);
+    //
+    // let _parts_hash = keccak256(_encoded_parts);
+    //
+    // let _encoded = &ethabi::encode(&[
+    //     ethabi::Token::Bytes(Bytes::from(ERC191_BYTE)),
+    //     ethabi::Token::Bytes(Bytes::from(ERC191_VERSION)),
+    //     ethabi::Token::Bytes(Bytes::from(domain_hash(&safe_address))),
+    //     ethabi::Token::Bytes(Bytes::from(_parts_hash)),
+    // ]);
 
     return keccak256(hashable);
 }
@@ -80,6 +81,29 @@ pub(super) fn domain_hash(safe_address: &Address) -> [u8; 32] {
     keccak256(input)
 }
 
+pub(super) fn cancellation_parts_hash(safe_address: Address, nonce: u64) -> [u8; 32] {
+    let type_hash: H256 =
+        serde_json::from_value(serde_json::Value::String(SAFE_TX_TYPEHASH.into())).unwrap();
+    let mut parts: Vec<u8> = vec![];
+    let nonce = nonce.to_be_bytes();
+    // let safe_tx_gas = 43837.to_be_bytes();
+    parts.extend(type_hash.0.iter());
+    parts.extend(zero_pad(safe_address.0.into(), 32).iter()); // to
+    parts.extend(zero_pad(vec![], 32).iter()); //value
+                                               // 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
+                                               // should be the value of keccak256 of emtpy data, if not try without padding
+    parts.extend(keccak256(vec![]).iter()); //data hashed should be
+    parts.extend(zero_pad(vec![], 32).iter()); // operation
+    parts.extend(zero_pad(vec![], 32).iter()); // safe_tx_gas
+    parts.extend(zero_pad(vec![], 32).iter()); // base_gas
+    parts.extend(zero_pad(vec![], 32).iter()); // gas_price
+    parts.extend(zero_pad(vec![], 32).iter()); // gas_token
+    parts.extend(zero_pad(vec![], 32).iter()); // refund_receiver
+    parts.extend(zero_pad(nonce.to_vec(), 32).iter()); // nonce
+
+    keccak256(&parts)
+}
+
 // Android uses 64 but that's because it is hex. In our case with u8 we should use 32
 fn zero_pad(input: Vec<u8>, final_length: usize) -> Vec<u8> {
     let padding_length = final_length - input.len();
@@ -89,15 +113,6 @@ fn zero_pad(input: Vec<u8>, final_length: usize) -> Vec<u8> {
         input
     }
 }
-
-// // Maybe we could implement https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md
-// pub fn to_hex_string(input: Vec<u8>) -> String {
-//     let mut output = String::new();
-//     for byte in input.iter() {
-//         output.push_str(&format!("0x{:02x?}", byte)) // uppercase x is for uppercase hex char.
-//     }
-//     output
-// }
 
 fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<MultisigTransaction> {
     let url = format!(

@@ -32,9 +32,30 @@ fn bool_with_default(key: &str, default: bool) -> bool {
         Err(_) => default,
     }
 }
+// TIME DURATION VALUES
+fn indefinite_timeout() -> usize {
+    usize_with_default("INDEFINITE_TIMEOUT", 60 * 60 * 24 * 7)
+}
 
-pub fn info_cache_duration() -> usize {
-    usize_with_default("INFO_CACHE_DURATION", 60 * 15)
+pub fn short_error_duration() -> usize {
+    usize_with_default("SHORT_ERROR_DURATION", 60)
+}
+
+pub fn long_error_duration() -> usize {
+    usize_with_default("LONG_ERROR_DURATION", 60 * 60 * 24)
+}
+
+// FUNCTIONAL TIMEOUTS
+pub fn safe_info_cache_duration() -> usize {
+    usize_with_default("SAFE_INFO_CACHE_DURATION", indefinite_timeout())
+}
+
+pub fn address_info_cache_duration() -> usize {
+    usize_with_default("ADDRESS_INFO_CACHE_DURATION", indefinite_timeout())
+}
+
+pub fn token_info_cache_duration() -> usize {
+    usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 60 * 24)
 }
 
 pub fn exchange_api_cache_duration() -> usize {
@@ -42,27 +63,24 @@ pub fn exchange_api_cache_duration() -> usize {
 }
 
 pub fn request_cache_duration() -> usize {
-    usize_with_default("REQUEST_CACHE_DURATION", 60 * 15)
+    usize_with_default("REQUEST_CACHE_DURATION", indefinite_timeout())
 }
 
 pub fn about_cache_duration() -> usize {
-    usize_with_default("ABOUT_CACHE_DURATION", request_cache_duration())
+    usize_with_default("ABOUT_CACHE_DURATION", 60 * 15)
 }
 
-pub fn safe_app_manifest_cache() -> usize {
-    usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", 60 * 60 * 24 * 7)
+pub fn safe_app_manifest_cache_duration() -> usize {
+    usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }
 
+//ERRORS
 pub fn internal_client_connect_timeout() -> u64 {
     u64_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)
 }
 
 pub fn request_error_cache_timeout() -> usize {
-    usize_with_default("REQS_ERROR_CACHE_DURATION", 60)
-}
-
-pub fn info_error_cache_timeout() -> usize {
-    usize_with_default("INFO_ERROR_CACHE_DURATION", 60 * 60 * 24)
+    usize_with_default("REQS_ERROR_CACHE_DURATION", short_error_duration())
 }
 
 pub fn log_all_error_responses() -> bool {

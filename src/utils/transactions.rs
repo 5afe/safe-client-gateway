@@ -48,7 +48,7 @@ pub(super) fn hash(safe_address: Address, nonce: u64) -> [u8; 32] {
 
     encoded.insert(0, erc_191_version);
     encoded.insert(0, erc_191_byte);
-    return keccak256(encoded);
+    keccak256(encoded)
 }
 
 pub(super) fn domain_hash(safe_address: &Address) -> [u8; 32] {

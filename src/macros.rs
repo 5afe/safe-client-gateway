@@ -46,3 +46,13 @@ macro_rules! api_error {
         $crate::private::new_adhoc()
     };
 }
+
+macro_rules! to_hex_string {
+    ($input:expr) => {{
+        let mut output = String::new();
+        for byte in $input.iter() {
+            output.push_str(&format!("{:02x?}", byte)) // uppercase x is for uppercase hex char.
+        }
+        format!("0x{}", output)
+    }};
+}

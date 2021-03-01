@@ -2,13 +2,10 @@ use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
 };
 use crate::models::backend::transactions::MultisigTransaction;
-use crate::models::commons::Operation;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
-use ethabi::Bytes;
 use ethcontract_common::hash::keccak256;
-use ethereum_types::{Address, H256, U256};
-use std::str::FromStr;
+use ethereum_types::{Address, H256};
 
 pub const DOMAIN_SEPARATOR_TYPEHASH: &'static str =
     "0x035aff83d86937d35b32e04f0ddc6ff469290eef2f1b692d8a815c89404d4749";
@@ -22,11 +19,21 @@ pub fn fetch_rejections(context: &Context, safe_address: &str, nonce: u64) -> Op
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
-    let hash = hash(&safe_address, nonce);
-    log::error!("0x{:#?}", to_hex_string(hash.into()));
+    let safe_tx_hash = hash(&safe_address, nonce).to_vec();
+    let safe_tx_hash = to_hex_string!(safe_tx_hash);
 
-    // correct safe_tx_hash 0x931e3e46c1c06ad4449ae193d159dab9e24c50112682ffea083e0052ba53900b
-    None
+    let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash);
+    multisig_tx
+        .as_ref()
+        .map(|cancel_tx| {
+            cancel_tx.confirmations.as_ref().map(|confirmations| {
+                confirmations
+                    .iter()
+                    .map(|confirmation| confirmation.owner.to_string())
+                    .collect()
+            })
+        })
+        .flatten()
 }
 
 pub(super) fn hash(safe_address: &Address, nonce: u64) -> [u8; 32] {
@@ -39,7 +46,6 @@ pub(super) fn hash(safe_address: &Address, nonce: u64) -> [u8; 32] {
 
     hashable.extend(domain_hash(&safe_address).iter());
 
-    // check vec![0] == zero bytes
     let mut parts: Vec<u8> = vec![];
     let nonce = nonce.to_be_bytes();
     // let safe_tx_gas = 43837.to_be_bytes();
@@ -50,7 +56,8 @@ pub(super) fn hash(safe_address: &Address, nonce: u64) -> [u8; 32] {
                                                // should be the value of keccak256 of emtpy data, if not try without padding
     parts.extend(keccak256(vec![]).iter()); //data hashed should be
     parts.extend(zero_pad(vec![], 32).iter()); // operation
-    parts.extend(zero_pad(43837_i32.to_be_bytes().to_vec(), 32).iter()); // tx_gas
+                                               //TODO make safe_tx_gas 0
+    parts.extend(zero_pad(43837_i32.to_be_bytes().to_vec(), 32).iter()); // safe_tx_gas
     parts.extend(zero_pad(vec![], 32).iter()); // base_gas
     parts.extend(zero_pad(vec![], 32).iter()); // gas_price
     parts.extend(zero_pad(vec![], 32).iter()); // gas_token
@@ -59,9 +66,6 @@ pub(super) fn hash(safe_address: &Address, nonce: u64) -> [u8; 32] {
 
     hashable.extend(keccak256(parts).iter());
 
-    let data_hash = keccak256(vec![]);
-
-    log::error!("{:#?}", to_hex_string(data_hash.into()));
     return keccak256(hashable);
 }
 
@@ -86,43 +90,31 @@ fn zero_pad(input: Vec<u8>, final_length: usize) -> Vec<u8> {
     }
 }
 
-// Maybe we could implement https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md
-pub fn to_hex_string(input: Vec<u8>) -> String {
-    let mut output = String::new();
-    for byte in input.iter() {
-        output.push_str(&format!("{:02x?}", byte)) // uppercase x is for uppercase hex char.
-    }
-    output
-}
+// // Maybe we could implement https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md
+// pub fn to_hex_string(input: Vec<u8>) -> String {
+//     let mut output = String::new();
+//     for byte in input.iter() {
+//         output.push_str(&format!("0x{:02x?}", byte)) // uppercase x is for uppercase hex char.
+//     }
+//     output
+// }
 
-// fetch the cancellation tx:
-// let url = format!(
-//     "{}/v1/multisig-transactions/{}/",
-//     base_transaction_service_url(),
-//     safe_tx_hash
-// );
-// let body = context
-//     .cache()
-//     .request_cached(
-//         &context.client(),
-//         &url,
-//         request_cache_duration(),
-//         request_error_cache_timeout(),
-//     )
-//     .ok();
-// let multisig_tx: Option<MultisigTransaction> = body
-//     .as_ref()
-//     .map(|body| serde_json::from_str::<MultisigTransaction>(body).ok())
-//     .flatten();
-//
-// multisig_tx
-//     .as_ref()
-//     .map(|cancel_tx| {
-//         cancel_tx.confirmations.as_ref().map(|confirmations| {
-//             confirmations
-//                 .iter()
-//                 .map(|confirmation| confirmation.owner)
-//                 .collect()
-//         })
-//     })
-//     .flatten()
+fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<MultisigTransaction> {
+    let url = format!(
+        "{}/v1/multisig-transactions/{}/",
+        base_transaction_service_url(),
+        safe_tx_hash
+    );
+    let body = context
+        .cache()
+        .request_cached(
+            &context.client(),
+            &url,
+            request_cache_duration(),
+            request_error_cache_timeout(),
+        )
+        .ok();
+    body.as_ref()
+        .map(|body| serde_json::from_str::<MultisigTransaction>(body).ok())
+        .flatten()
+}

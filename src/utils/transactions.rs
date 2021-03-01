@@ -71,7 +71,7 @@ pub(super) fn cancellation_parts_hash(safe_address: &Address, nonce: u64) -> [u8
     let encoded_parts = &ethabi::encode(&[
         ethabi::Token::Uint(Uint::from(safe_type_hash.0)),
         ethabi::Token::Address(Address::from(safe_address.0)), //to
-        ethabi::Token::Uint(Uint::zero()),                     // value
+        ethabi::Token::Uint(Uint::zero()),                     //value
         ethabi::Token::Uint(Uint::from(keccak256(vec![]))),    //data
         ethabi::Token::Uint(Uint::zero()),                     //operation
         ethabi::Token::Uint(Uint::zero()),                     //safe_tx_gas

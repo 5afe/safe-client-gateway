@@ -80,7 +80,7 @@ pub fn short_error_duration() -> usize {
 }
 
 pub fn long_error_duration() -> usize {
-    usize_with_default("LONG_ERROR", 60 * 60 * 24)
+    usize_with_default("LONG_ERROR_DURATION", 60 * 60 * 24)
 }
 
 pub fn log_all_error_responses() -> bool {

@@ -38,7 +38,7 @@ fn parts_hash_for_cancellation() {
     .unwrap();
     let nonce = 39;
 
-    let actual = cancellation_parts_hash(safe_address, nonce);
+    let actual = cancellation_parts_hash(&safe_address, nonce);
     assert_eq!(
         to_hex_string!(actual),
         "0xf0c66ea90dae4d21f8fed03cb6e7f03eb0720479fb2562915921721eed809626"

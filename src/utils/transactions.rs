@@ -18,24 +18,18 @@ pub const SAFE_TX_TYPEHASH: &'static str =
 pub const ERC191_BYTE: &'static str = "19";
 pub const ERC191_VERSION: &'static str = "01";
 
-pub fn fetch_rejections(
-    context: &Context,
-    safe_address: &str,
-    to: &str,
-    nonce: u64,
-) -> Option<Vec<String>> {
+pub fn fetch_rejections(context: &Context, safe_address: &str, nonce: u64) -> Option<Vec<String>> {
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
-    let to: Address =
-        serde_json::from_value(serde_json::value::Value::String(to.to_string())).unwrap();
-    let hash = hash(&safe_address, to, nonce);
+
+    let hash = hash(&safe_address, nonce);
     log::error!("0x{:#?}", to_hex_string(hash.into()));
 
     // correct safe_tx_hash 0x931e3e46c1c06ad4449ae193d159dab9e24c50112682ffea083e0052ba53900b
     None
 }
 
-fn hash(safe_address: &Address, to: Address, nonce: u64) -> [u8; 32] {
+pub(super) fn hash(safe_address: &Address, nonce: u64) -> [u8; 32] {
     let erc_191_byte = u8::from_str_radix(ERC191_BYTE, 16).unwrap();
     let erc_191_version = u8::from_str_radix(ERC191_VERSION, 16).unwrap();
     let type_hash: H256 =
@@ -71,7 +65,7 @@ fn hash(safe_address: &Address, to: Address, nonce: u64) -> [u8; 32] {
     return keccak256(hashable);
 }
 
-fn domain_hash(safe_address: &Address) -> [u8; 32] {
+pub(super) fn domain_hash(safe_address: &Address) -> [u8; 32] {
     let domain_separator: H256 =
         serde_json::from_value(serde_json::Value::String(DOMAIN_SEPARATOR_TYPEHASH.into()))
             .unwrap();
@@ -93,7 +87,7 @@ fn zero_pad(input: Vec<u8>, final_length: usize) -> Vec<u8> {
 }
 
 // Maybe we could implement https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md
-fn to_hex_string(input: Vec<u8>) -> String {
+pub fn to_hex_string(input: Vec<u8>) -> String {
     let mut output = String::new();
     for byte in input.iter() {
         output.push_str(&format!("{:02x?}", byte)) // uppercase x is for uppercase hex char.

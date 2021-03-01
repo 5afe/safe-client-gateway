@@ -103,12 +103,14 @@ fn multisig_custom_transaction_to_transaction_details() {
                         submitted_at: timestamp_confirmation1,
                     },
                 ],
+                rejections: None,
                 gas_token_info: None
             })),
         safe_app_info: None
     };
 
-    let actual = MultisigTransaction::to_transaction_details(&multisig_tx, &mut mock_info_provider);
+    let actual =
+        MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider);
 
     assert_eq!(expected, actual.unwrap());
 }
@@ -354,6 +356,7 @@ fn multisig_transaction_with_origin() {
                          submitted_at: 1607346715000,
                      }
                 ],
+                rejections: None,
                 gas_token_info: None,
             })),
         safe_app_info: Some(SafeAppInfo {
@@ -364,7 +367,8 @@ fn multisig_transaction_with_origin() {
         tx_hash: Some("0x4d84602bf94d099159baa41993edca288abb5f9795dd51cc14bd66195b9fdc77".to_string()),
     };
 
-    let actual = MultisigTransaction::to_transaction_details(&multisig_tx, &mut mock_info_provider);
+    let actual =
+        MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider);
 
     assert_eq!(expected, actual.unwrap());
 }

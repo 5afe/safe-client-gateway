@@ -37,12 +37,7 @@ pub(super) fn get_multisig_transaction_details(
     )?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 
-    let rejections = fetch_rejections(
-        context,
-        &multisig_tx.safe,
-        &multisig_tx.to,
-        multisig_tx.nonce,
-    );
+    let rejections = fetch_rejections(context, &multisig_tx.safe, multisig_tx.nonce);
 
     let details = multisig_tx.to_transaction_details(rejections, &mut info_provider)?;
 

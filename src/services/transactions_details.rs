@@ -16,6 +16,7 @@ use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
 use crate::utils::hex_hash;
+use crate::utils::transactions::fetch_rejections;
 use log::debug;
 
 pub(super) fn get_multisig_transaction_details(
@@ -35,7 +36,10 @@ pub(super) fn get_multisig_transaction_details(
         request_error_cache_timeout(),
     )?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
-    let details = multisig_tx.to_transaction_details(&mut info_provider)?;
+
+    let rejections = fetch_rejections(context, &multisig_tx.safe, multisig_tx.nonce);
+
+    let details = multisig_tx.to_transaction_details(rejections, &mut info_provider)?;
 
     Ok(details)
 }

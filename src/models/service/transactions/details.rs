@@ -39,6 +39,8 @@ pub struct MultisigExecutionDetails {
     pub confirmations_required: u64,
     pub confirmations: Vec<MultisigConfirmation>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub rejections: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gas_token_info: Option<TokenInfo>,
 }
 

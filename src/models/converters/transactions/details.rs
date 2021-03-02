@@ -14,6 +14,7 @@ use crate::utils::errors::ApiResult;
 impl MultisigTransaction {
     pub fn to_transaction_details(
         &self,
+        rejections: Option<Vec<String>>,
         info_provider: &mut dyn InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
@@ -36,7 +37,7 @@ impl MultisigTransaction {
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
-                self.build_execution_details(safe_info, gas_token),
+                self.build_execution_details(safe_info, gas_token, rejections),
             )),
             safe_app_info: self
                 .origin
@@ -49,6 +50,7 @@ impl MultisigTransaction {
         &self,
         safe_info: SafeInfo,
         gas_token_info: Option<TokenInfo>,
+        rejections: Option<Vec<String>>,
     ) -> MultisigExecutionDetails {
         MultisigExecutionDetails {
             submitted_at: self.submission_date.timestamp_millis(),
@@ -85,7 +87,8 @@ impl MultisigTransaction {
                 .as_ref()
                 .unwrap_or(&String::from("0"))
                 .to_owned(),
-            gas_token_info: gas_token_info,
+            gas_token_info,
+            rejections,
         }
     }
 }

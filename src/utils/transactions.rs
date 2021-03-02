@@ -84,7 +84,7 @@ pub(super) fn cancellation_parts_hash(safe_address: &Address, nonce: u64) -> [u8
     keccak256(encoded_parts)
 }
 
-// If there is an error while fetching the transaction we don't return the rejections
+// We silently fail if the cancellation transaction is not found
 fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<MultisigTransaction> {
     let url = format!(
         "{}/v1/multisig-transactions/{}/",

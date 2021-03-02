@@ -20,8 +20,7 @@ pub fn fetch_rejections(context: &Context, safe_address: &str, nonce: u64) -> Op
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
-    let safe_tx_hash = hash(safe_address, nonce).to_vec();
-    let safe_tx_hash = to_hex_string!(safe_tx_hash);
+    let safe_tx_hash = to_hex_string!(hash(safe_address, nonce).to_vec());
 
     let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash);
     multisig_tx
@@ -85,6 +84,7 @@ pub(super) fn cancellation_parts_hash(safe_address: &Address, nonce: u64) -> [u8
     keccak256(encoded_parts)
 }
 
+// If there is an error while fetching the transaction we don't return the rejections
 fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<MultisigTransaction> {
     let url = format!(
         "{}/v1/multisig-transactions/{}/",

@@ -32,7 +32,15 @@ pub fn active_routes() -> Vec<Route> {
 }
 
 pub fn error_catchers() -> Vec<Catcher> {
-    catchers![not_found, panic]
+    catchers![unprocessable_entity, not_found, panic]
+}
+
+#[catch(422)]
+fn unprocessable_entity() -> JsonValue {
+    json!({
+        "status": "error",
+        "reason": "Unprocessable Entity."
+    })
 }
 
 #[catch(404)]

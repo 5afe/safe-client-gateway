@@ -119,16 +119,31 @@ impl ModuleTransaction {
 }
 
 impl CreationTransaction {
-    pub fn to_transaction_summary(&self, safe_address: &String) -> TransactionSummary {
+    pub fn to_transaction_summary(
+        &self,
+        safe_address: &String,
+        info_provider: &mut dyn InfoProvider,
+    ) -> TransactionSummary {
         TransactionSummary {
             id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
             timestamp: self.created.timestamp_millis(),
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {
                 creator: self.creator.clone(),
+                creator_info: info_provider.address_info(&self.creator).ok(),
                 transaction_hash: self.transaction_hash.clone(),
                 implementation: self.master_copy.clone(),
+                implementation_info: self
+                    .master_copy
+                    .as_ref()
+                    .map(|address| info_provider.address_info(address).ok())
+                    .flatten(),
                 factory: self.factory_address.clone(),
+                factory_info: self
+                    .factory_address
+                    .as_ref()
+                    .map(|address| info_provider.address_info(address).ok())
+                    .flatten(),
             }),
             execution_info: None,
             safe_app_info: None,

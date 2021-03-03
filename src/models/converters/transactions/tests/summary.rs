@@ -14,6 +14,7 @@ use crate::models::service::transactions::{
     TransactionInfo, TransactionStatus, Transfer, TransferDirection, TransferInfo,
     ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
 };
+use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 use crate::utils::hex_hash;
 use chrono::Utc;
@@ -206,7 +207,13 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
 }
 
 #[test]
-fn creation_transaction_to_summary() {
+fn creation_transaction_to_summary_no_address_info_available() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_address_info()
+        .times(3)
+        .returning(move |_| bail!("No address info"));
+
     let created_date = Utc::now();
     let safe_address = String::from("0x38497");
     let creator = String::from("0x123");
@@ -227,16 +234,79 @@ fn creation_transaction_to_summary() {
         timestamp: created_date.timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Creation(Creation {
-            creator: creator,
-            transaction_hash: transaction_hash,
+            creator,
+            creator_info: None,
+            transaction_hash,
             implementation: Some(master_copy),
+            implementation_info: None,
             factory: Some(factory_address),
+            factory_info: None,
         }),
         execution_info: None,
         safe_app_info: None,
     };
 
-    let actual = creation_tx.to_transaction_summary(&safe_address);
+    let actual = creation_tx.to_transaction_summary(&safe_address, &mut mock_info_provider);
+
+    assert_eq!(expected, actual);
+}
+
+//TODO test with addresses returned
+#[test]
+fn creation_transaction_to_summary_address_info_available() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_address_info()
+        .times(3)
+        .returning(move |_| {
+            Ok(AddressInfo {
+                name: "".to_string(),
+                logo_uri: None,
+            })
+        });
+
+    let created_date = Utc::now();
+    let safe_address = String::from("0x38497");
+    let creator = String::from("0x123");
+    let transaction_hash = String::from("0x2232");
+    let factory_address = String::from("0x123");
+    let master_copy = String::from("0x987");
+    let creation_tx = CreationTransaction {
+        created: created_date,
+        creator: creator.clone(),
+        transaction_hash: transaction_hash.clone(),
+        factory_address: Some(factory_address.clone()),
+        master_copy: Some(master_copy.clone()),
+        setup_data: None,
+        data_decoded: None,
+    };
+    let expected = TransactionSummary {
+        id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
+        timestamp: created_date.timestamp_millis(),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::Creation(Creation {
+            creator,
+            creator_info: Some(AddressInfo {
+                name: "".to_string(),
+                logo_uri: None,
+            }),
+            transaction_hash,
+            implementation: Some(master_copy),
+            implementation_info: Some(AddressInfo {
+                name: "".to_string(),
+                logo_uri: None,
+            }),
+            factory: Some(factory_address),
+            factory_info: Some(AddressInfo {
+                name: "".to_string(),
+                logo_uri: None,
+            }),
+        }),
+        execution_info: None,
+        safe_app_info: None,
+    };
+
+    let actual = creation_tx.to_transaction_summary(&safe_address, &mut mock_info_provider);
 
     assert_eq!(expected, actual);
 }

@@ -87,7 +87,10 @@ pub(super) fn get_creation_transaction_summary(
         request_error_cache_timeout(),
     )?;
 
+    let mut info_provider = DefaultInfoProvider::new(context);
+
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
-    let transaction_summary = creation_transaction_dto.to_transaction_summary(safe);
+    let transaction_summary =
+        creation_transaction_dto.to_transaction_summary(safe, &mut info_provider);
     Ok(transaction_summary)
 }

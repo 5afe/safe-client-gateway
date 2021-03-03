@@ -1,13 +1,15 @@
-use crate::models::service::safes::SafeInfoEx;
+use crate::config::request_cache_duration;
+use crate::services::safes::get_safe_info_ex;
+use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
-use rocket_contrib::json::JsonValue;
 
 #[get("/v1/safes/<safe_address>")]
-pub fn safe_info(context: Context, safe_address: String) -> ApiResult<JsonValue> {
-    Ok(json!({
-         "status": "new",
-         "reason": "Resource in construction."
-    }))
+pub fn safe_info(context: Context, safe_address: String) -> ApiResult<content::Json<String>> {
+    context
+        .cache()
+        .cache_resp(&context.uri(), request_cache_duration(), || {
+            get_safe_info_ex(&context, &safe_address)
+        })
 }

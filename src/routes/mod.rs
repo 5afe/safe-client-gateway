@@ -10,6 +10,7 @@ pub mod balances;
 pub mod collectibles;
 pub mod health;
 pub mod hooks;
+pub mod safes;
 pub mod transactions;
 
 pub fn active_routes() -> Vec<Route> {
@@ -20,6 +21,7 @@ pub fn active_routes() -> Vec<Route> {
         balances::get_balances,
         balances::get_supported_fiat,
         collectibles::list,
+        safes::safe_info,
         transactions::details,
         transactions::all,
         transactions::history_transactions,

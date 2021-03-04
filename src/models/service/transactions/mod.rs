@@ -188,7 +188,13 @@ pub struct Custom {
 #[serde(rename_all = "camelCase")]
 pub struct Creation {
     pub creator: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub creator_info: Option<AddressInfo>,
     pub transaction_hash: String,
     pub implementation: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub implementation_info: Option<AddressInfo>,
     pub factory: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub factory_info: Option<AddressInfo>,
 }

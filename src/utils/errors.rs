@@ -3,6 +3,7 @@ use reqwest::blocking::Response as ReqwestResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
+use rocket_contrib::json::JsonError;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::fmt;
@@ -121,5 +122,15 @@ impl From<reqwest::Error> for ApiError {
 impl From<serde_json::error::Error> for ApiError {
     fn from(err: serde_json::error::Error) -> Self {
         Self::new_from_message(format!("{:?}", err))
+    }
+}
+
+impl From<rocket_contrib::json::JsonError<'_>> for ApiError {
+    fn from(err: JsonError<'_>) -> Self {
+        let message = match err {
+            JsonError::Io(_) => String::from("Request deserialize IO error"),
+            JsonError::Parse(_request_json, json_error) => json_error.to_string(),
+        };
+        Self::new_from_message_with_code(422, message)
     }
 }

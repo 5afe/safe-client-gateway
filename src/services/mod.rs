@@ -4,6 +4,7 @@ use std::cmp::max;
 pub mod about;
 pub mod balances;
 pub mod hooks;
+pub mod safes;
 pub mod transactions_details;
 pub mod transactions_history;
 pub mod transactions_list;

@@ -11,6 +11,7 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket_contrib::json::Json;
+use rocket_contrib::json::JsonError;
 
 #[get("/v1/safes/<safe_address>/transactions?<page_url>")]
 pub fn all(
@@ -36,17 +37,18 @@ pub fn details(context: Context, details_id: String) -> ApiResult<content::Json<
 
 #[post(
     "/v1/transactions/<safe_tx_hash>/confirmations",
+    format = "application/json",
     data = "<tx_confirmation_request>"
 )]
 pub fn submit_confirmation(
     context: Context,
     safe_tx_hash: String,
-    tx_confirmation_request: Json<ConfirmationRequest>,
+    tx_confirmation_request: Result<Json<ConfirmationRequest>, JsonError>,
 ) -> ApiResult<content::Json<String>> {
     transactions_proposal::submit_confirmation(
         &context,
         &safe_tx_hash,
-        &tx_confirmation_request.signed_safe_tx_hash,
+        &tx_confirmation_request?.0.signed_safe_tx_hash,
     )
     .and_then(|_| {
         context
@@ -99,16 +101,17 @@ pub fn queued_transactions(
 
 #[post(
     "/v1/transactions/<safe_address>/propose",
+    format = "application/json",
     data = "<multisig_transaction_request>"
 )]
 pub fn propose_transaction(
     context: Context,
     safe_address: String,
-    multisig_transaction_request: Json<MultisigTransactionRequest>,
+    multisig_transaction_request: Result<Json<MultisigTransactionRequest>, JsonError>,
 ) -> ApiResult<()> {
     transactions_proposal::propose_transaction(
         &context,
         &safe_address,
-        &multisig_transaction_request,
+        &multisig_transaction_request?.0,
     )
 }

@@ -193,7 +193,7 @@ pub(super) fn peek_timestamp_and_remove_item(
 }
 
 pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64, timezone_offset: i32) -> i64 {
-    log::info!("Timezone offset: {:#?}", timezone_offset);
+    log::debug!("Timezone offset: {:#?}", timezone_offset);
     let date_time = DateTime::<Utc>::from_utc(
         NaiveDateTime::from_timestamp(timestamp_in_millis / 1000, 0),
         Utc,

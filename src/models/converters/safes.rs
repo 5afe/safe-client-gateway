@@ -1,17 +1,26 @@
 use crate::models::service::safes::{AddressEx, SafeInfoEx};
 use crate::providers::info::{InfoProvider, SafeInfo};
 
+// AddressInfo for `address` and `owners` was deferred for a later version if necessary as it adds little value
 impl SafeInfo {
     pub fn to_safe_info_ex(&self, info_provider: &mut dyn InfoProvider) -> SafeInfoEx {
         SafeInfoEx {
-            address: to_address_ex(&self.address, info_provider),
+            address: AddressEx {
+                value: self.address.to_owned(),
+                name: None,
+                logo_url: None,
+            },
             nonce: self.nonce,
             threshold: self.threshold,
             implementation: to_address_ex(&self.master_copy, info_provider),
             owners: self
                 .owners
                 .iter()
-                .map(|owner| to_address_ex(owner, info_provider))
+                .map(|owner| AddressEx {
+                    value: owner.to_owned(),
+                    name: None,
+                    logo_url: None,
+                })
                 .collect(),
             modules: self.modules.as_ref().map(|modules| {
                 modules

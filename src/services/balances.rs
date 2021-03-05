@@ -1,5 +1,5 @@
 use crate::config::{
-    balance_cache_duration, base_transaction_service_url, request_error_cache_timeout,
+    balances_cache_duration, base_transaction_service_url, request_error_cache_timeout,
 };
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::service::balances::{Balance, Balances};
@@ -26,7 +26,7 @@ pub fn balances(
     let body = context.cache().request_cached(
         &context.client(),
         &url,
-        balance_cache_duration(),
+        balances_cache_duration(),
         request_error_cache_timeout(),
     )?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;

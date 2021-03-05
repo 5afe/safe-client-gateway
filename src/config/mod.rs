@@ -70,6 +70,10 @@ pub fn about_cache_duration() -> usize {
     usize_with_default("ABOUT_CACHE_DURATION", 60 * 15)
 }
 
+pub fn balance_cache_duration() -> usize {
+    usize_with_default("BALANCES_REQUEST_CACHE_DURATION", 60)
+}
+
 pub fn safe_app_manifest_cache_duration() -> usize {
     usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }

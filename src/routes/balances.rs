@@ -1,4 +1,4 @@
-use crate::config::request_cache_duration;
+use crate::config::{balance_cache_duration, request_cache_duration};
 use crate::providers::info::DefaultInfoProvider;
 use crate::services::balances::*;
 use crate::utils::cache::CacheExt;
@@ -18,7 +18,7 @@ pub fn get_balances(
     let exclude_spam = exclude_spam.unwrap_or(true);
     context
         .cache()
-        .cache_resp(&context.uri(), request_cache_duration(), || {
+        .cache_resp(&context.uri(), balance_cache_duration(), || {
             balances(
                 &context,
                 safe_address.as_str(),

@@ -4,7 +4,7 @@ use regex::Regex;
 use reqwest::Url;
 
 lazy_static! {
-    static ref IP_ADDRESS: Regex = Regex::new(r"\d{1,3}.\d{1,3}\.\d{1,3}\.\d{1,3}").unwrap();
+    static ref IP_ADDRESS: Regex = Regex::new(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").unwrap();
 }
 
 pub fn build_manifest_url(url: &str) -> ApiResult<String> {

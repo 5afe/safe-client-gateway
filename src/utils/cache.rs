@@ -4,7 +4,6 @@ use rocket::response::content;
 use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
 use serde::ser::Serialize;
 use serde_json;
-use std::process::exit;
 
 pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
 pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
@@ -19,7 +18,8 @@ pub trait Cache {
     fn create(&self, id: &str, dest: &str, timeout: usize);
     fn insert_in_hash(&self, hash: &str, id: &str, dest: &str);
     fn get_from_hash(&self, hash: &str, id: &str) -> Option<String>;
-    fn exists_in_hash(&self, hash: &str, id: &str) -> Option<bool>;
+    fn exists_in_hash(&self, hash: &str, id: &str) -> bool;
+    fn expire_entity(&self, id: &str, timeout: usize);
     fn invalidate_pattern(&self, pattern: &str);
     fn invalidate(&self, id: &str);
 }
@@ -45,8 +45,12 @@ impl Cache for ServiceCache {
     }
 
     fn exists_in_hash(&self, hash: &str, id: &str) -> bool {
-        let exists: Option<usize> = self.hexists(hash, id);
+        let exists: Option<usize> = self.hexists(hash, id).ok();
         exists.map(|it| it != 0).unwrap_or(false)
+    }
+
+    fn expire_entity(&self, id: &str, timeout: usize) {
+        let _: () = self.expire(id, timeout).unwrap();
     }
 
     fn invalidate_pattern(&self, pattern: &str) {

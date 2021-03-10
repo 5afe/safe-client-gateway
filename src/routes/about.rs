@@ -18,3 +18,8 @@ pub fn backbone(context: Context) -> ApiResult<content::Json<String>> {
     let url = format!("{}/v1/about/", base_transaction_service_url());
     Ok(content::Json(context.client().get(&url).send()?.text()?))
 }
+
+// #[get("/about/redis")]
+// pub fn redis_state(context: Context) -> ApiResult<content::Json<String>>{
+//
+// }

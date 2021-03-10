@@ -57,3 +57,11 @@ fn valid_url_with_trailing_slash() {
     let actual = build_manifest_url(input_url).unwrap();
     assert_eq!(actual, "https://happy.path/manifest.json")
 }
+
+#[test]
+fn valid_url_with_trailing_slash_and_port() {
+    let input_url = "https://happy.path:8000/";
+
+    let actual = build_manifest_url(input_url).unwrap();
+    assert_eq!(actual, "https://happy.path:8000/manifest.json")
+}

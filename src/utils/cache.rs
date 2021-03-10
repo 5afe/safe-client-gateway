@@ -42,8 +42,7 @@ impl Cache for ServiceCache {
 
 pub trait CacheExt: Cache {
     fn invalidate_caches(&self, key: &str) {
-        self.invalidate_pattern(&format!("{}_*{}*", CACHE_RESP_PREFIX, &key));
-        self.invalidate_pattern(&format!("{}_*{}*", CACHE_REQS_PREFIX, &key));
+        self.invalidate_pattern(&format!("c*{}*", &key));
     }
 
     fn cache_resp<R>(
@@ -55,7 +54,7 @@ pub trait CacheExt: Cache {
     where
         R: Serialize,
     {
-        let cache_key = format!("c_resp_{}", &key);
+        let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, &key);
         let cached = self.fetch(&cache_key);
         match cached {
             Some(value) => Ok(content::Json(value)),
@@ -75,7 +74,7 @@ pub trait CacheExt: Cache {
         timeout: usize,
         error_timeout: usize,
     ) -> ApiResult<String> {
-        let cache_key = format!("c_reqs_{}", &url);
+        let cache_key = format!("{}_{}", CACHE_REQS_PREFIX, &url);
         match self.fetch(&cache_key) {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
             None => {

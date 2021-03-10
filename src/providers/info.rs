@@ -1,7 +1,7 @@
 use crate::config::{
     address_info_cache_duration, base_transaction_service_url, exchange_api_cache_duration,
-    long_error_duration, request_cache_duration, safe_app_manifest_cache_duration,
-    safe_info_cache_duration, short_error_duration, token_info_cache_duration,
+    long_error_duration, safe_app_manifest_cache_duration, safe_info_cache_duration,
+    short_error_duration, token_info_cache_duration,
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
@@ -207,7 +207,7 @@ impl DefaultInfoProvider<'_> {
             self.cache.create(
                 &format!("dip_ti_{}", token.address),
                 &serde_json::to_string(&token)?,
-                request_cache_duration(),
+                token_info_cache_duration(),
             )
         }
         Ok(())

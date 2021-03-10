@@ -34,7 +34,7 @@ fn bool_with_default(key: &str, default: bool) -> bool {
 }
 // TIME DURATION VALUES
 fn indefinite_timeout() -> usize {
-    usize_with_default("INDEFINITE_TIMEOUT", 60 * 60 * 24 * 7)
+    usize_with_default("INDEFINITE_TIMEOUT", 60 * 60)
 }
 
 pub fn short_error_duration() -> usize {
@@ -42,7 +42,7 @@ pub fn short_error_duration() -> usize {
 }
 
 pub fn long_error_duration() -> usize {
-    usize_with_default("LONG_ERROR_DURATION", 60 * 60 * 24)
+    usize_with_default("LONG_ERROR_DURATION", 60 * 15)
 }
 
 // FUNCTIONAL TIMEOUTS

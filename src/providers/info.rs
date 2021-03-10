@@ -205,14 +205,14 @@ impl DefaultInfoProvider<'_> {
         let data: Page<TokenInfo> = response.json()?;
         for token in data.results.iter() {
             self.cache
-                .insert_in_hash(TOKEN_HASH, &token.address, &serde_json::to_string(&token)?)
+                .insert_in_hash(TOKEN_HASH, &token.address, &serde_json::to_string(&token)?);
         }
         Ok(())
     }
 
     fn check_token_cache(&mut self) -> ApiResult<()> {
         if self.cache.fetch("dip_tcl").is_some() {
-            // Cache is still up to data
+            // Cache is still up to dataam
             return Ok(());
         }
         let result = self.populate_token_cache();

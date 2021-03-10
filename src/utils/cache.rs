@@ -7,7 +7,7 @@ use serde_json;
 
 pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
 pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
-pub const TOKEN_HASH: &'static str = "token_hash";
+pub const TOKEN_HASH: &'static str = "dip_ti";
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
@@ -18,6 +18,7 @@ pub trait Cache {
     fn create(&self, id: &str, dest: &str, timeout: usize);
     fn insert_in_hash(&self, hash: &str, id: &str, dest: &str);
     fn get_from_hash(&self, hash: &str, id: &str) -> Option<String>;
+    fn exists_in_hash(&self, hash: &str, id: &str) -> Option<bool>;
     fn invalidate_pattern(&self, pattern: &str);
     fn invalidate(&self, id: &str);
 }
@@ -35,11 +36,15 @@ impl Cache for ServiceCache {
     }
 
     fn insert_in_hash(&self, hash: &str, id: &str, dest: &str) {
-        execute_hset(self, hash, id, dest)
+        let _: () = self.hset(hash, id, dest).unwrap();
     }
 
     fn get_from_hash(&self, hash: &str, id: &str) -> Option<String> {
-        execute_hget(self, hash, id)
+        self.hget(hash, id).ok()
+    }
+
+    fn exists_in_hash(&self, hash: &str, id: &str) -> Option<bool> {
+        self.hexists(hash, id).ok()
     }
 
     fn invalidate_pattern(&self, pattern: &str) {
@@ -169,16 +174,4 @@ fn pipeline_delete(con: &redis::Connection, keys: Iter<String>) {
         pipeline.del(key);
     }
     pipeline.execute(con);
-}
-
-fn execute_hset(con: &redis::Connection, hash: &str, field: &str, value: &str) {
-    redis::cmd("HSET")
-        .arg(hash)
-        .arg(field)
-        .arg(value)
-        .execute(con);
-}
-
-fn execute_hget(con: &redis::Connection, hash: &str, field: &str) -> Option<String> {
-    redis::cmd("HGET").arg(hash).arg(field).query(con).ok()
 }

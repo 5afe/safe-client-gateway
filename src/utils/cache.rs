@@ -21,6 +21,7 @@ pub trait Cache {
     fn expire_entity(&self, id: &str, timeout: usize);
     fn invalidate_pattern(&self, pattern: &str);
     fn invalidate(&self, id: &str);
+    fn info(&self) -> Option<String>;
 }
 
 impl Cache for ServiceCache {
@@ -58,6 +59,10 @@ impl Cache for ServiceCache {
 
     fn invalidate(&self, id: &str) {
         let _: () = self.del(id).unwrap();
+    }
+
+    fn info(&self) -> Option<String> {
+        info(self)
     }
 }
 
@@ -179,4 +184,9 @@ fn pipeline_delete(con: &redis::Connection, keys: Iter<String>) {
         pipeline.del(key);
     }
     pipeline.execute(con);
+}
+
+fn info(con: &redis::Connection) -> Option<String> {
+    let info: Option<String> = redis::cmd("INFO").query(con).ok();
+    return info;
 }

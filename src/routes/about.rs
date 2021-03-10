@@ -1,7 +1,7 @@
-use crate::config::about_cache_duration;
 use crate::config::base_transaction_service_url;
+use crate::config::{about_cache_duration, webhook_token};
 use crate::services::about;
-use crate::utils::cache::CacheExt;
+use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -19,7 +19,10 @@ pub fn backbone(context: Context) -> ApiResult<content::Json<String>> {
     Ok(content::Json(context.client().get(&url).send()?.text()?))
 }
 
-// #[get("/about/redis")]
-// pub fn redis_state(context: Context) -> ApiResult<content::Json<String>>{
-//
-// }
+#[get("/about/redis/<token>")]
+pub fn redis(context: Context, token: String) -> ApiResult<String> {
+    if token != webhook_token() {
+        bail!("Invalid token");
+    }
+    Ok(context.cache().info().unwrap_or(String::new()))
+}

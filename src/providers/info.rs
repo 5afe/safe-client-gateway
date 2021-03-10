@@ -9,6 +9,7 @@ use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
+use crate::utils::urls::build_manifest_url;
 use mockall::automock;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -112,7 +113,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
-        let manifest_url = format!("{}/manifest.json", url);
+        let manifest_url = build_manifest_url(url)?;
         let manifest_json = self.cache.request_cached(
             self.client,
             &manifest_url,

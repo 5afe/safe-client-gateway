@@ -10,6 +10,7 @@ pub mod cors;
 pub mod errors;
 pub mod json;
 pub mod transactions;
+pub mod urls;
 
 #[cfg(test)]
 mod tests;

@@ -10,6 +10,9 @@ edition = "2018"
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 
+regex = "1"
+lazy_static = "1.4.0"
+
 rocket = "0.4.5"
 rocket_codegen = "0.4.5"
 reqwest = { version = "0.11.0", features = ["blocking", "json"] }

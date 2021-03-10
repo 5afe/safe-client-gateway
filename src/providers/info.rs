@@ -210,28 +210,11 @@ impl DefaultInfoProvider<'_> {
         Ok(())
     }
 
-    fn check_token_cache(&mut self) -> ApiResult<()> {
-        if self.cache.fetch("dip_tcl").is_some() {
-            // Cache is still up to data
-            return Ok(());
-        }
-        let result = self.populate_token_cache();
-        // If error we use a shorter cache timeout (we do not want to DoS our service in case of an error)
-        self.cache.create(
-            "dip_tcl",
-            "",
-            if result.is_ok() {
-                token_info_cache_duration()
-            } else {
-                short_error_duration()
-            },
-        );
-        result
-    }
-
-    // TODO: Check Eviction policies: https://redis.io/topics/lru-cache
     fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
-        self.check_token_cache()?;
+        //Do we need to check this either way?
+        if !self.cache.exists_in_hash(token) {
+            Ok(None)
+        }
         match self.cache.get_from_hash(TOKEN_HASH, token) {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),

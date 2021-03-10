@@ -7,7 +7,6 @@ use serde_json;
 
 pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
 pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
-pub const TOKEN_HASH: &'static str = "dip_ti";
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);

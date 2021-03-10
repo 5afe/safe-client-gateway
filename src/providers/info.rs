@@ -5,7 +5,7 @@ use crate::config::{
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
-use crate::utils::cache::{Cache, CacheExt, TOKEN_HASH};
+use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
@@ -14,6 +14,8 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
+
+pub const TOKENS_KEY: &'static str = "dip_ti";
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
@@ -205,10 +207,10 @@ impl DefaultInfoProvider<'_> {
         let data: Page<TokenInfo> = response.json()?;
         for token in data.results.iter() {
             self.cache
-                .insert_in_hash(TOKEN_HASH, &token.address, &serde_json::to_string(&token)?);
+                .insert_in_hash(TOKENS_KEY, &token.address, &serde_json::to_string(&token)?);
         }
         self.cache
-            .expire_entity(TOKEN_HASH, token_info_cache_duration());
+            .expire_entity(TOKENS_KEY, token_info_cache_duration());
         Ok(())
     }
 
@@ -233,7 +235,7 @@ impl DefaultInfoProvider<'_> {
 
     fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
         self.check_token_cache()?;
-        match self.cache.get_from_hash(TOKEN_HASH, token) {
+        match self.cache.get_from_hash(TOKENS_KEY, token) {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }

@@ -4,6 +4,7 @@ use rocket::response::content;
 use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
 use serde::ser::Serialize;
 use serde_json;
+use std::process::exit;
 
 pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
 pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
@@ -43,8 +44,9 @@ impl Cache for ServiceCache {
         self.hget(hash, id).ok()
     }
 
-    fn exists_in_hash(&self, hash: &str, id: &str) -> Option<bool> {
-        self.hexists(hash, id).ok()
+    fn exists_in_hash(&self, hash: &str, id: &str) -> bool {
+        let exists: Option<usize> = self.hexists(hash, id);
+        exists.map(|it| it != 0).unwrap_or(false)
     }
 
     fn invalidate_pattern(&self, pattern: &str) {

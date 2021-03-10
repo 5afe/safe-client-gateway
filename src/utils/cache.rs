@@ -180,5 +180,5 @@ fn execute_hset(con: &redis::Connection, hash: &str, field: &str, value: &str) {
 }
 
 fn execute_hget(con: &redis::Connection, hash: &str, field: &str) -> Option<String> {
-    redis::cmd("HGET").arg(hash).arg(field).query(con).unwrap()
+    redis::cmd("HGET").arg(hash).arg(field).query(con).ok()
 }

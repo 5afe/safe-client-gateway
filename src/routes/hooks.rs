@@ -14,7 +14,7 @@ pub fn update(context: Context, token: String, update: Json<Payload>) -> ApiResu
     invalidate_caches(context.cache(), &update)
 }
 
-#[get("/flush_all/<token>")]
+#[get("/v1/flush_all/<token>")]
 pub fn flush_all(context: Context, token: String) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");

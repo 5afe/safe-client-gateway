@@ -5,7 +5,7 @@ use crate::config::{
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
-use crate::utils::cache::{Cache, CacheExt};
+use crate::utils::cache::{Cache, CacheExt, TOKEN_HASH};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
@@ -204,11 +204,8 @@ impl DefaultInfoProvider<'_> {
         let response = self.client.get(&url).send()?;
         let data: Page<TokenInfo> = response.json()?;
         for token in data.results.iter() {
-            self.cache.create(
-                &format!("dip_ti_{}", token.address),
-                &serde_json::to_string(&token)?,
-                token_info_cache_duration(),
-            )
+            self.cache
+                .insert_in_hash(TOKEN_HASH, &token.address, &serde_json::to_string(&token)?)
         }
         Ok(())
     }
@@ -235,7 +232,7 @@ impl DefaultInfoProvider<'_> {
     // TODO: Check Eviction policies: https://redis.io/topics/lru-cache
     fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
         self.check_token_cache()?;
-        match self.cache.fetch(&format!("dip_ti_{}", token)) {
+        match self.cache.get_from_hash(TOKEN_HASH, token) {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }

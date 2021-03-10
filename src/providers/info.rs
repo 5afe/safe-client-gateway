@@ -212,7 +212,7 @@ impl DefaultInfoProvider<'_> {
 
     fn check_token_cache(&mut self) -> ApiResult<()> {
         if self.cache.fetch("dip_tcl").is_some() {
-            // Cache is still up to dataam
+            // Cache is still up to data
             return Ok(());
         }
         let result = self.populate_token_cache();

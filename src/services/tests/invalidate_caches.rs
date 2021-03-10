@@ -15,7 +15,6 @@ fn invalidate_with_empty_payload() {
     };
 
     let mut mock_cache = MockCache::new();
-    let mut sequence = Sequence::new();
 
     mock_cache.expect_fetch().times(0);
     mock_cache.expect_create().times(0);
@@ -25,14 +24,7 @@ fn invalidate_with_empty_payload() {
         .expect_invalidate_pattern()
         .times(1)
         .return_const(())
-        .with(eq("c_resp_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
-        .in_sequence(&mut sequence);
-    mock_cache
-        .expect_invalidate_pattern()
-        .times(1)
-        .return_const(())
-        .with(eq("c_reqs_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
-        .in_sequence(&mut sequence);
+        .with(eq("c_re*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"));
 
     invalidate_caches(&mock_cache, &payload).unwrap();
 }
@@ -50,6 +42,7 @@ fn invalidate_new_confirmation_payload() {
 
     let mut mock_cache = MockCache::new();
     let mut sequence = Sequence::new();
+
     mock_cache.expect_fetch().times(0);
     mock_cache.expect_create().times(0);
     mock_cache.expect_invalidate().times(0);
@@ -57,28 +50,14 @@ fn invalidate_new_confirmation_payload() {
         .expect_invalidate_pattern()
         .times(1)
         .return_const(())
-        .with(eq("c_resp_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
-        .in_sequence(&mut sequence);
-    mock_cache
-        .expect_invalidate_pattern()
-        .times(1)
-        .return_const(())
-        .with(eq("c_reqs_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
+        .with(eq("c_re*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
         .in_sequence(&mut sequence);
     mock_cache
         .expect_invalidate_pattern()
         .times(1)
         .return_const(())
         .with(eq(
-            "c_resp_*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
-        ))
-        .in_sequence(&mut sequence);
-    mock_cache
-        .expect_invalidate_pattern()
-        .times(1)
-        .return_const(())
-        .with(eq(
-            "c_reqs_*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
+            "c_re*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
         ))
         .in_sequence(&mut sequence);
 
@@ -101,6 +80,7 @@ fn invalidate_executed_multisig_transaction_payload() {
 
     let mut mock_cache = MockCache::new();
     let mut sequence = Sequence::new();
+
     mock_cache.expect_fetch().times(0);
     mock_cache.expect_create().times(0);
     mock_cache.expect_invalidate().times(0);
@@ -108,28 +88,14 @@ fn invalidate_executed_multisig_transaction_payload() {
         .expect_invalidate_pattern()
         .times(1)
         .return_const(())
-        .with(eq("c_resp_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
-        .in_sequence(&mut sequence);
-    mock_cache
-        .expect_invalidate_pattern()
-        .times(1)
-        .return_const(())
-        .with(eq("c_reqs_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
+        .with(eq("c_re*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
         .in_sequence(&mut sequence);
     mock_cache
         .expect_invalidate_pattern()
         .times(1)
         .return_const(())
         .with(eq(
-            "c_resp_*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
-        ))
-        .in_sequence(&mut sequence);
-    mock_cache
-        .expect_invalidate_pattern()
-        .times(1)
-        .return_const(())
-        .with(eq(
-            "c_reqs_*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
+            "c_re*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
         ))
         .in_sequence(&mut sequence);
 
@@ -157,28 +123,14 @@ fn invalidate_pending_multisig_transaction_payload() {
         .expect_invalidate_pattern()
         .times(1)
         .return_const(())
-        .with(eq("c_resp_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
-        .in_sequence(&mut sequence);
-    mock_cache
-        .expect_invalidate_pattern()
-        .times(1)
-        .return_const(())
-        .with(eq("c_reqs_*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
+        .with(eq("c_re*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"))
         .in_sequence(&mut sequence);
     mock_cache
         .expect_invalidate_pattern()
         .times(1)
         .return_const(())
         .with(eq(
-            "c_resp_*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
-        ))
-        .in_sequence(&mut sequence);
-    mock_cache
-        .expect_invalidate_pattern()
-        .times(1)
-        .return_const(())
-        .with(eq(
-            "c_reqs_*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
+            "c_re*0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621*",
         ))
         .in_sequence(&mut sequence);
 

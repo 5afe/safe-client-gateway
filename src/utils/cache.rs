@@ -17,7 +17,7 @@ pub trait Cache {
     fn create(&self, id: &str, dest: &str, timeout: usize);
     fn insert_in_hash(&self, hash: &str, id: &str, dest: &str);
     fn get_from_hash(&self, hash: &str, id: &str) -> Option<String>;
-    fn exists_in_hash(&self, hash: &str, id: &str) -> bool;
+    fn has_key(&self, id: &str) -> bool;
     fn expire_entity(&self, id: &str, timeout: usize);
     fn invalidate_pattern(&self, pattern: &str);
     fn invalidate(&self, id: &str);
@@ -43,9 +43,9 @@ impl Cache for ServiceCache {
         self.hget(hash, id).ok()
     }
 
-    fn exists_in_hash(&self, hash: &str, id: &str) -> bool {
-        let exists: Option<usize> = self.hexists(hash, id).ok();
-        exists.map(|it| it != 0).unwrap_or(false)
+    fn has_key(&self, id: &str) -> bool {
+        let result: Option<usize> = self.exists(id).ok();
+        result.map(|it| it != 0).unwrap_or(false)
     }
 
     fn expire_entity(&self, id: &str, timeout: usize) {

@@ -209,27 +209,24 @@ impl DefaultInfoProvider<'_> {
             self.cache
                 .insert_in_hash(TOKENS_KEY, &token.address, &serde_json::to_string(&token)?);
         }
-        self.cache
-            .expire_entity(TOKENS_KEY, token_info_cache_duration());
         Ok(())
     }
 
     fn check_token_cache(&mut self) -> ApiResult<()> {
-        if self.cache.fetch("dip_tcl").is_some() {
-            // Cache is still up to data
+        if self.cache.has_key(TOKENS_KEY) {
             return Ok(());
         }
+        self.cache.insert_in_hash(TOKENS_KEY, "state", "populating");
         let result = self.populate_token_cache();
-        // If error we use a shorter cache timeout (we do not want to DoS our service in case of an error)
-        self.cache.create(
-            "dip_tcl",
-            "",
-            if result.is_ok() {
-                token_info_cache_duration()
-            } else {
-                short_error_duration()
-            },
-        );
+        if result.is_ok() {
+            self.cache
+                .expire_entity(TOKENS_KEY, token_info_cache_duration());
+            self.cache.insert_in_hash(TOKENS_KEY, "state", "populated");
+        } else {
+            self.cache.expire_entity(TOKENS_KEY, short_error_duration());
+            self.cache.insert_in_hash(TOKENS_KEY, "state", "errored");
+        }
+        // );
         result
     }
 

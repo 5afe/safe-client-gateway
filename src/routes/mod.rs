@@ -18,6 +18,7 @@ pub fn active_routes() -> Vec<Route> {
         root,
         about::backbone,
         about::info,
+        about::redis,
         balances::get_balances,
         balances::get_supported_fiat,
         collectibles::list,
@@ -29,6 +30,7 @@ pub fn active_routes() -> Vec<Route> {
         transactions::submit_confirmation,
         transactions::propose_transaction,
         hooks::update,
+        hooks::flush_all,
         health::health
     ]
 }

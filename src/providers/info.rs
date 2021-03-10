@@ -15,6 +15,8 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
 
+pub const TOKENS_KEY: &'static str = "dip_ti";
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TokenType {
@@ -204,38 +206,33 @@ impl DefaultInfoProvider<'_> {
         let response = self.client.get(&url).send()?;
         let data: Page<TokenInfo> = response.json()?;
         for token in data.results.iter() {
-            self.cache.create(
-                &format!("dip_ti_{}", token.address),
-                &serde_json::to_string(&token)?,
-                token_info_cache_duration(),
-            )
+            self.cache
+                .insert_in_hash(TOKENS_KEY, &token.address, &serde_json::to_string(&token)?);
         }
         Ok(())
     }
 
     fn check_token_cache(&mut self) -> ApiResult<()> {
-        if self.cache.fetch("dip_tcl").is_some() {
-            // Cache is still up to data
+        if self.cache.has_key(TOKENS_KEY) {
             return Ok(());
         }
+        self.cache.insert_in_hash(TOKENS_KEY, "state", "populating");
         let result = self.populate_token_cache();
-        // If error we use a shorter cache timeout (we do not want to DoS our service in case of an error)
-        self.cache.create(
-            "dip_tcl",
-            "",
-            if result.is_ok() {
-                token_info_cache_duration()
-            } else {
-                short_error_duration()
-            },
-        );
+        if result.is_ok() {
+            self.cache
+                .expire_entity(TOKENS_KEY, token_info_cache_duration());
+            self.cache.insert_in_hash(TOKENS_KEY, "state", "populated");
+        } else {
+            self.cache.expire_entity(TOKENS_KEY, short_error_duration());
+            self.cache.insert_in_hash(TOKENS_KEY, "state", "errored");
+        }
+        // );
         result
     }
 
-    // TODO: Check Eviction policies: https://redis.io/topics/lru-cache
     fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
         self.check_token_cache()?;
-        match self.cache.fetch(&format!("dip_ti_{}", token)) {
+        match self.cache.get_from_hash(TOKENS_KEY, token) {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }

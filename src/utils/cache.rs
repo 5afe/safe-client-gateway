@@ -15,8 +15,13 @@ pub struct ServiceCache(redis::Connection);
 pub trait Cache {
     fn fetch(&self, id: &str) -> Option<String>;
     fn create(&self, id: &str, dest: &str, timeout: usize);
+    fn insert_in_hash(&self, hash: &str, id: &str, dest: &str);
+    fn get_from_hash(&self, hash: &str, id: &str) -> Option<String>;
+    fn has_key(&self, id: &str) -> bool;
+    fn expire_entity(&self, id: &str, timeout: usize);
     fn invalidate_pattern(&self, pattern: &str);
     fn invalidate(&self, id: &str);
+    fn info(&self) -> Option<String>;
 }
 
 impl Cache for ServiceCache {
@@ -31,6 +36,23 @@ impl Cache for ServiceCache {
         let _: () = self.set_ex(id, dest, timeout).unwrap();
     }
 
+    fn insert_in_hash(&self, hash: &str, id: &str, dest: &str) {
+        let _: () = self.hset(hash, id, dest).unwrap();
+    }
+
+    fn get_from_hash(&self, hash: &str, id: &str) -> Option<String> {
+        self.hget(hash, id).ok()
+    }
+
+    fn has_key(&self, id: &str) -> bool {
+        let result: Option<usize> = self.exists(id).ok();
+        result.map(|it| it != 0).unwrap_or(false)
+    }
+
+    fn expire_entity(&self, id: &str, timeout: usize) {
+        let _: () = self.expire(id, timeout).unwrap();
+    }
+
     fn invalidate_pattern(&self, pattern: &str) {
         pipeline_delete(self, self.scan_match(pattern).unwrap());
     }
@@ -38,12 +60,15 @@ impl Cache for ServiceCache {
     fn invalidate(&self, id: &str) {
         let _: () = self.del(id).unwrap();
     }
+
+    fn info(&self) -> Option<String> {
+        info(self)
+    }
 }
 
 pub trait CacheExt: Cache {
     fn invalidate_caches(&self, key: &str) {
-        self.invalidate_pattern(&format!("{}_*{}*", CACHE_RESP_PREFIX, &key));
-        self.invalidate_pattern(&format!("{}_*{}*", CACHE_REQS_PREFIX, &key));
+        self.invalidate_pattern(&format!("c_re*{}*", &key));
     }
 
     fn cache_resp<R>(
@@ -55,7 +80,7 @@ pub trait CacheExt: Cache {
     where
         R: Serialize,
     {
-        let cache_key = format!("c_resp_{}", &key);
+        let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, &key);
         let cached = self.fetch(&cache_key);
         match cached {
             Some(value) => Ok(content::Json(value)),
@@ -75,7 +100,7 @@ pub trait CacheExt: Cache {
         timeout: usize,
         error_timeout: usize,
     ) -> ApiResult<String> {
-        let cache_key = format!("c_reqs_{}", &url);
+        let cache_key = format!("{}_{}", CACHE_REQS_PREFIX, &url);
         match self.fetch(&cache_key) {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
             None => {
@@ -159,4 +184,9 @@ fn pipeline_delete(con: &redis::Connection, keys: Iter<String>) {
         pipeline.del(key);
     }
     pipeline.execute(con);
+}
+
+fn info(con: &redis::Connection) -> Option<String> {
+    let info: Option<String> = redis::cmd("INFO").query(con).ok();
+    return info;
 }

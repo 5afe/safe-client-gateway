@@ -19,7 +19,11 @@ pub fn build_manifest_url(url: &str) -> ApiResult<String> {
     } else if IP_ADDRESS.captures(url_parts.host_str().unwrap()).is_some() {
         Err(api_error!("IP address not accepted"))
     } else {
-        url_parts.path_segments_mut().unwrap().pop_if_empty().push("manifest.json");
+        url_parts
+            .path_segments_mut()
+            .unwrap()
+            .pop_if_empty()
+            .push("manifest.json");
         url_parts.set_query(None);
         Ok(url_parts.to_string())
     }

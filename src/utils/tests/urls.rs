@@ -68,7 +68,8 @@ fn valid_url_with_trailing_slash_and_port() {
 
 #[test]
 fn valid_url_with_longer_path() {
-    let input_url = "https://cloudflare-ipfs.com/ipfs/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh";
+    let input_url =
+        "https://cloudflare-ipfs.com/ipfs/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh";
 
     let actual = build_manifest_url(input_url).unwrap();
     assert_eq!(actual, "https://cloudflare-ipfs.com/ipfs/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh/manifest.json")

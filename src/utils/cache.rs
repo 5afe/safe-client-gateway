@@ -57,10 +57,7 @@ impl Cache for ServiceCache {
     }
 
     fn invalidate_pattern(&self, pattern: &str) {
-        pipeline_delete(
-            self,
-            scan_match_count(self, pattern, redis_scan_count()).unwrap(),
-        );
+        pipeline_delete(self, scan_match_count(self, pattern, redis_scan_count()));
     }
 
     fn invalidate(&self, id: &str) {
@@ -196,7 +193,7 @@ fn scan_match_count<P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
     con: &redis::Connection,
     pattern: P,
     count: C,
-) -> redis::RedisResult<redis::Iter<RV>> {
+) -> redis::Iter<RV> {
     redis::cmd("INFO")
         .cursor_arg(0)
         .arg("MATCH")
@@ -204,6 +201,7 @@ fn scan_match_count<P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
         .arg("COUNT")
         .arg(count)
         .iter(con)
+        .unwrap()
 }
 
 fn info(con: &redis::Connection) -> Option<String> {

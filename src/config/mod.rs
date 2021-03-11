@@ -78,7 +78,7 @@ pub fn safe_app_manifest_cache_duration() -> usize {
     usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }
 
-//ERRORS
+// ERRORS
 pub fn internal_client_connect_timeout() -> u64 {
     u64_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)
 }
@@ -89,6 +89,11 @@ pub fn request_error_cache_timeout() -> usize {
 
 pub fn log_all_error_responses() -> bool {
     bool_with_default("LOG_ALL_ERROR_RESPONSES", false)
+}
+
+// OTHERS
+pub fn redis_scan_count() -> usize {
+    usize_with_default("REDIS_SCAN_COUNT", 300)
 }
 
 pub fn build_number() -> Option<String> {

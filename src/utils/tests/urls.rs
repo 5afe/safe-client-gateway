@@ -73,3 +73,11 @@ fn valid_url_with_longer_path() {
     let actual = build_manifest_url(input_url).unwrap();
     assert_eq!(actual, "https://cloudflare-ipfs.com/ipfs/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh/manifest.json")
 }
+
+#[test]
+fn valid_url_with_query_params() {
+    let input_url = "https://cloudflare-ipfs.com/ipfs/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh/?foo=bar&bla=blubb";
+
+    let actual = build_manifest_url(input_url).unwrap();
+    assert_eq!(actual, "https://cloudflare-ipfs.com/ipfs/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh/manifest.json")
+}

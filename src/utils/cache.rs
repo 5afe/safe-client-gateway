@@ -194,7 +194,7 @@ fn scan_match_count<P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
     pattern: P,
     count: C,
 ) -> redis::Iter<RV> {
-    redis::cmd("INFO")
+    redis::cmd("SCAN")
         .cursor_arg(0)
         .arg("MATCH")
         .arg(pattern)

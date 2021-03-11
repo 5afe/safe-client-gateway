@@ -8,7 +8,7 @@ lazy_static! {
 }
 
 pub fn build_manifest_url(url: &str) -> ApiResult<String> {
-    let url_parts = Url::parse(url).or(Err(api_error!("Not a valid Url")))?;
+    let mut url_parts = Url::parse(url).or(Err(api_error!("Not a valid Url")))?;
 
     if !url_parts.scheme().starts_with("http") {
         Err(api_error!("Invalid scheme"))
@@ -19,6 +19,12 @@ pub fn build_manifest_url(url: &str) -> ApiResult<String> {
     } else if IP_ADDRESS.captures(url_parts.host_str().unwrap()).is_some() {
         Err(api_error!("IP address not accepted"))
     } else {
-        Ok(format!("{}manifest.json", url_parts.to_string()))
+        url_parts
+            .path_segments_mut()
+            .unwrap()
+            .pop_if_empty()
+            .push("manifest.json");
+        url_parts.set_query(None);
+        Ok(url_parts.to_string())
     }
 }

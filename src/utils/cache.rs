@@ -192,11 +192,11 @@ fn pipeline_delete(con: &redis::Connection, keys: Iter<String>) {
     pipeline.execute(con);
 }
 
-fn scan_match_count<'a, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
-    con: &'a redis::Connection,
+fn scan_match_count<P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
+    con: &redis::Connection,
     pattern: P,
     count: C,
-) -> redis::RedisResult<redis::Iter<'a, RV>> {
+) -> redis::RedisResult<redis::Iter<RV>> {
     redis::cmd("INFO")
         .cursor_arg(0)
         .arg("MATCH")

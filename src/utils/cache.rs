@@ -1,7 +1,10 @@
+use crate::config::redis_scan_count;
 use crate::utils::errors::{ApiError, ApiResult};
 use mockall::automock;
 use rocket::response::content;
-use rocket_contrib::databases::redis::{self, pipe, Commands, Iter, PipelineCommands};
+use rocket_contrib::databases::redis::{
+    self, pipe, Commands, FromRedisValue, Iter, PipelineCommands, ToRedisArgs,
+};
 use serde::ser::Serialize;
 use serde_json;
 
@@ -54,7 +57,10 @@ impl Cache for ServiceCache {
     }
 
     fn invalidate_pattern(&self, pattern: &str) {
-        pipeline_delete(self, self.scan_match(pattern).unwrap());
+        pipeline_delete(
+            self,
+            scan_match_count(self, pattern, redis_scan_count()).unwrap(),
+        );
     }
 
     fn invalidate(&self, id: &str) {
@@ -186,7 +192,20 @@ fn pipeline_delete(con: &redis::Connection, keys: Iter<String>) {
     pipeline.execute(con);
 }
 
+fn scan_match_count<'a, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
+    con: &'a redis::Connection,
+    pattern: P,
+    count: C,
+) -> redis::RedisResult<redis::Iter<'a, RV>> {
+    redis::cmd("INFO")
+        .cursor_arg(0)
+        .arg("MATCH")
+        .arg(pattern)
+        .arg("COUNT")
+        .arg(count)
+        .iter(con)
+}
+
 fn info(con: &redis::Connection) -> Option<String> {
-    let info: Option<String> = redis::cmd("INFO").query(con).ok();
-    return info;
+    redis::cmd("INFO").query(con).ok()
 }

@@ -103,7 +103,7 @@ fn multisig_custom_transaction_to_transaction_details() {
                         submitted_at: timestamp_confirmation1,
                     },
                 ],
-                rejections: None,
+                rejectors: None,
                 gas_token_info: None
             })),
         safe_app_info: None
@@ -356,7 +356,7 @@ fn multisig_transaction_with_origin() {
                          submitted_at: 1607346715000,
                      }
                 ],
-                rejections: None,
+                rejectors: None,
                 gas_token_info: None,
             })),
         safe_app_info: Some(SafeAppInfo {

@@ -88,7 +88,7 @@ impl MultisigTransaction {
                 .unwrap_or(&String::from("0"))
                 .to_owned(),
             gas_token_info,
-            rejections,
+            rejectors: rejections,
         }
     }
 }

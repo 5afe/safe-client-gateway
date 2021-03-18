@@ -1,5 +1,4 @@
 use crate::config::{balances_cache_duration, request_cache_duration};
-use crate::providers::info::DefaultInfoProvider;
 use crate::services::balances::*;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
@@ -34,7 +33,6 @@ pub fn get_supported_fiat(context: Context) -> ApiResult<content::Json<String>> 
     context
         .cache()
         .cache_resp(&context.uri(), request_cache_duration(), || {
-            let info_provider = DefaultInfoProvider::new(&context);
-            Ok(info_provider.available_currency_codes()?)
+            fiat_codes(&context)
         })
 }

@@ -50,3 +50,21 @@ pub fn balances(
         items: service_balances,
     })
 }
+
+pub fn fiat_codes(context: &Context) -> ApiResult<Vec<String>> {
+    let info_provider = DefaultInfoProvider::new(&context);
+    let mut fiat_codes = info_provider.available_currency_codes()?;
+
+    let usd_index = fiat_codes.iter().position(|it| it.eq("USD")).unwrap();
+    let eur_index = fiat_codes.iter().position(|it| it.eq("EUR")).unwrap();
+
+    let usd_code = fiat_codes.swap_remove(usd_index);
+    let eur_code = fiat_codes.swap_remove(eur_index);
+
+    fiat_codes.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
+
+    let mut output = vec![usd_code, eur_code];
+    output.append(&mut fiat_codes);
+
+    Ok(output)
+}

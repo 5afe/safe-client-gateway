@@ -76,9 +76,9 @@ impl MultisigTransaction {
             && data_size > 0
             && self.safe == self.to
             && self
-            .data_decoded
-            .as_ref()
-            .map_or_else(|| false, |it| it.is_settings_change())
+                .data_decoded
+                .as_ref()
+                .map_or_else(|| false, |it| it.is_settings_change())
         {
             TransactionInfo::SettingsChange(self.to_settings_change(info_provider))
         } else if self
@@ -218,25 +218,25 @@ impl MultisigTransaction {
             && data_size(&self.data) == 0
             && self.value.as_ref().map_or(true, |value| value == "0")
             && self
-            .operation
-            .map_or(true, |operation| operation == Operation::CALL)
+                .operation
+                .map_or(true, |operation| operation == Operation::CALL)
             && self
-            .base_gas
-            .as_ref()
-            .map_or(true, |base_gas| base_gas.eq(&0))
+                .base_gas
+                .as_ref()
+                .map_or(true, |base_gas| base_gas.eq(&0))
             && self
-            .gas_price
-            .as_ref()
-            .map_or(true, |gas_price| gas_price == "0")
+                .gas_price
+                .as_ref()
+                .map_or(true, |gas_price| gas_price == "0")
             && self.gas_token.as_ref().map_or(true, |gas_token| {
-            gas_token == "0x0000000000000000000000000000000000000000"
-        })
-            && self
-            .refund_receiver
-            .as_ref()
-            .map_or(true, |refund_receiver| {
-                refund_receiver == "0x0000000000000000000000000000000000000000"
+                gas_token == "0x0000000000000000000000000000000000000000"
             })
+            && self
+                .refund_receiver
+                .as_ref()
+                .map_or(true, |refund_receiver| {
+                    refund_receiver == "0x0000000000000000000000000000000000000000"
+                })
     }
 }
 

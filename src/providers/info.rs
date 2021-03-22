@@ -89,9 +89,7 @@ pub trait InfoProvider {
                 name: it.name,
                 logo_uri: it.logo_uri.to_owned(),
             })
-            .or_else(|_| {
-                self.address_info(&address)
-            })
+            .or_else(|_| self.address_info(&address))
     }
 }
 
@@ -179,8 +177,8 @@ impl DefaultInfoProvider<'_> {
         generator: impl Fn(&mut Self, &String) -> ApiResult<Option<T>>,
         key: impl Into<String>,
     ) -> ApiResult<T>
-        where
-            T: Clone + DeserializeOwned,
+    where
+        T: Clone + DeserializeOwned,
     {
         let key = key.into();
         match local_cache(self).get(&key) {
@@ -231,7 +229,6 @@ impl DefaultInfoProvider<'_> {
             self.cache.expire_entity(TOKENS_KEY, short_error_duration());
             self.cache.insert_in_hash(TOKENS_KEY, "state", "errored");
         }
-        // );
         result
     }
 

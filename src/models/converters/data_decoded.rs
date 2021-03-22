@@ -15,7 +15,7 @@ impl DataDecoded {
             SET_FALLBACK_HANDLER => {
                 let handler = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::SetFallbackHandler {
-                    handler_info: info_provider.address_info(&handler).ok(),
+                    handler_info: info_provider.contract_info(&handler).ok(),
                     handler,
                 })
             }
@@ -48,21 +48,21 @@ impl DataDecoded {
             CHANGE_MASTER_COPY => {
                 let implementation = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::ChangeImplementation {
-                    implementation_info: info_provider.address_info(&implementation).ok(),
+                    implementation_info: info_provider.contract_info(&implementation).ok(),
                     implementation,
                 })
             }
             ENABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::EnableModule {
-                    module_info: info_provider.address_info(&module).ok(),
+                    module_info: info_provider.contract_info(&module).ok(),
                     module,
                 })
             }
             DISABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(1)?;
                 Some(SettingsInfo::DisableModule {
-                    module_info: info_provider.address_info(&module).ok(),
+                    module_info: info_provider.contract_info(&module).ok(),
                     module,
                 })
             }

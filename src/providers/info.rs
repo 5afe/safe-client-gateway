@@ -81,7 +81,7 @@ pub trait InfoProvider {
     fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo>;
     fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo>;
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
-    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
+    fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
 
     fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
         self.token_info(&address)
@@ -89,7 +89,7 @@ pub trait InfoProvider {
                 name: it.name,
                 logo_uri: it.logo_uri.to_owned(),
             })
-            .or_else(|_| self.address_info(&address))
+            .or_else(|_| self.contract_info(&address))
     }
 }
 
@@ -137,7 +137,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         })
     }
 
-    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
+    fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
         let url = format!(
             "{}/v1/contracts/{}/",
             base_transaction_service_url(),

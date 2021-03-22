@@ -38,7 +38,7 @@ impl SafeInfo {
 }
 
 fn to_address_ex(address: &str, info_provider: &mut dyn InfoProvider) -> AddressEx {
-    let address_info = info_provider.address_info(&address).ok();
+    let address_info = info_provider.contract_info(&address).ok();
     AddressEx {
         value: address.to_owned(),
         name: address_info.as_ref().map(|it| it.name.to_owned()),

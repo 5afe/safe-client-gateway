@@ -66,8 +66,7 @@ fn data_decoded_add_owner_with_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_info()
-        .times(1)
-        .return_once(move |_| bail!("Some http error"));
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -92,13 +91,7 @@ fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_info()
-        .times(1)
-        .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "Address name".to_string(),
-                logo_uri: Some("logo.url".to_string()),
-            })
-        });
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -108,10 +101,7 @@ fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
         data_decoded: data_decoded.clone(),
         settings_info: Some(SettingsInfo::AddOwner {
             owner: "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23".to_string(),
-            owner_info: Some(AddressInfo {
-                name: "Address name".to_string(),
-                logo_uri: Some("logo.url".to_string()),
-            }),
+            owner_info: None,
             threshold: 1,
         }),
     };
@@ -126,8 +116,7 @@ fn data_decoded_remove_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_info()
-        .times(1)
-        .return_once(move |_| bail!("Some http error"));
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
@@ -147,45 +136,11 @@ fn data_decoded_remove_owner_to_settings_info() {
 }
 
 #[test]
-fn data_decoded_remove_owner_to_settings_info_with_address_info() {
-    let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_address_info()
-        .times(1)
-        .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "Address name".to_string(),
-                logo_uri: Some("logo.url".to_string()),
-            })
-        });
-
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
-
-    let expected = SettingsChange {
-        data_decoded: data_decoded.clone(),
-        settings_info: Some(SettingsInfo::RemoveOwner {
-            owner: "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string(),
-            owner_info: Some(AddressInfo {
-                name: "Address name".to_string(),
-                logo_uri: Some("logo.url".to_string()),
-            }),
-            threshold: 2,
-        }),
-    };
-
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
-
-    assert_eq!(expected.settings_info, actual);
-}
-
-#[test]
 fn data_decoded_swap_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_info()
-        .times(2)
-        .returning(move |_| bail!("Some http error"));
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
@@ -197,43 +152,6 @@ fn data_decoded_swap_owner_to_settings_info() {
             old_owner_info: None,
             new_owner: "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string(),
             new_owner_info: None,
-        }),
-    };
-
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
-
-    assert_eq!(expected.settings_info, actual);
-}
-
-#[test]
-fn data_decoded_swap_owner_to_settings_info_with_address_info() {
-    let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_address_info()
-        .times(2)
-        .returning(move |_| {
-            Ok(AddressInfo {
-                name: "Address name".to_string(),
-                logo_uri: Some("logo.url".to_string()),
-            })
-        });
-
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
-
-    let expected = SettingsChange {
-        data_decoded: data_decoded.clone(),
-        settings_info: Some(SettingsInfo::SwapOwner {
-            old_owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
-            old_owner_info: Some(AddressInfo {
-                name: "Address name".to_string(),
-                logo_uri: Some("logo.url".to_string()),
-            }),
-            new_owner: "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string(),
-            new_owner_info: Some(AddressInfo {
-                name: "Address name".to_string(),
-                logo_uri: Some("logo.url".to_string()),
-            }),
         }),
     };
 
@@ -451,7 +369,7 @@ fn data_decoded_with_nested_safe_transaction() {
     let data_decoded = serde_json::from_str::<DataDecoded>(
         crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
     )
-    .unwrap();
+        .unwrap();
 
     let expected = DataDecoded {
         method: "execTransaction".to_string(),

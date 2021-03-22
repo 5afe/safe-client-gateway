@@ -22,7 +22,7 @@ impl DataDecoded {
             ADD_OWNER_WITH_THRESHOLD => {
                 let owner = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::AddOwner {
-                    owner_info: info_provider.address_info(&owner).ok(),
+                    owner_info: None,
                     owner,
                     threshold: self.get_parameter_single_value_at(1)?.parse().ok()?,
                 })
@@ -30,7 +30,7 @@ impl DataDecoded {
             REMOVE_OWNER => {
                 let owner = self.get_parameter_single_value_at(1)?;
                 Some(SettingsInfo::RemoveOwner {
-                    owner_info: info_provider.address_info(&owner).ok(),
+                    owner_info: None,
                     owner,
                     threshold: self.get_parameter_single_value_at(2)?.parse().ok()?,
                 })
@@ -39,9 +39,9 @@ impl DataDecoded {
                 let old_owner = self.get_parameter_single_value_at(1)?;
                 let new_owner = self.get_parameter_single_value_at(2)?;
                 Some(SettingsInfo::SwapOwner {
-                    old_owner_info: info_provider.address_info(&old_owner).ok(),
+                    old_owner_info: None,
                     old_owner,
-                    new_owner_info: info_provider.address_info(&new_owner).ok(),
+                    new_owner_info: None,
                     new_owner,
                 })
             }

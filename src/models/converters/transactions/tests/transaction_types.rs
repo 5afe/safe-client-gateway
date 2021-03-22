@@ -138,8 +138,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
         .expect_address_info()
-        .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .times(0);
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE)
         .unwrap();
@@ -180,23 +179,14 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method_with
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
         .expect_address_info()
-        .times(1)
-        .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
-            })
-        });
+        .times(0);
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE)
         .unwrap();
     let expected = TransactionInfo::SettingsChange(SettingsChange {
         settings_info: Some(SettingsInfo::AddOwner {
             owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
-            owner_info: Some(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
-            }),
+            owner_info: None,
             threshold: 2,
         }),
         data_decoded: DataDecoded {

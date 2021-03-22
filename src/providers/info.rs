@@ -82,6 +82,17 @@ pub trait InfoProvider {
     fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo>;
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
     fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
+
+    fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
+        self.token_info(&address)
+            .map(|it| AddressInfo {
+                name: it.name,
+                logo_uri: it.logo_uri.to_owned(),
+            })
+            .or_else(|_| {
+                self.address_info(&address)
+            })
+    }
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -262,14 +273,14 @@ impl DefaultInfoProvider<'_> {
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 
-    pub fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
-        self.token_info(&address)
-            .map(|it| AddressInfo {
-                name: it.name,
-                logo_uri: it.logo_uri.to_owned(),
-            })
-            .or_else(|_| {
-                self.address_info(&address)
-            })
-    }
+    // pub fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
+    //     self.token_info(&address)
+    //         .map(|it| AddressInfo {
+    //             name: it.name,
+    //             logo_uri: it.logo_uri.to_owned(),
+    //         })
+    //         .or_else(|_| {
+    //             self.address_info(&address)
+    //         })
+    // }
 }

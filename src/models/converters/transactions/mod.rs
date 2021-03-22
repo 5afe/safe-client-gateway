@@ -76,9 +76,9 @@ impl MultisigTransaction {
             && data_size > 0
             && self.safe == self.to
             && self
-                .data_decoded
-                .as_ref()
-                .map_or_else(|| false, |it| it.is_settings_change())
+            .data_decoded
+            .as_ref()
+            .map_or_else(|| false, |it| it.is_settings_change())
         {
             TransactionInfo::SettingsChange(self.to_settings_change(info_provider))
         } else if self
@@ -171,7 +171,7 @@ impl MultisigTransaction {
         Transfer {
             sender_info: None,
             sender: self.safe.to_owned(),
-            recipient_info: info_provider.address_info(&self.to).ok(),
+            recipient_info: info_provider.full_address_info_search(&self.to).ok(),
             recipient: self.to.to_owned(),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
@@ -193,7 +193,7 @@ impl MultisigTransaction {
     fn to_custom(&self, info_provider: &mut dyn InfoProvider) -> Custom {
         Custom {
             to: self.to.to_owned(),
-            to_info: info_provider.address_info(&self.to).ok(),
+            to_info: info_provider.full_address_info_search(&self.to).ok(),
             is_cancellation: self.is_cancellation(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap().into(),
@@ -218,32 +218,32 @@ impl MultisigTransaction {
             && data_size(&self.data) == 0
             && self.value.as_ref().map_or(true, |value| value == "0")
             && self
-                .operation
-                .map_or(true, |operation| operation == Operation::CALL)
+            .operation
+            .map_or(true, |operation| operation == Operation::CALL)
             && self
-                .base_gas
-                .as_ref()
-                .map_or(true, |base_gas| base_gas.eq(&0))
+            .base_gas
+            .as_ref()
+            .map_or(true, |base_gas| base_gas.eq(&0))
             && self
-                .gas_price
-                .as_ref()
-                .map_or(true, |gas_price| gas_price == "0")
+            .gas_price
+            .as_ref()
+            .map_or(true, |gas_price| gas_price == "0")
             && self.gas_token.as_ref().map_or(true, |gas_token| {
-                gas_token == "0x0000000000000000000000000000000000000000"
-            })
+            gas_token == "0x0000000000000000000000000000000000000000"
+        })
             && self
-                .refund_receiver
-                .as_ref()
-                .map_or(true, |refund_receiver| {
-                    refund_receiver == "0x0000000000000000000000000000000000000000"
-                })
+            .refund_receiver
+            .as_ref()
+            .map_or(true, |refund_receiver| {
+                refund_receiver == "0x0000000000000000000000000000000000000000"
+            })
     }
 }
 
 impl ModuleTransaction {
     fn to_transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
         TransactionInfo::Custom(Custom {
-            to_info: info_provider.address_info(&self.to).ok(),
+            to_info: info_provider.full_address_info_search(&self.to).ok(),
             to: self.to.to_owned(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),

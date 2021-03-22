@@ -11,7 +11,7 @@ use crate::providers::info::*;
 fn ether_transfer_dto_ether_incoming_transfer_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("no address info"));
 
@@ -42,7 +42,7 @@ fn ether_transfer_dto_ether_incoming_transfer_transaction() {
 fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| {
             Ok(AddressInfo {
@@ -81,7 +81,7 @@ fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_info() {
 fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| {
             Ok(AddressInfo {

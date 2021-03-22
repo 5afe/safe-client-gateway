@@ -14,7 +14,7 @@ fn transaction_operation_not_call() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -43,7 +43,7 @@ fn transaction_data_size_and_value_greater_than_0() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -72,7 +72,7 @@ fn transaction_data_size_and_value_greater_than_0_with_address_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| {
             Ok(AddressInfo {
@@ -109,7 +109,7 @@ fn transaction_data_size_0_value_greater_than_0() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -137,7 +137,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(0);
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE)
@@ -178,7 +178,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method_with
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(0);
 
     let tx = serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE)
@@ -219,7 +219,7 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method(
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -252,7 +252,7 @@ fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -290,7 +290,7 @@ fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -322,7 +322,7 @@ fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("no address info"));
 
@@ -351,7 +351,7 @@ fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -391,7 +391,7 @@ fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() 
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -421,7 +421,7 @@ fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
         .times(1)
         .return_once(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -448,7 +448,7 @@ fn cancellation_transaction() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

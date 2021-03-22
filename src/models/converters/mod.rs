@@ -28,10 +28,10 @@ pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> Transf
 pub(super) fn get_address_info(
     safe: &str,
     address: &str,
-    info_provide: &mut dyn InfoProvider,
+    info_provider: &mut dyn InfoProvider,
 ) -> Option<AddressInfo> {
     if safe != address {
-        info_provide.address_info(address).ok()
+        info_provider.full_address_info_search(address).ok()
     } else {
         None
     }

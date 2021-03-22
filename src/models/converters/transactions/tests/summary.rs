@@ -210,7 +210,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
 fn creation_transaction_to_summary_no_address_info_available() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -256,7 +256,7 @@ fn creation_transaction_to_summary_no_address_info_available() {
 fn creation_transaction_to_summary_address_info_available() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(3)
         .returning(move |_| {
             Ok(AddressInfo {
@@ -482,7 +482,7 @@ fn multisig_transaction_to_settings_change_summary() {
         .expect_safe_info()
         .times(1)
         .return_once(move |_| Ok(safe_info));
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionSummary {

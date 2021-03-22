@@ -7,7 +7,7 @@ fn to_safe_info_ex_no_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(5)
         .returning(move |_| bail!("No safe info"));
     let expected = SafeInfoEx {
@@ -85,7 +85,7 @@ fn to_safe_info_ex_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(5)
         .returning(move |address| {
             Ok(AddressInfo {
@@ -178,7 +178,7 @@ fn to_safe_info_ex_nullable_fields_are_all_null() {
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

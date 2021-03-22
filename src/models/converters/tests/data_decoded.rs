@@ -7,7 +7,7 @@ use crate::providers::info::*;
 fn data_decoded_set_fallback_handler_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -32,7 +32,7 @@ fn data_decoded_set_fallback_handler_to_settings_info() {
 fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| {
             Ok(AddressInfo {
@@ -64,7 +64,7 @@ fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() {
 #[test]
 fn data_decoded_add_owner_with_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -87,7 +87,7 @@ fn data_decoded_add_owner_with_threshold_to_settings_info() {
 #[test]
 fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -110,7 +110,7 @@ fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
 #[test]
 fn data_decoded_remove_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
@@ -132,7 +132,7 @@ fn data_decoded_remove_owner_to_settings_info() {
 #[test]
 fn data_decoded_swap_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
@@ -155,7 +155,7 @@ fn data_decoded_swap_owner_to_settings_info() {
 #[test]
 fn data_decoded_change_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_THRESHOLD).unwrap();
@@ -174,7 +174,7 @@ fn data_decoded_change_threshold_to_settings_info() {
 fn data_decoded_change_implementation_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -198,7 +198,7 @@ fn data_decoded_change_implementation_to_settings_info() {
 fn data_decoded_change_implementation_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| {
             Ok(AddressInfo {
@@ -230,7 +230,7 @@ fn data_decoded_change_implementation_to_settings_info_with_address_info() {
 fn data_decoded_enable_module_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -254,7 +254,7 @@ fn data_decoded_enable_module_to_settings_info() {
 fn data_decoded_enable_module_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| {
             Ok(AddressInfo {
@@ -286,7 +286,7 @@ fn data_decoded_enable_module_to_settings_info_with_address_info() {
 fn data_decoded_disable_module_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -310,7 +310,7 @@ fn data_decoded_disable_module_to_settings_info() {
 fn data_decoded_disable_module_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(1)
         .return_once(move |_| {
             Ok(AddressInfo {

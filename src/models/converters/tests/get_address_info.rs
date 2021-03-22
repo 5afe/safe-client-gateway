@@ -49,7 +49,7 @@ fn get_address_info_address_equal_to_safe() {
     let safe = "0x1234";
 
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
 
     let actual = get_address_info(safe, address, &mut mock_info_provider);
     assert!(actual.is_none());

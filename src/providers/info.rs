@@ -272,15 +272,4 @@ impl DefaultInfoProvider<'_> {
         )?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }
-
-    // pub fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
-    //     self.token_info(&address)
-    //         .map(|it| AddressInfo {
-    //             name: it.name,
-    //             logo_uri: it.logo_uri.to_owned(),
-    //         })
-    //         .or_else(|_| {
-    //             self.address_info(&address)
-    //         })
-    // }
 }

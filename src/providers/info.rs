@@ -129,33 +129,26 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
-        self.token_info(address)
-            .map(|it| AddressInfo {
-                name: it.name,
-                logo_uri: it.logo_uri.to_owned(),
+        let url = format!(
+            "{}/v1/contracts/{}/",
+            base_transaction_service_url(),
+            address
+        );
+        let contract_info_json = self.cache.request_cached(
+            self.client,
+            &url,
+            address_info_cache_duration(),
+            long_error_duration(),
+        )?;
+        let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
+        if contract_info.display_name.trim().is_empty() {
+            bail!("No display name")
+        } else {
+            Ok(AddressInfo {
+                name: contract_info.display_name.to_owned(),
+                logo_uri: contract_info.logo_uri.to_owned(),
             })
-            .or_else(|_| {
-                let url = format!(
-                    "{}/v1/contracts/{}/",
-                    base_transaction_service_url(),
-                    address
-                );
-                let contract_info_json = self.cache.request_cached(
-                    self.client,
-                    &url,
-                    address_info_cache_duration(),
-                    long_error_duration(),
-                )?;
-                let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
-                if contract_info.display_name.trim().is_empty() {
-                    bail!("No display name")
-                } else {
-                    Ok(AddressInfo {
-                        name: contract_info.display_name.to_owned(),
-                        logo_uri: contract_info.logo_uri.to_owned(),
-                    })
-                }
-            })
+        }
     }
 }
 
@@ -175,8 +168,8 @@ impl DefaultInfoProvider<'_> {
         generator: impl Fn(&mut Self, &String) -> ApiResult<Option<T>>,
         key: impl Into<String>,
     ) -> ApiResult<T>
-    where
-        T: Clone + DeserializeOwned,
+        where
+            T: Clone + DeserializeOwned,
     {
         let key = key.into();
         match local_cache(self).get(&key) {
@@ -267,5 +260,16 @@ impl DefaultInfoProvider<'_> {
             short_error_duration(),
         )?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
+    }
+
+    pub fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
+        self.token_info(&address)
+            .map(|it| AddressInfo {
+                name: it.name,
+                logo_uri: it.logo_uri.to_owned(),
+            })
+            .or_else(|_| {
+                self.address_info(&address)
+            })
     }
 }

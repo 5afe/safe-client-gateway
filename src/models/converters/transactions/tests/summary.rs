@@ -46,7 +46,7 @@ fn module_tx_to_summary_transaction() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -119,7 +119,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
     let safe_address = String::from("0x2323");
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(4)
         .returning(move |_| bail!("No address info"));
     let timestamp = Utc::now();
@@ -210,7 +210,7 @@ fn ethereum_tx_to_summary_transaction_with_transfers() {
 fn creation_transaction_to_summary_no_address_info_available() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -256,7 +256,7 @@ fn creation_transaction_to_summary_no_address_info_available() {
 fn creation_transaction_to_summary_address_info_available() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_address_info()
+        .expect_contract_info()
         .times(3)
         .returning(move |_| {
             Ok(AddressInfo {
@@ -329,7 +329,7 @@ fn multisig_transaction_to_erc20_transfer_summary() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -384,7 +384,7 @@ fn multisig_transaction_to_erc721_transfer_summary() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -434,7 +434,7 @@ fn multisig_transaction_to_ether_transfer_summary() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -482,10 +482,7 @@ fn multisig_transaction_to_settings_change_summary() {
         .expect_safe_info()
         .times(1)
         .return_once(move |_| Ok(safe_info));
-    mock_info_provider
-        .expect_address_info()
-        .times(1)
-        .return_once(move |_| bail!("No address info"));
+    mock_info_provider.expect_contract_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionSummary {
@@ -549,7 +546,7 @@ fn multisig_transaction_to_custom_summary() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -601,7 +598,7 @@ fn multisig_transaction_with_missing_signers() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -653,7 +650,7 @@ fn ethereum_transaction_with_inconsistent_token_types() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -707,7 +704,7 @@ fn multisig_transaction_with_origin() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
     mock_info_provider

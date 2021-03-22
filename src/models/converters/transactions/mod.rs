@@ -171,7 +171,7 @@ impl MultisigTransaction {
         Transfer {
             sender_info: None,
             sender: self.safe.to_owned(),
-            recipient_info: info_provider.address_info(&self.to).ok(),
+            recipient_info: info_provider.full_address_info_search(&self.to).ok(),
             recipient: self.to.to_owned(),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
@@ -193,7 +193,7 @@ impl MultisigTransaction {
     fn to_custom(&self, info_provider: &mut dyn InfoProvider) -> Custom {
         Custom {
             to: self.to.to_owned(),
-            to_info: info_provider.address_info(&self.to).ok(),
+            to_info: info_provider.full_address_info_search(&self.to).ok(),
             is_cancellation: self.is_cancellation(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap().into(),
@@ -243,7 +243,7 @@ impl MultisigTransaction {
 impl ModuleTransaction {
     fn to_transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
         TransactionInfo::Custom(Custom {
-            to_info: info_provider.address_info(&self.to).ok(),
+            to_info: info_provider.full_address_info_search(&self.to).ok(),
             to: self.to.to_owned(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),

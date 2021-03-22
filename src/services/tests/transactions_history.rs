@@ -71,7 +71,7 @@ fn backend_txs_to_summary_txs_with_values() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(6)
         .returning(move |_| bail!("No address info"));
 
@@ -258,7 +258,7 @@ fn service_txs_to_tx_list_items_last_timestamp_undefined() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -314,7 +314,7 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -371,7 +371,7 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -422,7 +422,7 @@ fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -476,7 +476,7 @@ fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -534,7 +534,7 @@ fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -611,7 +611,7 @@ fn peek_timestamp_and_remove_item_with_items() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

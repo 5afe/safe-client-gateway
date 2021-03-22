@@ -81,7 +81,16 @@ pub trait InfoProvider {
     fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo>;
     fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo>;
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
-    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
+    fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
+
+    fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
+        self.token_info(&address)
+            .map(|it| AddressInfo {
+                name: it.name,
+                logo_uri: it.logo_uri.to_owned(),
+            })
+            .or_else(|_| self.contract_info(&address))
+    }
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -128,34 +137,27 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         })
     }
 
-    fn address_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
-        self.token_info(address)
-            .map(|it| AddressInfo {
-                name: it.name,
-                logo_uri: it.logo_uri.to_owned(),
+    fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
+        let url = format!(
+            "{}/v1/contracts/{}/",
+            base_transaction_service_url(),
+            address
+        );
+        let contract_info_json = self.cache.request_cached(
+            self.client,
+            &url,
+            address_info_cache_duration(),
+            long_error_duration(),
+        )?;
+        let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
+        if contract_info.display_name.trim().is_empty() {
+            bail!("No display name")
+        } else {
+            Ok(AddressInfo {
+                name: contract_info.display_name.to_owned(),
+                logo_uri: contract_info.logo_uri.to_owned(),
             })
-            .or_else(|_| {
-                let url = format!(
-                    "{}/v1/contracts/{}/",
-                    base_transaction_service_url(),
-                    address
-                );
-                let contract_info_json = self.cache.request_cached(
-                    self.client,
-                    &url,
-                    address_info_cache_duration(),
-                    long_error_duration(),
-                )?;
-                let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
-                if contract_info.display_name.trim().is_empty() {
-                    bail!("No display name")
-                } else {
-                    Ok(AddressInfo {
-                        name: contract_info.display_name.to_owned(),
-                        logo_uri: contract_info.logo_uri.to_owned(),
-                    })
-                }
-            })
+        }
     }
 }
 
@@ -227,7 +229,6 @@ impl DefaultInfoProvider<'_> {
             self.cache.expire_entity(TOKENS_KEY, short_error_duration());
             self.cache.insert_in_hash(TOKENS_KEY, "state", "errored");
         }
-        // );
         result
     }
 

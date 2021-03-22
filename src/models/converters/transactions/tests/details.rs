@@ -33,7 +33,7 @@ fn multisig_custom_transaction_to_transaction_details() {
         .times(1)
         .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -121,7 +121,7 @@ fn module_transaction_to_transaction_details() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -196,7 +196,7 @@ fn ethereum_tx_transfer_to_transaction_details() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -237,7 +237,7 @@ fn multisig_transaction_with_origin() {
             })
         });
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("no address info"));
 

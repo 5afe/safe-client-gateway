@@ -23,7 +23,7 @@ fn erc_20_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -64,7 +64,7 @@ fn erc_721_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -101,7 +101,7 @@ fn ether_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -129,7 +129,7 @@ fn unknown_transfer_dto_to_transaction_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
-    mock_info_provider.expect_address_info().times(0);
+    mock_info_provider.expect_contract_info().times(0);
 
     let actual = unknown_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
 
@@ -165,7 +165,7 @@ fn transfer_dto_to_transaction_details() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -203,7 +203,7 @@ fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_address_info()
+        .expect_full_address_info_search()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

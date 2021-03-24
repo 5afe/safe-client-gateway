@@ -1,7 +1,11 @@
 import asyncio
 import os
-from dotenv import load_dotenv
 import requests
+from dotenv import load_dotenv
+
+
+async def install_cargo_drill():
+    os.system("cargo install drill")
 
 load_dotenv("../../.env")
 tx_service_url = os.getenv("TRANSACTION_SERVICE_URL")
@@ -13,4 +17,4 @@ safes = list(map(lambda safe: safe['safe'], response.json()['results']))
 
 print("Top 300 safes:")
 print("\n\t"+"\n\t".join(safes))
-
+print("Safes ready for tests")

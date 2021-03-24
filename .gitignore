@@ -16,3 +16,4 @@
 dump.rdb
 
 **/venv
+**/*.csv

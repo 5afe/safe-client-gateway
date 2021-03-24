@@ -14,8 +14,9 @@ TX_SERVICE_URL = os.getenv("TRANSACTION_SERVICE_URL")
 SAFES_CSV_FILE_NAME = 'safes.csv'
 
 
-def install_cargo_drill():
+def drill():
     os.system("cargo install drill")
+    os.system("drill --benchmark drill_config.yml --stats")
 
 
 def check_service():
@@ -29,6 +30,7 @@ def load_safes_from_file() -> list[str]:
     print("Loading from file...")
     with open(SAFES_CSV_FILE_NAME) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
+        next(csv_file)  # skip header name
 
         output = []
         for row in csv_reader:
@@ -44,6 +46,7 @@ def load_safes_remote() -> list[str]:
     safes = list(map(lambda safe: safe['safe'], response.json()['results']))
     with open(SAFES_CSV_FILE_NAME, 'w') as myfile:
         wr = csv.writer(myfile, delimiter=",", quoting=csv.QUOTE_ALL)
+        wr.writerow(['safe_address'])
         for safe in safes:
             wr.writerow([safe])
     return safes
@@ -58,4 +61,4 @@ safes = load_safes()
 print("Top 300 safes:")
 print("\n\t" + "\n\t".join(safes))
 print("Safes ready for tests")
-install_cargo_drill()
+drill()

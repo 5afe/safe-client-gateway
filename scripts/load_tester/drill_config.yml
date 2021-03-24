@@ -1,0 +1,24 @@
+concurrency: 4
+base: 'http://localhost:8000/'
+iterations: 5
+
+plan:
+  - name: Fetch balances
+    request:
+      url: /v1/safes/{{ item.safe_address }}/balances/USD
+    with_items_from_csv:
+      file_name: ./safes.csv
+      quote_char: "\""
+    shuffle: true
+
+#  - name: Fetch collectibles
+#    request:
+#      url: /api/organizations
+#
+#  - name: Fetch transactions/queued
+#      request:
+#        url: /api/organizations
+#
+#  - name: Fetch transactions/history
+#      request:
+#        url: /api/organizations

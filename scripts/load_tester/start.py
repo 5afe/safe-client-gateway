@@ -3,6 +3,10 @@ import os
 import requests
 from dotenv import load_dotenv
 
+# Usage: (with alias python=python3)
+# $ python -m pip install -r requirements.txt
+# $ python start.py
+
 
 async def install_cargo_drill():
     os.system("cargo install drill")

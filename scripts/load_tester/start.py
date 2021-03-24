@@ -1,4 +1,3 @@
-import asyncio
 import os
 import requests
 import sys
@@ -15,7 +14,7 @@ TX_SERVICE_URL = os.getenv("TRANSACTION_SERVICE_URL")
 SAFES_CSV_FILE_NAME = 'safes.csv'
 
 
-async def install_cargo_drill():
+def install_cargo_drill():
     os.system("cargo install drill")
 
 
@@ -59,5 +58,4 @@ safes = load_safes()
 print("Top 300 safes:")
 print("\n\t" + "\n\t".join(safes))
 print("Safes ready for tests")
-
-asyncio.run(install_cargo_drill())
+install_cargo_drill()

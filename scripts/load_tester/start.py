@@ -60,5 +60,7 @@ check_service()
 safes = load_safes()
 print("Top 300 safes:")
 print("\n\t" + "\n\t".join(safes))
-print("Safes ready for tests")
+print("Safes ready for tests ... ")
+print("Starting tests ...")
+
 drill()

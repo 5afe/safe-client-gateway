@@ -1,6 +1,7 @@
 import asyncio
 import os
 import requests
+import sys
 from dotenv import load_dotenv
 
 # Usage: (with alias python=python3)
@@ -11,6 +12,12 @@ from dotenv import load_dotenv
 
 async def install_cargo_drill():
     os.system("cargo install drill")
+
+
+local_instance_check = requests.get("http://localhost:8000/about")
+if local_instance_check.status_code != 200:
+    print("Local instance of the service must be running")
+    sys.exit(-1)
 
 load_dotenv("../../.env")
 tx_service_url = os.getenv("TRANSACTION_SERVICE_URL")

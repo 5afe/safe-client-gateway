@@ -54,7 +54,10 @@ def load_safes() -> list[str]:
     return load_safes_from_file() if os.path.isfile(SAFES_CSV_FILE_NAME) else load_safes_remote()
 
 
+check_service()
 safes = load_safes()
 print("Top 300 safes:")
 print("\n\t" + "\n\t".join(safes))
 print("Safes ready for tests")
+
+asyncio.run(install_cargo_drill())

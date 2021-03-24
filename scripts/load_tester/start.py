@@ -4,7 +4,8 @@ import requests
 from dotenv import load_dotenv
 
 # Usage: (with alias python=python3)
-# $ python -m pip install -r requirements.txt
+# $ stat venv 2>/dev/null || python -m venv venv
+# $ source venv/bin/activate && pip install -r requirements.txt
 # $ python start.py
 
 

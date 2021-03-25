@@ -4,11 +4,6 @@ import sys
 import csv
 from dotenv import load_dotenv
 
-# Usage: (with alias python=python3)
-# $ stat venv 2>/dev/null || python -m venv venv
-# $ source venv/bin/activate && pip install -r requirements.txt
-# $ python start.py
-
 load_dotenv("../../.env")
 TX_SERVICE_URL = os.getenv("TRANSACTION_SERVICE_URL")
 SAFES_CSV_FILE_NAME = 'safes.csv'

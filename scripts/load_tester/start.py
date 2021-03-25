@@ -8,11 +8,12 @@ TX_SERVICE_URL = os.getenv("TRANSACTION_SERVICE_URL")
 PRINT_FORMAT = "{0:<10} {1:>8}::{2:>8}"
 
 
-def check_service():
-    local_instance_check = requests.get("http://localhost:8000/about")
-    if local_instance_check.status_code != 200:
-        print("Local instance of the service must be running")
+def get_base_url() -> str:
+    if "staging" not in TX_SERVICE_URL:
+        print("Only meant for staging")
         sys.exit(-1)
+    return "https://safe-client-rinkeby.staging.gnosisdev.com" if "rinkeby" in TX_SERVICE_URL \
+        else "https://safe-client-mainnet.staging.gnosisdev.com"
 
 
 def load_safes() -> list[str]:
@@ -23,7 +24,7 @@ def load_safes() -> list[str]:
     return list(map(lambda safe: safe['safe'], response.json()['results']))
 
 
-check_service()
+base_gateway_url = get_base_url()
 safes = load_safes()
 print("Top 300 safes:")
 print("\n\t" + "\n\t".join(safes))
@@ -31,10 +32,10 @@ print("Safes ready ... ")
 print("Populating cache ...")
 
 for safe in safes:
-    balance_response = requests.get("http://localhost:8000/v1/safes/" + safe + "/balances/USD")
-    collectibles_response = requests.get("http://localhost:8000/v1/safes/" + safe + "/collectibles")
-    tx_queued_response = requests.get("http://localhost:8000/v1/safes/" + safe + "/transactions/queued")
-    tx_history_response = requests.get("http://localhost:8000/v1/safes/" + safe + "/transactions/history")
+    balance_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/balances/USD")
+    collectibles_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/collectibles")
+    tx_queued_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/transactions/queued")
+    tx_history_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/transactions/history")
 
     print(PRINT_FORMAT.format(str(balance_response.elapsed.total_seconds()), str(
         balance_response.status_code), balance_response.url))

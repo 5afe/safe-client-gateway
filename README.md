@@ -59,7 +59,7 @@ To run all tests use the `cargo test` command. If you want to run a specific sub
 
 Example: `cargo test converters` will run every tests under the `converters` module. Matching occurs also at a test name level, so by writing the full name of a test, that single test can be run.
 
-Additionally, for cache testing, we have included a script using `drill` that fills up the cache as it would happen in production. You can find the script in `./scripts/load_tester/start.py`. To run the script, use the following commands: 
+Additionally, for cache testing, we have included a script that fills up the cache as it would happen in production. You can find the script in `./scripts/load_tester/start.py`. To run the script, use the following commands: 
 
 ```shell
 $ alias python=python3

@@ -1,6 +1,5 @@
 import os
 import requests
-import sys
 from dotenv import load_dotenv
 
 load_dotenv("../../.env")
@@ -10,10 +9,11 @@ PRINT_FORMAT = "{0:<10} {1:>8}::{2:>8}"
 
 def get_base_url() -> str:
     if "staging" not in TX_SERVICE_URL:
-        print("Only meant for staging")
-        sys.exit(-1)
-    return "https://safe-client-rinkeby.staging.gnosisdev.com" if "rinkeby" in TX_SERVICE_URL \
-        else "https://safe-client-mainnet.staging.gnosisdev.com"
+        return "https://safe-client.rinkeby.gnosis.io" if "rinkeby" in TX_SERVICE_URL \
+            else "https://safe-client.mainnet.gnosis.io"
+    else:
+        return "https://safe-client-rinkeby.staging.gnosisdev.com" if "rinkeby" in TX_SERVICE_URL \
+            else "https://safe-client-mainnet.staging.gnosisdev.com"
 
 
 def load_safes() -> list[str]:

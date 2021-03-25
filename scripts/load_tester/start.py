@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv("../../.env")
 TX_SERVICE_URL = os.getenv("TRANSACTION_SERVICE_URL")
 PRINT_FORMAT = "{0:<10} {1:>8}::{2:>8}"
-SAFES_CSV_FILE_NAME = 'safes.csv'
 
 
 def check_service():

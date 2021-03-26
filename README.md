@@ -62,10 +62,9 @@ Example: `cargo test converters` will run every tests under the `converters` mod
 Additionally, for cache testing, we have included a script that fills up the cache as it would happen in production. You can find the script in `./scripts/load_tester/start.py`. To run the script, use the following commands: 
 
 ```shell
-$ alias python=python3
-$ stat venv 2>/dev/null || python -m venv venv
-$ source venv/bin/activate && pip install -r requirements.txt
-$ python start.py
+python3 -m venv venv
+source venv/bin/activate && pip install -r requirements.txt
+python start.py
 # once you are done testing
-$ deactivate
+deactivate
 ```

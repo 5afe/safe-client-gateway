@@ -26,16 +26,12 @@ def load_safes() -> list[str]:
 
 base_gateway_url = get_base_url()
 safes = load_safes()
-print("Top 300 safes:")
-print("\n\t" + "\n\t".join(safes))
-print("Safes ready ... ")
-print("Populating cache ...")
 
 for safe in safes:
-    balance_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/balances/USD")
-    collectibles_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/collectibles")
-    tx_queued_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/transactions/queued")
-    tx_history_response = requests.get(base_gateway_url + "/v1/safes/" + safe + "/transactions/history")
+    balance_response = requests.get("%s/v1/safes/%s/balances/USD" % (base_gateway_url, safe))
+    collectibles_response = requests.get("%s/v1/safes/%s/collectibles" % (base_gateway_url, safe))
+    tx_queued_response = requests.get("%s/v1/safes/%s/transactions/queued" % (base_gateway_url, safe))
+    tx_history_response = requests.get("%s/v1/safes/%s/transactions/history" % (base_gateway_url, safe))
 
     print(PRINT_FORMAT.format(str(balance_response.elapsed.total_seconds()), str(
         balance_response.status_code), balance_response.url))

@@ -36,7 +36,7 @@ pub fn balances(
 
     let mut total_fiat = 0.0;
 
-    let service_balances: Vec<Balance> = backend_balances
+    let mut service_balances: Vec<Balance> = backend_balances
         .into_iter()
         .map(|it| {
             let balance = it.to_balance(usd_to_fiat);
@@ -45,6 +45,14 @@ pub fn balances(
         })
         .collect();
 
+    service_balances.sort_by(|a, b| {
+        a.fiat_balance
+            .parse::<f64>()
+            .unwrap_or(0.0)
+            .partial_cmp(&b.fiat_balance.parse::<f64>().unwrap_or(0.0))
+            .unwrap()
+    });
+    service_balances.reverse();
     Ok(Balances {
         fiat_total: total_fiat.to_string(),
         items: service_balances,

@@ -47,13 +47,12 @@ pub fn balances(
         .collect();
 
     service_balances.sort_by(|a, b| {
-        a.fiat_balance
+        b.fiat_balance
             .parse::<f64>()
             .unwrap_or(0.0)
-            .partial_cmp(&b.fiat_balance.parse::<f64>().unwrap_or(0.0))
+            .partial_cmp(&a.fiat_balance.parse::<f64>().unwrap_or(0.0))
             .unwrap_or(Ordering::Equal)
     });
-    service_balances.reverse();
     Ok(Balances {
         fiat_total: total_fiat.to_string(),
         items: service_balances,

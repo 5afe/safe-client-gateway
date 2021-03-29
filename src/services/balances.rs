@@ -7,6 +7,7 @@ use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use std::cmp::Ordering;
 
 pub fn balances(
     context: &Context,
@@ -36,7 +37,7 @@ pub fn balances(
 
     let mut total_fiat = 0.0;
 
-    let service_balances: Vec<Balance> = backend_balances
+    let mut service_balances: Vec<Balance> = backend_balances
         .into_iter()
         .map(|it| {
             let balance = it.to_balance(usd_to_fiat);
@@ -45,6 +46,13 @@ pub fn balances(
         })
         .collect();
 
+    service_balances.sort_by(|a, b| {
+        b.fiat_balance
+            .parse::<f64>()
+            .unwrap_or(0.0)
+            .partial_cmp(&a.fiat_balance.parse::<f64>().unwrap_or(0.0))
+            .unwrap_or(Ordering::Equal)
+    });
     Ok(Balances {
         fiat_total: total_fiat.to_string(),
         items: service_balances,

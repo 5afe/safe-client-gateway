@@ -7,6 +7,7 @@ use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use std::cmp::Ordering;
 
 pub fn balances(
     context: &Context,
@@ -50,7 +51,7 @@ pub fn balances(
             .parse::<f64>()
             .unwrap_or(0.0)
             .partial_cmp(&b.fiat_balance.parse::<f64>().unwrap_or(0.0))
-            .unwrap()
+            .unwrap_or(Ordering::Equal)
     });
     service_balances.reverse();
     Ok(Balances {

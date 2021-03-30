@@ -179,8 +179,8 @@ impl DefaultInfoProvider<'_> {
         generator: impl Fn(&mut Self, &String) -> ApiResult<Option<T>>,
         key: impl Into<String>,
     ) -> ApiResult<T>
-    where
-        T: Clone + DeserializeOwned,
+        where
+            T: Clone + DeserializeOwned,
     {
         let key = key.into();
         match local_cache(self).get(&key) {
@@ -249,8 +249,8 @@ impl DefaultInfoProvider<'_> {
             Some(rates) => rates
                 .get(&currency_code)
                 .cloned()
-                .ok_or(api_error!("Currency not found")),
-            None => Err(api_error!("Currency not found")),
+                .ok_or(client_error!(422, "Currency not found")),
+            None => Err(client_error!(422, "Currency not found")),
         }
     }
 

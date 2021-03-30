@@ -32,6 +32,7 @@ fn bool_with_default(key: &str, default: bool) -> bool {
         Err(_) => default,
     }
 }
+
 // TIME DURATION VALUES
 fn indefinite_timeout() -> usize {
     usize_with_default("INDEFINITE_TIMEOUT", 60 * 60)
@@ -103,6 +104,18 @@ pub fn redis_scan_count() -> usize {
 
 pub fn build_number() -> Option<String> {
     option_env!("BUILD_NUMBER").map(|it| it.to_string())
+}
+
+pub fn native_coin_decimals() -> u64 {
+    u64_with_default("NATIVE_COIN_DECIMALS", 18)
+}
+
+pub fn native_coin_symbol() -> String {
+    env::var("NATIVE_COIN_SYMBOL").unwrap_or(String::from("ETH")).to_string()
+}
+
+pub fn native_coin_name() -> String {
+    env::var("NATIVE_COIN_NAME").unwrap_or(String::from("Ether")).to_string()
 }
 
 pub fn version() -> String {

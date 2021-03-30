@@ -78,11 +78,16 @@ pub fn safe_app_manifest_cache_duration() -> usize {
     usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }
 
-// ERRORS
+// REQUEST TIMEOUTS
 pub fn internal_client_connect_timeout() -> u64 {
     u64_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)
 }
 
+pub fn safe_app_info_request_timeout() -> u64 {
+    u64_with_default("SAFE_APP_INFO_REQUEST_TIMEOUT", 1000)
+}
+
+// ERRORS
 pub fn request_error_cache_timeout() -> usize {
     usize_with_default("REQS_ERROR_CACHE_DURATION", short_error_duration())
 }

@@ -7,6 +7,7 @@ use rocket_contrib::databases::redis::{
 };
 use serde::ser::Serialize;
 use serde_json;
+use std::time::Duration;
 
 pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
 pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
@@ -96,26 +97,48 @@ pub trait CacheExt: Cache {
         }
     }
 
-    fn request_cached(
+    // TODO: hate this name
+    fn request_cached_advanced(
         &self,
         client: &reqwest::blocking::Client,
         url: &str,
-        timeout: usize,
-        error_timeout: usize,
+        cache_duration: usize,
+        error_cache_duration: usize,
+        cache_all_errors: bool,
+        request_timeout: u64,
     ) -> ApiResult<String> {
         let cache_key = format!("{}_{}", CACHE_REQS_PREFIX, &url);
         match self.fetch(&cache_key) {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
             None => {
-                let response = client.get(url).send()?;
+                let mut request = client.get(url);
+                if request_timeout > 0 {
+                    request = request.timeout(Duration::from_millis(request_timeout));
+                }
+                let client_response = request.send();
+                if cache_all_errors && client_response.is_err() {
+                    self.create(
+                        &cache_key,
+                        CachedWithCode::join(500, "").as_str(),
+                        error_cache_duration,
+                    );
+                }
+                let response = client_response?;
+                log::debug!("response {}", response.status());
                 let status_code = response.status().as_u16();
 
                 // Early return and no caching if the error is a 500 or greater
+
                 if response.status().is_server_error() {
-                    return Err(ApiError::from_backend_error(
-                        42,
-                        format!("Got server error for {}", response.text()?).as_str(),
-                    ));
+                    let error_message = format!("Got server error for {}", response.text()?);
+                    if cache_all_errors {
+                        self.create(
+                            &cache_key,
+                            CachedWithCode::join(42, &error_message.as_str()).as_str(),
+                            error_cache_duration,
+                        );
+                    }
+                    return Err(ApiError::from_backend_error(42, &error_message.as_str()));
                 }
 
                 let is_client_error = response.status().is_client_error();
@@ -125,19 +148,29 @@ pub trait CacheExt: Cache {
                     self.create(
                         &cache_key,
                         CachedWithCode::join(status_code, &raw_data).as_str(),
-                        error_timeout,
+                        error_cache_duration,
                     );
                     Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {
                     self.create(
                         &cache_key,
                         CachedWithCode::join(status_code, &raw_data).as_str(),
-                        timeout,
+                        cache_duration,
                     );
                     Ok(raw_data.to_string())
                 }
             }
         }
+    }
+
+    fn request_cached(
+        &self,
+        client: &reqwest::blocking::Client,
+        url: &str,
+        cache_duration: usize,
+        error_cache_duration: usize,
+    ) -> ApiResult<String> {
+        self.request_cached_advanced(client, url, cache_duration, error_cache_duration, false, 0)
     }
 }
 

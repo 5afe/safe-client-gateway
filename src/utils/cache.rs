@@ -127,23 +127,18 @@ pub trait CacheExt: Cache {
                 let status_code = response.status().as_u16();
 
                 // Early return and no caching if the error is a 500 or greater
-
-                if response.status().is_server_error() {
-                    let error_message = format!("Got server error for {}", response.text()?);
-                    if cache_all_errors {
-                        self.create(
-                            &cache_key,
-                            CachedWithCode::join(42, &error_message.as_str()).as_str(),
-                            error_cache_duration,
-                        );
-                    }
-                    return Err(ApiError::from_backend_error(42, &error_message.as_str()));
+                let is_server_error = response.status().is_server_error();
+                if !cache_all_errors && is_server_error {
+                    return Err(ApiError::from_backend_error(
+                        42,
+                        format!("Got server error for {}", response.text()?).as_str(),
+                    ));
                 }
 
                 let is_client_error = response.status().is_client_error();
                 let raw_data = response.text()?;
 
-                if is_client_error {
+                if is_client_error || is_server_error {
                     self.create(
                         &cache_key,
                         CachedWithCode::join(status_code, &raw_data).as_str(),

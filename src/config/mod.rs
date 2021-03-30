@@ -84,7 +84,7 @@ pub fn internal_client_connect_timeout() -> u64 {
 }
 
 pub fn safe_app_info_request_timeout() -> u64 {
-    u64_with_default("SAFE_APP_INFO_REQUEST_TIMEOUT", 1000)
+    u64_with_default("SAFE_APP_INFO_REQUEST_TIMEOUT", 3000)
 }
 
 // ERRORS

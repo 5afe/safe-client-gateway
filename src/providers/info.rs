@@ -122,7 +122,6 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
-        log::debug!("safe_app_info {}", url);
         let manifest_url = build_manifest_url(url)?;
         let manifest_json = self.cache.request_cached_advanced(
             self.client,

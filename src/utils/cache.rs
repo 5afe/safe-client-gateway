@@ -124,7 +124,6 @@ pub trait CacheExt: Cache {
                     );
                 }
                 let response = client_response?;
-                log::debug!("response {}", response.status());
                 let status_code = response.status().as_u16();
 
                 // Early return and no caching if the error is a 500 or greater

@@ -1,9 +1,7 @@
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer as TransferDto;
 use crate::models::commons::ParamValue::SingleValue;
-use crate::models::commons::{
-    DataDecoded, Operation, Parameter,
-};
+use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,

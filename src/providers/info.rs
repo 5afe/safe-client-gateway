@@ -179,8 +179,8 @@ impl DefaultInfoProvider<'_> {
         generator: impl Fn(&mut Self, &String) -> ApiResult<Option<T>>,
         key: impl Into<String>,
     ) -> ApiResult<T>
-        where
-            T: Clone + DeserializeOwned,
+    where
+        T: Clone + DeserializeOwned,
     {
         let key = key.into();
         match local_cache(self).get(&key) {

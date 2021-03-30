@@ -5,7 +5,6 @@ use crate::config::{native_coin_decimals, native_coin_symbol, native_coin_name};
 
 impl BalanceDto {
     pub fn to_balance(&self, usd_to_fiat: f64) -> Balance {
-        log::error!("AM I even called?");
         let fiat_conversion = self.fiat_conversion.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
         let fiat_balance = self.fiat_balance.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
         let token_type = self

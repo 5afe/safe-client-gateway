@@ -237,6 +237,10 @@ impl MultisigTransaction {
                 .map_or(true, |refund_receiver| {
                     refund_receiver == "0x0000000000000000000000000000000000000000"
                 })
+            && self
+                .safe_tx_gas
+                .as_ref()
+                .map_or(true, |safe_tx_gas| safe_tx_gas.eq(&0))
     }
 }
 

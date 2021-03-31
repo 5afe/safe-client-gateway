@@ -7,6 +7,7 @@ use rocket_contrib::databases::redis::{
 };
 use serde::ser::Serialize;
 use serde_json;
+use std::time::Duration;
 
 pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
 pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
@@ -96,48 +97,74 @@ pub trait CacheExt: Cache {
         }
     }
 
-    fn request_cached(
+    fn request_cached_advanced(
         &self,
         client: &reqwest::blocking::Client,
         url: &str,
-        timeout: usize,
-        error_timeout: usize,
+        cache_duration: usize,
+        error_cache_duration: usize,
+        cache_all_errors: bool,
+        request_timeout: u64,
     ) -> ApiResult<String> {
         let cache_key = format!("{}_{}", CACHE_REQS_PREFIX, &url);
         match self.fetch(&cache_key) {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
             None => {
-                let response = client.get(url).send()?;
+                let mut request = client.get(url);
+                if request_timeout > 0 {
+                    request = request.timeout(Duration::from_millis(request_timeout));
+                }
+                let response = request.send().map_err(|err| {
+                    if cache_all_errors {
+                        self.create(
+                            &cache_key,
+                            &CachedWithCode::join(500, &format!("{:?}", &err)),
+                            error_cache_duration,
+                        );
+                    }
+                    err
+                })?;
                 let status_code = response.status().as_u16();
 
                 // Early return and no caching if the error is a 500 or greater
-                if response.status().is_server_error() {
+                let is_server_error = response.status().is_server_error();
+                if !cache_all_errors && is_server_error {
                     return Err(ApiError::from_backend_error(
                         42,
-                        format!("Got server error for {}", response.text()?).as_str(),
+                        &format!("Got server error for {}", response.text()?),
                     ));
                 }
 
                 let is_client_error = response.status().is_client_error();
                 let raw_data = response.text()?;
 
-                if is_client_error {
+                if is_client_error || is_server_error {
                     self.create(
                         &cache_key,
-                        CachedWithCode::join(status_code, &raw_data).as_str(),
-                        error_timeout,
+                        &CachedWithCode::join(status_code, &raw_data),
+                        error_cache_duration,
                     );
                     Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {
                     self.create(
                         &cache_key,
-                        CachedWithCode::join(status_code, &raw_data).as_str(),
-                        timeout,
+                        &CachedWithCode::join(status_code, &raw_data),
+                        cache_duration,
                     );
                     Ok(raw_data.to_string())
                 }
             }
         }
+    }
+
+    fn request_cached(
+        &self,
+        client: &reqwest::blocking::Client,
+        url: &str,
+        cache_duration: usize,
+        error_cache_duration: usize,
+    ) -> ApiResult<String> {
+        self.request_cached_advanced(client, url, cache_duration, error_cache_duration, false, 0)
     }
 }
 

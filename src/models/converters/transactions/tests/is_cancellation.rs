@@ -18,11 +18,11 @@ fn is_cancellation_has_0x_data_result_true() {
 }
 
 #[test]
-fn is_cancellation_has_safe_tx_gas_result_true() {
+fn is_cancellation_has_safe_tx_gas_result_false() {
     let mut tx = build_multisig_tx();
     tx.safe_tx_gas = Some(1);
 
-    assert_eq!(true, tx.is_cancellation());
+    assert_eq!(false, tx.is_cancellation());
 }
 
 #[test]

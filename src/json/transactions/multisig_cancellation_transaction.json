@@ -5,7 +5,7 @@
   "data": null,
   "operation": 0,
   "gasToken": "0x0000000000000000000000000000000000000000",
-  "safeTxGas": 43837,
+  "safeTxGas": 0,
   "baseGas": 0,
   "gasPrice": "0",
   "refundReceiver": "0x0000000000000000000000000000000000000000",

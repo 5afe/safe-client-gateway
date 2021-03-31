@@ -97,7 +97,6 @@ pub trait CacheExt: Cache {
         }
     }
 
-    // TODO: hate this name
     fn request_cached_advanced(
         &self,
         client: &reqwest::blocking::Client,
@@ -115,15 +114,16 @@ pub trait CacheExt: Cache {
                 if request_timeout > 0 {
                     request = request.timeout(Duration::from_millis(request_timeout));
                 }
-                let client_response = request.send();
-                if cache_all_errors && client_response.is_err() {
-                    self.create(
-                        &cache_key,
-                        CachedWithCode::join(500, "").as_str(),
-                        error_cache_duration,
-                    );
-                }
-                let response = client_response?;
+                let response = request.send().map_err(|err| {
+                    if cache_all_errors {
+                        self.create(
+                            &cache_key,
+                            &CachedWithCode::join(500, &format!("{:?}", &err)),
+                            error_cache_duration,
+                        );
+                    }
+                    err
+                })?;
                 let status_code = response.status().as_u16();
 
                 // Early return and no caching if the error is a 500 or greater
@@ -131,7 +131,7 @@ pub trait CacheExt: Cache {
                 if !cache_all_errors && is_server_error {
                     return Err(ApiError::from_backend_error(
                         42,
-                        format!("Got server error for {}", response.text()?).as_str(),
+                        &format!("Got server error for {}", response.text()?),
                     ));
                 }
 
@@ -141,14 +141,14 @@ pub trait CacheExt: Cache {
                 if is_client_error || is_server_error {
                     self.create(
                         &cache_key,
-                        CachedWithCode::join(status_code, &raw_data).as_str(),
+                        &CachedWithCode::join(status_code, &raw_data),
                         error_cache_duration,
                     );
                     Err(ApiError::from_backend_error(status_code, &raw_data))
                 } else {
                     self.create(
                         &cache_key,
-                        CachedWithCode::join(status_code, &raw_data).as_str(),
+                        &CachedWithCode::join(status_code, &raw_data),
                         cache_duration,
                     );
                     Ok(raw_data.to_string())

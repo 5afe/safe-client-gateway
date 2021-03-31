@@ -14,7 +14,7 @@ use crate::models::service::transactions::{
 use crate::providers::info::DefaultInfoProvider;
 use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
 use crate::utils::transactions::fetch_rejections;
 use log::debug;
@@ -141,10 +141,7 @@ pub fn get_transactions_details(
         TransactionIdParts::TransactionHash(safe_tx_hash) => {
             get_multisig_transaction_details(context, &safe_tx_hash)
         }
-        _ => Err(ApiError::new_from_message_with_code(
-            422,
-            String::from("Bad transaction id"),
-        )),
+        _ => Err(client_error!(422, "Bad transaction id")),
     }
 }
 

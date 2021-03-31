@@ -47,6 +47,13 @@ macro_rules! api_error {
     };
 }
 
+#[macro_export]
+macro_rules! client_error {
+    ($status_code:expr, $message:expr) => {
+        $crate::utils::errors::ApiError::new_from_message_with_code($status_code, format!($message))
+    };
+}
+
 macro_rules! to_hex_string {
     ($input:expr) => {{
         let mut output = String::new();

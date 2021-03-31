@@ -1,10 +1,7 @@
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer as TransferDto;
-use crate::models::commons::Operation::DELEGATE;
 use crate::models::commons::ParamValue::SingleValue;
-use crate::models::commons::{
-    DataDecoded, InternalTransaction, Operation, ParamValue, Parameter, ValueDecodedType,
-};
+use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
@@ -48,7 +45,7 @@ fn multisig_custom_transaction_to_transaction_details() {
             method_name: Some("approve".to_string()),
             action_count: None,
             to_info: None,
-            is_cancellation: false
+            is_cancellation: false,
         }),
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000")),
@@ -104,9 +101,9 @@ fn multisig_custom_transaction_to_transaction_details() {
                     },
                 ],
                 rejectors: None,
-                gas_token_info: None
+                gas_token_info: None,
             })),
-        safe_app_info: None
+        safe_app_info: None,
     };
 
     let actual =
@@ -139,7 +136,7 @@ fn module_transaction_to_transaction_details() {
             method_name: None,
             action_count: None,
             to_info: None,
-            is_cancellation: false
+            is_cancellation: false,
         }),
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x59f96ae500000000000000000000000000df91984582e6e96288307e9c2f20b38c8fece9000000000000000000000000c778417e063141139fce010982780140aa0cd5ab0000000000000000000000000000000000000000000000000000000000000475000000000000000000000000000000000000000000000003d962c8be3053def2")),
@@ -152,7 +149,7 @@ fn module_transaction_to_transaction_details() {
             ModuleExecutionDetails {
                 address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
             })),
-        safe_app_info: None
+        safe_app_info: None,
     };
 
     let actual =
@@ -189,7 +186,7 @@ fn ethereum_tx_transfer_to_transaction_details() {
         }),
         tx_data: None,
         detailed_execution_info: None,
-        safe_app_info: None
+        safe_app_info: None,
     };
 
     let mut mock_info_provider = MockInfoProvider::new();

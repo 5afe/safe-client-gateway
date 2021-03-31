@@ -1,7 +1,7 @@
+use crate::config::{native_coin_decimals, native_coin_name, native_coin_symbol};
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
-use crate::config::{native_coin_decimals, native_coin_symbol, native_coin_name};
 
 impl BalanceDto {
     pub fn to_balance(&self, usd_to_fiat: f64) -> Balance {
@@ -19,7 +19,11 @@ impl BalanceDto {
                     .token_address
                     .to_owned()
                     .unwrap_or(String::from("0x0000000000000000000000000000000000000000")),
-                decimals: self.token.as_ref().map(|it| it.decimals).unwrap_or(native_coin_decimals()),
+                decimals: self
+                    .token
+                    .as_ref()
+                    .map(|it| it.decimals)
+                    .unwrap_or(native_coin_decimals()),
                 symbol: self
                     .token
                     .as_ref()

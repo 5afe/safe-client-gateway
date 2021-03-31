@@ -8,7 +8,7 @@ pub fn safe_app_info_from(
     let origin_internal = serde_json::from_str::<OriginInternal>(origin).ok();
     origin_internal
         .as_ref()
-        .and_then(|origin| info_provider.safe_app_info(&origin.url).ok())
+        .and_then(|origin| info_provider.safe_app_info(&origin.url.replace("ipfs.io", "cloudflare-ipfs.com")).ok())
 }
 
 #[derive(Deserialize, Debug, PartialEq)]

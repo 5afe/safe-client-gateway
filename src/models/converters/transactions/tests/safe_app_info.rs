@@ -1,5 +1,6 @@
 use crate::models::converters::transactions::safe_app_info::{safe_app_info_from, OriginInternal};
 use crate::providers::info::*;
+use mockall::predicate::eq;
 
 #[test]
 fn valid_full_origin_data() {
@@ -96,6 +97,35 @@ fn to_safe_app_info_correct() {
         name: "WalletConnect".to_string(),
         url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
         logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+    };
+
+    let actual = safe_app_info_from(origin, &mut mock_info_provider);
+    assert!(actual.is_some());
+    assert_eq!(expected, actual.unwrap());
+}
+
+
+#[test]
+fn valid_ipfs_origin_gets_replaced() {
+    let origin =
+        "{\"url\":\"https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/manifest.json\",\"name\":\"WalletConnect\"}";
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_safe_app_info()
+        .times(1)
+        .with(eq("https://cloudflare-ipfs.com/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/manifest.json"))
+        .return_once(move |_| {
+            Ok(SafeAppInfo {
+                name: "WalletConnect".to_string(),
+                url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect".to_string(),
+                logo_url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect/walletConnect.jpg".to_string(),
+            })
+        });
+
+    let expected = SafeAppInfo {
+        name: "WalletConnect".to_string(),
+        url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect".to_string(),
+        logo_url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect/walletConnect.jpg".to_string(),
     };
 
     let actual = safe_app_info_from(origin, &mut mock_info_provider);

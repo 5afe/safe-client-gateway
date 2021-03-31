@@ -104,7 +104,6 @@ fn to_safe_app_info_correct() {
     assert_eq!(expected, actual.unwrap());
 }
 
-
 #[test]
 fn valid_ipfs_origin_gets_replaced() {
     let origin =

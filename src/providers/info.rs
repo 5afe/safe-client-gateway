@@ -249,8 +249,8 @@ impl DefaultInfoProvider<'_> {
             Some(rates) => rates
                 .get(&currency_code)
                 .cloned()
-                .ok_or(api_error!("Currency not found")),
-            None => Err(api_error!("Currency not found")),
+                .ok_or(client_error!(422, "Currency not found")),
+            None => Err(client_error!(422, "Currency not found")),
         }
     }
 

@@ -1,8 +1,4 @@
-use crate::config::{
-    address_info_cache_duration, base_transaction_service_url, exchange_api_cache_duration,
-    long_error_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
-    safe_info_cache_duration, short_error_duration, token_info_cache_duration,
-};
+use crate::config::{address_info_cache_duration, base_transaction_service_url, exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration, safe_info_cache_duration, short_error_duration, token_info_cache_duration, base_exchange_api_url};
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::cache::{Cache, CacheExt};
@@ -179,8 +175,8 @@ impl DefaultInfoProvider<'_> {
         generator: impl Fn(&mut Self, &String) -> ApiResult<Option<T>>,
         key: impl Into<String>,
     ) -> ApiResult<T>
-    where
-        T: Clone + DeserializeOwned,
+        where
+            T: Clone + DeserializeOwned,
     {
         let key = key.into();
         match local_cache(self).get(&key) {
@@ -246,10 +242,14 @@ impl DefaultInfoProvider<'_> {
         let currency_code = currency_code.to_uppercase();
         let exchange = self.fetch_exchange()?;
         match exchange.rates {
-            Some(rates) => rates
-                .get(&currency_code)
-                .cloned()
-                .ok_or(client_error!(422, "Currency not found")),
+            Some(rates) => {
+                let base_to_usd = rates.get("USD").unwrap_or(&0.0);
+                rates
+                    .get(&currency_code)
+                    .cloned()
+                    .map(|base_to_requested_code| base_to_requested_code / base_to_usd)
+                    .ok_or(client_error!(422, "Currency not found"))
+            }
             None => Err(client_error!(422, "Currency not found")),
         }
     }
@@ -262,7 +262,7 @@ impl DefaultInfoProvider<'_> {
     }
 
     fn fetch_exchange(&self) -> ApiResult<Exchange> {
-        let url = format!("https://api.exchangeratesapi.io/latest?base=USD");
+        let url = base_exchange_api_url();
         let body = self.cache.request_cached(
             self.client,
             &url,

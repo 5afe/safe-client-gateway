@@ -5,7 +5,11 @@ pub fn base_transaction_service_url() -> String {
 }
 
 pub fn base_exchange_api_url() -> String {
-    format!("{}?access_key={}", env::var("EXCHANGE_API_BASE_URL").unwrap(), env::var("EXCHANGE_API_KEY").unwrap())
+    format!(
+        "{}?access_key={}",
+        env::var("EXCHANGE_API_BASE_URL").unwrap(),
+        env::var("EXCHANGE_API_KEY").unwrap()
+    )
 }
 
 pub fn webhook_token() -> String {

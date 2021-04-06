@@ -244,6 +244,10 @@ impl DefaultInfoProvider<'_> {
     }
 
     pub fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
+        if &currency_code.to_lowercase() == "usd" {
+            return Ok(1.0);
+        }
+
         let currency_code = currency_code.to_uppercase();
         let exchange = self.fetch_exchange()?;
         match exchange.rates {

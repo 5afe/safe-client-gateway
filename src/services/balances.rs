@@ -33,11 +33,7 @@ pub fn balances(
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;
 
     let info_provider = DefaultInfoProvider::new(&context);
-    let usd_to_fiat = if fiat.to_lowercase() == "usd" {
-        1.0
-    } else {
-        info_provider.exchange_usd_to(fiat).unwrap_or(0.0)
-    };
+    let usd_to_fiat = info_provider.exchange_usd_to(fiat).unwrap_or(0.0);
 
     let mut total_fiat = 0.0;
 

@@ -169,7 +169,7 @@ fn module_transaction_to_transaction_details_failed() {
         .returning(move |_| bail!("No address info"));
 
     let module_transaction =
-        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_FAILED).unwrap();
 
     let expected = TransactionDetails {
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),

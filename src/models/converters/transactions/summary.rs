@@ -110,7 +110,11 @@ impl ModuleTransaction {
                 hex_hash(self)
             ),
             timestamp: self.execution_date.timestamp_millis(),
-            tx_status: TransactionStatus::Success,
+            tx_status: if self.is_successful {
+                TransactionStatus::Success
+            } else {
+                TransactionStatus::Failed
+            },
             execution_info: None,
             safe_app_info: None,
             tx_info: self.to_transaction_info(info_provider),

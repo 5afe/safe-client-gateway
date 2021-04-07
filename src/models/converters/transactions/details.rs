@@ -100,7 +100,11 @@ impl ModuleTransaction {
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
-            tx_status: TransactionStatus::Success,
+            tx_status: if self.is_successful {
+                TransactionStatus::Success
+            } else {
+                TransactionStatus::Failed
+            },
             tx_info: self.to_transaction_info(info_provider),
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),

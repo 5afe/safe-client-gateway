@@ -37,6 +37,7 @@ pub const MULTISIG_TX_CANCELLATION: &str =
     include_str!("transactions/multisig_cancellation_transaction.json");
 
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
+pub const MODULE_TX_FAILED: &str = include_str!("transactions/module_transaction_failed.json");
 
 pub const ETHEREUM_TX_INCONSISTENT_TOKEN_TYPES: &str =
     include_str!("transactions/ethereum_inconsistent_token_types.json");

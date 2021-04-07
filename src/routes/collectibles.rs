@@ -1,6 +1,6 @@
+use crate::cache::cache::CacheExt;
 use crate::config::request_cache_duration;
 use crate::config::{base_transaction_service_url, request_error_cache_timeout};
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;

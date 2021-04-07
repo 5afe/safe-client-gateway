@@ -1,6 +1,6 @@
+use crate::cache::cache::CacheExt;
 use crate::config::{balances_cache_duration, request_cache_duration};
 use crate::services::balances::*;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;

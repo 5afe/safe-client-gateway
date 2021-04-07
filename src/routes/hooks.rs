@@ -1,7 +1,7 @@
+use crate::cache::cache::Cache;
 use crate::config::webhook_token;
 use crate::models::backend::webhooks::Payload;
 use crate::services::hooks::invalidate_caches;
-use crate::utils::cache::Cache;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket_contrib::json::Json;

@@ -1,3 +1,4 @@
+use crate::cache::cache::CacheExt;
 use crate::config::request_cache_duration;
 use crate::models::service::transactions::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
@@ -6,7 +7,6 @@ use crate::services::{
     transactions_details, transactions_history, transactions_list, transactions_proposal,
     transactions_queued,
 };
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;

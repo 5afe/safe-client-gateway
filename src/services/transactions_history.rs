@@ -1,5 +1,6 @@
 extern crate reqwest;
 
+use crate::cache::cache::CacheExt;
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
 };
@@ -11,7 +12,6 @@ use crate::models::service::transactions::summary::{
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::services::offset_page_meta;
 use crate::services::transactions_list::get_creation_transaction_summary;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};

@@ -1,10 +1,10 @@
+use crate::cache::cache::CacheExt;
 use crate::config::{
     balances_cache_duration, base_transaction_service_url, request_error_cache_timeout,
 };
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::service::balances::{Balance, Balances};
 use crate::providers::info::DefaultInfoProvider;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use std::cmp::Ordering;

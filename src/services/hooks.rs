@@ -1,5 +1,5 @@
+use crate::cache::cache::{Cache, CacheExt};
 use crate::models::backend::webhooks::{Payload, PayloadDetails};
-use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::errors::ApiResult;
 
 pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()> {

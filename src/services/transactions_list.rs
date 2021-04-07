@@ -1,5 +1,6 @@
 extern crate reqwest;
 
+use crate::cache::cache::CacheExt;
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
 };
@@ -7,7 +8,6 @@ use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::Page;
 use crate::models::service::transactions::summary::TransactionSummary;
 use crate::providers::info::DefaultInfoProvider;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::extract_query_string;

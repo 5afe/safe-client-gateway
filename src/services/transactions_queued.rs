@@ -1,3 +1,4 @@
+use crate::cache::cache::CacheExt;
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
 };
@@ -6,7 +7,6 @@ use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{ConflictType, Label, TransactionListItem};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::services::offset_page_meta;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use itertools::Itertools;

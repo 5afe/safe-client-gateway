@@ -1,5 +1,6 @@
 extern crate reqwest;
 
+use crate::cache::cache::CacheExt;
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
 };
@@ -12,7 +13,6 @@ use crate::models::service::transactions::{
     ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
 };
 use crate::providers::info::DefaultInfoProvider;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;

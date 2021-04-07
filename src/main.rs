@@ -13,6 +13,7 @@ extern crate dotenv;
 #[macro_use]
 pub mod macros;
 
+mod cache;
 mod config;
 mod models;
 mod monitoring;
@@ -25,10 +26,10 @@ mod utils;
 mod json;
 
 use crate::routes::error_catchers;
+use cache::cache::ServiceCache;
 use dotenv::dotenv;
 use routes::active_routes;
 use std::time::Duration;
-use utils::cache::ServiceCache;
 use utils::cors::CORS;
 
 fn main() {

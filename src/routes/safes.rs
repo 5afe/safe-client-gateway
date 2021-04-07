@@ -1,6 +1,6 @@
+use crate::cache::cache::CacheExt;
 use crate::config::request_cache_duration;
 use crate::services::safes::get_safe_info_ex;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;

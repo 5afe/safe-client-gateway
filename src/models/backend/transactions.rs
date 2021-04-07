@@ -67,6 +67,7 @@ pub struct ModuleTransaction {
     pub created: String,
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,
+    pub is_successful: bool,
     pub transaction_hash: String,
     pub safe: String,
     pub module: String,

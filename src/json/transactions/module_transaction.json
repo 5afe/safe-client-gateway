@@ -2,6 +2,7 @@
   "created": "2020-03-04T10:52:19.106651Z",
   "executionDate": "2020-02-03T09:34:50Z",
   "blockNumber": 5905494,
+  "isSuccessful": true,
   "transactionHash": "0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f",
   "safe": "0x9422ff6AFB126C31F62057e2853d65cBB73f4608",
   "module": "0xfa559f0932b7B60d90B4af0b8813d4088465096b",

@@ -7,7 +7,6 @@ use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
 };
-use crate::models::service::transactions::TransactionStatus;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::utils::errors::ApiResult;
 
@@ -100,11 +99,7 @@ impl ModuleTransaction {
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
-            tx_status: if self.is_successful {
-                TransactionStatus::Success
-            } else {
-                TransactionStatus::Failed
-            },
+            tx_status: self.map_status(),
             tx_info: self.to_transaction_info(info_provider),
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),

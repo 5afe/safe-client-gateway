@@ -259,6 +259,14 @@ impl ModuleTransaction {
             is_cancellation: false,
         })
     }
+
+    fn map_status(&self) -> TransactionStatus {
+        if self.is_successful {
+            TransactionStatus::Success
+        } else {
+            TransactionStatus::Failed
+        }
+    }
 }
 
 fn data_size(data: &Option<String>) -> usize {

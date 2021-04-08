@@ -113,7 +113,7 @@ fn multisig_custom_transaction_to_transaction_details() {
 }
 
 #[test]
-fn module_transaction_to_transaction_details() {
+fn module_transaction_to_transaction_details_success() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -128,6 +128,52 @@ fn module_transaction_to_transaction_details() {
     let expected = TransactionDetails {
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Success,
+        tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
+        tx_info: TransactionInfo::Custom(Custom {
+            to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
+            data_size: "132".to_string(),
+            value: "0".to_string(),
+            method_name: None,
+            action_count: None,
+            to_info: None,
+            is_cancellation: false,
+        }),
+        tx_data: Some(TransactionData {
+            hex_data: Some(String::from("0x59f96ae500000000000000000000000000df91984582e6e96288307e9c2f20b38c8fece9000000000000000000000000c778417e063141139fce010982780140aa0cd5ab0000000000000000000000000000000000000000000000000000000000000475000000000000000000000000000000000000000000000003d962c8be3053def2")),
+            data_decoded: None,
+            to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
+            value: Some(String::from("0")),
+            operation: Operation::CALL,
+        }),
+        detailed_execution_info: Some(DetailedExecutionInfo::Module(
+            ModuleExecutionDetails {
+                address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
+            })),
+        safe_app_info: None,
+    };
+
+    let actual =
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider);
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[test]
+fn module_transaction_to_transaction_details_failed() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_full_address_info_search()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
+
+    let module_transaction =
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_FAILED).unwrap();
+
+    let expected = TransactionDetails {
+        executed_at: Some(module_transaction.execution_date.timestamp_millis()),
+        tx_status: TransactionStatus::Failed,
         tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
         tx_info: TransactionInfo::Custom(Custom {
             to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),

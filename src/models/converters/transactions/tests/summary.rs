@@ -41,7 +41,7 @@ fn unknown_tx_to_summary_transaction() {
 }
 
 #[test]
-fn module_tx_to_summary_transaction() {
+fn module_tx_to_summary_transaction_success() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -57,6 +57,7 @@ fn module_tx_to_summary_transaction() {
         created: String::from("created"),
         execution_date: expected_date,
         block_number: 0,
+        is_successful: true,
         transaction_hash: String::from("tx_hash"),
         safe: String::from("safe"),
         module: String::from("module"),
@@ -77,6 +78,59 @@ fn module_tx_to_summary_transaction() {
         ),
         timestamp: expected_date_in_millis,
         tx_status: TransactionStatus::Success,
+        execution_info: None,
+        tx_info: TransactionInfo::Custom(Custom {
+            to: expected_to,
+            data_size: String::from("0"),
+            value: String::from("0"),
+            method_name: None,
+            action_count: None,
+            to_info: None,
+            is_cancellation: false,
+        }),
+        safe_app_info: None,
+    }];
+    assert_eq!(actual, expected);
+}
+
+#[test]
+fn module_tx_to_summary_transaction_failed() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_full_address_info_search()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
+
+    let expected_to = String::from("0x12345789");
+    let expected_date = Utc::now();
+    let expected_date_in_millis = expected_date.timestamp_millis();
+    let module_tx = ModuleTransaction {
+        created: String::from("created"),
+        execution_date: expected_date,
+        block_number: 0,
+        is_successful: false,
+        transaction_hash: String::from("tx_hash"),
+        safe: String::from("safe"),
+        module: String::from("module"),
+        to: expected_to.clone(),
+        value: None,
+        data: None,
+        data_decoded: None,
+        operation: Operation::CALL,
+    };
+
+    let actual = ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider);
+    let expected = vec![TransactionSummary {
+        id: create_id!(
+            ID_PREFIX_MODULE_TX,
+            module_tx.safe,
+            module_tx.transaction_hash,
+            hex_hash(&module_tx)
+        ),
+        timestamp: expected_date_in_millis,
+        tx_status: TransactionStatus::Failed,
         execution_info: None,
         tx_info: TransactionInfo::Custom(Custom {
             to: expected_to,

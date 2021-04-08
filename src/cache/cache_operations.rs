@@ -38,19 +38,20 @@ where
     database: Database,
     key: String,
     timeout: usize,
-    resp_generator: dyn Fn() -> ApiResult<R>,
+    resp_generator: Box<dyn Fn() -> ApiResult<R>>,
 }
 
 impl<R> CacheResponse<R>
 where
     R: Serialize,
 {
-    pub fn new() -> &Self {
-        &CacheResponse {
+    // Can't decouple the intialisation of the struct with the generic type resolution
+    pub fn new(resp_generator: impl Fn() -> ApiResult<R> + 'static) -> Self {
+        CacheResponse {
             database: Database::Default,
             key: String::new(),
             timeout: request_cache_duration(),
-            resp_generator: (),
+            resp_generator: Box::new(resp_generator),
         }
     }
 
@@ -66,14 +67,6 @@ where
 
     pub fn timeout(&mut self, timeout: usize) -> &mut Self {
         self.timeout = timeout;
-        self
-    }
-
-    pub fn resp_generator<R>(&mut self, resp_generator: impl Fn() -> ApiResult<R>) -> &mut Self
-    where
-        R: Serialize,
-    {
-        self.resp_generator = resp_generator;
         self
     }
 }

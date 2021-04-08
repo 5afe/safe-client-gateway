@@ -3,8 +3,8 @@ use crate::utils::errors::ApiResult;
 use serde::Serialize;
 
 pub enum Database {
-    Info,
-    Default,
+    Info = 1,
+    Default = 2,
 }
 
 pub struct Invalidate {
@@ -92,7 +92,7 @@ impl CacheRequest {
         CacheRequest {
             database: Database::Default,
             url: String::new(),
-            request_timeout: 10000, //TODO: extract to variables
+            request_timeout: 10000, //TODO: extract to env variables
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_timeout(),
             cache_all_errors: false,

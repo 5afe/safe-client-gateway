@@ -1,4 +1,4 @@
-use crate::config::redis_scan_count;
+use crate::config::{default_request_timeout, redis_scan_count};
 use crate::utils::errors::{ApiError, ApiResult};
 use mockall::automock;
 use rocket::response::content;
@@ -111,9 +111,8 @@ pub trait CacheExt: Cache {
             Some(cached) => CachedWithCode::split(&cached).to_result(),
             None => {
                 let mut request = client.get(url);
-                if request_timeout > 0 {
-                    request = request.timeout(Duration::from_millis(request_timeout));
-                }
+                request = request.timeout(Duration::from_millis(request_timeout));
+
                 let response = request.send().map_err(|err| {
                     if cache_all_errors {
                         self.create(
@@ -164,7 +163,14 @@ pub trait CacheExt: Cache {
         cache_duration: usize,
         error_cache_duration: usize,
     ) -> ApiResult<String> {
-        self.request_cached_advanced(client, url, cache_duration, error_cache_duration, false, 0)
+        self.request_cached_advanced(
+            client,
+            url,
+            cache_duration,
+            error_cache_duration,
+            false,
+            default_request_timeout(),
+        )
     }
 }
 

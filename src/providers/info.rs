@@ -1,8 +1,8 @@
 use crate::config::{
     address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
     exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
-    safe_app_manifest_cache_duration, safe_info_cache_duration, short_error_duration,
-    token_info_cache_duration,
+    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
+    short_error_duration, token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
@@ -16,6 +16,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
+use std::time::Duration;
 
 pub const TOKENS_KEY: &'static str = "dip_ti";
 
@@ -198,18 +199,25 @@ impl DefaultInfoProvider<'_> {
 
     fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
         let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
-        let data: String = self.cache.request_cached(
+        let data: String = self.cache.request_cached_advanced(
             self.client,
             &url,
             safe_info_cache_duration(),
             short_error_duration(),
+            false,
+            safe_info_request_timeout(),
         )?;
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
+    // Are we sure we want to timeout in 5 seconds here?
     fn populate_token_cache(&mut self) -> ApiResult<()> {
         let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
-        let response = self.client.get(&url).send()?;
+        let request = self
+            .client
+            .get(&url)
+            .timeout(Duration::from_millis(token_info_request_timeout()));
+        let response = request.send()?;
         let data: Page<TokenInfo> = response.json()?;
         for token in data.results.iter() {
             self.cache

@@ -1,5 +1,6 @@
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+    transaction_request_timeout,
 };
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
@@ -40,11 +41,13 @@ pub fn get_queued_transactions(
         display_trusted_only
     );
 
-    let body = context.cache().request_cached(
+    let body = context.cache().request_cached_advanced(
         &context.client(),
         &url,
         request_cache_duration(),
         request_error_cache_timeout(),
+        false,
+        transaction_request_timeout(),
     )?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 

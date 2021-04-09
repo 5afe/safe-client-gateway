@@ -2,6 +2,7 @@ extern crate reqwest;
 
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+    transaction_request_timeout,
 };
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::Page;
@@ -25,11 +26,13 @@ pub fn get_all_transactions(
         safe_address,
         page_url.as_ref().unwrap_or(&String::new())
     );
-    let body = context.cache().request_cached(
+    let body = context.cache().request_cached_advanced(
         &context.client(),
         &url,
         request_cache_duration(),
         request_error_cache_timeout(),
+        false,
+        transaction_request_timeout(),
     )?;
     debug!("request URL: {}", &url);
     debug!("page_url: {:#?}", page_url);

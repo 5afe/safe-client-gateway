@@ -2,6 +2,7 @@ extern crate reqwest;
 
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+    transaction_request_timeout,
 };
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
@@ -29,11 +30,13 @@ pub(super) fn get_multisig_transaction_details(
         base_transaction_service_url(),
         safe_tx_hash
     );
-    let body = context.cache().request_cached(
+    let body = context.cache().request_cached_advanced(
         &context.client(),
         &url,
         request_cache_duration(),
         request_error_cache_timeout(),
+        false,
+        transaction_request_timeout(),
     )?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 

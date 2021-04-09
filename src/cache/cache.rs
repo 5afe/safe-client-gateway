@@ -73,32 +73,6 @@ impl Cache for ServiceCache {
 }
 
 pub trait CacheExt: Cache {
-    fn invalidate_caches(&self, key: &str) {
-        self.invalidate_pattern(&format!("c_re*{}*", &key)); // this is the same as *{}*
-    }
-
-    fn cache_resp<R>(
-        &self,
-        key: &str,
-        timeout: usize,
-        resp: impl Fn() -> ApiResult<R>,
-    ) -> ApiResult<content::Json<String>>
-    where
-        R: Serialize,
-    {
-        let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, &key);
-        let cached = self.fetch(&cache_key);
-        match cached {
-            Some(value) => Ok(content::Json(value)),
-            None => {
-                let resp = resp()?;
-                let resp_string = serde_json::to_string(&resp)?;
-                self.create(&cache_key, &resp_string, timeout);
-                Ok(content::Json(resp_string))
-            }
-        }
-    }
-
     fn request_cached_op(
         &self,
         client: &reqwest::blocking::Client,

@@ -1,4 +1,5 @@
 use crate::cache::cache::CacheExt;
+use crate::cache::cache_operations::CacheResponse;
 use crate::config::request_cache_duration;
 use crate::models::service::transactions::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
@@ -19,20 +20,20 @@ pub fn all(
     safe_address: String,
     page_url: Option<String>,
 ) -> ApiResult<content::Json<String>> {
-    context
-        .cache()
-        .cache_resp(&context.uri(), request_cache_duration(), || {
+    CacheResponse::new()
+        .key(context.uri())
+        .resp_generator(|| {
             transactions_list::get_all_transactions(&context, &safe_address, &page_url)
         })
+        .execute(context.cache())
 }
 
 #[get("/v1/transactions/<details_id>")]
 pub fn details(context: Context, details_id: String) -> ApiResult<content::Json<String>> {
-    context
-        .cache()
-        .cache_resp(&context.uri(), request_cache_duration(), || {
-            transactions_details::get_transactions_details(&context, &details_id)
-        })
+    CacheResponse::new()
+        .key(context.uri())
+        .resp_generator(|| transactions_details::get_transactions_details(&context, &details_id))
+        .execute(context.cache())
 }
 
 #[post(
@@ -51,11 +52,12 @@ pub fn submit_confirmation(
         &tx_confirmation_request?.0.signed_safe_tx_hash,
     )
     .and_then(|_| {
-        context
-            .cache()
-            .cache_resp(&context.uri(), request_cache_duration(), || {
+        CacheResponse::new()
+            .key(context.uri())
+            .resp_generator(|| {
                 transactions_details::get_transactions_details(&context, &safe_tx_hash)
             })
+            .execute(context.cache())
     })
 }
 
@@ -66,9 +68,9 @@ pub fn history_transactions(
     page_url: Option<String>,
     timezone_offset: Option<String>,
 ) -> ApiResult<content::Json<String>> {
-    context
-        .cache()
-        .cache_resp(&context.uri(), request_cache_duration(), || {
+    CacheResponse::new()
+        .key(context.uri())
+        .resp_generator(|| {
             transactions_history::get_history_transactions(
                 &context,
                 &safe_address,
@@ -76,6 +78,7 @@ pub fn history_transactions(
                 &timezone_offset,
             )
         })
+        .execute(context.cache())
 }
 
 #[get("/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
@@ -86,9 +89,9 @@ pub fn queued_transactions(
     timezone_offset: Option<String>,
     trusted: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    context
-        .cache()
-        .cache_resp(&context.uri(), request_cache_duration(), || {
+    CacheResponse::new()
+        .key(context.uri())
+        .resp_generator(|| {
             transactions_queued::get_queued_transactions(
                 &context,
                 &safe_address,
@@ -97,6 +100,7 @@ pub fn queued_transactions(
                 &trusted,
             )
         })
+        .execute(context.cache())
 }
 
 #[post(

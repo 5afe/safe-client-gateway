@@ -1,9 +1,9 @@
-use crate::cache::cache::Cache;
+use crate::cache::cache::{Cache, CacheExt};
 use crate::config::{request_cache_duration, request_error_cache_timeout};
 use crate::utils::errors::{ApiError, ApiResult};
 use rocket::response::content;
 use serde::Serialize;
-use std::borrow::BorrowMut;
+use std::borrow::{Borrow, BorrowMut};
 
 pub enum Database {
     Info = 1,
@@ -95,18 +95,18 @@ where
     }
 }
 
-pub struct CacheRequest {
+pub struct RequestCached {
     database: Database,
-    url: String,
-    request_timeout: u64,
-    cache_duration: usize,
-    error_cache_duration: usize,
-    cache_all_errors: bool,
+    pub url: String,
+    pub request_timeout: u64,
+    pub cache_duration: usize,
+    pub error_cache_duration: usize,
+    pub cache_all_errors: bool,
 }
 
-impl CacheRequest {
+impl RequestCached {
     pub fn new() -> Self {
-        CacheRequest {
+        RequestCached {
             database: Database::Default,
             url: String::new(),
             request_timeout: 0,
@@ -144,5 +144,13 @@ impl CacheRequest {
     pub fn cache_all_errors(&mut self, cache_all_errors: bool) -> &mut Self {
         self.cache_all_errors = cache_all_errors;
         self
+    }
+
+    pub fn execute(
+        &self,
+        client: &reqwest::blocking::Client,
+        cache: &impl Cache,
+    ) -> ApiResult<String> {
+        cache.request_cached_op(&client, self)
     }
 }

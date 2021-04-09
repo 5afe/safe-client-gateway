@@ -1,4 +1,4 @@
-use crate::cache::cache_operations::CacheResponse;
+use crate::cache::cache_operations::{CacheResponse, RequestCached};
 use crate::cache::inner_cache::CachedWithCode;
 use crate::config::redis_scan_count;
 use crate::utils::errors::{ApiError, ApiResult};
@@ -97,6 +97,21 @@ pub trait CacheExt: Cache {
                 Ok(content::Json(resp_string))
             }
         }
+    }
+
+    fn request_cached_op(
+        &self,
+        client: &reqwest::blocking::Client,
+        operation: &RequestCached,
+    ) -> ApiResult<String> {
+        self.request_cached_advanced(
+            client,
+            &operation.url,
+            operation.cache_duration,
+            operation.error_cache_duration,
+            operation.cache_all_errors,
+            operation.request_timeout,
+        )
     }
 
     fn request_cached_advanced(

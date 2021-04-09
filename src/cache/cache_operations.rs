@@ -1,5 +1,5 @@
 use crate::config::{request_cache_duration, request_error_cache_timeout};
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiError, ApiResult};
 use serde::Serialize;
 
 pub enum Database {
@@ -36,21 +36,21 @@ where
     R: Serialize,
 {
     database: Database,
-    key: String,
-    timeout: usize,
-    resp_generator: Box<dyn FnMut() -> ApiResult<R> + 'a>,
+    pub key: String,
+    pub timeout: usize,
+    pub resp_generator: Box<dyn FnMut() -> ApiResult<R> + 'a>,
 }
 
 impl<'a, R> CacheResponse<'a, R>
 where
     R: Serialize,
 {
-    pub fn new<'n>() -> CacheResponse<'n, String> {
+    pub fn new() -> Self {
         CacheResponse {
             database: Database::Default,
             key: String::new(),
             timeout: request_cache_duration(),
-            resp_generator: Box::new(|| Ok(String::new())),
+            resp_generator: Box::new(|| bail!("Need to set a response callback")),
         }
     }
 
@@ -76,6 +76,10 @@ where
         self.resp_generator = Box::new(resp_generator);
         self
     }
+
+    pub fn generate(&mut self) -> ApiResult<R> {
+        (self.resp_generator)()
+    }
 }
 
 pub struct CacheRequest {
@@ -92,7 +96,7 @@ impl CacheRequest {
         CacheRequest {
             database: Database::Default,
             url: String::new(),
-            request_timeout: 10000, //TODO: extract to env variables
+            request_timeout: 0,
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_timeout(),
             cache_all_errors: false,

@@ -1,3 +1,4 @@
+use crate::cache::cache_operations::CacheResponse;
 use crate::cache::inner_cache::CachedWithCode;
 use crate::config::redis_scan_count;
 use crate::utils::errors::{ApiError, ApiResult};
@@ -93,6 +94,26 @@ pub trait CacheExt: Cache {
                 let resp = resp()?;
                 let resp_string = serde_json::to_string(&resp)?;
                 self.create(&cache_key, &resp_string, timeout);
+                Ok(content::Json(resp_string))
+            }
+        }
+    }
+
+    fn cache_resp_op<R>(
+        &self,
+        cache_response: &mut CacheResponse<R>,
+    ) -> ApiResult<content::Json<String>>
+    where
+        R: Serialize,
+    {
+        let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, &cache_response.key);
+        let cached = self.fetch(&cache_key);
+        match cached {
+            Some(value) => Ok(content::Json(value)),
+            None => {
+                let resp = cache_response.generate()?;
+                let resp_string = serde_json::to_string(&resp)?;
+                self.create(&cache_key, &resp_string, cache_response.timeout);
                 Ok(content::Json(resp_string))
             }
         }

@@ -74,7 +74,7 @@ impl Cache for ServiceCache {
 
 pub trait CacheExt: Cache {
     fn invalidate_caches(&self, key: &str) {
-        self.invalidate_pattern(&format!("c_re*{}*", &key));
+        self.invalidate_pattern(&format!("c_re*{}*", &key)); // this is the same as *{}*
     }
 
     fn cache_resp<R>(

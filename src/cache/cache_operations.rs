@@ -23,14 +23,18 @@ impl Invalidate {
         }
     }
 
-    fn pattern(&mut self, pattern: &str) -> &mut Self {
-        self.pattern = pattern.to_string();
+    pub fn pattern(&mut self, pattern: String) -> &mut Self {
+        self.pattern = pattern;
         self
     }
 
     fn database(&mut self, database: Database) -> &mut Self {
         self.database = database;
         self
+    }
+
+    pub fn execute(&self, cache: &impl Cache) {
+        cache.invalidate_pattern(&self.pattern)
     }
 }
 

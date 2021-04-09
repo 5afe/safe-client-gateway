@@ -5,6 +5,8 @@ use rocket::response::content;
 use serde::Serialize;
 use std::borrow::{Borrow, BorrowMut};
 
+pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
+
 pub enum Database {
     Info = 1,
     Default = 2,
@@ -86,7 +88,7 @@ where
     }
 
     pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
-        let cache_key = format!("{}_{}", "c_resp", self.key);
+        let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, self.key);
         let cached = cache.fetch(&cache_key);
         match cached {
             Some(value) => Ok(content::Json(value)),

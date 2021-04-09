@@ -40,7 +40,7 @@ where
 {
     database: Database,
     pub key: String,
-    pub timeout: usize,
+    pub duration: usize,
     pub resp_generator: Box<dyn Fn() -> ApiResult<R> + 'a>,
 }
 
@@ -52,7 +52,7 @@ where
         CacheResponse {
             database: Database::Default,
             key: String::new(),
-            timeout: request_cache_duration(),
+            duration: request_cache_duration(),
             resp_generator: Box::new(|| bail!("Need to set a response callback")),
         }
     }
@@ -67,8 +67,8 @@ where
         self
     }
 
-    pub fn timeout(&mut self, timeout: usize) -> &mut Self {
-        self.timeout = timeout;
+    pub fn duration(&mut self, duration: usize) -> &mut Self {
+        self.duration = duration;
         self
     }
 
@@ -88,7 +88,7 @@ where
             Some(value) => Ok(content::Json(value)),
             None => {
                 let resp_string = serde_json::to_string(&self.generate()?)?;
-                cache.create(&cache_key, &resp_string, self.timeout);
+                cache.create(&cache_key, &resp_string, self.duration);
                 Ok(content::Json(resp_string))
             }
         }

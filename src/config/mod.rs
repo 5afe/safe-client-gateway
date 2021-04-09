@@ -105,7 +105,7 @@ pub fn safe_info_request_timeout() -> u64 {
 }
 
 pub fn token_info_request_timeout() -> u64 {
-    u64_with_default("TOKEN_INFO_REQUEST_TIMEOUT", 5000)
+    u64_with_default("TOKEN_INFO_REQUEST_TIMEOUT", 30000)
 }
 
 pub fn default_request_timeout() -> u64 {

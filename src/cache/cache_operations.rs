@@ -31,27 +31,26 @@ impl Invalidate {
     }
 }
 
-pub struct CacheResponse<R>
+pub struct CacheResponse<'a, R>
 where
     R: Serialize,
 {
     database: Database,
     key: String,
     timeout: usize,
-    resp_generator: Box<dyn Fn() -> ApiResult<R>>,
+    resp_generator: Box<dyn FnMut() -> ApiResult<R> + 'a>,
 }
 
-impl<R> CacheResponse<R>
+impl<'a, R> CacheResponse<'a, R>
 where
     R: Serialize,
 {
-    // Can't decouple the intialisation of the struct with the generic type resolution
-    pub fn new(resp_generator: impl Fn() -> ApiResult<R> + 'static) -> Self {
+    pub fn new<'n>() -> CacheResponse<'n, String> {
         CacheResponse {
             database: Database::Default,
             key: String::new(),
             timeout: request_cache_duration(),
-            resp_generator: Box::new(resp_generator),
+            resp_generator: Box::new(|| Ok(String::new())),
         }
     }
 
@@ -67,6 +66,14 @@ where
 
     pub fn timeout(&mut self, timeout: usize) -> &mut Self {
         self.timeout = timeout;
+        self
+    }
+
+    pub fn resp_generator(
+        &mut self,
+        resp_generator: impl FnMut() -> ApiResult<R> + 'a,
+    ) -> &mut Self {
+        self.resp_generator = Box::new(resp_generator);
         self
     }
 }

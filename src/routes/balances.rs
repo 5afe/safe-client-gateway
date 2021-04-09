@@ -31,9 +31,8 @@ pub fn get_balances(
 
 #[get("/v1/balances/supported-fiat-codes")]
 pub fn get_supported_fiat(context: Context) -> ApiResult<content::Json<String>> {
-    context
-        .cache()
-        .cache_resp(&context.uri(), request_cache_duration(), || {
-            fiat_codes(&context)
-        })
+    CacheResponse::new()
+        .key(context.uri())
+        .resp_generator(|| fiat_codes(&context))
+        .execute(context.cache())
 }

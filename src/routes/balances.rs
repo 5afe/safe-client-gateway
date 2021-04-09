@@ -1,4 +1,5 @@
 use crate::cache::cache::CacheExt;
+use crate::cache::cache_operations::CacheResponse;
 use crate::config::{balances_cache_duration, request_cache_duration};
 use crate::services::balances::*;
 use crate::utils::context::Context;
@@ -15,9 +16,11 @@ pub fn get_balances(
 ) -> ApiResult<content::Json<String>> {
     let trusted = trusted.unwrap_or(false);
     let exclude_spam = exclude_spam.unwrap_or(true);
-    context
-        .cache()
-        .cache_resp(&context.uri(), balances_cache_duration(), || {
+
+    let result = CacheResponse::new()
+        .key(context.uri())
+        .timeout(balances_cache_duration())
+        .resp_generator(|| {
             balances(
                 &context,
                 safe_address.as_str(),
@@ -26,6 +29,8 @@ pub fn get_balances(
                 exclude_spam,
             )
         })
+        .execute(context.cache());
+    result
 }
 
 #[get("/v1/balances/supported-fiat-codes")]

@@ -9,12 +9,9 @@ use rocket::response::content;
 
 #[get("/about")]
 pub fn info(context: Context) -> ApiResult<content::Json<String>> {
-    let mut cache_op = CacheResponse::new();
-    cache_op
-        .timeout(about_cache_duration())
-        .key(context.uri())
-        .resp_generator(about::get_about);
-    context.cache().cache_resp_op(&mut cache_op)
+    context
+        .cache()
+        .cache_resp(&context.uri(), about_cache_duration(), about::get_about)
 }
 
 #[get("/about/backbone")]

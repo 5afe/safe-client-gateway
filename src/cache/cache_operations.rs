@@ -1,6 +1,9 @@
+use crate::cache::cache::Cache;
 use crate::config::{request_cache_duration, request_error_cache_timeout};
 use crate::utils::errors::{ApiError, ApiResult};
+use rocket::response::content;
 use serde::Serialize;
+use std::borrow::BorrowMut;
 
 pub enum Database {
     Info = 1,
@@ -38,7 +41,7 @@ where
     database: Database,
     pub key: String,
     pub timeout: usize,
-    pub resp_generator: Box<dyn FnMut() -> ApiResult<R> + 'a>,
+    pub resp_generator: Box<dyn Fn() -> ApiResult<R> + 'a>,
 }
 
 impl<'a, R> CacheResponse<'a, R>
@@ -69,16 +72,26 @@ where
         self
     }
 
-    pub fn resp_generator(
-        &mut self,
-        resp_generator: impl FnMut() -> ApiResult<R> + 'a,
-    ) -> &mut Self {
+    pub fn resp_generator(&mut self, resp_generator: impl Fn() -> ApiResult<R> + 'a) -> &mut Self {
         self.resp_generator = Box::new(resp_generator);
         self
     }
 
-    pub fn generate(&mut self) -> ApiResult<R> {
+    pub fn generate(&self) -> ApiResult<R> {
         (self.resp_generator)()
+    }
+
+    pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
+        let cache_key = format!("{}_{}", "c_resp", self.key);
+        let cached = cache.fetch(&cache_key);
+        match cached {
+            Some(value) => Ok(content::Json(value)),
+            None => {
+                let resp_string = serde_json::to_string(&self.generate()?)?;
+                cache.create(&cache_key, &resp_string, self.timeout);
+                Ok(content::Json(resp_string))
+            }
+        }
     }
 }
 

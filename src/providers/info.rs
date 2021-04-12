@@ -147,12 +147,11 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             base_transaction_service_url(),
             address
         );
-        let contract_info_json = self.cache.request_cached(
-            self.client,
-            &url,
-            address_info_cache_duration(),
-            long_error_duration(),
-        )?;
+        let contract_info_json = RequestCached::new()
+            .url(url)
+            .cache_duration(address_info_cache_duration())
+            .error_cache_duration(long_error_duration())
+            .execute(self.client, self.cache)?;
         let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
         if contract_info.display_name.trim().is_empty() {
             bail!("No display name")
@@ -199,12 +198,11 @@ impl DefaultInfoProvider<'_> {
 
     fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
         let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
-        let data: String = self.cache.request_cached(
-            self.client,
-            &url,
-            safe_info_cache_duration(),
-            short_error_duration(),
-        )?;
+        let data = RequestCached::new()
+            .url(url)
+            .cache_duration(safe_info_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .execute(self.client, self.cache)?;
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
@@ -273,12 +271,11 @@ impl DefaultInfoProvider<'_> {
 
     fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = base_exchange_api_url();
-        let body = self.cache.request_cached(
-            self.client,
-            &url,
-            exchange_api_cache_duration(),
-            short_error_duration(),
-        )?;
+        let body = RequestCached::new()
+            .url(url)
+            .cache_duration(exchange_api_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .execute(self.client, self.cache)?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }

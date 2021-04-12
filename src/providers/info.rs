@@ -1,4 +1,5 @@
 use crate::cache::cache::{Cache, CacheExt};
+use crate::cache::cache_operations::RequestCached;
 use crate::config::{
     address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
     exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
@@ -124,14 +125,14 @@ impl InfoProvider for DefaultInfoProvider<'_> {
 
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = build_manifest_url(url)?;
-        let manifest_json = self.cache.request_cached_advanced(
-            self.client,
-            &manifest_url,
-            safe_app_manifest_cache_duration(),
-            long_error_duration(),
-            true,
-            safe_app_info_request_timeout(),
-        )?;
+
+        let manifest_json = RequestCached::new()
+            .url(manifest_url)
+            .cache_duration(safe_app_manifest_cache_duration())
+            .error_cache_duration(long_error_duration())
+            .cache_all_errors(true)
+            .request_timeout(safe_app_info_request_timeout())
+            .execute(self.client, self.cache)?;
         let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
         Ok(SafeAppInfo {
             name: manifest.name.to_owned(),

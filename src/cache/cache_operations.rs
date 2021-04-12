@@ -155,7 +155,7 @@ impl RequestCached {
     pub fn execute(
         &self,
         client: &reqwest::blocking::Client,
-        cache: &impl Cache,
+        cache: &dyn Cache,
     ) -> ApiResult<String> {
         cache.request_cached_op(&client, self)
     }

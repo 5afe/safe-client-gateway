@@ -97,7 +97,7 @@ pub fn safe_app_info_request_timeout() -> u64 {
 }
 
 // ERRORS
-pub fn request_error_cache_timeout() -> usize {
+pub fn request_error_cache_duration() -> usize {
     usize_with_default("REQS_ERROR_CACHE_DURATION", short_error_duration())
 }
 

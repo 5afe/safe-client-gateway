@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+    base_transaction_service_url, request_cache_duration, request_error_cache_duration,
 };
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::utils::context::Context;
@@ -94,7 +94,7 @@ fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<Mult
     let body = RequestCached::new()
         .url(url)
         .cache_duration(request_cache_duration())
-        .error_cache_duration(request_error_cache_timeout())
+        .error_cache_duration(request_error_cache_duration())
         .execute(context.client(), context.cache())
         .ok();
     body.as_ref()

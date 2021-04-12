@@ -2,7 +2,7 @@ extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+    base_transaction_service_url, request_cache_duration, request_error_cache_duration,
 };
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
@@ -32,7 +32,7 @@ pub(super) fn get_multisig_transaction_details(
     let body = RequestCached::new()
         .url(url)
         .cache_duration(request_cache_duration())
-        .error_cache_duration(request_error_cache_timeout())
+        .error_cache_duration(request_error_cache_duration())
         .execute(context.client(), context.cache())?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 
@@ -60,7 +60,7 @@ fn get_ethereum_transaction_details(
     let body = RequestCached::new()
         .url(url)
         .cache_duration(request_cache_duration())
-        .error_cache_duration(request_error_cache_timeout())
+        .error_cache_duration(request_error_cache_duration())
         .execute(context.client(), context.cache())?;
     let transfers: Page<Transfer> = serde_json::from_str(&body)?;
     let transfer = transfers
@@ -95,7 +95,7 @@ fn get_module_transaction_details(
     let body = RequestCached::new()
         .url(url)
         .cache_duration(request_cache_duration())
-        .error_cache_duration(request_error_cache_timeout())
+        .error_cache_duration(request_error_cache_duration())
         .execute(context.client(), context.cache())?;
     let transactions: Page<ModuleTransaction> = serde_json::from_str(&body)?;
     let transaction = transactions

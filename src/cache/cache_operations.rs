@@ -1,6 +1,6 @@
 use crate::cache::cache::Cache;
 use crate::cache::cache_op_executors::{cache_response, request_cached};
-use crate::config::{request_cache_duration, request_error_cache_timeout};
+use crate::config::{request_cache_duration, request_error_cache_duration};
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use serde::Serialize;
@@ -106,7 +106,7 @@ impl RequestCached {
             url: String::new(),
             request_timeout: 10000,
             cache_duration: request_cache_duration(),
-            error_cache_duration: request_error_cache_timeout(),
+            error_cache_duration: request_error_cache_duration(),
             cache_all_errors: false,
         }
     }

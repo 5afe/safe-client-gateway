@@ -2,7 +2,7 @@ extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+    base_transaction_service_url, request_cache_duration, request_error_cache_duration,
 };
 use crate::models::backend::transactions::Transaction;
 use crate::models::commons::{Page, PageMetadata};
@@ -130,7 +130,7 @@ fn fetch_backend_paged_txs(
     let body = RequestCached::new()
         .url(url)
         .cache_duration(request_cache_duration())
-        .error_cache_duration(request_error_cache_timeout())
+        .error_cache_duration(request_error_cache_duration())
         .execute(context.client(), context.cache())?;
     Ok(serde_json::from_str::<Page<Transaction>>(&body)?)
 }

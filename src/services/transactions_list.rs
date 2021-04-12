@@ -2,7 +2,7 @@ extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
+    base_transaction_service_url, request_cache_duration, request_error_cache_duration,
 };
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::Page;
@@ -30,7 +30,7 @@ pub fn get_all_transactions(
     let body = RequestCached::new()
         .url(url)
         .cache_duration(request_cache_duration())
-        .error_cache_duration(request_error_cache_timeout())
+        .error_cache_duration(request_error_cache_duration())
         .execute(context.client(), context.cache())?;
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions
@@ -82,7 +82,7 @@ pub(super) fn get_creation_transaction_summary(
     let body = RequestCached::new()
         .url(url)
         .cache_duration(request_cache_duration())
-        .error_cache_duration(request_error_cache_timeout())
+        .error_cache_duration(request_error_cache_duration())
         .execute(context.client(), context.cache())?;
 
     let mut info_provider = DefaultInfoProvider::new(context);

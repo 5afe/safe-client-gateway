@@ -1,10 +1,9 @@
 use crate::cache::cache::Cache;
 use crate::cache::cache_op_executors::{cache_response, request_cached};
 use crate::config::{request_cache_duration, request_error_cache_timeout};
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use serde::Serialize;
-use std::borrow::{Borrow, BorrowMut};
 
 pub enum Database {
     Info = 1,
@@ -105,7 +104,7 @@ impl RequestCached {
         RequestCached {
             database: Database::Default,
             url: String::new(),
-            request_timeout: 0,
+            request_timeout: 10000,
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_timeout(),
             cache_all_errors: false,

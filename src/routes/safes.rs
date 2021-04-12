@@ -1,5 +1,4 @@
 use crate::cache::cache_operations::CacheResponse;
-use crate::config::request_cache_duration;
 use crate::services::safes::get_safe_info_ex;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;

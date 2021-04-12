@@ -1,6 +1,5 @@
-use crate::cache::cache_operations::{CacheResponse, RequestCached};
-use crate::config::request_cache_duration;
-use crate::config::{base_transaction_service_url, request_error_cache_timeout};
+use crate::cache::cache_operations::RequestCached;
+use crate::config::base_transaction_service_url;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -23,7 +22,6 @@ pub fn list(
     Ok(content::Json(
         RequestCached::new()
             .url(url)
-            .request_timeout(30000) //TODO: extract to config
             .execute(context.client(), context.cache())?,
     ))
 }

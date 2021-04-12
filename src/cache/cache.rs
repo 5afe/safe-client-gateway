@@ -1,15 +1,8 @@
-use crate::cache::cache_operations::{CacheResponse, RequestCached};
-use crate::cache::inner_cache::CachedWithCode;
 use crate::config::redis_scan_count;
-use crate::utils::errors::{ApiError, ApiResult};
 use mockall::automock;
-use rocket::response::content;
 use rocket_contrib::databases::redis::{
     self, pipe, Commands, FromRedisValue, Iter, PipelineCommands, ToRedisArgs,
 };
-use serde::ser::Serialize;
-use serde_json;
-use std::time::Duration;
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);

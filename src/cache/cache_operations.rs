@@ -1,11 +1,10 @@
-use crate::cache::cache::{Cache, CacheExt};
+use crate::cache::cache::Cache;
+use crate::cache::cache_op_executors::{cache_response, request_cached};
 use crate::config::{request_cache_duration, request_error_cache_timeout};
 use crate::utils::errors::{ApiError, ApiResult};
 use rocket::response::content;
 use serde::Serialize;
 use std::borrow::{Borrow, BorrowMut};
-
-pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
 
 pub enum Database {
     Info = 1,
@@ -88,16 +87,7 @@ where
     }
 
     pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
-        let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, self.key);
-        let cached = cache.fetch(&cache_key);
-        match cached {
-            Some(value) => Ok(content::Json(value)),
-            None => {
-                let resp_string = serde_json::to_string(&self.generate()?)?;
-                cache.create(&cache_key, &resp_string, self.duration);
-                Ok(content::Json(resp_string))
-            }
-        }
+        cache_response(cache, self)
     }
 }
 
@@ -157,6 +147,6 @@ impl RequestCached {
         client: &reqwest::blocking::Client,
         cache: &dyn Cache,
     ) -> ApiResult<String> {
-        cache.request_cached_op(&client, self)
+        request_cached(cache, &client, self)
     }
 }

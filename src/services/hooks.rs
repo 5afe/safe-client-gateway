@@ -1,4 +1,4 @@
-use crate::cache::cache::{Cache, CacheExt};
+use crate::cache::cache::Cache;
 use crate::cache::cache_operations::Invalidate;
 use crate::models::backend::webhooks::{Payload, PayloadDetails};
 use crate::utils::errors::ApiResult;

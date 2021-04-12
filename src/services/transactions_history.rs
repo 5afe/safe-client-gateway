@@ -1,6 +1,6 @@
 extern crate reqwest;
 
-use crate::cache::cache::CacheExt;
+use crate::cache::cache_operations::RequestCached;
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
 };
@@ -124,15 +124,14 @@ fn fetch_backend_paged_txs(
         safe_address,
         page_metadata.to_url_string()
     );
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
     log::debug!("request URL: {}", &url);
-    log::debug!("page_url: {:#?}", page_url);
-    log::debug!("page_metadata: {:#?}", page_metadata);
+    log::debug!("page_url: {:#?}", &page_url);
+    log::debug!("page_metadata: {:#?}", &page_metadata);
+    let body = RequestCached::new()
+        .url(url)
+        .cache_duration(request_cache_duration())
+        .error_cache_duration(request_error_cache_timeout())
+        .execute(context.client(), context.cache())?;
     Ok(serde_json::from_str::<Page<Transaction>>(&body)?)
 }
 

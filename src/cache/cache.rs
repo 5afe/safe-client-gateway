@@ -72,7 +72,7 @@ impl Cache for ServiceCache {
     }
 }
 
-pub trait CacheExt: Cache {
+pub(super) trait CacheExt: Cache {
     fn request_cached_op(
         &self,
         client: &reqwest::blocking::Client,

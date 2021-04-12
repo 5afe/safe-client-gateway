@@ -1,4 +1,4 @@
-use crate::cache::cache::CacheExt;
+use crate::cache::cache_operations::RequestCached;
 use crate::config::{
     balances_cache_duration, base_transaction_service_url, request_error_cache_timeout,
 };
@@ -24,12 +24,11 @@ pub fn balances(
         exclude_spam
     );
 
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        balances_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new()
+        .url(url)
+        .cache_duration(balances_cache_duration())
+        .error_cache_duration(request_error_cache_timeout())
+        .execute(context.client(), context.cache())?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;
 
     let info_provider = DefaultInfoProvider::new(&context);

@@ -1,4 +1,3 @@
-use crate::cache::cache::CacheExt;
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::{balances_cache_duration, request_cache_duration};
 use crate::services::balances::*;

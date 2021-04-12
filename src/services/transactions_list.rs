@@ -1,6 +1,6 @@
 extern crate reqwest;
 
-use crate::cache::cache::CacheExt;
+use crate::cache::cache_operations::RequestCached;
 use crate::config::{
     base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
 };
@@ -25,14 +25,13 @@ pub fn get_all_transactions(
         safe_address,
         page_url.as_ref().unwrap_or(&String::new())
     );
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
     debug!("request URL: {}", &url);
     debug!("page_url: {:#?}", page_url);
+    let body = RequestCached::new()
+        .url(url)
+        .cache_duration(request_cache_duration())
+        .error_cache_duration(request_error_cache_timeout())
+        .execute(context.client(), context.cache())?;
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions
         .results
@@ -80,12 +79,11 @@ pub(super) fn get_creation_transaction_summary(
         safe
     );
     debug!("{}", &url);
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new()
+        .url(url)
+        .cache_duration(request_cache_duration())
+        .error_cache_duration(request_error_cache_timeout())
+        .execute(context.client(), context.cache())?;
 
     let mut info_provider = DefaultInfoProvider::new(context);
 

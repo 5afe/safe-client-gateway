@@ -26,7 +26,7 @@ mod utils;
 mod json;
 
 use crate::routes::error_catchers;
-use cache::cache::ServiceCache;
+use cache::redis::ServiceCache;
 use dotenv::dotenv;
 use routes::active_routes;
 use std::time::Duration;

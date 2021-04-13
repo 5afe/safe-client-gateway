@@ -1,7 +1,7 @@
-pub mod cache;
 mod cache_op_executors;
 pub mod cache_operations;
 mod inner_cache;
+pub mod redis;
 
 #[cfg(test)]
 mod tests;

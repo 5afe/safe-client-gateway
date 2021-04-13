@@ -96,6 +96,30 @@ pub fn safe_app_info_request_timeout() -> u64 {
     u64_with_default("SAFE_APP_INFO_REQUEST_TIMEOUT", 3000)
 }
 
+pub fn transaction_request_timeout() -> u64 {
+    u64_with_default("TRANSACTION_REQUEST_TIMEOUT", 30000)
+}
+
+pub fn safe_info_request_timeout() -> u64 {
+    u64_with_default("SAFE_INFO_REQUEST_TIMEOUT", 10000)
+}
+
+pub fn token_info_request_timeout() -> u64 {
+    u64_with_default("TOKEN_INFO_REQUEST_TIMEOUT", 15000)
+}
+
+pub fn balances_request_timeout() -> u64 {
+    u64_with_default("BALANCES_REQUEST_TIMEOUT", 20000)
+}
+
+pub fn collectibles_request_timeout() -> u64 {
+    u64_with_default("COLLECTIBLES_REQUEST_TIMEOUT", 20000)
+}
+
+pub fn default_request_timeout() -> u64 {
+    u64_with_default("DEFAULT_REQUEST_TIMEOUT", 10000)
+}
+
 // ERRORS
 pub fn request_error_cache_duration() -> usize {
     usize_with_default("REQS_ERROR_CACHE_DURATION", short_error_duration())

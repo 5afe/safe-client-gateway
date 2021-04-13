@@ -3,8 +3,8 @@ use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
     exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
-    safe_app_manifest_cache_duration, safe_info_cache_duration, short_error_duration,
-    token_info_cache_duration,
+    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
+    short_error_duration, token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
@@ -17,6 +17,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
+use std::time::Duration;
 
 pub const TOKENS_KEY: &'static str = "dip_ti";
 
@@ -199,13 +200,18 @@ impl DefaultInfoProvider<'_> {
         let data = RequestCached::new(url)
             .cache_duration(safe_info_cache_duration())
             .error_cache_duration(short_error_duration())
+            .request_timeout(safe_info_request_timeout())
             .execute(self.client, self.cache)?;
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
     fn populate_token_cache(&mut self) -> ApiResult<()> {
         let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
-        let response = self.client.get(&url).send()?;
+        let response = self
+            .client
+            .get(&url)
+            .timeout(Duration::from_millis(token_info_request_timeout()))
+            .send()?;
         let data: Page<TokenInfo> = response.json()?;
         for token in data.results.iter() {
             self.cache

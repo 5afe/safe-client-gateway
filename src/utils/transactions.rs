@@ -1,5 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::base_transaction_service_url;
+use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::utils::context::Context;
 use ethabi::Uint;
@@ -90,6 +90,7 @@ fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<Mult
         safe_tx_hash
     );
     let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())
         .ok();
     body.as_ref()

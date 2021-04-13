@@ -1,5 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::base_transaction_service_url;
+use crate::config::{base_transaction_service_url, collectibles_request_timeout};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -20,6 +20,8 @@ pub fn list(
     );
 
     Ok(content::Json(
-        RequestCached::new(url).execute(context.client(), context.cache())?,
+        RequestCached::new(url)
+            .request_timeout(collectibles_request_timeout())
+            .execute(context.client(), context.cache())?,
     ))
 }

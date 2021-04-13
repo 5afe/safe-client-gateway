@@ -6,9 +6,8 @@ use rocket::response::content;
 use serde::Serialize;
 use std::time::Duration;
 
-pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
-pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
-
+const CACHE_REQS_PREFIX: &'static str = "c_reqs";
+const CACHE_RESP_PREFIX: &'static str = "c_resp";
 const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
 
 pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {

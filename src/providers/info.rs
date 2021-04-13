@@ -130,7 +130,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             .url(manifest_url)
             .cache_duration(safe_app_manifest_cache_duration())
             .error_cache_duration(long_error_duration())
-            .cache_all_errors(true)
+            .cache_all_errors()
             .request_timeout(safe_app_info_request_timeout())
             .execute(self.client, self.cache)?;
         let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;

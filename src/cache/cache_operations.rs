@@ -136,8 +136,8 @@ impl RequestCached {
         self
     }
 
-    pub fn cache_all_errors(&mut self, cache_all_errors: bool) -> &mut Self {
-        self.cache_all_errors = cache_all_errors;
+    pub fn cache_all_errors(&mut self) -> &mut Self {
+        self.cache_all_errors = true;
         self
     }
 

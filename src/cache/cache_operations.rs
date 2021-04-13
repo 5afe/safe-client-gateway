@@ -50,7 +50,7 @@ where
     database: Database,
     pub key: String,
     pub duration: usize,
-    pub resp_generator: Box<dyn Fn() -> ApiResult<R> + 'a>,
+    pub resp_generator: Option<Box<dyn Fn() -> ApiResult<R> + 'a>>,
 }
 
 impl<'a, R> CacheResponse<'a, R>
@@ -62,7 +62,7 @@ where
             key,
             database: Database::Default,
             duration: request_cache_duration(),
-            resp_generator: Box::new(|| bail!("Need to set a response callback")),
+            resp_generator: None,
         }
     }
 
@@ -77,12 +77,12 @@ where
     }
 
     pub fn resp_generator(&mut self, resp_generator: impl Fn() -> ApiResult<R> + 'a) -> &mut Self {
-        self.resp_generator = Box::new(resp_generator);
+        self.resp_generator = Some(Box::new(resp_generator));
         self
     }
 
     pub fn generate(&self) -> ApiResult<R> {
-        (self.resp_generator)()
+        (self.resp_generator.as_ref().unwrap())()
     }
 
     pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
@@ -104,7 +104,7 @@ impl RequestCached {
         RequestCached {
             database: Database::Default,
             url,
-            request_timeout: 0,
+            request_timeout: 5000,
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_duration(),
             cache_all_errors: false,
@@ -141,6 +141,7 @@ impl RequestCached {
         client: &reqwest::blocking::Client,
         cache: &dyn Cache,
     ) -> ApiResult<String> {
+        assert!(self.request_timeout > 0);
         request_cached(cache, &client, self)
     }
 }

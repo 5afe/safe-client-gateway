@@ -20,8 +20,6 @@ pub fn list(
     );
 
     Ok(content::Json(
-        RequestCached::new()
-            .url(url)
-            .execute(context.client(), context.cache())?,
+        RequestCached::new(url).execute(context.client(), context.cache())?,
     ))
 }

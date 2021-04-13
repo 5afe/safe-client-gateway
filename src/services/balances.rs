@@ -22,8 +22,7 @@ pub fn balances(
         exclude_spam
     );
 
-    let body = RequestCached::new()
-        .url(url)
+    let body = RequestCached::new(url)
         .cache_duration(balances_cache_duration())
         .execute(context.client(), context.cache())?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;

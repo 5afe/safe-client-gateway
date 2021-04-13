@@ -38,9 +38,7 @@ pub fn get_queued_transactions(
         display_trusted_only
     );
 
-    let body = RequestCached::new()
-        .url(url)
-        .execute(context.client(), context.cache())?;
+    let body = RequestCached::new(url).execute(context.client(), context.cache())?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
     // We need to do this before we create the iterator

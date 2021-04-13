@@ -71,11 +71,6 @@ where
         self
     }
 
-    pub fn key(&mut self, key: String) -> &mut Self {
-        self.key = key;
-        self
-    }
-
     pub fn duration(&mut self, duration: usize) -> &mut Self {
         self.duration = duration;
         self
@@ -105,10 +100,10 @@ pub struct RequestCached {
 }
 
 impl RequestCached {
-    pub fn new() -> Self {
+    pub fn new(url: String) -> Self {
         RequestCached {
             database: Database::Default,
-            url: String::new(),
+            url,
             request_timeout: 0,
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_duration(),
@@ -118,11 +113,6 @@ impl RequestCached {
 
     pub fn database(&mut self, database: Database) -> &mut Self {
         self.database = database;
-        self
-    }
-
-    pub fn url(&mut self, url: String) -> &mut Self {
-        self.url = url;
         self
     }
 

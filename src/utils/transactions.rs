@@ -89,8 +89,7 @@ fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<Mult
         base_transaction_service_url(),
         safe_tx_hash
     );
-    let body = RequestCached::new()
-        .url(url)
+    let body = RequestCached::new(url)
         .execute(context.client(), context.cache())
         .ok();
     body.as_ref()

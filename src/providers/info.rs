@@ -126,8 +126,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = build_manifest_url(url)?;
 
-        let manifest_json = RequestCached::new()
-            .url(manifest_url)
+        let manifest_json = RequestCached::new(manifest_url)
             .cache_duration(safe_app_manifest_cache_duration())
             .error_cache_duration(long_error_duration())
             .cache_all_errors()
@@ -147,8 +146,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             base_transaction_service_url(),
             address
         );
-        let contract_info_json = RequestCached::new()
-            .url(url)
+        let contract_info_json = RequestCached::new(url)
             .cache_duration(address_info_cache_duration())
             .error_cache_duration(long_error_duration())
             .execute(self.client, self.cache)?;
@@ -198,8 +196,7 @@ impl DefaultInfoProvider<'_> {
 
     fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
         let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
-        let data = RequestCached::new()
-            .url(url)
+        let data = RequestCached::new(url)
             .cache_duration(safe_info_cache_duration())
             .error_cache_duration(short_error_duration())
             .execute(self.client, self.cache)?;
@@ -271,8 +268,7 @@ impl DefaultInfoProvider<'_> {
 
     fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = base_exchange_api_url();
-        let body = RequestCached::new()
-            .url(url)
+        let body = RequestCached::new(url)
             .cache_duration(exchange_api_cache_duration())
             .error_cache_duration(short_error_duration())
             .execute(self.client, self.cache)?;

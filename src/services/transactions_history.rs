@@ -125,9 +125,7 @@ fn fetch_backend_paged_txs(
     log::debug!("request URL: {}", &url);
     log::debug!("page_url: {:#?}", &page_url);
     log::debug!("page_metadata: {:#?}", &page_metadata);
-    let body = RequestCached::new()
-        .url(url)
-        .execute(context.client(), context.cache())?;
+    let body = RequestCached::new(url).execute(context.client(), context.cache())?;
     Ok(serde_json::from_str::<Page<Transaction>>(&body)?)
 }
 

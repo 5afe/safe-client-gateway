@@ -25,9 +25,7 @@ pub fn get_all_transactions(
     );
     debug!("request URL: {}", &url);
     debug!("page_url: {:#?}", page_url);
-    let body = RequestCached::new()
-        .url(url)
-        .execute(context.client(), context.cache())?;
+    let body = RequestCached::new(url).execute(context.client(), context.cache())?;
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions
         .results
@@ -75,9 +73,7 @@ pub(super) fn get_creation_transaction_summary(
         safe
     );
     debug!("{}", &url);
-    let body = RequestCached::new()
-        .url(url)
-        .execute(context.client(), context.cache())?;
+    let body = RequestCached::new(url).execute(context.client(), context.cache())?;
 
     let mut info_provider = DefaultInfoProvider::new(context);
 

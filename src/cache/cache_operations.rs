@@ -1,5 +1,5 @@
 use crate::cache::cache::Cache;
-use crate::cache::cache_op_executors::{cache_response, request_cached};
+use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
 use crate::config::{request_cache_duration, request_error_cache_duration};
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -11,19 +11,24 @@ pub enum Database {
 }
 
 pub struct Invalidate {
-    pattern: String,
+    pattern: InvalidationPattern,
     database: Database,
+}
+
+pub enum InvalidationPattern {
+    FlushAll,
+    RequestsResponses(String),
 }
 
 impl Invalidate {
     pub fn new() -> Self {
         Invalidate {
-            pattern: String::new(),
+            pattern: InvalidationPattern::FlushAll,
             database: Database::Default,
         }
     }
 
-    pub fn pattern(&mut self, pattern: String) -> &mut Self {
+    pub fn pattern(&mut self, pattern: InvalidationPattern) -> &mut Self {
         self.pattern = pattern;
         self
     }
@@ -34,7 +39,7 @@ impl Invalidate {
     }
 
     pub fn execute(&self, cache: &impl Cache) {
-        cache.invalidate_pattern(&self.pattern)
+        invalidate(cache, &self.pattern)
     }
 }
 

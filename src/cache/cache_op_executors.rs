@@ -1,5 +1,5 @@
 use crate::cache::cache::Cache;
-use crate::cache::cache_operations::{CacheResponse, RequestCached};
+use crate::cache::cache_operations::{CacheResponse, InvalidationPattern, RequestCached};
 use crate::cache::inner_cache::CachedWithCode;
 use crate::utils::errors::{ApiError, ApiResult};
 use rocket::response::content;
@@ -8,6 +8,19 @@ use std::time::Duration;
 
 pub const CACHE_REQS_PREFIX: &'static str = "c_reqs";
 pub const CACHE_RESP_PREFIX: &'static str = "c_resp";
+
+const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
+
+pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
+    let pattern_str = match pattern {
+        InvalidationPattern::FlushAll => String::from("*"),
+        InvalidationPattern::RequestsResponses(value) => {
+            format!("{}*{}*", CACHE_REQS_RESP_PREFIX, &value)
+        }
+    };
+
+    cache.invalidate_pattern(pattern_str.as_str());
+}
 
 pub(super) fn cache_response<S>(
     cache: &impl Cache,

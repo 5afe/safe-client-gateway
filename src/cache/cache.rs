@@ -1,24 +1,11 @@
+use crate::cache::Cache;
 use crate::config::redis_scan_count;
-use mockall::automock;
 use rocket_contrib::databases::redis::{
     self, pipe, Commands, FromRedisValue, Iter, PipelineCommands, ToRedisArgs,
 };
 
 #[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
-
-#[automock]
-pub trait Cache {
-    fn fetch(&self, id: &str) -> Option<String>;
-    fn create(&self, id: &str, dest: &str, timeout: usize);
-    fn insert_in_hash(&self, hash: &str, id: &str, dest: &str);
-    fn get_from_hash(&self, hash: &str, id: &str) -> Option<String>;
-    fn has_key(&self, id: &str) -> bool;
-    fn expire_entity(&self, id: &str, timeout: usize);
-    fn invalidate_pattern(&self, pattern: &str);
-    fn invalidate(&self, id: &str);
-    fn info(&self) -> Option<String>;
-}
 
 impl Cache for ServiceCache {
     fn fetch(&self, id: &str) -> Option<String> {

@@ -1,4 +1,4 @@
-use crate::cache::cache::Cache;
+use crate::cache::Cache;
 use crate::config::base_transaction_service_url;
 use crate::models::service::transactions::requests::MultisigTransactionRequest;
 use crate::utils::context::Context;

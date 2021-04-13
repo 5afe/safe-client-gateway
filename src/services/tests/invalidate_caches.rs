@@ -1,4 +1,4 @@
-use crate::cache::cache::*;
+use crate::cache::*;
 use crate::models::backend::webhooks::{
     ExecutedMultisigTransaction, NewConfirmation, Payload, PayloadDetails,
     PendingMultisigTransaction,

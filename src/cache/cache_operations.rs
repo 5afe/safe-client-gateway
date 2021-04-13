@@ -1,5 +1,5 @@
-use crate::cache::cache::Cache;
 use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+use crate::cache::Cache;
 use crate::config::{request_cache_duration, request_error_cache_duration};
 use crate::utils::errors::ApiResult;
 use rocket::response::content;

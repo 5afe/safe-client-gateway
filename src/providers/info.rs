@@ -1,5 +1,5 @@
-use crate::cache::cache::Cache;
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
     exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,

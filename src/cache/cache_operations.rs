@@ -30,11 +30,6 @@ impl Invalidate {
         }
     }
 
-    pub fn pattern(&mut self, pattern: InvalidationPattern) -> &mut Self {
-        self.pattern = pattern;
-        self
-    }
-
     fn database(&mut self, database: Database) -> &mut Self {
         self.database = database;
         self

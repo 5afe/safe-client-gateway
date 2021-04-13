@@ -49,10 +49,10 @@ pub(super) fn request_cached(
     match cache.fetch(&cache_key) {
         Some(cached) => CachedWithCode::split(&cached).to_result(),
         None => {
-            let mut request = client.get(&operation.url);
-            if operation.request_timeout > 0 {
-                request = request.timeout(Duration::from_millis(operation.request_timeout));
-            }
+            let mut request = client
+                .get(&operation.url)
+                .timeout(Duration::from_millis(operation.request_timeout));
+
             let response = request.send().map_err(|err| {
                 if operation.cache_all_errors {
                     cache.create(

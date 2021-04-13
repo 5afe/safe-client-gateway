@@ -9,8 +9,7 @@ use rocket::response::content;
 
 #[get("/about")]
 pub fn info(context: Context) -> ApiResult<content::Json<String>> {
-    CacheResponse::new()
-        .key(context.uri())
+    CacheResponse::new(context.uri())
         .duration(about_cache_duration())
         .resp_generator(about::get_about)
         .execute(context.cache())

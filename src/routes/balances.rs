@@ -13,8 +13,7 @@ pub fn get_balances(
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new()
-        .key(context.uri())
+    CacheResponse::new(context.uri())
         .duration(balances_cache_duration())
         .resp_generator(|| {
             balances(
@@ -30,8 +29,7 @@ pub fn get_balances(
 
 #[get("/v1/balances/supported-fiat-codes")]
 pub fn get_supported_fiat(context: Context) -> ApiResult<content::Json<String>> {
-    CacheResponse::new()
-        .key(context.uri())
+    CacheResponse::new(context.uri())
         .resp_generator(|| fiat_codes(&context))
         .execute(context.cache())
 }

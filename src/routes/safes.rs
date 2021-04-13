@@ -6,8 +6,7 @@ use rocket::response::content;
 
 #[get("/v1/safes/<safe_address>")]
 pub fn safe_info(context: Context, safe_address: String) -> ApiResult<content::Json<String>> {
-    CacheResponse::new()
-        .key(context.uri())
+    CacheResponse::new(context.uri())
         .resp_generator(|| get_safe_info_ex(&context, &safe_address))
         .execute(context.cache())
 }

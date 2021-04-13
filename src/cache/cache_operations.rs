@@ -57,10 +57,10 @@ impl<'a, R> CacheResponse<'a, R>
 where
     R: Serialize,
 {
-    pub fn new() -> Self {
+    pub fn new(key: String) -> Self {
         CacheResponse {
+            key,
             database: Database::Default,
-            key: String::new(),
             duration: request_cache_duration(),
             resp_generator: Box::new(|| bail!("Need to set a response callback")),
         }

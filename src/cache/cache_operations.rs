@@ -21,9 +21,9 @@ pub enum InvalidationPattern {
 }
 
 impl Invalidate {
-    pub fn new() -> Self {
+    pub fn new(pattern: InvalidationPattern) -> Self {
         Invalidate {
-            pattern: InvalidationPattern::FlushAll,
+            pattern,
             database: Database::Default,
         }
     }

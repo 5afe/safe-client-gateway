@@ -19,8 +19,6 @@ pub fn flush_all(context: Context, token: String) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Invalidate::new()
-        .pattern(InvalidationPattern::FlushAll)
-        .execute(context.cache());
+    Invalidate::new(InvalidationPattern::FlushAll).execute(context.cache());
     Ok(())
 }

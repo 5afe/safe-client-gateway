@@ -1,18 +1,31 @@
+use crate::cache::cache_operations::{Invalidate, InvalidationPattern};
+use crate::cache::Cache;
 use crate::models::backend::webhooks::{Payload, PayloadDetails};
-use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::errors::ApiResult;
 
 pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()> {
-    cache.invalidate_caches(&payload.address);
+    Invalidate::new(InvalidationPattern::RequestsResponses(
+        payload.address.to_owned(),
+    ))
+    .execute(cache);
     payload.details.as_ref().map(|d| match d {
         PayloadDetails::NewConfirmation(data) => {
-            cache.invalidate_caches(&data.safe_tx_hash);
+            Invalidate::new(InvalidationPattern::RequestsResponses(String::from(
+                &data.safe_tx_hash,
+            )))
+            .execute(cache);
         }
         PayloadDetails::ExecutedMultisigTransaction(data) => {
-            cache.invalidate_caches(&data.safe_tx_hash);
+            Invalidate::new(InvalidationPattern::RequestsResponses(String::from(
+                &data.safe_tx_hash,
+            )))
+            .execute(cache);
         }
         PayloadDetails::PendingMultisigTransaction(data) => {
-            cache.invalidate_caches(&data.safe_tx_hash);
+            Invalidate::new(InvalidationPattern::RequestsResponses(String::from(
+                &data.safe_tx_hash,
+            )))
+            .execute(cache);
         }
         _ => {}
     });

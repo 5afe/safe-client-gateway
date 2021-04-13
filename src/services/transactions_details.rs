@@ -1,8 +1,7 @@
 extern crate reqwest;
 
-use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
-};
+use crate::cache::cache_operations::RequestCached;
+use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
@@ -12,7 +11,6 @@ use crate::models::service::transactions::{
     ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
 };
 use crate::providers::info::DefaultInfoProvider;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
@@ -29,12 +27,9 @@ pub(super) fn get_multisig_transaction_details(
         base_transaction_service_url(),
         safe_tx_hash
     );
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 
     let rejections = fetch_rejections(context, &multisig_tx.safe, multisig_tx.nonce);
@@ -58,12 +53,9 @@ fn get_ethereum_transaction_details(
         tx_hash
     );
     debug!("url: {}", url);
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())?;
     let transfers: Page<Transfer> = serde_json::from_str(&body)?;
     let transfer = transfers
         .results
@@ -94,12 +86,9 @@ fn get_module_transaction_details(
         tx_hash
     );
     debug!("url: {}", url);
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())?;
     let transactions: Page<ModuleTransaction> = serde_json::from_str(&body)?;
     let transaction = transactions
         .results

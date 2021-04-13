@@ -1,9 +1,9 @@
+use crate::cache::*;
 use crate::models::backend::webhooks::{
     ExecutedMultisigTransaction, NewConfirmation, Payload, PayloadDetails,
     PendingMultisigTransaction,
 };
 use crate::services::hooks::invalidate_caches;
-use crate::utils::cache::*;
 use mockall::predicate::*;
 use mockall::Sequence;
 

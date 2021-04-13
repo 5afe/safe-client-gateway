@@ -1,12 +1,13 @@
+use crate::cache::cache_operations::RequestCached;
+use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
     exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
-    safe_app_manifest_cache_duration, safe_info_cache_duration, short_error_duration,
-    token_info_cache_duration,
+    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
+    short_error_duration, token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
-use crate::utils::cache::{Cache, CacheExt};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
@@ -16,6 +17,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
+use std::time::Duration;
 
 pub const TOKENS_KEY: &'static str = "dip_ti";
 
@@ -124,14 +126,13 @@ impl InfoProvider for DefaultInfoProvider<'_> {
 
     fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = build_manifest_url(url)?;
-        let manifest_json = self.cache.request_cached_advanced(
-            self.client,
-            &manifest_url,
-            safe_app_manifest_cache_duration(),
-            long_error_duration(),
-            true,
-            safe_app_info_request_timeout(),
-        )?;
+
+        let manifest_json = RequestCached::new(manifest_url)
+            .cache_duration(safe_app_manifest_cache_duration())
+            .error_cache_duration(long_error_duration())
+            .cache_all_errors()
+            .request_timeout(safe_app_info_request_timeout())
+            .execute(self.client, self.cache)?;
         let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
         Ok(SafeAppInfo {
             name: manifest.name.to_owned(),
@@ -146,12 +147,10 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             base_transaction_service_url(),
             address
         );
-        let contract_info_json = self.cache.request_cached(
-            self.client,
-            &url,
-            address_info_cache_duration(),
-            long_error_duration(),
-        )?;
+        let contract_info_json = RequestCached::new(url)
+            .cache_duration(address_info_cache_duration())
+            .error_cache_duration(long_error_duration())
+            .execute(self.client, self.cache)?;
         let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
         if contract_info.display_name.trim().is_empty() {
             bail!("No display name")
@@ -198,18 +197,21 @@ impl DefaultInfoProvider<'_> {
 
     fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
         let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
-        let data: String = self.cache.request_cached(
-            self.client,
-            &url,
-            safe_info_cache_duration(),
-            short_error_duration(),
-        )?;
+        let data = RequestCached::new(url)
+            .cache_duration(safe_info_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .request_timeout(safe_info_request_timeout())
+            .execute(self.client, self.cache)?;
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
     fn populate_token_cache(&mut self) -> ApiResult<()> {
         let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
-        let response = self.client.get(&url).send()?;
+        let response = self
+            .client
+            .get(&url)
+            .timeout(Duration::from_millis(token_info_request_timeout()))
+            .send()?;
         let data: Page<TokenInfo> = response.json()?;
         for token in data.results.iter() {
             self.cache
@@ -272,12 +274,10 @@ impl DefaultInfoProvider<'_> {
 
     fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = base_exchange_api_url();
-        let body = self.cache.request_cached(
-            self.client,
-            &url,
-            exchange_api_cache_duration(),
-            short_error_duration(),
-        )?;
+        let body = RequestCached::new(url)
+            .cache_duration(exchange_api_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .execute(self.client, self.cache)?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }

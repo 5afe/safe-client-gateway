@@ -1,6 +1,6 @@
-use crate::config::{balances_cache_duration, request_cache_duration};
+use crate::cache::cache_operations::CacheResponse;
+use crate::config::balances_cache_duration;
 use crate::services::balances::*;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -13,26 +13,23 @@ pub fn get_balances(
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    let trusted = trusted.unwrap_or(false);
-    let exclude_spam = exclude_spam.unwrap_or(true);
-    context
-        .cache()
-        .cache_resp(&context.uri(), balances_cache_duration(), || {
+    CacheResponse::new(context.uri())
+        .duration(balances_cache_duration())
+        .resp_generator(|| {
             balances(
                 &context,
                 safe_address.as_str(),
                 fiat.as_str(),
-                trusted,
-                exclude_spam,
+                trusted.unwrap_or(false),
+                exclude_spam.unwrap_or(true),
             )
         })
+        .execute(context.cache())
 }
 
 #[get("/v1/balances/supported-fiat-codes")]
 pub fn get_supported_fiat(context: Context) -> ApiResult<content::Json<String>> {
-    context
-        .cache()
-        .cache_resp(&context.uri(), request_cache_duration(), || {
-            fiat_codes(&context)
-        })
+    CacheResponse::new(context.uri())
+        .resp_generator(|| fiat_codes(&context))
+        .execute(context.cache())
 }

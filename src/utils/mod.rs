@@ -4,7 +4,6 @@ use rocket::http::uri::Absolute;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
-pub mod cache;
 pub mod context;
 pub mod cors;
 pub mod errors;

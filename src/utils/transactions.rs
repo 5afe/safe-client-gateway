@@ -1,8 +1,6 @@
-use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
-};
+use crate::cache::cache_operations::RequestCached;
+use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::MultisigTransaction;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use ethabi::Uint;
 use ethcontract_common::hash::keccak256;
@@ -91,14 +89,9 @@ fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<Mult
         base_transaction_service_url(),
         safe_tx_hash
     );
-    let body = context
-        .cache()
-        .request_cached(
-            &context.client(),
-            &url,
-            request_cache_duration(),
-            request_error_cache_timeout(),
-        )
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())
         .ok();
     body.as_ref()
         .map(|body| serde_json::from_str::<MultisigTransaction>(body).ok())

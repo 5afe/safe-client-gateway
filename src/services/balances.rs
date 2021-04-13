@@ -1,10 +1,10 @@
+use crate::cache::cache_operations::RequestCached;
 use crate::config::{
-    balances_cache_duration, base_transaction_service_url, request_error_cache_timeout,
+    balances_cache_duration, balances_request_timeout, base_transaction_service_url,
 };
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::service::balances::{Balance, Balances};
 use crate::providers::info::DefaultInfoProvider;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use std::cmp::Ordering;
@@ -24,12 +24,10 @@ pub fn balances(
         exclude_spam
     );
 
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        balances_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new(url)
+        .cache_duration(balances_cache_duration())
+        .request_timeout(balances_request_timeout())
+        .execute(context.client(), context.cache())?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;
 
     let info_provider = DefaultInfoProvider::new(&context);

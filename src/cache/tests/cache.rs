@@ -1,4 +1,4 @@
-use crate::utils::cache::CachedWithCode;
+use crate::cache::inner_cache::CachedWithCode;
 use crate::utils::errors::{ApiError, ErrorDetails};
 
 #[test]

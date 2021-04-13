@@ -1,12 +1,10 @@
-use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
-};
+use crate::cache::cache_operations::RequestCached;
+use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{ConflictType, Label, TransactionListItem};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::services::offset_page_meta;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use itertools::Itertools;
@@ -40,12 +38,9 @@ pub fn get_queued_transactions(
         display_trusted_only
     );
 
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
     // We need to do this before we create the iterator

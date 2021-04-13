@@ -1,13 +1,11 @@
 extern crate reqwest;
 
-use crate::config::{
-    base_transaction_service_url, request_cache_duration, request_error_cache_timeout,
-};
+use crate::cache::cache_operations::RequestCached;
+use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::Page;
 use crate::models::service::transactions::summary::TransactionSummary;
 use crate::providers::info::DefaultInfoProvider;
-use crate::utils::cache::CacheExt;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::extract_query_string;
@@ -25,14 +23,11 @@ pub fn get_all_transactions(
         safe_address,
         page_url.as_ref().unwrap_or(&String::new())
     );
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
     debug!("request URL: {}", &url);
     debug!("page_url: {:#?}", page_url);
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())?;
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions
         .results
@@ -80,12 +75,9 @@ pub(super) fn get_creation_transaction_summary(
         safe
     );
     debug!("{}", &url);
-    let body = context.cache().request_cached(
-        &context.client(),
-        &url,
-        request_cache_duration(),
-        request_error_cache_timeout(),
-    )?;
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())?;
 
     let mut info_provider = DefaultInfoProvider::new(context);
 

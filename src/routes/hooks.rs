@@ -1,7 +1,7 @@
+use crate::cache::cache_operations::{Invalidate, InvalidationPattern};
 use crate::config::webhook_token;
 use crate::models::backend::webhooks::Payload;
 use crate::services::hooks::invalidate_caches;
-use crate::utils::cache::Cache;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket_contrib::json::Json;
@@ -19,6 +19,6 @@ pub fn flush_all(context: Context, token: String) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    context.cache().invalidate_pattern("*");
+    Invalidate::new(InvalidationPattern::FlushAll).execute(context.cache());
     Ok(())
 }

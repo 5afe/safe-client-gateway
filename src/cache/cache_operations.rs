@@ -104,7 +104,7 @@ impl RequestCached {
         RequestCached {
             database: Database::Default,
             url: String::new(),
-            request_timeout: 10000,
+            request_timeout: 0,
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_duration(),
             cache_all_errors: false,

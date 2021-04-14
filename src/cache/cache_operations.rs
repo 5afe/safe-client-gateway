@@ -35,7 +35,7 @@ impl Invalidate {
         self
     }
 
-    pub fn execute(&self, cache: &mut impl Cache) {
+    pub fn execute(&self, cache: &impl Cache) {
         invalidate(cache, &self.pattern)
     }
 }
@@ -82,7 +82,7 @@ where
         (self.resp_generator.as_ref().unwrap())()
     }
 
-    pub fn execute(&self, cache: &mut impl Cache) -> ApiResult<content::Json<String>> {
+    pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
         cache_response(cache, self)
     }
 }
@@ -136,7 +136,7 @@ impl RequestCached {
     pub fn execute(
         &self,
         client: &reqwest::blocking::Client,
-        cache: &mut dyn Cache,
+        cache: &dyn Cache,
     ) -> ApiResult<String> {
         assert!(self.request_timeout > 0);
         request_cached(cache, &client, self)

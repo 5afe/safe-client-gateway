@@ -11,7 +11,7 @@ use itertools::Itertools;
 
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
 pub fn get_queued_transactions(
-    context: &Context,
+    context: &mut Context,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -188,7 +188,7 @@ pub(super) fn process_transactions(
 }
 
 fn build_page_url(
-    context: &Context,
+    context: &mut Context,
     safe_address: &String,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -199,9 +199,12 @@ fn build_page_url(
     url.as_ref().map(|_| {
         context.build_absolute_url(uri!(
             crate::routes::transactions::queued_transactions: safe_address,
-            offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
-            timezone_offset.clone().unwrap_or("0".to_string()),
-            display_trusted_only
+            Some(offset_page_meta(
+                page_meta,
+                direction * (page_meta.limit as i64)
+            )),
+            Some(timezone_offset.clone().unwrap_or("0".to_string())),
+            Some(display_trusted_only)
         ))
     })
 }

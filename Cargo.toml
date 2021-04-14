@@ -17,7 +17,9 @@ rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "4f3511786cb8b
 rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "4f3511786cb8b6540124b867591c7c5a6933409e" }
 
 reqwest = { version = "0.11.3", features = ["blocking", "json"] }
-redis = "0.20.0"
+
+r2d2 = "0.8.9"
+redis = { version = "0.20", features = ["r2d2"] }
 
 ethcontract-common = "0.11.1"
 ethereum-types = { version = "0.9.2", features = ["serialize"]}

@@ -11,7 +11,7 @@ const CACHE_REQS_PREFIX: &'static str = "c_reqs";
 const CACHE_RESP_PREFIX: &'static str = "c_resp";
 const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
 
-pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
+pub(super) fn invalidate(cache: &mut impl Cache, pattern: &InvalidationPattern) {
     let pattern_str = match pattern {
         InvalidationPattern::FlushAll => String::from("*"),
         InvalidationPattern::RequestsResponses(value) => {
@@ -24,7 +24,7 @@ pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
 }
 
 pub(super) fn cache_response<S>(
-    cache: &impl Cache,
+    cache: &mut impl Cache,
     cache_response: &CacheResponse<S>,
 ) -> ApiResult<content::Json<String>>
 where
@@ -43,7 +43,7 @@ where
 }
 
 pub(super) fn request_cached(
-    cache: &dyn Cache,
+    cache: &mut dyn Cache,
     client: &reqwest::blocking::Client,
     operation: &RequestCached,
 ) -> ApiResult<String> {
@@ -51,7 +51,7 @@ pub(super) fn request_cached(
     match cache.fetch(&cache_key) {
         Some(cached) => CachedWithCode::split(&cached).to_result(),
         None => {
-            let mut request = client
+            let request = client
                 .get(&operation.url)
                 .timeout(Duration::from_millis(operation.request_timeout));
 

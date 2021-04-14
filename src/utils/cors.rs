@@ -32,7 +32,7 @@ impl Fairing for CORS {
 
         if request.method() == Method::Options {
             response.set_header(ContentType::Plain);
-            response.set_sized_body(Cursor::new(""));
+            response.set_sized_body(0, Cursor::new(""));
         }
     }
 }

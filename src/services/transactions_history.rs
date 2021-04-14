@@ -16,7 +16,7 @@ use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 
 pub fn get_history_transactions(
-    context: &Context,
+    context: &mut Context,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -81,7 +81,7 @@ pub fn get_history_transactions(
 }
 
 fn build_page_url(
-    context: &Context,
+    context: &mut Context,
     safe_address: &str,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -91,8 +91,11 @@ fn build_page_url(
     url.as_ref().map(|_| {
         context.build_absolute_url(uri!(
             crate::routes::transactions::history_transactions: safe_address,
-            offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
-            timezone_offset.clone().unwrap_or("0".to_string()),
+            Some(offset_page_meta(
+                page_meta,
+                direction * (page_meta.limit as i64)
+            )),
+            Some(timezone_offset.clone().unwrap_or("0".to_string())),
         ))
     })
 }
@@ -112,7 +115,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 }
 
 fn fetch_backend_paged_txs(
-    context: &Context,
+    context: &mut Context,
     safe_address: &str,
     page_url: &Option<String>,
 ) -> ApiResult<Page<Transaction>> {

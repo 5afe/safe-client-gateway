@@ -9,7 +9,7 @@ use crate::config::scheme;
 pub struct Context<'r> {
     uri: String,
     host: Option<String>,
-    cache: ServiceCache,
+    cache: ServiceCache<'r>,
     client: &'r reqwest::blocking::Client,
 }
 
@@ -18,8 +18,8 @@ impl<'r> Context<'r> {
         self.client
     }
 
-    pub fn cache(&mut self) -> &mut impl Cache {
-        &mut self.cache
+    pub fn cache(&self) -> &ServiceCache<'r> {
+        &self.cache
     }
 
     pub fn uri(&self) -> String {
@@ -31,7 +31,9 @@ impl<'r> Context<'r> {
     }
 
     fn host(&self) -> Option<String> {
-        self.host.map(|host| format!("{}://{}", scheme(), host))
+        self.host
+            .as_ref()
+            .map(|host| format!("{}://{}", scheme(), host))
     }
 }
 

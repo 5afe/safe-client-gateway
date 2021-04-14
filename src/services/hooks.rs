@@ -3,7 +3,7 @@ use crate::cache::Cache;
 use crate::models::backend::webhooks::{Payload, PayloadDetails};
 use crate::utils::errors::ApiResult;
 
-pub fn invalidate_caches(cache: &mut impl Cache, payload: &Payload) -> ApiResult<()> {
+pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()> {
     Invalidate::new(InvalidationPattern::RequestsResponses(
         payload.address.to_owned(),
     ))

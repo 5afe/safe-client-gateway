@@ -18,7 +18,7 @@ use crate::utils::transactions::fetch_rejections;
 use log::debug;
 
 pub(super) fn get_multisig_transaction_details(
-    context: &mut Context,
+    context: &Context,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
@@ -40,7 +40,7 @@ pub(super) fn get_multisig_transaction_details(
 }
 
 fn get_ethereum_transaction_details(
-    context: &mut Context,
+    context: &Context,
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
@@ -72,7 +72,7 @@ fn get_ethereum_transaction_details(
 }
 
 fn get_module_transaction_details(
-    context: &mut Context,
+    context: &Context,
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
@@ -101,7 +101,7 @@ fn get_module_transaction_details(
 }
 
 pub fn get_transactions_details(
-    context: &mut Context,
+    context: &Context,
     details_id: &String,
 ) -> ApiResult<TransactionDetails> {
     let id_parts = parse_id(details_id)?;

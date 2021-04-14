@@ -16,7 +16,7 @@ use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 
 pub fn get_history_transactions(
-    context: &mut Context,
+    context: &Context,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -81,7 +81,7 @@ pub fn get_history_transactions(
 }
 
 fn build_page_url(
-    context: &mut Context,
+    context: &Context,
     safe_address: &str,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -115,7 +115,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 }
 
 fn fetch_backend_paged_txs(
-    context: &mut Context,
+    context: &Context,
     safe_address: &str,
     page_url: &Option<String>,
 ) -> ApiResult<Page<Transaction>> {

@@ -17,7 +17,7 @@ pub fn get_balances(
         .duration(balances_cache_duration())
         .resp_generator(|| {
             balances(
-                &mut context,
+                &context,
                 safe_address.as_str(),
                 fiat.as_str(),
                 trusted.unwrap_or(false),

@@ -12,7 +12,7 @@ use crate::utils::extract_query_string;
 use log::debug;
 
 pub fn get_all_transactions(
-    context: &mut Context,
+    context: &Context,
     safe_address: &String,
     page_url: &Option<String>,
 ) -> ApiResult<Page<TransactionSummary>> {
@@ -70,7 +70,7 @@ pub fn get_all_transactions(
 }
 
 pub(super) fn get_creation_transaction_summary(
-    context: &mut Context,
+    context: &Context,
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
     let url = format!(

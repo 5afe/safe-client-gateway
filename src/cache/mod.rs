@@ -10,13 +10,13 @@ use mockall::automock;
 
 #[automock]
 pub trait Cache {
-    fn fetch(&mut self, id: &str) -> Option<String>;
-    fn create(&mut self, id: &str, dest: &str, timeout: usize);
-    fn insert_in_hash(&mut self, hash: &str, id: &str, dest: &str);
-    fn get_from_hash(&mut self, hash: &str, id: &str) -> Option<String>;
-    fn has_key(&mut self, id: &str) -> bool;
-    fn expire_entity(&mut self, id: &str, timeout: usize);
-    fn invalidate_pattern(&mut self, pattern: &str);
-    fn invalidate(&mut self, id: &str);
-    fn info(&mut self) -> Option<String>;
+    fn fetch(&self, id: &str) -> Option<String>;
+    fn create(&self, id: &str, dest: &str, timeout: usize);
+    fn insert_in_hash(&self, hash: &str, id: &str, dest: &str);
+    fn get_from_hash(&self, hash: &str, id: &str) -> Option<String>;
+    fn has_key(&self, id: &str) -> bool;
+    fn expire_entity(&self, id: &str, timeout: usize);
+    fn invalidate_pattern(&self, pattern: &str);
+    fn invalidate(&self, id: &str);
+    fn info(&self) -> Option<String>;
 }

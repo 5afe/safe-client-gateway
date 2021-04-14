@@ -10,7 +10,7 @@ use crate::utils::errors::ApiResult;
 use std::cmp::Ordering;
 
 pub fn balances(
-    context: &mut Context,
+    context: &Context,
     safe_address: &str,
     fiat: &str,
     trusted: bool,

@@ -6,7 +6,7 @@ use crate::utils::errors::{ApiError, ApiResult};
 use std::collections::HashMap;
 
 pub fn submit_confirmation(
-    context: &mut Context,
+    context: &Context,
     safe_tx_hash: &str,
     signature: &str,
 ) -> ApiResult<()> {
@@ -34,7 +34,7 @@ pub fn submit_confirmation(
 }
 
 pub fn propose_transaction(
-    context: &mut Context,
+    context: &Context,
     safe_address: &str,
     transaction_request: &MultisigTransactionRequest,
 ) -> ApiResult<()> {

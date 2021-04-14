@@ -8,7 +8,7 @@ use rocket::State;
 type RedisPool = Pool<redis::Client>;
 type RedisConnection = PooledConnection<redis::Client>;
 
-pub struct ServiceCache<'r>(&'r RedisPool);
+pub struct ServiceCache<'r>(State<'r, RedisPool>);
 
 pub fn create_pool() -> RedisPool {
     // TODO check if we want to use deadpool instead of r2d2
@@ -22,13 +22,13 @@ impl<'r> FromRequest<'r> for ServiceCache<'r> {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let pool = try_outcome!(request.guard::<State<RedisPool>>().await);
-        return request::Outcome::Success(ServiceCache(&pool));
+        return request::Outcome::Success(ServiceCache(pool));
     }
 }
 
 impl ServiceCache<'_> {
     fn conn(&self) -> RedisConnection {
-        self.0.get().unwrap()
+        self.0.inner().get().unwrap()
     }
 }
 
@@ -90,14 +90,13 @@ fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
     pattern: P,
     count: C,
 ) -> redis::Iter<'r, RV> {
-    redis::cmd("SCAN")
-        .cursor_arg(0)
+    let mut cmd = redis::cmd("SCAN");
+    cmd.cursor_arg(0)
         .arg("MATCH")
         .arg(pattern)
         .arg("COUNT")
-        .arg(count)
-        .iter(con)
-        .unwrap()
+        .arg(count);
+    cmd.iter(con).unwrap()
 }
 
 fn info(con: &mut redis::Connection) -> Option<String> {

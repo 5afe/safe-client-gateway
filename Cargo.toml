@@ -13,9 +13,11 @@ dotenv_codegen = "0.15.0"
 regex = "1"
 lazy_static = "1.4.0"
 
-rocket = "0.4.5"
-rocket_codegen = "0.4.5"
-reqwest = { version = "0.11.0", features = ["blocking", "json"] }
+rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "4f3511786cb8b6540124b867591c7c5a6933409e" }
+rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "4f3511786cb8b6540124b867591c7c5a6933409e" }
+
+reqwest = { version = "0.11.3", features = ["blocking", "json"] }
+redis = "0.20.0"
 
 ethcontract-common = "0.11.1"
 ethereum-types = { version = "0.9.2", features = ["serialize"]}
@@ -40,9 +42,10 @@ log = "0.4"
 env_logger = "0.7.1"
 
 [dependencies.rocket_contrib]
-version = "0.4.5"
+git = "https://github.com/SergioBenitez/Rocket"
+rev = "4f3511786cb8b6540124b867591c7c5a6933409e"
 default-features = false
-features = ["json", "redis_pool"]
+features = ["json"]
 
 [dev-dependencies]
 cargo-watch = "7.3.0"

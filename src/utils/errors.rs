@@ -93,8 +93,8 @@ impl fmt::Display for ApiError {
     }
 }
 
-impl<'r> Responder<'r> for ApiError {
-    fn respond_to(self, request: &Request) -> response::Result<'r> {
+impl<'r> Responder<'r, 'static> for ApiError {
+    fn respond_to(self, request: &'r Request<'_>) -> response::Result<'static> {
         if log_all_error_responses() || (self.status >= 500 && self.status < 600) {
             log::error!(
                 "ERR::{}::{}::{}",

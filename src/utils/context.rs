@@ -1,6 +1,5 @@
 use rocket::http::uri::Origin;
 use rocket::request::{self, FromRequest, Request};
-use rocket::Outcome;
 use rocket::State;
 
 use crate::cache::redis::ServiceCache;
@@ -13,7 +12,7 @@ pub struct Context<'a, 'r> {
 }
 
 impl<'a, 'r> Context<'a, 'r> {
-    fn get<T: FromRequest<'a, 'r>>(&self) -> T {
+    fn get<T: FromRequest<'r>>(&self) -> T {
         self.request.guard::<T>().unwrap()
     }
 
@@ -41,11 +40,12 @@ impl<'a, 'r> Context<'a, 'r> {
     }
 }
 
-impl<'a, 'r> FromRequest<'a, 'r> for Context<'a, 'r> {
+#[rocket::async_trait]
+impl<'a, 'r> FromRequest<'r> for Context<'a, 'r> {
     type Error = ();
 
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<Self, Self::Error> {
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let cache = request.guard().unwrap();
-        return Outcome::Success(Context { request, cache });
+        return request::Outcome::Success(Context { request, cache });
     }
 }

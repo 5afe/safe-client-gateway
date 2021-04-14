@@ -1,10 +1,8 @@
 use crate::cache::Cache;
 use crate::config::redis_scan_count;
-use rocket_contrib::databases::redis::{
-    self, pipe, Commands, FromRedisValue, Iter, PipelineCommands, ToRedisArgs,
-};
+use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 
-#[database("service_cache")]
+//#[database("service_cache")]
 pub struct ServiceCache(redis::Connection);
 
 impl Cache for ServiceCache {

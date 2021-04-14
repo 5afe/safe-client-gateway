@@ -32,7 +32,8 @@ use routes::active_routes;
 use std::time::Duration;
 use utils::cors::CORS;
 
-fn main() {
+#[launch]
+fn rocket() -> _ {
     dotenv().ok();
     env_logger::init();
 
@@ -43,12 +44,11 @@ fn main() {
         .build()
         .unwrap();
 
-    rocket::ignite()
+    rocket::build()
         .mount("/", active_routes())
+        .register("/", error_catchers())
         .manage(client)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
         .attach(ServiceCache::fairing())
-        .register(error_catchers())
-        .launch();
 }

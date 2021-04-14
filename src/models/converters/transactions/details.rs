@@ -9,24 +9,21 @@ use crate::models::service::transactions::details::{
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::utils::errors::ApiResult;
+use rocket::futures::future::OptionFuture;
 
 impl MultisigTransaction {
-    pub fn to_transaction_details(
+    pub async fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
-        let safe_info = info_provider.safe_info(&self.safe.to_string())?;
-        let gas_token = self
-            .gas_token
-            .as_ref()
-            .map(|it| info_provider.token_info(it).ok())
-            .flatten();
+        let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
+        let gas_token = map_address_to_token_info(&self.gas_token, info_provider).await;
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
-            tx_info: self.transaction_info(info_provider),
+            tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),
@@ -38,10 +35,13 @@ impl MultisigTransaction {
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
                 self.build_execution_details(safe_info, gas_token, rejections),
             )),
-            safe_app_info: self
-                .origin
-                .as_ref()
-                .and_then(|origin| safe_app_info_from(origin, info_provider)),
+            safe_app_info: OptionFuture::from(
+                self.origin
+                    .as_ref()
+                    .map(|origin| async move { safe_app_info_from(origin, info_provider).await }),
+            )
+            .await
+            .flatten(),
         })
     }
 
@@ -93,14 +93,14 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    pub fn to_transaction_details(
+    pub async fn to_transaction_details(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
-            tx_info: self.to_transaction_info(info_provider),
+            tx_info: self.to_transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),
@@ -115,4 +115,14 @@ impl ModuleTransaction {
             safe_app_info: None,
         })
     }
+}
+
+//TODO: extract this too
+async fn map_address_to_token_info(
+    address: &Option<String>,
+    info_provider: &mut impl InfoProvider,
+) -> Option<TokenInfo> {
+    // early return if modules are None
+    let address = address.as_ref()?;
+    info_provider.token_info(address).await.ok()
 }

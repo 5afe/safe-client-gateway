@@ -14,13 +14,17 @@ pub const SAFE_TX_TYPEHASH: &'static str =
 pub const ERC191_BYTE: &'static str = "19";
 pub const ERC191_VERSION: &'static str = "01";
 
-pub fn fetch_rejections(context: &Context, safe_address: &str, nonce: u64) -> Option<Vec<String>> {
+pub async fn fetch_rejections(
+    context: &Context<'_>,
+    safe_address: &str,
+    nonce: u64,
+) -> Option<Vec<String>> {
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
     let safe_tx_hash = to_hex_string!(hash(safe_address, nonce).to_vec());
 
-    let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash);
+    let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash).await;
     multisig_tx
         .as_ref()
         .map(|cancel_tx| {
@@ -83,7 +87,10 @@ pub(super) fn cancellation_parts_hash(safe_address: &Address, nonce: u64) -> [u8
 }
 
 // We silently fail if the cancellation transaction is not found
-fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<MultisigTransaction> {
+async fn fetch_cancellation_tx(
+    context: &Context<'_>,
+    safe_tx_hash: String,
+) -> Option<MultisigTransaction> {
     let url = format!(
         "{}/v1/multisig-transactions/{}/",
         base_transaction_service_url(),
@@ -92,6 +99,7 @@ fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<Mult
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())
+        .await
         .ok();
     body.as_ref()
         .map(|body| serde_json::from_str::<MultisigTransaction>(body).ok())

@@ -6,8 +6,8 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 #[get("/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>")]
-pub fn get_balances(
-    context: Context,
+pub async fn get_balances(
+    context: Context<'_>,
     safe_address: String,
     fiat: String,
     trusted: Option<bool>,
@@ -25,11 +25,13 @@ pub fn get_balances(
             )
         })
         .execute(context.cache())
+        .await
 }
 
 #[get("/v1/balances/supported-fiat-codes")]
-pub fn get_supported_fiat(context: Context) -> ApiResult<content::Json<String>> {
+pub async fn get_supported_fiat(context: Context<'_>) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .resp_generator(|| fiat_codes(&context))
         .execute(context.cache())
+        .await
 }

@@ -7,15 +7,15 @@ use crate::utils::{
 };
 
 impl DataDecoded {
-    pub(super) fn to_settings_info(
+    pub(super) async fn to_settings_info(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> Option<SettingsInfo> {
         match self.method.as_str() {
             SET_FALLBACK_HANDLER => {
                 let handler = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::SetFallbackHandler {
-                    handler_info: info_provider.contract_info(&handler).ok(),
+                    handler_info: info_provider.contract_info(&handler).await.ok(),
                     handler,
                 })
             }
@@ -48,21 +48,21 @@ impl DataDecoded {
             CHANGE_MASTER_COPY => {
                 let implementation = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::ChangeImplementation {
-                    implementation_info: info_provider.contract_info(&implementation).ok(),
+                    implementation_info: info_provider.contract_info(&implementation).await.ok(),
                     implementation,
                 })
             }
             ENABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::EnableModule {
-                    module_info: info_provider.contract_info(&module).ok(),
+                    module_info: info_provider.contract_info(&module).await.ok(),
                     module,
                 })
             }
             DISABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(1)?;
                 Some(SettingsInfo::DisableModule {
-                    module_info: info_provider.contract_info(&module).ok(),
+                    module_info: info_provider.contract_info(&module).await.ok(),
                     module,
                 })
             }

@@ -8,10 +8,11 @@ use crate::services::offset_page_meta;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use itertools::Itertools;
+use std::collections::HashMap;
 
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
-pub fn get_queued_transactions(
-    context: &Context,
+pub async fn get_queued_transactions(
+    context: &Context<'_>,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -28,7 +29,7 @@ pub fn get_queued_transactions(
     let display_trusted_only = trusted.unwrap_or(true);
 
     // As we require the Safe nonce later we use it here explicitely to query transaction that are in the future
-    let safe_nonce = info_provider.safe_info(safe_address)?.nonce as i64;
+    let safe_nonce = info_provider.safe_info(safe_address).await?.nonce as i64;
     let url = format!(
         "{}/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
         base_transaction_service_url(),
@@ -40,7 +41,8 @@ pub fn get_queued_transactions(
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
     // We need to do this before we create the iterator
@@ -58,7 +60,8 @@ pub fn get_queued_transactions(
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     Ok(Page {
         next: build_page_url(
@@ -97,7 +100,7 @@ pub(super) fn get_edge_nonce(backend_transactions: &mut Page<MultisigTransaction
 // Nonce of the last item in the previous page (-1 if not present)
 pub(super) fn get_previous_page_nonce(
     page_meta: &PageMetadata,
-    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+    tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
 ) -> i64 {
     // If we are not on the first page then we take the first item to get information on the previous page
     if page_meta.offset == 0 {
@@ -108,18 +111,24 @@ pub(super) fn get_previous_page_nonce(
     .map_or(-1, |tx| tx.nonce as i64)
 }
 
-pub(super) fn process_transactions(
-    info_provider: &mut dyn InfoProvider,
+pub(super) async fn process_transactions(
+    info_provider: &mut impl InfoProvider,
     safe_nonce: i64,
-    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+    tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
     previous_page_nonce: i64,
     edge_nonce: i64,
 ) -> Vec<TransactionListItem> {
     let mut last_proccessed_nonce = previous_page_nonce;
     let mut service_transactions: Vec<TransactionListItem> = Vec::new();
-    for (group_nonce, transaction_group) in
-        &tx_iter.group_by(|transaction| transaction.nonce as i64)
-    {
+    let transaction_groups = tx_iter
+        .group_by(|transaction| transaction.nonce as i64)
+        .into_iter()
+        .map(|(group_nonce, transaction_group)| {
+            (group_nonce, transaction_group.collect::<Vec<_>>())
+        })
+        .collect::<HashMap<_, _>>();
+    for &group_nonce in transaction_groups.keys().sorted() {
+        let transaction_group = transaction_groups.get(&group_nonce).unwrap();
         // Check if we need to add section headers
         if last_proccessed_nonce < safe_nonce && group_nonce == safe_nonce {
             // If the last nonce processed was the initial nonce (-1) and this group nonce is the current Safe nonce then we start the Next section
@@ -135,7 +144,7 @@ pub(super) fn process_transactions(
         last_proccessed_nonce = group_nonce as i64;
 
         // Make the group peekable for conflict type checks
-        let mut group_iter = transaction_group.peekable();
+        let mut group_iter = transaction_group.iter().peekable();
         // There will be always at least one transaction for a group
         let group_start_tx = group_iter.next().unwrap();
         // Check if this group has the same nonce as the starting item of the next page
@@ -165,7 +174,8 @@ pub(super) fn process_transactions(
                 // No conflict in this or the previous page
                 ConflictType::None
             },
-        );
+        )
+        .await;
         // Add additional conflicts of the group (only present when conflicts in the same page)
         while let Some(tx) = group_iter.next() {
             // Indicate if we are in a conflict group on the edge or if there are more conflicts in this page
@@ -180,7 +190,8 @@ pub(super) fn process_transactions(
                 &mut service_transactions,
                 &tx,
                 conflict_type,
-            );
+            )
+            .await;
         }
     }
 
@@ -199,9 +210,12 @@ fn build_page_url(
     url.as_ref().map(|_| {
         context.build_absolute_url(uri!(
             crate::routes::transactions::queued_transactions: safe_address,
-            offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
-            timezone_offset.clone().unwrap_or("0".to_string()),
-            display_trusted_only
+            Some(offset_page_meta(
+                page_meta,
+                direction * (page_meta.limit as i64)
+            )),
+            Some(timezone_offset.clone().unwrap_or("0".to_string())),
+            Some(display_trusted_only)
         ))
     })
 }
@@ -220,8 +234,8 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     }
 }
 
-pub(super) fn add_transaction_as_summary(
-    info_provider: &mut dyn InfoProvider,
+pub(super) async fn add_transaction_as_summary(
+    info_provider: &mut impl InfoProvider,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,
     conflict_type: ConflictType,
@@ -229,6 +243,7 @@ pub(super) fn add_transaction_as_summary(
     // Converting a multisig transaction theoretically can result in multiple summaries
     let mut tx_summary_iter = transaction
         .to_transaction_summary(info_provider)
+        .await
         .unwrap_or(vec![])
         .into_iter()
         .peekable();

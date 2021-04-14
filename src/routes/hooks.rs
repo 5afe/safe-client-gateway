@@ -7,7 +7,7 @@ use crate::utils::errors::ApiResult;
 use rocket_contrib::json::Json;
 
 #[post("/v1/hook/update/<token>", format = "json", data = "<update>")]
-pub fn update(context: Context, token: String, update: Json<Payload>) -> ApiResult<()> {
+pub fn update(context: Context<'_>, token: String, update: Json<Payload>) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
@@ -15,7 +15,7 @@ pub fn update(context: Context, token: String, update: Json<Payload>) -> ApiResu
 }
 
 #[get("/v1/flush_all/<token>")]
-pub fn flush_all(context: Context, token: String) -> ApiResult<()> {
+pub fn flush_all(context: Context<'_>, token: String) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");
     }

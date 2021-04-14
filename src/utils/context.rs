@@ -10,14 +10,15 @@ pub struct Context<'r> {
     uri: String,
     host: Option<String>,
     cache: ServiceCache<'r>,
-    client: &'r reqwest::blocking::Client,
+    client: State<'r, reqwest::blocking::Client>,
 }
 
 impl<'r> Context<'r> {
     pub fn client(&self) -> &'r reqwest::blocking::Client {
-        self.client
+        self.client.inner()
     }
 
+    // TODO: we would want to return the Cache trait here
     pub fn cache(&self) -> &ServiceCache<'r> {
         &self.cache
     }
@@ -54,7 +55,7 @@ impl<'r> FromRequest<'r> for Context<'r> {
             host,
             uri,
             cache,
-            client: &client,
+            client,
         });
     }
 }

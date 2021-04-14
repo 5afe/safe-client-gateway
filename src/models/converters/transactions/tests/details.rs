@@ -12,8 +12,8 @@ use crate::models::service::transactions::{
 };
 use crate::providers::info::*;
 
-#[test]
-fn multisig_custom_transaction_to_transaction_details() {
+#[rocket::async_test]
+async fn multisig_custom_transaction_to_transaction_details() {
     let multisig_tx =
         serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CUSTOM).unwrap();
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
@@ -107,13 +107,14 @@ fn multisig_custom_transaction_to_transaction_details() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider);
+        MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider)
+            .await;
 
     assert_eq!(expected, actual.unwrap());
 }
 
-#[test]
-fn module_transaction_to_transaction_details_success() {
+#[rocket::async_test]
+async fn module_transaction_to_transaction_details_success() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -153,13 +154,14 @@ fn module_transaction_to_transaction_details_success() {
     };
 
     let actual =
-        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider);
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider)
+            .await;
 
     assert_eq!(expected, actual.unwrap());
 }
 
-#[test]
-fn module_transaction_to_transaction_details_failed() {
+#[rocket::async_test]
+async fn module_transaction_to_transaction_details_failed() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -199,13 +201,14 @@ fn module_transaction_to_transaction_details_failed() {
     };
 
     let actual =
-        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider);
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider)
+            .await;
 
     assert_eq!(expected, actual.unwrap());
 }
 
-#[test]
-fn ethereum_tx_transfer_to_transaction_details() {
+#[rocket::async_test]
+async fn ethereum_tx_transfer_to_transaction_details() {
     let transfer =
         serde_json::from_str::<TransferDto>(crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO)
             .unwrap();
@@ -247,13 +250,14 @@ fn ethereum_tx_transfer_to_transaction_details() {
         &transfer,
         &mut mock_info_provider,
         "0xBc79855178842FDBA0c353494895DEEf509E26bB",
-    );
+    )
+    .await;
 
     assert_eq!(expected, actual.unwrap());
 }
 
-#[test]
-fn multisig_transaction_with_origin() {
+#[rocket::async_test]
+async fn multisig_transaction_with_origin() {
     let multisig_tx =
         serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_WITH_ORIGIN).unwrap();
     let mut safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
@@ -289,6 +293,7 @@ fn multisig_transaction_with_origin() {
 
     let actual =
         MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider)
+            .await
             .unwrap();
 
     let actual_json = serde_json::to_string(&actual).unwrap();

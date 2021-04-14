@@ -137,8 +137,8 @@ fn get_previous_page_nonce_offset_greater_than_0() {
     );
 }
 
-#[test]
-fn process_transactions_empty_list() {
+#[rocket::async_test]
+async fn process_transactions_empty_list() {
     let input_list: Vec<MultisigTransaction> = vec![];
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -155,15 +155,16 @@ fn process_transactions_empty_list() {
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     let expected: Vec<TransactionListItem> = vec![];
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn process_transactions_no_conflicts_everything_queued() {
+#[rocket::async_test]
+async fn process_transactions_no_conflicts_everything_queued() {
     let input_list: Vec<MultisigTransaction> = serde_json::from_str::<Page<MultisigTransaction>>(
         BACKEND_QUEUED_TRANSACTION_LIST_PAGE_NO_CONFLICTS,
     )
@@ -215,7 +216,8 @@ fn process_transactions_no_conflicts_everything_queued() {
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     let expected: Vec<TransactionListItem> = vec![
         TransactionListItem::Label {
@@ -318,8 +320,8 @@ fn process_transactions_no_conflicts_everything_queued() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn process_transactions_conflicts_in_queued() {
+#[rocket::async_test]
+async fn process_transactions_conflicts_in_queued() {
     let input_list: Vec<MultisigTransaction> = serde_json::from_str::<Page<MultisigTransaction>>(
         BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_394,
     )
@@ -371,7 +373,8 @@ fn process_transactions_conflicts_in_queued() {
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     let expected: Vec<TransactionListItem> = vec![
         TransactionListItem::Label {
@@ -478,8 +481,8 @@ fn process_transactions_conflicts_in_queued() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn process_transactions_conflicts_in_next() {
+#[rocket::async_test]
+async fn process_transactions_conflicts_in_next() {
     let input_list: Vec<MultisigTransaction> = serde_json::from_str::<Page<MultisigTransaction>>(
         BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_393,
     )
@@ -531,7 +534,8 @@ fn process_transactions_conflicts_in_next() {
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     let expected: Vec<TransactionListItem> = vec![
         TransactionListItem::Label {
@@ -639,8 +643,8 @@ fn process_transactions_conflicts_in_next() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
+#[rocket::async_test]
+async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
     let input_list: Vec<MultisigTransaction> = serde_json::from_str::<Page<MultisigTransaction>>(
         BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_394,
     )
@@ -692,7 +696,8 @@ fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     //The first item expected is just a a transaction because we are not in the first page of data
     let expected: Vec<TransactionListItem> = vec![

@@ -5,8 +5,8 @@ use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
 use std::collections::HashMap;
 
-pub fn submit_confirmation(
-    context: &Context,
+pub async fn submit_confirmation(
+    context: &Context<'_>,
     safe_tx_hash: &str,
     signature: &str,
 ) -> ApiResult<()> {
@@ -18,7 +18,7 @@ pub fn submit_confirmation(
     let mut json = HashMap::new();
     json.insert("signature", signature);
 
-    let response = context.client().post(&url).json(&json).send()?;
+    let response = context.client().post(&url).json(&json).send().await?;
 
     if response.status().is_success() {
         context
@@ -29,12 +29,13 @@ pub fn submit_confirmation(
         Err(ApiError::from_http_response(
             response,
             String::from("Unexpected tx confirmation error"),
-        ))
+        )
+        .await)
     }
 }
 
-pub fn propose_transaction(
-    context: &Context,
+pub async fn propose_transaction(
+    context: &Context<'_>,
     safe_address: &str,
     transaction_request: &MultisigTransactionRequest,
 ) -> ApiResult<()> {
@@ -47,7 +48,8 @@ pub fn propose_transaction(
         .client()
         .post(&url)
         .json(&transaction_request)
-        .send()?;
+        .send()
+        .await?;
 
     if response.status().is_success() {
         context
@@ -58,6 +60,7 @@ pub fn propose_transaction(
         Err(ApiError::from_http_response(
             response,
             String::from("Unexpected multisig tx proposal error"),
-        ))
+        )
+        .await)
     }
 }

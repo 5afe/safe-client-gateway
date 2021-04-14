@@ -9,7 +9,7 @@ mod tests;
 use mockall::automock;
 
 #[automock]
-pub trait Cache {
+pub trait Cache: Send + Sync {
     fn fetch(&self, id: &str) -> Option<String>;
     fn create(&self, id: &str, dest: &str, timeout: usize);
     fn insert_in_hash(&self, hash: &str, id: &str, dest: &str);

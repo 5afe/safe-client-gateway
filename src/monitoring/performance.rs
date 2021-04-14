@@ -21,7 +21,7 @@ impl Fairing for PerformanceMonitor {
         let path_data = request
             .route()
             .map(|route| route.uri.to_string())
-            .unwrap_or(String::from(request.uri().path()));
+            .unwrap_or(request.uri().path().to_string());
         let cached = request
             .local_cache(|| Utc::now().timestamp_millis())
             .to_owned();

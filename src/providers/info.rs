@@ -98,7 +98,7 @@ pub trait InfoProvider {
 
 pub struct DefaultInfoProvider<'p> {
     client: &'p reqwest::blocking::Client,
-    cache: &'p dyn Cache,
+    cache: &'p mut dyn Cache,
     safe_cache: HashMap<String, Option<SafeInfo>>,
     token_cache: HashMap<String, Option<TokenInfo>>,
 }

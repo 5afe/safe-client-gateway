@@ -103,10 +103,9 @@ impl<'r> Responder<'r, 'static> for ApiError {
                 self.details
             );
         }
+        let resp = serde_json::to_string(&self.details).expect("Couldn't serialize error");
         Response::build()
-            .sized_body(Cursor::new(
-                serde_json::to_string(&self.details).expect("Couldn't serialize error"),
-            ))
+            .sized_body(resp.len(), Cursor::new(resp))
             .header(ContentType::JSON)
             .status(Status::from_code(self.status).expect("Unknown status code"))
             .ok()

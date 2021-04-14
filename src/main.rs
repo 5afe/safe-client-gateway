@@ -26,7 +26,7 @@ mod utils;
 mod json;
 
 use crate::routes::error_catchers;
-use cache::redis::ServiceCache;
+use cache::redis::create_pool;
 use dotenv::dotenv;
 use routes::active_routes;
 use std::time::Duration;
@@ -47,8 +47,8 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", active_routes())
         .register("/", error_catchers())
+        .manage(create_pool())
         .manage(client)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
-        .attach(ServiceCache::fairing())
 }

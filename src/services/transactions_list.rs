@@ -12,7 +12,7 @@ use crate::utils::extract_query_string;
 use log::debug;
 
 pub fn get_all_transactions(
-    context: &Context,
+    context: &mut Context,
     safe_address: &String,
     page_url: &Option<String>,
 ) -> ApiResult<Page<TransactionSummary>> {
@@ -50,23 +50,27 @@ pub fn get_all_transactions(
             .as_ref()
             .and_then(|link| extract_query_string(link))
             .map(|link| {
-                context
-                    .build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
+                context.build_absolute_url(uri!(
+                    crate::routes::transactions::all: safe_address,
+                    Some(link)
+                ))
             }),
         previous: backend_transactions
             .previous
             .as_ref()
             .and_then(|link| extract_query_string(link))
             .map(|link| {
-                context
-                    .build_absolute_url(uri!(crate::routes::transactions::all: safe_address, link))
+                context.build_absolute_url(uri!(
+                    crate::routes::transactions::all: safe_address,
+                    Some(link)
+                ))
             }),
         results: service_transactions,
     })
 }
 
 pub(super) fn get_creation_transaction_summary(
-    context: &Context,
+    context: &mut Context,
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
     let url = format!(

@@ -14,7 +14,11 @@ pub const SAFE_TX_TYPEHASH: &'static str =
 pub const ERC191_BYTE: &'static str = "19";
 pub const ERC191_VERSION: &'static str = "01";
 
-pub fn fetch_rejections(context: &Context, safe_address: &str, nonce: u64) -> Option<Vec<String>> {
+pub fn fetch_rejections(
+    context: &mut Context,
+    safe_address: &str,
+    nonce: u64,
+) -> Option<Vec<String>> {
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
@@ -83,7 +87,10 @@ pub(super) fn cancellation_parts_hash(safe_address: &Address, nonce: u64) -> [u8
 }
 
 // We silently fail if the cancellation transaction is not found
-fn fetch_cancellation_tx(context: &Context, safe_tx_hash: String) -> Option<MultisigTransaction> {
+fn fetch_cancellation_tx(
+    context: &mut Context,
+    safe_tx_hash: String,
+) -> Option<MultisigTransaction> {
     let url = format!(
         "{}/v1/multisig-transactions/{}/",
         base_transaction_service_url(),

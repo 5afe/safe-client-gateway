@@ -20,7 +20,7 @@ pub fn all(
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .resp_generator(|| {
-            transactions_list::get_all_transactions(&context, &safe_address, &page_url)
+            transactions_list::get_all_transactions(&mut context, &safe_address, &page_url)
         })
         .execute(context.cache())
 }
@@ -28,7 +28,9 @@ pub fn all(
 #[get("/v1/transactions/<details_id>")]
 pub fn details(context: Context, details_id: String) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
-        .resp_generator(|| transactions_details::get_transactions_details(&context, &details_id))
+        .resp_generator(|| {
+            transactions_details::get_transactions_details(&mut context, &details_id)
+        })
         .execute(context.cache())
 }
 
@@ -43,14 +45,14 @@ pub fn submit_confirmation(
     tx_confirmation_request: Result<Json<ConfirmationRequest>, JsonError>,
 ) -> ApiResult<content::Json<String>> {
     transactions_proposal::submit_confirmation(
-        &context,
+        &mut context,
         &safe_tx_hash,
         &tx_confirmation_request?.0.signed_safe_tx_hash,
     )
     .and_then(|_| {
         CacheResponse::new(context.uri())
             .resp_generator(|| {
-                transactions_details::get_transactions_details(&context, &safe_tx_hash)
+                transactions_details::get_transactions_details(&mut context, &safe_tx_hash)
             })
             .execute(context.cache())
     })
@@ -66,7 +68,7 @@ pub fn history_transactions(
     CacheResponse::new(context.uri())
         .resp_generator(|| {
             transactions_history::get_history_transactions(
-                &context,
+                &mut context,
                 &safe_address,
                 &page_url,
                 &timezone_offset,
@@ -86,7 +88,7 @@ pub fn queued_transactions(
     CacheResponse::new(context.uri())
         .resp_generator(|| {
             transactions_queued::get_queued_transactions(
-                &context,
+                &mut context,
                 &safe_address,
                 &page_url,
                 &timezone_offset,
@@ -107,7 +109,7 @@ pub fn propose_transaction(
     multisig_transaction_request: Result<Json<MultisigTransactionRequest>, JsonError>,
 ) -> ApiResult<()> {
     transactions_proposal::propose_transaction(
-        &context,
+        &mut context,
         &safe_address,
         &multisig_transaction_request?.0,
     )

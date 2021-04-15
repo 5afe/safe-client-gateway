@@ -11,22 +11,22 @@ use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::utils::errors::ApiResult;
 
 impl MultisigTransaction {
-    pub fn to_transaction_details(
+    pub async fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
         info_provider: &mut dyn InfoProvider,
     ) -> ApiResult<TransactionDetails> {
-        let safe_info = info_provider.safe_info(&self.safe.to_string())?;
+        let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
         let gas_token = self
             .gas_token
             .as_ref()
-            .map(|it| info_provider.token_info(it).ok())
+            .map(|it| async { info_provider.token_info(it).await.ok() })
             .flatten();
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
-            tx_info: self.transaction_info(info_provider),
+            tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),
@@ -93,14 +93,14 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    pub fn to_transaction_details(
+    pub async fn to_transaction_details(
         &self,
         info_provider: &mut dyn InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
-            tx_info: self.to_transaction_info(info_provider),
+            tx_info: self.to_transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),

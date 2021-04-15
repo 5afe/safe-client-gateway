@@ -11,8 +11,8 @@ use crate::utils::errors::ApiResult;
 use crate::utils::extract_query_string;
 use log::debug;
 
-pub fn get_all_transactions(
-    context: &Context,
+pub async fn get_all_transactions(
+    context: &Context<'_>,
     safe_address: &String,
     page_url: &Option<String>,
 ) -> ApiResult<Page<TransactionSummary>> {
@@ -27,7 +27,8 @@ pub fn get_all_transactions(
     debug!("page_url: {:#?}", page_url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
     let mut service_transactions: Vec<TransactionSummary> = backend_transactions
         .results
@@ -39,7 +40,9 @@ pub fn get_all_transactions(
         })
         .collect();
     if backend_transactions.next.is_none() {
-        if let Ok(creation_transaction) = get_creation_transaction_summary(context, safe_address) {
+        if let Ok(creation_transaction) =
+            get_creation_transaction_summary(context, safe_address).await
+        {
             service_transactions.push(creation_transaction);
         }
     }
@@ -69,8 +72,8 @@ pub fn get_all_transactions(
     })
 }
 
-pub(super) fn get_creation_transaction_summary(
-    context: &Context,
+pub(super) async fn get_creation_transaction_summary(
+    context: &Context<'_>,
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
     let url = format!(
@@ -81,12 +84,14 @@ pub(super) fn get_creation_transaction_summary(
     debug!("{}", &url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
 
     let mut info_provider = DefaultInfoProvider::new(context);
 
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
-    let transaction_summary =
-        creation_transaction_dto.to_transaction_summary(safe, &mut info_provider);
+    let transaction_summary = creation_transaction_dto
+        .to_transaction_summary(safe, &mut info_provider)
+        .await;
     Ok(transaction_summary)
 }

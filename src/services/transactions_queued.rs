@@ -10,8 +10,8 @@ use crate::utils::errors::ApiResult;
 use itertools::Itertools;
 
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
-pub fn get_queued_transactions(
-    context: &Context,
+pub async fn get_queued_transactions(
+    context: &Context<'_>,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -28,7 +28,7 @@ pub fn get_queued_transactions(
     let display_trusted_only = trusted.unwrap_or(true);
 
     // As we require the Safe nonce later we use it here explicitely to query transaction that are in the future
-    let safe_nonce = info_provider.safe_info(safe_address)?.nonce as i64;
+    let safe_nonce = info_provider.safe_info(safe_address).await?.nonce as i64;
     let url = format!(
         "{}/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
         base_transaction_service_url(),
@@ -40,7 +40,8 @@ pub fn get_queued_transactions(
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
     // We need to do this before we create the iterator
@@ -223,7 +224,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     }
 }
 
-pub(super) fn add_transaction_as_summary(
+pub(super) async fn add_transaction_as_summary(
     info_provider: &mut dyn InfoProvider,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,
@@ -232,6 +233,7 @@ pub(super) fn add_transaction_as_summary(
     // Converting a multisig transaction theoretically can result in multiple summaries
     let mut tx_summary_iter = transaction
         .to_transaction_summary(info_provider)
+        .await
         .unwrap_or(vec![])
         .into_iter()
         .peekable();

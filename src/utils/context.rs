@@ -10,11 +10,11 @@ pub struct Context<'r> {
     uri: String,
     host: Option<String>,
     cache: ServiceCache<'r>,
-    client: State<'r, reqwest::blocking::Client>,
+    client: State<'r, reqwest::Client>,
 }
 
 impl<'r> Context<'r> {
-    pub fn client(&self) -> &'r reqwest::blocking::Client {
+    pub fn client(&self) -> &'r reqwest::Client {
         self.client.inner()
     }
 
@@ -44,7 +44,7 @@ impl<'r> FromRequest<'r> for Context<'r> {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let cache = request.guard().await.unwrap();
-        let client = try_outcome!(request.guard::<State<reqwest::blocking::Client>>().await);
+        let client = try_outcome!(request.guard::<State<reqwest::Client>>().await);
         // TODO: I couldn't get the request to be part of the context ... not sure if we want that for the future
         let host = request
             .headers()

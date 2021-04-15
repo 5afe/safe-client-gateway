@@ -9,8 +9,8 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use std::cmp::Ordering;
 
-pub fn balances(
-    context: &Context,
+pub async fn balances(
+    context: &Context<'_>,
     safe_address: &str,
     fiat: &str,
     trusted: bool,
@@ -27,11 +27,12 @@ pub fn balances(
     let body = RequestCached::new(url)
         .cache_duration(balances_cache_duration())
         .request_timeout(balances_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;
 
     let info_provider = DefaultInfoProvider::new(&context);
-    let usd_to_fiat = info_provider.exchange_usd_to(fiat).unwrap_or(0.0);
+    let usd_to_fiat = info_provider.exchange_usd_to(fiat).await.unwrap_or(0.0);
 
     let mut total_fiat = 0.0;
 
@@ -57,9 +58,9 @@ pub fn balances(
     })
 }
 
-pub fn fiat_codes(context: &Context) -> ApiResult<Vec<String>> {
+pub async fn fiat_codes(context: &Context<'_>) -> ApiResult<Vec<String>> {
     let info_provider = DefaultInfoProvider::new(&context);
-    let mut fiat_codes = info_provider.available_currency_codes()?;
+    let mut fiat_codes = info_provider.available_currency_codes().await?;
 
     let usd_index = fiat_codes.iter().position(|it| it.eq("USD")).unwrap();
     let eur_index = fiat_codes.iter().position(|it| it.eq("EUR")).unwrap();

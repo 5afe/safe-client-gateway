@@ -13,22 +13,26 @@ use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use crate::utils::errors::ApiResult;
 
 impl TransferDto {
-    pub fn to_transfer(&self, info_provider: &mut dyn InfoProvider, safe: &str) -> TransactionInfo {
+    pub async fn to_transfer(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+        safe: &str,
+    ) -> TransactionInfo {
         match self {
-            TransferDto::Erc721(transfer) => {
-                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
-            }
-            TransferDto::Erc20(transfer) => {
-                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
-            }
-            TransferDto::Ether(transfer) => {
-                TransactionInfo::Transfer(transfer.to_transfer_transaction(info_provider, safe))
-            }
+            TransferDto::Erc721(transfer) => TransactionInfo::Transfer(
+                transfer.to_transfer_transaction(info_provider, safe).await,
+            ),
+            TransferDto::Erc20(transfer) => TransactionInfo::Transfer(
+                transfer.to_transfer_transaction(info_provider, safe).await,
+            ),
+            TransferDto::Ether(transfer) => TransactionInfo::Transfer(
+                transfer.to_transfer_transaction(info_provider, safe).await,
+            ),
             _ => TransactionInfo::Unknown,
         }
     }
 
-    pub fn to_transaction_details(
+    pub async fn to_transaction_details(
         &self,
         info_provider: &mut dyn InfoProvider,
         safe: &str,
@@ -36,7 +40,7 @@ impl TransferDto {
         Ok(TransactionDetails {
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,
-            tx_info: self.to_transfer(info_provider, safe),
+            tx_info: self.to_transfer(info_provider, safe).await,
             tx_data: None,
             tx_hash: self.get_transaction_hash(),
             detailed_execution_info: None,
@@ -64,24 +68,28 @@ impl TransferDto {
 }
 
 impl Erc20TransferDto {
-    pub(super) fn to_transfer_transaction(
+    pub(super) async fn to_transfer_transaction(
         &self,
         info_provider: &mut dyn InfoProvider,
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
-            sender_info: get_address_info(safe, &self.from, info_provider),
+            sender_info: get_address_info(safe, &self.from, info_provider).await,
             sender: self.from.to_owned(),
-            recipient_info: get_address_info(safe, &self.to, info_provider),
+            recipient_info: get_address_info(safe, &self.to, info_provider).await,
             recipient: self.to.to_owned(),
             direction: get_transfer_direction(safe, &self.from, &self.to),
-            transfer_info: self.to_transfer_info(info_provider),
+            transfer_info: self.to_transfer_info(info_provider).await,
         }
     }
 
-    pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
+    pub(super) async fn to_transfer_info(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+    ) -> TransferInfo {
         let token_info =
-            token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone());
+            token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone())
+                .await;
         build_transfer_info(
             token_info.as_ref(),
             TokenType::Erc20,
@@ -92,24 +100,28 @@ impl Erc20TransferDto {
 }
 
 impl Erc721TransferDto {
-    pub(super) fn to_transfer_transaction(
+    pub(super) async fn to_transfer_transaction(
         &self,
         info_provider: &mut dyn InfoProvider,
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
-            sender_info: get_address_info(safe, &self.from, info_provider),
+            sender_info: get_address_info(safe, &self.from, info_provider).await,
             sender: self.from.to_owned(),
-            recipient_info: get_address_info(safe, &self.to, info_provider),
+            recipient_info: get_address_info(safe, &self.to, info_provider).await,
             recipient: self.to.to_owned(),
             direction: get_transfer_direction(safe, &self.from, &self.to),
-            transfer_info: self.to_transfer_info(info_provider),
+            transfer_info: self.to_transfer_info(info_provider).await,
         }
     }
 
-    pub(super) fn to_transfer_info(&self, info_provider: &mut dyn InfoProvider) -> TransferInfo {
+    pub(super) async fn to_transfer_info(
+        &self,
+        info_provider: &mut dyn InfoProvider,
+    ) -> TransferInfo {
         let token_info =
-            token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone());
+            token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone())
+                .await;
         build_transfer_info(
             token_info.as_ref(),
             TokenType::Erc721,
@@ -120,15 +132,15 @@ impl Erc721TransferDto {
 }
 
 impl EtherTransferDto {
-    pub(super) fn to_transfer_transaction(
+    pub(super) async fn to_transfer_transaction(
         &self,
         info_provider: &mut dyn InfoProvider,
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
-            sender_info: get_address_info(safe, &self.from, info_provider),
+            sender_info: get_address_info(safe, &self.from, info_provider).await,
             sender: self.from.to_owned(),
-            recipient_info: get_address_info(safe, &self.to, info_provider),
+            recipient_info: get_address_info(safe, &self.to, info_provider).await,
             recipient: self.to.to_owned(),
             direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(),
@@ -171,10 +183,10 @@ fn build_transfer_info(
     }
 }
 
-fn token_info_with_fallback(
+async fn token_info_with_fallback(
     info_provider: &mut dyn InfoProvider,
     token_address: &str,
     token_info: Option<TokenInfo>,
 ) -> Option<TokenInfo> {
-    token_info.or_else(|| info_provider.token_info(token_address).ok())
+    token_info.or_else(|| info_provider.token_info(token_address).await.ok())
 }

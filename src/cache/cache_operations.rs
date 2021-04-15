@@ -6,6 +6,7 @@ use crate::config::{
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use serde::Serialize;
+use std::future::Future;
 
 pub enum Database {
     Info = 1,
@@ -47,7 +48,7 @@ where
     database: Database,
     pub key: String,
     pub duration: usize,
-    pub resp_generator: Option<Box<dyn Fn() -> ApiResult<R> + 'a>>,
+    pub resp_generator: Option<Box<dyn Fn() -> (dyn Future<Output = ApiResult<R>>) + 'a>>,
 }
 
 impl<'a, R> CacheResponse<'a, R>
@@ -73,13 +74,16 @@ where
         self
     }
 
-    pub fn resp_generator(&mut self, resp_generator: impl Fn() -> ApiResult<R> + 'a) -> &mut Self {
+    pub fn resp_generator(
+        &mut self,
+        resp_generator: impl Fn() -> (dyn Future<Output = ApiResult<R>>) + 'a,
+    ) -> &mut Self {
         self.resp_generator = Some(Box::new(resp_generator));
         self
     }
 
-    pub fn generate(&self) -> ApiResult<R> {
-        (self.resp_generator.as_ref().unwrap())()
+    pub fn generate(&self) -> impl Future<Output = ApiResult<R>> {
+        (self.resp_generator.unwrap())()
     }
 
     pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
@@ -133,12 +137,8 @@ impl RequestCached {
         self
     }
 
-    pub fn execute(
-        &self,
-        client: &reqwest::blocking::Client,
-        cache: &dyn Cache,
-    ) -> ApiResult<String> {
+    pub async fn execute(&self, client: &reqwest::Client, cache: &dyn Cache) -> ApiResult<String> {
         assert!(self.request_timeout > 0);
-        request_cached(cache, &client, self)
+        request_cached(cache, &client, self).await
     }
 }

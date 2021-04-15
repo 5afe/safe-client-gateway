@@ -8,7 +8,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 #[get("/about")]
-pub fn info(context: Context) -> ApiResult<content::Json<String>> {
+pub fn info(context: Context<'_>) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .duration(about_cache_duration())
         .resp_generator(about::get_about)
@@ -16,13 +16,15 @@ pub fn info(context: Context) -> ApiResult<content::Json<String>> {
 }
 
 #[get("/about/backbone")]
-pub fn backbone(context: Context) -> ApiResult<content::Json<String>> {
+pub async fn backbone(context: Context<'_>) -> ApiResult<content::Json<String>> {
     let url = format!("{}/v1/about/", base_transaction_service_url());
-    Ok(content::Json(context.client().get(&url).send()?.text()?))
+    Ok(content::Json(
+        context.client().get(&url).send().await?.text().await?,
+    ))
 }
 
 #[get("/about/redis/<token>")]
-pub fn redis(context: Context, token: String) -> ApiResult<String> {
+pub fn redis(context: Context<'_>, token: String) -> ApiResult<String> {
     if token != webhook_token() {
         bail!("Invalid token");
     }

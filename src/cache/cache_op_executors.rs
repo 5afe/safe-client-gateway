@@ -40,9 +40,9 @@ where
     }
 }
 
-pub(super) fn request_cached(
+pub(super) async fn request_cached(
     cache: &dyn Cache,
-    client: &reqwest::blocking::Client,
+    client: &reqwest::Client,
     operation: &RequestCached,
 ) -> ApiResult<String> {
     let cache_key = format!("{}_{}", CACHE_REQS_PREFIX, &operation.url);
@@ -53,7 +53,7 @@ pub(super) fn request_cached(
                 .get(&operation.url)
                 .timeout(Duration::from_millis(operation.request_timeout));
 
-            let response = request.send().map_err(|err| {
+            let response = (request.send().await).map_err(|err| {
                 if operation.cache_all_errors {
                     cache.create(
                         &cache_key,
@@ -70,12 +70,12 @@ pub(super) fn request_cached(
             if !operation.cache_all_errors && is_server_error {
                 return Err(ApiError::from_backend_error(
                     42,
-                    &format!("Got server error for {}", response.text()?),
+                    &format!("Got server error for {}", response.text().await?),
                 ));
             }
 
             let is_client_error = response.status().is_client_error();
-            let raw_data = response.text()?;
+            let raw_data = response.text().await?;
 
             if is_client_error || is_server_error {
                 cache.create(

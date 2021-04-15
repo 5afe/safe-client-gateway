@@ -1,4 +1,4 @@
-#![feature(proc_macro_hygiene, decl_macro, option_result_contains)]
+#![feature(async_closure, proc_macro_hygiene, decl_macro, option_result_contains)]
 
 extern crate log;
 
@@ -37,7 +37,7 @@ fn rocket() -> _ {
     dotenv().ok();
     env_logger::init();
 
-    let client = reqwest::blocking::Client::builder()
+    let client = reqwest::Client::builder()
         .connect_timeout(Duration::from_millis(
             config::internal_client_connect_timeout(),
         ))

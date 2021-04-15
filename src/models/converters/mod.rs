@@ -25,13 +25,13 @@ pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> Transf
 // This method is required to prevent polluting the cache with all the safe requests
 // This is done to prevent that every user that queries a transfer transaction, doesn't
 // leave a mark in our cache.
-pub(super) fn get_address_info(
+pub(super) async fn get_address_info(
     safe: &str,
     address: &str,
     info_provider: &mut dyn InfoProvider,
 ) -> Option<AddressInfo> {
     if safe != address {
-        info_provider.full_address_info_search(address).ok()
+        info_provider.full_address_info_search(address).await.ok()
     } else {
         None
     }

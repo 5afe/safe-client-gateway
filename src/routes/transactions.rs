@@ -37,16 +37,17 @@ pub fn details(context: Context, details_id: String) -> ApiResult<content::Json<
     format = "application/json",
     data = "<tx_confirmation_request>"
 )]
-pub fn submit_confirmation(
-    context: Context,
+pub async fn submit_confirmation<'e>(
+    context: Context<'_>,
     safe_tx_hash: String,
-    tx_confirmation_request: Result<Json<ConfirmationRequest>, JsonError>,
+    tx_confirmation_request: Result<Json<ConfirmationRequest>, JsonError<'e>>,
 ) -> ApiResult<content::Json<String>> {
     transactions_proposal::submit_confirmation(
         &context,
         &safe_tx_hash,
         &tx_confirmation_request?.0.signed_safe_tx_hash,
     )
+    .await
     .and_then(|_| {
         CacheResponse::new(context.uri())
             .resp_generator(|| {
@@ -101,14 +102,15 @@ pub fn queued_transactions(
     format = "application/json",
     data = "<multisig_transaction_request>"
 )]
-pub fn propose_transaction(
-    context: Context,
+pub async fn propose_transaction<'e>(
+    context: Context<'_>,
     safe_address: String,
-    multisig_transaction_request: Result<Json<MultisigTransactionRequest>, JsonError>,
+    multisig_transaction_request: Result<Json<MultisigTransactionRequest>, JsonError<'e>>,
 ) -> ApiResult<()> {
     transactions_proposal::propose_transaction(
         &context,
         &safe_address,
         &multisig_transaction_request?.0,
     )
+    .await
 }

@@ -17,8 +17,8 @@ use crate::utils::hex_hash;
 use crate::utils::transactions::fetch_rejections;
 use log::debug;
 
-pub(super) fn get_multisig_transaction_details(
-    context: &Context,
+pub(super) async fn get_multisig_transaction_details(
+    context: &Context<'_>,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
@@ -29,18 +29,21 @@ pub(super) fn get_multisig_transaction_details(
     );
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 
-    let rejections = fetch_rejections(context, &multisig_tx.safe, multisig_tx.nonce);
+    let rejections = fetch_rejections(context, &multisig_tx.safe, multisig_tx.nonce).await;
 
-    let details = multisig_tx.to_transaction_details(rejections, &mut info_provider)?;
+    let details = multisig_tx
+        .to_transaction_details(rejections, &mut info_provider)
+        .await?;
 
     Ok(details)
 }
 
-fn get_ethereum_transaction_details(
-    context: &Context,
+async fn get_ethereum_transaction_details(
+    context: &Context<'_>,
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
@@ -55,7 +58,8 @@ fn get_ethereum_transaction_details(
     debug!("url: {}", url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let transfers: Page<Transfer> = serde_json::from_str(&body)?;
     let transfer = transfers
         .results
@@ -66,13 +70,15 @@ fn get_ethereum_transaction_details(
             hex_hash(transfer) == detail_hash
         })
         .ok_or(api_error!("No transfer found"))?;
-    let details = transfer.to_transaction_details(&mut info_provider, &safe.to_owned())?;
+    let details = transfer
+        .to_transaction_details(&mut info_provider, &safe.to_owned())
+        .await?;
 
     Ok(details)
 }
 
-fn get_module_transaction_details(
-    context: &Context,
+async fn get_module_transaction_details(
+    context: &Context<'_>,
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
@@ -88,20 +94,23 @@ fn get_module_transaction_details(
     debug!("url: {}", url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let transactions: Page<ModuleTransaction> = serde_json::from_str(&body)?;
     let transaction = transactions
         .results
         .into_iter()
         .find(|tx| hex_hash(tx) == detail_hash)
         .ok_or(api_error!("No transfer found"))?;
-    let details = transaction.to_transaction_details(&mut info_provider)?;
+    let details = transaction
+        .to_transaction_details(&mut info_provider)
+        .await?;
 
     Ok(details)
 }
 
-pub fn get_transactions_details(
-    context: &Context,
+pub async fn get_transactions_details(
+    context: &Context<'_>,
     details_id: &String,
 ) -> ApiResult<TransactionDetails> {
     let id_parts = parse_id(details_id)?;
@@ -111,24 +120,28 @@ pub fn get_transactions_details(
             safe_address,
             transaction_hash,
             details_hash,
-        } => get_ethereum_transaction_details(
-            context,
-            &safe_address,
-            &transaction_hash,
-            &details_hash,
-        ),
+        } => {
+            get_ethereum_transaction_details(
+                context,
+                &safe_address,
+                &transaction_hash,
+                &details_hash,
+            )
+            .await
+        }
         TransactionIdParts::Module {
             safe_address,
             transaction_hash,
             details_hash,
         } => {
             get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash)
+                .await
         }
         TransactionIdParts::Multisig { safe_tx_hash, .. } => {
-            get_multisig_transaction_details(context, &safe_tx_hash)
+            get_multisig_transaction_details(context, &safe_tx_hash).await
         }
         TransactionIdParts::TransactionHash(safe_tx_hash) => {
-            get_multisig_transaction_details(context, &safe_tx_hash)
+            get_multisig_transaction_details(context, &safe_tx_hash).await
         }
         _ => Err(client_error!(422, "Bad transaction id")),
     }

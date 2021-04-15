@@ -1,7 +1,7 @@
 use crate::providers::info::{InfoProvider, SafeAppInfo};
 use serde::Deserialize;
 
-pub fn safe_app_info_from(
+pub async fn safe_app_info_from(
     origin: &str,
     info_provider: &mut dyn InfoProvider,
 ) -> Option<SafeAppInfo> {
@@ -9,6 +9,7 @@ pub fn safe_app_info_from(
     origin_internal.as_ref().and_then(|origin| {
         info_provider
             .safe_app_info(&origin.url.replace("ipfs.io", "cloudflare-ipfs.com"))
+            .await
             .ok()
     })
 }

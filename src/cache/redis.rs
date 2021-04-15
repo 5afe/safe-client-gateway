@@ -12,6 +12,7 @@ pub struct ServiceCache<'r>(State<'r, RedisPool>);
 
 pub fn create_pool() -> RedisPool {
     // TODO check if we want to use deadpool instead of r2d2
+    // TODO don't hardcode stuff
     let client = redis::Client::open("redis://127.0.0.1/").unwrap();
     Pool::builder().max_size(15).build(client).unwrap()
 }

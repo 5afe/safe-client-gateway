@@ -5,13 +5,15 @@ pub async fn safe_app_info_from(
     origin: &str,
     info_provider: &mut dyn InfoProvider,
 ) -> Option<SafeAppInfo> {
-    let origin_internal = serde_json::from_str::<OriginInternal>(origin).ok();
-    origin_internal.as_ref().and_then(|origin| {
-        info_provider
-            .safe_app_info(&origin.url.replace("ipfs.io", "cloudflare-ipfs.com"))
-            .await
-            .ok()
-    })
+    let origin_internal = serde_json::from_str::<OriginInternal>(origin).ok()?;
+    info_provider
+        .safe_app_info(
+            &origin_internal
+                .url
+                .replace("ipfs.io", "cloudflare-ipfs.com"),
+        )
+        .await
+        .ok()
 }
 
 #[derive(Deserialize, Debug, PartialEq)]

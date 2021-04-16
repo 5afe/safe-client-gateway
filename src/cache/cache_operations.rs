@@ -4,6 +4,8 @@ use crate::config::{
     default_request_timeout, request_cache_duration, request_error_cache_duration,
 };
 use crate::utils::errors::ApiResult;
+use rocket::futures::future::BoxFuture;
+use rocket::futures::FutureExt;
 use rocket::response::content;
 use serde::Serialize;
 use std::future::Future;
@@ -48,7 +50,7 @@ where
     database: Database,
     pub key: String,
     pub duration: usize,
-    pub resp_generator: Option<Box<dyn Fn() -> (dyn Future<Output = ApiResult<R>>) + 'a>>,
+    pub resp_generator: Option<Box<dyn Fn() -> BoxFuture<'a, ApiResult<R>> + 'a>>,
 }
 
 impl<'a, R> CacheResponse<'a, R>
@@ -74,16 +76,17 @@ where
         self
     }
 
-    pub fn resp_generator(
-        &mut self,
-        resp_generator: impl Fn() -> (dyn Future<Output = ApiResult<R>>) + 'a,
-    ) -> &mut Self {
-        self.resp_generator = Some(Box::new(resp_generator));
+    pub fn resp_generator<F, Fut>(&mut self, resp_generator: F) -> &mut Self
+    where
+        F: Fn() -> Fut + 'a,
+        Fut: Future<Output = ApiResult<R>> + 'a,
+    {
+        self.resp_generator = Some(Box::new(|| resp_generator().boxed()));
         self
     }
 
-    pub fn generate(&self) -> impl Future<Output = ApiResult<R>> {
-        (self.resp_generator.unwrap())()
+    pub async fn generate(&self) -> ApiResult<R> {
+        (self.resp_generator.unwrap())().await
     }
 
     pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {

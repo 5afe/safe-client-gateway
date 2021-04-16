@@ -13,6 +13,8 @@ use crate::models::service::transactions::{
 use crate::providers::info::InfoProvider;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
+use rocket::futures::stream::{self, StreamExt as _};
+use rocket::futures::StreamExt;
 
 impl Transaction {
     pub async fn to_transaction_summary(
@@ -76,22 +78,26 @@ impl EthereumTransaction {
         safe: &str,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
-            Some(transfers) => transfers
-                .into_iter()
-                .map(|transfer| TransactionSummary {
-                    id: create_id!(
-                        ID_PREFIX_ETHEREUM_TX,
-                        safe,
-                        self.tx_hash,
-                        hex_hash(transfer)
-                    ),
-                    timestamp: self.execution_date.timestamp_millis(),
-                    tx_status: TransactionStatus::Success,
-                    execution_info: None,
-                    safe_app_info: None,
-                    tx_info: transfer.to_transfer(info_provider, safe).await,
-                })
-                .collect(),
+            Some(transfers) => {
+                stream::iter(transfers)
+                    .then(|transfer| async move {
+                        TransactionSummary {
+                            id: create_id!(
+                                ID_PREFIX_ETHEREUM_TX,
+                                safe,
+                                self.tx_hash,
+                                hex_hash(transfer)
+                            ),
+                            timestamp: self.execution_date.timestamp_millis(),
+                            tx_status: TransactionStatus::Success,
+                            execution_info: None,
+                            safe_app_info: None,
+                            tx_info: transfer.to_transfer(info_provider, safe).await,
+                        }
+                    })
+                    .collect()
+                    .await
+            }
             _ => vec![],
         }
     }

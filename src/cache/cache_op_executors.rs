@@ -35,7 +35,7 @@ where
     match cached {
         Some(value) => Ok(content::Json(value)),
         None => {
-            let resp_string = serde_json::to_string(&cache_response.generate()?)?;
+            let resp_string = serde_json::to_string(&cache_response.generate().await?)?;
             cache.create(&cache_key, &resp_string, cache_response.duration);
             Ok(content::Json(resp_string))
         }

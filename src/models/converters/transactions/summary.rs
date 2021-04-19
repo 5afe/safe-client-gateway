@@ -66,7 +66,8 @@ impl MultisigTransaction {
             safe_app_info: self
                 .origin
                 .as_ref()
-                .and_then(|origin| safe_app_info_from(origin, info_provider)),
+                .and_then(|origin| async { safe_app_info_from(origin, info_provider).await })
+                .flatten(),
         }])
     }
 }
@@ -142,13 +143,13 @@ impl CreationTransaction {
                 implementation_info: self
                     .master_copy
                     .as_ref()
-                    .map(|address| info_provider.contract_info(address).await.ok())
+                    .and_then(|address| async { info_provider.contract_info(address).await.ok() })
                     .flatten(),
                 factory: self.factory_address.clone(),
                 factory_info: self
                     .factory_address
                     .as_ref()
-                    .map(|address| info_provider.contract_info(address).await.ok())
+                    .and_then(|address| async { info_provider.contract_info(address).await.ok() })
                     .flatten(),
             }),
             execution_info: None,

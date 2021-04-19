@@ -51,7 +51,7 @@ where
     database: Database,
     pub key: String,
     pub duration: usize,
-    pub resp_generator: Option<Box<dyn Fn() -> BoxFuture<'a, ApiResult<R>> + 'a>>,
+    pub resp_generator: Option<Box<dyn Fn() -> BoxFuture<'a, ApiResult<R>> + Send + Sync + 'a>>,
 }
 
 impl<'a, R> CacheResponse<'a, R>
@@ -79,8 +79,8 @@ where
 
     pub fn resp_generator<F, Fut>(&mut self, resp_generator: F) -> &mut Self
     where
-        F: Fn() -> Fut + 'a,
-        Fut: Future<Output = ApiResult<R>> + 'a,
+        F: Fn() -> Fut + Send + Sync + 'a,
+        Fut: Future<Output = ApiResult<R>> + Send + 'a,
     {
         self.resp_generator = Some(Box::new(|| resp_generator().boxed()));
         self
@@ -90,7 +90,7 @@ where
         (self.resp_generator.unwrap())().await
     }
 
-    pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
+    pub async fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
         cache_response(cache, self)
     }
 }

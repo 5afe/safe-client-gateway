@@ -8,11 +8,12 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 #[get("/about")]
-pub fn info(context: Context<'_>) -> ApiResult<content::Json<String>> {
+pub async fn info(context: Context<'_>) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .duration(about_cache_duration())
         .resp_generator(about::get_about)
         .execute(context.cache())
+        .await
 }
 
 #[get("/about/backbone")]

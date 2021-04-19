@@ -98,7 +98,7 @@ pub(super) fn get_edge_nonce(backend_transactions: &mut Page<MultisigTransaction
 // Nonce of the last item in the previous page (-1 if not present)
 pub(super) fn get_previous_page_nonce(
     page_meta: &PageMetadata,
-    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+    tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
 ) -> i64 {
     // If we are not on the first page then we take the first item to get information on the previous page
     if page_meta.offset == 0 {
@@ -110,9 +110,9 @@ pub(super) fn get_previous_page_nonce(
 }
 
 pub(super) fn process_transactions(
-    info_provider: &mut dyn InfoProvider,
+    info_provider: &mut impl InfoProvider,
     safe_nonce: i64,
-    tx_iter: &mut dyn Iterator<Item = MultisigTransaction>,
+    tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
     previous_page_nonce: i64,
     edge_nonce: i64,
 ) -> Vec<TransactionListItem> {
@@ -225,7 +225,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 }
 
 pub(super) async fn add_transaction_as_summary(
-    info_provider: &mut dyn InfoProvider,
+    info_provider: &mut impl InfoProvider,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,
     conflict_type: ConflictType,

@@ -21,7 +21,7 @@ pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
     cache.invalidate_pattern(pattern_str.as_str());
 }
 
-pub(super) fn cache_response<S>(
+pub(super) async fn cache_response<S>(
     cache: &impl Cache,
     cache_response: &CacheResponse<S>,
 ) -> ApiResult<content::Json<String>>

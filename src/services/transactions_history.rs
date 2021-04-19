@@ -140,8 +140,8 @@ async fn fetch_backend_paged_txs(
 }
 
 pub(super) async fn backend_txs_to_summary_txs(
-    txs: &mut dyn Iterator<Item = Transaction>,
-    info_provider: &mut dyn InfoProvider,
+    txs: &mut impl Iterator<Item = Transaction>,
+    info_provider: &mut impl InfoProvider,
     safe_address: &str,
 ) -> ApiResult<Vec<TransactionSummary>> {
     Ok(stream::iter(txs)
@@ -181,8 +181,8 @@ pub(super) fn service_txs_to_tx_list_items(
 }
 
 pub(super) async fn peek_timestamp_and_remove_item(
-    transactions: &mut dyn Iterator<Item = Transaction>,
-    info_provider: &mut dyn InfoProvider,
+    transactions: &mut impl Iterator<Item = Transaction>,
+    info_provider: &mut impl InfoProvider,
     safe_address: &str,
     timezone_offset: i32,
 ) -> ApiResult<i64> {

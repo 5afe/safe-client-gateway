@@ -19,7 +19,7 @@ use rocket::futures::StreamExt;
 impl Transaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
         safe: &str,
     ) -> ApiResult<Vec<TransactionSummary>> {
         match self {
@@ -40,7 +40,7 @@ impl Transaction {
 impl MultisigTransaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> ApiResult<Vec<TransactionSummary>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
         let tx_status = self.map_status(&safe_info);
@@ -75,7 +75,7 @@ impl MultisigTransaction {
 impl EthereumTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
         safe: &str,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
@@ -107,7 +107,7 @@ impl EthereumTransaction {
 impl ModuleTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> Vec<TransactionSummary> {
         vec![TransactionSummary {
             id: create_id!(
@@ -129,7 +129,7 @@ impl CreationTransaction {
     pub async fn to_transaction_summary(
         &self,
         safe_address: &String,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> TransactionSummary {
         TransactionSummary {
             id: create_id!(ID_PREFIX_CREATION_TX, safe_address),

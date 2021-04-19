@@ -14,7 +14,7 @@ impl MultisigTransaction {
     pub async fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
         let gas_token = self
@@ -95,7 +95,7 @@ impl MultisigTransaction {
 impl ModuleTransaction {
     pub async fn to_transaction_details(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),

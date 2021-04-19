@@ -92,6 +92,8 @@ pub trait InfoProvider {
 pub struct DefaultInfoProvider<'p> {
     client: &'p reqwest::Client,
     cache: &'p dyn Cache,
+    // TODO: question: Do we need in memory cache still? This forces the DIProvider to be mutable everywhere
+    // making closures that require moving data, simpler as this gets moved as a side effect too
     safe_cache: HashMap<String, Option<SafeInfo>>,
     token_cache: HashMap<String, Option<TokenInfo>>,
 }
@@ -101,7 +103,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     async fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo> {
         self.cached(
             |this| &mut this.safe_cache,
-            DefaultInfoProvider::load_safe_info,
+            |this, safe| this.load_safe_info(safe), // TODO: why this works?
             safe,
         )
         .await
@@ -111,7 +113,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         if token != "0x0000000000000000000000000000000000000000" {
             self.cached(
                 |this| &mut this.token_cache,
-                DefaultInfoProvider::load_token_info,
+                |this, token| this.load_token_info(token), // TODO: why ? maybe lifetime
                 token,
             )
             .await
@@ -179,14 +181,15 @@ impl DefaultInfoProvider<'_> {
         }
     }
 
-    async fn cached<T>(
+    async fn cached<T, Fut>(
         &mut self,
         local_cache: impl Fn(&mut Self) -> &mut HashMap<String, Option<T>>,
-        generator: impl Fn(&mut Self, &String) -> dyn Future<Output = ApiResult<Option<T>>>,
+        generator: impl Fn(&mut Self, &String) -> Fut,
         key: impl Into<String>,
     ) -> ApiResult<T>
     where
         T: Clone + DeserializeOwned,
+        Fut: Future<Output = ApiResult<Option<T>>>,
     {
         let key = key.into();
         match local_cache(self).get(&key) {
@@ -194,7 +197,7 @@ impl DefaultInfoProvider<'_> {
                 .clone()
                 .ok_or(api_error!("Cached value not available")),
             None => {
-                let value: Option<T> = None; // TODO: generator(self, &key).await?;
+                let value: Option<T> = generator(self, &key).await?;
                 local_cache(self).insert(key, value.clone());
                 value.ok_or(api_error!("Could not generate value"))
             }

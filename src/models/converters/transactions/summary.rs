@@ -13,6 +13,7 @@ use crate::models::service::transactions::{
 use crate::providers::info::InfoProvider;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
+use rocket::futures::future::OptionFuture;
 use rocket::futures::stream::{self, StreamExt as _};
 use rocket::futures::StreamExt;
 
@@ -63,11 +64,18 @@ impl MultisigTransaction {
                 missing_signers,
             }),
             tx_info: self.transaction_info(info_provider).await,
-            safe_app_info: self
-                .origin
-                .as_ref()
-                .and_then(|origin| async { safe_app_info_from(origin, info_provider).await })
-                .flatten(),
+            safe_app_info: OptionFuture::from(
+                self.origin
+                    .as_ref()
+                    .map(|origin| async move { safe_app_info_from(&origin, info_provider).await }),
+            )
+            .await
+            .flatten(),
+            // self
+            //     .origin
+            //     .as_ref()
+            //     .and_then(|origin| async { safe_app_info_from(origin, info_provider).await })
+            //     .flatten(),
         }])
     }
 }

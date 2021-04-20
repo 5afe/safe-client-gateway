@@ -132,5 +132,5 @@ async fn map_address_to_token_info(
 ) -> Option<TokenInfo> {
     // early return if modules are None
     let address = address.as_ref()?;
-    info_provider.token_info(it).await.ok()
+    info_provider.token_info(address).await.ok()
 }

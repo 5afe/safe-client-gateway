@@ -17,6 +17,7 @@ use crate::models::service::transactions::{
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
 use crate::utils::TRANSFER_METHOD;
+use rocket::futures::future::OptionFuture;
 
 impl MultisigTransaction {
     fn confirmation_count(&self) -> u64 {
@@ -183,10 +184,13 @@ impl MultisigTransaction {
     async fn to_settings_change(&self, info_provider: &mut impl InfoProvider) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
-            settings_info: self
-                .data_decoded
-                .as_ref()
-                .and_then(async move |it| it.to_settings_info(info_provider).await),
+            settings_info: OptionFuture::from(
+                self.data_decoded
+                    .as_ref()
+                    .map(|it| async move { it.to_settings_info(info_provider).await }),
+            )
+            .await
+            .flatten(),
         }
     }
 

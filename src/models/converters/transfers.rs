@@ -188,5 +188,6 @@ async fn token_info_with_fallback(
     token_address: &str,
     token_info: Option<TokenInfo>,
 ) -> Option<TokenInfo> {
-    token_info.or_else(|| async { info_provider.token_info(token_address).await.ok() })
+    let token_info = token_info?;
+    info_provider.token_info(token_address).await.ok()
 }

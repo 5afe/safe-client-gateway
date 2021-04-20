@@ -4,6 +4,7 @@ use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
+use crate::models::backend::transfers::Transfer;
 use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
@@ -72,11 +73,6 @@ impl MultisigTransaction {
             )
             .await
             .flatten(),
-            // self
-            //     .origin
-            //     .as_ref()
-            //     .and_then(|origin| async { safe_app_info_from(origin, info_provider).await })
-            //     .flatten(),
         }])
     }
 }
@@ -89,27 +85,40 @@ impl EthereumTransaction {
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
             Some(transfers) => {
-                stream::iter(transfers)
-                    .then(|transfer| async move {
-                        TransactionSummary {
-                            id: create_id!(
-                                ID_PREFIX_ETHEREUM_TX,
-                                safe,
-                                self.tx_hash,
-                                hex_hash(transfer)
-                            ),
-                            timestamp: self.execution_date.timestamp_millis(),
-                            tx_status: TransactionStatus::Success,
-                            execution_info: None,
-                            safe_app_info: None,
-                            tx_info: transfer.to_transfer(info_provider, safe).await,
-                        }
-                    })
-                    .collect()
+                self.transfer_to_transaction_summary(transfers, safe, info_provider)
                     .await
             }
             _ => vec![],
         }
+    }
+
+    //TODO: manage these sort of functions
+    async fn transfer_to_transaction_summary(
+        &self,
+        transfers: &Vec<Transfer>,
+        safe_address: &str,
+        info_provider: &mut impl InfoProvider,
+    ) -> Vec<TransactionSummary> {
+        let mut results = Vec::with_capacity(transfers.len());
+
+        for transfer in transfers {
+            let transaction_summary = TransactionSummary {
+                id: create_id!(
+                    ID_PREFIX_ETHEREUM_TX,
+                    safe_address,
+                    self.tx_hash,
+                    hex_hash(transfer)
+                ),
+                timestamp: self.execution_date.timestamp_millis(),
+                tx_status: TransactionStatus::Success,
+                execution_info: None,
+                safe_app_info: None,
+                tx_info: transfer.to_transfer(info_provider, safe_address).await,
+            };
+
+            results.push(transaction_summary);
+        }
+        results
     }
 }
 

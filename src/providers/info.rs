@@ -166,8 +166,8 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         self.token_info(&address).await.map(|it| AddressInfo {
             name: it.name,
             logo_uri: it.logo_uri.to_owned(),
-        })
-        // TODO: .or_else(async move |_| { self.contract_info(&address).await })
+        })?;
+        self.contract_info(&address).await
     }
 }
 

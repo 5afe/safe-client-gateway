@@ -10,6 +10,7 @@ use crate::models::service::transactions::{
     Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
     ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
 };
+use crate::providers::address_info::AddressInfo;
 use crate::providers::info::InfoProvider;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
@@ -148,20 +149,24 @@ impl CreationTransaction {
                 creator_info: info_provider.contract_info(&self.creator).await.ok(),
                 transaction_hash: self.transaction_hash.clone(),
                 implementation: self.master_copy.clone(),
-                implementation_info: self
-                    .master_copy
-                    .as_ref()
-                    .and_then(|address| async { info_provider.contract_info(address).await.ok() })
-                    .flatten(),
+                implementation_info: map_address_to_contract_info(&self.master_copy, info_provider)
+                    .await,
                 factory: self.factory_address.clone(),
-                factory_info: self
-                    .factory_address
-                    .as_ref()
-                    .and_then(|address| async { info_provider.contract_info(address).await.ok() })
-                    .flatten(),
+                factory_info: map_address_to_contract_info(&self.factory_address, info_provider)
+                    .await,
             }),
             execution_info: None,
             safe_app_info: None,
         }
     }
+}
+
+//TODO: make crate pub or move to some utils?
+async fn map_address_to_contract_info(
+    address: &Option<String>,
+    info_provider: &mut impl InfoProvider,
+) -> Option<AddressInfo> {
+    // early return if modules are None
+    let address = address.as_ref()?;
+    info_provider.contract_info(address).await.ok()
 }

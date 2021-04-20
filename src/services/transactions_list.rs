@@ -36,6 +36,7 @@ pub async fn get_all_transactions(
         .flat_map(|transaction| {
             transaction
                 .to_transaction_summary(&mut info_provider, safe_address)
+                .await
                 .unwrap_or(vec![])
         })
         .collect();

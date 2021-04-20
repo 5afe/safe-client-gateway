@@ -144,15 +144,18 @@ pub(super) async fn backend_txs_to_summary_txs(
     info_provider: &mut impl InfoProvider,
     safe_address: &str,
 ) -> ApiResult<Vec<TransactionSummary>> {
-    Ok(stream::iter(txs)
-        .flat_map(|transaction| async {
+    let mut results = vec![];
+
+    for transaction in txs {
+        results.push(
             transaction
                 .to_transaction_summary(info_provider, safe_address)
                 .await
-                .unwrap_or(vec![])
-        })
-        .collect()
-        .await)
+                .unwrap_or_default(),
+        );
+    }
+
+    Ok(results.into_iter().flatten().collect())
 }
 
 pub(super) fn service_txs_to_tx_list_items(

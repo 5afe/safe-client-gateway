@@ -5,11 +5,13 @@ use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::Page;
 use crate::models::service::transactions::summary::TransactionSummary;
-use crate::providers::info::DefaultInfoProvider;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::extract_query_string;
 use log::debug;
+use rocket::futures::stream::{self, StreamExt as _};
+use rocket::futures::{FutureExt, StreamExt};
 
 pub async fn get_all_transactions(
     context: &Context<'_>,
@@ -30,16 +32,12 @@ pub async fn get_all_transactions(
         .execute(context.client(), context.cache())
         .await?;
     let backend_transactions: Page<Transaction> = serde_json::from_str(&body)?;
-    let mut service_transactions: Vec<TransactionSummary> = backend_transactions
-        .results
-        .into_iter()
-        .flat_map(|transaction| {
-            transaction
-                .to_transaction_summary(&mut info_provider, safe_address)
-                .await
-                .unwrap_or(vec![])
-        })
-        .collect();
+    let mut service_transactions = transactions_to_transaction_summary(
+        backend_transactions.results,
+        safe_address,
+        &mut info_provider,
+    )
+    .await;
     if backend_transactions.next.is_none() {
         if let Ok(creation_transaction) =
             get_creation_transaction_summary(context, safe_address).await
@@ -95,4 +93,22 @@ pub(super) async fn get_creation_transaction_summary(
         .to_transaction_summary(safe, &mut info_provider)
         .await;
     Ok(transaction_summary)
+}
+
+async fn transactions_to_transaction_summary(
+    input: Vec<Transaction>,
+    safe_address: &String,
+    info_provider: &mut impl InfoProvider,
+) -> Vec<TransactionSummary> {
+    let mut result = vec![];
+    for transaction in input {
+        let new_entry = transaction
+            .to_transaction_summary(info_provider, safe_address)
+            .await
+            .unwrap_or_default();
+
+        result.push(new_entry);
+    }
+
+    result.into_iter().flatten().collect()
 }

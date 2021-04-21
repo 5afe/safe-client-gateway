@@ -8,8 +8,8 @@ use crate::models::service::transactions::{
 use crate::providers::info::*;
 use chrono::Utc;
 
-#[test]
-fn multisig_tx_check_erc721_transfer() {
+#[rocket::async_test]
+async fn multisig_tx_check_erc721_transfer() {
     let token_info = TokenInfo {
         token_type: TokenType::Erc721,
         address: String::from("0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF"),
@@ -106,13 +106,13 @@ fn multisig_tx_check_erc721_transfer() {
         }),
     });
 
-    let actual = multisig_tx.transaction_info(&mut mock_info_provider);
+    let actual = multisig_tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn multisig_tx_check_erc20_transfer() {
+#[rocket::async_test]
+async fn multisig_tx_check_erc20_transfer() {
     let token_info = TokenInfo {
         token_type: TokenType::Erc20,
         address: String::from("0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85"),
@@ -210,13 +210,13 @@ fn multisig_tx_check_erc20_transfer() {
         }),
     });
 
-    let actual = multisig_tx.transaction_info(&mut mock_info_provider);
+    let actual = multisig_tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn multisig_tx_check_ether_transfer() {
+#[rocket::async_test]
+async fn multisig_tx_check_ether_transfer() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -285,7 +285,7 @@ fn multisig_tx_check_ether_transfer() {
         }),
     });
 
-    let actual = multisig_tx.transaction_info(&mut mock_info_provider);
+    let actual = multisig_tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }

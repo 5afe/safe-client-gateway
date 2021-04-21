@@ -1,10 +1,10 @@
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::utils::errors::{ApiError, ErrorDetails};
-use rocket::local::Client;
+use rocket::local::asynchronous::{Client, LocalRequest};
 use rocket::response::Responder;
 
-#[test]
-fn api_error_responder_json() {
+#[rocket::async_test]
+async fn api_error_responder_json() {
     let api_error = ApiError {
         status: 418,
         details: ErrorDetails {
@@ -15,13 +15,14 @@ fn api_error_responder_json() {
     };
     let expected_error_json = r#"{"code":1337,"message":"Not found"}"#;
 
-    let rocket = rocket::ignite();
-    let client = Client::new(rocket).expect("valid rocket instance");
-    let local_request = client.get("/");
-    let request = local_request.inner();
-    let mut response = api_error.respond_to(&request).unwrap();
+    let rocket = crate::rocket();
+    let client = Client::debug(rocket).await.expect("valid rocket instance");
+    // let local_request = client.get("/");
+    let response = client.get("/").dispatch().await;
+    // let request = local_request.inner();
+    // let mut response = api_error.respond_to(&request).unwrap();
 
-    let body_json = response.body().unwrap().into_string().unwrap();
+    let body_json = response.into_string().await.unwrap();
 
     assert_eq!(response.status().code, 418);
     assert_eq!(body_json, expected_error_json);

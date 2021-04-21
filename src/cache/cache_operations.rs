@@ -51,6 +51,7 @@ where
     database: Database,
     pub key: String,
     pub duration: usize,
+    // "dyn" allows setting the type of the BoxFuture to different times in runtime
     pub resp_generator: Option<Box<dyn Fn() -> BoxFuture<'a, ApiResult<R>> + Send + Sync + 'a>>,
 }
 
@@ -141,7 +142,7 @@ impl RequestCached {
         self
     }
 
-    pub async fn execute(&self, client: &reqwest::Client, cache: &dyn Cache) -> ApiResult<String> {
+    pub async fn execute(&self, client: &reqwest::Client, cache: &impl Cache) -> ApiResult<String> {
         assert!(self.request_timeout > 0);
         request_cached(cache, &client, self).await
     }

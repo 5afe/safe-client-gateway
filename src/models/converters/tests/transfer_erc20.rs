@@ -6,8 +6,8 @@ use crate::models::service::transactions::{Erc20Transfer, Transfer, TransferDire
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
-#[test]
-fn erc20_transfer_dto_to_incoming_transfer_transaction() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_to_incoming_transfer_transaction() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
@@ -43,13 +43,14 @@ fn erc20_transfer_dto_to_incoming_transfer_transaction() {
         &erc20_transfer,
         &mut mock_info_provider,
         safe_address,
-    );
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn erc20_transfer_dto_to_incoming_transfer_transaction_with_address_info() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_to_incoming_transfer_transaction_with_address_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
@@ -93,13 +94,14 @@ fn erc20_transfer_dto_to_incoming_transfer_transaction_with_address_info() {
         &erc20_transfer,
         &mut mock_info_provider,
         safe_address,
-    );
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn erc20_transfer_dto_to_outgoing_transfer_transaction_with_address_info() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_to_outgoing_transfer_transaction_with_address_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_OUTGOING,
@@ -143,13 +145,14 @@ fn erc20_transfer_dto_to_outgoing_transfer_transaction_with_address_info() {
         &erc20_transfer,
         &mut mock_info_provider,
         safe_address,
-    );
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn erc20_transfer_dto_to_transfer_info_token_available() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_to_transfer_info_token_available() {
     let erc20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
     )
@@ -169,13 +172,13 @@ fn erc20_transfer_dto_to_transfer_info_token_available() {
         }
     );
 
-    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn erc20_transfer_dto_to_transfer_info_token_unavailable() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_to_transfer_info_token_unavailable() {
     let erc20_transfer =
         serde_json::from_str::<Erc20TransferDto>(crate::json::ERC_20_TRANSFER_WITHOUT_TOKEN_INFO)
             .unwrap();
@@ -195,13 +198,13 @@ fn erc20_transfer_dto_to_transfer_info_token_unavailable() {
         logo_uri: None,
     });
 
-    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn erc20_transfer_dto_get_token_info_present() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_get_token_info_present() {
     let erc20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
     )
@@ -218,13 +221,13 @@ fn erc20_transfer_dto_get_token_info_present() {
         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
         value: "1000000000000000000".to_string()
     });
-    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;
 
     assert_eq!(actual, expected);
 }
 
-#[test]
-fn erc20_transfer_dto_get_token_info_not_present() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_get_token_info_not_present() {
     let erc20_transfer =
         serde_json::from_str::<Erc20TransferDto>(crate::json::ERC_20_TRANSFER_WITHOUT_TOKEN_INFO)
             .unwrap();
@@ -245,13 +248,13 @@ fn erc20_transfer_dto_get_token_info_not_present() {
         value: "1000000000000000000".to_string()
     });
 
-    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn erc20_transfer_dto_get_info_provider_error() {
+#[rocket::async_test]
+async fn erc20_transfer_dto_get_info_provider_error() {
     let erc20_transfer =
         serde_json::from_str::<Erc20TransferDto>(crate::json::ERC_20_TRANSFER_WITHOUT_TOKEN_INFO)
             .unwrap();
@@ -270,7 +273,7 @@ fn erc20_transfer_dto_get_info_provider_error() {
         value: "1000000000000000000".to_string(),
     });
 
-    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider);
+    let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }

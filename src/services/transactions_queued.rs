@@ -8,6 +8,9 @@ use crate::services::offset_page_meta;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use itertools::Itertools;
+use rocket::futures::FutureExt;
+use rocket::http::ext::IntoCollection;
+use std::collections::HashMap;
 
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
 pub async fn get_queued_transactions(
@@ -59,7 +62,8 @@ pub async fn get_queued_transactions(
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     Ok(Page {
         next: build_page_url(
@@ -109,7 +113,7 @@ pub(super) fn get_previous_page_nonce(
     .map_or(-1, |tx| tx.nonce as i64)
 }
 
-pub(super) fn process_transactions(
+pub(super) async fn process_transactions(
     info_provider: &mut impl InfoProvider,
     safe_nonce: i64,
     tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
@@ -118,9 +122,14 @@ pub(super) fn process_transactions(
 ) -> Vec<TransactionListItem> {
     let mut last_proccessed_nonce = previous_page_nonce;
     let mut service_transactions: Vec<TransactionListItem> = Vec::new();
-    for (group_nonce, transaction_group) in
-        &tx_iter.group_by(|transaction| transaction.nonce as i64)
-    {
+    let transaction_groups = tx_iter
+        .group_by(|transaction| transaction.nonce as i64)
+        .into_iter()
+        .map(|(group_nonce, transaction_group)| {
+            (group_nonce, transaction_group.collect::<Vec<_>>())
+        })
+        .collect::<HashMap<_, _>>();
+    for (&group_nonce, transaction_group) in &transaction_groups {
         // Check if we need to add section headers
         if last_proccessed_nonce < safe_nonce && group_nonce == safe_nonce {
             // If the last nonce processed was the initial nonce (-1) and this group nonce is the current Safe nonce then we start the Next section
@@ -136,7 +145,7 @@ pub(super) fn process_transactions(
         last_proccessed_nonce = group_nonce as i64;
 
         // Make the group peekable for conflict type checks
-        let mut group_iter = transaction_group.peekable();
+        let mut group_iter = transaction_group.iter().peekable();
         // There will be always at least one transaction for a group
         let group_start_tx = group_iter.next().unwrap();
         // Check if this group has the same nonce as the starting item of the next page
@@ -166,7 +175,8 @@ pub(super) fn process_transactions(
                 // No conflict in this or the previous page
                 ConflictType::None
             },
-        );
+        )
+        .await;
         // Add additional conflicts of the group (only present when conflicts in the same page)
         while let Some(tx) = group_iter.next() {
             // Indicate if we are in a conflict group on the edge or if there are more conflicts in this page
@@ -181,7 +191,8 @@ pub(super) fn process_transactions(
                 &mut service_transactions,
                 &tx,
                 conflict_type,
-            );
+            )
+            .await;
         }
     }
 

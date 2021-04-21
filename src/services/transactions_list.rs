@@ -10,8 +10,6 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::extract_query_string;
 use log::debug;
-use rocket::futures::stream::{self, StreamExt as _};
-use rocket::futures::{FutureExt, StreamExt};
 
 pub async fn get_all_transactions(
     context: &Context<'_>,

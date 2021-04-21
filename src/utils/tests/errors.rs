@@ -1,8 +1,8 @@
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::utils::errors::{ApiError, ErrorDetails};
-use rocket::local::asynchronous::{Client, LocalRequest};
-use rocket::response::Responder;
+use rocket::local::asynchronous::Client;
 
+//TODO what is this tests doing...
 #[rocket::async_test]
 async fn api_error_responder_json() {
     let api_error = ApiError {

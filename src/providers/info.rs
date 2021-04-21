@@ -18,8 +18,6 @@ use rocket::tokio::sync::Mutex;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use std::borrow::BorrowMut;
-use std::cell::Cell;
 use std::collections::HashMap;
 use std::future::Future;
 use std::time::Duration;

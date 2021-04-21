@@ -1,8 +1,6 @@
 use crate::models::service::safes::{AddressEx, SafeInfoEx};
 use crate::providers::info::{InfoProvider, SafeInfo};
 use rocket::futures::future::OptionFuture;
-use rocket::futures::stream::{self, StreamExt as _};
-use std::borrow::BorrowMut;
 
 // AddressInfo for `address` and `owners` was deferred for a later version if necessary as it adds little value
 impl SafeInfo {

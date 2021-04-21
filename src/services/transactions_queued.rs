@@ -8,8 +8,6 @@ use crate::services::offset_page_meta;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use itertools::Itertools;
-use rocket::futures::FutureExt;
-use rocket::http::ext::IntoCollection;
 use std::collections::HashMap;
 
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable

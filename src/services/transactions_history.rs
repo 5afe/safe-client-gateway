@@ -14,8 +14,6 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
-use rocket::futures::stream::{self, StreamExt as _};
-use rocket::futures::StreamExt;
 
 pub async fn get_history_transactions(
     context: &Context<'_>,

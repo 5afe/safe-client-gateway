@@ -3,7 +3,6 @@ use rocket::request::{self, FromRequest, Request};
 use rocket::State;
 
 use crate::cache::redis::ServiceCache;
-use crate::cache::Cache;
 use crate::config::scheme;
 
 pub struct Context<'r> {

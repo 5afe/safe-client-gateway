@@ -137,8 +137,8 @@ fn get_previous_page_nonce_offset_greater_than_0() {
     );
 }
 
-#[test]
-fn process_transactions_empty_list() {
+#[rocket::async_test]
+async fn process_transactions_empty_list() {
     let input_list: Vec<MultisigTransaction> = vec![];
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -155,7 +155,8 @@ fn process_transactions_empty_list() {
         &mut tx_iter,
         previous_page_nonce,
         edge_nonce,
-    );
+    )
+    .await;
 
     let expected: Vec<TransactionListItem> = vec![];
 

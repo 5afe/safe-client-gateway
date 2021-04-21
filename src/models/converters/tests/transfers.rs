@@ -206,8 +206,8 @@ async fn transfer_dto_to_transaction_details() {
     assert_eq!(expected, actual)
 }
 
-#[test]
-fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
+#[rocket::async_test]
+async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -237,10 +237,12 @@ fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
         }),
     });
 
-    let actual = transfer.to_transfer(
-        &mut mock_info_provider,
-        "0xBc79855178842FDBA0c353494895DEEf509E26bB",
-    );
+    let actual = transfer
+        .to_transfer(
+            &mut mock_info_provider,
+            "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+        )
+        .await;
 
     assert_eq!(expected, actual)
 }

@@ -605,8 +605,8 @@ fn peek_timestamp_and_remove_item_empty() {
     .unwrap();
 }
 
-#[test]
-fn peek_timestamp_and_remove_item_with_items() {
+#[rocket::async_test]
+async fn peek_timestamp_and_remove_item_with_items() {
     let expected_timestamp = 1606780800000;
     let utc_timezone_offset = 0;
 
@@ -630,6 +630,7 @@ fn peek_timestamp_and_remove_item_with_items() {
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
         utc_timezone_offset,
     )
+    .await
     .unwrap();
 
     assert_eq!(expected_timestamp, actual_timestamp);

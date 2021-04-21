@@ -41,7 +41,7 @@ where
 }
 
 pub(super) async fn request_cached(
-    cache: &dyn Cache,
+    cache: &impl Cache,
     client: &reqwest::Client,
     operation: &RequestCached,
 ) -> ApiResult<String> {

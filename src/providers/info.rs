@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
@@ -94,25 +95,19 @@ pub trait InfoProvider {
     async fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo>;
 }
 
-pub struct DefaultInfoProvider<'p> {
+pub struct DefaultInfoProvider<'p, C: Cache> {
     client: &'p reqwest::Client,
-    cache: &'p dyn Cache,
-    // TODO: question: Do we need in memory cache still? This forces the DIProvider to be mutable everywhere
-    // making closures that require moving data, simpler as this gets moved as a side effect too
+    cache: &'p C,
+    // Mutex is an async Mutex, meaning that the lock is non-blocking
     safe_cache: Arc<Mutex<HashMap<String, Option<SafeInfo>>>>,
     token_cache: Arc<Mutex<HashMap<String, Option<TokenInfo>>>>,
 }
 
 #[rocket::async_trait]
-impl InfoProvider for DefaultInfoProvider<'_> {
+impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo> {
         let safe_cache = &mut self.safe_cache.lock().await;
-        Self::cached(
-            safe_cache,
-            || DefaultInfoProvider::load_safe_info(&self, safe.to_string()), // TODO: why this works?
-            safe,
-        )
-        .await
+        Self::cached(safe_cache, || self.load_safe_info(safe.to_string()), safe).await
     }
 
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo> {
@@ -120,7 +115,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             let token_cache = &mut self.token_cache.lock().await;
             Self::cached(
                 token_cache,
-                || async move { DefaultInfoProvider::load_token_info(&self, token.to_string()).await }, // TODO: why ? maybe lifetime
+                || self.load_token_info(token.to_string()),
                 token,
             )
             .await
@@ -178,8 +173,8 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 }
 
-impl DefaultInfoProvider<'_> {
-    pub fn new<'p>(context: &'p Context) -> DefaultInfoProvider<'p> {
+impl<'a> DefaultInfoProvider<'a, ServiceCache<'a>> {
+    pub fn new(context: &'a Context) -> Self {
         DefaultInfoProvider {
             client: context.client(),
             cache: context.cache(),
@@ -187,7 +182,9 @@ impl DefaultInfoProvider<'_> {
             token_cache: Default::default(),
         }
     }
+}
 
+impl<C: Cache> DefaultInfoProvider<'_, C> {
     async fn cached<'a, T, Fut>(
         local_cache: &'a mut HashMap<String, Option<T>>,
         generator: impl FnOnce() -> Fut,

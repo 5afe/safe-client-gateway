@@ -1,4 +1,5 @@
 #![feature(async_closure, proc_macro_hygiene, decl_macro, option_result_contains)]
+#![deny(unused_must_use)]
 
 extern crate log;
 

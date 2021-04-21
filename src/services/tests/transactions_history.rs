@@ -587,7 +587,7 @@ async fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
 
 #[rocket::async_test]
 #[should_panic]
-fn peek_timestamp_and_remove_item_empty() {
+async fn peek_timestamp_and_remove_item_empty() {
     let utc_timezone_offset = 3600;
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);

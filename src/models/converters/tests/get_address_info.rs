@@ -2,8 +2,8 @@ use crate::models::converters::get_address_info;
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
-#[test]
-fn get_address_info_address_diff_than_safe() {
+#[rocket::async_test]
+async fn get_address_info_address_diff_than_safe() {
     let address = "0x1234";
     let safe = "0x4321";
 
@@ -22,14 +22,14 @@ fn get_address_info_address_diff_than_safe() {
         logo_uri: None,
     };
 
-    let actual = get_address_info(safe, address, &mut mock_info_provider);
+    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
 
     assert!(actual.is_some());
     assert_eq!(expected, actual.unwrap());
 }
 
-#[test]
-fn get_address_info_address_diff_than_safe_error() {
+#[rocket::async_test]
+async fn get_address_info_address_diff_than_safe_error() {
     let address = "0x1234";
     let safe = "0x4321";
 
@@ -43,14 +43,14 @@ fn get_address_info_address_diff_than_safe_error() {
     assert!(actual.is_none());
 }
 
-#[test]
-fn get_address_info_address_equal_to_safe() {
+#[rocket::async_test]
+async fn get_address_info_address_equal_to_safe() {
     let address = "0x1234";
     let safe = "0x1234";
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
-    let actual = get_address_info(safe, address, &mut mock_info_provider);
+    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
     assert!(actual.is_none());
 }

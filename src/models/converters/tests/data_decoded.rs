@@ -3,8 +3,8 @@ use crate::models::service::transactions::{SettingsChange, SettingsInfo};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
-#[test]
-fn data_decoded_set_fallback_handler_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_set_fallback_handler_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -23,13 +23,13 @@ fn data_decoded_set_fallback_handler_to_settings_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() {
+#[rocket::async_test]
+async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -56,13 +56,13 @@ fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_add_owner_with_threshold_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_add_owner_with_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
@@ -79,13 +79,13 @@ fn data_decoded_add_owner_with_threshold_to_settings_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
+#[rocket::async_test]
+async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
@@ -102,13 +102,13 @@ fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_remove_owner_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_remove_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
@@ -124,13 +124,13 @@ fn data_decoded_remove_owner_to_settings_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_swap_owner_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_swap_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
@@ -147,13 +147,13 @@ fn data_decoded_swap_owner_to_settings_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_change_threshold_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_change_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
@@ -165,13 +165,13 @@ fn data_decoded_change_threshold_to_settings_info() {
         settings_info: Some(SettingsInfo::ChangeThreshold { threshold: 2 }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_change_implementation_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_change_implementation_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -189,13 +189,13 @@ fn data_decoded_change_implementation_to_settings_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_change_implementation_to_settings_info_with_address_info() {
+#[rocket::async_test]
+async fn data_decoded_change_implementation_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -221,13 +221,13 @@ fn data_decoded_change_implementation_to_settings_info_with_address_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_enable_module_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_enable_module_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -245,13 +245,13 @@ fn data_decoded_enable_module_to_settings_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_enable_module_to_settings_info_with_address_info() {
+#[rocket::async_test]
+async fn data_decoded_enable_module_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -277,13 +277,13 @@ fn data_decoded_enable_module_to_settings_info_with_address_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_disable_module_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_disable_module_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -301,13 +301,13 @@ fn data_decoded_disable_module_to_settings_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_disable_module_to_settings_info_with_address_info() {
+#[rocket::async_test]
+async fn data_decoded_disable_module_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -333,13 +333,13 @@ fn data_decoded_disable_module_to_settings_info_with_address_info() {
         }),
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }
 
-#[test]
-fn data_decoded_unknown_to_settings_info() {
+#[rocket::async_test]
+async fn data_decoded_unknown_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
 
     let data_decoded =
@@ -351,7 +351,7 @@ fn data_decoded_unknown_to_settings_info() {
         settings_info: None,
     };
 
-    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider);
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
 
     assert_eq!(expected.settings_info, actual);
 }

@@ -15,16 +15,17 @@ async fn api_error_responder_json() {
     };
     let expected_error_json = r#"{"code":1337,"message":"Not found"}"#;
 
-    let rocket = crate::rocket();
+    let rocket = rocket::build();
     let client = Client::debug(rocket).await.expect("valid rocket instance");
     // let local_request = client.get("/");
     let response = client.get("/").dispatch().await;
     // let request = local_request.inner();
     // let mut response = api_error.respond_to(&request).unwrap();
 
-    let body_json = response.into_string().await.unwrap();
+    let status_code: u16 = response.status().code;
+    let body_json: &str = &response.into_string().await.unwrap();
 
-    assert_eq!(response.status().code, 418);
+    assert_eq!(status_code, 418);
     assert_eq!(body_json, expected_error_json);
 }
 

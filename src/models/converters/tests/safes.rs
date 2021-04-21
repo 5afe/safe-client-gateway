@@ -2,8 +2,8 @@ use crate::models::service::safes::{AddressEx, SafeInfoEx};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
-#[test]
-fn to_safe_info_ex_no_address_info() {
+#[rocket::async_test]
+async fn to_safe_info_ex_no_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -75,13 +75,13 @@ fn to_safe_info_ex_no_address_info() {
         version: Some("1.1.1".to_string()),
     };
 
-    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider);
+    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
 
     assert_eq!(actual, expected);
 }
 
-#[test]
-fn to_safe_info_ex_address_info() {
+#[rocket::async_test]
+async fn to_safe_info_ex_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -158,13 +158,13 @@ fn to_safe_info_ex_address_info() {
         version: Some("1.1.1".to_string()),
     };
 
-    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider);
+    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
 
     assert_eq!(actual, expected);
 }
 
-#[test]
-fn to_safe_info_ex_nullable_fields_are_all_null() {
+#[rocket::async_test]
+async fn to_safe_info_ex_nullable_fields_are_all_null() {
     let safe_info = serde_json::from_str::<SafeInfo>(
         &json!({
             "address": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
@@ -205,7 +205,7 @@ fn to_safe_info_ex_nullable_fields_are_all_null() {
         version: None,
     };
 
-    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider);
+    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }

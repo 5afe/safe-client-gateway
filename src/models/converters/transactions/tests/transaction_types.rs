@@ -8,8 +8,8 @@ use crate::models::service::transactions::{
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
-#[test]
-fn transaction_operation_not_call() {
+#[rocket::async_test]
+async fn transaction_operation_not_call() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -32,13 +32,13 @@ fn transaction_operation_not_call() {
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_size_and_value_greater_than_0() {
+#[rocket::async_test]
+async fn transaction_data_size_and_value_greater_than_0() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -61,13 +61,13 @@ fn transaction_data_size_and_value_greater_than_0() {
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_size_and_value_greater_than_0_with_address_info() {
+#[rocket::async_test]
+async fn transaction_data_size_and_value_greater_than_0_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -98,13 +98,13 @@ fn transaction_data_size_and_value_greater_than_0_with_address_info() {
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_size_0_value_greater_than_0() {
+#[rocket::async_test]
+async fn transaction_data_size_0_value_greater_than_0() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -126,13 +126,13 @@ fn transaction_data_size_0_value_greater_than_0() {
         }),
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
+#[rocket::async_test]
+async fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -167,13 +167,14 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
         },
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method_with_address_info() {
+#[rocket::async_test]
+async fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method_with_address_info(
+) {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -208,13 +209,13 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method_with
         },
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method() {
+#[rocket::async_test]
+async fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -237,13 +238,13 @@ fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method(
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
+#[rocket::async_test]
+async fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
     let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_USDT).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -275,13 +276,13 @@ fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
             }),
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
+#[rocket::async_test]
+async fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
     let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_CRYPTO_KITTIES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -311,13 +312,13 @@ fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
         }),
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
+#[rocket::async_test]
+async fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -340,13 +341,13 @@ fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
+#[rocket::async_test]
+async fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -369,13 +370,13 @@ fn transaction_data_decoded_is_erc721_receiver_not_ok_transfer_method() {
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() {
+#[rocket::async_test]
+async fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() {
     let token_info = TokenInfo {
         token_type: TokenType::Unknown,
         address: "".to_string(),
@@ -407,13 +408,13 @@ fn transaction_data_decoded_is_transfer_method_receiver_ok_token_type_unknown() 
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
+#[rocket::async_test]
+async fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
@@ -437,13 +438,13 @@ fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
         is_cancellation: false,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn cancellation_transaction() {
+#[rocket::async_test]
+async fn cancellation_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -464,7 +465,7 @@ fn cancellation_transaction() {
         is_cancellation: true,
     });
 
-    let actual = tx.transaction_info(&mut mock_info_provider);
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }

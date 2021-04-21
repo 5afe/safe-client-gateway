@@ -13,11 +13,16 @@ use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
 use mockall::automock;
+use rocket::tokio::sync::Mutex;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
+use std::borrow::BorrowMut;
+use std::cell::Cell;
 use std::collections::HashMap;
 use std::future::Future;
+use std::rc::Rc;
+use std::sync::Arc;
 use std::time::Duration;
 
 pub const TOKENS_KEY: &'static str = "dip_ti";
@@ -82,8 +87,8 @@ pub struct TokenInfo {
 #[automock]
 #[rocket::async_trait]
 pub trait InfoProvider {
-    async fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo>;
-    async fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo>;
+    async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
+    async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
     async fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
     async fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
     async fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo>;
@@ -94,26 +99,28 @@ pub struct DefaultInfoProvider<'p> {
     cache: &'p dyn Cache,
     // TODO: question: Do we need in memory cache still? This forces the DIProvider to be mutable everywhere
     // making closures that require moving data, simpler as this gets moved as a side effect too
-    safe_cache: HashMap<String, Option<SafeInfo>>,
-    token_cache: HashMap<String, Option<TokenInfo>>,
+    safe_cache: Arc<Mutex<HashMap<String, Option<SafeInfo>>>>,
+    token_cache: Arc<Mutex<HashMap<String, Option<TokenInfo>>>>,
 }
 
 #[rocket::async_trait]
 impl InfoProvider for DefaultInfoProvider<'_> {
-    async fn safe_info(&mut self, safe: &str) -> ApiResult<SafeInfo> {
-        self.cached(
-            |this| &mut this.safe_cache,
-            |this, safe| this.load_safe_info(safe), // TODO: why this works?
+    async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo> {
+        let safe_cache = &mut self.safe_cache.lock().await;
+        Self::cached(
+            safe_cache,
+            || DefaultInfoProvider::load_safe_info(&self, safe.to_string()), // TODO: why this works?
             safe,
         )
         .await
     }
 
-    async fn token_info(&mut self, token: &str) -> ApiResult<TokenInfo> {
+    async fn token_info(&self, token: &str) -> ApiResult<TokenInfo> {
         if token != "0x0000000000000000000000000000000000000000" {
-            self.cached(
-                |this| &mut this.token_cache,
-                |this, token| this.load_token_info(token), // TODO: why ? maybe lifetime
+            let token_cache = &mut self.token_cache.lock().await;
+            Self::cached(
+                token_cache,
+                || async move { DefaultInfoProvider::load_token_info(&self, token.to_string()).await }, // TODO: why ? maybe lifetime
                 token,
             )
             .await
@@ -176,35 +183,34 @@ impl DefaultInfoProvider<'_> {
         DefaultInfoProvider {
             client: context.client(),
             cache: context.cache(),
-            safe_cache: HashMap::new(),
-            token_cache: HashMap::new(),
+            safe_cache: Default::default(),
+            token_cache: Default::default(),
         }
     }
 
-    async fn cached<T, Fut>(
-        &mut self,
-        local_cache: impl Fn(&mut Self) -> &mut HashMap<String, Option<T>>,
-        generator: impl Fn(&mut Self, &String) -> Fut,
+    async fn cached<'a, T, Fut>(
+        local_cache: &'a mut HashMap<String, Option<T>>,
+        generator: impl FnOnce() -> Fut,
         key: impl Into<String>,
     ) -> ApiResult<T>
     where
-        T: Clone + DeserializeOwned,
+        T: Clone + DeserializeOwned + 'a,
         Fut: Future<Output = ApiResult<Option<T>>>,
     {
         let key = key.into();
-        match local_cache(self).get(&key) {
+        match local_cache.get(&key) {
             Some(value) => value
                 .clone()
                 .ok_or(api_error!("Cached value not available")),
             None => {
-                let value: Option<T> = generator(self, &key).await?;
-                local_cache(self).insert(key, value.clone());
+                let value: Option<T> = generator().await?;
+                local_cache.insert(key, value.clone());
                 value.ok_or(api_error!("Could not generate value"))
             }
         }
     }
 
-    async fn load_safe_info(&mut self, safe: &String) -> ApiResult<Option<SafeInfo>> {
+    async fn load_safe_info(&self, safe: String) -> ApiResult<Option<SafeInfo>> {
         let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
         let data = RequestCached::new(url)
             .cache_duration(safe_info_cache_duration())
@@ -215,7 +221,7 @@ impl DefaultInfoProvider<'_> {
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
-    async fn populate_token_cache(&mut self) -> ApiResult<()> {
+    async fn populate_token_cache(&self) -> ApiResult<()> {
         let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
         let response = self
             .client
@@ -231,7 +237,7 @@ impl DefaultInfoProvider<'_> {
         Ok(())
     }
 
-    async fn check_token_cache(&mut self) -> ApiResult<()> {
+    async fn check_token_cache(&self) -> ApiResult<()> {
         if self.cache.has_key(TOKENS_KEY) {
             return Ok(());
         }
@@ -248,9 +254,9 @@ impl DefaultInfoProvider<'_> {
         result
     }
 
-    async fn load_token_info(&mut self, token: &String) -> ApiResult<Option<TokenInfo>> {
+    async fn load_token_info(&self, token: String) -> ApiResult<Option<TokenInfo>> {
         self.check_token_cache().await?;
-        match self.cache.get_from_hash(TOKENS_KEY, token) {
+        match self.cache.get_from_hash(TOKENS_KEY, &token) {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }

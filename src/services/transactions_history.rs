@@ -147,7 +147,7 @@ pub(super) async fn backend_txs_to_summary_txs(
     let mut results = vec![];
 
     for transaction in txs {
-        results.push(
+        results.extend(
             transaction
                 .to_transaction_summary(info_provider, safe_address)
                 .await
@@ -155,7 +155,7 @@ pub(super) async fn backend_txs_to_summary_txs(
         );
     }
 
-    Ok(results.into_iter().flatten().collect())
+    Ok(results)
 }
 
 pub(super) fn service_txs_to_tx_list_items(

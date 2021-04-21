@@ -22,8 +22,6 @@ use std::borrow::BorrowMut;
 use std::cell::Cell;
 use std::collections::HashMap;
 use std::future::Future;
-use std::rc::Rc;
-use std::sync::Arc;
 use std::time::Duration;
 
 pub const TOKENS_KEY: &'static str = "dip_ti";
@@ -99,8 +97,8 @@ pub struct DefaultInfoProvider<'p, C: Cache> {
     client: &'p reqwest::Client,
     cache: &'p C,
     // Mutex is an async Mutex, meaning that the lock is non-blocking
-    safe_cache: Arc<Mutex<HashMap<String, Option<SafeInfo>>>>,
-    token_cache: Arc<Mutex<HashMap<String, Option<TokenInfo>>>>,
+    safe_cache: Mutex<HashMap<String, Option<SafeInfo>>>,
+    token_cache: Mutex<HashMap<String, Option<TokenInfo>>>,
 }
 
 #[rocket::async_trait]

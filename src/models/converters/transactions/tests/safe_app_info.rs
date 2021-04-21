@@ -65,8 +65,8 @@ fn ellipsized_invalid_json_origin_data() {
     serde_json::from_str::<OriginInternal>(origin).unwrap();
 }
 
-#[test]
-fn to_safe_app_info_bad_url() {
+#[rocket::async_test]
+async fn to_safe_app_info_bad_url() {
     let origin = "{\"url\":\"https://apps.gnosis-safe.io/walletConnect\"}";
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -74,12 +74,12 @@ fn to_safe_app_info_bad_url() {
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
-    let actual = safe_app_info_from(origin, &mut mock_info_provider);
+    let actual = safe_app_info_from(origin, &mut mock_info_provider).await;
     assert!(actual.is_none());
 }
 
-#[test]
-fn to_safe_app_info_correct() {
+#[rocket::async_test]
+async fn to_safe_app_info_correct() {
     let origin = "{\"url\":\"https://apps.gnosis-safe.io/walletConnect\"}";
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -99,13 +99,13 @@ fn to_safe_app_info_correct() {
         logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
     };
 
-    let actual = safe_app_info_from(origin, &mut mock_info_provider);
+    let actual = safe_app_info_from(origin, &mut mock_info_provider).await;
     assert!(actual.is_some());
     assert_eq!(expected, actual.unwrap());
 }
 
-#[test]
-fn valid_ipfs_origin_gets_replaced() {
+#[rocket::async_test]
+async fn valid_ipfs_origin_gets_replaced() {
     let origin =
         "{\"url\":\"https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/manifest.json\",\"name\":\"WalletConnect\"}";
     let mut mock_info_provider = MockInfoProvider::new();
@@ -127,7 +127,7 @@ fn valid_ipfs_origin_gets_replaced() {
         logo_url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect/walletConnect.jpg".to_string(),
     };
 
-    let actual = safe_app_info_from(origin, &mut mock_info_provider);
+    let actual = safe_app_info_from(origin, &mut mock_info_provider).await;
     assert!(actual.is_some());
     assert_eq!(expected, actual.unwrap());
 }

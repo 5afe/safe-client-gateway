@@ -81,7 +81,7 @@ where
         F: Fn() -> Fut + Send + Sync + 'a,
         Fut: Future<Output = ApiResult<R>> + Send + 'a,
     {
-        self.resp_generator = Some(Box::new(|| resp_generator().boxed()));
+        self.resp_generator = Some(Box::new(move || resp_generator().boxed()));
         self
     }
 
@@ -90,7 +90,7 @@ where
     }
 
     pub async fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
-        cache_response(cache, self).await
+        cache_response(cache, &self).await
     }
 }
 

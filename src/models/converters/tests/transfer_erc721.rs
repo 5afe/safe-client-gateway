@@ -7,7 +7,7 @@ use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
 #[rocket::async_test]
-aysnc fn erc721_transfer_dto_to_incoming_transfer_transaction() {
+async fn erc721_transfer_dto_to_incoming_transfer_transaction() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
         crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
@@ -42,7 +42,8 @@ aysnc fn erc721_transfer_dto_to_incoming_transfer_transaction() {
         &erc721_transfer,
         &mut mock_info_provider,
         safe_address,
-    ).async;
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
@@ -88,7 +89,8 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction_with_address_info(
         &erc721_transfer,
         &mut mock_info_provider,
         safe_address,
-    ).await;
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
@@ -134,7 +136,8 @@ async fn erc721_transfer_dto_to_outgoing_transfer_transaction_with_address_info(
         &erc721_transfer,
         &mut mock_info_provider,
         safe_address,
-    ).await;
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
@@ -159,7 +162,8 @@ async fn erc721_transfer_dto_to_transfer_info_token_available() {
         }
     );
 
-    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
+    let actual =
+        Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
@@ -184,7 +188,8 @@ async fn erc721_transfer_dto_to_transfer_info_token_unavailable() {
         logo_uri: None,
     });
 
-    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
+    let actual =
+        Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
@@ -207,7 +212,8 @@ async fn erc721_transfer_dto_get_token_info_present() {
         logo_uri:  Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string())
     }) ;
 
-    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
+    let actual =
+        Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
@@ -234,7 +240,8 @@ async fn erc721_transfer_dto_get_token_info_not_present() {
         logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
     });
 
-    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
+    let actual =
+        Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
@@ -258,7 +265,8 @@ async fn erc721_transfer_dto_get_info_provider_error() {
         logo_uri: None,
     });
 
-    let actual = Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
+    let actual =
+        Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }

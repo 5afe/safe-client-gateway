@@ -87,11 +87,11 @@ where
     }
 
     pub async fn generate(&self) -> ApiResult<R> {
-        (self.resp_generator.unwrap())().await
+        (self.resp_generator.as_ref().unwrap())().await
     }
 
     pub async fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
-        cache_response(cache, self)
+        cache_response(cache, self).await
     }
 }
 

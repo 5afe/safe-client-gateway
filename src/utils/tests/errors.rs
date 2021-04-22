@@ -1,6 +1,7 @@
 use crate::models::backend::transactions::MultisigTransaction;
+use crate::rocket::response::Responder;
 use crate::utils::errors::{ApiError, ErrorDetails};
-use rocket::local::asynchronous::Client;
+use rocket::local::asynchronous::{Client, LocalRequest};
 
 //TODO what is this tests doing...
 #[rocket::async_test]
@@ -17,13 +18,11 @@ async fn api_error_responder_json() {
 
     let rocket = rocket::build();
     let client = Client::debug(rocket).await.expect("valid rocket instance");
-    // let local_request = client.get("/");
-    let response = client.get("/").dispatch().await;
-    // let request = local_request.inner();
-    // let mut response = api_error.respond_to(&request).unwrap();
+    let request = client.get("/");
+    let mut response = api_error.respond_to(&request).unwrap();
 
     let status_code: u16 = response.status().code;
-    let body_json: &str = &response.into_string().await.unwrap();
+    let body_json = &response.body_string().await.unwrap();
 
     assert_eq!(status_code, 418);
     assert_eq!(body_json, expected_error_json);

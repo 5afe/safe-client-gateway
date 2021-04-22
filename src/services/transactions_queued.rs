@@ -127,7 +127,8 @@ pub(super) async fn process_transactions(
             (group_nonce, transaction_group.collect::<Vec<_>>())
         })
         .collect::<HashMap<_, _>>();
-    for (&group_nonce, transaction_group) in &transaction_groups {
+    for &group_nonce in transaction_groups.keys().sorted() {
+        let transaction_group = transaction_groups.get(&group_nonce).unwrap();
         // Check if we need to add section headers
         if last_proccessed_nonce < safe_nonce && group_nonce == safe_nonce {
             // If the last nonce processed was the initial nonce (-1) and this group nonce is the current Safe nonce then we start the Next section

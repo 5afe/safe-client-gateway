@@ -86,9 +86,9 @@ pub struct TokenInfo {
 pub trait InfoProvider {
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
-    async fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo>;
-    async fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo>;
-    async fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo>;
+    async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
+    async fn contract_info(&self, address: &str) -> ApiResult<AddressInfo>;
+    async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo>;
 }
 
 pub struct DefaultInfoProvider<'p, C: Cache> {
@@ -120,7 +120,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         }
     }
 
-    async fn safe_app_info(&mut self, url: &str) -> ApiResult<SafeAppInfo> {
+    async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = build_manifest_url(url)?;
 
         let manifest_json = RequestCached::new(manifest_url)
@@ -138,7 +138,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         })
     }
 
-    async fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
+    async fn contract_info(&self, address: &str) -> ApiResult<AddressInfo> {
         let url = format!(
             "{}/v1/contracts/{}/",
             base_transaction_service_url(),
@@ -160,7 +160,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         }
     }
 
-    async fn full_address_info_search(&mut self, address: &str) -> ApiResult<AddressInfo> {
+    async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo> {
         self.token_info(&address).await.map(|it| AddressInfo {
             name: it.name,
             logo_uri: it.logo_uri.to_owned(),

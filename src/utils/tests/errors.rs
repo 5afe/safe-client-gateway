@@ -1,7 +1,7 @@
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::rocket::response::Responder;
 use crate::utils::errors::{ApiError, ErrorDetails};
-use rocket::local::asynchronous::{Client, LocalRequest};
+use rocket::local::asynchronous::Client;
 
 //TODO what is this tests doing...
 #[rocket::async_test]

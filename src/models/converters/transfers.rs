@@ -11,7 +11,6 @@ use crate::models::service::transactions::{
 };
 use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use crate::utils::errors::ApiResult;
-use rocket::futures::future::OptionFuture;
 
 impl TransferDto {
     pub async fn to_transfer(
@@ -189,12 +188,9 @@ async fn token_info_with_fallback(
     token_address: &str,
     token_info: Option<TokenInfo>,
 ) -> Option<TokenInfo> {
-    print!("{:#?}", &token_info);
-    OptionFuture::from(
+    if token_info.is_none() {
+        info_provider.token_info(token_address).await.ok()
+    } else {
         token_info
-            .as_ref()
-            .map(|_| async move { info_provider.token_info(token_address).await.ok() }),
-    )
-    .await
-    .flatten()
+    }
 }

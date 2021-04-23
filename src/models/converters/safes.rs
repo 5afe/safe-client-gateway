@@ -24,7 +24,15 @@ impl SafeInfo {
                 })
                 .collect(),
             // "move" forces us to have a function that borrows info_provider
-            modules: map_modules_address_ex(&self.modules, info_provider).await,
+            modules: OptionFuture::from(self.modules.as_ref().map(|modules| async move {
+                let mut results = Vec::with_capacity(modules.len());
+                for module in modules {
+                    results.push(to_address_ex(module, info_provider).await)
+                }
+                results
+            }))
+            .await,
+            // map_modules_address_ex(&self.modules, info_provider).await,
             //This one can use async move as it is the last use of the info_provider and can be moved
             fallback_handler: OptionFuture::from(
                 self.fallback_handler
@@ -35,19 +43,6 @@ impl SafeInfo {
             version: self.version.to_owned(),
         }
     }
-}
-
-async fn map_modules_address_ex(
-    modules: &Option<Vec<String>>,
-    info_provider: &impl InfoProvider,
-) -> Option<Vec<AddressEx>> {
-    // early return if modules are None
-    let modules = modules.as_ref()?;
-    let mut results = Vec::with_capacity(modules.len());
-    for module in modules {
-        results.push(to_address_ex(module, info_provider).await)
-    }
-    Some(results)
 }
 
 async fn to_address_ex(address: &str, info_provider: &impl InfoProvider) -> AddressEx {

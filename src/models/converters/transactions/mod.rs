@@ -65,7 +65,7 @@ impl MultisigTransaction {
         }
     }
 
-    async fn transaction_info(&self, info_provider: &mut impl InfoProvider) -> TransactionInfo {
+    async fn transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
         let value = self.value_as_uint();
         let data_size = data_size(&self.data);
 
@@ -111,7 +111,7 @@ impl MultisigTransaction {
     async fn to_erc20_transfer(
         &self,
         token: &TokenInfo,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
@@ -140,7 +140,7 @@ impl MultisigTransaction {
     async fn to_erc721_transfer(
         &self,
         token: &TokenInfo,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
@@ -168,7 +168,7 @@ impl MultisigTransaction {
         }
     }
 
-    async fn to_ether_transfer(&self, info_provider: &mut impl InfoProvider) -> Transfer {
+    async fn to_ether_transfer(&self, info_provider: &impl InfoProvider) -> Transfer {
         Transfer {
             sender_info: None,
             sender: self.safe.to_owned(),
@@ -181,7 +181,7 @@ impl MultisigTransaction {
         }
     }
 
-    async fn to_settings_change(&self, info_provider: &mut impl InfoProvider) -> SettingsChange {
+    async fn to_settings_change(&self, info_provider: &impl InfoProvider) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
             settings_info: OptionFuture::from(
@@ -194,7 +194,7 @@ impl MultisigTransaction {
         }
     }
 
-    async fn to_custom(&self, info_provider: &mut impl InfoProvider) -> Custom {
+    async fn to_custom(&self, info_provider: &impl InfoProvider) -> Custom {
         Custom {
             to: self.to.to_owned(),
             to_info: info_provider.full_address_info_search(&self.to).await.ok(),
@@ -249,7 +249,7 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    async fn to_transaction_info(&self, info_provider: &mut impl InfoProvider) -> TransactionInfo {
+    async fn to_transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
         TransactionInfo::Custom(Custom {
             to_info: info_provider.full_address_info_search(&self.to).await.ok(),
             to: self.to.to_owned(),

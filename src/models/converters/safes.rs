@@ -4,7 +4,7 @@ use rocket::futures::future::OptionFuture;
 
 // AddressInfo for `address` and `owners` was deferred for a later version if necessary as it adds little value
 impl SafeInfo {
-    pub async fn to_safe_info_ex(&self, info_provider: &mut impl InfoProvider) -> SafeInfoEx {
+    pub async fn to_safe_info_ex(&self, info_provider: &impl InfoProvider) -> SafeInfoEx {
         SafeInfoEx {
             address: AddressEx {
                 value: self.address.to_owned(),
@@ -39,7 +39,7 @@ impl SafeInfo {
 
 async fn map_modules_address_ex(
     modules: &Option<Vec<String>>,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
 ) -> Option<Vec<AddressEx>> {
     // early return if modules are None
     let modules = modules.as_ref()?;
@@ -50,7 +50,7 @@ async fn map_modules_address_ex(
     Some(results)
 }
 
-async fn to_address_ex(address: &str, info_provider: &mut impl InfoProvider) -> AddressEx {
+async fn to_address_ex(address: &str, info_provider: &impl InfoProvider) -> AddressEx {
     let address_info = info_provider.contract_info(&address).await.ok();
     AddressEx {
         value: address.to_owned(),

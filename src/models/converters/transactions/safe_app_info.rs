@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 pub async fn safe_app_info_from(
     origin: &str,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
 ) -> Option<SafeAppInfo> {
     let origin_internal = serde_json::from_str::<OriginInternal>(origin).ok()?;
     info_provider

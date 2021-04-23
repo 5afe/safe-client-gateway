@@ -4,7 +4,6 @@ use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
-use crate::models::backend::transfers::Transfer;
 use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
@@ -20,7 +19,7 @@ use rocket::futures::future::OptionFuture;
 impl Transaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
         safe: &str,
     ) -> ApiResult<Vec<TransactionSummary>> {
         match self {
@@ -41,7 +40,7 @@ impl Transaction {
 impl MultisigTransaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> ApiResult<Vec<TransactionSummary>> {
         let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
         let tx_status = self.map_status(&safe_info);
@@ -78,52 +77,41 @@ impl MultisigTransaction {
 impl EthereumTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &mut impl InfoProvider,
-        safe: &str,
+        info_provider: &impl InfoProvider,
+        safe_address: &str,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
             Some(transfers) => {
-                self.transfer_to_transaction_summary(transfers, safe, info_provider)
-                    .await
+                let mut results = Vec::with_capacity(transfers.len());
+
+                for transfer in transfers {
+                    let transaction_summary = TransactionSummary {
+                        id: create_id!(
+                            ID_PREFIX_ETHEREUM_TX,
+                            safe_address,
+                            self.tx_hash,
+                            hex_hash(transfer)
+                        ),
+                        timestamp: self.execution_date.timestamp_millis(),
+                        tx_status: TransactionStatus::Success,
+                        execution_info: None,
+                        safe_app_info: None,
+                        tx_info: transfer.to_transfer(info_provider, safe_address).await,
+                    };
+
+                    results.push(transaction_summary);
+                }
+                results
             }
             _ => vec![],
         }
-    }
-
-    //TODO: manage these sort of functions
-    async fn transfer_to_transaction_summary(
-        &self,
-        transfers: &Vec<Transfer>,
-        safe_address: &str,
-        info_provider: &mut impl InfoProvider,
-    ) -> Vec<TransactionSummary> {
-        let mut results = Vec::with_capacity(transfers.len());
-
-        for transfer in transfers {
-            let transaction_summary = TransactionSummary {
-                id: create_id!(
-                    ID_PREFIX_ETHEREUM_TX,
-                    safe_address,
-                    self.tx_hash,
-                    hex_hash(transfer)
-                ),
-                timestamp: self.execution_date.timestamp_millis(),
-                tx_status: TransactionStatus::Success,
-                execution_info: None,
-                safe_app_info: None,
-                tx_info: transfer.to_transfer(info_provider, safe_address).await,
-            };
-
-            results.push(transaction_summary);
-        }
-        results
     }
 }
 
 impl ModuleTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> Vec<TransactionSummary> {
         vec![TransactionSummary {
             id: create_id!(
@@ -145,7 +133,7 @@ impl CreationTransaction {
     pub async fn to_transaction_summary(
         &self,
         safe_address: &String,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> TransactionSummary {
         TransactionSummary {
             id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
@@ -171,7 +159,7 @@ impl CreationTransaction {
 //TODO: make crate pub or move to some utils?
 async fn map_address_to_contract_info(
     address: &Option<String>,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
 ) -> Option<AddressInfo> {
     // early return if modules are None
     let address = address.as_ref()?;

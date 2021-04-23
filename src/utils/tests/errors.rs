@@ -3,7 +3,6 @@ use crate::rocket::response::Responder;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use rocket::local::asynchronous::Client;
 
-//TODO what is this tests doing...
 #[rocket::async_test]
 async fn api_error_responder_json() {
     let api_error = ApiError {

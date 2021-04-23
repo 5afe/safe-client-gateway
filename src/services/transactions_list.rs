@@ -96,7 +96,7 @@ pub(super) async fn get_creation_transaction_summary(
 async fn transactions_to_transaction_summary(
     input: Vec<Transaction>,
     safe_address: &String,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
 ) -> Vec<TransactionSummary> {
     let mut result = vec![];
     for transaction in input {

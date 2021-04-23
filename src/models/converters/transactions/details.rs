@@ -18,11 +18,13 @@ impl MultisigTransaction {
         info_provider: &impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
-        let gas_token = self
-            .gas_token
-            .as_ref()
-            .and_then(|it| async move { info_provider.token_info(it).await.ok() })
-            .flatten();
+        let gas_token = OptionFuture::from(
+            self.gas_token
+                .as_ref()
+                .map(|it| async move { info_provider.token_info(it).await.ok() }),
+        )
+        .await
+        .flatten();
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),

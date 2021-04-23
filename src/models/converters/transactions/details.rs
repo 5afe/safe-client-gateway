@@ -18,7 +18,11 @@ impl MultisigTransaction {
         info_provider: &impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
-        let gas_token = map_address_to_token_info(&self.gas_token, info_provider).await;
+        let gas_token = self
+            .gas_token
+            .as_ref()
+            .and_then(|it| async move { info_provider.token_info(it).await.ok() })
+            .flatten();
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
@@ -115,14 +119,4 @@ impl ModuleTransaction {
             safe_app_info: None,
         })
     }
-}
-
-//TODO: extract this too
-async fn map_address_to_token_info(
-    address: &Option<String>,
-    info_provider: &impl InfoProvider,
-) -> Option<TokenInfo> {
-    // early return if modules are None
-    let address = address.as_ref()?;
-    info_provider.token_info(address).await.ok()
 }

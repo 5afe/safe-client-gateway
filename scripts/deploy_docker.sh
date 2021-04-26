@@ -10,7 +10,7 @@ export VERSION=${description:1}
 
 echo "Trigger docker build and upload for version $VERSION ($BUILD_NUMBER)"
 
-if [ "$1" = "develop" -o "$1" = "main" ]; then
+if [ "$1" = "develop" -o "$1" = "main" -o "$1" = "spectrum" ]; then
     # If image does not exist, don't use cache
     docker pull $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1 && \
     docker build -t $DOCKERHUB_PROJECT -f Dockerfile --build-arg VERSION --build-arg BUILD_NUMBER . --cache-from $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1 || \

@@ -1,16 +1,7 @@
-use regex::Regex;
 use std::env;
 
-pub fn redis_config() -> String {
-    let config = env::var("ROCKET_DATABASES").unwrap();
-    // TODO: This is a hack so we do not have to change the config var, but for the deployment we should adjust the config
-    let capture = Regex::new(r"\{service_cache=\{url=(.+)\}\}")
-        .unwrap()
-        .captures(&config)
-        .unwrap();
-    capture
-        .get(1)
-        .map_or(config.to_string(), |c| c.as_str().to_string())
+pub fn redis_url() -> String {
+    env::var("REDIS_URL").unwrap()
 }
 
 pub fn base_transaction_service_url() -> String {

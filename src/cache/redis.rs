@@ -1,5 +1,5 @@
 use crate::cache::Cache;
-use crate::config::{redis_config, redis_scan_count};
+use crate::config::{redis_scan_count, redis_url};
 use r2d2::{Pool, PooledConnection};
 use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 use rocket::request::{self, FromRequest, Request};
@@ -11,7 +11,7 @@ type RedisConnection = PooledConnection<redis::Client>;
 pub struct ServiceCache<'r>(State<'r, RedisPool>);
 
 pub fn create_pool() -> RedisPool {
-    let client = redis::Client::open(redis_config()).unwrap();
+    let client = redis::Client::open(redis_url()).unwrap();
     Pool::builder().max_size(15).build(client).unwrap()
 }
 

@@ -15,7 +15,7 @@ use crate::utils::errors::ApiResult;
 impl TransferDto {
     pub async fn to_transfer(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
         safe: &str,
     ) -> TransactionInfo {
         match self {
@@ -34,7 +34,7 @@ impl TransferDto {
 
     pub async fn to_transaction_details(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
         safe: &str,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
@@ -70,7 +70,7 @@ impl TransferDto {
 impl Erc20TransferDto {
     pub(super) async fn to_transfer_transaction(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
@@ -83,10 +83,7 @@ impl Erc20TransferDto {
         }
     }
 
-    pub(super) async fn to_transfer_info(
-        &self,
-        info_provider: &mut impl InfoProvider,
-    ) -> TransferInfo {
+    pub(super) async fn to_transfer_info(&self, info_provider: &impl InfoProvider) -> TransferInfo {
         let token_info =
             token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone())
                 .await;
@@ -102,7 +99,7 @@ impl Erc20TransferDto {
 impl Erc721TransferDto {
     pub(super) async fn to_transfer_transaction(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
@@ -115,10 +112,7 @@ impl Erc721TransferDto {
         }
     }
 
-    pub(super) async fn to_transfer_info(
-        &self,
-        info_provider: &mut impl InfoProvider,
-    ) -> TransferInfo {
+    pub(super) async fn to_transfer_info(&self, info_provider: &impl InfoProvider) -> TransferInfo {
         let token_info =
             token_info_with_fallback(info_provider, &self.token_address, self.token_info.clone())
                 .await;
@@ -134,7 +128,7 @@ impl Erc721TransferDto {
 impl EtherTransferDto {
     pub(super) async fn to_transfer_transaction(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
@@ -184,7 +178,7 @@ fn build_transfer_info(
 }
 
 async fn token_info_with_fallback(
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
     token_address: &str,
     token_info: Option<TokenInfo>,
 ) -> Option<TokenInfo> {

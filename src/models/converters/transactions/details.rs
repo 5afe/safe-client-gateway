@@ -7,6 +7,7 @@ use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
 };
+use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::utils::errors::ApiResult;
 use rocket::futures::future::OptionFuture;
@@ -15,10 +16,10 @@ impl MultisigTransaction {
     pub async fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
-        let gas_token = map_address_to_token_info(&self.gas_token, info_provider).await;
+        let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
@@ -99,7 +100,7 @@ impl MultisigTransaction {
 impl ModuleTransaction {
     pub async fn to_transaction_details(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
@@ -123,14 +124,4 @@ impl ModuleTransaction {
             safe_app_info: None,
         })
     }
-}
-
-//TODO: extract this too
-async fn map_address_to_token_info(
-    address: &Option<String>,
-    info_provider: &mut impl InfoProvider,
-) -> Option<TokenInfo> {
-    // early return if modules are None
-    let address = address.as_ref()?;
-    info_provider.token_info(address).await.ok()
 }

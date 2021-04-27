@@ -17,7 +17,6 @@ impl<'r> Context<'r> {
         self.client.inner()
     }
 
-    // TODO: we would want to return the Cache trait here
     pub fn cache(&self) -> &ServiceCache<'r> {
         &self.cache
     }

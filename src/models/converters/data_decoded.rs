@@ -12,7 +12,7 @@ use std::collections::HashMap;
 impl DataDecoded {
     pub(super) async fn to_settings_info(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> Option<SettingsInfo> {
         match self.method.as_str() {
             SET_FALLBACK_HANDLER => {

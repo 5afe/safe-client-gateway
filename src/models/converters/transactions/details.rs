@@ -7,6 +7,7 @@ use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
 };
+use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::utils::errors::ApiResult;
 use rocket::futures::future::OptionFuture;
@@ -15,16 +16,10 @@ impl MultisigTransaction {
     pub async fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
-        let gas_token = OptionFuture::from(
-            self.gas_token
-                .as_ref()
-                .map(|it| async move { info_provider.token_info(it).await.ok() }),
-        )
-        .await
-        .flatten();
+        let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),

@@ -10,6 +10,7 @@ use crate::models::service::transactions::{
     Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
     ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
 };
+use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::InfoProvider;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
@@ -132,7 +133,7 @@ impl CreationTransaction {
     pub async fn to_transaction_summary(
         &self,
         safe_address: &String,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> TransactionSummary {
         TransactionSummary {
             id: create_id!(ID_PREFIX_CREATION_TX, safe_address),
@@ -143,21 +144,9 @@ impl CreationTransaction {
                 creator_info: info_provider.contract_info(&self.creator).await.ok(),
                 transaction_hash: self.transaction_hash.clone(),
                 implementation: self.master_copy.clone(),
-                implementation_info: OptionFuture::from(
-                    self.master_copy.as_ref().map(|address| async move {
-                        info_provider.contract_info(address).await.ok()
-                    }),
-                )
-                .await
-                .flatten(),
+                implementation_info: info_provider.to_address_info(&self.master_copy).await,
                 factory: self.factory_address.clone(),
-                factory_info: OptionFuture::from(
-                    self.factory_address.as_ref().map(|address| async move {
-                        info_provider.contract_info(address).await.ok()
-                    }),
-                )
-                .await
-                .flatten(),
+                factory_info: info_provider.to_address_info(&self.factory_address).await,
             }),
             execution_info: None,
             safe_app_info: None,

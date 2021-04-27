@@ -28,7 +28,7 @@ pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> Transf
 pub(super) async fn get_address_info(
     safe: &str,
     address: &str,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
 ) -> Option<AddressInfo> {
     if safe != address {
         info_provider.full_address_info_search(address).await.ok()

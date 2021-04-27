@@ -14,7 +14,6 @@ pub mod urls;
 #[cfg(test)]
 mod tests;
 
-//TODO think of a better impl, using enums as per Nick's suggestion
 pub const TRANSFER_METHOD: &str = "transfer";
 pub const ERC20_TRANSFER_METHODS: &[&str] = &[TRANSFER_METHOD, "transferFrom"];
 pub const ERC721_TRANSFER_METHODS: &[&str] = &[TRANSFER_METHOD, "transferFrom", "safeTransferFrom"];

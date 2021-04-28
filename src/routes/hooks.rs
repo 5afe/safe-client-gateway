@@ -22,3 +22,12 @@ pub fn flush_all(context: Context, token: String) -> ApiResult<()> {
     Invalidate::new(InvalidationPattern::FlushAll).execute(context.cache());
     Ok(())
 }
+
+#[get("/v1/flush_tokens/<token>")]
+pub fn flush_token_info(context: Context, token: String) -> ApiResult<()> {
+    if token != webhook_token() {
+        bail!("Invalid token");
+    }
+    Invalidate::new(InvalidationPattern::Tokens).execute(context.cache());
+    Ok(())
+}

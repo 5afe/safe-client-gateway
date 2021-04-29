@@ -26,12 +26,9 @@ pub struct AddressEx {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct SafeLastChanges {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub collectibles: Option<i64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tx_queued: Option<i64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tx_history: Option<i64>,
+    pub collectibles: i64,
+    pub tx_queued: i64,
+    pub tx_history: i64,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

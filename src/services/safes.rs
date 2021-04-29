@@ -1,6 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::{MultisigTransaction, Transaction};
+use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
 use crate::models::service::safes::{SafeInfoEx, SafeLastChanges, SafeState};
 use crate::models::service::transactions::summary::TransactionSummary;
@@ -20,13 +21,41 @@ pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<S
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
-            collectibles: 0,
+            collectibles: get_last_collectible(context, safe_address).unwrap_or(0),
             tx_queued: get_last_queued_tx(context, safe_address).unwrap_or(0),
             tx_history: get_last_history_tx(context, safe_address).unwrap_or(0),
         },
     };
 
     Ok(safe_state)
+}
+
+fn get_last_collectible(context: &Context, safe_address: &String) -> ApiResult<i64> {
+    let url = format!(
+        "{}/v1/safes/{}/transfers/?\
+        &ordering=executionDate\
+        &limit=1",
+        base_transaction_service_url(),
+        safe_address,
+    );
+
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())?;
+    let transaction: Page<Transfer> = serde_json::from_str(&body)?;
+
+    log::debug!("{:#?}", &transaction);
+    transaction
+        .results
+        .get(0)
+        .as_ref()
+        .map(|transfer| match transfer {
+            Transfer::Erc721(transfer) => transfer.execution_date.timestamp(),
+            Transfer::Erc20(transfer) => transfer.execution_date.timestamp(),
+            Transfer::Ether(transfer) => transfer.execution_date.timestamp(),
+            Transfer::Unknown => 0,
+        })
+        .ok_or(api_error!("Couldn't get tx timestamps"))
 }
 
 fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64> {
@@ -59,6 +88,7 @@ fn get_last_history_tx(context: &Context, safe_address: &String) -> ApiResult<i6
 
     let url = format!(
         "{}/v1/safes/{}/all-transactions/?\
+        &ordering=executionDate
         &queued=false\
         &executed=true",
         base_transaction_service_url(),

@@ -26,9 +26,9 @@ pub struct AddressEx {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct SafeLastChanges {
-    pub collectibles_e_tag: String,
-    pub tx_queued_e_tag: String,
-    pub tx_history_e_tag: String,
+    pub collectibles_tag: String,
+    pub tx_queued_tag: String,
+    pub tx_history_tag: String,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

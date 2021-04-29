@@ -17,13 +17,13 @@ pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<S
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
-            collectibles_e_tag: get_last_collectible(context, safe_address)
+            collectibles_tag: get_last_collectible(context, safe_address)
                 .unwrap_or(0)
                 .to_string(),
-            tx_queued_e_tag: get_last_queued_tx(context, safe_address)
+            tx_queued_tag: get_last_queued_tx(context, safe_address)
                 .unwrap_or(0)
                 .to_string(),
-            tx_history_e_tag: get_last_history_tx(context, safe_address)
+            tx_history_tag: get_last_history_tx(context, safe_address)
                 .unwrap_or(0)
                 .to_string(),
         },

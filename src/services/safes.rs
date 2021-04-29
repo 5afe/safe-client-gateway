@@ -3,12 +3,10 @@ use crate::config::{base_transaction_service_url, transaction_request_timeout};
 use crate::models::backend::transactions::{MultisigTransaction, Transaction};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
-use crate::models::service::safes::{SafeInfoEx, SafeLastChanges, SafeState};
-use crate::models::service::transactions::summary::TransactionSummary;
+use crate::models::service::safes::{SafeLastChanges, SafeState};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use chrono::{DateTime, TimeZone, Utc};
 
 pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<SafeState> {
     let mut info_provider = DefaultInfoProvider::new(context);
@@ -19,9 +17,15 @@ pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<S
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
-            collectibles: get_last_collectible(context, safe_address).unwrap_or(0),
-            tx_queued: get_last_queued_tx(context, safe_address).unwrap_or(0),
-            tx_history: get_last_history_tx(context, safe_address).unwrap_or(0),
+            collectibles_e_tag: get_last_collectible(context, safe_address)
+                .unwrap_or(0)
+                .to_string(),
+            tx_queued_e_tag: get_last_queued_tx(context, safe_address)
+                .unwrap_or(0)
+                .to_string(),
+            tx_history_e_tag: get_last_history_tx(context, safe_address)
+                .unwrap_or(0)
+                .to_string(),
         },
     };
 
@@ -77,7 +81,8 @@ fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64
         .results
         .get(0)
         .as_ref()
-        .map(|tx| tx.submission_date.timestamp())
+        .map(|tx| tx.modified.as_ref().map(|it| it.timestamp()))
+        .flatten()
         .ok_or(api_error!("Couldn't get tx timestamps"))
 }
 
@@ -103,14 +108,15 @@ fn get_last_history_tx(context: &Context, safe_address: &String) -> ApiResult<i6
         .results
         .get(0)
         .as_ref()
-        .and_then(|tx| {
-            tx.to_transaction_summary(&mut info_provider, safe_address)
-                .ok()
+        .map(|tx| match tx {
+            Transaction::Multisig(tx) => tx
+                .modified
                 .as_ref()
-                .map(|txs| txs.get(0))
-                .flatten()
-                .as_ref()
-                .map(|tx| tx.timestamp / 1000)
+                .map(|it| it.timestamp())
+                .unwrap_or(tx.submission_date.timestamp()),
+            Transaction::Ethereum(tx) => tx.execution_date.timestamp(),
+            Transaction::Module(tx) => tx.execution_date.timestamp(),
+            Transaction::Unknown => 0,
         })
         .ok_or(api_error!("Couldn't get tx timestamps"))
 }

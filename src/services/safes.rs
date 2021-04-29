@@ -11,7 +11,6 @@ use crate::utils::errors::ApiResult;
 pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<SafeState> {
     let mut info_provider = DefaultInfoProvider::new(context);
     let safe_info = info_provider.safe_info(safe_address)?;
-
     let safe_info_ex = safe_info.to_safe_info_ex(&mut info_provider);
 
     let safe_state = SafeState {
@@ -87,8 +86,6 @@ fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64
 }
 
 fn get_last_history_tx(context: &Context, safe_address: &String) -> ApiResult<i64> {
-    let mut info_provider = DefaultInfoProvider::new(context);
-
     let url = format!(
         "{}/v1/safes/{}/all-transactions/?\
         &ordering=executionDate

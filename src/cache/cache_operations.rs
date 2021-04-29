@@ -23,6 +23,7 @@ pub struct Invalidate {
 pub enum InvalidationPattern {
     FlushAll,
     RequestsResponses(String),
+    Tokens,
 }
 
 impl Invalidate {

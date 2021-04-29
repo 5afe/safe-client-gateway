@@ -16,8 +16,6 @@ pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<S
 
     let safe_info_ex = safe_info.to_safe_info_ex(&mut info_provider);
 
-    // let last_transfer = ;
-
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {

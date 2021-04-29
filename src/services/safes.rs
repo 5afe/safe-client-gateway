@@ -63,7 +63,7 @@ fn get_last_collectible(context: &Context, safe_address: &String) -> ApiResult<i
 fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64> {
     let url = format!(
         "{}/v1/safes/{}/multisig-transactions/?\
-        &ordering=nonce,submissionDate\
+        &ordering=submissionDate\
         &executed=false\
         &trusted=true\
         &limit=1",

@@ -45,7 +45,6 @@ fn get_last_collectible(context: &Context, safe_address: &String) -> ApiResult<i
         .execute(context.client(), context.cache())?;
     let transaction: Page<Transfer> = serde_json::from_str(&body)?;
 
-    log::debug!("{:#?}", &transaction);
     transaction
         .results
         .get(0)
@@ -75,7 +74,6 @@ fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64
         .execute(context.client(), context.cache())?;
     let transaction: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
-    log::debug!("{:#?}", &transaction);
     transaction
         .results
         .get(0)
@@ -100,7 +98,6 @@ fn get_last_history_tx(context: &Context, safe_address: &String) -> ApiResult<i6
         .execute(context.client(), context.cache())?;
     let transaction: Page<Transaction> = serde_json::from_str(&body)?;
 
-    log::debug!("{:#?}", &transaction);
     transaction
         .results
         .get(0)

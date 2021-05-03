@@ -35,14 +35,14 @@ pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<S
 }
 
 fn get_last_collectible(context: &Context, safe_address: &String) -> ApiResult<i64> {
+    //TODO: Apply ERC721 filter when available in core services
     let url = format!(
         "{}/v1/safes/{}/transfers/?\
         &limit=1",
         base_transaction_service_url(),
         safe_address,
     );
-    //1620053387
-    //1620053387
+
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())?;

@@ -1,10 +1,12 @@
-use crate::models::commons::DataDecoded;
+use crate::models::commons::{DataDecoded, ParamValue, Parameter};
 use crate::models::service::transactions::SettingsInfo;
+use crate::providers::address_info::AddressInfo;
 use crate::providers::info::InfoProvider;
 use crate::utils::{
     ADD_OWNER_WITH_THRESHOLD, CHANGE_MASTER_COPY, CHANGE_THRESHOLD, DISABLE_MODULE, ENABLE_MODULE,
-    REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
+    MULTI_SEND, REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
 };
+use std::collections::HashMap;
 
 impl DataDecoded {
     pub(super) fn to_settings_info(
@@ -70,6 +72,43 @@ impl DataDecoded {
                 threshold: self.get_parameter_single_value_at(0)?.parse().ok()?,
             }),
             _ => None,
+        }
+    }
+}
+
+impl DataDecoded {
+    // pub(super) fn build_address_info_index(&self, info_provider: &mut impl InfoProvider) -> Option<HashMap<String, AddressInfo>> {
+    //     let mut index = HashMap::new();
+    //     if self.method == MULTI_SEND {
+    //     } else {
+    //         let address = self.parameters.as_ref()
+    //             .map(|it|
+    //                 it.iter()
+    //                     .for_each(|parameter|
+    //                                   match &parameter.value{
+    //                                       ParamValue::SingleValue(value) =>{
+    //
+    //                                       },
+    //                                       ParamValue::ArrayValue(values) => {}
+    //                                   }
+    //         }}))
+    //     }
+    // }
+
+    fn value_to_address_info(
+        parameter: Parameter,
+        info_provider: &mut impl InfoProvider,
+    ) -> Option<(String, AddressInfo)> {
+        match parameter.value {
+            ParamValue::SingleValue(value) => {
+                if parameter.param_type.to_lowercase() == "address" {
+                    let address_info = info_provider.full_address_info_search(&value).ok();
+                    address_info.map(|it| (value, it.to_owned()))
+                } else {
+                    None
+                }
+            }
+            ParamValue::ArrayValue(values) => None,
         }
     }
 }

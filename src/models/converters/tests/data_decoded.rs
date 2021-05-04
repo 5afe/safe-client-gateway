@@ -431,3 +431,37 @@ fn data_decoded_with_nested_safe_transaction() {
 
     assert_eq!(expected, data_decoded);
 }
+
+#[test]
+fn data_decoded_address_info_index_not_multi_send_address_single_value() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
+}
+
+#[test]
+fn data_decoded_address_info_index_not_multi_send_address_array_value() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
+}
+
+#[test]
+fn data_decoded_address_info_index_multi_send_single_level_of_nesting() {
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
+    )
+    .unwrap();
+}
+
+#[test]
+fn data_decoded_address_info_index_multi_send_two_levels_of_nesting() {
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
+    )
+    .unwrap();
+}
+
+#[test]
+fn data_decoded_skip_address_info_for_0x0() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
+}

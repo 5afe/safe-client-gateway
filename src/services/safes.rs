@@ -41,9 +41,9 @@ pub async fn get_safe_info_ex(
 }
 
 async fn get_last_collectible(context: &Context<'_>, safe_address: &String) -> ApiResult<i64> {
-    //TODO: Apply ERC721 filter when available in core services
     let url = format!(
         "{}/v1/safes/{}/transfers/?\
+        &erc721=true\
         &limit=1",
         base_transaction_service_url(),
         safe_address,

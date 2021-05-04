@@ -77,57 +77,46 @@ impl DataDecoded {
 }
 
 impl DataDecoded {
-    pub(super) fn build_address_info_index(&self, info_provider: &mut impl InfoProvider) -> Option<HashMap<String, AddressInfo>> {
+    pub(super) fn build_address_info_index(
+        &self,
+        info_provider: &mut impl InfoProvider,
+    ) -> Option<HashMap<String, AddressInfo>> {
         let mut index = HashMap::new();
         if self.method == MULTI_SEND {
-            None
         } else {
-            let address = self.parameters.as_ref()
-                .map(|it|
-                         it.iter()
-                             .for_each(|parameter|
-                                           match &parameter.value {
-                                               ParamValue::SingleValue(value) => {
-                                                   let (address, address_info) = value_to_address_info(&parameter, info_provider);
-                                                    index.insert(address, address_info);
-                                               },
-                                               ParamValue::ArrayValue(_) => {
-
-                                               }
-                                           }
-        }
-    }))
-}
-}
-
-fn value_to_address_info(
-        parameter: &Parameter,
-        info_provider: &mut impl InfoProvider,
-    ) -> Option<Vec(String, AddressInfo)> {
-        match &parameter.value {
-            ParamValue::SingleValue(value) => {
-                if parameter.param_type.to_lowercase() == "address" {
-                    let address_info = info_provider.full_address_info_search(&value).ok();
-                    address_info.map(|it| vec![(value.to_owned(), it)])
-                } else {
-                    None
+            if let Some(parameters) = &self.parameters {
+                for parameter in parameters {
+                    match &parameter.value {
+                        ParamValue::SingleValue(value) => {
+                            if value.len() == 42 && value.starts_with("0x") {
+                                if let Some(address_info) =
+                                    info_provider.full_address_info_search(&value).ok()
+                                {
+                                    index.insert(value.to_owned(), address_info);
+                                };
+                            }
+                        }
+                        ParamValue::ArrayValue(values) => {
+                            for value in values {
+                                if let ParamValue::SingleValue(value) = value {
+                                    if value.len() == 42 && value.starts_with("0x") {
+                                        if let Some(address_info) =
+                                            info_provider.full_address_info_search(&value).ok()
+                                        {
+                                            index.insert(value.to_owned(), address_info);
+                                        };
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            ParamValue::ArrayValue(values) => {
-                if parameter.param_type.to_lowercase().contains("address") {
-                    let mut output = vec![];
-                    values.iter().for_each(|paramter|{
-                        let address_info = info_provider.full_address_info_search(&value).ok();
-                        address_info.map(|it| (value.to_owned(), it))
-
-                        output =
-                    })
-                    let address_info = info_provider.full_address_info_search(&value).ok();
-                    address_info.map(|it| (value.to_owned(), it))
-                } else {
-                    None
-                }
-            },
+        }
+        if index.is_empty() {
+            None
+        } else {
+            Some(index)
         }
     }
 }

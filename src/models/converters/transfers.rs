@@ -41,6 +41,7 @@ impl TransferDto {
             tx_hash: self.get_transaction_hash(),
             detailed_execution_info: None,
             safe_app_info: None,
+            address_info_index: None,
         })
     }
 

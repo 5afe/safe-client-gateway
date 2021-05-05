@@ -285,8 +285,8 @@ fn multisig_transaction_with_origin() {
         });
     mock_info_provider
         .expect_full_address_info_search()
-        .times(1)
-        .return_once(move |_| bail!("no address info"));
+        .times(7) // 1 + 6 calls within data decoded multisig
+        .returning(move |_| bail!("no address info"));
 
     let mut expected = crate::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
     expected.retain(|c| !c.is_whitespace());

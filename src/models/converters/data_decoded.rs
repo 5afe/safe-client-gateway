@@ -88,52 +88,67 @@ impl DataDecoded {
             {
                 match value_decoded_type {
                     ValueDecodedType::InternalTransaction(transactions) => {
-                        // TODO avoid recursion
+                        transactions.iter().for_each(|transaction| {
+                            insert_value_into_index(&transaction.to, &mut index, info_provider);
+                            put_parameter_into_index(
+                                &transaction
+                                    .data_decoded
+                                    .as_ref()
+                                    .map(|it| it.parameters.to_owned())
+                                    .flatten(),
+                                &mut index,
+                                info_provider,
+                            )
+                        })
                     }
                 }
             }
         } else {
-            if let Some(parameters) = &self.parameters {
-                for parameter in parameters {
-                    match &parameter.value {
-                        ParamValue::SingleValue(value) => {
-                            if value.len() == 42
-                                && value.starts_with("0x")
-                                && value != "0x0000000000000000000000000000000000000000"
-                                && !index.contains_key(value)
-                            {
-                                if let Some(address_info) =
-                                    info_provider.full_address_info_search(&value).ok()
-                                {
-                                    index.insert(value.to_owned(), address_info);
-                                };
-                            }
-                        }
-                        ParamValue::ArrayValue(values) => {
-                            for value in values {
-                                if let ParamValue::SingleValue(value) = value {
-                                    if value.len() == 42
-                                        && value.starts_with("0x")
-                                        && value != "0x0000000000000000000000000000000000000000"
-                                        && !index.contains_key(value)
-                                    {
-                                        if let Some(address_info) =
-                                            info_provider.full_address_info_search(&value).ok()
-                                        {
-                                            index.insert(value.to_owned(), address_info);
-                                        };
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            put_parameter_into_index(&self.parameters, &mut index, info_provider);
         }
         if index.is_empty() {
             None
         } else {
             Some(index)
         }
+    }
+}
+
+fn put_parameter_into_index(
+    parameters: &Option<Vec<Parameter>>,
+    index: &mut HashMap<String, AddressInfo>,
+    info_provider: &mut impl InfoProvider,
+) {
+    if let Some(parameters) = parameters {
+        for parameter in parameters {
+            match &parameter.value {
+                ParamValue::SingleValue(value) => {
+                    insert_value_into_index(value, index, info_provider)
+                }
+                ParamValue::ArrayValue(values) => {
+                    for value in values {
+                        if let ParamValue::SingleValue(value) = value {
+                            insert_value_into_index(value, index, info_provider)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn insert_value_into_index(
+    value: &String,
+    index: &mut HashMap<String, AddressInfo>,
+    info_provider: &mut impl InfoProvider,
+) {
+    if value.len() == 42
+        && value.starts_with("0x")
+        && value != "0x0000000000000000000000000000000000000000"
+        && !index.contains_key(value)
+    {
+        if let Some(address_info) = info_provider.full_address_info_search(&value).ok() {
+            index.insert(value.to_owned(), address_info);
+        };
     }
 }

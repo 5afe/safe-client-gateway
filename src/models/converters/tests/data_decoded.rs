@@ -623,18 +623,6 @@ fn address_info_index_multi_send_single_level_of_nesting() {
 
     mock_info_provider
         .expect_full_address_info_search()
-        .with(eq("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5"))
-        .times(1)
-        .return_once(move |address| {
-            Ok(AddressInfo {
-                name: format!("{}_name", &address),
-                logo_uri: Some(format!("{}_url", &address)),
-            })
-        })
-        .in_sequence(&mut sequence);
-
-    mock_info_provider
-        .expect_full_address_info_search()
         .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
         .times(1)
         .return_once(move |address| {
@@ -681,14 +669,6 @@ fn address_info_index_multi_send_single_level_of_nesting() {
             AddressInfo {
                 name: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_name".to_string(),
                 logo_uri: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_url".to_string()),
-            },
-        );
-
-        map.insert(
-            "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_string(),
-            AddressInfo {
-                name: "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_name".to_string(),
-                logo_uri: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_url".to_string()),
             },
         );
 

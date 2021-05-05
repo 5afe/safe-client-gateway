@@ -88,7 +88,11 @@ impl DataDecoded {
                 for parameter in parameters {
                     match &parameter.value {
                         ParamValue::SingleValue(value) => {
-                            if value.len() == 42 && value.starts_with("0x") {
+                            if value.len() == 42
+                                && value.starts_with("0x")
+                                && value != "0x0000000000000000000000000000000000000000"
+                                && !index.contains_key(value)
+                            {
                                 if let Some(address_info) =
                                     info_provider.full_address_info_search(&value).ok()
                                 {
@@ -99,7 +103,11 @@ impl DataDecoded {
                         ParamValue::ArrayValue(values) => {
                             for value in values {
                                 if let ParamValue::SingleValue(value) = value {
-                                    if value.len() == 42 && value.starts_with("0x") {
+                                    if value.len() == 42
+                                        && value.starts_with("0x")
+                                        && value != "0x0000000000000000000000000000000000000000"
+                                        && !index.contains_key(value)
+                                    {
                                         if let Some(address_info) =
                                             info_provider.full_address_info_search(&value).ok()
                                         {

@@ -142,7 +142,6 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     fn contract_info(&mut self, address: &str) -> ApiResult<AddressInfo> {
-        // TODO add early return for if token == "0x0000000000000000000000000000000000000000"
         let url = format!(
             "{}/v1/contracts/{}/",
             base_transaction_service_url(),

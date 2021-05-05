@@ -690,8 +690,82 @@ fn address_info_index_multi_send_single_level_of_nesting() {
 
 #[test]
 fn address_info_index_multi_send_two_levels_of_nesting() {
+    let mut sequence = Sequence::new();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x68881260bd04E9dAc7F77a314360ce05435B4818"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    // Had to doctor the json in order to have different address in the nested calls and verify that we
+    // don't call them, not because they are duplicate, but because they are 1 level further nested
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_NESTED_MULTI_SENDS).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::json::DOCTORED_DATA_DECODED_NESTED_MULTI_SENDS)
+            .unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_string(),
+            AddressInfo {
+                name: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_name".to_string(),
+                logo_uri: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B".to_string(),
+            AddressInfo {
+                name: "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_name".to_string(),
+                logo_uri: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x68881260bd04E9dAc7F77a314360ce05435B4818".to_string(),
+            AddressInfo {
+                name: "0x68881260bd04E9dAc7F77a314360ce05435B4818_name".to_string(),
+                logo_uri: Some("0x68881260bd04E9dAc7F77a314360ce05435B4818_url".to_string()),
+            },
+        );
+
+        map
+    };
+
+    let actual = data_decoded.build_address_info_index(&mut mock_info_provider);
+
+    assert_eq!(expected, actual.unwrap());
 }
 
 #[test]

@@ -2,6 +2,8 @@ use crate::models::commons::{DataDecoded, ParamValue, Parameter};
 use crate::models::service::transactions::{SettingsChange, SettingsInfo};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
+use mockall::predicate::eq;
+use std::collections::HashMap;
 
 #[test]
 fn data_decoded_set_fallback_handler_to_settings_info() {
@@ -433,19 +435,47 @@ fn data_decoded_with_nested_safe_transaction() {
 }
 
 #[test]
-fn data_decoded_address_info_index_not_multi_send_address_single_value() {
+fn address_info_index_not_multi_send_address_single_value() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(AddressInfo {
+                name: "Master Copy".to_string(),
+                logo_uri: Some("url.de".to_string()),
+            })
+        });
+
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string(),
+            AddressInfo {
+                name: "Master Copy".to_string(),
+                logo_uri: Some("url.de".to_string()),
+            },
+        );
+        map
+    };
+
+    let actual = data_decoded.build_address_info_index(&mut mock_info_provider);
+
+    assert_eq!(expected, actual.unwrap());
 }
 
 #[test]
-fn data_decoded_address_info_index_not_multi_send_address_array_value() {
+fn address_info_index_not_multi_send_address_array_value() {
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
 }
 
 #[test]
-fn data_decoded_address_info_index_multi_send_single_level_of_nesting() {
+fn address_info_index_multi_send_single_level_of_nesting() {
     let data_decoded = serde_json::from_str::<DataDecoded>(
         crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
@@ -453,7 +483,7 @@ fn data_decoded_address_info_index_multi_send_single_level_of_nesting() {
 }
 
 #[test]
-fn data_decoded_address_info_index_multi_send_two_levels_of_nesting() {
+fn address_info_index_multi_send_two_levels_of_nesting() {
     let data_decoded = serde_json::from_str::<DataDecoded>(
         crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
@@ -461,7 +491,7 @@ fn data_decoded_address_info_index_multi_send_two_levels_of_nesting() {
 }
 
 #[test]
-fn data_decoded_skip_address_info_for_0x0() {
+fn address_info_index_skip_address_info_for_0x0() {
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
 }

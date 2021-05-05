@@ -14,7 +14,7 @@ impl MultisigTransaction {
     pub fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         let gas_token = self
@@ -42,6 +42,10 @@ impl MultisigTransaction {
                 .origin
                 .as_ref()
                 .and_then(|origin| safe_app_info_from(origin, info_provider)),
+            address_info_index: self
+                .data_decoded
+                .as_ref()
+                .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
         })
     }
 
@@ -95,7 +99,7 @@ impl MultisigTransaction {
 impl ModuleTransaction {
     pub fn to_transaction_details(
         &self,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &mut impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
@@ -113,6 +117,10 @@ impl ModuleTransaction {
                 address: self.module.to_owned(),
             })),
             safe_app_info: None,
+            address_info_index: self
+                .data_decoded
+                .as_ref()
+                .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
         })
     }
 }

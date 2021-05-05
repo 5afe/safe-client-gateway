@@ -2,6 +2,7 @@ use super::*;
 use crate::models::commons::{DataDecoded, Operation};
 use crate::providers::info::{SafeAppInfo, TokenInfo};
 use serde::Serialize;
+use std::collections::HashMap;
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -14,6 +15,8 @@ pub struct TransactionDetails {
     pub tx_hash: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub safe_app_info: Option<SafeAppInfo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address_info_index: Option<HashMap<String, AddressInfo>>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

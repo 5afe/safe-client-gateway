@@ -31,7 +31,7 @@ fn multisig_custom_transaction_to_transaction_details() {
         .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
         .expect_full_address_info_search()
-        .times(1)
+        .times(2) // to_info and data_decoded "spender" address parameter
         .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
@@ -104,6 +104,7 @@ fn multisig_custom_transaction_to_transaction_details() {
                 gas_token_info: None,
             })),
         safe_app_info: None,
+        address_info_index: None
     };
 
     let actual =
@@ -150,6 +151,7 @@ fn module_transaction_to_transaction_details_success() {
                 address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
             })),
         safe_app_info: None,
+        address_info_index: None
     };
 
     let actual =
@@ -196,6 +198,7 @@ fn module_transaction_to_transaction_details_failed() {
                 address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
             })),
         safe_app_info: None,
+        address_info_index: None
     };
 
     let actual =
@@ -233,6 +236,7 @@ fn ethereum_tx_transfer_to_transaction_details() {
         tx_data: None,
         detailed_execution_info: None,
         safe_app_info: None,
+        address_info_index: None
     };
 
     let mut mock_info_provider = MockInfoProvider::new();
@@ -281,8 +285,8 @@ fn multisig_transaction_with_origin() {
         });
     mock_info_provider
         .expect_full_address_info_search()
-        .times(1)
-        .return_once(move |_| bail!("no address info"));
+        .times(7) // 1 + 6 calls within data decoded multisig
+        .returning(move |_| bail!("no address info"));
 
     let mut expected = crate::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
     expected.retain(|c| !c.is_whitespace());

@@ -43,6 +43,13 @@ impl MultisigTransaction {
             )
             .await
             .flatten(),
+            address_info_index: OptionFuture::from(
+                self.data_decoded.as_ref().map(|data_decoded| async move {
+                    data_decoded.build_address_info_index(info_provider).await
+                }),
+            )
+            .await
+            .flatten(),
         })
     }
 
@@ -114,6 +121,13 @@ impl ModuleTransaction {
                 address: self.module.to_owned(),
             })),
             safe_app_info: None,
+            address_info_index: OptionFuture::from(
+                self.data_decoded.as_ref().map(|data_decoded| async move {
+                    data_decoded.build_address_info_index(info_provider).await
+                }),
+            )
+            .await
+            .flatten(),
         })
     }
 }

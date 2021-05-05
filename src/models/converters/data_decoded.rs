@@ -1,3 +1,4 @@
+use crate::config::feature_flag_nested_decoding;
 use crate::models::commons::{DataDecoded, ParamValue, Parameter, ValueDecodedType};
 use crate::models::service::transactions::SettingsInfo;
 use crate::providers::address_info::AddressInfo;
@@ -81,6 +82,10 @@ impl DataDecoded {
         &self,
         info_provider: &mut impl InfoProvider,
     ) -> Option<HashMap<String, AddressInfo>> {
+        if !feature_flag_nested_decoding() {
+            return None;
+        }
+
         let mut index = HashMap::new();
         if self.method == MULTI_SEND {
             if let Some(value_decoded_type) =

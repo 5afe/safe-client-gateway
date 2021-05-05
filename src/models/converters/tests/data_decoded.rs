@@ -3,6 +3,7 @@ use crate::models::service::transactions::{SettingsChange, SettingsInfo};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 use mockall::predicate::eq;
+use mockall::Sequence;
 use std::collections::HashMap;
 
 #[test]
@@ -470,8 +471,118 @@ fn address_info_index_not_multi_send_address_single_value() {
 
 #[test]
 fn address_info_index_not_multi_send_address_array_value() {
+    // expected address in json, one will not return to test behaviour of that too
+    // 1) "0x4FB84d2dFc50017aFa759107a389759c8fD077DE" -> returns
+    // 2) "0x111111111117dC0aa78b770fA6A738034120C302" -> returns
+    // 3) "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" -> bails
+
+    //TODO: double call should not be expected
+    // 4) "0x4FB84d2dFc50017aFa759107a389759c8fD077DE" -> returns
+
+    // 5) "0xBc79855178842FDBA0c353494895DEEf509E26bB" -> bails
+    // 6) "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B" -> returns
+    // we expect the index to contain 4 values
+
+    let mut sequence = Sequence::new();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x4FB84d2dFc50017aFa759107a389759c8fD077DE"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x111111111117dC0aa78b770fA6A738034120C302"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
+        .times(1)
+        .return_once(move |address| bail!("no address"))
+        .in_sequence(&mut sequence);
+
+    //TODO remove this expectation
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x4FB84d2dFc50017aFa759107a389759c8fD077DE"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
+        .times(1)
+        .return_once(move |address| bail!("no address"))
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0x4FB84d2dFc50017aFa759107a389759c8fD077DE".to_string(),
+            AddressInfo {
+                name: "0x4FB84d2dFc50017aFa759107a389759c8fD077DE_name".to_string(),
+                logo_uri: Some("0x4FB84d2dFc50017aFa759107a389759c8fD077DE_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x111111111117dC0aa78b770fA6A738034120C302".to_string(),
+            AddressInfo {
+                name: "0x111111111117dC0aa78b770fA6A738034120C302_name".to_string(),
+                logo_uri: Some("0x111111111117dC0aa78b770fA6A738034120C302_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B".to_string(),
+            AddressInfo {
+                name: "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_name".to_string(),
+                logo_uri: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
+            },
+        );
+
+        map
+    };
+
+    let actual = data_decoded.build_address_info_index(&mut mock_info_provider);
+
+    assert_eq!(expected, actual.unwrap());
 }
 
 #[test]

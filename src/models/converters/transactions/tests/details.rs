@@ -31,7 +31,7 @@ fn multisig_custom_transaction_to_transaction_details() {
         .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
         .expect_full_address_info_search()
-        .times(2) //to_info and data_decoded "spender" address parameter
+        .times(2) // to_info and data_decoded "spender" address parameter
         .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {

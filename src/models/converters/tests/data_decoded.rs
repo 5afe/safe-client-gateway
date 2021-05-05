@@ -690,7 +690,8 @@ fn address_info_index_multi_send_single_level_of_nesting() {
 
 #[test]
 fn address_info_index_multi_send_two_levels_of_nesting() {
-    //TODO: find json for this stuff
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_NESTED_MULTI_SENDS).unwrap();
 }
 
 #[test]

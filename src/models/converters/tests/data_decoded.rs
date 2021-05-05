@@ -571,18 +571,146 @@ fn address_info_index_not_multi_send_address_array_value() {
 
 #[test]
 fn address_info_index_multi_send_single_level_of_nesting() {
+    let mut sequence = Sequence::new();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x111111125434b319222CdBf8C261674aDB56F3ae"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
     let data_decoded = serde_json::from_str::<DataDecoded>(
         crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
     .unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0x111111125434b319222CdBf8C261674aDB56F3ae".to_string(),
+            AddressInfo {
+                name: "0x111111125434b319222CdBf8C261674aDB56F3ae_name".to_string(),
+                logo_uri: Some("0x111111125434b319222CdBf8C261674aDB56F3ae_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_string(),
+            AddressInfo {
+                name: "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_name".to_string(),
+                logo_uri: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_string(),
+            AddressInfo {
+                name: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_name".to_string(),
+                logo_uri: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".to_string(),
+            AddressInfo {
+                name: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_name".to_string(),
+                logo_uri: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_string(),
+            AddressInfo {
+                name: "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_name".to_string(),
+                logo_uri: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+            AddressInfo {
+                name: "0xBc79855178842FDBA0c353494895DEEf509E26bB_name".to_string(),
+                logo_uri: Some("0xBc79855178842FDBA0c353494895DEEf509E26bB_url".to_string()),
+            },
+        );
+
+        map
+    };
+
+    let actual = data_decoded.build_address_info_index(&mut mock_info_provider);
+
+    assert_eq!(expected, actual.unwrap());
 }
 
 #[test]
 fn address_info_index_multi_send_two_levels_of_nesting() {
-    let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
-    )
-    .unwrap();
+    //TODO: find json for this stuff
 }
 
 #[test]
@@ -620,4 +748,25 @@ fn address_info_index_skip_address_info_for_0x0() {
     let actual = data_decoded.build_address_info_index(&mut mock_info_provider);
 
     assert_eq!(expected, actual.unwrap());
+}
+
+#[test]
+fn address_info_index_no_results_returns_none() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x441E604Ad49602c0B9C0B08D0781eCF96740786a"))
+        .times(1)
+        .return_once(move |_| bail!("no address info"));
+
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+    )
+    .unwrap();
+
+    let expected = None;
+
+    let actual = data_decoded.build_address_info_index(&mut mock_info_provider);
+
+    assert_eq!(expected, actual);
 }

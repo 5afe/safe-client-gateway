@@ -1,10 +1,10 @@
-use crate::models::commons::{DataDecoded, ParamValue, Parameter};
+use crate::models::commons::{DataDecoded, ParamValue, Parameter, ValueDecodedType};
 use crate::models::service::transactions::SettingsInfo;
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::InfoProvider;
 use crate::utils::{
     ADD_OWNER_WITH_THRESHOLD, CHANGE_MASTER_COPY, CHANGE_THRESHOLD, DISABLE_MODULE, ENABLE_MODULE,
-    MULTI_SEND, REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
+    MULTI_SEND, MULTI_SEND_TRANSACTIONS_PARAM, REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
 };
 use std::collections::HashMap;
 
@@ -83,6 +83,15 @@ impl DataDecoded {
     ) -> Option<HashMap<String, AddressInfo>> {
         let mut index = HashMap::new();
         if self.method == MULTI_SEND {
+            if let Some(value_decoded_type) =
+                &self.get_parameter_value_decoded(MULTI_SEND_TRANSACTIONS_PARAM)
+            {
+                match value_decoded_type {
+                    ValueDecodedType::InternalTransaction(transactions) => {
+                        // TODO avoid recursion
+                    }
+                }
+            }
         } else {
             if let Some(parameters) = &self.parameters {
                 for parameter in parameters {

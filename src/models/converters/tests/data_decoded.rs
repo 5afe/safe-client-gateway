@@ -510,14 +510,14 @@ fn address_info_index_not_multi_send_address_array_value() {
         .expect_full_address_info_search()
         .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
         .times(1)
-        .return_once(move |address| bail!("no address"))
+        .return_once(move |_| bail!("no address"))
         .in_sequence(&mut sequence);
 
     mock_info_provider
         .expect_full_address_info_search()
         .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
         .times(1)
-        .return_once(move |address| bail!("no address"))
+        .return_once(move |_| bail!("no address"))
         .in_sequence(&mut sequence);
 
     mock_info_provider

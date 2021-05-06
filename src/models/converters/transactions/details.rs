@@ -33,6 +33,10 @@ impl MultisigTransaction {
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation.unwrap_or(Operation::CALL),
+                address_info_index: self
+                    .data_decoded
+                    .as_ref()
+                    .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
@@ -42,10 +46,6 @@ impl MultisigTransaction {
                 .origin
                 .as_ref()
                 .and_then(|origin| safe_app_info_from(origin, info_provider)),
-            address_info_index: self
-                .data_decoded
-                .as_ref()
-                .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
         })
     }
 
@@ -111,16 +111,16 @@ impl ModuleTransaction {
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation,
+                address_info_index: self
+                    .data_decoded
+                    .as_ref()
+                    .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {
                 address: self.module.to_owned(),
             })),
             safe_app_info: None,
-            address_info_index: self
-                .data_decoded
-                .as_ref()
-                .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
         })
     }
 }

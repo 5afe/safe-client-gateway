@@ -15,8 +15,6 @@ pub struct TransactionDetails {
     pub tx_hash: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub safe_app_info: Option<SafeAppInfo>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub address_info_index: Option<HashMap<String, AddressInfo>>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -69,4 +67,6 @@ pub struct TransactionData {
     pub to: String,
     pub value: Option<String>,
     pub operation: Operation,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address_info_index: Option<HashMap<String, AddressInfo>>,
 }

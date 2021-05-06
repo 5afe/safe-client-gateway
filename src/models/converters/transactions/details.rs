@@ -31,6 +31,13 @@ impl MultisigTransaction {
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation.unwrap_or(Operation::CALL),
+                address_info_index: OptionFuture::from(self.data_decoded.as_ref().map(
+                    |data_decoded| async move {
+                        data_decoded.build_address_info_index(info_provider).await
+                    },
+                ))
+                .await
+                .flatten(),
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
@@ -40,13 +47,6 @@ impl MultisigTransaction {
                 self.origin
                     .as_ref()
                     .map(|origin| async move { safe_app_info_from(origin, info_provider).await }),
-            )
-            .await
-            .flatten(),
-            address_info_index: OptionFuture::from(
-                self.data_decoded.as_ref().map(|data_decoded| async move {
-                    data_decoded.build_address_info_index(info_provider).await
-                }),
             )
             .await
             .flatten(),
@@ -115,19 +115,19 @@ impl ModuleTransaction {
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation,
+                address_info_index: OptionFuture::from(self.data_decoded.as_ref().map(
+                    |data_decoded| async move {
+                        data_decoded.build_address_info_index(info_provider).await
+                    },
+                ))
+                .await
+                .flatten(),
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {
                 address: self.module.to_owned(),
             })),
             safe_app_info: None,
-            address_info_index: OptionFuture::from(
-                self.data_decoded.as_ref().map(|data_decoded| async move {
-                    data_decoded.build_address_info_index(info_provider).await
-                }),
-            )
-            .await
-            .flatten(),
         })
     }
 }

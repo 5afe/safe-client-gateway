@@ -69,6 +69,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
             to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
             value: Some(String::from("0")),
             operation: Operation::CALL,
+            address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
             MultisigExecutionDetails {
@@ -104,7 +105,6 @@ async fn multisig_custom_transaction_to_transaction_details() {
                 gas_token_info: None,
             })),
         safe_app_info: None,
-        address_info_index: None
     };
 
     let actual =
@@ -146,13 +146,13 @@ async fn module_transaction_to_transaction_details_success() {
             to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
             value: Some(String::from("0")),
             operation: Operation::CALL,
+            address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
                 address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
             })),
         safe_app_info: None,
-        address_info_index: None
     };
 
     let actual =
@@ -194,13 +194,13 @@ async fn module_transaction_to_transaction_details_failed() {
             to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
             value: Some(String::from("0")),
             operation: Operation::CALL,
+            address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
                 address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
             })),
         safe_app_info: None,
-        address_info_index: None
     };
 
     let actual =
@@ -239,7 +239,6 @@ async fn ethereum_tx_transfer_to_transaction_details() {
         tx_data: None,
         detailed_execution_info: None,
         safe_app_info: None,
-        address_info_index: None
     };
 
     let mut mock_info_provider = MockInfoProvider::new();

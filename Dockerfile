@@ -13,6 +13,7 @@ WORKDIR "/app"
 RUN cargo init
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
+COPY rust-roolchain rust-roolchain
 RUN cargo build --release --locked
 
 COPY . .

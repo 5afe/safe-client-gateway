@@ -20,5 +20,5 @@ else
     docker build -t $DOCKERHUB_PROJECT -f Dockerfile --build-arg VERSION --build-arg BUILD_NUMBER . --cache-from $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:staging || \
     docker build -t $DOCKERHUB_PROJECT -f Dockerfile --build-arg VERSION --build-arg BUILD_NUMBER .
 fi
-docker tag $DOCKERHUB_PROJECT $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1
-docker push $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1
+#docker tag $DOCKERHUB_PROJECT $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1
+#docker push $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1

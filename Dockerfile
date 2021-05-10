@@ -1,5 +1,6 @@
 # Build Stage
-FROM rustlang/rust:nightly-buster-slim as builder
+# We use a stable rust image as we will switch to nightly via the toolchain file.
+FROM rust:1.52.0-slim-buster as builder
 
 RUN set -ex; \ 
   apt-get update; \
@@ -10,10 +11,12 @@ RUN set -ex; \
 ENV USER=root
 WORKDIR "/app"
 # Cache dependencies
+# We copy the toolchain requirements first. 
+# This will make it possible that all the stages after the init can be cached.
+COPY rust-toolchain rust-toolchain
 RUN cargo init
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
-COPY rust-toolchain rust-toolchain
 RUN cargo build --release --locked
 
 COPY . .

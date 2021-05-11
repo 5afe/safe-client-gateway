@@ -80,7 +80,7 @@ impl DataDecoded {
 impl DataDecoded {
     pub(super) fn build_address_info_index(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> Option<HashMap<String, AddressInfo>> {
         if !feature_flag_nested_decoding() {
             return None;
@@ -122,7 +122,7 @@ impl DataDecoded {
 fn put_parameter_into_index(
     parameters: &Option<Vec<Parameter>>,
     index: &mut HashMap<String, AddressInfo>,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
 ) {
     if let Some(parameters) = parameters {
         for parameter in parameters {
@@ -145,7 +145,7 @@ fn put_parameter_into_index(
 fn insert_value_into_index(
     value: &String,
     index: &mut HashMap<String, AddressInfo>,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &impl InfoProvider,
 ) {
     if value.len() == 42
         && value.starts_with("0x")

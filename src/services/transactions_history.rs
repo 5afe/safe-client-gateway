@@ -53,7 +53,7 @@ pub async fn get_history_transactions(
     let mut service_txs =
         backend_txs_to_summary_txs(&mut backend_txs_iter, &mut info_provider, safe_address).await?;
     if backend_paged_txs.next.is_none() {
-        if let Ok(creation_tx) = get_creation_transaction_summary(context, safe_address).await? {
+        if let Ok(creation_tx) = get_creation_transaction_summary(context, safe_address).await {
             service_txs.push(creation_tx);
         }
     }

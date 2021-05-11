@@ -1,4 +1,4 @@
-# Build Stage
+# Build Image
 # We use a stable rust image as we will switch to nightly via the toolchain file.
 FROM rust:1.52.0-slim-buster as builder
 
@@ -27,7 +27,7 @@ ARG BUILD_NUMBER
 RUN rm -rf target/release/.fingerprint/safe-client-gateway*
 RUN cargo build --release --locked
 
-# Image Stage
+# Runtime Image
 FROM debian:buster-slim
 
 

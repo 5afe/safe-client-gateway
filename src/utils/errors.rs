@@ -103,11 +103,19 @@ impl<'r> Responder<'r, 'static> for ApiError {
                 self.details
             );
         }
-        let resp = serde_json::to_string(&self.details).expect("Couldn't serialize error");
+        let resp = serde_json::to_string(&self.details).unwrap_or(String::from(
+            &self
+                .details
+                .message
+                .unwrap_or("No message error from backend".to_string()),
+        ));
         Response::build()
             .sized_body(resp.len(), Cursor::new(resp))
             .header(ContentType::JSON)
-            .status(Status::from_code(self.status).expect("Unknown status code"))
+            .status(
+                Status::from_code(self.status)
+                    .unwrap_or(Status::new(self.status, "Unknown status code")),
+            )
             .ok()
     }
 }

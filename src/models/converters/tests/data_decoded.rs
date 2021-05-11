@@ -2,6 +2,9 @@ use crate::models::commons::{DataDecoded, ParamValue, Parameter};
 use crate::models::service::transactions::{SettingsChange, SettingsInfo};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
+use mockall::predicate::eq;
+use mockall::Sequence;
+use std::collections::HashMap;
 
 #[rocket::async_test]
 async fn data_decoded_set_fallback_handler_to_settings_info() {
@@ -430,4 +433,407 @@ fn data_decoded_with_nested_safe_transaction() {
     };
 
     assert_eq!(expected, data_decoded);
+}
+
+#[rocket::async_test]
+async fn address_info_index_not_multi_send_address_single_value() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(AddressInfo {
+                name: "Master Copy".to_string(),
+                logo_uri: Some("url.de".to_string()),
+            })
+        });
+
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string(),
+            AddressInfo {
+                name: "Master Copy".to_string(),
+                logo_uri: Some("url.de".to_string()),
+            },
+        );
+        map
+    };
+
+    let actual = data_decoded
+        .build_address_info_index(&mock_info_provider)
+        .await;
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[rocket::async_test]
+async fn address_info_index_not_multi_send_address_array_value() {
+    // expected address in json, one will not return to test behaviour of that too
+    // 1) "0x4FB84d2dFc50017aFa759107a389759c8fD077DE" -> returns
+    // 2) "0x111111111117dC0aa78b770fA6A738034120C302" -> returns
+    // 3) "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" -> bails
+    // 4) "0x4FB84d2dFc50017aFa759107a389759c8fD077DE" -> skip duplicate
+    // 5) "0xBc79855178842FDBA0c353494895DEEf509E26bB" -> bails
+    // 6) "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B" -> returns
+    // we expect the index to contain 4 values
+
+    let mut sequence = Sequence::new();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x4FB84d2dFc50017aFa759107a389759c8fD077DE"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x111111111117dC0aa78b770fA6A738034120C302"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
+        .times(1)
+        .return_once(move |_| bail!("no address"))
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
+        .times(1)
+        .return_once(move |_| bail!("no address"))
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0x4FB84d2dFc50017aFa759107a389759c8fD077DE".to_string(),
+            AddressInfo {
+                name: "0x4FB84d2dFc50017aFa759107a389759c8fD077DE_name".to_string(),
+                logo_uri: Some("0x4FB84d2dFc50017aFa759107a389759c8fD077DE_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x111111111117dC0aa78b770fA6A738034120C302".to_string(),
+            AddressInfo {
+                name: "0x111111111117dC0aa78b770fA6A738034120C302_name".to_string(),
+                logo_uri: Some("0x111111111117dC0aa78b770fA6A738034120C302_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B".to_string(),
+            AddressInfo {
+                name: "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_name".to_string(),
+                logo_uri: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
+            },
+        );
+
+        map
+    };
+
+    let actual = data_decoded
+        .build_address_info_index(&mock_info_provider)
+        .await;
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[rocket::async_test]
+async fn address_info_index_multi_send_single_level_of_nesting() {
+    let mut sequence = Sequence::new();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x111111125434b319222CdBf8C261674aDB56F3ae"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
+    )
+    .unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0x111111125434b319222CdBf8C261674aDB56F3ae".to_string(),
+            AddressInfo {
+                name: "0x111111125434b319222CdBf8C261674aDB56F3ae_name".to_string(),
+                logo_uri: Some("0x111111125434b319222CdBf8C261674aDB56F3ae_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_string(),
+            AddressInfo {
+                name: "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_name".to_string(),
+                logo_uri: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_string(),
+            AddressInfo {
+                name: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_name".to_string(),
+                logo_uri: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".to_string(),
+            AddressInfo {
+                name: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_name".to_string(),
+                logo_uri: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
+            AddressInfo {
+                name: "0xBc79855178842FDBA0c353494895DEEf509E26bB_name".to_string(),
+                logo_uri: Some("0xBc79855178842FDBA0c353494895DEEf509E26bB_url".to_string()),
+            },
+        );
+
+        map
+    };
+
+    let actual = data_decoded
+        .build_address_info_index(&mut mock_info_provider)
+        .await;
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[rocket::async_test]
+async fn address_info_index_multi_send_two_levels_of_nesting() {
+    let mut sequence = Sequence::new();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x68881260bd04E9dAc7F77a314360ce05435B4818"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        })
+        .in_sequence(&mut sequence);
+
+    // Had to doctor the json in order to have different address in the nested calls and verify that we
+    // don't call them, not because they are duplicate, but because they are 1 level further nested
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::json::DOCTORED_DATA_DECODED_NESTED_MULTI_SENDS)
+            .unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_string(),
+            AddressInfo {
+                name: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_name".to_string(),
+                logo_uri: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B".to_string(),
+            AddressInfo {
+                name: "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_name".to_string(),
+                logo_uri: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
+            },
+        );
+
+        map.insert(
+            "0x68881260bd04E9dAc7F77a314360ce05435B4818".to_string(),
+            AddressInfo {
+                name: "0x68881260bd04E9dAc7F77a314360ce05435B4818_name".to_string(),
+                logo_uri: Some("0x68881260bd04E9dAc7F77a314360ce05435B4818_url".to_string()),
+            },
+        );
+
+        map
+    };
+
+    let actual = data_decoded
+        .build_address_info_index(&mut mock_info_provider)
+        .await;
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[rocket::async_test]
+async fn address_info_index_skip_address_info_for_0x0() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x441E604Ad49602c0B9C0B08D0781eCF96740786a"))
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressInfo {
+                name: format!("{}_name", &address),
+                logo_uri: Some(format!("{}_url", &address)),
+            })
+        });
+
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+    )
+    .unwrap();
+
+    let expected = {
+        let mut map = HashMap::new();
+        map.insert(
+            "0x441E604Ad49602c0B9C0B08D0781eCF96740786a".to_string(),
+            AddressInfo {
+                name: "0x441E604Ad49602c0B9C0B08D0781eCF96740786a_name".to_string(),
+                logo_uri: Some("0x441E604Ad49602c0B9C0B08D0781eCF96740786a_url".to_string()),
+            },
+        );
+
+        map
+    };
+
+    let actual = data_decoded
+        .build_address_info_index(&mut mock_info_provider)
+        .await;
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[rocket::async_test]
+async fn address_info_index_no_results_returns_none() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_full_address_info_search()
+        .with(eq("0x441E604Ad49602c0B9C0B08D0781eCF96740786a"))
+        .times(1)
+        .return_once(move |_| bail!("no address info"));
+
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+    )
+    .unwrap();
+
+    let expected = None;
+
+    let actual = data_decoded
+        .build_address_info_index(&mut mock_info_provider)
+        .await;
+
+    assert_eq!(expected, actual);
 }

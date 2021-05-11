@@ -16,17 +16,17 @@ else
     cache_tag="staging"
 fi
 
-cached_builder_image_id = $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$cache_tag-builder
-cached_runtime_image_id = $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$cache_tag
-runtime_image_id = $DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1
+cached_builder_image_id="$DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$cache_tag-builder"
+cached_runtime_image_id="$DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$cache_tag"
+runtime_image_id="$DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1"
 
 # Load cached builder image
-docker pull $builder_image_id || true
+docker pull $cached_builder_image_id || true
 # Rebuild builder image if required
 docker build \
     --target builder \
-    --cache-from $builder_image_id \
-    -t $builder_image_id \
+    --cache-from $cached_builder_image_id \
+    -t $cached_builder_image_id \
     -f Dockerfile \
     --build-arg VERSION --build-arg BUILD_NUMBER \
     .
@@ -43,7 +43,7 @@ docker build \
     .
 
 # Push runtime images to remote repository
-docker push $runtime_image_id
+# docker push $runtime_image_id
 
 # Push builder image to remote repository for next build
-docker push $cached_builder_image_id
+# docker push $cached_builder_image_id

@@ -43,7 +43,7 @@ docker build \
     .
 
 # Push runtime images to remote repository
-# docker push $runtime_image_id
+docker push $runtime_image_id
 
 # Push builder image to remote repository for next build
-# docker push $cached_builder_image_id
+docker push $cached_builder_image_id

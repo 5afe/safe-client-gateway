@@ -22,20 +22,3 @@ pub struct AddressEx {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub logo_url: Option<String>,
 }
-
-#[derive(Serialize, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct SafeLastChanges {
-    pub collectibles_tag: String,
-    pub tx_queued_tag: String,
-    pub tx_history_tag: String,
-}
-
-#[derive(Serialize, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct SafeState {
-    #[serde(flatten)]
-    pub safe_config: SafeInfoEx,
-    #[serde(flatten)]
-    pub safe_state: SafeLastChanges,
-}

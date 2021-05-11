@@ -14,7 +14,7 @@ impl MultisigTransaction {
     pub fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &mut dyn InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider.safe_info(&self.safe.to_string())?;
         let gas_token = self
@@ -33,10 +33,6 @@ impl MultisigTransaction {
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation.unwrap_or(Operation::CALL),
-                address_info_index: self
-                    .data_decoded
-                    .as_ref()
-                    .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
@@ -99,7 +95,7 @@ impl MultisigTransaction {
 impl ModuleTransaction {
     pub fn to_transaction_details(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &mut dyn InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
@@ -111,10 +107,6 @@ impl ModuleTransaction {
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation,
-                address_info_index: self
-                    .data_decoded
-                    .as_ref()
-                    .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {

@@ -31,7 +31,7 @@ fn multisig_custom_transaction_to_transaction_details() {
         .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
         .expect_full_address_info_search()
-        .times(2) // to_info and data_decoded "spender" address parameter
+        .times(1)
         .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
@@ -69,7 +69,6 @@ fn multisig_custom_transaction_to_transaction_details() {
             to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
             value: Some(String::from("0")),
             operation: Operation::CALL,
-            address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
             MultisigExecutionDetails {
@@ -145,7 +144,6 @@ fn module_transaction_to_transaction_details_success() {
             to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
             value: Some(String::from("0")),
             operation: Operation::CALL,
-            address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -192,7 +190,6 @@ fn module_transaction_to_transaction_details_failed() {
             to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
             value: Some(String::from("0")),
             operation: Operation::CALL,
-            address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -284,8 +281,8 @@ fn multisig_transaction_with_origin() {
         });
     mock_info_provider
         .expect_full_address_info_search()
-        .times(7) // 1 + 6 calls within data decoded multisig
-        .returning(move |_| bail!("no address info"));
+        .times(1)
+        .return_once(move |_| bail!("no address info"));
 
     let mut expected = crate::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
     expected.retain(|c| !c.is_whitespace());

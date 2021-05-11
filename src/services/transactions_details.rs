@@ -142,45 +142,45 @@ pub(super) fn parse_id(details_id: &str) -> ApiResult<TransactionIdParts> {
         ID_PREFIX_MULTISIG_TX => TransactionIdParts::Multisig {
             safe_address: id_parts
                 .get(1)
-                .ok_or(client_error!(422, "No safe address provided"))?
+                .ok_or(api_error!("No safe address provided"))?
                 .to_string(),
             safe_tx_hash: id_parts
                 .get(2)
-                .ok_or(client_error!(422, "No safe tx hash provided"))?
+                .ok_or(api_error!("No safe tx hash provided"))?
                 .to_string(),
         },
         ID_PREFIX_ETHEREUM_TX => TransactionIdParts::Ethereum {
             safe_address: id_parts
                 .get(1)
-                .ok_or(client_error!(422, "No safe address"))?
+                .ok_or(api_error!("No safe address"))?
                 .to_string(),
             transaction_hash: id_parts
                 .get(2)
-                .ok_or(client_error!(422, "No ethereum tx hash"))?
+                .ok_or(api_error!("No ethereum tx hash"))?
                 .to_string(),
             details_hash: id_parts
                 .get(3)
-                .ok_or(client_error!(422, "No ethereum tx details hash"))?
+                .ok_or(api_error!("No ethereum tx details hash"))?
                 .to_string(),
         },
         ID_PREFIX_MODULE_TX => TransactionIdParts::Module {
             safe_address: id_parts
                 .get(1)
-                .ok_or(client_error!(422, "No safe address"))?
+                .ok_or(api_error!("No safe address"))?
                 .to_string(),
             transaction_hash: id_parts
                 .get(2)
-                .ok_or(client_error!(422, "No module tx hash"))?
+                .ok_or(api_error!("No module tx hash"))?
                 .to_string(),
             details_hash: id_parts
                 .get(3)
-                .ok_or(client_error!(422, "No module tx details hash"))?
+                .ok_or(api_error!("No module tx details hash"))?
                 .to_string(),
         },
         ID_PREFIX_CREATION_TX => TransactionIdParts::Creation(
             id_parts
                 .get(1)
-                .ok_or(client_error!(422, "No safe address provided"))?
+                .ok_or(api_error!("No safe address provided"))?
                 .to_string(),
         ),
         &_ => TransactionIdParts::TransactionHash(tx_type.to_string()),

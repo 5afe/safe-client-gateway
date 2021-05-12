@@ -161,11 +161,14 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     }
 
     async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo> {
-        self.token_info(&address).await.map(|it| AddressInfo {
+        let token_info = self.token_info(&address).await.map(|it| AddressInfo {
             name: it.name,
             logo_uri: it.logo_uri.to_owned(),
-        })?;
-        self.contract_info(&address).await
+        });
+        match token_info {
+            Ok(_) => token_info,
+            Err(_) => self.contract_info(&address).await,
+        }
     }
 }
 

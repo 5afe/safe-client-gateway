@@ -5,8 +5,8 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 #[get("/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>")]
-pub fn list(
-    context: Context,
+pub async fn list(
+    context: Context<'_>,
     safe_address: String,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
@@ -22,6 +22,7 @@ pub fn list(
     Ok(content::Json(
         RequestCached::new(url)
             .request_timeout(collectibles_request_timeout())
-            .execute(context.client(), context.cache())?,
+            .execute(context.client(), context.cache())
+            .await?,
     ))
 }

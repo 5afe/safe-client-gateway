@@ -46,8 +46,8 @@ fn adjust_page_meta_offset_greater_than_0() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn backend_txs_to_summary_txs_empty() {
+#[rocket::async_test]
+async fn backend_txs_to_summary_txs_empty() {
     let backend_txs = Page {
         next: None,
         previous: None,
@@ -58,13 +58,14 @@ fn backend_txs_to_summary_txs_empty() {
     mock_info_provider.expect_token_info().times(0);
     let mut back_end_txs_iter = backend_txs.results.into_iter();
 
-    let actual =
-        backend_txs_to_summary_txs(&mut back_end_txs_iter, &mut mock_info_provider, "").unwrap();
+    let actual = backend_txs_to_summary_txs(&mut back_end_txs_iter, &mut mock_info_provider, "")
+        .await
+        .unwrap();
     assert_eq!(actual.is_empty(), true);
 }
 
-#[test]
-fn backend_txs_to_summary_txs_with_values() {
+#[rocket::async_test]
+async fn backend_txs_to_summary_txs_with_values() {
     let backend_txs =
         serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
@@ -237,6 +238,7 @@ fn backend_txs_to_summary_txs_with_values() {
         &mut mock_info_provider,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
     )
+    .await
     .unwrap();
 
     assert_eq!(expected, actual);
@@ -252,8 +254,8 @@ fn service_txs_to_tx_list_items_empty() {
     assert_eq!(actual.is_empty(), true);
 }
 
-#[test]
-fn service_txs_to_tx_list_items_last_timestamp_undefined() {
+#[rocket::async_test]
+async fn service_txs_to_tx_list_items_last_timestamp_undefined() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -262,8 +264,8 @@ fn service_txs_to_tx_list_items_last_timestamp_undefined() {
         .times(12)
         .returning(move |_| bail!("No address info"));
 
-    let service_txs = get_service_txs(&mut mock_info_provider);
-    let service_txs_copy = get_service_txs(&mut mock_info_provider);
+    let service_txs = get_service_txs(&mut mock_info_provider).await;
+    let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
     let utc_timezone_offset = 0;
 
     let mut service_txs_inter = service_txs.into_iter();
@@ -305,8 +307,8 @@ fn service_txs_to_tx_list_items_last_timestamp_undefined() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
+#[rocket::async_test]
+async fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
     let last_timestamp = 1606867200000;
     let utc_timezone_offset = 0;
 
@@ -318,8 +320,8 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
         .times(12)
         .returning(move |_| bail!("No address info"));
 
-    let service_txs = get_service_txs(&mut mock_info_provider);
-    let service_txs_copy = get_service_txs(&mut mock_info_provider);
+    let service_txs = get_service_txs(&mut mock_info_provider).await;
+    let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
 
     let mut service_txs_inter = service_txs.into_iter();
 
@@ -362,8 +364,8 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
+#[rocket::async_test]
+async fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     let last_timestamp = 1606780800000;
     let utc_timezone_offset = 0;
 
@@ -375,8 +377,8 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
         .times(12)
         .returning(move |_| bail!("No address info"));
 
-    let service_txs = get_service_txs(&mut mock_info_provider);
-    let service_txs_copy = get_service_txs(&mut mock_info_provider);
+    let service_txs = get_service_txs(&mut mock_info_provider).await;
+    let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
 
     let mut service_txs_inter = service_txs.into_iter();
 
@@ -416,8 +418,8 @@ fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
+#[rocket::async_test]
+async fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -426,8 +428,8 @@ fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
         .times(12)
         .returning(move |_| bail!("No address info"));
 
-    let service_txs = get_service_txs(&mut mock_info_provider);
-    let service_txs_copy = get_service_txs(&mut mock_info_provider);
+    let service_txs = get_service_txs(&mut mock_info_provider).await;
+    let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
     let berlin_timezone_offset = 3600; // + 1 hours Germany/Berlin
 
     let mut service_txs_inter = service_txs.into_iter();
@@ -470,8 +472,8 @@ fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
+#[rocket::async_test]
+async fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -480,8 +482,8 @@ fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
         .times(12)
         .returning(move |_| bail!("No address info"));
 
-    let service_txs = get_service_txs(&mut mock_info_provider);
-    let service_txs_copy = get_service_txs(&mut mock_info_provider);
+    let service_txs = get_service_txs(&mut mock_info_provider).await;
+    let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
     let melbourne_timezone_offset = 39600; // + 11 hours Melbourne/Australia
 
     let mut service_txs_inter = service_txs.into_iter();
@@ -528,8 +530,8 @@ fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
+#[rocket::async_test]
+async fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -538,8 +540,8 @@ fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
         .times(12)
         .returning(move |_| bail!("No address info"));
 
-    let service_txs = get_service_txs(&mut mock_info_provider);
-    let service_txs_copy = get_service_txs(&mut mock_info_provider);
+    let service_txs = get_service_txs(&mut mock_info_provider).await;
+    let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
     let buenos_aires_timezone_offset = -10800; // -3 hours Argentina/Buenos Aires
 
     let mut service_txs_inter = service_txs.into_iter();
@@ -583,9 +585,9 @@ fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
     assert_eq!(expected, actual);
 }
 
-#[test]
+#[rocket::async_test]
 #[should_panic]
-fn peek_timestamp_and_remove_item_empty() {
+async fn peek_timestamp_and_remove_item_empty() {
     let utc_timezone_offset = 3600;
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -599,11 +601,12 @@ fn peek_timestamp_and_remove_item_empty() {
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
         utc_timezone_offset,
     )
+    .await
     .unwrap();
 }
 
-#[test]
-fn peek_timestamp_and_remove_item_with_items() {
+#[rocket::async_test]
+async fn peek_timestamp_and_remove_item_with_items() {
     let expected_timestamp = 1606780800000;
     let utc_timezone_offset = 0;
 
@@ -627,6 +630,7 @@ fn peek_timestamp_and_remove_item_with_items() {
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
         utc_timezone_offset,
     )
+    .await
     .unwrap();
 
     assert_eq!(expected_timestamp, actual_timestamp);
@@ -643,19 +647,22 @@ fn get_day_timestamp_millis_for_02_12_2020_00_00_01() {
     assert_eq!(expected, actual);
 }
 
-fn get_service_txs(mock_info_provider: &mut MockInfoProvider) -> Vec<TransactionSummary> {
+async fn get_service_txs(mock_info_provider: &mut MockInfoProvider) -> Vec<TransactionSummary> {
     let backend_txs =
         serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE).unwrap();
-    backend_txs
-        .results
-        .into_iter()
-        .flat_map(|transaction| {
-            transaction
-                .to_transaction_summary(
-                    mock_info_provider,
-                    "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
-                )
-                .unwrap_or(vec![])
-        })
-        .collect()
+
+    let mut result = vec![];
+
+    for tx in backend_txs.results {
+        result.extend(
+            tx.to_transaction_summary(
+                mock_info_provider,
+                "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+            )
+            .await
+            .unwrap_or_default(),
+        )
+    }
+
+    result
 }

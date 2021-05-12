@@ -17,6 +17,7 @@ use crate::models::service::transactions::{
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
 use crate::utils::TRANSFER_METHOD;
+use rocket::futures::future::OptionFuture;
 
 impl MultisigTransaction {
     fn confirmation_count(&self) -> u64 {
@@ -64,14 +65,14 @@ impl MultisigTransaction {
         }
     }
 
-    fn transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
+    async fn transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
         let value = self.value_as_uint();
         let data_size = data_size(&self.data);
 
         if (value > 0 && data_size > 0) || !self.operation.contains(&Operation::CALL) {
-            TransactionInfo::Custom(self.to_custom(info_provider))
+            TransactionInfo::Custom(self.to_custom(info_provider).await)
         } else if value > 0 && data_size == 0 {
-            TransactionInfo::Transfer(self.to_ether_transfer(info_provider))
+            TransactionInfo::Transfer(self.to_ether_transfer(info_provider).await)
         } else if value == 0
             && data_size > 0
             && self.safe == self.to
@@ -80,7 +81,7 @@ impl MultisigTransaction {
                 .as_ref()
                 .map_or_else(|| false, |it| it.is_settings_change())
         {
-            TransactionInfo::SettingsChange(self.to_settings_change(info_provider))
+            TransactionInfo::SettingsChange(self.to_settings_change(info_provider).await)
         } else if self
             .data_decoded
             .as_ref()
@@ -90,35 +91,35 @@ impl MultisigTransaction {
             .unwrap_or(false)
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
         {
-            match info_provider.token_info(&self.to) {
+            match info_provider.token_info(&self.to).await {
                 Ok(token) => match token.token_type {
-                    TokenType::Erc20 => {
-                        TransactionInfo::Transfer(self.to_erc20_transfer(&token, info_provider))
-                    }
-                    TokenType::Erc721 => {
-                        TransactionInfo::Transfer(self.to_erc721_transfer(&token, info_provider))
-                    }
-                    _ => TransactionInfo::Custom(self.to_custom(info_provider)),
+                    TokenType::Erc20 => TransactionInfo::Transfer(
+                        self.to_erc20_transfer(&token, info_provider).await,
+                    ),
+                    TokenType::Erc721 => TransactionInfo::Transfer(
+                        self.to_erc721_transfer(&token, info_provider).await,
+                    ),
+                    _ => TransactionInfo::Custom(self.to_custom(info_provider).await),
                 },
-                _ => TransactionInfo::Custom(self.to_custom(info_provider)),
+                _ => TransactionInfo::Custom(self.to_custom(info_provider).await),
             }
         } else {
-            TransactionInfo::Custom(self.to_custom(info_provider))
+            TransactionInfo::Custom(self.to_custom(info_provider).await)
         }
     }
 
-    fn to_erc20_transfer(
+    async fn to_erc20_transfer(
         &self,
         token: &TokenInfo,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: get_address_info(&self.safe, &sender, info_provider),
+            sender_info: get_address_info(&self.safe, &sender, info_provider).await,
             sender,
-            recipient_info: get_address_info(&self.safe, &recipient, info_provider),
+            recipient_info: get_address_info(&self.safe, &recipient, info_provider).await,
             recipient,
             direction,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
@@ -136,18 +137,18 @@ impl MultisigTransaction {
         }
     }
 
-    fn to_erc721_transfer(
+    async fn to_erc721_transfer(
         &self,
         token: &TokenInfo,
-        info_provider: &mut dyn InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: get_address_info(&self.safe, &sender, info_provider),
+            sender_info: get_address_info(&self.safe, &sender, info_provider).await,
             sender,
-            recipient_info: get_address_info(&self.safe, &recipient, info_provider),
+            recipient_info: get_address_info(&self.safe, &recipient, info_provider).await,
             recipient,
             direction,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
@@ -167,11 +168,11 @@ impl MultisigTransaction {
         }
     }
 
-    fn to_ether_transfer(&self, info_provider: &mut dyn InfoProvider) -> Transfer {
+    async fn to_ether_transfer(&self, info_provider: &impl InfoProvider) -> Transfer {
         Transfer {
             sender_info: None,
             sender: self.safe.to_owned(),
-            recipient_info: info_provider.full_address_info_search(&self.to).ok(),
+            recipient_info: info_provider.full_address_info_search(&self.to).await.ok(),
             recipient: self.to.to_owned(),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {
@@ -180,20 +181,23 @@ impl MultisigTransaction {
         }
     }
 
-    fn to_settings_change(&self, info_provider: &mut dyn InfoProvider) -> SettingsChange {
+    async fn to_settings_change(&self, info_provider: &impl InfoProvider) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
-            settings_info: self
-                .data_decoded
-                .as_ref()
-                .and_then(|it| it.to_settings_info(info_provider)),
+            settings_info: OptionFuture::from(
+                self.data_decoded
+                    .as_ref()
+                    .map(|it| async move { it.to_settings_info(info_provider).await }),
+            )
+            .await
+            .flatten(),
         }
     }
 
-    fn to_custom(&self, info_provider: &mut dyn InfoProvider) -> Custom {
+    async fn to_custom(&self, info_provider: &impl InfoProvider) -> Custom {
         Custom {
             to: self.to.to_owned(),
-            to_info: info_provider.full_address_info_search(&self.to).ok(),
+            to_info: info_provider.full_address_info_search(&self.to).await.ok(),
             is_cancellation: self.is_cancellation(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap().into(),
@@ -245,9 +249,9 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    fn to_transaction_info(&self, info_provider: &mut dyn InfoProvider) -> TransactionInfo {
+    async fn to_transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
         TransactionInfo::Custom(Custom {
-            to_info: info_provider.full_address_info_search(&self.to).ok(),
+            to_info: info_provider.full_address_info_search(&self.to).await.ok(),
             to: self.to.to_owned(),
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),

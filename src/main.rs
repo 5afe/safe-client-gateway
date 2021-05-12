@@ -1,4 +1,5 @@
-#![feature(proc_macro_hygiene, decl_macro, option_result_contains)]
+#![feature(async_closure, proc_macro_hygiene, decl_macro, option_result_contains)]
+#![deny(unused_must_use)]
 
 extern crate log;
 
@@ -26,29 +27,29 @@ mod utils;
 mod json;
 
 use crate::routes::error_catchers;
-use cache::redis::ServiceCache;
+use cache::redis::create_pool;
 use dotenv::dotenv;
 use routes::active_routes;
 use std::time::Duration;
 use utils::cors::CORS;
 
-fn main() {
+#[launch]
+fn rocket() -> _ {
     dotenv().ok();
     env_logger::init();
 
-    let client = reqwest::blocking::Client::builder()
+    let client = reqwest::Client::builder()
         .connect_timeout(Duration::from_millis(
             config::internal_client_connect_timeout(),
         ))
         .build()
         .unwrap();
 
-    rocket::ignite()
+    rocket::build()
         .mount("/", active_routes())
+        .register("/", error_catchers())
+        .manage(create_pool())
         .manage(client)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
-        .attach(ServiceCache::fairing())
-        .register(error_catchers())
-        .launch();
 }

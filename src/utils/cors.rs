@@ -5,6 +5,7 @@ use std::io::Cursor;
 
 pub struct CORS();
 
+#[rocket::async_trait]
 impl Fairing for CORS {
     fn info(&self) -> Info {
         Info {
@@ -13,7 +14,7 @@ impl Fairing for CORS {
         }
     }
 
-    fn on_response(&self, request: &Request, response: &mut Response) {
+    async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
         // TODO https://github.com/lawliet89/rocket_cors/blob/master/examples/fairing.rs
         if request.method() == Method::Options || response.content_type() == Some(ContentType::JSON)
         {
@@ -31,7 +32,7 @@ impl Fairing for CORS {
 
         if request.method() == Method::Options {
             response.set_header(ContentType::Plain);
-            response.set_sized_body(Cursor::new(""));
+            response.set_sized_body(0, Cursor::new(""));
         }
     }
 }

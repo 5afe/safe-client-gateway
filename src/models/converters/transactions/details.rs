@@ -7,45 +7,49 @@ use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
 };
+use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::utils::errors::ApiResult;
+use rocket::futures::future::OptionFuture;
 
 impl MultisigTransaction {
-    pub fn to_transaction_details(
+    pub async fn to_transaction_details(
         &self,
         rejections: Option<Vec<String>>,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
-        let safe_info = info_provider.safe_info(&self.safe.to_string())?;
-        let gas_token = self
-            .gas_token
-            .as_ref()
-            .map(|it| info_provider.token_info(it).ok())
-            .flatten();
+        let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
+        let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
-            tx_info: self.transaction_info(info_provider),
+            tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation.unwrap_or(Operation::CALL),
-                address_info_index: self
-                    .data_decoded
-                    .as_ref()
-                    .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
+                address_info_index: OptionFuture::from(self.data_decoded.as_ref().map(
+                    |data_decoded| async move {
+                        data_decoded.build_address_info_index(info_provider).await
+                    },
+                ))
+                .await
+                .flatten(),
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
                 self.build_execution_details(safe_info, gas_token, rejections),
             )),
-            safe_app_info: self
-                .origin
-                .as_ref()
-                .and_then(|origin| safe_app_info_from(origin, info_provider)),
+            safe_app_info: OptionFuture::from(
+                self.origin
+                    .as_ref()
+                    .map(|origin| async move { safe_app_info_from(origin, info_provider).await }),
+            )
+            .await
+            .flatten(),
         })
     }
 
@@ -97,24 +101,27 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    pub fn to_transaction_details(
+    pub async fn to_transaction_details(
         &self,
-        info_provider: &mut impl InfoProvider,
+        info_provider: &impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
-            tx_info: self.to_transaction_info(info_provider),
+            tx_info: self.to_transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: self.to.to_owned(),
                 value: self.value.to_owned(),
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
                 operation: self.operation,
-                address_info_index: self
-                    .data_decoded
-                    .as_ref()
-                    .and_then(|data_decoded| data_decoded.build_address_info_index(info_provider)),
+                address_info_index: OptionFuture::from(self.data_decoded.as_ref().map(
+                    |data_decoded| async move {
+                        data_decoded.build_address_info_index(info_provider).await
+                    },
+                ))
+                .await
+                .flatten(),
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {

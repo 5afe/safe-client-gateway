@@ -7,8 +7,8 @@ use crate::models::service::transactions::{
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
-#[test]
-fn ether_transfer_dto_ether_incoming_transfer_transaction() {
+#[rocket::async_test]
+async fn ether_transfer_dto_ether_incoming_transfer_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_full_address_info_search()
@@ -33,13 +33,14 @@ fn ether_transfer_dto_ether_incoming_transfer_transaction() {
         &ether_transfer_dto,
         &mut mock_info_provider,
         safe,
-    );
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_info() {
+#[rocket::async_test]
+async fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_full_address_info_search()
@@ -72,13 +73,14 @@ fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_info() {
         &ether_transfer_dto,
         &mut mock_info_provider,
         safe,
-    );
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_info() {
+#[rocket::async_test]
+async fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_full_address_info_search()
@@ -111,7 +113,8 @@ fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_info() {
         &ether_transfer_dto,
         &mut mock_info_provider,
         safe,
-    );
+    )
+    .await;
 
     assert_eq!(expected, actual);
 }

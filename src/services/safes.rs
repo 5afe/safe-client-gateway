@@ -11,21 +11,27 @@ use chrono::Utc;
 
 // We use Utc::now().timestamp() as the fallback value so that we don't block clients from reloading
 // as returning always 0, and the clients invalidating on value changes, would prevent reloading
-pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<SafeState> {
-    let mut info_provider = DefaultInfoProvider::new(context);
-    let safe_info = info_provider.safe_info(safe_address)?;
-    let safe_info_ex = safe_info.to_safe_info_ex(&mut info_provider);
+pub async fn get_safe_info_ex(
+    context: &Context<'_>,
+    safe_address: &String,
+) -> ApiResult<SafeState> {
+    let info_provider = DefaultInfoProvider::new(context);
+    let safe_info = info_provider.safe_info(safe_address).await?;
+    let safe_info_ex = safe_info.to_safe_info_ex(&info_provider).await;
 
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
             collectibles_tag: get_last_collectible(context, safe_address)
+                .await
                 .unwrap_or(Utc::now().timestamp())
                 .to_string(),
             tx_queued_tag: get_last_queued_tx(context, safe_address)
+                .await
                 .unwrap_or(Utc::now().timestamp())
                 .to_string(),
             tx_history_tag: get_last_history_tx(context, safe_address)
+                .await
                 .unwrap_or(Utc::now().timestamp())
                 .to_string(),
         },
@@ -34,7 +40,7 @@ pub fn get_safe_info_ex(context: &Context, safe_address: &String) -> ApiResult<S
     Ok(safe_state)
 }
 
-fn get_last_collectible(context: &Context, safe_address: &String) -> ApiResult<i64> {
+async fn get_last_collectible(context: &Context<'_>, safe_address: &String) -> ApiResult<i64> {
     let url = format!(
         "{}/v1/safes/{}/transfers/?\
         &erc721=true\
@@ -45,7 +51,8 @@ fn get_last_collectible(context: &Context, safe_address: &String) -> ApiResult<i
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let transaction: Page<Transfer> = serde_json::from_str(&body)?;
 
     transaction
@@ -61,7 +68,7 @@ fn get_last_collectible(context: &Context, safe_address: &String) -> ApiResult<i
         .ok_or(api_error!("Couldn't get tx timestamps"))
 }
 
-fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64> {
+async fn get_last_queued_tx(context: &Context<'_>, safe_address: &String) -> ApiResult<i64> {
     let url = format!(
         "{}/v1/safes/{}/multisig-transactions/?\
         &ordering=-modified\
@@ -74,7 +81,8 @@ fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let transaction: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
     transaction
@@ -86,7 +94,7 @@ fn get_last_queued_tx(context: &Context, safe_address: &String) -> ApiResult<i64
         .ok_or(api_error!("Couldn't get tx timestamps"))
 }
 
-fn get_last_history_tx(context: &Context, safe_address: &String) -> ApiResult<i64> {
+async fn get_last_history_tx(context: &Context<'_>, safe_address: &String) -> ApiResult<i64> {
     let url = format!(
         "{}/v1/safes/{}/all-transactions/?\
         &ordering=executionDate
@@ -98,7 +106,8 @@ fn get_last_history_tx(context: &Context, safe_address: &String) -> ApiResult<i6
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     let transaction: Page<Transaction> = serde_json::from_str(&body)?;
 
     transaction

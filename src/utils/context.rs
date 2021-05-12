@@ -1,32 +1,28 @@
 use rocket::http::uri::Origin;
 use rocket::request::{self, FromRequest, Request};
-use rocket::Outcome;
 use rocket::State;
 
 use crate::cache::redis::ServiceCache;
-use crate::cache::Cache;
 use crate::config::scheme;
 
-pub struct Context<'a, 'r> {
-    request: &'a Request<'r>,
-    cache: ServiceCache,
+pub struct Context<'r> {
+    uri: String,
+    host: Option<String>,
+    cache: ServiceCache<'r>,
+    client: State<'r, reqwest::Client>,
 }
 
-impl<'a, 'r> Context<'a, 'r> {
-    fn get<T: FromRequest<'a, 'r>>(&self) -> T {
-        self.request.guard::<T>().unwrap()
+impl<'r> Context<'r> {
+    pub fn client(&self) -> &'r reqwest::Client {
+        self.client.inner()
     }
 
-    pub fn client(&self) -> &'r reqwest::blocking::Client {
-        self.get::<State<reqwest::blocking::Client>>().inner()
-    }
-
-    pub fn cache(&self) -> &impl Cache {
+    pub fn cache(&self) -> &ServiceCache<'r> {
         &self.cache
     }
 
     pub fn uri(&self) -> String {
-        self.request.uri().to_string()
+        self.uri.clone()
     }
 
     pub fn build_absolute_url(&self, origin: Origin) -> String {
@@ -34,18 +30,30 @@ impl<'a, 'r> Context<'a, 'r> {
     }
 
     fn host(&self) -> Option<String> {
-        self.request
-            .headers()
-            .get_one("Host")
+        self.host
+            .as_ref()
             .map(|host| format!("{}://{}", scheme(), host))
     }
 }
 
-impl<'a, 'r> FromRequest<'a, 'r> for Context<'a, 'r> {
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for Context<'r> {
     type Error = ();
 
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<Self, Self::Error> {
-        let cache = request.guard().unwrap();
-        return Outcome::Success(Context { request, cache });
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        let cache = request.guard().await.unwrap();
+        let client = try_outcome!(request.guard::<State<reqwest::Client>>().await);
+        // TODO: I couldn't get the request to be part of the context ... not sure if we want that for the future
+        let host = request
+            .headers()
+            .get_one("Host")
+            .map(|host| host.to_string());
+        let uri = request.uri().to_string();
+        return request::Outcome::Success(Context {
+            host,
+            uri,
+            cache,
+            client,
+        });
     }
 }

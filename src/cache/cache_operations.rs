@@ -4,8 +4,11 @@ use crate::config::{
     default_request_timeout, request_cache_duration, request_error_cache_duration,
 };
 use crate::utils::errors::ApiResult;
+use rocket::futures::future::BoxFuture;
+use rocket::futures::FutureExt;
 use rocket::response::content;
 use serde::Serialize;
+use std::future::Future;
 
 pub enum Database {
     Info = 1,
@@ -48,7 +51,8 @@ where
     database: Database,
     pub key: String,
     pub duration: usize,
-    pub resp_generator: Option<Box<dyn Fn() -> ApiResult<R> + 'a>>,
+    // "dyn" allows setting the type of the BoxFuture to different times in runtime
+    pub resp_generator: Option<Box<dyn Fn() -> BoxFuture<'a, ApiResult<R>> + Send + Sync + 'a>>,
 }
 
 impl<'a, R> CacheResponse<'a, R>
@@ -74,17 +78,21 @@ where
         self
     }
 
-    pub fn resp_generator(&mut self, resp_generator: impl Fn() -> ApiResult<R> + 'a) -> &mut Self {
-        self.resp_generator = Some(Box::new(resp_generator));
+    pub fn resp_generator<F, Fut>(&mut self, resp_generator: F) -> &mut Self
+    where
+        F: Fn() -> Fut + Send + Sync + 'a,
+        Fut: Future<Output = ApiResult<R>> + Send + 'a,
+    {
+        self.resp_generator = Some(Box::new(move || resp_generator().boxed()));
         self
     }
 
-    pub fn generate(&self) -> ApiResult<R> {
-        (self.resp_generator.as_ref().unwrap())()
+    pub async fn generate(&self) -> ApiResult<R> {
+        (self.resp_generator.as_ref().unwrap())().await
     }
 
-    pub fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
-        cache_response(cache, self)
+    pub async fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
+        cache_response(cache, &self).await
     }
 }
 
@@ -134,12 +142,8 @@ impl RequestCached {
         self
     }
 
-    pub fn execute(
-        &self,
-        client: &reqwest::blocking::Client,
-        cache: &dyn Cache,
-    ) -> ApiResult<String> {
+    pub async fn execute(&self, client: &reqwest::Client, cache: &impl Cache) -> ApiResult<String> {
         assert!(self.request_timeout > 0);
-        request_cached(cache, &client, self)
+        request_cached(cache, &client, self).await
     }
 }

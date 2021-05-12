@@ -15,8 +15,8 @@ use crate::utils::errors::ApiResult;
 use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 
-pub fn get_history_transactions(
-    context: &Context,
+pub async fn get_history_transactions(
+    context: &Context<'_>,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -34,7 +34,8 @@ pub fn get_history_transactions(
     let page_metadata = adjust_page_meta(&incoming_page_metadata);
     let extended_page_url = Some(page_metadata.to_url_string());
 
-    let backend_paged_txs = fetch_backend_paged_txs(context, safe_address, &extended_page_url)?;
+    let backend_paged_txs =
+        fetch_backend_paged_txs(context, safe_address, &extended_page_url).await?;
     let mut backend_txs_iter = backend_paged_txs.results.into_iter();
     let prev_page_timestamp = if page_metadata.offset != 0 {
         peek_timestamp_and_remove_item(
@@ -43,15 +44,16 @@ pub fn get_history_transactions(
             safe_address,
             request_timezone_offset,
         )
+        .await
         .unwrap_or(-1)
     } else {
         -1
     };
 
     let mut service_txs =
-        backend_txs_to_summary_txs(&mut backend_txs_iter, &mut info_provider, safe_address)?;
+        backend_txs_to_summary_txs(&mut backend_txs_iter, &mut info_provider, safe_address).await?;
     if backend_paged_txs.next.is_none() {
-        if let Ok(creation_tx) = get_creation_transaction_summary(context, safe_address) {
+        if let Ok(creation_tx) = get_creation_transaction_summary(context, safe_address).await {
             service_txs.push(creation_tx);
         }
     }
@@ -81,7 +83,7 @@ pub fn get_history_transactions(
 }
 
 fn build_page_url(
-    context: &Context,
+    context: &Context<'_>,
     safe_address: &str,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -91,8 +93,11 @@ fn build_page_url(
     url.as_ref().map(|_| {
         context.build_absolute_url(uri!(
             crate::routes::transactions::history_transactions: safe_address,
-            offset_page_meta(page_meta, direction * (page_meta.limit as i64)),
-            timezone_offset.clone().unwrap_or("0".to_string()),
+            Some(offset_page_meta(
+                page_meta,
+                direction * (page_meta.limit as i64)
+            )),
+            Some(timezone_offset.clone().unwrap_or("0".to_string())),
         ))
     })
 }
@@ -111,8 +116,8 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
     }
 }
 
-fn fetch_backend_paged_txs(
-    context: &Context,
+async fn fetch_backend_paged_txs(
+    context: &Context<'_>,
     safe_address: &str,
     page_url: &Option<String>,
 ) -> ApiResult<Page<Transaction>> {
@@ -128,22 +133,28 @@ fn fetch_backend_paged_txs(
     log::debug!("page_metadata: {:#?}", &page_metadata);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())?;
+        .execute(context.client(), context.cache())
+        .await?;
     Ok(serde_json::from_str::<Page<Transaction>>(&body)?)
 }
 
-pub(super) fn backend_txs_to_summary_txs(
-    txs: &mut dyn Iterator<Item = Transaction>,
-    info_provider: &mut dyn InfoProvider,
+pub(super) async fn backend_txs_to_summary_txs(
+    txs: &mut impl Iterator<Item = Transaction>,
+    info_provider: &mut impl InfoProvider,
     safe_address: &str,
 ) -> ApiResult<Vec<TransactionSummary>> {
-    Ok(txs
-        .flat_map(|transaction| {
+    let mut results = vec![];
+
+    for transaction in txs {
+        results.extend(
             transaction
                 .to_transaction_summary(info_provider, safe_address)
-                .unwrap_or(vec![])
-        })
-        .collect())
+                .await
+                .unwrap_or_default(),
+        );
+    }
+
+    Ok(results)
 }
 
 pub(super) fn service_txs_to_tx_list_items(
@@ -171,16 +182,17 @@ pub(super) fn service_txs_to_tx_list_items(
     Ok(tx_list_items)
 }
 
-pub(super) fn peek_timestamp_and_remove_item(
-    transactions: &mut dyn Iterator<Item = Transaction>,
-    info_provider: &mut dyn InfoProvider,
+pub(super) async fn peek_timestamp_and_remove_item(
+    transactions: &mut impl Iterator<Item = Transaction>,
+    info_provider: &mut impl InfoProvider,
     safe_address: &str,
     timezone_offset: i32,
 ) -> ApiResult<i64> {
     let timestamp = transactions
         .next()
         .ok_or(api_error!("empty transactions"))?
-        .to_transaction_summary(info_provider, safe_address)?
+        .to_transaction_summary(info_provider, safe_address)
+        .await?
         .last()
         .ok_or(api_error!("empty transactions"))?
         .timestamp;

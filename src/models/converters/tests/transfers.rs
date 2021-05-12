@@ -9,8 +9,8 @@ use crate::models::service::transactions::{
 };
 use crate::providers::info::*;
 
-#[test]
-fn erc_20_transfer_dto_to_transaction_info() {
+#[rocket::async_test]
+async fn erc_20_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc_20_transfer = TransferDto::Erc20(
         serde_json::from_str::<Erc20TransferDto>(
@@ -45,13 +45,15 @@ fn erc_20_transfer_dto_to_transaction_info() {
         ),
     });
 
-    let actual = erc_20_transfer.to_transfer(&mut mock_info_provider, safe_address);
+    let actual = erc_20_transfer
+        .to_transfer(&mut mock_info_provider, safe_address)
+        .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn erc_721_transfer_dto_to_transaction_info() {
+#[rocket::async_test]
+async fn erc_721_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc_721_transfer = TransferDto::Erc721(
         serde_json::from_str::<Erc721TransferDto>(
@@ -85,13 +87,15 @@ fn erc_721_transfer_dto_to_transaction_info() {
         ),
     });
 
-    let actual = erc_721_transfer.to_transfer(&mut mock_info_provider, safe_address);
+    let actual = erc_721_transfer
+        .to_transfer(&mut mock_info_provider, safe_address)
+        .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn ether_transfer_dto_to_transaction_info() {
+#[rocket::async_test]
+async fn ether_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
         serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
@@ -116,13 +120,15 @@ fn ether_transfer_dto_to_transaction_info() {
         })),
     });
 
-    let actual = ether_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
+    let actual = ether_transfer_dto
+        .to_transfer(&mut mock_info_provider, safe_address)
+        .await;
 
     assert_eq!(expected, actual);
 }
 
-#[test]
-fn unknown_transfer_dto_to_transaction_info() {
+#[rocket::async_test]
+async fn unknown_transfer_dto_to_transaction_info() {
     let unknown_transfer_dto = TransferDto::Unknown;
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
 
@@ -131,7 +137,9 @@ fn unknown_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider.expect_contract_info().times(0);
 
-    let actual = unknown_transfer_dto.to_transfer(&mut mock_info_provider, safe_address);
+    let actual = unknown_transfer_dto
+        .to_transfer(&mut mock_info_provider, safe_address)
+        .await;
 
     assert_eq!(TransactionInfo::Unknown, actual);
 }
@@ -154,8 +162,8 @@ fn unknown_transfer_dto_get_transaction_hash() {
     assert_eq!(None, actual);
 }
 
-#[test]
-fn transfer_dto_to_transaction_details() {
+#[rocket::async_test]
+async fn transfer_dto_to_transaction_details() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
         serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
@@ -192,13 +200,14 @@ fn transfer_dto_to_transaction_details() {
 
     let actual = ether_transfer_dto
         .to_transaction_details(&mut mock_info_provider, safe_address)
+        .await
         .unwrap();
 
     assert_eq!(expected, actual)
 }
 
-#[test]
-fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
+#[rocket::async_test]
+async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
@@ -228,10 +237,12 @@ fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
         }),
     });
 
-    let actual = transfer.to_transfer(
-        &mut mock_info_provider,
-        "0xBc79855178842FDBA0c353494895DEEf509E26bB",
-    );
+    let actual = transfer
+        .to_transfer(
+            &mut mock_info_provider,
+            "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+        )
+        .await;
 
     assert_eq!(expected, actual)
 }

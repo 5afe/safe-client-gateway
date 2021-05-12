@@ -14,6 +14,7 @@ use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
 use mockall::automock;
+use rocket::futures::TryFutureExt;
 use rocket::tokio::sync::Mutex;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -161,14 +162,13 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     }
 
     async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo> {
-        let token_info = self.token_info(&address).await.map(|it| AddressInfo {
-            name: it.name,
-            logo_uri: it.logo_uri.to_owned(),
-        });
-        match token_info {
-            Ok(_) => token_info,
-            Err(_) => self.contract_info(&address).await,
-        }
+        self.token_info(&address)
+            .map_ok(|it| AddressInfo {
+                name: it.name,
+                logo_uri: it.logo_uri,
+            })
+            .or_else(|_| async move { self.contract_info(&address).await })
+            .await
     }
 }
 

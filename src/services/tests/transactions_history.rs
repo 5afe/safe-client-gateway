@@ -647,6 +647,38 @@ fn get_day_timestamp_millis_for_02_12_2020_00_00_01() {
     assert_eq!(expected, actual);
 }
 
+#[rocket::async_test]
+async fn service_txs_to_tx_list_items_date_failed_mapping_is_ignored() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_full_address_info_search()
+        .times(6)
+        .returning(move |_| bail!("No address info"));
+
+    let mut backend_txs =
+        serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE).unwrap();
+
+    backend_txs.results.push(Transaction::Unknown);
+
+    let mut result = vec![];
+
+    for tx in backend_txs.results {
+        result.extend(
+            tx.to_transaction_summary(
+                &mock_info_provider,
+                "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+            )
+            .await
+            .unwrap_or_default(),
+        )
+    }
+
+    assert!(!result.is_empty());
+    assert_eq!(result.len(), 6);
+}
+
 async fn get_service_txs(mock_info_provider: &mut MockInfoProvider) -> Vec<TransactionSummary> {
     let backend_txs =
         serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE).unwrap();

@@ -146,12 +146,18 @@ pub(super) async fn backend_txs_to_summary_txs(
     let mut results = vec![];
 
     for transaction in txs {
-        if let Ok(tx_summaries) = transaction
-            .to_transaction_summary(info_provider, safe_address)
-            .await
-        {
-            results.extend(tx_summaries);
-        }
+        // if let Ok(tx_summaries) = transaction
+        //     .to_transaction_summary(info_provider, safe_address)
+        //     .await
+        // {
+        //     results.extend(tx_summaries);
+        // }
+        results.extend(
+            transaction
+                .to_transaction_summary(info_provider, safe_address)
+                .await
+                .unwrap_or_default(),
+        );
     }
 
     Ok(results)

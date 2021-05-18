@@ -63,8 +63,8 @@ Additionally, for cache testing, we have included a script that fills up the cac
 
 ```shell
 python3 -m venv venv
-source venv/bin/activate && pip install -r requirements.txt
-python start.py
+source venv/bin/activate && pip install -r scripts/cache_warmer/requirements.txt
+python scripts/cache_warmer/start.py
 # once you are done testing
 deactivate
 ```

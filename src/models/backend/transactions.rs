@@ -17,15 +17,22 @@ pub enum Transaction {
     Unknown,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug, PartialEq, Hash)]
 #[serde(rename_all = "camelCase")]
-pub struct MultisigTransaction {
+pub struct SafeTransaction {
     pub safe: String,
     pub to: String,
     pub value: Option<String>,
     pub data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
     pub operation: Operation,
+}
+
+#[derive(Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct MultisigTransaction {
+    #[serde(flatten)]
+    pub safe_transaction: SafeTransaction,
     pub gas_token: Option<String>,
     pub safe_tx_gas: Option<usize>,
     pub base_gas: Option<usize>,
@@ -64,18 +71,14 @@ pub struct EthereumTransaction {
 #[derive(Deserialize, Debug, Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleTransaction {
+    #[serde(flatten)]
+    pub safe_transaction: SafeTransaction,
     pub created: String,
     pub execution_date: DateTime<Utc>,
     pub block_number: u64,
     pub is_successful: bool,
     pub transaction_hash: String,
-    pub safe: String,
     pub module: String,
-    pub to: String,
-    pub value: Option<String>,
-    pub data: Option<String>,
-    pub data_decoded: Option<DataDecoded>,
-    pub operation: Operation,
     // pub transfers: Option<Vec<Transfer>>,
 }
 

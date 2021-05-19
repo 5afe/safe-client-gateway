@@ -42,7 +42,9 @@ impl MultisigTransaction {
         &self,
         info_provider: &impl InfoProvider,
     ) -> ApiResult<Vec<TransactionSummary>> {
-        let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
+        let safe_info = info_provider
+            .safe_info(&self.safe_transaction.safe.to_string())
+            .await?;
         let tx_status = self.map_status(&safe_info);
         let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations {
             Some(self.missing_signers(&safe_info.owners))
@@ -50,7 +52,11 @@ impl MultisigTransaction {
             None
         };
         Ok(vec![TransactionSummary {
-            id: create_id!(ID_PREFIX_MULTISIG_TX, &self.safe, self.safe_tx_hash),
+            id: create_id!(
+                ID_PREFIX_MULTISIG_TX,
+                &self.safe_transaction.safe,
+                self.safe_tx_hash
+            ),
             timestamp: self
                 .execution_date
                 .unwrap_or(self.submission_date)
@@ -116,7 +122,7 @@ impl ModuleTransaction {
         vec![TransactionSummary {
             id: create_id!(
                 ID_PREFIX_MODULE_TX,
-                self.safe,
+                self.safe_transaction.safe,
                 self.transaction_hash,
                 hex_hash(self)
             ),
@@ -124,7 +130,7 @@ impl ModuleTransaction {
             tx_status: self.map_status(),
             execution_info: None,
             safe_app_info: None,
-            tx_info: self.to_transaction_info(info_provider).await,
+            tx_info: self.transaction_info(info_provider).await,
         }]
     }
 }

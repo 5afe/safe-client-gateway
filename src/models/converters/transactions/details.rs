@@ -17,7 +17,10 @@ impl MultisigTransaction {
         rejections: Option<Vec<String>>,
         info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
-        let safe_info = info_provider.safe_info(&self.safe.to_string()).await?;
+        let safe_transaction = &self.safe_transaction;
+        let safe_info = info_provider
+            .safe_info(&safe_transaction.safe.to_string())
+            .await?;
         let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
 
         Ok(TransactionDetails {
@@ -25,12 +28,12 @@ impl MultisigTransaction {
             tx_status: self.map_status(&safe_info),
             tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
-                to: self.to.to_owned(),
-                value: self.value.to_owned(),
-                hex_data: self.data.to_owned(),
-                data_decoded: self.data_decoded.clone(),
-                operation: self.operation,
-                address_info_index: OptionFuture::from(self.data_decoded.as_ref().map(
+                to: self.safe_transaction.to.to_owned(),
+                value: self.safe_transaction.value.to_owned(),
+                hex_data: self.safe_transaction.data.to_owned(),
+                data_decoded: self.safe_transaction.data_decoded.clone(),
+                operation: self.safe_transaction.operation,
+                address_info_index: OptionFuture::from(self.safe_transaction.data_decoded.as_ref().map(
                     |data_decoded| async move {
                         data_decoded.build_address_info_index(info_provider).await
                     },
@@ -104,17 +107,18 @@ impl ModuleTransaction {
         &self,
         info_provider: &impl InfoProvider,
     ) -> ApiResult<TransactionDetails> {
+        let safe_transaction = &self.safe_transaction;
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
-            tx_info: self.to_transaction_info(info_provider).await,
+            tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
-                to: self.to.to_owned(),
-                value: self.value.to_owned(),
-                hex_data: self.data.to_owned(),
-                data_decoded: self.data_decoded.clone(),
-                operation: self.operation,
-                address_info_index: OptionFuture::from(self.data_decoded.as_ref().map(
+                to: safe_transaction.to.to_owned(),
+                value: safe_transaction.value.to_owned(),
+                hex_data: safe_transaction.data.to_owned(),
+                data_decoded: safe_transaction.data_decoded.clone(),
+                operation: safe_transaction.operation,
+                address_info_index: OptionFuture::from(safe_transaction.data_decoded.as_ref().map(
                     |data_decoded| async move {
                         data_decoded.build_address_info_index(info_provider).await
                     },

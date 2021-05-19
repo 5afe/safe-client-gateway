@@ -8,7 +8,20 @@ fn domain_hash_for_safe_address() {
         "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
     ))
     .unwrap();
-    let actual = to_hex_string!(domain_hash(&safe_address).to_vec());
+    let actual = to_hex_string!(domain_hash(&safe_address, false).to_vec());
+    assert_eq!(
+        "0x6dda5da6f3b6225311946ab4732b5658018db6dc890378fbdb529d8e9832762a",
+        actual
+    );
+}
+
+#[test]
+fn domain_hash_for_safe_address_legacy() {
+    let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
+        "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
+    ))
+    .unwrap();
+    let actual = to_hex_string!(domain_hash(&safe_address, true).to_vec());
     assert_eq!(
         "0x6dda5da6f3b6225311946ab4732b5658018db6dc890378fbdb529d8e9832762a",
         actual

@@ -24,6 +24,7 @@ use std::future::Future;
 use std::time::Duration;
 
 pub const TOKENS_KEY: &'static str = "dip_ti";
+pub const SAFE_V_1_3_0: &'static str = "1.3.0";
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]

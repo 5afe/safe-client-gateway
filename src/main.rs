@@ -2,6 +2,7 @@
 #![deny(unused_must_use)]
 
 extern crate log;
+extern crate semver;
 
 #[macro_use]
 extern crate rocket;

@@ -1,12 +1,12 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{base_transaction_service_url, chain_id, transaction_request_timeout};
 use crate::models::backend::transactions::MultisigTransaction;
-use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::providers::info::{DefaultInfoProvider, InfoProvider, SAFE_V_1_3_0};
 use crate::utils::context::Context;
 use ethabi::Uint;
 use ethcontract_common::hash::keccak256;
 use ethereum_types::{Address, H256};
-use semver_parser::version;
+use semver::Version;
 
 pub const DOMAIN_SEPARATOR_TYPEHASH: &'static str =
     "0x035aff83d86937d35b32e04f0ddc6ff469290eef2f1b692d8a815c89404d4749";
@@ -26,19 +26,20 @@ pub async fn fetch_rejections(
 
     let version = safe_info
         .as_ref()
-        .and_then(|safe_info| safe_info.version.as_ref().map(|it| version::parse(it).ok()))
+        .and_then(|safe_info| safe_info.version.as_ref().map(|it| Version::parse(it).ok()))
         .flatten();
 
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
-  is_legacy =  if let version = Some(version) {
-
+    let is_legacy = if let Some(version) = version {
+        version <= Version::parse(SAFE_V_1_3_0).unwrap_or(Version::new(1, 3, 0))
     } else {
         true
-    }
+    };
+
     let safe_tx_hash =
-        to_hex_string!(hash(safe_address, nonce, domain_hash(&safe_address)).to_vec());
+        to_hex_string!(hash(safe_address, nonce, domain_hash(&safe_address, is_legacy)).to_vec());
 
     let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash).await;
     multisig_tx
@@ -74,12 +75,12 @@ pub(super) fn domain_hash(safe_address: &Address, is_legacy: bool) -> [u8; 32] {
             .unwrap();
 
     let encoded = if is_legacy {
-        &ethabi::encode(&[
+        ethabi::encode(&[
             ethabi::Token::Uint(Uint::from(domain_separator.0)),
             ethabi::Token::Address(Address::from(safe_address.0)),
         ])
     } else {
-        &ethabi::encode(&[
+        ethabi::encode(&[
             ethabi::Token::Uint(Uint::from(domain_separator.0)),
             ethabi::Token::Uint(Uint::from(chain_id())),
             ethabi::Token::Address(Address::from(safe_address.0)),

@@ -30,8 +30,7 @@ pub async fn fetch_rejections(
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
-    let safe_tx_hash =
-        to_hex_string!(hash(safe_address, nonce, domain_hash(&safe_address, is_legacy)).to_vec());
+    let safe_tx_hash = to_hex_string!(hash(safe_address, nonce, is_legacy).to_vec());
 
     let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash).await;
     multisig_tx
@@ -47,9 +46,10 @@ pub async fn fetch_rejections(
         .flatten()
 }
 
-pub(super) fn hash(safe_address: Address, nonce: u64, domain_hash: [u8; 32]) -> [u8; 32] {
+pub(super) fn hash(safe_address: Address, nonce: u64, is_legacy: bool) -> [u8; 32] {
     let erc_191_byte = u8::from_str_radix(ERC191_BYTE, 16).unwrap();
     let erc_191_version = u8::from_str_radix(ERC191_VERSION, 16).unwrap();
+    let domain_hash = domain_hash(&safe_address, is_legacy);
 
     let mut encoded = ethabi::encode(&[
         ethabi::Token::Uint(Uint::from(domain_hash)),

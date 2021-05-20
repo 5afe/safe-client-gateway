@@ -39,8 +39,7 @@ fn safe_tx_hash_for_safe_address_cancellation_tx_legacy() {
     .unwrap();
     let nonce = 39;
 
-    let domain_hash = domain_hash(&safe_address, true);
-    let actual = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
+    let actual = to_hex_string!(hash(safe_address, nonce, true).to_vec());
     assert_eq!(
         "0x89067bfebe450e45c02dd97e3cc9bd1656d49ebb8a17819829eab9c5dc575c27",
         actual
@@ -55,8 +54,7 @@ fn safe_tx_hash_for_safe_address_cancellation_tx() {
     .unwrap();
     let nonce = 39;
 
-    let domain_hash = domain_hash(&safe_address, false);
-    let actual = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
+    let actual = to_hex_string!(hash(safe_address, nonce, false).to_vec());
     assert_eq!(
         "0xdce3bf453ed8cf84d13c76911e5d11c31501b24004b9e856d6091808067bd398",
         actual

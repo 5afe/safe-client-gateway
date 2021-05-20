@@ -272,6 +272,34 @@ async fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_m
 }
 
 #[rocket::async_test]
+async fn module_transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_method() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_full_address_info_search()
+        .times(1)
+        .return_once(move |_| bail!("No address info"));
+
+    let tx =
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_UNKNOWN_SETTINGS_CHANGE)
+            .unwrap();
+    let expected = TransactionInfo::Custom(Custom {
+        to: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        data_size: "68".to_string(),
+        value: "0".to_string(),
+        method_name: Some("newAndDifferentAddOwnerWithThreshold".to_string()),
+        action_count: None,
+        to_info: None,
+        is_cancellation: false,
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
+
+    assert_eq!(expected, actual);
+}
+
+#[rocket::async_test]
 async fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
     let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_USDT).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();

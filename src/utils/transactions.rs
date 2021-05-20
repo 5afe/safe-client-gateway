@@ -25,12 +25,13 @@ pub async fn fetch_rejections(
 ) -> Option<Vec<String>> {
     let info_provider = DefaultInfoProvider::new(&context);
     let safe_info = info_provider.safe_info(safe_address).await.ok();
+    let is_legacy = is_legacy_domain_separator(safe_info);
 
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
 
     let safe_tx_hash =
-        to_hex_string!(hash(safe_address, nonce, domain_hash(&safe_address, safe_info)).to_vec());
+        to_hex_string!(hash(safe_address, nonce, domain_hash(&safe_address, is_legacy)).to_vec());
 
     let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash).await;
     multisig_tx
@@ -60,8 +61,7 @@ pub(super) fn hash(safe_address: Address, nonce: u64, domain_hash: [u8; 32]) -> 
     keccak256(encoded)
 }
 
-pub(super) fn domain_hash(safe_address: &Address, safe_info: Option<SafeInfo>) -> [u8; 32] {
-    let is_legacy = is_legacy_domain_separator(safe_info);
+pub(super) fn domain_hash(safe_address: &Address, is_legacy: bool) -> [u8; 32] {
     let domain_separator_typehash = if is_legacy {
         DOMAIN_SEPARATOR_TYPEHASH_LEGACY
     } else {

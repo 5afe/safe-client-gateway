@@ -356,6 +356,42 @@ async fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
 }
 
 #[rocket::async_test]
+async fn module_transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
+    let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_CRYPTO_KITTIES).unwrap();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider
+        .expect_token_info()
+        .times(1)
+        .return_once(move |_| Ok(token_info));
+    mock_info_provider
+        .expect_full_address_info_search()
+        .times(1)
+        .return_once(move |_| bail!("No address info"));
+
+    let tx =
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_ERC721_TRANSFER).unwrap();
+    let expected = TransactionInfo::Transfer(Transfer {
+        sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        sender_info: None,
+        recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+        recipient_info: None,
+        direction: TransferDirection::Outgoing,
+        transfer_info: TransferInfo::Erc721(Erc721Transfer {
+            token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
+            token_id: "1316".to_string(),
+            token_name: Some("CryptoKitties".to_string()),
+            token_symbol: Some("CK".to_string()),
+            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string()),
+        }),
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
+
+    assert_eq!(expected, actual);
+}
+
+#[rocket::async_test]
 async fn transaction_data_decoded_is_erc20_receiver_not_ok_transfer_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);

@@ -132,6 +132,34 @@ async fn transaction_data_size_0_value_greater_than_0() {
 }
 
 #[rocket::async_test]
+async fn module_transaction_data_size_0_value_greater_than_0() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_full_address_info_search()
+        .times(1)
+        .return_once(move |_| bail!("No address info"));
+
+    let tx =
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_ETHER_TRANSFER).unwrap();
+    let expected = TransactionInfo::Transfer(Transfer {
+        sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        sender_info: None,
+        recipient: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
+        recipient_info: None,
+        direction: TransferDirection::Outgoing,
+        transfer_info: TransferInfo::Ether(EtherTransfer {
+            value: "100000000000000000".to_string(),
+        }),
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
+
+    assert_eq!(expected, actual);
+}
+
+#[rocket::async_test]
 async fn transaction_data_size_greater_than_value_0_to_is_safe_is_settings_method() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);

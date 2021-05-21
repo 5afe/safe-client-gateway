@@ -169,5 +169,5 @@ pub fn version() -> String {
 }
 
 pub fn chain_id() -> u64 {
-    u64_with_default("CHAIN_ID", 4) // Is there a more sensible default than Rinkeby?
+    u64_with_default("CHAIN_ID", 1)
 }

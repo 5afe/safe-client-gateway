@@ -1,7 +1,6 @@
 extern crate chrono;
 
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
-use crate::models::commons::Operation;
 use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
 use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
@@ -30,7 +29,7 @@ impl MultisigTransaction {
                 value: self.value.to_owned(),
                 hex_data: self.data.to_owned(),
                 data_decoded: self.data_decoded.clone(),
-                operation: self.operation.unwrap_or(Operation::CALL),
+                operation: self.operation,
                 address_info_index: OptionFuture::from(self.data_decoded.as_ref().map(
                     |data_decoded| async move {
                         data_decoded.build_address_info_index(info_provider).await

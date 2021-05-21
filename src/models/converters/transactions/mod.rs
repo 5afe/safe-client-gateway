@@ -69,7 +69,7 @@ impl MultisigTransaction {
         let value = self.value_as_uint();
         let data_size = data_size(&self.data);
 
-        if (value > 0 && data_size > 0) || !self.operation.contains(&Operation::CALL) {
+        if (value > 0 && data_size > 0) || self.operation != Operation::CALL {
             TransactionInfo::Custom(self.to_custom(info_provider).await)
         } else if value > 0 && data_size == 0 {
             TransactionInfo::Transfer(self.to_ether_transfer(info_provider).await)
@@ -221,9 +221,7 @@ impl MultisigTransaction {
         self.to == self.safe
             && data_size(&self.data) == 0
             && self.value.as_ref().map_or(true, |value| value == "0")
-            && self
-                .operation
-                .map_or(true, |operation| operation == Operation::CALL)
+            && self.operation == Operation::CALL
             && self
                 .base_gas
                 .as_ref()

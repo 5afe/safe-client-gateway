@@ -44,7 +44,7 @@ fn is_cancellation_has_data_result_false() {
 #[test]
 fn is_cancellation_delegate_operation_false() {
     let mut tx = build_multisig_tx();
-    tx.operation = Some(Operation::DELEGATE);
+    tx.operation = Operation::DELEGATE;
 
     assert_eq!(false, tx.is_cancellation());
 }
@@ -88,7 +88,7 @@ fn build_multisig_tx() -> MultisigTransaction {
         value: None,
         data: None,
         data_decoded: None,
-        operation: None,
+        operation: Operation::CALL,
         gas_token: None,
         safe_tx_gas: None,
         base_gas: None,

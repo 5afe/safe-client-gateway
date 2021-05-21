@@ -25,7 +25,7 @@ pub struct MultisigTransaction {
     pub value: Option<String>,
     pub data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
-    pub operation: Option<Operation>,
+    pub operation: Operation,
     pub gas_token: Option<String>,
     pub safe_tx_gas: Option<usize>,
     pub base_gas: Option<usize>,

@@ -112,10 +112,7 @@ impl<'r> Responder<'r, 'static> for ApiError {
         Response::build()
             .sized_body(resp.len(), Cursor::new(resp))
             .header(ContentType::JSON)
-            .status(
-                Status::from_code(self.status)
-                    .unwrap_or(Status::new(self.status)),
-            )
+            .status(Status::from_code(self.status).unwrap_or(Status::new(self.status)))
             .ok()
     }
 }

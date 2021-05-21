@@ -1,4 +1,4 @@
-use crate::models::backend::transactions::{Confirmation, MultisigTransaction};
+use crate::models::backend::transactions::{Confirmation, MultisigTransaction, SafeTransaction};
 use crate::models::commons::Operation;
 use crate::models::commons::{DataDecoded, Parameter};
 use crate::models::service::transactions::{
@@ -33,18 +33,20 @@ async fn multisig_tx_check_erc721_transfer() {
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let to = String::from("0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF");
     let multisig_tx = MultisigTransaction {
-        safe: safe.to_string(),
-        to,
-        value: Some(String::from("0")),
-        data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e76443000000000000000000000000000000000000000000000000000000000000000466")),
-        data_decoded: Some(DataDecoded {
-            method: String::from("transfer"),
-            parameters: Some(vec!(
-                Parameter { name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300").into(), value_decoded: None },
-                Parameter { name: String::from("value"), param_type: String::from("uint256"), value: String::from("1126").into(), value_decoded: None },
-            )),
-        }),
-        operation: Operation::CALL,
+        safe_transaction: SafeTransaction {
+            safe: safe.to_string(),
+            to,
+            value: Some(String::from("0")),
+            data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e76443000000000000000000000000000000000000000000000000000000000000000466")),
+            data_decoded: Some(DataDecoded {
+                method: String::from("transfer"),
+                parameters: Some(vec!(
+                    Parameter { name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300").into(), value_decoded: None },
+                    Parameter { name: String::from("value"), param_type: String::from("uint256"), value: String::from("1126").into(), value_decoded: None },
+                )),
+            }),
+            operation: Operation::CALL,
+        },
         gas_token: Some(String::from("0x0000000000000000000000000000000000000000")),
         safe_tx_gas: Some(47810),
         base_gas: Some(0),
@@ -136,18 +138,20 @@ async fn multisig_tx_check_erc20_transfer() {
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let to = String::from("0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85");
     let multisig_tx = MultisigTransaction {
-        safe: safe.to_string(),
-        to,
-        value: Some(String::from("0")),
-        data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000002d79883d2000")),
-        data_decoded: Some(DataDecoded {
-            method: String::from("transfer"),
-            parameters: Some(vec!(
-                Parameter { name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300").into(), value_decoded: None },
-                Parameter { name: String::from("value"), param_type: String::from("uint256"), value: String::from("50000000000000").into(), value_decoded: None },
-            )),
-        }),
-        operation: Operation::CALL,
+        safe_transaction: SafeTransaction {
+            safe: safe.to_string(),
+            to,
+            value: Some(String::from("0")),
+            data: Some(String::from("0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000002d79883d2000")),
+            data_decoded: Some(DataDecoded {
+                method: String::from("transfer"),
+                parameters: Some(vec!(
+                    Parameter { name: String::from("to"), param_type: String::from("address"), value: String::from("0x938bae50a210b80EA233112800Cd5Bc2e7644300").into(), value_decoded: None },
+                    Parameter { name: String::from("value"), param_type: String::from("uint256"), value: String::from("50000000000000").into(), value_decoded: None },
+                )),
+            }),
+            operation: Operation::CALL,
+        },
         gas_token: Some(String::from("0x0000000000000000000000000000000000000000")),
         safe_tx_gas: Some(36698),
         base_gas: Some(0),
@@ -229,12 +233,14 @@ async fn multisig_tx_check_ether_transfer() {
     let safe = "0x938bae50a210b80EA233112800Cd5Bc2e7644300";
     let to = String::from("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0");
     let multisig_tx = MultisigTransaction {
-        safe: safe.to_string(),
-        to,
-        value: Some(String::from("50000000000000")),
-        data: None,
-        data_decoded: None,
-        operation: Operation::CALL,
+        safe_transaction: SafeTransaction {
+            safe: safe.to_string(),
+            to,
+            value: Some(String::from("50000000000000")),
+            data: None,
+            data_decoded: None,
+            operation: Operation::CALL,
+        },
         gas_token: Some(String::from("0x0000000000000000000000000000000000000000")),
         safe_tx_gas: Some(27845),
         base_gas: Some(0),

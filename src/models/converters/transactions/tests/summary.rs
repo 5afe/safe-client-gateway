@@ -1,6 +1,6 @@
 use crate::models::backend::transactions::{
     CreationTransaction, EthereumTransaction, ModuleTransaction, MultisigTransaction,
-    Transaction as TransactionDto,
+    SafeTransaction, Transaction as TransactionDto,
 };
 use crate::models::backend::transfers::{
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
@@ -56,18 +56,20 @@ async fn module_tx_to_summary_transaction_success() {
     let expected_date = Utc::now();
     let expected_date_in_millis = expected_date.timestamp_millis();
     let module_tx = ModuleTransaction {
+        safe_transaction: SafeTransaction {
+            safe: String::from("safe"),
+            to: expected_to.clone(),
+            value: None,
+            data: None,
+            data_decoded: None,
+            operation: Operation::CALL,
+        },
         created: String::from("created"),
         execution_date: expected_date,
         block_number: 0,
         is_successful: true,
         transaction_hash: String::from("tx_hash"),
-        safe: String::from("safe"),
         module: String::from("module"),
-        to: expected_to.clone(),
-        value: None,
-        data: None,
-        data_decoded: None,
-        operation: Operation::CALL,
     };
 
     let actual =
@@ -75,7 +77,7 @@ async fn module_tx_to_summary_transaction_success() {
     let expected = vec![TransactionSummary {
         id: create_id!(
             ID_PREFIX_MODULE_TX,
-            module_tx.safe,
+            module_tx.safe_transaction.safe,
             module_tx.transaction_hash,
             hex_hash(&module_tx)
         ),
@@ -110,18 +112,20 @@ async fn module_tx_to_summary_transaction_failed() {
     let expected_date = Utc::now();
     let expected_date_in_millis = expected_date.timestamp_millis();
     let module_tx = ModuleTransaction {
+        safe_transaction: SafeTransaction {
+            safe: String::from("safe"),
+            to: expected_to.clone(),
+            value: None,
+            data: None,
+            data_decoded: None,
+            operation: Operation::CALL,
+        },
         created: String::from("created"),
         execution_date: expected_date,
         block_number: 0,
         is_successful: false,
         transaction_hash: String::from("tx_hash"),
-        safe: String::from("safe"),
         module: String::from("module"),
-        to: expected_to.clone(),
-        value: None,
-        data: None,
-        data_decoded: None,
-        operation: Operation::CALL,
     };
 
     let actual =
@@ -129,7 +133,7 @@ async fn module_tx_to_summary_transaction_failed() {
     let expected = vec![TransactionSummary {
         id: create_id!(
             ID_PREFIX_MODULE_TX,
-            module_tx.safe,
+            module_tx.safe_transaction.safe,
             module_tx.transaction_hash,
             hex_hash(&module_tx)
         ),

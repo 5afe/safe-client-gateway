@@ -1,0 +1,50 @@
+{
+  "created": "2020-12-01T18:04:14Z",
+  "executionDate": "2020-12-01T18:04:14Z",
+  "blockNumber": 7645325,
+  "isSuccessful": true,
+  "transactionHash": "0xcd10b23687bf336d0f4c0a3383590d3d1722aaa99a41fd0d289a5f69a8266c8f",
+  "safe": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+  "module": "0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134",
+  "to": "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02",
+  "value": "0",
+  "data": "0xa9059cbb000000000000000000000000f353ebba77e5e71c210599236686d51ca1f88b8400000000000000000000000000000000000000000000000000005af3107a4000",
+  "operation": 0,
+  "dataDecoded": {
+    "method": "transfer",
+    "parameters": [
+      {
+        "name": "to",
+        "type": "address",
+        "value": "0x938bae50a210b80EA233112800Cd5Bc2e7644300"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "value": "1316"
+      }
+    ]
+  },
+  "transfers": [
+    {
+      "type": "ERC721_TRANSFER",
+      "executionDate": "2020-08-07T09:04:14Z",
+      "blockNumber": 6975696,
+      "transactionHash": "0xaed85c03ee20f4c3b76e6ebb46ceb8c8498a98c877089b870b421c8462ac5820",
+      "to": "0x938bae50a210b80EA233112800Cd5Bc2e7644300",
+      "value": null,
+      "tokenId": "1316",
+      "tokenAddress": "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF",
+      "tokenInfo": {
+        "type": "ERC721",
+        "address": "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF",
+        "name": "CryptoKitties",
+        "symbol": "CK",
+        "decimals": 0,
+        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png"
+      },
+      "from": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b"
+    }
+  ],
+  "txType": "MODULE_TRANSACTION"
+}

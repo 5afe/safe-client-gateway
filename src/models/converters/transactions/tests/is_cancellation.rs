@@ -1,5 +1,5 @@
 use super::super::chrono::Utc;
-use crate::models::backend::transactions::MultisigTransaction;
+use crate::models::backend::transactions::{MultisigTransaction, SafeTransaction};
 use crate::models::commons::Operation;
 
 #[test]
@@ -12,7 +12,7 @@ fn is_cancellation_result_true() {
 #[test]
 fn is_cancellation_has_0x_data_result_true() {
     let mut tx = build_multisig_tx();
-    tx.data = Some(String::from("0x"));
+    tx.safe_transaction.data = Some(String::from("0x"));
 
     assert_eq!(true, tx.is_cancellation());
 }
@@ -28,7 +28,7 @@ fn is_cancellation_has_safe_tx_gas_result_false() {
 #[test]
 fn is_cancellation_has_value_result_false() {
     let mut tx = build_multisig_tx();
-    tx.value = Some(String::from("1"));
+    tx.safe_transaction.value = Some(String::from("1"));
 
     assert_eq!(false, tx.is_cancellation());
 }
@@ -36,7 +36,7 @@ fn is_cancellation_has_value_result_false() {
 #[test]
 fn is_cancellation_has_data_result_false() {
     let mut tx = build_multisig_tx();
-    tx.data = Some(String::from("0x12345678"));
+    tx.safe_transaction.data = Some(String::from("0x12345678"));
 
     assert_eq!(false, tx.is_cancellation());
 }
@@ -44,7 +44,7 @@ fn is_cancellation_has_data_result_false() {
 #[test]
 fn is_cancellation_delegate_operation_false() {
     let mut tx = build_multisig_tx();
-    tx.operation = Operation::DELEGATE;
+    tx.safe_transaction.operation = Operation::DELEGATE;
 
     assert_eq!(false, tx.is_cancellation());
 }
@@ -83,12 +83,14 @@ fn is_cancellation_has_refund_receiver_result_false() {
 
 fn build_multisig_tx() -> MultisigTransaction {
     MultisigTransaction {
-        safe: "0x1".to_string(),
-        to: "0x1".to_string(),
-        value: None,
-        data: None,
-        data_decoded: None,
-        operation: Operation::CALL,
+        safe_transaction: SafeTransaction {
+            safe: "0x1".to_string(),
+            to: "0x1".to_string(),
+            value: None,
+            data: None,
+            data_decoded: None,
+            operation: Operation::CALL,
+        },
         gas_token: None,
         safe_tx_gas: None,
         base_gas: None,

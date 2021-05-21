@@ -38,6 +38,11 @@ pub const MULTISIG_TX_CANCELLATION: &str =
 
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 pub const MODULE_TX_FAILED: &str = include_str!("transactions/module_transaction_failed.json");
+pub const MODULE_TX_ERC20_TRANSFER: &str = include_str!("transactions/module_erc20_transfer.json");
+pub const MODULE_TX_ERC721_TRANSFER: &str = include_str!("transactions/module_erc721_transfer.json");
+pub const MODULE_TX_ETHER_TRANSFER: &str = include_str!("transactions/module_ether_transfer.json");
+pub const MODULE_TX_UNKNOWN_SETTINGS_CHANGE: &str = include_str!("transactions/module_newAndDifferentAddOwnerWithThreshold_settings_change.json");
+pub const MODULE_TX_SETTINGS_CHANGE: &str = include_str!("transactions/module_addOwnerWithThreshold_settings_change.json");
 
 pub const ETHEREUM_TX_INCONSISTENT_TOKEN_TYPES: &str =
     include_str!("transactions/ethereum_inconsistent_token_types.json");

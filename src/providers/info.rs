@@ -13,9 +13,11 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
+use lazy_static::lazy_static;
 use mockall::automock;
 use rocket::futures::TryFutureExt;
 use rocket::tokio::sync::Mutex;
+use semver::Version;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -24,6 +26,9 @@ use std::future::Future;
 use std::time::Duration;
 
 pub const TOKENS_KEY: &'static str = "dip_ti";
+lazy_static! {
+    pub static ref SAFE_V_1_3_0: Version = Version::new(1, 3, 0);
+}
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]

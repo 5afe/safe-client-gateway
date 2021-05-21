@@ -31,7 +31,7 @@ impl SafeTransaction {
         let data_size = data_size(&self.data);
 
         if (value > 0 && data_size > 0) || self.operation != Operation::CALL {
-            TransactionInfo::Custom(self.custom_decode(info_provider, is_cancellation).await)
+            TransactionInfo::Custom(self.to_custom(info_provider, is_cancellation).await)
         } else if value > 0 && data_size == 0 {
             TransactionInfo::Transfer(self.to_ether_transfer(info_provider).await)
         } else if value == 0
@@ -61,23 +61,17 @@ impl SafeTransaction {
                         self.to_erc721_transfer(&token, info_provider).await,
                     ),
                     _ => TransactionInfo::Custom(
-                        self.custom_decode(info_provider, is_cancellation).await,
+                        self.to_custom(info_provider, is_cancellation).await,
                     ),
                 },
-                _ => TransactionInfo::Custom(
-                    self.custom_decode(info_provider, is_cancellation).await,
-                ),
+                _ => TransactionInfo::Custom(self.to_custom(info_provider, is_cancellation).await),
             }
         } else {
-            TransactionInfo::Custom(self.custom_decode(info_provider, is_cancellation).await)
+            TransactionInfo::Custom(self.to_custom(info_provider, is_cancellation).await)
         }
     }
 
-    async fn custom_decode(
-        &self,
-        info_provider: &impl InfoProvider,
-        is_cancellation: bool,
-    ) -> Custom {
+    async fn to_custom(&self, info_provider: &impl InfoProvider, is_cancellation: bool) -> Custom {
         Custom {
             to: self.to.to_owned(),
             to_info: info_provider.full_address_info_search(&self.to).await.ok(),
@@ -241,7 +235,11 @@ impl MultisigTransaction {
     fn is_cancellation(&self) -> bool {
         self.safe_transaction.to == self.safe_transaction.safe
             && data_size(&self.safe_transaction.data) == 0
-            && self.safe_transaction.value.as_ref().map_or(true, |value| value == "0")
+            && self
+                .safe_transaction
+                .value
+                .as_ref()
+                .map_or(true, |value| value == "0")
             && self.safe_transaction.operation == Operation::CALL
             && self
                 .base_gas

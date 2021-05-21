@@ -17,9 +17,8 @@ impl MultisigTransaction {
         rejections: Option<Vec<String>>,
         info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
-        let safe_transaction = &self.safe_transaction;
         let safe_info = info_provider
-            .safe_info(&safe_transaction.safe.to_string())
+            .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
         let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
 
@@ -33,11 +32,14 @@ impl MultisigTransaction {
                 hex_data: self.safe_transaction.data.to_owned(),
                 data_decoded: self.safe_transaction.data_decoded.clone(),
                 operation: self.safe_transaction.operation,
-                address_info_index: OptionFuture::from(self.safe_transaction.data_decoded.as_ref().map(
-                    |data_decoded| async move {
-                        data_decoded.build_address_info_index(info_provider).await
-                    },
-                ))
+                address_info_index: OptionFuture::from(
+                    self.safe_transaction
+                        .data_decoded
+                        .as_ref()
+                        .map(|data_decoded| async move {
+                            data_decoded.build_address_info_index(info_provider).await
+                        }),
+                )
                 .await
                 .flatten(),
             }),

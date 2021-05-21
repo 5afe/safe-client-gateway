@@ -82,7 +82,7 @@ async fn backend_txs_to_summary_txs_with_values() {
     let mut back_end_txs_iter = backend_txs.results.into_iter();
     let expected = vec![
         TransactionSummary {
-            id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0xcd10b23687bf336d0f4c0a3383590d3d1722aaa99a41fd0d289a5f69a8266c8f_0xd53ac0f689ace74a".into(),
+            id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0xcd10b23687bf336d0f4c0a3383590d3d1722aaa99a41fd0d289a5f69a8266c8f_0x53b6e88b578a6313".into(),
             timestamp: 1606845854000,
             tx_status: Success,
             tx_info: TransactionInfo::Custom(
@@ -100,7 +100,7 @@ async fn backend_txs_to_summary_txs_with_values() {
             safe_app_info: None,
         },
         TransactionSummary {
-            id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x1cf24abdb39bb7b156677a128e709cea55c6991b12708904d1f0f3664ad6646e_0x6000265bdbf4bceb".into(),
+            id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x1cf24abdb39bb7b156677a128e709cea55c6991b12708904d1f0f3664ad6646e_0x2e5157f6f782e36f".into(),
             timestamp: 1606845794000,
             tx_status: Success,
             tx_info: TransactionInfo::Custom(
@@ -118,7 +118,7 @@ async fn backend_txs_to_summary_txs_with_values() {
             safe_app_info: None,
         },
         TransactionSummary {
-            id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x3f12bb74cd91ef09d553f66e3623bceaf879ba3dcb325227b1fbf2455757891a_0x8a20bf269d0c3ee2".into(),
+            id: "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x3f12bb74cd91ef09d553f66e3623bceaf879ba3dcb325227b1fbf2455757891a_0x15a0e5a089475db".into(),
             timestamp: 1606845070000,
             tx_status: Success,
             tx_info: TransactionInfo::Custom(

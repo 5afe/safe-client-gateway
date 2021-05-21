@@ -3,12 +3,11 @@ use crate::config::{redis_scan_count, redis_url};
 use r2d2::{Pool, PooledConnection};
 use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 use rocket::request::{self, FromRequest, Request};
-use rocket::State;
 
 type RedisPool = Pool<redis::Client>;
 type RedisConnection = PooledConnection<redis::Client>;
 
-pub struct ServiceCache<'r>(State<'r, RedisPool>);
+pub struct ServiceCache<'r>(&'r RedisPool);
 
 pub fn create_pool() -> RedisPool {
     let client = redis::Client::open(redis_url()).unwrap();
@@ -20,14 +19,14 @@ impl<'r> FromRequest<'r> for ServiceCache<'r> {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let pool = try_outcome!(request.guard::<State<RedisPool>>().await);
+        let pool = request.rocket().state::<RedisPool>().unwrap();
         return request::Outcome::Success(ServiceCache(pool));
     }
 }
 
 impl ServiceCache<'_> {
     fn conn(&self) -> RedisConnection {
-        self.0.inner().get().unwrap()
+        self.0.get().unwrap()
     }
 }
 

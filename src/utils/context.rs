@@ -1,6 +1,5 @@
 use rocket::http::uri::Origin;
 use rocket::request::{self, FromRequest, Request};
-use rocket::State;
 
 use crate::cache::redis::ServiceCache;
 use crate::config::scheme;
@@ -9,12 +8,12 @@ pub struct Context<'r> {
     uri: String,
     host: Option<String>,
     cache: ServiceCache<'r>,
-    client: State<'r, reqwest::Client>,
+    client: &'r reqwest::Client,
 }
 
 impl<'r> Context<'r> {
     pub fn client(&self) -> &'r reqwest::Client {
-        self.client.inner()
+        self.client
     }
 
     pub fn cache(&self) -> &ServiceCache<'r> {
@@ -42,7 +41,7 @@ impl<'r> FromRequest<'r> for Context<'r> {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let cache = request.guard().await.unwrap();
-        let client = try_outcome!(request.guard::<State<reqwest::Client>>().await);
+        let client = request.rocket().state::<reqwest::Client>().unwrap();
         // TODO: I couldn't get the request to be part of the context ... not sure if we want that for the future
         let host = request
             .headers()

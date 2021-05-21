@@ -33,6 +33,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23b62fc65de8e4e7f52534fb52b0f3ed04746ae267519eef2a83941e8085068b"
 
 [[package]]
+name = "async-stream"
+version = "0.3.0"
+source = "git+https://github.com/SergioBenitez/async-stream.git?rev=c46ada9#c46ada948e0d4800393836f57eb2a3db516beb1e"
+dependencies = [
+ "async-stream-impl",
+ "futures-core",
+]
+
+[[package]]
+name = "async-stream-impl"
+version = "0.3.0"
+source = "git+https://github.com/SergioBenitez/async-stream.git?rev=c46ada9#c46ada948e0d4800393836f57eb2a3db516beb1e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "async-trait"
 version = "0.1.49"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1172,9 +1191,9 @@ checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
 
 [[package]]
 name = "libc"
-version = "0.2.86"
+version = "0.2.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7282d924be3275cec7f6756ff4121987bc6481325397dde6ba3e7802b1a8b1c"
+checksum = "18794a8ad5b29321f790b55d93dfba91e125cb1a9edbd4f8e3150acc771c1a5e"
 
 [[package]]
 name = "lock_api"
@@ -1320,8 +1339,9 @@ dependencies = [
 
 [[package]]
 name = "multer"
-version = "1.2.2"
-source = "git+https://github.com/rousan/multer-rs.git?rev=7e4f0c5f#7e4f0c5fe14e4c531f503922bfe04f68b32ddf17"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0fdd568fea4758b30d6423f013f7171e193c34aa97828d1bd9f924fb3af30a8c"
 dependencies = [
  "bytes 1.0.1",
  "derive_more",
@@ -1331,6 +1351,7 @@ dependencies = [
  "httparse",
  "log",
  "mime",
+ "spin",
  "tokio",
  "tokio-util",
  "twoway",
@@ -1531,9 +1552,9 @@ dependencies = [
 
 [[package]]
 name = "pear"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86ab3a2b792945ed67eadbbdcbd2898f8dd2319392b2a45ac21adea5245cb113"
+checksum = "15e44241c5e4c868e3eaa78b7c1848cadd6344ed4f54d029832d32b415a58702"
 dependencies = [
  "inlinable_string",
  "pear_codegen",
@@ -1542,9 +1563,9 @@ dependencies = [
 
 [[package]]
 name = "pear_codegen"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "620c9c4776ba41b59ab101360c9b1419c0c8c81cd2e6e39fae7109e7425994cb"
+checksum = "82a5ca643c2303ecb740d506539deba189e16f2754040a42901cd8105d0282d0"
 dependencies = [
  "proc-macro2",
  "proc-macro2-diagnostics",
@@ -1700,9 +1721,9 @@ checksum = "bc881b2c22681370c6a780e47af9840ef841837bc98118431d4e1868bd0c1086"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.26"
+version = "1.0.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a152013215dca273577e18d2bf00fa862b89b24169fb78c4c95aeb07992c9cec"
+checksum = "f0d8caf72986c1a598726adc988bb5984792ef84f5ee5aa50209145ee8077038"
 dependencies = [
  "unicode-xid",
 ]
@@ -1968,8 +1989,9 @@ dependencies = [
 [[package]]
 name = "rocket"
 version = "0.5.0-dev"
-source = "git+https://github.com/SergioBenitez/Rocket?rev=4f3511786cb8b6540124b867591c7c5a6933409e#4f3511786cb8b6540124b867591c7c5a6933409e"
+source = "git+https://github.com/SergioBenitez/Rocket?rev=f85604b65ef3d1335adfeb98a0a83be34c27388d#f85604b65ef3d1335adfeb98a0a83be34c27388d"
 dependencies = [
+ "async-stream",
  "async-trait",
  "atomic",
  "atty",
@@ -2003,20 +2025,22 @@ dependencies = [
 [[package]]
 name = "rocket_codegen"
 version = "0.5.0-dev"
-source = "git+https://github.com/SergioBenitez/Rocket?rev=4f3511786cb8b6540124b867591c7c5a6933409e#4f3511786cb8b6540124b867591c7c5a6933409e"
+source = "git+https://github.com/SergioBenitez/Rocket?rev=f85604b65ef3d1335adfeb98a0a83be34c27388d#f85604b65ef3d1335adfeb98a0a83be34c27388d"
 dependencies = [
  "devise",
  "glob",
  "indexmap",
+ "proc-macro2",
  "quote",
  "rocket_http",
+ "syn",
  "unicode-xid",
 ]
 
 [[package]]
 name = "rocket_contrib"
 version = "0.5.0-dev"
-source = "git+https://github.com/SergioBenitez/Rocket?rev=4f3511786cb8b6540124b867591c7c5a6933409e#4f3511786cb8b6540124b867591c7c5a6933409e"
+source = "git+https://github.com/SergioBenitez/Rocket?rev=f85604b65ef3d1335adfeb98a0a83be34c27388d#f85604b65ef3d1335adfeb98a0a83be34c27388d"
 dependencies = [
  "log",
  "rocket",
@@ -2028,7 +2052,7 @@ dependencies = [
 [[package]]
 name = "rocket_http"
 version = "0.5.0-dev"
-source = "git+https://github.com/SergioBenitez/Rocket?rev=4f3511786cb8b6540124b867591c7c5a6933409e#4f3511786cb8b6540124b867591c7c5a6933409e"
+source = "git+https://github.com/SergioBenitez/Rocket?rev=f85604b65ef3d1335adfeb98a0a83be34c27388d#f85604b65ef3d1335adfeb98a0a83be34c27388d"
 dependencies = [
  "cookie",
  "either",
@@ -2096,6 +2120,7 @@ dependencies = [
  "lazy_static 1.4.0",
  "log",
  "mockall",
+ "proc-macro2",
  "r2d2",
  "redis",
  "regex",
@@ -2322,6 +2347,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "spin"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b87bbf98cb81332a56c1ee8929845836f85e8ddd693157c30d76660196014478"
+
+[[package]]
 name = "stable-pattern"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2429,9 +2460,9 @@ checksum = "6446ced80d6c486436db5c078dde11a9f73d42b57fb273121e160b84f63d894c"
 
 [[package]]
 name = "syn"
-version = "1.0.69"
+version = "1.0.72"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "48fe99c6bd8b1cc636890bcc071842de909d902c81ac7dab53ba33c421ab8ffb"
+checksum = "a1e8cdbefb79a9a5a65e0db8b47b723ee907b7c7f8496c76a1770b5c310bab82"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2616,9 +2647,9 @@ checksum = "cda74da7e1a664f795bb1f8a87ec406fb89a02522cf6e50620d016add6dbbf5c"
 
 [[package]]
 name = "tokio"
-version = "1.2.0"
+version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8190d04c665ea9e6b6a0dc45523ade572c088d2e6566244c1122671dbf4ae3a"
+checksum = "bd3076b5c8cc18138b8f8814895c11eb4de37114a5d127bafdc5e55798ceef37"
 dependencies = [
  "autocfg",
  "bytes 1.0.1",

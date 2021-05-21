@@ -114,7 +114,7 @@ impl<'r> Responder<'r, 'static> for ApiError {
             .header(ContentType::JSON)
             .status(
                 Status::from_code(self.status)
-                    .unwrap_or(Status::new(self.status, "Unknown status code")),
+                    .unwrap_or(Status::new(self.status)),
             )
             .ok()
     }

@@ -72,7 +72,7 @@ jobs:
 
       - name: Fetch grcov
         if: steps.grcov-cache.outputs.cache-hit != 'true'
-        run: curl --location https://github.com/mozilla/grcov/releases/download/v0.8.0/grcov-tcmalloc-linux-x86_64.tar.bz2 | tar jxf -
+        run: curl --location https://github.com/mozilla/grcov/releases/download/v0.8.0/grcov-linux-x86_64.tar.bz2 | tar jxf -
 
       - name: Run grcov
         id: coverage

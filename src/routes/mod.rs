@@ -24,7 +24,6 @@ pub fn active_routes() -> Vec<Route> {
         collectibles::list,
         safes::safe_info,
         transactions::details,
-        transactions::all,
         transactions::history_transactions,
         transactions::queued_transactions,
         transactions::submit_confirmation,

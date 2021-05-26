@@ -3,28 +3,13 @@ use crate::models::service::transactions::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
 };
 use crate::services::{
-    transactions_details, transactions_history, transactions_list, transactions_proposal,
-    transactions_queued,
+    transactions_details, transactions_history, transactions_proposal, transactions_queued,
 };
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket_contrib::json::Json;
 use rocket_contrib::json::JsonError;
-
-#[get("/v1/safes/<safe_address>/transactions?<page_url>")]
-pub async fn all(
-    context: Context<'_>,
-    safe_address: String,
-    page_url: Option<String>,
-) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
-        .resp_generator(|| {
-            transactions_list::get_all_transactions(&context, &safe_address, &page_url)
-        })
-        .execute(context.cache())
-        .await
-}
 
 #[get("/v1/transactions/<details_id>")]
 pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<content::Json<String>> {

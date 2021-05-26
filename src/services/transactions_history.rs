@@ -2,14 +2,13 @@ extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{base_transaction_service_url, transaction_request_timeout};
-use crate::models::backend::transactions::Transaction;
+use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
     ConflictType, TransactionListItem, TransactionSummary,
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::services::offset_page_meta;
-use crate::services::transactions_list::get_creation_transaction_summary;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
@@ -213,4 +212,28 @@ pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64, timezone_offset
     let date =
         NaiveDate::from_ymd_opt(date_time.year(), date_time.month(), date_time.day()).unwrap();
     (date.and_hms_milli(0, 0, 0, 0).timestamp() - timezone_offset as i64) * 1000
+}
+
+pub(super) async fn get_creation_transaction_summary(
+    context: &Context<'_>,
+    safe: &String,
+) -> ApiResult<TransactionSummary> {
+    let url = format!(
+        "{}/v1/safes/{}/creation/",
+        base_transaction_service_url(),
+        safe
+    );
+    debug!("{}", &url);
+    let body = RequestCached::new(url)
+        .request_timeout(transaction_request_timeout())
+        .execute(context.client(), context.cache())
+        .await?;
+
+    let mut info_provider = DefaultInfoProvider::new(context);
+
+    let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
+    let transaction_summary = creation_transaction_dto
+        .to_transaction_summary(safe, &mut info_provider)
+        .await;
+    Ok(transaction_summary)
 }

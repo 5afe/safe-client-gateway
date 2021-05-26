@@ -65,7 +65,7 @@ jobs:
 
       - name: Cache grcov
         id: grcov-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.5
         with:
           path: /home/runner/.cargo/bin/
           key: ${{ runner.os }}-grcov-v080

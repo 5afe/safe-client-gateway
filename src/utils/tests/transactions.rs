@@ -12,7 +12,7 @@ fn domain_hash_for_safe_address() {
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
     ))
-        .unwrap();
+    .unwrap();
     let actual = to_hex_string!(domain_hash_v130(&safe_address).to_vec());
     assert_eq!(
         "0x0d56532a2a780ffd32b2c3d85d0f8a7b2fc13df0576c006e2aaa47eb66cf71c9",
@@ -25,7 +25,7 @@ fn domain_hash_for_safe_address_legacy() {
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
     ))
-        .unwrap();
+    .unwrap();
     let actual = to_hex_string!(domain_hash_v100(&safe_address).to_vec());
     assert_eq!(
         "0x6dda5da6f3b6225311946ab4732b5658018db6dc890378fbdb529d8e9832762a",
@@ -38,7 +38,7 @@ fn safe_tx_hash_for_safe_address_cancellation_tx_legacy() {
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
     ))
-        .unwrap();
+    .unwrap();
     let nonce = 39;
     let domain_hash = domain_hash_v100(&safe_address);
 
@@ -55,7 +55,7 @@ fn safe_tx_hash_for_safe_address_cancellation_tx() {
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f".to_string(),
     ))
-        .unwrap();
+    .unwrap();
     let nonce = 39;
     let domain_hash = domain_hash_v130(&safe_address);
 
@@ -71,7 +71,7 @@ fn parts_hash_for_cancellation() {
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
     ))
-        .unwrap();
+    .unwrap();
     let nonce = 39;
 
     let actual = cancellation_parts_hash(&safe_address, nonce);

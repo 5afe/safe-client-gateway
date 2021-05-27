@@ -25,7 +25,10 @@ pub async fn fetch_rejections(
     nonce: u64,
 ) -> Option<Vec<String>> {
     let info_provider = DefaultInfoProvider::new(&context);
-    let version = info_provider.safe_info(safe_address).await.ok()
+    let version = info_provider
+        .safe_info(safe_address)
+        .await
+        .ok()
         .as_ref()
         .and_then(|safe_info| safe_info.version.as_ref().map(|it| Version::parse(it).ok()))
         .flatten();
@@ -85,7 +88,7 @@ pub(super) fn domain_hash_v100(safe_address: &Address) -> [u8; 32] {
     let domain_separator: H256 = serde_json::from_value(serde_json::Value::String(
         DOMAIN_SEPARATOR_TYPEHASH_LEGACY.into(),
     ))
-        .unwrap();
+    .unwrap();
 
     let encoded = ethabi::encode(&[
         ethabi::Token::Uint(Uint::from(domain_separator.0)),

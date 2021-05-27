@@ -65,14 +65,14 @@ jobs:
 
       - name: Cache grcov
         id: grcov-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.5
         with:
           path: /home/runner/.cargo/bin/
-          key: ${{ runner.os }}-grcov-latest
+          key: ${{ runner.os }}-grcov-v080
 
       - name: Fetch grcov
         if: steps.grcov-cache.outputs.cache-hit != 'true'
-        run: curl --location https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
+        run: curl --location https://github.com/mozilla/grcov/releases/download/v0.8.0/grcov-linux-x86_64.tar.bz2 | tar jxf -
 
       - name: Run grcov
         id: coverage
@@ -116,7 +116,3 @@ jobs:
       - name: Deploy develop # unused
         if: github.ref == 'refs/heads/develop'
         run: bash scripts/deploy_docker.sh develop
-
-      - name: Deploy spectrum
-        if: github.ref == 'refs/heads/spectrum'
-        run: bash scripts/deploy_docker.sh spectrum

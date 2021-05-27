@@ -35,7 +35,7 @@ pub async fn fetch_rejections(
     let domain_hash = if is_legacy {
         domain_hash_v100(&safe_address)
     } else {
-        domain_hash_v130(&safe_address, chain_id())
+        domain_hash_v130(&safe_address)
     };
 
     let safe_tx_hash = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
@@ -68,14 +68,14 @@ pub(super) fn hash(safe_address: Address, nonce: u64, domain_hash: [u8; 32]) -> 
     keccak256(encoded)
 }
 
-pub(super) fn domain_hash_v130(safe_address: &Address, chain_id: u64) -> [u8; 32] {
+pub(super) fn domain_hash_v130(safe_address: &Address) -> [u8; 32] {
     let domain_separator: H256 =
         serde_json::from_value(serde_json::Value::String(DOMAIN_SEPARATOR_TYPEHASH.into()))
             .unwrap();
 
     let encoded = ethabi::encode(&[
         ethabi::Token::Uint(Uint::from(domain_separator.0)),
-        ethabi::Token::Uint(Uint::from(chain_id)),
+        ethabi::Token::Uint(Uint::from(chain_id())),
         ethabi::Token::Address(Address::from(safe_address.0)),
     ]);
     keccak256(encoded)

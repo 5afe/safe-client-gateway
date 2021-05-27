@@ -25,8 +25,7 @@ pub async fn fetch_rejections(
     nonce: u64,
 ) -> Option<Vec<String>> {
     let info_provider = DefaultInfoProvider::new(&context);
-    let safe_info = info_provider.safe_info(safe_address).await.ok();
-    let version = safe_info
+    let version = info_provider.safe_info(safe_address).await.ok()
         .as_ref()
         .and_then(|safe_info| safe_info.version.as_ref().map(|it| Version::parse(it).ok()))
         .flatten();

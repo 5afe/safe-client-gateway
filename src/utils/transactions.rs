@@ -2,7 +2,7 @@ use crate::cache::cache_operations::RequestCached;
 use crate::config::{base_transaction_service_url, chain_id, transaction_request_timeout};
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::providers::info::SAFE_V_1_3_0;
-use crate::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use ethabi::Uint;
 use ethcontract_common::hash::keccak256;
@@ -25,14 +25,20 @@ pub async fn fetch_rejections(
     nonce: u64,
 ) -> Option<Vec<String>> {
     let info_provider = DefaultInfoProvider::new(&context);
-    let safe_info = info_provider.safe_info(safe_address).await.ok();
-    let is_legacy = use_legacy_domain_separator(safe_info);
+    let version = info_provider
+        .safe_info(safe_address)
+        .await
+        .ok()
+        .as_ref()
+        .and_then(|safe_info| safe_info.version.as_ref().map(|it| Version::parse(it).ok()))
+        .flatten();
+    let is_legacy = use_legacy_domain_separator(version);
     let safe_address: Address =
         serde_json::from_value(serde_json::value::Value::String(safe_address.to_string())).unwrap();
     let domain_hash = if is_legacy {
         domain_hash_v100(&safe_address)
     } else {
-        domain_hash_v130(&safe_address, chain_id())
+        domain_hash_v130(&safe_address)
     };
 
     let safe_tx_hash = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
@@ -65,14 +71,14 @@ pub(super) fn hash(safe_address: Address, nonce: u64, domain_hash: [u8; 32]) -> 
     keccak256(encoded)
 }
 
-pub(super) fn domain_hash_v130(safe_address: &Address, chain_id: u64) -> [u8; 32] {
+pub(super) fn domain_hash_v130(safe_address: &Address) -> [u8; 32] {
     let domain_separator: H256 =
         serde_json::from_value(serde_json::Value::String(DOMAIN_SEPARATOR_TYPEHASH.into()))
             .unwrap();
 
     let encoded = ethabi::encode(&[
         ethabi::Token::Uint(Uint::from(domain_separator.0)),
-        ethabi::Token::Uint(Uint::from(chain_id)),
+        ethabi::Token::Uint(Uint::from(chain_id())),
         ethabi::Token::Address(Address::from(safe_address.0)),
     ]);
     keccak256(encoded)
@@ -112,12 +118,7 @@ pub(super) fn cancellation_parts_hash(safe_address: &Address, nonce: u64) -> [u8
     keccak256(encoded_parts)
 }
 
-pub(super) fn use_legacy_domain_separator(safe_info: Option<SafeInfo>) -> bool {
-    let version = safe_info
-        .as_ref()
-        .and_then(|safe_info| safe_info.version.as_ref().map(|it| Version::parse(it).ok()))
-        .flatten();
-
+pub(super) fn use_legacy_domain_separator(version: Option<Version>) -> bool {
     if let Some(version) = version.as_ref() {
         version < &SAFE_V_1_3_0
     } else {

@@ -1,17 +1,19 @@
-use crate::providers::info::SafeInfo;
 use crate::utils::transactions::{
     cancellation_parts_hash, domain_hash_v100, domain_hash_v130, hash, use_legacy_domain_separator,
 };
 use ethcontract_common::hash::keccak256;
 use ethereum_types::Address;
+use semver::Version;
+use std::env;
 
 #[test]
 fn domain_hash_for_safe_address() {
+    env::set_var("CHAIN_ID", "4"); // Rinkeby
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
     ))
     .unwrap();
-    let actual = to_hex_string!(domain_hash_v130(&safe_address, 4).to_vec()); // Rinkeby
+    let actual = to_hex_string!(domain_hash_v130(&safe_address).to_vec());
     assert_eq!(
         "0x0d56532a2a780ffd32b2c3d85d0f8a7b2fc13df0576c006e2aaa47eb66cf71c9",
         actual
@@ -49,12 +51,13 @@ fn safe_tx_hash_for_safe_address_cancellation_tx_legacy() {
 
 #[test]
 fn safe_tx_hash_for_safe_address_cancellation_tx() {
+    env::set_var("CHAIN_ID", "4"); // Rinkeby
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f".to_string(),
     ))
     .unwrap();
     let nonce = 39;
-    let domain_hash = domain_hash_v130(&safe_address, 4); // Rinkeby
+    let domain_hash = domain_hash_v130(&safe_address);
 
     let actual = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
     assert_eq!(
@@ -88,27 +91,14 @@ fn empty_data_keccak() {
 
 #[test]
 fn use_legacy_domain_separator_v130() {
-    let safe_info = build_safe_info("1.3.0".to_string());
+    let version = Version::parse("1.3.0").ok();
 
-    assert_eq!(false, use_legacy_domain_separator(safe_info));
+    assert_eq!(false, use_legacy_domain_separator(version));
 }
 
 #[test]
 fn use_legacy_domain_separator_legacy() {
-    let safe_info = build_safe_info("1.1.1".to_string());
+    let version = Version::parse("1.1.1").ok();
 
-    assert_eq!(true, use_legacy_domain_separator(safe_info));
-}
-
-fn build_safe_info(version: String) -> Option<SafeInfo> {
-    Some(SafeInfo {
-        address: "".to_string(),
-        nonce: 0,
-        threshold: 0,
-        owners: vec![],
-        master_copy: "".to_string(),
-        modules: None,
-        fallback_handler: None,
-        version: Some(version),
-    })
+    assert_eq!(true, use_legacy_domain_separator(version));
 }

@@ -16,3 +16,5 @@
 dump.rdb
 
 **/venv
+
+*.DS_Store*

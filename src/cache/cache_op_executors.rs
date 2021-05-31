@@ -71,7 +71,7 @@ pub(super) async fn request_cached(
             let is_server_error = response.status().is_server_error();
             if !operation.cache_all_errors && is_server_error {
                 return Err(ApiError::from_backend_error(
-                    42,
+                    status_code,
                     &format!("Got server error for {}", response.text().await?),
                 ));
             }

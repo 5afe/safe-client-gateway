@@ -14,7 +14,7 @@ use rocket_contrib::json::JsonError;
 ///
 /// # Transaction Details
 ///
-/// The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object that can be visualized in the [models](https://github.com/gnosis/safe-client-gateway/wiki/transaction_details#models) section of this article.
+/// The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object [crate::models::service::transactions::details::TransactionDetails]
 ///
 /// ## Path
 ///
@@ -24,7 +24,7 @@ use rocket_contrib::json::JsonError;
 ///
 /// ## Query paramets
 ///
-/// There aren't any query parameters that can be passed to this endpoint. Returns [crate::models::service::transactions::details::TransactionDetails]
+/// There aren't any query parameters that can be passed to this endpoint.
 #[get("/v1/transactions/<details_id>")]
 pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())

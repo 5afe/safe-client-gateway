@@ -11,7 +11,6 @@ use rocket::response::content;
 use rocket_contrib::json::Json;
 use rocket_contrib::json::JsonError;
 
-///
 /// # Transaction Details
 ///
 /// The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object [crate::models::service::transactions::details::TransactionDetails]
@@ -33,6 +32,21 @@ pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<cont
         .await
 }
 
+///# Transaction Confirmation
+///
+/// This endpoint provides a way for submitting confirmations for clients making use of the `safe_tx_hash` as part of the path, and the very same `safe_tx_hash` signed by an owner corresponding to the safe from which the transaction is being sent.
+///
+/// If the confirmation is submitted successfully to the core services, then the local cache for that specific transaction is invalidated and the updated transaction details with the confirmation are returned in the request.
+///
+/// ## Path
+///
+/// `POST /v1/transactions/<safe_tx_hash>/confirmations`
+///
+/// The expected [crate::models::service::transactions::requests::ConfirmationRequest] body for this request, as well as the returned [crate::models::service::transactions::details::TransactionDetails]
+///
+/// ## Query parameters
+///
+/// No query parameters available for this endpoint.
 #[post(
     "/v1/transactions/<safe_tx_hash>/confirmations",
     format = "application/json",
@@ -104,7 +118,6 @@ pub async fn history_transactions(
         .await
 }
 
-///
 /// # Transactions Queued
 ///
 /// This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a `Next` marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren't any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.
@@ -149,6 +162,20 @@ pub async fn queued_transactions(
         .await
 }
 
+///# Transaction Proposal
+///
+/// This endpoint provides a way for submitting transactions of any kind in the format expected by the core services.
+/// See the example `json` to see how to submit a cancellation transaction (you would need to supply a `nonce`, `signature` and `contractTransactionHash` appropriate to the transaction you are submitting)
+///
+/// ## Path
+///
+/// `POST /v1/transactions/<safe_address>/propose`
+///
+/// The expected [crate::models::service::transactions::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
+///
+/// ## Query parameters
+///
+/// No query parameters available for this endpoint.
 #[post(
     "/v1/transactions/<safe_address>/propose",
     format = "application/json",

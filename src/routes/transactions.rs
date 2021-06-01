@@ -56,6 +56,34 @@ pub async fn submit_confirmation<'e>(
         .await
 }
 
+/// # Transactions History
+///
+/// This endpoint returns all the transactions that have been executed for a given safe. Cancelled
+/// transactions will not be shown in this endpoint. Therefore, there is no concept of conflicting `nonces`
+/// for this endpoint, as there could potentially be for queued transactions.
+///
+/// This endpoint does not return any `TransactionListItem::Label` nor `TransactionListItem::ConflictHeader`
+/// as of the writing of this iteration of this document.
+///
+/// Transaction are aggregated by day and for each day there is a `TransactionListItem::DateLabel` added.
+/// The timestamp returned corresponds to the **date** only, **time** fields should be therefore ignored.
+/// The dates are returned in UTC, in a later iteration this will be offset by the `timezone_offset`
+/// sent by the clients in the query parameter.
+///
+/// `TransactionListItem::Transaction` is returned with the same data layout as in the `/transactions/queued` endpoint.
+///
+/// The structure of the `transaction` object corresponds to that of a [crate::models::service::transactions::summary::TransactionSummary]
+///
+/// ## Path
+///
+/// `GET /v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trustc`ed>`
+///
+/// ## Query parameters
+///
+/// - `<safe_address>` should be the checksummed address of the safe to be observed.
+/// - `<page_url>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
+/// - `<timezone_offset>`: Currently ignored by the gateway.
+/// - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
 #[get("/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>")]
 pub async fn history_transactions(
     context: Context<'_>,
@@ -76,6 +104,29 @@ pub async fn history_transactions(
         .await
 }
 
+///
+/// # Transactions Queued
+///
+/// This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a `Next` marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren't any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.
+///
+/// Additionally to the `Next` marker, there is also `Queued`. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the `Next` section of the list, a `ConflictHeader` will be introduced for any group of transactions sharing the same `nonce`.
+///
+/// The structure of the transaction object corresponds to that of a [crate::models::service::transactions::summary::TransactionSummary]
+///
+/// A `TransactionListItem` can be either a `Label` (containing either `Next` or `Queued`), `ConflictHeader` (with the conflicting `nonce`) and a `Transaction`, for which there is a `TransactionSummary` and a `ConflictType` associated. The conflict type can have `HasNext` or `End` value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a `ConflictType::End`.
+///
+/// ## Path
+///
+/// `GET /v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>`
+///
+/// The response is a list of [crate::models::service::transactions::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
+///
+/// ## Query parameters
+///
+/// - `<safe_address>` should be the checksummed address of the safe to be observed.
+/// - `<page_url>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
+/// - `<timezone_offset>`: Currently ignored by the gateway.
+/// - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
 #[get("/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
 pub async fn queued_transactions(
     context: Context<'_>,

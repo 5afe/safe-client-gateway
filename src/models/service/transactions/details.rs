@@ -4,7 +4,7 @@ use crate::providers::info::{SafeAppInfo, TokenInfo};
 use serde::Serialize;
 use std::collections::HashMap;
 
-/// Sample JSON
+/// Top level object returned by the `/v1/transactions/<details_id>` endpoint
 ///
 /// <details>
 /// <summary>Sample 1: Multisig Transaction awaiting confirmation</summary>

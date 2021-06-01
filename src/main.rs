@@ -12,6 +12,7 @@ extern crate rocket_contrib;
 
 extern crate dotenv;
 
+#[doc(hidden)]
 #[macro_use]
 pub mod macros;
 

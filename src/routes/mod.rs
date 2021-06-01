@@ -8,7 +8,9 @@ use rocket_contrib::json::JsonValue;
 pub mod about;
 pub mod balances;
 pub mod collectibles;
+#[doc(hidden)]
 pub mod health;
+#[doc(hidden)]
 pub mod hooks;
 pub mod safes;
 pub mod transactions;

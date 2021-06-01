@@ -6,6 +6,7 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket_contrib::json::Json;
 
+#[doc(hidden)]
 #[post("/v1/hook/update/<token>", format = "json", data = "<update>")]
 pub fn update(context: Context<'_>, token: String, update: Json<Payload>) -> ApiResult<()> {
     if token != webhook_token() {

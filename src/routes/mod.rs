@@ -5,14 +5,24 @@ use rocket::Catcher;
 use rocket::Route;
 use rocket_contrib::json::JsonValue;
 
+/// # About endpoint
 pub mod about;
+/// # Balance endpoints
 pub mod balances;
+/// # Collectibles endpoint
 pub mod collectibles;
 #[doc(hidden)]
 pub mod health;
 #[doc(hidden)]
 pub mod hooks;
+/// # Safe endpoints
 pub mod safes;
+
+/// # Transactions endpoints
+///
+/// As presented by the endpoints in this service, we are taking in the types returned by the [transaction service](https://github.com/gnosis/safe-transaction-service-example), which to this data are `Multisig`, `Module` and `Ethereum` transaction types.
+///
+/// The types served by the gate way are `Transfer`, `SettingsChange` and `Custom`. Additionally, we treat the `Creation` transaction as one additional type, as it is meant to be group with the rest of the items in the same UI component in the apps.
 pub mod transactions;
 
 pub fn active_routes() -> Vec<Route> {

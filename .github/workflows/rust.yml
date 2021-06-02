@@ -91,19 +91,37 @@ jobs:
     needs: [ rustfmt, tests ]
     if: github.ref == 'refs/heads/main'
     steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # checks out all branches and tags, necessary for versioning /about endpoint
+
+      - name: Set variables
+        run: |
+          TOOLCHAIN=$(cat rust-toolchain)
+          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.TOOLCHAIN }}
+          override: true
+          components: rustfmt
+
+      - name: Cargo cache
+        uses: Swatinem/rust-cache@v1
+
       - name: Generate docs
-        if: github.ref == 'refs/heads/main'
         uses: actions-rs/cargo@v1
         with:
           command: doc
           args: --no-deps --workspace --locked
 
       - name: Move folder
-        if: github.ref == 'refs/heads/main'
         run: mv target/doc/safe_client_gateway target/doc/docs && cp .github/landing_page/* target/doc
 
       - name: Update docs
-        if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -8,7 +8,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 /**
- * `/About` <br />
+ * `/about` <br />
  * Returns [crate::models::service::about::About]
  *
  * # About

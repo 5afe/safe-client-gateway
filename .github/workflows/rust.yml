@@ -86,17 +86,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ${{ github.workspace }}/lcov.info
 
-      ### move the following actions to a different step
-      - name: Run tests
+      ### TODO use a different task without losing cached builds
+      - name: Generate docs
+        if: github.ref == 'refs/heads/main'
         uses: actions-rs/cargo@v1
         with:
           command: doc
           args: --no-deps --workspace --locked
 
       - name: Move folder
+        if: github.ref == 'refs/heads/main'
         run: mv target/doc/safe_client_gateway target/doc/docs && cp -r .github/landing_page target/doc
 
       - name: Update docs
+        if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

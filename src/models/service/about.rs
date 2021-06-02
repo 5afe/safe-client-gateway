@@ -2,8 +2,6 @@ use serde::Serialize;
 
 /// About
 ///
-///
-///
 /// <details>
 /// <summary>Sample</summary>
 ///

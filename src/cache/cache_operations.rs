@@ -20,9 +20,21 @@ pub struct Invalidate {
     database: Database,
 }
 
+pub(crate) enum Something {
+    Requests,
+    Responses,
+    All,
+}
+
 pub enum InvalidationPattern {
     FlushAll,
-    RequestsResponses(String),
+    SafeAddress(String, Something),
+    Requests(String),
+    Responses(String),
+    Transaction(String, Something),
+    Balances(String, Something),
+    Collectibles(String),
+    KnownAddresses,
     Tokens,
 }
 

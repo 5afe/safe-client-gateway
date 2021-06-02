@@ -14,7 +14,7 @@ const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
 pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
     let pattern_str = match pattern {
         InvalidationPattern::FlushAll => String::from("*"),
-        InvalidationPattern::RequestsResponses(value) => {
+        InvalidationPattern::SafeAddress(value) => {
             format!("{}*{}*", CACHE_REQS_RESP_PREFIX, &value)
         }
         InvalidationPattern::Tokens => String::from(TOKENS_KEY),

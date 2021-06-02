@@ -7,17 +7,22 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
-///# About
-///
-/// The about endpoint provides information of the environmental variables set for the instance of `safe-client-gateway`. This would allow to identify on which commit and version the last deployment happened and to which safe transaction service backend environment the current instance of the gateway is pointing to.
-///
-/// ## Path
-///
-/// `/about`
-///
-/// ## Query parameters
-///
-/// There are no query parameters for this endpoint
+/**
+ * `/About` <br />
+ * Returns [crate::models::service::about::About]
+ *
+ * # About
+ *
+ * The about endpoint provides information of the environmental variables set for the instance of `safe-client-gateway`. This would allow to identify on which commit and version the last deployment happened and to which safe transaction service backend environment the current instance of the gateway is pointing to.
+ *
+ * ## Path
+ *
+ * `/about`
+ *
+ * ## Query parameters
+ *
+ * There are no query parameters for this endpoint
+ */
 #[get("/about")]
 pub async fn info(context: Context<'_>) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())

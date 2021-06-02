@@ -34,6 +34,7 @@ macro_rules! bail {
     };
 }
 
+#[doc(hidden)]
 #[macro_export]
 macro_rules! api_error {
     ($msg:literal $(,)?) => {
@@ -47,6 +48,7 @@ macro_rules! api_error {
     };
 }
 
+#[doc(hidden)]
 #[macro_export]
 macro_rules! client_error {
     ($status_code:expr, $message:expr) => {

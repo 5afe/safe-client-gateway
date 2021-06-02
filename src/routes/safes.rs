@@ -4,6 +4,10 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
+/**
+ * `/v1/safes/<safe_address>` <br />
+ * Returns [SafeState](crate::models::service::safes::SafeState)
+ */
 #[get("/v1/safes/<safe_address>")]
 pub async fn safe_info(
     context: Context<'_>,

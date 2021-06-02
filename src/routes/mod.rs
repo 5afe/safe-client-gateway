@@ -25,6 +25,7 @@ pub mod safes;
 /// The types served by the gate way are `Transfer`, `SettingsChange` and `Custom`. Additionally, we treat the `Creation` transaction as one additional type, as it is meant to be group with the rest of the items in the same UI component in the apps.
 pub mod transactions;
 
+#[doc(hidden)]
 pub fn active_routes() -> Vec<Route> {
     routes![
         root,
@@ -47,10 +48,12 @@ pub fn active_routes() -> Vec<Route> {
     ]
 }
 
+#[doc(hidden)]
 pub fn error_catchers() -> Vec<Catcher> {
     catchers![not_found, panic]
 }
 
+#[doc(hidden)]
 #[catch(404)]
 fn not_found() -> JsonValue {
     json!({
@@ -59,6 +62,7 @@ fn not_found() -> JsonValue {
     })
 }
 
+#[doc(hidden)]
 #[catch(500)]
 fn panic() -> JsonValue {
     json!({
@@ -67,7 +71,8 @@ fn panic() -> JsonValue {
     })
 }
 
+#[doc(hidden)]
 #[get("/")]
 pub fn root() -> Redirect {
-    Redirect::temporary("https://github.com/gnosis/safe-client-gateway/wiki")
+    Redirect::temporary("https://gnosis.github.io/safe-client-gateway/")
 }

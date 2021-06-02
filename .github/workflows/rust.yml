@@ -86,9 +86,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ${{ github.workspace }}/lcov.info
 
+      ### move the following actions to a different step
       - name: Build docs
         run: cargo doc --no-deps --workspace
 
+      - name: Move folder
+        run: mv target/doc/safe_client_gateway target/doc/docs
+        
       - name: Update docs
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:

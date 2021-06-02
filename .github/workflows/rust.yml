@@ -86,6 +86,15 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ${{ github.workspace }}/lcov.info
 
+      - name: Build docs
+        run: cargo doc --no-deps --workspace
+
+      - name: Update docs
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/doc
+
   deploy:
     runs-on: ubuntu-latest
     env:

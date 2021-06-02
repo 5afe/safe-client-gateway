@@ -7,7 +7,7 @@ use rocket::response::content;
 
 /**
  * `/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
- * Returns [crate::models::service::balances::Balances]
+ * Returns [Balances](crate::models::service::balances::Balances)
  *
  * # Balances
  *
@@ -51,7 +51,7 @@ pub async fn get_balances(
 
 /**
  * `/v1/balances/supported-fiat-codes` <br/>
- * Returns [Vec<String>]
+ * Returns [Vec] of [String]
  *
  * Supported fiat codes for balances
  * `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `<fiat>` segment of the balance endpoint.

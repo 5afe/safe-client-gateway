@@ -6,7 +6,7 @@ use rocket::response::content;
 
 /**
  * `/v1/safes/<safe_address>` <br />
- * Returns [crate::models::service::safes::SafeState]
+ * Returns [SafeState](crate::models::service::safes::SafeState)
  */
 #[get("/v1/safes/<safe_address>")]
 pub async fn safe_info(

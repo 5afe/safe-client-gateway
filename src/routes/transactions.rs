@@ -13,7 +13,7 @@ use rocket_contrib::json::JsonError;
 
 /**
  * `/v1/transactions/<transaction_id>` <br />
- * Returns [crate::models::service::transactions::details::TransactionDetails]
+ * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Details
  *
@@ -39,7 +39,7 @@ pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<cont
 
 /**
  * `/v1/transactions/<safe_tx_hash>/confirmations` <br />
- * Returns [crate::models::service::transactions::details::TransactionDetails]
+ * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Confirmation
  *
@@ -82,7 +82,7 @@ pub async fn submit_confirmation<'e>(
 
 /**
  * `/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
- * Returns a [crate::models::commons::Page] of [crate::models::service::transactions::summary::TransactionListItem]
+ * Returns a [Page](crate::models::commons::Page) of [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions History
  *
@@ -135,7 +135,7 @@ pub async fn history_transactions(
 
 /**
  * `/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
- * Returns a [crate::models::commons::Page] of  [crate::models::service::transactions::summary::TransactionListItem]
+ * Returns a [Page](crate::models::commons::Page) of  [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions Queued
  *

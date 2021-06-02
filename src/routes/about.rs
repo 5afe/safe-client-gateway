@@ -9,7 +9,7 @@ use rocket::response::content;
 
 /**
  * `/about` <br />
- * Returns [crate::models::service::about::About]
+ * Returns [About](crate::models::service::about::About)
  *
  * # About
  *

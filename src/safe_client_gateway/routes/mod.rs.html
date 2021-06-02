@@ -74,6 +74,11 @@
 <span id="71">71</span>
 <span id="72">72</span>
 <span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rocket</span>;
 
@@ -102,6 +107,7 @@
 <span class="doccomment">/// The types served by the gate way are `Transfer`, `SettingsChange` and `Custom`. Additionally, we treat the `Creation` transaction as one additional type, as it is meant to be group with the rest of the items in the same UI component in the apps.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transactions</span>;
 
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">active_routes</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Route</span><span class="op">&gt;</span> {
     <span class="macro">routes!</span>[
         <span class="ident">root</span>,
@@ -124,10 +130,12 @@
     ]
 }
 
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_catchers</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Catcher</span><span class="op">&gt;</span> {
     <span class="macro">catchers!</span>[<span class="ident">not_found</span>, <span class="ident">panic</span>]
 }
 
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">catch</span>(<span class="number">404</span>)]</span>
 <span class="kw">fn</span> <span class="ident">not_found</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">JsonValue</span> {
     <span class="macro">json!</span>({
@@ -136,6 +144,7 @@
     })
 }
 
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">catch</span>(<span class="number">500</span>)]</span>
 <span class="kw">fn</span> <span class="ident">panic</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">JsonValue</span> {
     <span class="macro">json!</span>({
@@ -144,9 +153,10 @@
     })
 }
 
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">root</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Redirect</span> {
-    <span class="ident">Redirect::temporary</span>(<span class="string">&quot;https://github.com/gnosis/safe-client-gateway/wiki&quot;</span>)
+    <span class="ident">Redirect::temporary</span>(<span class="string">&quot;https://gnosis.github.io/safe-client-gateway/&quot;</span>)
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-search-js="../../../search-index.js"></div>

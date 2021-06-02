@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["about",""],["balances",""],["safes",""],["transactions",""]]});

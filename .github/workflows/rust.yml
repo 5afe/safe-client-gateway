@@ -87,8 +87,11 @@ jobs:
           path-to-lcov: ${{ github.workspace }}/lcov.info
 
       ### move the following actions to a different step
-      - name: Build docs
-        run: cargo doc --no-deps --workspace
+      - name: Run tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --no-deps --workspace --locked
 
       - name: Move folder
         run: mv target/doc/safe_client_gateway target/doc/docs && cp -r .github/landing_page target/doc

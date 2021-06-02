@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ConfirmationRequest",""],["MultisigTransactionRequest","MultisigTransactionRequest"]]});

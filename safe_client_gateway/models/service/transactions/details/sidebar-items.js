@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["DetailedExecutionInfo",""]],"struct":[["ModuleExecutionDetails",""],["MultisigConfirmation",""],["MultisigExecutionDetails",""],["TransactionData",""],["TransactionDetails","Top level object returned by the `/v1/transactions/<details_id>` endpoint"]]});

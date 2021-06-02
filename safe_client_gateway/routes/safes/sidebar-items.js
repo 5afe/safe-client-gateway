@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["safe_info","`/v1/safes/<safe_address>`  Returns SafeState"]]});

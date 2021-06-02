@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>`  Returns collectibles from the transaction service"><meta name="keywords" content="rust, rustlang, rust-lang, list"><title>safe_client_gateway::routes::collectibles::list - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc fn"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../safe_client_gateway/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a><div class="sidebar-elems"><p class="location"><a href="../../index.html">safe_client_gateway</a>::<wbr><a href="../index.html">routes</a>::<wbr><a href="index.html">collectibles</a></p><div id="sidebar-vars" data-name="list" data-ty="fn" data-relpath=""></div><script defer src="sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Function <a href="../../index.html">safe_client_gateway</a>::<wbr><a href="../index.html">routes</a>::<wbr><a href="index.html">collectibles</a>::<wbr><a class="fn" href="">list</a><button id="copy-path" onclick="copy_path(this)">⎘</button></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../../../src/safe_client_gateway/routes/collectibles.rs.html#154-174" title="goto source code">[src]</a></span></h1><pre class="rust fn">pub async fn list(<br>&nbsp;&nbsp;&nbsp;&nbsp;context: Context&lt;'_&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;safe_address: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;trusted: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;exclude_spam: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://api.rocket.rs/master/rocket/response/content/struct.Json.html" title="struct rocket::response::content::Json">Json</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;, ApiError&gt;</pre><div class="docblock"><p><code>/v1/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;</code> <br />
+Returns collectibles from the transaction service</p>
+<h1 id="collectibles" class="section-header"><a href="#collectibles">Collectibles</a></h1>
+<p>The collectibles endpoint does not implement any logic in the client-gateway. The response from the core services is cached and then forwarded to the clients.</p>
+<h2 id="path" class="section-header"><a href="#path">Path</a></h2>
+<ul>
+<li><code>/v1/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;</code> : Returns a list of the ERC721 tokens stored in a safe</li>
+</ul>
+<h2 id="query-parameters" class="section-header"><a href="#query-parameters">Query parameters</a></h2>
+<p><code>&lt;trusted&gt;</code> : A token is defined as trusted by our core service process when adding them. Default value is <code>false</code>
+<code>&lt;exclude_spam&gt;</code>: A token is defined as spam by our core service process when adding them. Default value is <code>true</code></p>
+<h2 id="models" class="section-header"><a href="#models">Models</a></h2>
+<p>For the most up-to-date version of the endpoint please check: <a href="https://safe-transaction.gnosis.io/">https://safe-transaction.gnosis.io/</a></p>
+<pre><code class="language-json">[
+  {
+    &quot;address&quot;: &quot;string&quot;,
+    &quot;tokenName&quot;: &quot;string&quot;,
+    &quot;tokenSymbol&quot;: &quot;string&quot;,
+    &quot;logoUri&quot;: &quot;string&quot;,
+    &quot;id&quot;: &quot;string&quot;,
+    &quot;uri&quot;: &quot;string&quot;,
+    &quot;name&quot;: &quot;string&quot;,
+    &quot;description&quot;: &quot;string&quot;,
+    &quot;imageUri&quot;: &quot;string&quot;,
+    &quot;metadata&quot;: {
+      &quot;additionalProp1&quot;: &quot;string&quot;,
+      &quot;additionalProp2&quot;: &quot;string&quot;,
+      &quot;additionalProp3&quot;: &quot;string&quot;
+    }
+  }
+]
+</code></pre>
+<h2 id="json" class="section-header"><a href="#json">JSON</a></h2><details>
+<summary>Full response</summary>
+<pre><code class="language-json">[
+  {
+    &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,
+    &quot;tokenName&quot;: &quot;Main&quot;,
+    &quot;tokenSymbol&quot;: &quot;JOSE&quot;,
+    &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,
+    &quot;id&quot;: &quot;2&quot;,
+    &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,
+    &quot;name&quot;: &quot;Chiken dinner&quot;,
+    &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+    &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+    &quot;metadata&quot;: {
+     &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,
+      &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,
+      &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+      &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,
+      &quot;fiatPrice&quot;: &quot;$0.00&quot;,
+      &quot;name&quot;: &quot;Chiken dinner&quot;,
+      &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+      &quot;youtubeUrl&quot;: &quot;&quot;,
+      &quot;price&quot;: 0,
+      &quot;ethPrice&quot;: &quot;0&quot;,
+      &quot;amountToMint&quot;: &quot;5&quot;,
+      &quot;visibility&quot;: &quot;safe&quot;,
+      &quot;forSale&quot;: false,
+      &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+      &quot;attributes&quot;: [],
+      &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,
+      &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+      &quot;type&quot;: &quot;ERC721&quot;
+    }
+  },
+  {
+    &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,
+    &quot;tokenName&quot;: &quot;Main&quot;,
+    &quot;tokenSymbol&quot;: &quot;JOSE&quot;,
+    &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,
+    &quot;id&quot;: &quot;4&quot;,
+    &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,
+    &quot;name&quot;: &quot;Chiken dinner&quot;,
+    &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+    &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+    &quot;metadata&quot;: {
+      &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,
+      &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,
+      &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+      &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,
+      &quot;fiatPrice&quot;: &quot;$0.00&quot;,
+      &quot;name&quot;: &quot;Chiken dinner&quot;,
+      &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+      &quot;youtubeUrl&quot;: &quot;&quot;,
+      &quot;price&quot;: 0,
+      &quot;ethPrice&quot;: &quot;0&quot;,
+      &quot;amountToMint&quot;: &quot;5&quot;,
+      &quot;visibility&quot;: &quot;safe&quot;,
+      &quot;forSale&quot;: false,
+      &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+      &quot;attributes&quot;: [],
+      &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,
+      &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+      &quot;type&quot;: &quot;ERC721&quot;
+    }
+  },
+  {
+    &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,
+    &quot;tokenName&quot;: &quot;Main&quot;,
+    &quot;tokenSymbol&quot;: &quot;JOSE&quot;,
+    &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,
+    &quot;id&quot;: &quot;5&quot;,
+    &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,
+    &quot;name&quot;: &quot;Chiken dinner&quot;,
+    &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+    &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+    &quot;metadata&quot;: {
+      &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,
+      &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,
+      &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+      &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,
+      &quot;fiatPrice&quot;: &quot;$0.00&quot;,
+      &quot;name&quot;: &quot;Chiken dinner&quot;,
+      &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+      &quot;youtubeUrl&quot;: &quot;&quot;,
+      &quot;price&quot;: 0,
+      &quot;ethPrice&quot;: &quot;0&quot;,
+      &quot;amountToMint&quot;: &quot;5&quot;,
+      &quot;visibility&quot;: &quot;safe&quot;,
+      &quot;forSale&quot;: false,
+      &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+      &quot;attributes&quot;: [],
+      &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,
+      &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+      &quot;type&quot;: &quot;ERC721&quot;
+    }
+  }
+]
+</code></pre>
+</details></div></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-search-js="../../../search-index.js"></div>
+    <script src="../../../main.js"></script></body></html>

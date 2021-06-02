@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["active_routes",""],["error_catchers",""],["not_found",""],["panic",""],["root",""]],"mod":[["about","About endpoint"],["balances","Balance endpoints"],["collectibles","Collectibles endpoint"],["safes","Safe endpoints"],["transactions","Transactions endpoints"]]});

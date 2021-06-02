@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["safe_client_gateway"];

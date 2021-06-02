@@ -6,7 +6,7 @@ use rocket::response::content;
 
 /**
  * `/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` <br />
- * Returns [Collectible](https://safe-transaction.gnosis.io/)
+ * Returns collectibles from the transaction service
  *
  * # Collectibles
  *

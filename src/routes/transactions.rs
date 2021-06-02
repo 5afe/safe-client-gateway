@@ -82,7 +82,7 @@ pub async fn submit_confirmation<'e>(
 
 /**
  * `/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
- * Returns a List of [crate::models::service::transactions::summary::TransactionListItem]
+ * Returns a [crate::models::commons::Page] of [crate::models::service::transactions::summary::TransactionListItem]
  *
  * # Transactions History
  *
@@ -135,7 +135,7 @@ pub async fn history_transactions(
 
 /**
  * `/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
- * Returns a List of  [crate::models::service::transactions::summary::TransactionListItem]
+ * Returns a [crate::models::commons::Page] of  [crate::models::service::transactions::summary::TransactionListItem]
  *
  * # Transactions Queued
  *

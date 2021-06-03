@@ -11,6 +11,7 @@ use crate::utils::errors::ApiResult;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
 use rocket::response::content;
+use serde::Deserialize;
 use serde::Serialize;
 use std::future::Future;
 
@@ -24,16 +25,16 @@ pub struct Invalidate {
     database: Database,
 }
 
+#[derive(Deserialize, Debug)]
 pub enum Something {
     Requests,
     Responses,
     Both,
 }
 
+#[derive(Deserialize, Debug)]
 pub enum InvalidationPattern {
-    SafeAddress(String),
-    Requests(String),
-    Responses(String),
+    Any(String, Something),
     Transaction(String, Something),
     Balances(String, Something),
     Collectibles(String, Something),
@@ -44,25 +45,24 @@ pub enum InvalidationPattern {
 impl InvalidationPattern {
     pub(super) fn to_pattern_string(&self) -> String {
         match &self {
-            InvalidationPattern::SafeAddress(value) => {
-                format!("{}*{}*", CACHE_REQS_RESP_PREFIX, &value)
+            InvalidationPattern::Any(value, something) => {
+                format!("{}*{}*", something.something_string(), &value)
             }
             InvalidationPattern::Tokens => String::from(TOKENS_KEY),
-            InvalidationPattern::Requests(value) => format!("{}_{}", CACHE_REQS_PREFIX, value),
-            InvalidationPattern::Responses(value) => format!("{}_{}", CACHE_RESP_PREFIX, value),
             InvalidationPattern::Transaction(value, something) => {
-                format!("{}*transaction*{}", &something.something_string(), value)
+                format!("{}*transaction*{}", something.something_string(), value)
             }
             InvalidationPattern::Balances(value, something) => {
-                format!("{}*balances*{}", &something.something_string(), value)
+                format!("{}*balances*{}", something.something_string(), value)
             }
             InvalidationPattern::Collectibles(value, something) => {
-                format!("{}*collectibles*{}", &something.something_string(), value)
+                format!("{}*collectibles*{}", something.something_string(), value)
             }
             InvalidationPattern::KnownAddresses => String::from("*contract*"),
         }
     }
 }
+
 impl Something {
     fn something_string(&self) -> String {
         match &self {

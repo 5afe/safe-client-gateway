@@ -59,14 +59,14 @@ impl InvalidationPattern {
             }
             InvalidationPattern::Balances(value, something) => {
                 format!(
-                    "{}*balances*{}",
+                    "{}*/{}/balances*",
                     something.invalidation_scope_string(),
                     value
                 )
             }
             InvalidationPattern::Collectibles(value, something) => {
                 format!(
-                    "{}*collectibles*{}",
+                    "{}*/{}/collectibles*",
                     something.invalidation_scope_string(),
                     value
                 )
@@ -77,7 +77,7 @@ impl InvalidationPattern {
 }
 
 impl InvalidationScope {
-    fn invalidation_scope_string(&self) -> String {
+    pub(super) fn invalidation_scope_string(&self) -> String {
         match &self {
             InvalidationScope::Requests => CACHE_REQS_PREFIX,
             InvalidationScope::Responses => CACHE_RESP_PREFIX,

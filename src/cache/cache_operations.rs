@@ -26,7 +26,7 @@ pub struct Invalidate {
 }
 
 #[derive(Deserialize, Debug)]
-pub enum Something {
+pub enum InvalidationScope {
     Requests,
     Responses,
     Both,
@@ -35,10 +35,10 @@ pub enum Something {
 #[derive(Deserialize, Debug)]
 #[serde(tag = "invalidate", content = "pattern_details")]
 pub enum InvalidationPattern {
-    Any(String, Something),
-    Transaction(String, Something),
-    Balances(String, Something),
-    Collectibles(String, Something),
+    Any(String, InvalidationScope),
+    Transactions(String, InvalidationScope),
+    Balances(String, InvalidationScope),
+    Collectibles(String, InvalidationScope),
     Contracts,
     Tokens,
 }
@@ -47,29 +47,41 @@ impl InvalidationPattern {
     pub(super) fn to_pattern_string(&self) -> String {
         match &self {
             InvalidationPattern::Any(value, something) => {
-                format!("{}*{}*", something.something_string(), &value)
+                format!("{}*{}*", something.invalidation_scope_string(), &value)
             }
             InvalidationPattern::Tokens => String::from(TOKENS_KEY),
-            InvalidationPattern::Transaction(value, something) => {
-                format!("{}*transaction*{}", something.something_string(), value)
+            InvalidationPattern::Transactions(value, something) => {
+                format!(
+                    "{}*transactions/*{}",
+                    something.invalidation_scope_string(),
+                    value
+                )
             }
             InvalidationPattern::Balances(value, something) => {
-                format!("{}*balances*{}", something.something_string(), value)
+                format!(
+                    "{}*balances*{}",
+                    something.invalidation_scope_string(),
+                    value
+                )
             }
             InvalidationPattern::Collectibles(value, something) => {
-                format!("{}*collectibles*{}", something.something_string(), value)
+                format!(
+                    "{}*collectibles*{}",
+                    something.invalidation_scope_string(),
+                    value
+                )
             }
             InvalidationPattern::Contracts => String::from("*contract*"),
         }
     }
 }
 
-impl Something {
-    fn something_string(&self) -> String {
+impl InvalidationScope {
+    fn invalidation_scope_string(&self) -> String {
         match &self {
-            Something::Requests => CACHE_REQS_PREFIX,
-            Something::Responses => CACHE_RESP_PREFIX,
-            Something::Both => CACHE_REQS_RESP_PREFIX,
+            InvalidationScope::Requests => CACHE_REQS_PREFIX,
+            InvalidationScope::Responses => CACHE_RESP_PREFIX,
+            InvalidationScope::Both => CACHE_REQS_RESP_PREFIX,
         }
         .to_string()
     }

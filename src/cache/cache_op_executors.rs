@@ -1,9 +1,6 @@
-use crate::cache::cache_operations::{
-    CacheResponse, InvalidationPattern, RequestCached, Something,
-};
+use crate::cache::cache_operations::{CacheResponse, InvalidationPattern, RequestCached};
 use crate::cache::inner_cache::CachedWithCode;
 use crate::cache::Cache;
-use crate::providers::info::TOKENS_KEY;
 use crate::utils::errors::{ApiError, ApiResult};
 use rocket::response::content;
 use serde::Serialize;

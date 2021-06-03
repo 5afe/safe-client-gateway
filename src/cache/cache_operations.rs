@@ -33,12 +33,13 @@ pub enum Something {
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(tag = "invalidate", content = "pattern_details")]
 pub enum InvalidationPattern {
     Any(String, Something),
     Transaction(String, Something),
     Balances(String, Something),
     Collectibles(String, Something),
-    KnownAddresses,
+    Contracts,
     Tokens,
 }
 
@@ -58,7 +59,7 @@ impl InvalidationPattern {
             InvalidationPattern::Collectibles(value, something) => {
                 format!("{}*collectibles*{}", something.something_string(), value)
             }
-            InvalidationPattern::KnownAddresses => String::from("*contract*"),
+            InvalidationPattern::Contracts => String::from("*contract*"),
         }
     }
 }

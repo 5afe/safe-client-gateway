@@ -1,4 +1,6 @@
-use crate::cache::cache_operations::{CacheResponse, InvalidationPattern, RequestCached};
+use crate::cache::cache_operations::{
+    CacheResponse, InvalidationPattern, RequestCached, Something,
+};
 use crate::cache::inner_cache::CachedWithCode;
 use crate::cache::Cache;
 use crate::providers::info::TOKENS_KEY;
@@ -13,11 +15,16 @@ const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
 
 pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
     let pattern_str = match pattern {
-        InvalidationPattern::FlushAll => String::from("*"),
         InvalidationPattern::SafeAddress(value) => {
             format!("{}*{}*", CACHE_REQS_RESP_PREFIX, &value)
         }
         InvalidationPattern::Tokens => String::from(TOKENS_KEY),
+        InvalidationPattern::Requests(value) => {}
+        InvalidationPattern::Responses(value) => {}
+        InvalidationPattern::Transaction(value, something) => {}
+        InvalidationPattern::Balances(value, something) => {}
+        InvalidationPattern::Collectibles(value) => {}
+        InvalidationPattern::KnownAddresses => {}
     };
 
     cache.invalidate_pattern(pattern_str.as_str());

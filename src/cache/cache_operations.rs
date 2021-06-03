@@ -23,12 +23,11 @@ pub struct Invalidate {
 pub(crate) enum Something {
     Requests,
     Responses,
-    All,
+    Both,
 }
 
 pub enum InvalidationPattern {
-    FlushAll,
-    SafeAddress(String, Something),
+    SafeAddress(String),
     Requests(String),
     Responses(String),
     Transaction(String, Something),

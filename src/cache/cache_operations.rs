@@ -52,7 +52,7 @@ impl InvalidationPattern {
             InvalidationPattern::Tokens => String::from(TOKENS_KEY),
             InvalidationPattern::Transactions(value, something) => {
                 format!(
-                    "{}*transactions/*{}",
+                    "{}*/{}/*transactions/*",
                     something.invalidation_scope_string(),
                     value
                 )

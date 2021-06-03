@@ -5,7 +5,6 @@ use crate::utils::errors::ApiResult;
 
 pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()> {
     Invalidate::new(InvalidationPattern::Any(
-        // safe variant
         payload.address.to_owned(),
         InvalidationScope::Both,
     ))
@@ -13,7 +12,6 @@ pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()>
     payload.details.as_ref().map(|d| match d {
         PayloadDetails::NewConfirmation(data) => {
             Invalidate::new(InvalidationPattern::Any(
-                //TODO investigate impact of using Transaction variant
                 String::from(&data.safe_tx_hash),
                 InvalidationScope::Both,
             ))
@@ -21,7 +19,6 @@ pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()>
         }
         PayloadDetails::ExecutedMultisigTransaction(data) => {
             Invalidate::new(InvalidationPattern::Any(
-                //TODO investigate impact of using Transaction variant
                 String::from(&data.safe_tx_hash),
                 InvalidationScope::Both,
             ))
@@ -29,7 +26,6 @@ pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()>
         }
         PayloadDetails::PendingMultisigTransaction(data) => {
             Invalidate::new(InvalidationPattern::Any(
-                //TODO investigate impact of using Transaction variant
                 String::from(&data.safe_tx_hash),
                 InvalidationScope::Both,
             ))

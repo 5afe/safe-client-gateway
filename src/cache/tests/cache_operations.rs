@@ -19,7 +19,7 @@ fn invalidation_pattern_any_string() {
 fn invalidation_pattern_transactions_string() {
     let invalidation_pattern =
         InvalidationPattern::Transactions("some_address".to_string(), InvalidationScope::Both);
-    let expected = format!("{}*transactions/*some_address", CACHE_REQS_RESP_PREFIX);
+    let expected = format!("{}*/some_address/*transactions/*", CACHE_REQS_RESP_PREFIX);
 
     let actual = invalidation_pattern.to_pattern_string();
 

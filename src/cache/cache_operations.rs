@@ -1,8 +1,12 @@
-use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+use crate::cache::cache_op_executors::{
+    cache_response, invalidate, request_cached, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX,
+    CACHE_RESP_PREFIX,
+};
 use crate::cache::Cache;
 use crate::config::{
     default_request_timeout, request_cache_duration, request_error_cache_duration,
 };
+use crate::providers::info::TOKENS_KEY;
 use crate::utils::errors::ApiResult;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
@@ -20,7 +24,7 @@ pub struct Invalidate {
     database: Database,
 }
 
-pub(crate) enum Something {
+pub enum Something {
     Requests,
     Responses,
     Both,
@@ -32,9 +36,42 @@ pub enum InvalidationPattern {
     Responses(String),
     Transaction(String, Something),
     Balances(String, Something),
-    Collectibles(String),
+    Collectibles(String, Something),
     KnownAddresses,
     Tokens,
+}
+
+impl InvalidationPattern {
+    pub(super) fn to_pattern_string(&self) -> String {
+        match &self {
+            InvalidationPattern::SafeAddress(value) => {
+                format!("{}*{}*", CACHE_REQS_RESP_PREFIX, &value)
+            }
+            InvalidationPattern::Tokens => String::from(TOKENS_KEY),
+            InvalidationPattern::Requests(value) => format!("{}_{}", CACHE_REQS_PREFIX, value),
+            InvalidationPattern::Responses(value) => format!("{}_{}", CACHE_RESP_PREFIX, value),
+            InvalidationPattern::Transaction(value, something) => {
+                format!("{}*transaction*{}", &something.something_string(), value)
+            }
+            InvalidationPattern::Balances(value, something) => {
+                format!("{}*balances*{}", &something.something_string(), value)
+            }
+            InvalidationPattern::Collectibles(value, something) => {
+                format!("{}*collectibles*{}", &something.something_string(), value)
+            }
+            InvalidationPattern::KnownAddresses => String::from("*contract*"),
+        }
+    }
+}
+impl Something {
+    fn something_string(&self) -> String {
+        match &self {
+            Something::Requests => CACHE_REQS_PREFIX,
+            Something::Responses => CACHE_RESP_PREFIX,
+            Something::Both => CACHE_REQS_RESP_PREFIX,
+        }
+        .to_string()
+    }
 }
 
 impl Invalidate {

@@ -42,7 +42,6 @@ pub fn active_routes() -> Vec<Route> {
         transactions::submit_confirmation,
         transactions::propose_transaction,
         hooks::update,
-        hooks::flush_all,
         hooks::flush_token_info,
         health::health
     ]

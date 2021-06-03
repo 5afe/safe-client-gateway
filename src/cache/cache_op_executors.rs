@@ -9,25 +9,12 @@ use rocket::response::content;
 use serde::Serialize;
 use std::time::Duration;
 
-const CACHE_REQS_PREFIX: &'static str = "c_reqs";
-const CACHE_RESP_PREFIX: &'static str = "c_resp";
-const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
+pub(super) const CACHE_REQS_PREFIX: &'static str = "c_reqs";
+pub(super) const CACHE_RESP_PREFIX: &'static str = "c_resp";
+pub(super) const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
 
 pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
-    let pattern_str = match pattern {
-        InvalidationPattern::SafeAddress(value) => {
-            format!("{}*{}*", CACHE_REQS_RESP_PREFIX, &value)
-        }
-        InvalidationPattern::Tokens => String::from(TOKENS_KEY),
-        InvalidationPattern::Requests(value) => {}
-        InvalidationPattern::Responses(value) => {}
-        InvalidationPattern::Transaction(value, something) => {}
-        InvalidationPattern::Balances(value, something) => {}
-        InvalidationPattern::Collectibles(value) => {}
-        InvalidationPattern::KnownAddresses => {}
-    };
-
-    cache.invalidate_pattern(pattern_str.as_str());
+    cache.invalidate_pattern(pattern.to_pattern_string().as_str());
 }
 
 pub(super) async fn cache_response<S>(

@@ -49,14 +49,6 @@ impl InvalidationPattern {
             InvalidationPattern::Any(value, scope) => {
                 format!("{}*{}*", scope.invalidation_scope_string(), &value)
             }
-            InvalidationPattern::Tokens => String::from(TOKENS_KEY),
-            InvalidationPattern::Transactions(value, scope) => {
-                format!(
-                    "{}*/{}/*transactions/*",
-                    scope.invalidation_scope_string(),
-                    value
-                )
-            }
             InvalidationPattern::Balances(value, scope) => {
                 format!("{}*/{}/balances*", scope.invalidation_scope_string(), value)
             }
@@ -67,7 +59,15 @@ impl InvalidationPattern {
                     value
                 )
             }
+            InvalidationPattern::Transactions(value, scope) => {
+                format!(
+                    "{}*/{}/*transactions/*",
+                    scope.invalidation_scope_string(),
+                    value
+                )
+            }
             InvalidationPattern::Contracts => String::from("*contract*"),
+            InvalidationPattern::Tokens => String::from(TOKENS_KEY),
         }
     }
 }

@@ -46,28 +46,24 @@ pub enum InvalidationPattern {
 impl InvalidationPattern {
     pub(super) fn to_pattern_string(&self) -> String {
         match &self {
-            InvalidationPattern::Any(value, something) => {
-                format!("{}*{}*", something.invalidation_scope_string(), &value)
+            InvalidationPattern::Any(value, scope) => {
+                format!("{}*{}*", scope.invalidation_scope_string(), &value)
             }
             InvalidationPattern::Tokens => String::from(TOKENS_KEY),
-            InvalidationPattern::Transactions(value, something) => {
+            InvalidationPattern::Transactions(value, scope) => {
                 format!(
                     "{}*/{}/*transactions/*",
-                    something.invalidation_scope_string(),
+                    scope.invalidation_scope_string(),
                     value
                 )
             }
-            InvalidationPattern::Balances(value, something) => {
-                format!(
-                    "{}*/{}/balances*",
-                    something.invalidation_scope_string(),
-                    value
-                )
+            InvalidationPattern::Balances(value, scope) => {
+                format!("{}*/{}/balances*", scope.invalidation_scope_string(), value)
             }
-            InvalidationPattern::Collectibles(value, something) => {
+            InvalidationPattern::Collectibles(value, scope) => {
                 format!(
                     "{}*/{}/collectibles*",
-                    something.invalidation_scope_string(),
+                    scope.invalidation_scope_string(),
                     value
                 )
             }

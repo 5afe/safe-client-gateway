@@ -8,6 +8,10 @@ mod tests;
 
 use mockall::automock;
 
+const CACHE_REQS_PREFIX: &'static str = "c_reqs";
+const CACHE_RESP_PREFIX: &'static str = "c_resp";
+const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
+
 #[automock]
 pub trait Cache: Send + Sync {
     fn fetch(&self, id: &str) -> Option<String>;

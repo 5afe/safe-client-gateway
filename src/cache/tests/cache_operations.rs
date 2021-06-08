@@ -1,7 +1,5 @@
-use crate::cache::cache_op_executors::{
-    CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX,
-};
 use crate::cache::cache_operations::{InvalidationPattern, InvalidationScope};
+use crate::cache::{CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::providers::info::TOKENS_KEY;
 
 #[test]

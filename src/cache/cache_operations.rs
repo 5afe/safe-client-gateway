@@ -1,8 +1,5 @@
-use crate::cache::cache_op_executors::{
-    cache_response, invalidate, request_cached, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX,
-    CACHE_RESP_PREFIX,
-};
-use crate::cache::Cache;
+use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::config::{
     default_request_timeout, request_cache_duration, request_error_cache_duration,
 };

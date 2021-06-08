@@ -29,12 +29,6 @@
 <span id="26">26</span>
 <span id="27">27</span>
 <span id="28">28</span>
-<span id="29">29</span>
-<span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations</span>::{<span class="ident">Invalidate</span>, <span class="ident">InvalidationPattern</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config::webhook_token</span>;
@@ -44,7 +38,6 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket_contrib::json::Json</span>;
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">post</span>(<span class="string">&quot;/v1/hook/update/&lt;token&gt;&quot;</span>, <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>, <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;update&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">update</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
@@ -53,21 +46,16 @@
     <span class="ident">invalidate_caches</span>(<span class="ident">context</span>.<span class="ident">cache</span>(), <span class="kw-2">&amp;</span><span class="ident">update</span>)
 }
 
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/flush_all/&lt;token&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush_all</span>(<span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">token</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="attribute">#[<span class="ident">post</span>(<span class="string">&quot;/v1/flush/&lt;token&gt;&quot;</span>, <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>, <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;invalidation_pattern&gt;&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush</span>(
+    <span class="ident">context</span>: <span class="ident">Context</span>,
+    <span class="ident">token</span>: <span class="ident">String</span>,
+    <span class="ident">invalidation_pattern</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">InvalidationPattern</span><span class="op">&gt;</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
         <span class="macro">bail!</span>(<span class="string">&quot;Invalid token&quot;</span>);
     }
-    <span class="ident">Invalidate::new</span>(<span class="ident">InvalidationPattern::FlushAll</span>).<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>());
-    <span class="prelude-val">Ok</span>(())
-}
-
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/flush_tokens/&lt;token&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush_token_info</span>(<span class="ident">context</span>: <span class="ident">Context</span>, <span class="ident">token</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
-        <span class="macro">bail!</span>(<span class="string">&quot;Invalid token&quot;</span>);
-    }
-    <span class="ident">Invalidate::new</span>(<span class="ident">InvalidationPattern::Tokens</span>).<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>());
+    <span class="ident">Invalidate::new</span>(<span class="ident">invalidation_pattern</span>.<span class="number">0</span>).<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>());
     <span class="prelude-val">Ok</span>(())
 }
 </pre></div>

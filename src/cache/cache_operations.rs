@@ -32,10 +32,10 @@ pub enum InvalidationScope {
 #[derive(Deserialize, Debug)]
 #[serde(tag = "invalidate", content = "pattern_details")]
 pub enum InvalidationPattern {
-    Any(String, InvalidationScope),
-    Transactions(String, InvalidationScope),
-    Balances(String, InvalidationScope),
-    Collectibles(String, InvalidationScope),
+    Any(InvalidationScope, String),
+    Transactions(InvalidationScope, String),
+    Balances(InvalidationScope, String),
+    Collectibles(InvalidationScope, String),
     Contracts,
     Tokens,
 }
@@ -43,20 +43,20 @@ pub enum InvalidationPattern {
 impl InvalidationPattern {
     pub(super) fn to_pattern_string(&self) -> String {
         match &self {
-            InvalidationPattern::Any(value, scope) => {
+            InvalidationPattern::Any(scope, value) => {
                 format!("{}*{}*", scope.invalidation_scope_string(), &value)
             }
-            InvalidationPattern::Balances(value, scope) => {
+            InvalidationPattern::Balances(scope, value) => {
                 format!("{}*/{}/balances*", scope.invalidation_scope_string(), value)
             }
-            InvalidationPattern::Collectibles(value, scope) => {
+            InvalidationPattern::Collectibles(scope, value) => {
                 format!(
                     "{}*/{}/collectibles*",
                     scope.invalidation_scope_string(),
                     value
                 )
             }
-            InvalidationPattern::Transactions(value, scope) => {
+            InvalidationPattern::Transactions(scope, value) => {
                 format!(
                     "{}*/{}/*transactions/*",
                     scope.invalidation_scope_string(),
@@ -70,13 +70,12 @@ impl InvalidationPattern {
 }
 
 impl InvalidationScope {
-    pub(super) fn invalidation_scope_string(&self) -> String {
+    pub(super) fn invalidation_scope_string(&self) -> &str {
         match &self {
             InvalidationScope::Requests => CACHE_REQS_PREFIX,
             InvalidationScope::Responses => CACHE_RESP_PREFIX,
             InvalidationScope::Both => CACHE_REQS_RESP_PREFIX,
         }
-        .to_string()
     }
 }
 

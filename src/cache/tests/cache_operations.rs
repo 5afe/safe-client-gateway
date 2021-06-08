@@ -5,7 +5,7 @@ use crate::providers::info::TOKENS_KEY;
 #[test]
 fn invalidation_pattern_any_string() {
     let invalidation_pattern =
-        InvalidationPattern::Any("some_address".to_string(), InvalidationScope::Both);
+        InvalidationPattern::Any(InvalidationScope::Both, "some_address".to_string());
     let expected = format!("{}*some_address*", CACHE_REQS_RESP_PREFIX);
 
     let actual = invalidation_pattern.to_pattern_string();
@@ -16,7 +16,7 @@ fn invalidation_pattern_any_string() {
 #[test]
 fn invalidation_pattern_transactions_string() {
     let invalidation_pattern =
-        InvalidationPattern::Transactions("some_address".to_string(), InvalidationScope::Both);
+        InvalidationPattern::Transactions(InvalidationScope::Both, "some_address".to_string());
     let expected = format!("{}*/some_address/*transactions/*", CACHE_REQS_RESP_PREFIX);
 
     let actual = invalidation_pattern.to_pattern_string();
@@ -47,7 +47,7 @@ fn invalidation_pattern_contracts_string() {
 #[test]
 fn invalidation_pattern_balances_string() {
     let invalidation_pattern =
-        InvalidationPattern::Balances("some_address".to_string(), InvalidationScope::Both);
+        InvalidationPattern::Balances(InvalidationScope::Both, "some_address".to_string());
     let expected = format!("{}*/some_address/balances*", CACHE_REQS_RESP_PREFIX);
 
     let actual = invalidation_pattern.to_pattern_string();
@@ -58,7 +58,7 @@ fn invalidation_pattern_balances_string() {
 #[test]
 fn invalidation_pattern_collectibles_string() {
     let invalidation_pattern =
-        InvalidationPattern::Collectibles("some_address".to_string(), InvalidationScope::Both);
+        InvalidationPattern::Collectibles(InvalidationScope::Both, "some_address".to_string());
     let expected = format!("{}*/some_address/collectibles*", CACHE_REQS_RESP_PREFIX);
 
     let actual = invalidation_pattern.to_pattern_string();

@@ -25,6 +25,17 @@ fn invalidation_pattern_transactions_string() {
 }
 
 #[test]
+fn invalidation_pattern_transfers_string() {
+    let invalidation_pattern =
+        InvalidationPattern::Transfers(InvalidationScope::Requests, "some_address".to_string());
+    let expected = format!("{}*/some_address/*transfer*", CACHE_REQS_PREFIX);
+
+    let actual = invalidation_pattern.to_pattern_string();
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
 fn invalidation_pattern_tokens_string() {
     let invalidation_pattern = InvalidationPattern::Tokens;
     let expected = TOKENS_KEY.to_string();

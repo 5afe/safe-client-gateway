@@ -36,6 +36,7 @@ pub enum InvalidationPattern {
     Transactions(InvalidationScope, String),
     Balances(InvalidationScope, String),
     Collectibles(InvalidationScope, String),
+    Transfers(InvalidationScope, String),
     Contracts,
     Tokens,
 }
@@ -52,6 +53,13 @@ impl InvalidationPattern {
             InvalidationPattern::Collectibles(scope, value) => {
                 format!(
                     "{}*/{}/collectibles*",
+                    scope.invalidation_scope_string(),
+                    value
+                )
+            }
+            InvalidationPattern::Transfers(scope, value) => {
+                format!(
+                    "{}*/{}/*transfer*",
                     scope.invalidation_scope_string(),
                     value
                 )

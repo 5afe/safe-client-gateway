@@ -6,7 +6,6 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket_contrib::json::Json;
 
-#[doc(hidden)]
 #[post("/v1/hook/update/<token>", format = "json", data = "<update>")]
 pub fn update(context: Context<'_>, token: String, update: Json<Payload>) -> ApiResult<()> {
     if token != webhook_token() {
@@ -15,20 +14,15 @@ pub fn update(context: Context<'_>, token: String, update: Json<Payload>) -> Api
     invalidate_caches(context.cache(), &update)
 }
 
-#[get("/v1/flush_all/<token>")]
-pub fn flush_all(context: Context<'_>, token: String) -> ApiResult<()> {
+#[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]
+pub fn flush(
+    context: Context,
+    token: String,
+    invalidation_pattern: Json<InvalidationPattern>,
+) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Invalidate::new(InvalidationPattern::FlushAll).execute(context.cache());
-    Ok(())
-}
-
-#[get("/v1/flush_tokens/<token>")]
-pub fn flush_token_info(context: Context, token: String) -> ApiResult<()> {
-    if token != webhook_token() {
-        bail!("Invalid token");
-    }
-    Invalidate::new(InvalidationPattern::Tokens).execute(context.cache());
+    Invalidate::new(invalidation_pattern.0).execute(context.cache());
     Ok(())
 }

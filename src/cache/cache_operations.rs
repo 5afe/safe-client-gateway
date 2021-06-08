@@ -1,12 +1,14 @@
 use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
-use crate::cache::Cache;
+use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::config::{
     default_request_timeout, request_cache_duration, request_error_cache_duration,
 };
+use crate::providers::info::TOKENS_KEY;
 use crate::utils::errors::ApiResult;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
 use rocket::response::content;
+use serde::Deserialize;
 use serde::Serialize;
 use std::future::Future;
 
@@ -20,10 +22,69 @@ pub struct Invalidate {
     database: Database,
 }
 
+#[derive(Deserialize, Debug)]
+pub enum InvalidationScope {
+    Requests,
+    Responses,
+    Both,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(tag = "invalidate", content = "pattern_details")]
 pub enum InvalidationPattern {
-    FlushAll,
-    RequestsResponses(String),
+    Any(InvalidationScope, String),
+    Transactions(InvalidationScope, String),
+    Balances(InvalidationScope, String),
+    Collectibles(InvalidationScope, String),
+    Transfers(InvalidationScope, String),
+    Contracts,
     Tokens,
+}
+
+impl InvalidationPattern {
+    pub(super) fn to_pattern_string(&self) -> String {
+        match &self {
+            InvalidationPattern::Any(scope, value) => {
+                format!("{}*{}*", scope.invalidation_scope_string(), &value)
+            }
+            InvalidationPattern::Balances(scope, value) => {
+                format!("{}*/{}/balances*", scope.invalidation_scope_string(), value)
+            }
+            InvalidationPattern::Collectibles(scope, value) => {
+                format!(
+                    "{}*/{}/collectibles*",
+                    scope.invalidation_scope_string(),
+                    value
+                )
+            }
+            InvalidationPattern::Transfers(scope, value) => {
+                format!(
+                    "{}*/{}/*transfer*",
+                    scope.invalidation_scope_string(),
+                    value
+                )
+            }
+            InvalidationPattern::Transactions(scope, value) => {
+                format!(
+                    "{}*/{}/*transactions/*",
+                    scope.invalidation_scope_string(),
+                    value
+                )
+            }
+            InvalidationPattern::Contracts => String::from("*contract*"),
+            InvalidationPattern::Tokens => String::from(TOKENS_KEY),
+        }
+    }
+}
+
+impl InvalidationScope {
+    pub(super) fn invalidation_scope_string(&self) -> &str {
+        match &self {
+            InvalidationScope::Requests => CACHE_REQS_PREFIX,
+            InvalidationScope::Responses => CACHE_RESP_PREFIX,
+            InvalidationScope::Both => CACHE_REQS_RESP_PREFIX,
+        }
+    }
 }
 
 impl Invalidate {

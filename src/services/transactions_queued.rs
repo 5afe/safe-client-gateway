@@ -208,15 +208,15 @@ fn build_page_url(
     direction: i64,
 ) -> Option<String> {
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(
-            crate::routes::transactions::queued_transactions: safe_address,
+        context.build_absolute_url(uri!(crate::routes::transactions::queued_transactions(
+            safe_address,
             Some(offset_page_meta(
                 page_meta,
                 direction * (page_meta.limit as i64)
             )),
             Some(timezone_offset.clone().unwrap_or("0".to_string())),
             Some(display_trusted_only)
-        ))
+        )))
     })
 }
 

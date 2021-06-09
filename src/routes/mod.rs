@@ -1,9 +1,9 @@
 extern crate rocket;
 
 use rocket::response::Redirect;
+use rocket::serde::json::{json, Value};
 use rocket::Catcher;
 use rocket::Route;
-use rocket_contrib::json::JsonValue;
 
 /// # About endpoint
 pub mod about;
@@ -54,7 +54,7 @@ pub fn error_catchers() -> Vec<Catcher> {
 
 #[doc(hidden)]
 #[catch(404)]
-fn not_found() -> JsonValue {
+fn not_found() -> Value {
     json!({
         "status": "error",
         "reason": "Resource was not found."
@@ -63,7 +63,7 @@ fn not_found() -> JsonValue {
 
 #[doc(hidden)]
 #[catch(500)]
-fn panic() -> JsonValue {
+fn panic() -> Value {
     json!({
         "status": "error",
         "reason": "Server error occurred."

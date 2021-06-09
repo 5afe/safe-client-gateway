@@ -13,7 +13,7 @@ impl Fairing for PerformanceMonitor {
         }
     }
 
-    async fn on_request(&self, request: &mut Request<'_>, _data: &mut Data) {
+    async fn on_request(&self, request: &mut Request<'_>, _data: &mut Data<'_>) {
         request.local_cache(|| Utc::now().timestamp_millis());
     }
 

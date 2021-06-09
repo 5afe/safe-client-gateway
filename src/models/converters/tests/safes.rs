@@ -1,6 +1,7 @@
 use crate::models::service::safes::{AddressEx, SafeInfoEx};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
+use rocket::serde::json::json;
 
 #[rocket::async_test]
 async fn to_safe_info_ex_no_address_info() {

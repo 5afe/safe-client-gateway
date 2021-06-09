@@ -13,11 +13,12 @@ dotenv_codegen = "0.15.0"
 regex = "1"
 lazy_static = "1.4.0"
 
-rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "f85604b65ef3d1335adfeb98a0a83be34c27388d" }
-rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "f85604b65ef3d1335adfeb98a0a83be34c27388d" }
+rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968", features = ["tls", "json"] }
+rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968" }
 
 # Force rocket peer-dependencies versions
 proc-macro2 = "1.0.27"
+tokio = "1.6.1"
 
 reqwest = { version = "0.11.3", features = ["json"] }
 
@@ -47,12 +48,6 @@ semver = "0.11.0"
 # Logging
 log = "0.4"
 env_logger = "0.7.1"
-
-[dependencies.rocket_contrib]
-git = "https://github.com/SergioBenitez/Rocket"
-rev = "f85604b65ef3d1335adfeb98a0a83be34c27388d"
-default-features = false
-features = ["json"]
 
 [dev-dependencies]
 cargo-watch = "7.3.0"

@@ -8,8 +8,8 @@ use crate::services::{
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
-use rocket_contrib::json::Json;
-use rocket_contrib::json::JsonError;
+use rocket::serde::json::Error;
+use rocket::serde::json::Json;
 
 /**
  * `/v1/transactions/<transaction_id>` <br />
@@ -65,7 +65,7 @@ pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<cont
 pub async fn submit_confirmation<'e>(
     context: Context<'_>,
     safe_tx_hash: String,
-    tx_confirmation_request: Result<Json<ConfirmationRequest>, JsonError<'e>>,
+    tx_confirmation_request: Result<Json<ConfirmationRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {
     transactions_proposal::submit_confirmation(
         &context,
@@ -209,7 +209,7 @@ pub async fn queued_transactions(
 pub async fn propose_transaction<'e>(
     context: Context<'_>,
     safe_address: String,
-    multisig_transaction_request: Result<Json<MultisigTransactionRequest>, JsonError<'e>>,
+    multisig_transaction_request: Result<Json<MultisigTransactionRequest>, Error<'e>>,
 ) -> ApiResult<()> {
     transactions_proposal::propose_transaction(
         &context,

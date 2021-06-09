@@ -12,6 +12,9 @@ echo "Trigger docker build and upload for version $VERSION ($BUILD_NUMBER)"
 
 if [ "$1" = "develop" -o "$1" = "main" ]; then
     cache_tag="$1"
+# TODO remove elif branch
+elif [ "$1" = "interstellar" ]; then
+    cache_tag="staging"
 else
     cache_tag="staging"
 fi

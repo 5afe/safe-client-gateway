@@ -10,7 +10,7 @@ export VERSION=${description:1}
 
 echo "Trigger docker build and upload for version $VERSION ($BUILD_NUMBER)"
 
-if [ "$1" = "develop" -o "$1" = "main" ]; then
+if [ "$1" = "develop" -o "$1" = "interstellar" ]; then
     cache_tag="$1"
 else
     cache_tag="staging"

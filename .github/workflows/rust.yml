@@ -136,7 +136,6 @@ jobs:
       DOCKERHUB_ORG: gnosispm
       DOCKERHUB_PROJECT: safe-client-gateway
     needs: [ rustfmt, tests ]
-    #    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
     if: github.ref == 'refs/heads/interstellar' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: Checkout branch
@@ -149,10 +148,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-        #      - name: Deploy main
-        #        if: github.ref == 'refs/heads/main'
-        #        run: bash scripts/deploy_docker.sh staging
 
       - name: Deploy interstellar
         if: github.ref == 'refs/heads/interstellar'

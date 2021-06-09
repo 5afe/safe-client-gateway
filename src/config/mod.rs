@@ -8,6 +8,10 @@ pub fn base_transaction_service_url() -> String {
     format!("{}{}", env::var("TRANSACTION_SERVICE_URL").unwrap(), "/api")
 }
 
+pub fn base_config_service_url() -> String {
+    format!("{}{}", env::var("CONFIG_SERVICE_URL").unwrap(), "/api")
+}
+
 pub fn base_exchange_api_url() -> String {
     format!(
         "{}?access_key={}",

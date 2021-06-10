@@ -16,6 +16,7 @@ use itertools::Itertools;
 
 pub async fn get_history_transactions(
     context: &Context<'_>,
+    chain_id: &String,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -63,6 +64,7 @@ pub async fn get_history_transactions(
     Ok(Page {
         next: build_page_url(
             context,
+            chain_id,
             safe_address,
             &incoming_page_metadata,
             timezone_offset,
@@ -71,6 +73,7 @@ pub async fn get_history_transactions(
         ),
         previous: build_page_url(
             context,
+            chain_id,
             safe_address,
             &incoming_page_metadata,
             timezone_offset,
@@ -83,6 +86,7 @@ pub async fn get_history_transactions(
 
 fn build_page_url(
     context: &Context<'_>,
+    chain_id: &str,
     safe_address: &str,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -90,7 +94,8 @@ fn build_page_url(
     direction: i64,
 ) -> Option<String> {
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(crate::routes::transactions::history_transactions(
+        context.build_absolute_url(uri!(crate::routes::transactions::get_transactions_history(
+            chain_id,
             safe_address,
             Some(offset_page_meta(
                 page_meta,

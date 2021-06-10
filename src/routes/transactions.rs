@@ -42,7 +42,7 @@ pub async fn get_transactions(
 }
 
 /**
- * `/v1/transactions/<safe_tx_hash>/confirmations` <br />
+ * `/<chain_id>/v1/transactions/<safe_tx_hash>/confirmations` <br />
  * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Confirmation
@@ -62,12 +62,13 @@ pub async fn get_transactions(
  * No query parameters available for this endpoint.
  */
 #[post(
-    "/v1/transactions/<safe_tx_hash>/confirmations",
+    "/<chain_id>/v1/transactions/<safe_tx_hash>/confirmations",
     format = "application/json",
     data = "<tx_confirmation_request>"
 )]
-pub async fn submit_confirmation<'e>(
+pub async fn post_confirmation<'e>(
     context: Context<'_>,
+    chain_id: String,
     safe_tx_hash: String,
     tx_confirmation_request: Result<Json<ConfirmationRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {
@@ -85,7 +86,7 @@ pub async fn submit_confirmation<'e>(
 }
 
 /**
- * `/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/<chain_id>/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions History
@@ -117,9 +118,10 @@ pub async fn submit_confirmation<'e>(
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get("/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>")]
-pub async fn history_transactions(
+#[get("/<chain_id>/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>")]
+pub async fn get_transactions_history(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
     page_url: Option<String>,
     timezone_offset: Option<String>,
@@ -128,6 +130,7 @@ pub async fn history_transactions(
         .resp_generator(|| {
             transactions_history::get_history_transactions(
                 &context,
+                &chain_id,
                 &safe_address,
                 &page_url,
                 &timezone_offset,
@@ -138,7 +141,7 @@ pub async fn history_transactions(
 }
 
 /**
- * `/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/<chain_id>/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of  [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions Queued
@@ -164,9 +167,10 @@ pub async fn history_transactions(
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get("/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
-pub async fn queued_transactions(
+#[get("/<chain_id>/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
+pub async fn get_transactions_queued(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
     page_url: Option<String>,
     timezone_offset: Option<String>,
@@ -176,6 +180,7 @@ pub async fn queued_transactions(
         .resp_generator(|| {
             transactions_queued::get_queued_transactions(
                 &context,
+                &chain_id,
                 &safe_address,
                 &page_url,
                 &timezone_offset,
@@ -187,7 +192,7 @@ pub async fn queued_transactions(
 }
 
 /**
- * `/v1/transactions/<safe_address>/propose` <br />
+ * `/<chain_id>/v1/transactions/<safe_address>/propose` <br />
  * No return value
  *
  * # Transaction Proposal
@@ -206,12 +211,13 @@ pub async fn queued_transactions(
  * No query parameters available for this endpoint.
  */
 #[post(
-    "/v1/transactions/<safe_address>/propose",
+    "/<chain_id>/v1/transactions/<safe_address>/propose",
     format = "application/json",
     data = "<multisig_transaction_request>"
 )]
-pub async fn propose_transaction<'e>(
+pub async fn post_transaction<'e>(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
     multisig_transaction_request: Result<Json<MultisigTransactionRequest>, Error<'e>>,
 ) -> ApiResult<()> {

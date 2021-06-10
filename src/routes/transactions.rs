@@ -12,7 +12,7 @@ use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
 /**
- * `/v1/transactions/<transaction_id>` <br />
+ * `/<chain_id>/v1/transactions/<transaction_id>` <br />
  * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Details
@@ -29,8 +29,12 @@ use rocket::serde::json::Json;
  *
  * There aren't any query parameters that can be passed to this endpoint.
  */
-#[get("/v1/transactions/<details_id>")]
-pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<content::Json<String>> {
+#[get("/<chain_id>/v1/transactions/<details_id>")]
+pub async fn get_transactions(
+    context: Context<'_>,
+    chain_id: String,
+    details_id: String,
+) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .resp_generator(|| transactions_details::get_transactions_details(&context, &details_id))
         .execute(context.cache())

@@ -21,7 +21,7 @@ use rocket::serde::json::Json;
  *
  * ## Path
  *
- * `/v1/transactions/<transaction_id>`
+ * `GET /<chain_id>/v1/transactions/<transaction_id>`
  *
  * `<transaction_id>` can be either an `id` returned by the transaction summary list endpoint or a `safe_tx_hash` from the Safe Transaction API.
  *
@@ -53,7 +53,7 @@ pub async fn get_transactions(
  *
  * ## Path
  *
- * `POST /v1/transactions/<safe_tx_hash>/confirmations`
+ * `POST /<chain_id>/v1/transactions/<safe_tx_hash>/confirmations`
  *
  * The expected [crate::models::service::transactions::requests::ConfirmationRequest] body for this request, as well as the returned [crate::models::service::transactions::details::TransactionDetails]
  *
@@ -109,7 +109,7 @@ pub async fn post_confirmation<'e>(
  *
  * ## Path
  *
- * `GET /v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /<chain_id>/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>`
  *
  * ## Query parameters
  *
@@ -156,7 +156,7 @@ pub async fn get_transactions_history(
  *
  * ## Path
  *
- * `GET /v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /<chain_id>/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>`
  *
  * The response is a list of [crate::models::service::transactions::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
  *
@@ -202,7 +202,7 @@ pub async fn get_transactions_queued(
  *
  * ## Path
  *
- * `POST /v1/transactions/<safe_address>/propose`
+ * `POST /<chain_id>/v1/transactions/<safe_address>/propose`
  *
  * The expected [crate::models::service::transactions::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
  *

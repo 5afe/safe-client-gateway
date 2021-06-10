@@ -6,7 +6,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 /**
- * `/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
+ * `/<chain_id>/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
  * Returns [Balances](crate::models::service::balances::Balances)
  *
  * # Balances
@@ -19,16 +19,17 @@ use rocket::response::content;
  *
  * ## Path
  *
- * - `/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>` returns the balance for every supported ERC20 token for a `<safe_address>`, as well as the aggregated fiat total in the fiat currency requested with `<fiat>` . Sorted by fiat balance.
+ * - `/<chain_id>/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>` returns the balance for every supported ERC20 token for a `<safe_address>`, as well as the aggregated fiat total in the fiat currency requested with `<fiat>` . Sorted by fiat balance.
  *
  * ## Query parameters
  *
  * - `<trusted>` : A token is defined as trusted by our core service process when adding them. Default value is `false`
  * - `<exclude_spam>`: A token is defined as spam by our core service process when adding them. Default value is `true`
  */
-#[get("/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>")]
+#[get("/<chain_id>/v1/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>")]
 pub async fn get_balances(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
     fiat: String,
     trusted: Option<bool>,

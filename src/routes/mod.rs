@@ -34,7 +34,7 @@ pub fn active_routes() -> Vec<Route> {
         about::redis,
         balances::get_balances,
         balances::get_supported_fiat,
-        collectibles::list,
+        collectibles::get_collectibles,
         safes::get_safe_info,
         transactions::get_transactions,
         transactions::get_transactions_history,

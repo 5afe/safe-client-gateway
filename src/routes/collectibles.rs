@@ -5,7 +5,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 /**
- * `/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` <br />
+ * `/<chain_id>/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` <br />
  * Returns collectibles from the transaction service
  *
  * # Collectibles
@@ -14,7 +14,7 @@ use rocket::response::content;
  *
  * ## Path
  *
- * - `/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` : Returns a list of the ERC721 tokens stored in a safe
+ * - `/<chain_id>/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` : Returns a list of the ERC721 tokens stored in a safe
  *
  * ## Query parameters
  *
@@ -150,9 +150,10 @@ use rocket::response::content;
  * ```
  * </details>
  */
-#[get("/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>")]
-pub async fn list(
+#[get("/<chain_id>/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>")]
+pub async fn get_collectibles(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,

@@ -5,12 +5,13 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 /**
- * `/v1/safes/<safe_address>` <br />
+ * `/<chain_id>/v1/safes/<safe_address>` <br />
  * Returns [SafeState](crate::models::service::safes::SafeState)
  */
-#[get("/v1/safes/<safe_address>")]
-pub async fn safe_info(
+#[get("/<chain_id>/v1/safes/<safe_address>")]
+pub async fn get_safe_info(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())

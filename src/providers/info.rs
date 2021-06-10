@@ -3,10 +3,10 @@ use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, base_config_service_url, base_exchange_api_url,
-    base_transaction_service_url, exchange_api_cache_duration, long_error_duration,
-    safe_app_info_request_timeout, safe_app_manifest_cache_duration, safe_info_cache_duration,
-    safe_info_request_timeout, short_error_duration, token_info_cache_duration,
-    token_info_request_timeout,
+    base_transaction_service_url, chain_info_cache_duration, chain_info_request_timeout,
+    exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
+    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
+    short_error_duration, token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::chains::ChainInfo;
 use crate::models::commons::Page;
@@ -224,9 +224,9 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
     async fn load_chain_info(&self, chain_id: &str) -> ApiResult<Option<ChainInfo>> {
         let url = format!("{}/v1/chains/{}/", base_config_service_url(), chain_id);
         let data = RequestCached::new(url)
-            // .cache_duration(safe_info_cache_duration())
-            // .error_cache_duration(short_error_duration())
-            // .request_timeout(safe_info_request_timeout())
+            .cache_duration(chain_info_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .request_timeout(chain_info_request_timeout())
             .execute(self.client, self.cache)
             .await?;
         Ok(serde_json::from_str(&data).unwrap_or(None))

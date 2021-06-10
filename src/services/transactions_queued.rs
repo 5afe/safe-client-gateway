@@ -13,6 +13,7 @@ use std::collections::HashMap;
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
 pub async fn get_queued_transactions(
     context: &Context<'_>,
+    chain_id: &String,
     safe_address: &String,
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
@@ -66,6 +67,7 @@ pub async fn get_queued_transactions(
     Ok(Page {
         next: build_page_url(
             context,
+            &chain_id,
             &safe_address,
             &page_meta,
             timezone_offset,
@@ -75,6 +77,7 @@ pub async fn get_queued_transactions(
         ),
         previous: build_page_url(
             context,
+            &chain_id,
             &safe_address,
             &page_meta,
             timezone_offset,
@@ -200,6 +203,7 @@ pub(super) async fn process_transactions(
 
 fn build_page_url(
     context: &Context,
+    chain_id: &String,
     safe_address: &String,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -208,7 +212,8 @@ fn build_page_url(
     direction: i64,
 ) -> Option<String> {
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(crate::routes::transactions::queued_transactions(
+        context.build_absolute_url(uri!(crate::routes::transactions::get_transactions_queued(
+            chain_id,
             safe_address,
             Some(offset_page_meta(
                 page_meta,

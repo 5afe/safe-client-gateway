@@ -23,7 +23,7 @@ pub fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
     .to_url_string()
 }
 
-pub async fn backend_url(
+pub async fn core_backend_url(
     chain_id: &str,
     info_provider: impl InfoProvider,
     path_query: impl Fn() -> String,

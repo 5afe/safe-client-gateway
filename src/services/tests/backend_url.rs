@@ -1,6 +1,6 @@
 use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::providers::info::*;
-use crate::services::backend_url;
+use crate::services::core_backend_url;
 
 #[rocket::async_test]
 async fn balances_backend_url_success() {
@@ -25,7 +25,7 @@ async fn balances_backend_url_success() {
         .expect_chain_info()
         .times(1)
         .return_once(move |_| Ok(chain_info));
-    let url = backend_url(chain_id, mock_info_provider, || {
+    let url = core_backend_url(chain_id, mock_info_provider, || {
         format!(
             "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
             safe_address, trusted, exclude_spam
@@ -44,6 +44,6 @@ async fn backend_url_error() {
         .expect_chain_info()
         .times(1)
         .returning(move |_| bail!("Unsupported net"));
-    let url = backend_url("1", mock_info_provider, || String::from("nice/path")).await;
+    let url = core_backend_url("1", mock_info_provider, || String::from("nice/path")).await;
     url.expect("An error");
 }

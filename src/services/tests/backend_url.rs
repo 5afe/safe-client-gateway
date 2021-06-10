@@ -68,7 +68,7 @@ async fn core_uri_success_without_params() -> ApiResult<()> {
 }
 
 #[rocket::async_test]
-async fn core_uri_error() -> ApiError {
+async fn core_uri_error() -> ApiResult<()> {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_chain_info()
@@ -76,5 +76,6 @@ async fn core_uri_error() -> ApiError {
         .returning(move |_| bail!("Unsupported net"));
 
     let url = core_uri!(mock_info_provider, "1", "/nice/path");
-    url.unwrap_err()
+    assert!(url.is_err());
+    Ok(())
 }

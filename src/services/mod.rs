@@ -1,4 +1,6 @@
 use crate::models::commons::PageMetadata;
+use crate::providers::info::InfoProvider;
+use crate::utils::errors::ApiResult;
 use std::cmp::max;
 
 pub mod about;
@@ -19,4 +21,13 @@ pub fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
         limit: meta.limit,
     }
     .to_url_string()
+}
+
+pub async fn backend_url(
+    chain_id: &str,
+    info_provider: impl InfoProvider,
+    path_query: impl Fn() -> String,
+) -> ApiResult<String> {
+    let chain_info = info_provider.chain_info(chain_id).await?;
+    Ok(format!("{}{}", chain_info.tx_service_url, path_query()))
 }

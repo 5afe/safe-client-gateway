@@ -65,3 +65,19 @@ macro_rules! to_hex_string {
         format!("0x{}", output)
     }};
 }
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! core_uri {
+    ($info_provider:tt, $chain_id:expr, $path:literal) => {{
+        let chain_info = $info_provider.chain_info($chain_id).await?;
+        let result: ApiResult<String> = Ok(format!("{}{}",chain_info.tx_service_url, $path));
+        result
+    }};
+    ($info_provider:tt, $chain_id:expr, $path:literal, $($arg:tt)*) => {{
+        let chain_info = $info_provider.chain_info($chain_id).await?;
+        let full_path = format!($path, $($arg)*);
+        let result: ApiResult<String> = Ok(format!("{}{}", chain_info.tx_service_url, full_path));
+        result
+    }};
+}

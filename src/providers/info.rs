@@ -2,11 +2,13 @@ use crate::cache::cache_operations::RequestCached;
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
-    address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
+    address_info_cache_duration, base_config_service_url, base_exchange_api_url,
+    base_transaction_service_url, chain_info_cache_duration, chain_info_request_timeout,
     exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
     safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
     short_error_duration, token_info_cache_duration, token_info_request_timeout,
 };
+use crate::models::chains::ChainInfo;
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::context::Context;
@@ -90,6 +92,7 @@ pub struct TokenInfo {
 #[automock]
 #[rocket::async_trait]
 pub trait InfoProvider {
+    async fn chain_info(&self, chain_id: &str) -> ApiResult<ChainInfo>;
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
@@ -103,10 +106,16 @@ pub struct DefaultInfoProvider<'p, C: Cache> {
     // Mutex is an async Mutex, meaning that the lock is non-blocking
     safe_cache: Mutex<HashMap<String, Option<SafeInfo>>>,
     token_cache: Mutex<HashMap<String, Option<TokenInfo>>>,
+    chain_cache: Mutex<HashMap<String, Option<ChainInfo>>>,
 }
 
 #[rocket::async_trait]
 impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
+    async fn chain_info(&self, chain_id: &str) -> ApiResult<ChainInfo> {
+        let chain_cache = &mut self.chain_cache.lock().await;
+        Self::cached(chain_cache, || self.load_chain_info(chain_id), chain_id).await
+    }
+
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo> {
         let safe_cache = &mut self.safe_cache.lock().await;
         Self::cached(safe_cache, || self.load_safe_info(safe.to_string()), safe).await
@@ -182,6 +191,7 @@ impl<'a> DefaultInfoProvider<'a, ServiceCache<'a>> {
         DefaultInfoProvider {
             client: context.client(),
             cache: context.cache(),
+            chain_cache: Default::default(),
             safe_cache: Default::default(),
             token_cache: Default::default(),
         }
@@ -209,6 +219,17 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
                 value.ok_or(api_error!("Could not generate value"))
             }
         }
+    }
+
+    async fn load_chain_info(&self, chain_id: &str) -> ApiResult<Option<ChainInfo>> {
+        let url = format!("{}/v1/chains/{}/", base_config_service_url(), chain_id);
+        let data = RequestCached::new(url)
+            .cache_duration(chain_info_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .request_timeout(chain_info_request_timeout())
+            .execute(self.client, self.cache)
+            .await?;
+        Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
     async fn load_safe_info(&self, safe: String) -> ApiResult<Option<SafeInfo>> {

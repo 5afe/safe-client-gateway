@@ -37,6 +37,7 @@ pub enum InvalidationPattern {
     Balances(InvalidationScope, String),
     Collectibles(InvalidationScope, String),
     Transfers(InvalidationScope, String),
+    Chains,
     Contracts,
     Tokens,
 }
@@ -73,6 +74,9 @@ impl InvalidationPattern {
             }
             InvalidationPattern::Contracts => String::from("*contract*"),
             InvalidationPattern::Tokens => String::from(TOKENS_KEY),
+            InvalidationPattern::Chains => {
+                format!("*chain*")
+            }
         }
     }
 }

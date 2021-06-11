@@ -78,6 +78,16 @@ fn invalidation_pattern_collectibles_string() {
 }
 
 #[test]
+fn invalidation_pattern_chains_string() {
+    let invalidation_pattern = InvalidationPattern::Chains;
+    let expected = "*chain*";
+
+    let actual = invalidation_pattern.to_pattern_string();
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
 fn invalidation_scope_both_to_string() {
     assert_eq!(
         CACHE_REQS_RESP_PREFIX,

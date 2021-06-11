@@ -8,6 +8,10 @@ pub fn base_transaction_service_url() -> String {
     format!("{}{}", env::var("TRANSACTION_SERVICE_URL").unwrap(), "/api")
 }
 
+pub fn base_config_service_url() -> String {
+    format!("{}{}", env::var("CONFIG_SERVICE_URL").unwrap(), "/api")
+}
+
 pub fn base_exchange_api_url() -> String {
     format!(
         "{}?access_key={}",
@@ -71,6 +75,10 @@ pub fn token_info_cache_duration() -> usize {
     usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 60 * 24)
 }
 
+pub fn chain_info_cache_duration() -> usize {
+    usize_with_default("CHAIN_INFO_CACHE_DURATION", indefinite_timeout())
+}
+
 pub fn exchange_api_cache_duration() -> usize {
     usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12)
 }
@@ -110,6 +118,10 @@ pub fn safe_info_request_timeout() -> u64 {
 
 pub fn token_info_request_timeout() -> u64 {
     u64_with_default("TOKEN_INFO_REQUEST_TIMEOUT", 15000)
+}
+
+pub fn chain_info_request_timeout() -> u64 {
+    u64_with_default("CHAIN_INFO_REQUEST_TIMEOUT", 15000)
 }
 
 pub fn balances_request_timeout() -> u64 {

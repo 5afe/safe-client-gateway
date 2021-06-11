@@ -73,6 +73,7 @@ async fn to_safe_info_ex_no_address_info() {
             name: None,
             logo_url: None,
         }),
+        guard: None,
         version: Some("1.1.1".to_string()),
     };
 
@@ -156,6 +157,7 @@ async fn to_safe_info_ex_address_info() {
             name: Some("name_0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44".to_string()),
             logo_url: Some("logo_uri_0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44".to_string()),
         }),
+        guard: None,
         version: Some("1.1.1".to_string()),
     };
 
@@ -173,6 +175,8 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
             "threshold" : 3,
             "owners" : ["0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"],
             "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
+            "fallbackHandler": "0x0000000000000000000000000000000000000000",
+            "guard": "0x0000000000000000000000000000000000000000"
         })
         .to_string(),
     )
@@ -203,6 +207,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
         },
         modules: None,
         fallback_handler: None,
+        guard: None,
         version: None,
     };
 

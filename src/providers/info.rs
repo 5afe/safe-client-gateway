@@ -42,7 +42,7 @@ pub enum TokenType {
     Unknown,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct SafeInfo {
     pub address: String,
@@ -51,7 +51,8 @@ pub struct SafeInfo {
     pub owners: Vec<String>,
     pub master_copy: String,
     pub modules: Option<Vec<String>>,
-    pub fallback_handler: Option<String>,
+    pub fallback_handler: String,
+    pub guard: String,
     pub version: Option<String>,
 }
 

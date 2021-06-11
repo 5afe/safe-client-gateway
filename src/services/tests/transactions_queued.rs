@@ -185,6 +185,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )
@@ -342,6 +343,7 @@ async fn process_transactions_conflicts_in_queued() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )
@@ -503,6 +505,7 @@ async fn process_transactions_conflicts_in_next() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )
@@ -665,6 +668,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )

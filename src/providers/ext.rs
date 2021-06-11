@@ -45,6 +45,14 @@ pub trait InfoProviderExt: InfoProvider {
         }
     }
 
+    async fn to_address_ex_optional(&self, address: &String) -> Option<AddressEx> {
+        if address != "0x0000000000000000000000000000000000000000" {
+            Some(self.to_address_ex(address).await)
+        } else {
+            None
+        }
+    }
+
     async fn optional_to_address_ex(&self, address: &Option<String>) -> Option<AddressEx> {
         OptionFuture::from(
             address

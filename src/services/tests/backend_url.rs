@@ -1,9 +1,9 @@
 use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::providers::info::*;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiResult;
 
 #[rocket::async_test]
-async fn core_uri_success_with_params() -> ApiResult<()> {
+async fn core_uri_success_with_params() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let trusted = false;
     let exclude_spam = true;
@@ -35,11 +35,10 @@ async fn core_uri_success_with_params() -> ApiResult<()> {
     );
 
     assert_eq!(url.unwrap(),"https://safe-transaction.mainnet.gnosis.io/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/balances/usd/?trusted=false&exclude_spam=true".to_string());
-    Ok(())
 }
 
 #[rocket::async_test]
-async fn core_uri_success_without_params() -> ApiResult<()> {
+async fn core_uri_success_without_params() {
     let chain_id = "1";
     let chain_info = ChainInfo {
         tx_service_url: "https://safe-transaction.mainnet.gnosis.io".to_string(),
@@ -64,11 +63,11 @@ async fn core_uri_success_without_params() -> ApiResult<()> {
         "https://safe-transaction.mainnet.gnosis.io/some/path",
         url.unwrap()
     );
-    Ok(())
 }
 
 #[rocket::async_test]
-async fn core_uri_error() -> ApiResult<()> {
+#[should_panic]
+async fn core_uri_error() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_chain_info()
@@ -76,6 +75,5 @@ async fn core_uri_error() -> ApiResult<()> {
         .returning(move |_| bail!("Unsupported net"));
 
     let url = core_uri!(mock_info_provider, "1", "/nice/path");
-    assert!(url.is_err());
-    Ok(())
+    url.unwrap();
 }

@@ -70,14 +70,20 @@ macro_rules! to_hex_string {
 #[macro_export]
 macro_rules! core_uri {
     ($info_provider:tt, $chain_id:expr, $path:literal) => {{
-        let chain_info = $info_provider.chain_info($chain_id).await?;
-        let result: ApiResult<String> = Ok(format!("{}{}",chain_info.tx_service_url, $path));
+        let result: ApiResult<String> =
+        match $info_provider.chain_info($chain_id).await {
+            Ok(chain_info) => Ok(format!("{}{}",chain_info.tx_service_url, $path)),
+            Err(error) => Err(error,)
+        };
         result
     }};
     ($info_provider:tt, $chain_id:expr, $path:literal, $($arg:tt)*) => {{
-        let chain_info = $info_provider.chain_info($chain_id).await?;
         let full_path = format!($path, $($arg)*);
-        let result: ApiResult<String> = Ok(format!("{}{}", chain_info.tx_service_url, full_path));
+        let result: ApiResult<String> =
+        match $info_provider.chain_info($chain_id).await {
+            Ok(chain_info) => Ok(format!("{}{}",chain_info.tx_service_url, full_path)),
+            Err(error) => Err(error,)
+        };
         result
     }};
 }

@@ -54,6 +54,7 @@ pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
 pub const SAFE_WITH_THRESHOLD_TWO: &str = include_str!("safes/with_threshold_two.json");
 pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str =
     include_str!("safes/with_modules_and_high_nonce.json");
+pub const SAFE_WITH_GUARD_SAFE_V130: &str = include_str!("safes/with_guard_safe_v130.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
 pub const ETHER_TRANSFER_INCOMING: &str = include_str!("transfers/ether_transfer_incoming.json");

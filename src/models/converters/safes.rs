@@ -25,8 +25,9 @@ impl SafeInfo {
                 .collect(),
             modules: info_provider.addresses_to_address_ex(&self.modules).await,
             fallback_handler: info_provider
-                .optional_to_address_ex(&self.fallback_handler)
+                .to_address_ex_optional(&self.fallback_handler)
                 .await,
+            guard: info_provider.to_address_ex_optional(&self.guard).await,
             version: self.version.to_owned(),
         }
     }

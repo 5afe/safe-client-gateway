@@ -223,14 +223,19 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
     }
 
     async fn load_chain_info(&self, chain_id: &str) -> ApiResult<Option<ChainInfo>> {
-        let url = format!("{}/v1/chains/{}/", base_config_service_url(), chain_id);
+        // TODO: revert
+        // let url = format!("{}/v1/chains/{}/", base_config_service_url(), chain_id);
+        let url = "https://gist.githubusercontent.com/jpalvarezl/2639c9da0d637f1f6c9bbeb9abad340b/raw/7c60171c345b423ac0657dcd5263f9c3e9005b30/chains_by_id.json".to_string();
         let data = RequestCached::new(url)
             .cache_duration(chain_info_cache_duration())
             .error_cache_duration(short_error_duration())
             .request_timeout(chain_info_request_timeout())
             .execute(self.client, self.cache)
             .await?;
-        Ok(serde_json::from_str(&data).unwrap_or(None))
+        log::error!("{:#?}", &data);
+        let result = serde_json::from_str::<Option<ChainInfo>>(&data).unwrap_or(None); // what do we do on network not found?
+        log::error!("{:#?}", &result);
+        Ok(result)
     }
 
     async fn load_safe_info(&self, safe: String) -> ApiResult<Option<SafeInfo>> {

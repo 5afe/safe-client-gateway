@@ -4,25 +4,28 @@ use crate::config::{
 };
 use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::service::balances::{Balance, Balances};
-use crate::providers::info::DefaultInfoProvider;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use std::cmp::Ordering;
 
 pub async fn balances(
     context: &Context<'_>,
+    chain_id: &str,
     safe_address: &str,
     fiat: &str,
     trusted: bool,
     exclude_spam: bool,
 ) -> ApiResult<Balances> {
-    let url = format!(
-        "{}/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
-        base_transaction_service_url(),
+    let info_provider = DefaultInfoProvider::new(&context);
+    let url = core_uri!(
+        info_provider,
+        chain_id,
+        "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
         safe_address,
         trusted,
         exclude_spam
-    );
+    )?;
 
     let body = RequestCached::new(url)
         .cache_duration(balances_cache_duration())
@@ -31,7 +34,6 @@ pub async fn balances(
         .await?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;
 
-    let info_provider = DefaultInfoProvider::new(&context);
     let usd_to_fiat = info_provider.exchange_usd_to(fiat).await.unwrap_or(0.0);
 
     let mut total_fiat = 0.0;

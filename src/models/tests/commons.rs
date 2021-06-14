@@ -1,6 +1,8 @@
+use crate::models::chains::ChainInfo;
 use crate::models::commons::{
     DataDecoded, InternalTransaction, Operation, ParamValue, Parameter, ValueDecodedType,
 };
+use rocket::serde::json::json;
 
 #[test]
 fn deserialise_params_value_as_string() {
@@ -145,4 +147,24 @@ fn deserialize_decoded_value() {
     };
 
     assert_eq!(actual, expected);
+}
+
+#[test]
+fn chain_info_json() {
+    let chain_info_json = json!({
+          "chainId": "4",
+          "chainName": "Rinkeby",
+          "rpcUrl": "https://someurl.com/rpc",
+          "blockExplorerUrl": "https://blockexplorer.com/",
+          "transactionServiceUrl": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
+          "nativeCurrency": {
+            "name": "Ether",
+            "symbol": "ETH",
+            "decimals": 18
+          }
+    });
+
+    let chain_info = serde_json::from_str::<ChainInfo>(&chain_info_json.to_string());
+
+    println!("{:#?}", chain_info);
 }

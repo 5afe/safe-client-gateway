@@ -13,10 +13,11 @@ use chrono::Utc;
 // as returning always 0, and the clients invalidating on value changes, would prevent reloading
 pub async fn get_safe_info_ex(
     context: &Context<'_>,
+    chain_id: &String,
     safe_address: &String,
 ) -> ApiResult<SafeState> {
     let info_provider = DefaultInfoProvider::new(context);
-    let safe_info = info_provider.safe_info(safe_address).await?;
+    let safe_info = info_provider.safe_info(chain_id, safe_address).await?;
     let safe_info_ex = safe_info.to_safe_info_ex(&info_provider).await;
 
     let safe_state = SafeState {

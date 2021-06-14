@@ -94,11 +94,15 @@ pub struct TokenInfo {
 #[rocket::async_trait]
 pub trait InfoProvider {
     async fn chain_info(&self, chain_id: &str) -> ApiResult<ChainInfo>;
-    async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
-    async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
-    async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
-    async fn contract_info(&self, address: &str) -> ApiResult<AddressInfo>;
-    async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo>;
+    async fn safe_info(&self, chain_id: &str, safe: &str) -> ApiResult<SafeInfo>;
+    async fn token_info(&self, chain_id: &str, token: &str) -> ApiResult<TokenInfo>;
+    async fn safe_app_info(&self, chain_id: &str, url: &str) -> ApiResult<SafeAppInfo>;
+    async fn contract_info(&self, chain_id: &str, address: &str) -> ApiResult<AddressInfo>;
+    async fn full_address_info_search(
+        &self,
+        chain_id: &str,
+        address: &str,
+    ) -> ApiResult<AddressInfo>;
 }
 
 pub struct DefaultInfoProvider<'p, C: Cache> {
@@ -117,17 +121,22 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         Self::cached(chain_cache, || self.load_chain_info(chain_id), chain_id).await
     }
 
-    async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo> {
+    async fn safe_info(&self, chain_id: &str, safe: &str) -> ApiResult<SafeInfo> {
         let safe_cache = &mut self.safe_cache.lock().await;
-        Self::cached(safe_cache, || self.load_safe_info(safe.to_string()), safe).await
+        Self::cached(
+            safe_cache,
+            || self.load_safe_info(chain_id, safe.to_string()),
+            safe,
+        )
+        .await
     }
 
-    async fn token_info(&self, token: &str) -> ApiResult<TokenInfo> {
+    async fn token_info(&self, chain_id: &str, token: &str) -> ApiResult<TokenInfo> {
         if token != "0x0000000000000000000000000000000000000000" {
             let token_cache = &mut self.token_cache.lock().await;
             Self::cached(
                 token_cache,
-                || self.load_token_info(token.to_string()),
+                || self.load_token_info(chain_id, token.to_string()),
                 token,
             )
             .await
@@ -136,7 +145,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         }
     }
 
-    async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo> {
+    async fn safe_app_info(&self, chain_id: &str, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = build_manifest_url(url)?;
 
         let manifest_json = RequestCached::new(manifest_url)
@@ -154,7 +163,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         })
     }
 
-    async fn contract_info(&self, address: &str) -> ApiResult<AddressInfo> {
+    async fn contract_info(&self, chain_id: &str, address: &str) -> ApiResult<AddressInfo> {
         let url = format!(
             "{}/v1/contracts/{}/",
             base_transaction_service_url(),
@@ -176,13 +185,17 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         }
     }
 
-    async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo> {
-        self.token_info(&address)
+    async fn full_address_info_search(
+        &self,
+        chain_id: &str,
+        address: &str,
+    ) -> ApiResult<AddressInfo> {
+        self.token_info(&chain_id, &address)
             .map_ok(|it| AddressInfo {
                 name: it.name,
                 logo_uri: it.logo_uri,
             })
-            .or_else(|_| async move { self.contract_info(&address).await })
+            .or_else(|_| async move { self.contract_info(&chain_id, &address).await })
             .await
     }
 }
@@ -236,8 +249,8 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
         Ok(result)
     }
 
-    async fn load_safe_info(&self, safe: String) -> ApiResult<Option<SafeInfo>> {
-        let url = format!("{}/v1/safes/{}/", base_transaction_service_url(), safe);
+    async fn load_safe_info(&self, chain_id: &str, safe: String) -> ApiResult<Option<SafeInfo>> {
+        let url = core_uri!(self, chain_id, "/v1/safes/{}/", safe)?;
         let data = RequestCached::new(url)
             .cache_duration(safe_info_cache_duration())
             .error_cache_duration(short_error_duration())
@@ -247,8 +260,8 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
         Ok(serde_json::from_str(&data).unwrap_or(None))
     }
 
-    async fn populate_token_cache(&self) -> ApiResult<()> {
-        let url = format!("{}/v1/tokens/?limit=10000", base_transaction_service_url());
+    async fn populate_token_cache(&self, chain_id: &str) -> ApiResult<()> {
+        let url = core_uri!(self, chain_id, "/v1/tokens/?limit=10000")?;
         let response = self
             .client
             .get(&url)
@@ -263,12 +276,12 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
         Ok(())
     }
 
-    async fn check_token_cache(&self) -> ApiResult<()> {
+    async fn check_token_cache(&self, chain_id: &str) -> ApiResult<()> {
         if self.cache.has_key(TOKENS_KEY) {
             return Ok(());
         }
         self.cache.insert_in_hash(TOKENS_KEY, "state", "populating");
-        let result = self.populate_token_cache().await;
+        let result = self.populate_token_cache(chain_id).await;
         if result.is_ok() {
             self.cache
                 .expire_entity(TOKENS_KEY, token_info_cache_duration());
@@ -280,8 +293,8 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
         result
     }
 
-    async fn load_token_info(&self, token: String) -> ApiResult<Option<TokenInfo>> {
-        self.check_token_cache().await?;
+    async fn load_token_info(&self, chain_id: &str, token: String) -> ApiResult<Option<TokenInfo>> {
+        self.check_token_cache(chain_id).await?;
         match self.cache.get_from_hash(TOKENS_KEY, &token) {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),

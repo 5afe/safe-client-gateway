@@ -19,6 +19,9 @@ pub trait InfoProviderExt: InfoProvider {
         addresses: &Option<Vec<String>>,
     ) -> Option<Vec<AddressEx>> {
         let addresses = addresses.as_ref()?;
+        if addresses.is_empty() {
+            return None;
+        }
         let mut results = Vec::with_capacity(addresses.len());
         for address in addresses {
             results.push(self.to_address_ex(address).await)

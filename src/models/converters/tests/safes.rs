@@ -215,3 +215,55 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
 
     assert_eq!(expected, actual);
 }
+
+#[rocket::async_test]
+async fn to_safe_info_guard_and_fallback_handler_defined() {
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_GUARD_SAFE_V130).unwrap();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_contract_info()
+        .times(3)
+        .returning(move |address| {
+            Ok(AddressInfo {
+                name: format!("name_{}", &address),
+                logo_uri: Some(format!("logo_uri_{}", &address)),
+            })
+        });
+
+    let expected = SafeInfoEx {
+        address: AddressEx {
+            value: "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f".to_string(),
+            name: None,
+            logo_url: None,
+        },
+        nonce: 7,
+        threshold: 1,
+        owners: vec![AddressEx {
+            value: "0x5aC255889882aCd3da2aA939679E3f3d4cea221e".to_string(),
+            name: None,
+            logo_url: None,
+        }],
+        implementation: AddressEx {
+            value: "0x3E5c63644E683549055b9Be8653de26E0B4CD36E".to_string(),
+            name: Some("name_0x3E5c63644E683549055b9Be8653de26E0B4CD36E".to_string()),
+            logo_url: Some("logo_uri_0x3E5c63644E683549055b9Be8653de26E0B4CD36E".to_string()),
+        },
+        modules: None,
+        fallback_handler: Some(AddressEx {
+            value: "0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4".to_string(),
+            name: Some("name_0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4".to_string()),
+            logo_url: Some("logo_uri_0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4".to_string()),
+        }),
+        guard: Some(AddressEx {
+            value: "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D".to_string(),
+            name: Some("name_0x40A2aCCbd92BCA938b02010E17A5b8929b49130D".to_string()),
+            logo_url: Some("logo_uri_0x40A2aCCbd92BCA938b02010E17A5b8929b49130D".to_string()),
+        }),
+        version: Some("1.3.0".to_string()),
+    };
+
+    let actual = safe_info.to_safe_info_ex(&mock_info_provider).await;
+
+    assert_eq!(expected, actual);
+}

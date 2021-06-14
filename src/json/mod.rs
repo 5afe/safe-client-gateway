@@ -39,19 +39,22 @@ pub const MULTISIG_TX_CANCELLATION: &str =
 pub const MODULE_TX: &str = include_str!("transactions/module_transaction.json");
 pub const MODULE_TX_FAILED: &str = include_str!("transactions/module_transaction_failed.json");
 pub const MODULE_TX_ERC20_TRANSFER: &str = include_str!("transactions/module_erc20_transfer.json");
-pub const MODULE_TX_ERC721_TRANSFER: &str = include_str!("transactions/module_erc721_transfer.json");
+pub const MODULE_TX_ERC721_TRANSFER: &str =
+    include_str!("transactions/module_erc721_transfer.json");
 pub const MODULE_TX_ETHER_TRANSFER: &str = include_str!("transactions/module_ether_transfer.json");
-pub const MODULE_TX_UNKNOWN_SETTINGS_CHANGE: &str = include_str!("transactions/module_newAndDifferentAddOwnerWithThreshold_settings_change.json");
-pub const MODULE_TX_SETTINGS_CHANGE: &str = include_str!("transactions/module_addOwnerWithThreshold_settings_change.json");
+pub const MODULE_TX_UNKNOWN_SETTINGS_CHANGE: &str =
+    include_str!("transactions/module_newAndDifferentAddOwnerWithThreshold_settings_change.json");
+pub const MODULE_TX_SETTINGS_CHANGE: &str =
+    include_str!("transactions/module_addOwnerWithThreshold_settings_change.json");
 
 pub const ETHEREUM_TX_INCONSISTENT_TOKEN_TYPES: &str =
     include_str!("transactions/ethereum_inconsistent_token_types.json");
 
 pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
-
 pub const SAFE_WITH_THRESHOLD_TWO: &str = include_str!("safes/with_threshold_two.json");
 pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str =
     include_str!("safes/with_modules_and_high_nonce.json");
+pub const SAFE_WITH_GUARD_SAFE_V130: &str = include_str!("safes/with_guard_safe_v130.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
 pub const ETHER_TRANSFER_INCOMING: &str = include_str!("transfers/ether_transfer_incoming.json");

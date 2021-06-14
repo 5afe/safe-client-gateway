@@ -19,6 +19,9 @@ pub trait InfoProviderExt: InfoProvider {
         addresses: &Option<Vec<String>>,
     ) -> Option<Vec<AddressEx>> {
         let addresses = addresses.as_ref()?;
+        if addresses.is_empty() {
+            return None;
+        }
         let mut results = Vec::with_capacity(addresses.len());
         for address in addresses {
             results.push(self.to_address_ex(address).await)
@@ -42,6 +45,14 @@ pub trait InfoProviderExt: InfoProvider {
             value: address.to_owned(),
             name: address_info.as_ref().map(|it| it.name.to_owned()),
             logo_url: address_info.map(|it| it.logo_uri).to_owned().flatten(),
+        }
+    }
+
+    async fn to_address_ex_optional(&self, address: &String) -> Option<AddressEx> {
+        if address != "0x0000000000000000000000000000000000000000" {
+            Some(self.to_address_ex(address).await)
+        } else {
+            None
         }
     }
 

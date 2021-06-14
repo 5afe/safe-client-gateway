@@ -10,6 +10,7 @@ pub struct SafeInfoEx {
     pub implementation: AddressEx,
     pub modules: Option<Vec<AddressEx>>,
     pub fallback_handler: Option<AddressEx>,
+    pub guard: Option<AddressEx>,
     pub version: Option<String>,
 }
 

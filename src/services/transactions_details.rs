@@ -19,11 +19,13 @@ use log::debug;
 
 pub(super) async fn get_multisig_transaction_details(
     context: &Context<'_>,
+    chain_id: &str,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
-    let url = format!(
-        "{}/v1/multisig-transactions/{}/",
+    let url = core_uri!(
+        info_provider
+        "/v1/multisig-transactions/{}/",
         base_transaction_service_url(),
         safe_tx_hash
     );

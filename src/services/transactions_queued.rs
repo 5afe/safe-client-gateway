@@ -31,14 +31,15 @@ pub async fn get_queued_transactions(
 
     // As we require the Safe nonce later we use it here explicitely to query transaction that are in the future
     let safe_nonce = info_provider.safe_info(safe_address).await?.nonce as i64;
-    let url = format!(
-        "{}/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
-        base_transaction_service_url(),
+    let url = core_uri!(
+        info_provider,
+        chain_id,
+        "/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
         safe_address,
         adjusted_page_meta.to_url_string(),
         safe_nonce,
         display_trusted_only
-    );
+    )?;
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())

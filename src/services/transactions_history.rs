@@ -34,8 +34,14 @@ pub async fn get_history_transactions(
     let page_metadata = adjust_page_meta(&incoming_page_metadata);
     let extended_page_url = Some(page_metadata.to_url_string());
 
-    let backend_paged_txs =
-        fetch_backend_paged_txs(context, safe_address, &extended_page_url).await?;
+    let backend_paged_txs = fetch_backend_paged_txs(
+        context,
+        &info_provider,
+        chain_id,
+        safe_address,
+        &extended_page_url,
+    )
+    .await?;
     let mut backend_txs_iter = backend_paged_txs.results.into_iter();
     let prev_page_timestamp = if page_metadata.offset != 0 {
         peek_timestamp_and_remove_item(
@@ -122,16 +128,19 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 
 async fn fetch_backend_paged_txs(
     context: &Context<'_>,
+    info_provider: &impl InfoProvider,
+    chain_id: &str,
     safe_address: &str,
     page_url: &Option<String>,
 ) -> ApiResult<Page<Transaction>> {
     let page_metadata = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
-    let url = format!(
-        "{}/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",
-        base_transaction_service_url(),
+    let url = core_uri!(
+        info_provider,
+        chain_id,
+        "/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",
         safe_address,
         page_metadata.to_url_string()
-    );
+    )?;
     log::debug!("request URL: {}", &url);
     log::debug!("page_url: {:#?}", &page_url);
     log::debug!("page_metadata: {:#?}", &page_metadata);

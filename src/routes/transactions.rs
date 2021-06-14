@@ -76,6 +76,7 @@ pub async fn post_confirmation<'e>(
 ) -> ApiResult<content::Json<String>> {
     transactions_proposal::submit_confirmation(
         &context,
+        &chain_id,
         &safe_tx_hash,
         &tx_confirmation_request?.0.signed_safe_tx_hash,
     )
@@ -227,6 +228,7 @@ pub async fn post_transaction<'e>(
 ) -> ApiResult<()> {
     transactions_proposal::propose_transaction(
         &context,
+        &chain_id,
         &safe_address,
         &multisig_transaction_request?.0,
     )

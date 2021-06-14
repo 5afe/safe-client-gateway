@@ -1,5 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{ConflictType, Label, TransactionListItem};

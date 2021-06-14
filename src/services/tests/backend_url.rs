@@ -9,7 +9,7 @@ async fn core_uri_success_with_params() {
     let exclude_spam = true;
     let chain_id = "1";
     let chain_info = ChainInfo {
-        transaction_service_url: "https://safe-transaction.mainnet.gnosis.io".to_string(),
+        transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
         rpc_url: "".to_string(),
@@ -41,7 +41,7 @@ async fn core_uri_success_with_params() {
 async fn core_uri_success_without_params() {
     let chain_id = "1";
     let chain_info = ChainInfo {
-        transaction_service_url: "https://safe-transaction.mainnet.gnosis.io".to_string(),
+        transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
         rpc_url: "".to_string(),

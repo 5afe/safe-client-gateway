@@ -13,12 +13,13 @@ impl DataDecoded {
     pub(super) async fn to_settings_info(
         &self,
         info_provider: &impl InfoProvider,
+        chain_id: &str,
     ) -> Option<SettingsInfo> {
         match self.method.as_str() {
             SET_FALLBACK_HANDLER => {
                 let handler = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::SetFallbackHandler {
-                    handler_info: info_provider.contract_info(&handler).await.ok(),
+                    handler_info: info_provider.contract_info(chain_id, &handler).await.ok(),
                     handler,
                 })
             }
@@ -51,21 +52,24 @@ impl DataDecoded {
             CHANGE_MASTER_COPY => {
                 let implementation = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::ChangeImplementation {
-                    implementation_info: info_provider.contract_info(&implementation).await.ok(),
+                    implementation_info: info_provider
+                        .contract_info(chain_id, &implementation)
+                        .await
+                        .ok(),
                     implementation,
                 })
             }
             ENABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::EnableModule {
-                    module_info: info_provider.contract_info(&module).await.ok(),
+                    module_info: info_provider.contract_info(chain_id, &module).await.ok(),
                     module,
                 })
             }
             DISABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(1)?;
                 Some(SettingsInfo::DisableModule {
-                    module_info: info_provider.contract_info(&module).await.ok(),
+                    module_info: info_provider.contract_info(chain_id, &module).await.ok(),
                     module,
                 })
             }
@@ -81,6 +85,7 @@ impl DataDecoded {
     pub(super) async fn build_address_info_index(
         &self,
         info_provider: &impl InfoProvider,
+        chain_id: &str,
     ) -> Option<HashMap<String, AddressInfo>> {
         if !feature_flag_nested_decoding() {
             return None;
@@ -94,8 +99,13 @@ impl DataDecoded {
                 match value_decoded_type {
                     ValueDecodedType::InternalTransaction(transactions) => {
                         for transaction in transactions.iter() {
-                            insert_value_into_index(&transaction.to, &mut index, info_provider)
-                                .await;
+                            insert_value_into_index(
+                                &transaction.to,
+                                &mut index,
+                                info_provider,
+                                chain_id,
+                            )
+                            .await;
                             put_parameter_into_index(
                                 &transaction
                                     .data_decoded
@@ -104,6 +114,7 @@ impl DataDecoded {
                                     .flatten(),
                                 &mut index,
                                 info_provider,
+                                chain_id,
                             )
                             .await
                         }
@@ -111,7 +122,7 @@ impl DataDecoded {
                 }
             }
         } else {
-            put_parameter_into_index(&self.parameters, &mut index, info_provider).await;
+            put_parameter_into_index(&self.parameters, &mut index, info_provider, chain_id).await;
         }
         if index.is_empty() {
             None
@@ -125,17 +136,18 @@ async fn put_parameter_into_index(
     parameters: &Option<Vec<Parameter>>,
     index: &mut HashMap<String, AddressInfo>,
     info_provider: &impl InfoProvider,
+    chain_id: &str,
 ) {
     if let Some(parameters) = parameters {
         for parameter in parameters {
             match &parameter.value {
                 ParamValue::SingleValue(value) => {
-                    insert_value_into_index(value, index, info_provider).await
+                    insert_value_into_index(value, index, info_provider, chain_id).await
                 }
                 ParamValue::ArrayValue(values) => {
                     for value in values {
                         if let ParamValue::SingleValue(value) = value {
-                            insert_value_into_index(value, index, info_provider).await
+                            insert_value_into_index(value, index, info_provider, chain_id).await
                         }
                     }
                 }
@@ -148,13 +160,18 @@ async fn insert_value_into_index(
     value: &String,
     index: &mut HashMap<String, AddressInfo>,
     info_provider: &impl InfoProvider,
+    chain_id: &str,
 ) {
     if value.len() == 42
         && value.starts_with("0x")
         && value != "0x0000000000000000000000000000000000000000"
         && !index.contains_key(value)
     {
-        if let Some(address_info) = info_provider.full_address_info_search(&value).await.ok() {
+        if let Some(address_info) = info_provider
+            .full_address_info_search(chain_id, &value)
+            .await
+            .ok()
+        {
             index.insert(value.to_owned(), address_info);
         };
     }

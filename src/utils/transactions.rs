@@ -21,12 +21,13 @@ pub const ERC191_VERSION: &'static str = "01";
 
 pub async fn fetch_rejections(
     context: &Context<'_>,
+    chain_id: &str,
     safe_address: &str,
     nonce: u64,
 ) -> Option<Vec<String>> {
     let info_provider = DefaultInfoProvider::new(&context);
     let version = info_provider
-        .safe_info(safe_address)
+        .safe_info(chain_id, safe_address)
         .await
         .ok()
         .as_ref()
@@ -71,6 +72,7 @@ pub(super) fn hash(safe_address: Address, nonce: u64, domain_hash: [u8; 32]) -> 
     keccak256(encoded)
 }
 
+// TODO: figure out how to pass the chain_id from the request and not the env
 pub(super) fn domain_hash_v130(safe_address: &Address) -> [u8; 32] {
     let domain_separator: H256 =
         serde_json::from_value(serde_json::Value::String(DOMAIN_SEPARATOR_TYPEHASH.into()))

@@ -37,13 +37,14 @@ pub(super) async fn get_multisig_transaction_details(
 
     let rejections = fetch_rejections(
         context,
+        chain_id,
         &multisig_tx.safe_transaction.safe,
         multisig_tx.nonce,
     )
     .await;
 
     let details = multisig_tx
-        .to_transaction_details(rejections, &mut info_provider)
+        .to_transaction_details(rejections, &mut info_provider, chain_id)
         .await?;
 
     Ok(details)
@@ -51,6 +52,7 @@ pub(super) async fn get_multisig_transaction_details(
 
 async fn get_ethereum_transaction_details(
     context: &Context<'_>,
+    chain_id: &str,
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
@@ -78,7 +80,7 @@ async fn get_ethereum_transaction_details(
         })
         .ok_or(api_error!("No transfer found"))?;
     let details = transfer
-        .to_transaction_details(&mut info_provider, &safe.to_owned())
+        .to_transaction_details(&mut info_provider, chain_id, &safe.to_owned())
         .await?;
 
     Ok(details)
@@ -113,7 +115,7 @@ async fn get_module_transaction_details(
         .find(|tx| hex_hash(tx) == detail_hash)
         .ok_or(api_error!("No transfer found"))?;
     let details = transaction
-        .to_transaction_details(&mut info_provider)
+        .to_transaction_details(&mut info_provider, chain_id)
         .await?;
 
     Ok(details)
@@ -134,6 +136,7 @@ pub async fn get_transactions_details(
         } => {
             get_ethereum_transaction_details(
                 context,
+                &chain_id,
                 &safe_address,
                 &transaction_hash,
                 &details_hash,

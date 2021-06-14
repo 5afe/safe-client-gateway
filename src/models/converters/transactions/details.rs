@@ -16,16 +16,19 @@ impl MultisigTransaction {
         &self,
         rejections: Option<Vec<String>>,
         info_provider: &(impl InfoProvider + Sync),
+        chain_id: &str,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider
-            .safe_info(&self.safe_transaction.safe.to_string())
+            .safe_info(chain_id, &self.safe_transaction.safe.to_string())
             .await?;
-        let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
+        let gas_token = info_provider
+            .address_to_token_info(chain_id, &self.gas_token)
+            .await;
 
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
-            tx_info: self.transaction_info(info_provider).await,
+            tx_info: self.transaction_info(info_provider, chain_id).await,
             tx_data: Some(TransactionData {
                 to: self.safe_transaction.to.to_owned(),
                 value: self.safe_transaction.value.to_owned(),
@@ -37,7 +40,9 @@ impl MultisigTransaction {
                         .data_decoded
                         .as_ref()
                         .map(|data_decoded| async move {
-                            data_decoded.build_address_info_index(info_provider).await
+                            data_decoded
+                                .build_address_info_index(info_provider, chain_id)
+                                .await
                         }),
                 )
                 .await
@@ -47,11 +52,9 @@ impl MultisigTransaction {
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
                 self.build_execution_details(safe_info, gas_token, rejections),
             )),
-            safe_app_info: OptionFuture::from(
-                self.origin
-                    .as_ref()
-                    .map(|origin| async move { safe_app_info_from(origin, info_provider).await }),
-            )
+            safe_app_info: OptionFuture::from(self.origin.as_ref().map(|origin| async move {
+                safe_app_info_from(origin, info_provider, chain_id).await
+            }))
             .await
             .flatten(),
         })
@@ -108,12 +111,13 @@ impl ModuleTransaction {
     pub async fn to_transaction_details(
         &self,
         info_provider: &impl InfoProvider,
+        chain_id: &str,
     ) -> ApiResult<TransactionDetails> {
         let safe_transaction = &self.safe_transaction;
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
-            tx_info: self.transaction_info(info_provider).await,
+            tx_info: self.transaction_info(info_provider, chain_id).await,
             tx_data: Some(TransactionData {
                 to: safe_transaction.to.to_owned(),
                 value: safe_transaction.value.to_owned(),
@@ -122,7 +126,9 @@ impl ModuleTransaction {
                 operation: safe_transaction.operation,
                 address_info_index: OptionFuture::from(safe_transaction.data_decoded.as_ref().map(
                     |data_decoded| async move {
-                        data_decoded.build_address_info_index(info_provider).await
+                        data_decoded
+                            .build_address_info_index(info_provider, chain_id)
+                            .await
                     },
                 ))
                 .await

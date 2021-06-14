@@ -18,7 +18,7 @@ pub async fn get_safe_info_ex(
 ) -> ApiResult<SafeState> {
     let info_provider = DefaultInfoProvider::new(context);
     let safe_info = info_provider.safe_info(chain_id, safe_address).await?;
-    let safe_info_ex = safe_info.to_safe_info_ex(&info_provider).await;
+    let safe_info_ex = safe_info.to_safe_info_ex(&info_provider, chain_id).await;
 
     let safe_state = SafeState {
         safe_config: safe_info_ex,

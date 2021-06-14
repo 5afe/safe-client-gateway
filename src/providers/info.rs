@@ -164,11 +164,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     }
 
     async fn contract_info(&self, chain_id: &str, address: &str) -> ApiResult<AddressInfo> {
-        let url = format!(
-            "{}/v1/contracts/{}/",
-            base_transaction_service_url(),
-            address
-        );
+        let url = core_uri!(self, chain_id, "/v1/contracts/{}/", address)?;
         let contract_info_json = RequestCached::new(url)
             .cache_duration(address_info_cache_duration())
             .error_cache_duration(long_error_duration())

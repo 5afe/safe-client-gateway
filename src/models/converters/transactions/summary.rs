@@ -20,18 +20,19 @@ impl Transaction {
     pub async fn to_transaction_summary(
         &self,
         info_provider: &impl InfoProvider,
+        chain_id: &str,
         safe: &str,
     ) -> ApiResult<Vec<TransactionSummary>> {
         match self {
-            Transaction::Multisig(transaction) => {
-                Ok(transaction.to_transaction_summary(info_provider).await?)
-            }
+            Transaction::Multisig(transaction) => Ok(transaction
+                .to_transaction_summary(info_provider, chain_id)
+                .await?),
             Transaction::Ethereum(transaction) => Ok(transaction
-                .to_transaction_summary(info_provider, safe)
+                .to_transaction_summary(info_provider, chain_id, safe)
                 .await),
-            Transaction::Module(transaction) => {
-                Ok(transaction.to_transaction_summary(info_provider).await)
-            }
+            Transaction::Module(transaction) => Ok(transaction
+                .to_transaction_summary(info_provider, chain_id)
+                .await),
             Transaction::Unknown => bail!("Unknown transaction type from backend"),
         }
     }
@@ -41,9 +42,10 @@ impl MultisigTransaction {
     pub async fn to_transaction_summary(
         &self,
         info_provider: &impl InfoProvider,
+        chain_id: &str,
     ) -> ApiResult<Vec<TransactionSummary>> {
         let safe_info = info_provider
-            .safe_info(&self.safe_transaction.safe.to_string())
+            .safe_info(chain_id, &self.safe_transaction.safe.to_string())
             .await?;
         let tx_status = self.map_status(&safe_info);
         let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations {
@@ -68,12 +70,10 @@ impl MultisigTransaction {
                 confirmations_required: self.confirmation_required(safe_info.threshold),
                 missing_signers,
             }),
-            tx_info: self.transaction_info(info_provider).await,
-            safe_app_info: OptionFuture::from(
-                self.origin
-                    .as_ref()
-                    .map(|origin| async move { safe_app_info_from(&origin, info_provider).await }),
-            )
+            tx_info: self.transaction_info(info_provider, chain_id).await,
+            safe_app_info: OptionFuture::from(self.origin.as_ref().map(|origin| async move {
+                safe_app_info_from(&origin, info_provider, chain_id).await
+            }))
             .await
             .flatten(),
         }])
@@ -84,6 +84,7 @@ impl EthereumTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
         info_provider: &impl InfoProvider,
+        chain_id: &str,
         safe_address: &str,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
@@ -102,7 +103,9 @@ impl EthereumTransaction {
                         tx_status: TransactionStatus::Success,
                         execution_info: None,
                         safe_app_info: None,
-                        tx_info: transfer.to_transfer(info_provider, safe_address).await,
+                        tx_info: transfer
+                            .to_transfer(info_provider, chain_id, safe_address)
+                            .await,
                     };
 
                     results.push(transaction_summary);
@@ -118,6 +121,7 @@ impl ModuleTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
         info_provider: &impl InfoProvider,
+        chain_id: &str,
     ) -> Vec<TransactionSummary> {
         vec![TransactionSummary {
             id: create_id!(
@@ -130,7 +134,7 @@ impl ModuleTransaction {
             tx_status: self.map_status(),
             execution_info: None,
             safe_app_info: None,
-            tx_info: self.transaction_info(info_provider).await,
+            tx_info: self.transaction_info(info_provider, chain_id).await,
         }]
     }
 }
@@ -138,6 +142,7 @@ impl ModuleTransaction {
 impl CreationTransaction {
     pub async fn to_transaction_summary(
         &self,
+        chain_id: &String,
         safe_address: &String,
         info_provider: &(impl InfoProvider + Sync),
     ) -> TransactionSummary {
@@ -147,12 +152,19 @@ impl CreationTransaction {
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {
                 creator: self.creator.clone(),
-                creator_info: info_provider.contract_info(&self.creator).await.ok(),
+                creator_info: info_provider
+                    .contract_info(chain_id, &self.creator)
+                    .await
+                    .ok(),
                 transaction_hash: self.transaction_hash.clone(),
                 implementation: self.master_copy.clone(),
-                implementation_info: info_provider.to_address_info(&self.master_copy).await,
+                implementation_info: info_provider
+                    .to_address_info(chain_id, &self.master_copy)
+                    .await,
                 factory: self.factory_address.clone(),
-                factory_info: info_provider.to_address_info(&self.factory_address).await,
+                factory_info: info_provider
+                    .to_address_info(chain_id, &self.factory_address)
+                    .await,
             }),
             execution_info: None,
             safe_app_info: None,

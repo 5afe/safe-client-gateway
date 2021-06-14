@@ -11,7 +11,7 @@ impl<T: ?Sized> InfoProviderExt for T where T: InfoProvider {}
 pub trait InfoProviderExt: InfoProvider {
     async fn address_to_token_info(
         &self,
-        chain_id: &String,
+        chain_id: &str,
         address: &Option<String>,
     ) -> Option<TokenInfo> {
         let address = address.as_ref()?;
@@ -20,7 +20,7 @@ pub trait InfoProviderExt: InfoProvider {
 
     async fn addresses_to_address_ex(
         &self,
-        chain_id: &String,
+        chain_id: &str,
         addresses: &Option<Vec<String>>,
     ) -> Option<Vec<AddressEx>> {
         let addresses = addresses.as_ref()?;
@@ -36,7 +36,7 @@ pub trait InfoProviderExt: InfoProvider {
 
     async fn to_address_info(
         &self,
-        chain_id: &String,
+        chain_id: &str,
         address: &Option<String>,
     ) -> Option<AddressInfo> {
         OptionFuture::from(
@@ -48,7 +48,7 @@ pub trait InfoProviderExt: InfoProvider {
         .flatten()
     }
 
-    async fn to_address_ex(&self, chain_id: &String, address: &String) -> AddressEx {
+    async fn to_address_ex(&self, chain_id: &str, address: &String) -> AddressEx {
         let address_info = self.contract_info(&chain_id, &address).await.ok();
         AddressEx {
             value: address.to_owned(),
@@ -57,11 +57,7 @@ pub trait InfoProviderExt: InfoProvider {
         }
     }
 
-    async fn to_address_ex_optional(
-        &self,
-        chain_id: &String,
-        address: &String,
-    ) -> Option<AddressEx> {
+    async fn to_address_ex_optional(&self, chain_id: &str, address: &String) -> Option<AddressEx> {
         if address != "0x0000000000000000000000000000000000000000" {
             Some(self.to_address_ex(chain_id, address).await)
         } else {
@@ -71,7 +67,7 @@ pub trait InfoProviderExt: InfoProvider {
 
     async fn optional_to_address_ex(
         &self,
-        chain_id: &String,
+        chain_id: &str,
         address: &Option<String>,
     ) -> Option<AddressEx> {
         OptionFuture::from(

@@ -175,7 +175,3 @@ pub fn version() -> String {
         .unwrap_or(env!("CARGO_PKG_VERSION"))
         .to_string()
 }
-
-pub fn chain_id() -> u64 {
-    u64_with_default("CHAIN_ID", 1)
-}

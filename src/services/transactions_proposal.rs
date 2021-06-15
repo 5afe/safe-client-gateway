@@ -11,10 +11,9 @@ pub async fn submit_confirmation(
     safe_tx_hash: &str,
     signature: &str,
 ) -> ApiResult<()> {
-    let info_provider = DefaultInfoProvider::new(context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/multisig-transactions/{}/confirmations/",
         &safe_tx_hash
     )?;
@@ -43,10 +42,9 @@ pub async fn propose_transaction(
     safe_address: &str,
     transaction_request: &MultisigTransactionRequest,
 ) -> ApiResult<()> {
-    let info_provider = DefaultInfoProvider::new(context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/multisig-transactions/",
         &safe_address
     )?;

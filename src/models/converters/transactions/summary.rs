@@ -45,7 +45,7 @@ impl MultisigTransaction {
         chain_id: &str,
     ) -> ApiResult<Vec<TransactionSummary>> {
         let safe_info = info_provider
-            .safe_info(chain_id, &self.safe_transaction.safe.to_string())
+            .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
         let tx_status = self.map_status(&safe_info);
         let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations {
@@ -154,19 +154,12 @@ impl CreationTransaction {
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {
                 creator: self.creator.clone(),
-                creator_info: info_provider
-                    .contract_info(chain_id, &self.creator)
-                    .await
-                    .ok(),
+                creator_info: info_provider.contract_info(&self.creator).await.ok(),
                 transaction_hash: self.transaction_hash.clone(),
                 implementation: self.master_copy.clone(),
-                implementation_info: info_provider
-                    .to_address_info(chain_id, &self.master_copy)
-                    .await,
+                implementation_info: info_provider.to_address_info(&self.master_copy).await,
                 factory: self.factory_address.clone(),
-                factory_info: info_provider
-                    .to_address_info(chain_id, &self.factory_address)
-                    .await,
+                factory_info: info_provider.to_address_info(&self.factory_address).await,
             }),
             execution_info: None,
             safe_app_info: None,

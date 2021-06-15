@@ -17,9 +17,7 @@ impl SafeInfo {
             },
             nonce: self.nonce,
             threshold: self.threshold,
-            implementation: info_provider
-                .to_address_ex(chain_id, &self.master_copy)
-                .await,
+            implementation: info_provider.to_address_ex(&self.master_copy).await,
             owners: self
                 .owners
                 .iter()
@@ -29,15 +27,11 @@ impl SafeInfo {
                     logo_url: None,
                 })
                 .collect(),
-            modules: info_provider
-                .addresses_to_address_ex(chain_id, &self.modules)
-                .await,
+            modules: info_provider.addresses_to_address_ex(&self.modules).await,
             fallback_handler: info_provider
-                .to_address_ex_optional(chain_id, &self.fallback_handler)
+                .to_address_ex_optional(&self.fallback_handler)
                 .await,
-            guard: info_provider
-                .to_address_ex_optional(chain_id, &self.guard)
-                .await,
+            guard: info_provider.to_address_ex_optional(&self.guard).await,
             version: self.version.to_owned(),
         }
     }

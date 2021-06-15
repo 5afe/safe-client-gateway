@@ -22,13 +22,8 @@ pub(super) async fn get_multisig_transaction_details(
     chain_id: &str,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
-    let mut info_provider = DefaultInfoProvider::new(context);
-    let url = core_uri!(
-        info_provider,
-        chain_id,
-        "/v1/multisig-transactions/{}/",
-        safe_tx_hash
-    )?;
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
+    let url = core_uri!(info_provider, "/v1/multisig-transactions/{}/", safe_tx_hash)?;
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())
@@ -57,10 +52,9 @@ async fn get_ethereum_transaction_details(
     tx_hash: &str,
     detail_hash: &str,
 ) -> ApiResult<TransactionDetails> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/transfers/?transaction_hash={}&limit=1000",
         safe,
         tx_hash
@@ -94,11 +88,10 @@ async fn get_module_transaction_details(
     safe_tx_hash: &str,
     detail_hash: &str,
 ) -> ApiResult<TransactionDetails> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
 
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
         safe_address,
         safe_tx_hash

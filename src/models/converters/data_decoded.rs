@@ -19,7 +19,7 @@ impl DataDecoded {
             SET_FALLBACK_HANDLER => {
                 let handler = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::SetFallbackHandler {
-                    handler_info: info_provider.contract_info(chain_id, &handler).await.ok(),
+                    handler_info: info_provider.contract_info(&handler).await.ok(),
                     handler,
                 })
             }
@@ -52,24 +52,21 @@ impl DataDecoded {
             CHANGE_MASTER_COPY => {
                 let implementation = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::ChangeImplementation {
-                    implementation_info: info_provider
-                        .contract_info(chain_id, &implementation)
-                        .await
-                        .ok(),
+                    implementation_info: info_provider.contract_info(&implementation).await.ok(),
                     implementation,
                 })
             }
             ENABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::EnableModule {
-                    module_info: info_provider.contract_info(chain_id, &module).await.ok(),
+                    module_info: info_provider.contract_info(&module).await.ok(),
                     module,
                 })
             }
             DISABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(1)?;
                 Some(SettingsInfo::DisableModule {
-                    module_info: info_provider.contract_info(chain_id, &module).await.ok(),
+                    module_info: info_provider.contract_info(&module).await.ok(),
                     module,
                 })
             }
@@ -167,11 +164,7 @@ async fn insert_value_into_index(
         && value != "0x0000000000000000000000000000000000000000"
         && !index.contains_key(value)
     {
-        if let Some(address_info) = info_provider
-            .full_address_info_search(chain_id, &value)
-            .await
-            .ok()
-        {
+        if let Some(address_info) = info_provider.full_address_info_search(&value).await.ok() {
             index.insert(value.to_owned(), address_info);
         };
     }

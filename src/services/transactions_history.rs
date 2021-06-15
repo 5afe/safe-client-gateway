@@ -21,7 +21,7 @@ pub async fn get_history_transactions(
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
     let request_timezone_offset = timezone_offset
         .as_ref()
         .and_then(|it| it.parse::<i32>().ok())
@@ -144,7 +144,6 @@ async fn fetch_backend_paged_txs(
     let page_metadata = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",
         safe_address,
         page_metadata.to_url_string()
@@ -243,8 +242,8 @@ pub(super) async fn get_creation_transaction_summary(
     chain_id: &String,
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
-    let info_provider = DefaultInfoProvider::new(context);
-    let url = core_uri!(info_provider, chain_id, "/v1/safes/{}/creation/", safe)?;
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let url = core_uri!(info_provider, "/v1/safes/{}/creation/", safe)?;
     debug!("{}", &url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())

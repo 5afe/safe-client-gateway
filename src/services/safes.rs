@@ -16,8 +16,8 @@ pub async fn get_safe_info_ex(
     chain_id: &String,
     safe_address: &String,
 ) -> ApiResult<SafeState> {
-    let info_provider = DefaultInfoProvider::new(context);
-    let safe_info = info_provider.safe_info(chain_id, safe_address).await?;
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let safe_info = info_provider.safe_info(safe_address).await?;
     let safe_info_ex = safe_info.to_safe_info_ex(&info_provider, &chain_id).await;
 
     let safe_state = SafeState {
@@ -46,10 +46,9 @@ async fn get_last_collectible(
     chain_id: &String,
     safe_address: &String,
 ) -> ApiResult<i64> {
-    let info_provider = DefaultInfoProvider::new(context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/transfers/?\
         &erc721=true\
         &limit=1",
@@ -80,10 +79,9 @@ async fn get_last_queued_tx(
     chain_id: &String,
     safe_address: &String,
 ) -> ApiResult<i64> {
-    let info_provider = DefaultInfoProvider::new(context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/multisig-transactions/?\
         &ordering=-modified\
         &executed=false\
@@ -112,10 +110,9 @@ async fn get_last_history_tx(
     chain_id: &String,
     safe_address: &String,
 ) -> ApiResult<i64> {
-    let info_provider = DefaultInfoProvider::new(context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/all-transactions/?\
         &ordering=executionDate
         &queued=false\

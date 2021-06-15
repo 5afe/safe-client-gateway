@@ -32,10 +32,7 @@ pub(super) async fn get_address_info(
     info_provider: &impl InfoProvider,
 ) -> Option<AddressInfo> {
     if safe != address {
-        info_provider
-            .full_address_info_search(chain_id, address)
-            .await
-            .ok()
+        info_provider.full_address_info_search(address).await.ok()
     } else {
         None
     }

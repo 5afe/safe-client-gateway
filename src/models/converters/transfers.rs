@@ -211,7 +211,7 @@ async fn token_info_with_fallback(
     token_info: Option<TokenInfo>,
 ) -> Option<TokenInfo> {
     if token_info.is_none() {
-        info_provider.token_info(chain_id, token_address).await.ok()
+        info_provider.token_info(token_address).await.ok()
     } else {
         token_info
     }

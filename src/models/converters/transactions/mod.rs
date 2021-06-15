@@ -56,7 +56,7 @@ impl SafeTransaction {
             .unwrap_or(false)
             && check_sender_or_receiver(&self.data_decoded, &self.safe)
         {
-            match info_provider.token_info(chain_id, &self.to).await {
+            match info_provider.token_info(&self.to).await {
                 Ok(token) => match token.token_type {
                     TokenType::Erc20 => TransactionInfo::Transfer(
                         self.to_erc20_transfer(&token, info_provider, chain_id)
@@ -92,10 +92,7 @@ impl SafeTransaction {
     ) -> Custom {
         Custom {
             to: self.to.to_owned(),
-            to_info: info_provider
-                .full_address_info_search(chain_id, &self.to)
-                .await
-                .ok(),
+            to_info: info_provider.full_address_info_search(&self.to).await.ok(),
             is_cancellation,
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
@@ -177,10 +174,7 @@ impl SafeTransaction {
         Transfer {
             sender_info: None,
             sender: self.safe.to_owned(),
-            recipient_info: info_provider
-                .full_address_info_search(chain_id, &self.to)
-                .await
-                .ok(),
+            recipient_info: info_provider.full_address_info_search(&self.to).await.ok(),
             recipient: self.to.to_owned(),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Ether(EtherTransfer {

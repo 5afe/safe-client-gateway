@@ -35,8 +35,8 @@ pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<cont
 #[doc(hidden)]
 #[get("/<chain_id>/about/backbone")]
 pub async fn backbone(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
-    let info_provider = DefaultInfoProvider::new(&context);
-    let url = core_uri!(info_provider, &chain_id, "/v1/about/")?;
+    let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
+    let url = core_uri!(info_provider, "/v1/about/")?;
     Ok(content::Json(
         context.client().get(&url).send().await?.text().await?,
     ))

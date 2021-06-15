@@ -26,9 +26,9 @@ pub async fn fetch_rejections(
     safe_address: &str,
     nonce: u64,
 ) -> Option<Vec<String>> {
-    let info_provider = DefaultInfoProvider::new(&context);
+    let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let version = info_provider
-        .safe_info(chain_id, safe_address)
+        .safe_info(safe_address)
         .await
         .ok()
         .as_ref()
@@ -136,14 +136,8 @@ async fn fetch_cancellation_tx(
     chain_id: &str,
     safe_tx_hash: String,
 ) -> Option<MultisigTransaction> {
-    let info_provider = DefaultInfoProvider::new(context);
-    let url = core_uri!(
-        info_provider,
-        chain_id,
-        "/v1/multisig-transactions/{}/",
-        safe_tx_hash
-    )
-    .ok()?;
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let url = core_uri!(info_provider, "/v1/multisig-transactions/{}/", safe_tx_hash).ok()?;
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())

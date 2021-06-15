@@ -21,13 +21,12 @@ async fn core_uri_success_with_params() {
         },
     };
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .return_once(move |_| Ok(chain_info));
+    // mock_info_provider
+    //     .expect_chain_info()
+    //     .times(1)
+    //     .return_once(move |_| Ok(chain_info));
     let url = core_uri!(
         mock_info_provider,
-        chain_id,
         "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
         safe_address,
         trusted,
@@ -53,11 +52,11 @@ async fn core_uri_success_without_params() {
         },
     };
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .return_once(move |_| Ok(chain_info));
-    let url = core_uri!(mock_info_provider, chain_id, "/some/path");
+    // mock_info_provider
+    //     .expect_chain_info()
+    //     .times(1)
+    //     .return_once(move |_| Ok(chain_info));
+    let url = core_uri!(mock_info_provider, "/some/path");
 
     assert_eq!(
         "https://safe-transaction.mainnet.gnosis.io/api/some/path",
@@ -69,11 +68,11 @@ async fn core_uri_success_without_params() {
 #[should_panic]
 async fn core_uri_error() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(move |_| bail!("Unsupported net"));
+    // mock_info_provider
+    //     .expect_chain_info()
+    //     .times(1)
+    //     .returning(move |_| bail!("Unsupported net"));
 
-    let url = core_uri!(mock_info_provider, "1", "/nice/path");
+    let url = core_uri!(mock_info_provider, "/nice/path");
     url.unwrap();
 }

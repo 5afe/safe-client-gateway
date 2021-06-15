@@ -19,7 +19,7 @@ pub async fn get_queued_transactions(
     timezone_offset: &Option<String>,
     trusted: &Option<bool>,
 ) -> ApiResult<Page<TransactionListItem>> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
 
     // Parse page meta (offset and limit)
     let page_meta = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
@@ -30,10 +30,9 @@ pub async fn get_queued_transactions(
     let display_trusted_only = trusted.unwrap_or(true);
 
     // As we require the Safe nonce later we use it here explicitely to query transaction that are in the future
-    let safe_nonce = info_provider.safe_info(chain_id, safe_address).await?.nonce as i64;
+    let safe_nonce = info_provider.safe_info(safe_address).await?.nonce as i64;
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
         safe_address,
         adjusted_page_meta.to_url_string(),

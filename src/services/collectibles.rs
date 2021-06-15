@@ -13,10 +13,10 @@ pub async fn collectibles(
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<Json<String>> {
-    let info_provider = DefaultInfoProvider::new(&context);
+    let info_provider = DefaultInfoProvider::new(chain_id, &context);
+
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/collectibles/?trusted={}&exclude_spam={}",
         safe_address,
         trusted.unwrap_or(false),

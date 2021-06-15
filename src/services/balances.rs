@@ -15,10 +15,9 @@ pub async fn balances(
     trusted: bool,
     exclude_spam: bool,
 ) -> ApiResult<Balances> {
-    let info_provider = DefaultInfoProvider::new(&context);
+    let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let url = core_uri!(
         info_provider,
-        chain_id,
         "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
         safe_address,
         trusted,
@@ -59,7 +58,7 @@ pub async fn balances(
 }
 
 pub async fn fiat_codes(context: &Context<'_>) -> ApiResult<Vec<String>> {
-    let info_provider = DefaultInfoProvider::new(&context);
+    let info_provider = DefaultInfoProvider::new_no_net(&context);
     let mut fiat_codes = info_provider.available_currency_codes().await?;
 
     let usd_index = fiat_codes.iter().position(|it| it.eq("USD")).unwrap();

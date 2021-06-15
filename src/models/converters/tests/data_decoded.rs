@@ -1,4 +1,3 @@
-use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::models::commons::{DataDecoded, ParamValue, Parameter};
 use crate::models::service::transactions::{SettingsChange, SettingsInfo};
 use crate::providers::address_info::AddressInfo;
@@ -14,24 +13,6 @@ async fn data_decoded_set_fallback_handler_to_settings_info() {
         .expect_contract_info()
         .times(1)
         .return_once(move |_, _| bail!("Some http error"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SET_FALLBACK_HANDLER)
@@ -62,24 +43,6 @@ async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() 
                 logo_uri: Some("logo.url".to_string()),
             })
         });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SET_FALLBACK_HANDLER)
@@ -105,24 +68,6 @@ async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() 
 async fn data_decoded_add_owner_with_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -146,24 +91,6 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info() {
 async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -187,24 +114,6 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_inf
 async fn data_decoded_remove_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
@@ -227,24 +136,6 @@ async fn data_decoded_remove_owner_to_settings_info() {
 async fn data_decoded_swap_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
@@ -268,24 +159,6 @@ async fn data_decoded_swap_owner_to_settings_info() {
 async fn data_decoded_change_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_THRESHOLD).unwrap();
@@ -307,24 +180,6 @@ async fn data_decoded_change_implementation_to_settings_info() {
         .expect_contract_info()
         .times(1)
         .return_once(move |_, _| bail!("Some http error"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
@@ -354,24 +209,6 @@ async fn data_decoded_change_implementation_to_settings_info_with_address_info()
                 logo_uri: Some("logo.url".to_string()),
             })
         });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
@@ -399,24 +236,6 @@ async fn data_decoded_enable_module_to_settings_info() {
         .expect_contract_info()
         .times(1)
         .return_once(move |_, _| bail!("Some http error"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ENABLE_MODULE).unwrap();
@@ -446,24 +265,6 @@ async fn data_decoded_enable_module_to_settings_info_with_address_info() {
                 logo_uri: Some("logo.url".to_string()),
             })
         });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ENABLE_MODULE).unwrap();
@@ -491,24 +292,6 @@ async fn data_decoded_disable_module_to_settings_info() {
         .expect_contract_info()
         .times(1)
         .return_once(move |_, _| bail!("Some http error"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_DISABLE_MODULE).unwrap();
@@ -538,24 +321,6 @@ async fn data_decoded_disable_module_to_settings_info_with_address_info() {
                 logo_uri: Some("logo.url".to_string()),
             })
         });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_DISABLE_MODULE).unwrap();
@@ -579,24 +344,6 @@ async fn data_decoded_disable_module_to_settings_info_with_address_info() {
 #[rocket::async_test]
 async fn data_decoded_unknown_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE)
@@ -701,24 +448,6 @@ async fn address_info_index_not_multi_send_address_single_value() {
                 logo_uri: Some("url.de".to_string()),
             })
         });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
@@ -804,25 +533,6 @@ async fn address_info_index_not_multi_send_address_array_value() {
             })
         })
         .in_sequence(&mut sequence);
-
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
@@ -927,25 +637,6 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         })
         .in_sequence(&mut sequence);
 
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
-
     let data_decoded = serde_json::from_str::<DataDecoded>(
         crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
@@ -1043,25 +734,6 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
         })
         .in_sequence(&mut sequence);
 
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
-
     // Had to doctor the json in order to have different address in the nested calls and verify that we
     // don't call them, not because they are duplicate, but because they are 1 level further nested
     let data_decoded =
@@ -1117,24 +789,6 @@ async fn address_info_index_skip_address_info_for_0x0() {
                 logo_uri: Some(format!("{}_url", &address)),
             })
         });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded = serde_json::from_str::<DataDecoded>(
         crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
@@ -1169,24 +823,6 @@ async fn address_info_index_no_results_returns_none() {
         .with(eq("4"), eq("0x441E604Ad49602c0B9C0B08D0781eCF96740786a"))
         .times(1)
         .return_once(move |_, _| bail!("no address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let data_decoded = serde_json::from_str::<DataDecoded>(
         crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,

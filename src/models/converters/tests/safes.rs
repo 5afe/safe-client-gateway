@@ -1,4 +1,3 @@
-use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::models::service::safes::{AddressEx, SafeInfoEx};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
@@ -12,24 +11,6 @@ async fn to_safe_info_ex_no_address_info() {
         .expect_contract_info()
         .times(5)
         .returning(move |_, _| bail!("No safe info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -115,24 +96,6 @@ async fn to_safe_info_ex_address_info() {
             Ok(AddressInfo {
                 name: format!("name_{}", &address),
                 logo_uri: Some(format!("logo_uri_{}", &address)),
-            })
-        });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
             })
         });
 
@@ -229,24 +192,6 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
         .expect_contract_info()
         .times(1)
         .return_once(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -291,24 +236,6 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
             Ok(AddressInfo {
                 name: format!("name_{}", &address),
                 logo_uri: Some(format!("logo_uri_{}", &address)),
-            })
-        });
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
             })
         });
 

@@ -2,7 +2,6 @@ use crate::models::backend::transfers::{
     Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto,
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
-use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::{
     Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, Transfer,
@@ -27,24 +26,6 @@ async fn erc_20_transfer_dto_to_transaction_info() {
         .expect_full_address_info_search()
         .times(1)
         .return_once(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
@@ -88,24 +69,6 @@ async fn erc_721_transfer_dto_to_transaction_info() {
         .expect_full_address_info_search()
         .times(1)
         .return_once(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
@@ -145,24 +108,6 @@ async fn ether_transfer_dto_to_transaction_info() {
         .expect_full_address_info_search()
         .times(1)
         .return_once(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let expected = TransactionInfo::Transfer(Transfer {
         sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
@@ -191,24 +136,6 @@ async fn unknown_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider.expect_contract_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let actual = unknown_transfer_dto
         .to_transfer(&mut mock_info_provider, "4", safe_address)
@@ -249,24 +176,6 @@ async fn transfer_dto_to_transaction_details() {
         .expect_full_address_info_search()
         .times(1)
         .return_once(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let expected = TransactionDetails {
         executed_at: Some(1597733631000),
@@ -306,24 +215,6 @@ async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
         .expect_full_address_info_search()
         .times(1)
         .return_once(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let erc_20_transfer = serde_json::from_str::<Erc20TransferDto>(
         crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,

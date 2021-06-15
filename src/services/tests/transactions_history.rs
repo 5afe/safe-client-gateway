@@ -1,6 +1,5 @@
 use crate::json::BACKEND_HISTORY_TRANSACTION_LIST_PAGE;
 use crate::models::backend::transactions::Transaction;
-use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
     ConflictType, TransactionListItem, TransactionSummary,
@@ -57,24 +56,7 @@ async fn backend_txs_to_summary_txs_empty() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
+
     let mut back_end_txs_iter = backend_txs.results.into_iter();
 
     let actual =
@@ -98,24 +80,7 @@ async fn backend_txs_to_summary_txs_with_values() {
         .expect_full_address_info_search()
         .times(6)
         .returning(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
+
     let mut back_end_txs_iter = backend_txs.results.into_iter();
     let expected = vec![
         TransactionSummary {
@@ -651,24 +616,7 @@ async fn peek_timestamp_and_remove_item_empty() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
+
     let backend_txs: Vec<Transaction> = vec![];
     let mut backend_txs_iter = backend_txs.into_iter();
 
@@ -698,24 +646,6 @@ async fn peek_timestamp_and_remove_item_with_items() {
         .expect_full_address_info_search()
         .times(1)
         .return_once(move |_, _| bail!("No address info"));
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
 
     let backend_txs =
         serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE)
@@ -748,25 +678,6 @@ fn get_day_timestamp_millis_for_02_12_2020_00_00_01() {
 }
 
 async fn get_service_txs(mock_info_provider: &mut MockInfoProvider) -> Vec<TransactionSummary> {
-    mock_info_provider
-        .expect_chain_info()
-        .times(1)
-        .returning(|_| {
-            Ok(ChainInfo {
-                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
-                    .to_string(),
-                chain_id: "4".to_string(),
-                chain_name: "Rinkeby".to_string(),
-                rpc_url: "some_url".to_string(),
-                block_explorer_url: "some_url".to_string(),
-                native_currency: NativeCurrency {
-                    name: "Ether".to_string(),
-                    symbol: "ETH".to_string(),
-                    decimals: 18,
-                },
-            })
-        });
-
     let backend_txs =
         serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE).unwrap();
 

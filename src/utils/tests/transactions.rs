@@ -4,7 +4,6 @@ use crate::utils::transactions::{
 use ethcontract_common::hash::keccak256;
 use ethereum_types::Address;
 use semver::Version;
-use std::env;
 
 #[test]
 fn domain_hash_for_safe_address() {

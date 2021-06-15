@@ -1,7 +1,7 @@
 extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
@@ -58,12 +58,13 @@ async fn get_ethereum_transaction_details(
     detail_hash: &str,
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(context);
-    let url = format!(
-        "{}/v1/safes/{}/transfers/?transaction_hash={}&limit=1000",
-        base_transaction_service_url(),
+    let url = core_uri!(
+        info_provider,
+        chain_id,
+        "/v1/safes/{}/transfers/?transaction_hash={}&limit=1000",
         safe,
         tx_hash
-    );
+    )?;
     debug!("url: {}", url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())

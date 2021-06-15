@@ -1,5 +1,4 @@
 use crate::cache::Cache;
-use crate::config::base_transaction_service_url;
 use crate::models::service::transactions::requests::MultisigTransactionRequest;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
@@ -16,8 +15,7 @@ pub async fn submit_confirmation(
     let url = core_uri!(
         info_provider,
         chain_id,
-        "{}/v1/multisig-transactions/{}/confirmations/",
-        base_transaction_service_url(),
+        "/v1/multisig-transactions/{}/confirmations/",
         &safe_tx_hash
     )?;
     let mut json = HashMap::new();

@@ -1,14 +1,14 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::cache::Cache;
-use crate::config::base_transaction_service_url;
 use crate::config::{about_cache_duration, webhook_token};
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::services::about;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 /**
- * `/about` <br />
+ * `/<chain_id>/about` <br />
  * Returns [About](crate::models::service::about::About)
  *
  * # About
@@ -17,25 +17,26 @@ use rocket::response::content;
  *
  * ## Path
  *
- * `/about`
+ * `/<chain_id>/about`
  *
  * ## Query parameters
  *
  * There are no query parameters for this endpoint
  */
-#[get("/about")]
-pub async fn info(context: Context<'_>) -> ApiResult<content::Json<String>> {
+#[get("/<chain_id>/about")]
+pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .duration(about_cache_duration())
-        .resp_generator(about::get_about)
+        .resp_generator(|| about::about(&context, &chain_id))
         .execute(context.cache())
         .await
 }
 
 #[doc(hidden)]
-#[get("/about/backbone")]
-pub async fn backbone(context: Context<'_>) -> ApiResult<content::Json<String>> {
-    let url = format!("{}/v1/about/", base_transaction_service_url());
+#[get("/<chain_id>/about/backbone")]
+pub async fn backbone(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
+    let info_provider = DefaultInfoProvider::new(&context);
+    let url = core_uri!(info_provider, &chain_id, "/v1/about/")?;
     Ok(content::Json(
         context.client().get(&url).send().await?.text().await?,
     ))

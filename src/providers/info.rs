@@ -3,10 +3,10 @@ use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, base_config_service_url, base_exchange_api_url,
-    base_transaction_service_url, chain_info_cache_duration, chain_info_request_timeout,
-    exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
-    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
-    short_error_duration, token_info_cache_duration, token_info_request_timeout,
+    chain_info_cache_duration, chain_info_request_timeout, exchange_api_cache_duration,
+    long_error_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
+    safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
+    token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::chains::ChainInfo;
 use crate::models::commons::Page;

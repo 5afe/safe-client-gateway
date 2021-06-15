@@ -1,9 +1,10 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, chain_id, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::providers::info::SAFE_V_1_3_0;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
+use crate::utils::errors::ApiResult;
 use ethabi::Uint;
 use ethcontract_common::hash::keccak256;
 use ethereum_types::{Address, H256};
@@ -39,12 +40,12 @@ pub async fn fetch_rejections(
     let domain_hash = if is_legacy {
         domain_hash_v100(&safe_address)
     } else {
-        domain_hash_v130(&safe_address)
+        domain_hash_v130(chain_id, &safe_address)
     };
 
     let safe_tx_hash = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
 
-    let multisig_tx = fetch_cancellation_tx(context, safe_tx_hash).await;
+    let multisig_tx = fetch_cancellation_tx(context, chain_id, safe_tx_hash).await;
     multisig_tx
         .as_ref()
         .map(|cancel_tx| {
@@ -72,15 +73,16 @@ pub(super) fn hash(safe_address: Address, nonce: u64, domain_hash: [u8; 32]) -> 
     keccak256(encoded)
 }
 
-// TODO: figure out how to pass the chain_id from the request and not the env
-pub(super) fn domain_hash_v130(safe_address: &Address) -> [u8; 32] {
+pub(super) fn domain_hash_v130(chain_id: &str, safe_address: &Address) -> [u8; 32] {
     let domain_separator: H256 =
         serde_json::from_value(serde_json::Value::String(DOMAIN_SEPARATOR_TYPEHASH.into()))
             .unwrap();
 
     let encoded = ethabi::encode(&[
         ethabi::Token::Uint(Uint::from(domain_separator.0)),
-        ethabi::Token::Uint(Uint::from(chain_id())),
+        ethabi::Token::Uint(Uint::from(
+            chain_id.parse::<u64>().expect("Chain_Id is not a u64"),
+        )),
         ethabi::Token::Address(Address::from(safe_address.0)),
     ]);
     keccak256(encoded)
@@ -131,13 +133,17 @@ pub(super) fn use_legacy_domain_separator(version: Option<Version>) -> bool {
 // We silently fail if the cancellation transaction is not found
 async fn fetch_cancellation_tx(
     context: &Context<'_>,
+    chain_id: &str,
     safe_tx_hash: String,
 ) -> Option<MultisigTransaction> {
-    let url = format!(
-        "{}/v1/multisig-transactions/{}/",
-        base_transaction_service_url(),
+    let info_provider = DefaultInfoProvider::new(context);
+    let url = core_uri!(
+        info_provider,
+        chain_id,
+        "/v1/multisig-transactions/{}/",
         safe_tx_hash
-    );
+    )
+    .ok()?;
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())

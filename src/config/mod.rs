@@ -4,10 +4,6 @@ pub fn redis_url() -> String {
     env::var("REDIS_URL").unwrap()
 }
 
-pub fn base_transaction_service_url() -> String {
-    format!("{}{}", env::var("TRANSACTION_SERVICE_URL").unwrap(), "/api")
-}
-
 pub fn base_config_service_url() -> String {
     format!("{}{}", env::var("CONFIG_SERVICE_URL").unwrap(), "/api")
 }

@@ -1,7 +1,7 @@
 extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
@@ -243,22 +243,17 @@ pub(super) async fn get_creation_transaction_summary(
     chain_id: &String,
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
-    let url = format!(
-        "{}/v1/safes/{}/creation/",
-        base_transaction_service_url(),
-        safe
-    );
+    let info_provider = DefaultInfoProvider::new(context);
+    let url = core_uri!(info_provider, chain_id, "/v1/safes/{}/creation/", safe)?;
     debug!("{}", &url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())
         .await?;
 
-    let mut info_provider = DefaultInfoProvider::new(context);
-
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
     let transaction_summary = creation_transaction_dto
-        .to_transaction_summary(chain_id, safe, &mut info_provider)
+        .to_transaction_summary(chain_id, safe, &info_provider)
         .await;
     Ok(transaction_summary)
 }

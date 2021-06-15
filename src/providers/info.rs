@@ -232,9 +232,8 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
     }
 
     async fn load_chain_info(&self, chain_id: &str) -> ApiResult<Option<ChainInfo>> {
-        // TODO: revert
-        // let url = format!("{}/v1/chains/{}/", base_config_service_url(), chain_id);
-        let url = "https://gist.githubusercontent.com/jpalvarezl/2639c9da0d637f1f6c9bbeb9abad340b/raw/0350bd2443c6d89b5ff1cc6d171e2d074c46b01a/chains_by_id.json".to_string();
+        let url = format!("{}/v1/chains/{}", base_config_service_url(), chain_id);
+        log::debug!("Config service URL:{:#?}", &url);
         let data = RequestCached::new(url)
             .cache_duration(chain_info_cache_duration())
             .error_cache_duration(short_error_duration())

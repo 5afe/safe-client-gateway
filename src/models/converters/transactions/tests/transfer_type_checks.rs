@@ -23,11 +23,11 @@ async fn multisig_tx_check_erc721_transfer() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_| Ok(token_info));
+        .return_once(move |_, _| Ok(token_info));
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .return_once(move |_, _| bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
@@ -108,7 +108,9 @@ async fn multisig_tx_check_erc721_transfer() {
         }),
     });
 
-    let actual = multisig_tx.transaction_info(&mut mock_info_provider).await;
+    let actual = multisig_tx
+        .transaction_info(&mut mock_info_provider, "4")
+        .await;
 
     assert_eq!(expected, actual);
 }
@@ -128,11 +130,11 @@ async fn multisig_tx_check_erc20_transfer() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_| Ok(token_info));
+        .return_once(move |_, _| Ok(token_info));
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .return_once(move |_, _| bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
@@ -214,7 +216,9 @@ async fn multisig_tx_check_erc20_transfer() {
         }),
     });
 
-    let actual = multisig_tx.transaction_info(&mut mock_info_provider).await;
+    let actual = multisig_tx
+        .transaction_info(&mut mock_info_provider, "4")
+        .await;
 
     assert_eq!(expected, actual);
 }
@@ -227,7 +231,7 @@ async fn multisig_tx_check_ether_transfer() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .return_once(move |_, _| bail!("No address info"));
 
     let expected_date = Utc::now();
     let safe = "0x938bae50a210b80EA233112800Cd5Bc2e7644300";
@@ -291,7 +295,9 @@ async fn multisig_tx_check_ether_transfer() {
         }),
     });
 
-    let actual = multisig_tx.transaction_info(&mut mock_info_provider).await;
+    let actual = multisig_tx
+        .transaction_info(&mut mock_info_provider, "4")
+        .await;
 
     assert_eq!(expected, actual);
 }

@@ -1,4 +1,5 @@
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
+use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Parameter};
 use crate::models::service::transactions::{
@@ -165,7 +166,7 @@ async fn transaction_data_size_0_value_greater_than_0() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .return_once(move |_, _| bail!("No address info"));
     mock_info_provider
         .expect_chain_info()
         .times(1)

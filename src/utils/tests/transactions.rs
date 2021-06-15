@@ -8,12 +8,11 @@ use std::env;
 
 #[test]
 fn domain_hash_for_safe_address() {
-    env::set_var("CHAIN_ID", "4"); // Rinkeby
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67".to_string(),
     ))
     .unwrap();
-    let actual = to_hex_string!(domain_hash_v130(&safe_address).to_vec());
+    let actual = to_hex_string!(domain_hash_v130("4", &safe_address).to_vec()); // Rinkeby
     assert_eq!(
         "0x0d56532a2a780ffd32b2c3d85d0f8a7b2fc13df0576c006e2aaa47eb66cf71c9",
         actual
@@ -51,13 +50,12 @@ fn safe_tx_hash_for_safe_address_cancellation_tx_legacy() {
 
 #[test]
 fn safe_tx_hash_for_safe_address_cancellation_tx() {
-    env::set_var("CHAIN_ID", "4"); // Rinkeby
     let safe_address: Address = serde_json::from_value(serde_json::value::Value::String(
         "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f".to_string(),
     ))
     .unwrap();
     let nonce = 39;
-    let domain_hash = domain_hash_v130(&safe_address);
+    let domain_hash = domain_hash_v130("4", &safe_address); // Rinkeby
 
     let actual = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
     assert_eq!(

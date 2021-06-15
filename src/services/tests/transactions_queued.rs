@@ -5,6 +5,7 @@ use crate::json::{
     MULTISIG_TX_SETTINGS_CHANGE, TOKEN_BAT,
 };
 use crate::models::backend::transactions::MultisigTransaction;
+use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
     ConflictType, ExecutionInfo, Label, TransactionListItem, TransactionSummary,
@@ -143,6 +144,24 @@ async fn process_transactions_empty_list() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(|_| {
+            Ok(ChainInfo {
+                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
+                    .to_string(),
+                chain_id: "4".to_string(),
+                chain_name: "Rinkeby".to_string(),
+                rpc_url: "some_url".to_string(),
+                block_explorer_url: "some_url".to_string(),
+                native_currency: NativeCurrency {
+                    name: "Ether".to_string(),
+                    symbol: "ETH".to_string(),
+                    decimals: 18,
+                },
+            })
+        });
 
     let mut tx_iter = input_list.into_iter();
     let safe_nonce = 0;
@@ -151,6 +170,7 @@ async fn process_transactions_empty_list() {
 
     let actual = process_transactions(
         &mut mock_info_provider,
+        "4",
         safe_nonce,
         &mut tx_iter,
         previous_page_nonce,
@@ -195,15 +215,33 @@ async fn process_transactions_no_conflicts_everything_queued() {
     mock_info_provider
         .expect_safe_info()
         .times(3)
-        .returning(move |_| Ok(safe_info.clone()));
+        .returning(move |_, _| Ok(safe_info.clone()));
     mock_info_provider
         .expect_token_info()
         .times(3)
-        .returning(move |_| Ok(bat_token_info.clone()));
+        .returning(move |_, _| Ok(bat_token_info.clone()));
     mock_info_provider
         .expect_full_address_info_search()
         .times(3)
-        .returning(move |_| bail!("No address info"));
+        .returning(move |_, _| bail!("No address info"));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(|_| {
+            Ok(ChainInfo {
+                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
+                    .to_string(),
+                chain_id: "4".to_string(),
+                chain_name: "Rinkeby".to_string(),
+                rpc_url: "some_url".to_string(),
+                block_explorer_url: "some_url".to_string(),
+                native_currency: NativeCurrency {
+                    name: "Ether".to_string(),
+                    symbol: "ETH".to_string(),
+                    decimals: 18,
+                },
+            })
+        });
 
     let mut tx_iter = input_list.into_iter();
 
@@ -213,6 +251,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
 
     let actual = process_transactions(
         &mut mock_info_provider,
+        "4",
         safe_nonce,
         &mut tx_iter,
         previous_page_nonce,
@@ -353,15 +392,33 @@ async fn process_transactions_conflicts_in_queued() {
     mock_info_provider
         .expect_safe_info()
         .times(3)
-        .returning(move |_| Ok(safe_info.clone()));
+        .returning(move |_, _| Ok(safe_info.clone()));
     mock_info_provider
         .expect_token_info()
         .times(3)
-        .returning(move |_| Ok(bat_token_info.clone()));
+        .returning(move |_, _| Ok(bat_token_info.clone()));
     mock_info_provider
         .expect_full_address_info_search()
         .times(3)
-        .returning(move |_| bail!("No address info"));
+        .returning(move |_, _| bail!("No address info"));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(|_| {
+            Ok(ChainInfo {
+                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
+                    .to_string(),
+                chain_id: "4".to_string(),
+                chain_name: "Rinkeby".to_string(),
+                rpc_url: "some_url".to_string(),
+                block_explorer_url: "some_url".to_string(),
+                native_currency: NativeCurrency {
+                    name: "Ether".to_string(),
+                    symbol: "ETH".to_string(),
+                    decimals: 18,
+                },
+            })
+        });
 
     let mut tx_iter = input_list.into_iter();
 
@@ -371,6 +428,7 @@ async fn process_transactions_conflicts_in_queued() {
 
     let actual = process_transactions(
         &mut mock_info_provider,
+        "4",
         safe_nonce,
         &mut tx_iter,
         previous_page_nonce,
@@ -515,15 +573,33 @@ async fn process_transactions_conflicts_in_next() {
     mock_info_provider
         .expect_safe_info()
         .times(3)
-        .returning(move |_| Ok(safe_info.clone()));
+        .returning(move |_, _| Ok(safe_info.clone()));
     mock_info_provider
         .expect_token_info()
         .times(3)
-        .returning(move |_| Ok(bat_token_info.clone()));
+        .returning(move |_, _| Ok(bat_token_info.clone()));
     mock_info_provider
         .expect_full_address_info_search()
         .times(3)
-        .returning(move |_| bail!("No address info"));
+        .returning(move |_, _| bail!("No address info"));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(|_| {
+            Ok(ChainInfo {
+                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
+                    .to_string(),
+                chain_id: "4".to_string(),
+                chain_name: "Rinkeby".to_string(),
+                rpc_url: "some_url".to_string(),
+                block_explorer_url: "some_url".to_string(),
+                native_currency: NativeCurrency {
+                    name: "Ether".to_string(),
+                    symbol: "ETH".to_string(),
+                    decimals: 18,
+                },
+            })
+        });
 
     let mut tx_iter = input_list.into_iter();
 
@@ -533,6 +609,7 @@ async fn process_transactions_conflicts_in_next() {
 
     let actual = process_transactions(
         &mut mock_info_provider,
+        "4",
         safe_nonce,
         &mut tx_iter,
         previous_page_nonce,
@@ -678,16 +755,33 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
     mock_info_provider
         .expect_safe_info()
         .times(3)
-        .returning(move |_| Ok(safe_info.clone()));
+        .returning(move |_, _| Ok(safe_info.clone()));
     mock_info_provider
         .expect_token_info()
         .times(3)
-        .returning(move |_| Ok(bat_token_info.clone()));
+        .returning(move |_, _| Ok(bat_token_info.clone()));
     mock_info_provider
         .expect_full_address_info_search()
         .times(3)
-        .returning(move |_| bail!("No address info"));
-
+        .returning(move |_, _| bail!("No address info"));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(|_| {
+            Ok(ChainInfo {
+                transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com"
+                    .to_string(),
+                chain_id: "4".to_string(),
+                chain_name: "Rinkeby".to_string(),
+                rpc_url: "some_url".to_string(),
+                block_explorer_url: "some_url".to_string(),
+                native_currency: NativeCurrency {
+                    name: "Ether".to_string(),
+                    symbol: "ETH".to_string(),
+                    decimals: 18,
+                },
+            })
+        });
     let mut tx_iter = input_list.into_iter();
 
     let safe_nonce = 392;
@@ -696,6 +790,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
 
     let actual = process_transactions(
         &mut mock_info_provider,
+        "4",
         safe_nonce,
         &mut tx_iter,
         previous_page_nonce,

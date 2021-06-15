@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ChainInfo {
-    pub transaction_service: String, // assumption that this will exist
+    pub transaction_service: String,
     pub chain_id: String,
     pub chain_name: String,
     pub rpc_url: String,

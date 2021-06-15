@@ -144,7 +144,7 @@ impl ModuleTransaction {
 impl CreationTransaction {
     pub async fn to_transaction_summary(
         &self,
-        chain_id: &String,
+        chain_id: &str,
         safe_address: &String,
         info_provider: &(impl InfoProvider + Sync),
     ) -> TransactionSummary {

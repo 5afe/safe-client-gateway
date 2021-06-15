@@ -96,7 +96,7 @@ pub trait InfoProvider {
     async fn chain_info(&self, chain_id: &str) -> ApiResult<ChainInfo>;
     async fn safe_info(&self, chain_id: &str, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, chain_id: &str, token: &str) -> ApiResult<TokenInfo>;
-    async fn safe_app_info(&self, chain_id: &str, url: &str) -> ApiResult<SafeAppInfo>;
+    async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
     async fn contract_info(&self, chain_id: &str, address: &str) -> ApiResult<AddressInfo>;
     async fn full_address_info_search(
         &self,
@@ -145,7 +145,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         }
     }
 
-    async fn safe_app_info(&self, chain_id: &str, url: &str) -> ApiResult<SafeAppInfo> {
+    async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = build_manifest_url(url)?;
 
         let manifest_json = RequestCached::new(manifest_url)

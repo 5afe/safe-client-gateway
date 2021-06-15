@@ -71,9 +71,11 @@ impl MultisigTransaction {
                 missing_signers,
             }),
             tx_info: self.transaction_info(info_provider, chain_id).await,
-            safe_app_info: OptionFuture::from(self.origin.as_ref().map(|origin| async move {
-                safe_app_info_from(&origin, info_provider, chain_id).await
-            }))
+            safe_app_info: OptionFuture::from(
+                self.origin
+                    .as_ref()
+                    .map(|origin| async move { safe_app_info_from(&origin, info_provider).await }),
+            )
             .await
             .flatten(),
         }])

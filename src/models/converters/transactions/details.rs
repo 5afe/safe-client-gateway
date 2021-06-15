@@ -52,9 +52,11 @@ impl MultisigTransaction {
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
                 self.build_execution_details(safe_info, gas_token, rejections),
             )),
-            safe_app_info: OptionFuture::from(self.origin.as_ref().map(|origin| async move {
-                safe_app_info_from(origin, info_provider, chain_id).await
-            }))
+            safe_app_info: OptionFuture::from(
+                self.origin
+                    .as_ref()
+                    .map(|origin| async move { safe_app_info_from(origin, info_provider).await }),
+            )
             .await
             .flatten(),
         })

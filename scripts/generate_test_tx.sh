@@ -51,7 +51,7 @@ curl --location --request POST 'https://safe-transaction.rinkeby.gnosis.io/api/v
     "safeTxGas": "0",
     "baseGas": "0",
     "gasPrice": "0",
-    "nonce":
+    "nonce": "4",
     "contractTransactionHash": "0xd720f976fe7dd6692217dedbeec1ca2936d3e677ddf77e3da57b8b8b914dc09d",
     "sender": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9"
 }'

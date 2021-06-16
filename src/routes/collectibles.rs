@@ -88,7 +88,7 @@ use rocket::response::content;
  *     "tokenName": "Main",
  *     "tokenSymbol": "JOSE",
  *     "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png",
- *     "id":
+ *     "id": "4",
  *     "uri": "https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8",
  *     "name": "Chiken dinner",
  *     "description": "This token is meant for testing. ",

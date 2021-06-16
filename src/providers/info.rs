@@ -113,9 +113,12 @@ pub struct DefaultInfoProvider<'p, C: Cache> {
 #[rocket::async_trait]
 impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     async fn chain_info(&self) -> ApiResult<ChainInfo> {
-        let url = format!("{}/v1/chains/{}", base_config_service_url(), self.chain_id);
-        log::debug!("Config service URL:{:#?}", &url);
-        let data = RequestCached::new(url)
+        let mut url = reqwest::Url::parse(base_config_service_url().as_str())
+            .expect("Bad base config service url");
+        url.path_segments_mut()
+            .expect("Cannot add chain_id to path")
+            .extend(["v1", "chains", self.chain_id]);
+        let data = RequestCached::new(url.into_string())
             .cache_duration(chain_info_cache_duration())
             .error_cache_duration(short_error_duration())
             .request_timeout(chain_info_request_timeout())

@@ -49,7 +49,9 @@ pub fn active_routes() -> Vec<Route> {
         transactions::post_confirmation,
         hooks::update,
         hooks::flush,
-        health::health
+        health::health,
+        utils::post_data_decoder,
+        utils::post_safe_gas_estimation
     ]
 }
 

@@ -21,7 +21,7 @@ pub async fn get_history_transactions(
     page_url: &Option<String>,
     timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
-    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let request_timezone_offset = timezone_offset
         .as_ref()
         .and_then(|it| it.parse::<i32>().ok())
@@ -34,20 +34,13 @@ pub async fn get_history_transactions(
     let page_metadata = adjust_page_meta(&incoming_page_metadata);
     let extended_page_url = Some(page_metadata.to_url_string());
 
-    let backend_paged_txs = fetch_backend_paged_txs(
-        context,
-        &info_provider,
-        chain_id,
-        safe_address,
-        &extended_page_url,
-    )
-    .await?;
+    let backend_paged_txs =
+        fetch_backend_paged_txs(context, &info_provider, safe_address, &extended_page_url).await?;
     let mut backend_txs_iter = backend_paged_txs.results.into_iter();
     let prev_page_timestamp = if page_metadata.offset != 0 {
         peek_timestamp_and_remove_item(
             &mut backend_txs_iter,
-            &mut info_provider,
-            chain_id,
+            &info_provider,
             safe_address,
             request_timezone_offset,
         )
@@ -57,16 +50,11 @@ pub async fn get_history_transactions(
         -1
     };
 
-    let mut service_txs = backend_txs_to_summary_txs(
-        &mut backend_txs_iter,
-        &mut info_provider,
-        chain_id,
-        safe_address,
-    )
-    .await?;
+    let mut service_txs =
+        backend_txs_to_summary_txs(&mut backend_txs_iter, &info_provider, safe_address).await?;
     if backend_paged_txs.next.is_none() {
         if let Ok(creation_tx) =
-            get_creation_transaction_summary(context, chain_id, safe_address).await
+            get_creation_transaction_summary(context, &info_provider, safe_address).await
         {
             service_txs.push(creation_tx);
         }
@@ -137,7 +125,6 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 async fn fetch_backend_paged_txs(
     context: &Context<'_>,
     info_provider: &impl InfoProvider,
-    chain_id: &str,
     safe_address: &str,
     page_url: &Option<String>,
 ) -> ApiResult<Page<Transaction>> {
@@ -160,8 +147,7 @@ async fn fetch_backend_paged_txs(
 
 pub(super) async fn backend_txs_to_summary_txs(
     txs: &mut impl Iterator<Item = Transaction>,
-    info_provider: &mut impl InfoProvider,
-    chain_id: &str,
+    info_provider: &(impl InfoProvider + Sync),
     safe_address: &str,
 ) -> ApiResult<Vec<TransactionSummary>> {
     let mut results = vec![];
@@ -169,7 +155,7 @@ pub(super) async fn backend_txs_to_summary_txs(
     for transaction in txs {
         results.extend(
             transaction
-                .to_transaction_summary(info_provider, chain_id, safe_address)
+                .to_transaction_summary(info_provider, safe_address)
                 .await
                 .unwrap_or_default(),
         );
@@ -205,15 +191,14 @@ pub(super) fn service_txs_to_tx_list_items(
 
 pub(super) async fn peek_timestamp_and_remove_item(
     transactions: &mut impl Iterator<Item = Transaction>,
-    info_provider: &mut impl InfoProvider,
-    chain_id: &str,
+    info_provider: &(impl InfoProvider + Sync),
     safe_address: &str,
     timezone_offset: i32,
 ) -> ApiResult<i64> {
     let timestamp = transactions
         .next()
         .ok_or(api_error!("empty transactions"))?
-        .to_transaction_summary(info_provider, chain_id, safe_address)
+        .to_transaction_summary(info_provider, safe_address)
         .await?
         .last()
         .ok_or(api_error!("empty transactions"))?
@@ -239,10 +224,9 @@ pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64, timezone_offset
 
 pub(super) async fn get_creation_transaction_summary(
     context: &Context<'_>,
-    chain_id: &String,
+    info_provider: &(impl InfoProvider + Sync),
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
-    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(info_provider, "/v1/safes/{}/creation/", safe)?;
     debug!("{}", &url);
     let body = RequestCached::new(url)
@@ -252,7 +236,7 @@ pub(super) async fn get_creation_transaction_summary(
 
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
     let transaction_summary = creation_transaction_dto
-        .to_transaction_summary(chain_id, safe, &info_provider)
+        .to_transaction_summary(safe, info_provider)
         .await;
     Ok(transaction_summary)
 }

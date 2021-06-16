@@ -26,7 +26,6 @@ pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> Transf
 // This is done to prevent that every user that queries a transfer transaction, doesn't
 // leave a mark in our cache.
 pub(super) async fn get_address_info(
-    chain_id: &str,
     safe: &str,
     address: &str,
     info_provider: &impl InfoProvider,

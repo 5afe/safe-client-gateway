@@ -16,7 +16,6 @@ impl MultisigTransaction {
         &self,
         rejections: Option<Vec<String>>,
         info_provider: &(impl InfoProvider + Sync),
-        chain_id: &str,
     ) -> ApiResult<TransactionDetails> {
         let safe_info = info_provider
             .safe_info(&self.safe_transaction.safe.to_string())
@@ -26,7 +25,7 @@ impl MultisigTransaction {
         Ok(TransactionDetails {
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
-            tx_info: self.transaction_info(info_provider, chain_id).await,
+            tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: self.safe_transaction.to.to_owned(),
                 value: self.safe_transaction.value.to_owned(),
@@ -38,9 +37,7 @@ impl MultisigTransaction {
                         .data_decoded
                         .as_ref()
                         .map(|data_decoded| async move {
-                            data_decoded
-                                .build_address_info_index(info_provider, chain_id)
-                                .await
+                            data_decoded.build_address_info_index(info_provider).await
                         }),
                 )
                 .await
@@ -111,13 +108,12 @@ impl ModuleTransaction {
     pub async fn to_transaction_details(
         &self,
         info_provider: &impl InfoProvider,
-        chain_id: &str,
     ) -> ApiResult<TransactionDetails> {
         let safe_transaction = &self.safe_transaction;
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
-            tx_info: self.transaction_info(info_provider, chain_id).await,
+            tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: safe_transaction.to.to_owned(),
                 value: safe_transaction.value.to_owned(),
@@ -126,9 +122,7 @@ impl ModuleTransaction {
                 operation: safe_transaction.operation,
                 address_info_index: OptionFuture::from(safe_transaction.data_decoded.as_ref().map(
                     |data_decoded| async move {
-                        data_decoded
-                            .build_address_info_index(info_provider, chain_id)
-                            .await
+                        data_decoded.build_address_info_index(info_provider).await
                     },
                 ))
                 .await

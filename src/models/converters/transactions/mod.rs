@@ -25,19 +25,15 @@ impl SafeTransaction {
     async fn transaction_info(
         &self,
         info_provider: &impl InfoProvider,
-        chain_id: &str,
         is_cancellation: bool,
     ) -> TransactionInfo {
         let value = self.value_as_uint();
         let data_size = data_size(&self.data);
 
         if (value > 0 && data_size > 0) || self.operation != Operation::CALL {
-            TransactionInfo::Custom(
-                self.to_custom(info_provider, chain_id, is_cancellation)
-                    .await,
-            )
+            TransactionInfo::Custom(self.to_custom(info_provider, is_cancellation).await)
         } else if value > 0 && data_size == 0 {
-            TransactionInfo::Transfer(self.to_ether_transfer(info_provider, chain_id).await)
+            TransactionInfo::Transfer(self.to_ether_transfer(info_provider).await)
         } else if value == 0
             && data_size > 0
             && self.safe == self.to
@@ -46,7 +42,7 @@ impl SafeTransaction {
                 .as_ref()
                 .map_or_else(|| false, |it| it.is_settings_change())
         {
-            TransactionInfo::SettingsChange(self.to_settings_change(info_provider, chain_id).await)
+            TransactionInfo::SettingsChange(self.to_settings_change(info_provider).await)
         } else if self
             .data_decoded
             .as_ref()
@@ -59,37 +55,23 @@ impl SafeTransaction {
             match info_provider.token_info(&self.to).await {
                 Ok(token) => match token.token_type {
                     TokenType::Erc20 => TransactionInfo::Transfer(
-                        self.to_erc20_transfer(&token, info_provider, chain_id)
-                            .await,
+                        self.to_erc20_transfer(&token, info_provider).await,
                     ),
                     TokenType::Erc721 => TransactionInfo::Transfer(
-                        self.to_erc721_transfer(&token, info_provider, chain_id)
-                            .await,
+                        self.to_erc721_transfer(&token, info_provider).await,
                     ),
                     _ => TransactionInfo::Custom(
-                        self.to_custom(info_provider, chain_id, is_cancellation)
-                            .await,
+                        self.to_custom(info_provider, is_cancellation).await,
                     ),
                 },
-                _ => TransactionInfo::Custom(
-                    self.to_custom(info_provider, chain_id, is_cancellation)
-                        .await,
-                ),
+                _ => TransactionInfo::Custom(self.to_custom(info_provider, is_cancellation).await),
             }
         } else {
-            TransactionInfo::Custom(
-                self.to_custom(info_provider, chain_id, is_cancellation)
-                    .await,
-            )
+            TransactionInfo::Custom(self.to_custom(info_provider, is_cancellation).await)
         }
     }
 
-    async fn to_custom(
-        &self,
-        info_provider: &impl InfoProvider,
-        chain_id: &str,
-        is_cancellation: bool,
-    ) -> Custom {
+    async fn to_custom(&self, info_provider: &impl InfoProvider, is_cancellation: bool) -> Custom {
         Custom {
             to: self.to.to_owned(),
             to_info: info_provider.full_address_info_search(&self.to).await.ok(),
@@ -108,15 +90,14 @@ impl SafeTransaction {
         &self,
         token: &TokenInfo,
         info_provider: &impl InfoProvider,
-        chain_id: &str,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: get_address_info(chain_id, &self.safe, &sender, info_provider).await,
+            sender_info: get_address_info(&self.safe, &sender, info_provider).await,
             sender,
-            recipient_info: get_address_info(chain_id, &self.safe, &recipient, info_provider).await,
+            recipient_info: get_address_info(&self.safe, &recipient, info_provider).await,
             recipient,
             direction,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
@@ -138,15 +119,14 @@ impl SafeTransaction {
         &self,
         token: &TokenInfo,
         info_provider: &impl InfoProvider,
-        chain_id: &str,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: get_address_info(chain_id, &self.safe, &sender, info_provider).await,
+            sender_info: get_address_info(&self.safe, &sender, info_provider).await,
             sender,
-            recipient_info: get_address_info(chain_id, &self.safe, &recipient, info_provider).await,
+            recipient_info: get_address_info(&self.safe, &recipient, info_provider).await,
             recipient,
             direction,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
@@ -166,11 +146,7 @@ impl SafeTransaction {
         }
     }
 
-    async fn to_ether_transfer(
-        &self,
-        info_provider: &impl InfoProvider,
-        chain_id: &str,
-    ) -> Transfer {
+    async fn to_ether_transfer(&self, info_provider: &impl InfoProvider) -> Transfer {
         Transfer {
             sender_info: None,
             sender: self.safe.to_owned(),
@@ -183,17 +159,13 @@ impl SafeTransaction {
         }
     }
 
-    async fn to_settings_change(
-        &self,
-        info_provider: &impl InfoProvider,
-        chain_id: &str,
-    ) -> SettingsChange {
+    async fn to_settings_change(&self, info_provider: &impl InfoProvider) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
             settings_info: OptionFuture::from(
                 self.data_decoded
                     .as_ref()
-                    .map(|it| async move { it.to_settings_info(info_provider, chain_id).await }),
+                    .map(|it| async move { it.to_settings_info(info_provider).await }),
             )
             .await
             .flatten(),
@@ -210,13 +182,9 @@ impl SafeTransaction {
 }
 
 impl MultisigTransaction {
-    async fn transaction_info(
-        &self,
-        info_provider: &impl InfoProvider,
-        chain_id: &str,
-    ) -> TransactionInfo {
+    async fn transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
         self.safe_transaction
-            .transaction_info(info_provider, chain_id, self.is_cancellation())
+            .transaction_info(info_provider, self.is_cancellation())
             .await
     }
     fn confirmation_count(&self) -> u64 {
@@ -298,13 +266,9 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    async fn transaction_info(
-        &self,
-        info_provider: &impl InfoProvider,
-        chain_id: &str,
-    ) -> TransactionInfo {
+    async fn transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
         self.safe_transaction
-            .transaction_info(info_provider, chain_id, false)
+            .transaction_info(info_provider, false)
             .await
     }
 

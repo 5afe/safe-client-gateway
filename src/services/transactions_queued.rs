@@ -57,7 +57,6 @@ pub async fn get_queued_transactions(
 
     let service_transactions = process_transactions(
         &mut info_provider,
-        chain_id,
         safe_nonce,
         &mut tx_iter,
         previous_page_nonce,
@@ -117,7 +116,6 @@ pub(super) fn get_previous_page_nonce(
 
 pub(super) async fn process_transactions(
     info_provider: &mut impl InfoProvider,
-    chain_id: &str,
     safe_nonce: i64,
     tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
     previous_page_nonce: i64,
@@ -167,7 +165,6 @@ pub(super) async fn process_transactions(
         // Add the one transaction that is always present
         add_transaction_as_summary(
             info_provider,
-            chain_id,
             &mut service_transactions,
             &group_start_tx,
             if has_conflicts {
@@ -193,7 +190,6 @@ pub(super) async fn process_transactions(
             };
             add_transaction_as_summary(
                 info_provider,
-                chain_id,
                 &mut service_transactions,
                 &tx,
                 conflict_type,
@@ -245,14 +241,13 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 
 pub(super) async fn add_transaction_as_summary(
     info_provider: &mut impl InfoProvider,
-    chain_id: &str,
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,
     conflict_type: ConflictType,
 ) {
     // Converting a multisig transaction theoretically can result in multiple summaries
     let mut tx_summary_iter = transaction
-        .to_transaction_summary(info_provider, chain_id)
+        .to_transaction_summary(info_provider)
         .await
         .unwrap_or(vec![])
         .into_iter()

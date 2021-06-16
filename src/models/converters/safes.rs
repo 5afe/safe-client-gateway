@@ -4,11 +4,7 @@ use crate::providers::info::{InfoProvider, SafeInfo};
 
 // We need to add Sync as trait bound as info_provider moves across threads
 impl SafeInfo {
-    pub async fn to_safe_info_ex(
-        &self,
-        info_provider: &(impl InfoProvider + Sync),
-        chain_id: &str,
-    ) -> SafeInfoEx {
+    pub async fn to_safe_info_ex(&self, info_provider: &(impl InfoProvider + Sync)) -> SafeInfoEx {
         SafeInfoEx {
             address: AddressEx {
                 value: self.address.to_owned(),

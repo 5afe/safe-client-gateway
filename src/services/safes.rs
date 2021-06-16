@@ -18,20 +18,20 @@ pub async fn get_safe_info_ex(
 ) -> ApiResult<SafeState> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let safe_info = info_provider.safe_info(safe_address).await?;
-    let safe_info_ex = safe_info.to_safe_info_ex(&info_provider, &chain_id).await;
+    let safe_info_ex = safe_info.to_safe_info_ex(&info_provider).await;
 
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
-            collectibles_tag: get_last_collectible(context, &chain_id, safe_address)
+            collectibles_tag: get_last_collectible(context, &info_provider, safe_address)
                 .await
                 .unwrap_or(Utc::now().timestamp())
                 .to_string(),
-            tx_queued_tag: get_last_queued_tx(context, &chain_id, safe_address)
+            tx_queued_tag: get_last_queued_tx(context, &info_provider, safe_address)
                 .await
                 .unwrap_or(Utc::now().timestamp())
                 .to_string(),
-            tx_history_tag: get_last_history_tx(context, &chain_id, safe_address)
+            tx_history_tag: get_last_history_tx(context, &info_provider, safe_address)
                 .await
                 .unwrap_or(Utc::now().timestamp())
                 .to_string(),
@@ -43,10 +43,9 @@ pub async fn get_safe_info_ex(
 
 async fn get_last_collectible(
     context: &Context<'_>,
-    chain_id: &String,
+    info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
-    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/transfers/?\
@@ -76,10 +75,9 @@ async fn get_last_collectible(
 
 async fn get_last_queued_tx(
     context: &Context<'_>,
-    chain_id: &String,
+    info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
-    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/multisig-transactions/?\
@@ -107,10 +105,9 @@ async fn get_last_queued_tx(
 
 async fn get_last_history_tx(
     context: &Context<'_>,
-    chain_id: &String,
+    info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
-    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/all-transactions/?\

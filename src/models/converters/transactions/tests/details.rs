@@ -24,15 +24,15 @@ async fn multisig_custom_transaction_to_transaction_details() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .returning(move |_, _| bail!("Token Address 0x0"));
+        .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(2) // to_info and data_decoded "spender" address parameter
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
         executed_at: multisig_tx.execution_date.map(|it| it.timestamp_millis()),
@@ -107,13 +107,9 @@ async fn multisig_custom_transaction_to_transaction_details() {
         safe_app_info: None,
     };
 
-    let actual = MultisigTransaction::to_transaction_details(
-        &multisig_tx,
-        None,
-        &mut mock_info_provider,
-        "4",
-    )
-    .await;
+    let actual =
+        MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider)
+            .await;
 
     assert_eq!(expected, actual.unwrap());
 }
@@ -126,7 +122,7 @@ async fn module_transaction_to_transaction_details_success() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let module_transaction =
         serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
@@ -159,12 +155,9 @@ async fn module_transaction_to_transaction_details_success() {
         safe_app_info: None,
     };
 
-    let actual = ModuleTransaction::to_transaction_details(
-        &module_transaction,
-        &mut mock_info_provider,
-        "4",
-    )
-    .await;
+    let actual =
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider)
+            .await;
 
     assert_eq!(expected, actual.unwrap());
 }
@@ -177,7 +170,7 @@ async fn module_transaction_to_transaction_details_failed() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let module_transaction =
         serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_FAILED).unwrap();
@@ -210,12 +203,9 @@ async fn module_transaction_to_transaction_details_failed() {
         safe_app_info: None,
     };
 
-    let actual = ModuleTransaction::to_transaction_details(
-        &module_transaction,
-        &mut mock_info_provider,
-        "4",
-    )
-    .await;
+    let actual =
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider)
+            .await;
 
     assert_eq!(expected, actual.unwrap());
 }
@@ -257,12 +247,11 @@ async fn ethereum_tx_transfer_to_transaction_details() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let actual = TransferDto::to_transaction_details(
         &transfer,
         &mut mock_info_provider,
-        "4",
         "0xBc79855178842FDBA0c353494895DEEf509E26bB",
     )
     .await;
@@ -282,11 +271,11 @@ async fn multisig_transaction_with_origin() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_, _| bail!("No token info"));
+        .return_once(move |_| bail!("No token info"));
     mock_info_provider
         .expect_safe_app_info()
         .times(1)
@@ -300,19 +289,15 @@ async fn multisig_transaction_with_origin() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(7) // 1 + 6 calls within data decoded multisig
-        .returning(move |_, _| bail!("no address info"));
+        .returning(move |_| bail!("no address info"));
 
     let mut expected = crate::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
     expected.retain(|c| !c.is_whitespace());
 
-    let actual = MultisigTransaction::to_transaction_details(
-        &multisig_tx,
-        None,
-        &mut mock_info_provider,
-        "4",
-    )
-    .await
-    .unwrap();
+    let actual =
+        MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider)
+            .await
+            .unwrap();
 
     let actual_json = serde_json::to_string(&actual).unwrap();
 

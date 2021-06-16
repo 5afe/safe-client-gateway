@@ -10,7 +10,7 @@ async fn to_safe_info_ex_no_address_info() {
     mock_info_provider
         .expect_contract_info()
         .times(5)
-        .returning(move |_, _| bail!("No safe info"));
+        .returning(move |_| bail!("No safe info"));
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -78,9 +78,7 @@ async fn to_safe_info_ex_no_address_info() {
         version: Some("1.1.1".to_string()),
     };
 
-    let actual = safe_info
-        .to_safe_info_ex(&mut mock_info_provider, "4")
-        .await;
+    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
 
     assert_eq!(actual, expected);
 }
@@ -92,7 +90,7 @@ async fn to_safe_info_ex_address_info() {
     mock_info_provider
         .expect_contract_info()
         .times(5)
-        .returning(move |_, address| {
+        .returning(move |address| {
             Ok(AddressInfo {
                 name: format!("name_{}", &address),
                 logo_uri: Some(format!("logo_uri_{}", &address)),
@@ -165,9 +163,7 @@ async fn to_safe_info_ex_address_info() {
         version: Some("1.1.1".to_string()),
     };
 
-    let actual = safe_info
-        .to_safe_info_ex(&mut mock_info_provider, "4")
-        .await;
+    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
 
     assert_eq!(actual, expected);
 }
@@ -191,7 +187,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
     mock_info_provider
         .expect_contract_info()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -217,9 +213,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
         version: None,
     };
 
-    let actual = safe_info
-        .to_safe_info_ex(&mut mock_info_provider, "4")
-        .await;
+    let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }
@@ -232,7 +226,7 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
     mock_info_provider
         .expect_contract_info()
         .times(3)
-        .returning(move |_, address| {
+        .returning(move |address| {
             Ok(AddressInfo {
                 name: format!("name_{}", &address),
                 logo_uri: Some(format!("logo_uri_{}", &address)),
@@ -271,7 +265,7 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
         version: Some("1.3.0".to_string()),
     };
 
-    let actual = safe_info.to_safe_info_ex(&mock_info_provider, "4").await;
+    let actual = safe_info.to_safe_info_ex(&mock_info_provider).await;
 
     assert_eq!(expected, actual);
 }

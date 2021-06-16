@@ -13,7 +13,7 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("no address info"));
+        .return_once(move |_| bail!("no address info"));
 
     let ether_transfer_dto =
         serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap();
@@ -32,7 +32,6 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction() {
     let actual = EtherTransferDto::to_transfer_transaction(
         &ether_transfer_dto,
         &mut mock_info_provider,
-        "4",
         safe,
     )
     .await;
@@ -46,7 +45,7 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_inf
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| {
+        .return_once(move |_| {
             Ok(AddressInfo {
                 name: "".to_string(),
                 logo_uri: None,
@@ -73,7 +72,6 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_inf
     let actual = EtherTransferDto::to_transfer_transaction(
         &ether_transfer_dto,
         &mut mock_info_provider,
-        "4",
         safe,
     )
     .await;
@@ -87,7 +85,7 @@ async fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_inf
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| {
+        .return_once(move |_| {
             Ok(AddressInfo {
                 name: "".to_string(),
                 logo_uri: None,
@@ -114,7 +112,6 @@ async fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_inf
     let actual = EtherTransferDto::to_transfer_transaction(
         &ether_transfer_dto,
         &mut mock_info_provider,
-        "4",
         safe,
     )
     .await;

@@ -11,7 +11,7 @@ async fn get_address_info_address_diff_than_safe() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| {
+        .return_once(move |_| {
             Ok(AddressInfo {
                 name: "".to_string(),
                 logo_uri: None,
@@ -23,7 +23,7 @@ async fn get_address_info_address_diff_than_safe() {
         logo_uri: None,
     };
 
-    let actual = get_address_info("4", safe, address, &mut mock_info_provider).await;
+    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
 
     assert!(actual.is_some());
     assert_eq!(expected, actual.unwrap());
@@ -38,9 +38,9 @@ async fn get_address_info_address_diff_than_safe_error() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
-    let actual = get_address_info("4", safe, address, &mut mock_info_provider).await;
+    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
     assert!(actual.is_none());
 }
 
@@ -52,6 +52,6 @@ async fn get_address_info_address_equal_to_safe() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
-    let actual = get_address_info("4", safe, address, &mut mock_info_provider).await;
+    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
     assert!(actual.is_none());
 }

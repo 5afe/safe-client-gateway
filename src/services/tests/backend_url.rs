@@ -7,7 +7,6 @@ async fn core_uri_success_with_params() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let trusted = false;
     let exclude_spam = true;
-    let chain_id = "1";
     let chain_info = ChainInfo {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
@@ -21,10 +20,10 @@ async fn core_uri_success_with_params() {
         },
     };
     let mut mock_info_provider = MockInfoProvider::new();
-    // mock_info_provider
-    //     .expect_chain_info()
-    //     .times(1)
-    //     .return_once(move |_| Ok(chain_info));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .return_once(move || Ok(chain_info));
     let url = core_uri!(
         mock_info_provider,
         "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
@@ -38,7 +37,6 @@ async fn core_uri_success_with_params() {
 
 #[rocket::async_test]
 async fn core_uri_success_without_params() {
-    let chain_id = "1";
     let chain_info = ChainInfo {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
@@ -52,10 +50,10 @@ async fn core_uri_success_without_params() {
         },
     };
     let mut mock_info_provider = MockInfoProvider::new();
-    // mock_info_provider
-    //     .expect_chain_info()
-    //     .times(1)
-    //     .return_once(move |_| Ok(chain_info));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .return_once(move || Ok(chain_info));
     let url = core_uri!(mock_info_provider, "/some/path");
 
     assert_eq!(
@@ -67,11 +65,7 @@ async fn core_uri_success_without_params() {
 #[rocket::async_test]
 #[should_panic]
 async fn core_uri_error() {
-    let mut mock_info_provider = MockInfoProvider::new();
-    // mock_info_provider
-    //     .expect_chain_info()
-    //     .times(1)
-    //     .returning(move |_| bail!("Unsupported net"));
+    let mock_info_provider = MockInfoProvider::new();
 
     let url = core_uri!(mock_info_provider, "/nice/path");
     url.unwrap();

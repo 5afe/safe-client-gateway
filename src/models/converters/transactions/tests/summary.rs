@@ -36,7 +36,7 @@ async fn unknown_tx_to_summary_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
 
     let error = unknown_tx
-        .to_transaction_summary(&mut mock_info_provider, "4", &String::from(""))
+        .to_transaction_summary(&mut mock_info_provider, &String::from(""))
         .await;
 
     assert!(error.is_err());
@@ -50,7 +50,7 @@ async fn module_tx_to_summary_transaction_success() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let expected_to = String::from("0x12345789");
     let expected_date = Utc::now();
@@ -73,7 +73,7 @@ async fn module_tx_to_summary_transaction_success() {
     };
 
     let actual =
-        ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider, "4").await;
+        ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider).await;
     let expected = vec![TransactionSummary {
         id: create_id!(
             ID_PREFIX_MODULE_TX,
@@ -106,7 +106,7 @@ async fn module_tx_to_summary_transaction_failed() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let expected_to = String::from("0x12345789");
     let expected_date = Utc::now();
@@ -129,7 +129,7 @@ async fn module_tx_to_summary_transaction_failed() {
     };
 
     let actual =
-        ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider, "4").await;
+        ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider).await;
     let expected = vec![TransactionSummary {
         id: create_id!(
             ID_PREFIX_MODULE_TX,
@@ -171,7 +171,6 @@ async fn ethereum_tx_to_summary_transaction_no_transfers() {
     let actual = EthereumTransaction::to_transaction_summary(
         &ethereum_tx,
         &mut mock_info_provider,
-        "4",
         &safe_address,
     )
     .await;
@@ -185,7 +184,7 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(4)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
     let timestamp = Utc::now();
     let timestamp_millis = timestamp.timestamp_millis();
 
@@ -219,7 +218,6 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
     let actual = EthereumTransaction::to_transaction_summary(
         &ethereum_tx,
         &mut mock_info_provider,
-        "4",
         &safe_address,
     )
     .await;
@@ -278,7 +276,7 @@ async fn creation_transaction_to_summary_no_address_info_available() {
     mock_info_provider
         .expect_contract_info()
         .times(3)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let created_date = Utc::now();
     let safe_address = String::from("0x38497");
@@ -313,7 +311,7 @@ async fn creation_transaction_to_summary_no_address_info_available() {
     };
 
     let actual = creation_tx
-        .to_transaction_summary("4", &safe_address, &mut mock_info_provider)
+        .to_transaction_summary(&safe_address, &mut mock_info_provider)
         .await;
 
     assert_eq!(expected, actual);
@@ -326,7 +324,7 @@ async fn creation_transaction_to_summary_address_info_available() {
     mock_info_provider
         .expect_contract_info()
         .times(3)
-        .returning(move |_, _| {
+        .returning(move |_| {
             Ok(AddressInfo {
                 name: "".to_string(),
                 logo_uri: None,
@@ -375,7 +373,7 @@ async fn creation_transaction_to_summary_address_info_available() {
     };
 
     let actual = creation_tx
-        .to_transaction_summary("4", &safe_address, &mut mock_info_provider)
+        .to_transaction_summary(&safe_address, &mut mock_info_provider)
         .await;
 
     assert_eq!(expected, actual);
@@ -393,15 +391,15 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_, _| Ok(token_info));
+        .return_once(move |_| Ok(token_info));
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"),
@@ -432,8 +430,7 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider, "4")
-            .await;
+        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider).await;
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
@@ -450,15 +447,15 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .return_once(move |_, _| Ok(token_info));
+        .return_once(move |_| Ok(token_info));
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"),
@@ -488,8 +485,7 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider, "4")
-            .await;
+        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider).await;
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
@@ -505,12 +501,12 @@ async fn multisig_transaction_to_ether_transfer_summary() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -540,8 +536,7 @@ async fn multisig_transaction_to_ether_transfer_summary() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider, "4")
-            .await;
+        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider).await;
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
@@ -557,7 +552,7 @@ async fn multisig_transaction_to_settings_change_summary() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_contract_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
@@ -605,8 +600,7 @@ async fn multisig_transaction_to_settings_change_summary() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider, "4")
-            .await;
+        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider).await;
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
@@ -621,12 +615,12 @@ async fn multisig_transaction_to_custom_summary() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -655,8 +649,7 @@ async fn multisig_transaction_to_custom_summary() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider, "4")
-            .await;
+        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider).await;
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
@@ -675,12 +668,12 @@ async fn multisig_transaction_with_missing_signers() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionSummary {
         id: create_id!(
@@ -715,8 +708,7 @@ async fn multisig_transaction_with_missing_signers() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider, "4")
-            .await;
+        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider).await;
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }
@@ -734,12 +726,11 @@ async fn ethereum_transaction_with_inconsistent_token_types() {
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let actual = EthereumTransaction::to_transaction_summary(
         &ethereum_tx,
         &mut mock_info_provider,
-        "4",
         "0xBc79855178842FDBA0c353494895DEEf509E26bB",
     )
     .await;
@@ -786,11 +777,11 @@ async fn multisig_transaction_with_origin() {
     mock_info_provider
         .expect_safe_info()
         .times(1)
-        .return_once(move |_, _| Ok(safe_info));
+        .return_once(move |_| Ok(safe_info));
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
     mock_info_provider
         .expect_safe_app_info()
         .times(1)
@@ -834,8 +825,7 @@ async fn multisig_transaction_with_origin() {
     };
 
     let actual =
-        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider, "4")
-            .await;
+        MultisigTransaction::to_transaction_summary(&multisig_tx, &mut mock_info_provider).await;
 
     assert_eq!(&expected, actual.unwrap().get(0).unwrap());
 }

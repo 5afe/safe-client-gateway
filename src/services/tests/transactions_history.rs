@@ -59,10 +59,9 @@ async fn backend_txs_to_summary_txs_empty() {
 
     let mut back_end_txs_iter = backend_txs.results.into_iter();
 
-    let actual =
-        backend_txs_to_summary_txs(&mut back_end_txs_iter, &mut mock_info_provider, "4", "")
-            .await
-            .unwrap();
+    let actual = backend_txs_to_summary_txs(&mut back_end_txs_iter, &mut mock_info_provider, "")
+        .await
+        .unwrap();
     assert_eq!(actual.is_empty(), true);
 }
 
@@ -75,11 +74,11 @@ async fn backend_txs_to_summary_txs_with_values() {
     mock_info_provider
         .expect_token_info()
         .times(3)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(6)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let mut back_end_txs_iter = backend_txs.results.into_iter();
     let expected = vec![
@@ -241,7 +240,6 @@ async fn backend_txs_to_summary_txs_with_values() {
     let actual = backend_txs_to_summary_txs(
         &mut back_end_txs_iter,
         &mut mock_info_provider,
-        "4",
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
     )
     .await
@@ -267,11 +265,11 @@ async fn service_txs_to_tx_list_items_last_timestamp_undefined() {
     mock_info_provider
         .expect_token_info()
         .times(6)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(12)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider).await;
     let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
@@ -326,11 +324,11 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
     mock_info_provider
         .expect_token_info()
         .times(6)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(12)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider).await;
     let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
@@ -386,11 +384,11 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     mock_info_provider
         .expect_token_info()
         .times(6)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(12)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider).await;
     let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
@@ -440,11 +438,11 @@ async fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
     mock_info_provider
         .expect_token_info()
         .times(6)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(12)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider).await;
     let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
@@ -497,11 +495,11 @@ async fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
     mock_info_provider
         .expect_token_info()
         .times(6)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(12)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider).await;
     let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
@@ -558,11 +556,11 @@ async fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
     mock_info_provider
         .expect_token_info()
         .times(6)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(12)
-        .returning(move |_, _| bail!("No address info"));
+        .returning(move |_| bail!("No address info"));
 
     let service_txs = get_service_txs(&mut mock_info_provider).await;
     let service_txs_copy = get_service_txs(&mut mock_info_provider).await;
@@ -623,7 +621,6 @@ async fn peek_timestamp_and_remove_item_empty() {
     peek_timestamp_and_remove_item(
         &mut backend_txs_iter,
         &mut mock_info_provider,
-        "4",
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
         utc_timezone_offset,
     )
@@ -641,11 +638,11 @@ async fn peek_timestamp_and_remove_item_with_items() {
     mock_info_provider
         .expect_token_info()
         .times(1)
-        .returning(move |_, _| bail!("No token info"));
+        .returning(move |_| bail!("No token info"));
     mock_info_provider
         .expect_full_address_info_search()
         .times(1)
-        .return_once(move |_, _| bail!("No address info"));
+        .return_once(move |_| bail!("No address info"));
 
     let backend_txs =
         serde_json::from_str::<Page<Transaction>>(BACKEND_HISTORY_TRANSACTION_LIST_PAGE)
@@ -656,7 +653,6 @@ async fn peek_timestamp_and_remove_item_with_items() {
     let actual_timestamp = peek_timestamp_and_remove_item(
         &mut backend_txs_iter,
         &mut mock_info_provider,
-        "4",
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
         utc_timezone_offset,
     )
@@ -687,7 +683,6 @@ async fn get_service_txs(mock_info_provider: &mut MockInfoProvider) -> Vec<Trans
         result.extend(
             tx.to_transaction_summary(
                 mock_info_provider,
-                "4",
                 "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
             )
             .await

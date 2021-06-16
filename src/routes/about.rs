@@ -1,4 +1,4 @@
-use crate::cache::cache_operations::CacheResponse;
+use crate::cache::cache_operations::{CacheResponse, RequestCached};
 use crate::cache::Cache;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
@@ -30,6 +30,50 @@ pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<cont
         .resp_generator(|| about::about(&context, &chain_id))
         .execute(context.cache())
         .await
+}
+
+/**
+ * `/<chain_id>/about/master-copies`
+ * Returns a list of `MasterCopy`   
+ *
+ * # Master Copies
+ *
+ * This endpoint returns a list of `MasterCopy` objects just as documented in the core services
+ *
+ * ## Path
+ *
+ * `/<chain_id>/about/master-copies` where `chain_id` correspond to the chain id of the desired network
+ *
+ * ## Sample Json
+ * <details>
+ * <summary>JSON sample</summary>
+ *
+ * ```json
+ * [
+ *   {
+ *     "address": "0x8942595A2dC5181Df0465AF0D7be08c8f23C93af",
+ *     "version": "0.1.0",
+ *     "deployer": "Gnosis",
+ *     "deployedBlockNumber": 3392692,
+ *     "lastIndexedBlockNumber": 8774331
+ *   }
+ * ]
+ * ```
+ * </details>
+ */
+
+#[get("/<chain_id>/about/master-copies")]
+pub async fn get_master_copies(
+    context: Context<'_>,
+    chain_id: String,
+) -> ApiResult<content::Json<String>> {
+    let url = ""; // TODO: once other PR is merged use core_uri!
+    Ok(content::Json(
+        RequestCached::new(url.to_string())
+            .cache_duration(about_cache_duration())
+            .execute(context.client(), context.cache())
+            .await?,
+    ))
 }
 
 #[doc(hidden)]

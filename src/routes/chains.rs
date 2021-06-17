@@ -25,8 +25,8 @@ pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<cont
     CacheResponse::new(context.uri())
         .duration(chain_info_cache_duration())
         .resp_generator(async || {
-            let info_provider = DefaultInfoProvider::new(&context);
-            info_provider.chain_info(&chain_id).await
+            let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+            info_provider.chain_info().await
         })
         .execute(context.cache())
         .await
@@ -47,10 +47,14 @@ pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<cont
  */
 #[get("/v1/chains")]
 pub async fn get_chains(context: Context<'_>) -> ApiResult<content::Json<String>> {
-    let url = format!("{}/v1/chains", base_config_service_url(),);
+    let mut url = reqwest::Url::parse(base_config_service_url().as_str())
+        .expect("Bad base config service url");
+    url.path_segments_mut()
+        .expect("Cannot add chain_id to path")
+        .extend(["v1", "chains"]);
 
     Ok(content::Json(
-        RequestCached::new(url)
+        RequestCached::new(url.to_string())
             .request_timeout(chain_info_request_timeout())
             .cache_duration(chain_info_cache_duration())
             .execute(context.client(), context.cache())

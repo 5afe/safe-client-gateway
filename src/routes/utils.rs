@@ -48,6 +48,40 @@ pub async fn post_data_decoder<'e>(
     )?))
 }
 
+/**
+ * `/<chain_id>/safes/<safe_address>/multisig-transactions/estimations`
+ * Returns [SafeTransactionEstimation](crate::models::utils::SafeTransactionEstimation)
+ *
+ * # Safe Gas Estimation
+ *
+ * This endpoint provides a `safeTxGas` according to the transaction passed as part of the request body
+ *
+ * ## Path
+ *
+ * - `/<chain_id>/safes/<safe_address>/multisig-transactions/estimations
+ *
+ * ## Examples
+ *
+ * Example request body:
+ *
+ * ```json
+ * {
+ *   "to": "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02",
+ *   "value": 0,
+ *   "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
+ *   "operation": 0
+ * }
+ * ```
+ *
+ * This results (at the time of writing this documentation) in:
+ *
+ * ```json
+ * {
+ *   "safeTxGas": "43585"
+ * }
+ * ```
+ *
+ */
 #[post(
     "/<chain_id>/safes/<safe_address>/multisig-transactions/estimations",
     format = "application/json",

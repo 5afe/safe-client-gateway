@@ -15,7 +15,7 @@ pub async fn get_safe_info(
     safe_address: String,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
-        .resp_generator(|| get_safe_info_ex(&context, &safe_address))
+        .resp_generator(|| get_safe_info_ex(&context, &chain_id, &safe_address))
         .execute(context.cache())
         .await
 }

@@ -11,6 +11,7 @@ async fn to_safe_info_ex_no_address_info() {
         .expect_contract_info()
         .times(5)
         .returning(move |_| bail!("No safe info"));
+
     let expected = SafeInfoEx {
         address: AddressEx {
             value: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
@@ -95,6 +96,7 @@ async fn to_safe_info_ex_address_info() {
                 logo_uri: Some(format!("logo_uri_{}", &address)),
             })
         });
+
     let expected = SafeInfoEx {
         address: AddressEx {
             value: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),

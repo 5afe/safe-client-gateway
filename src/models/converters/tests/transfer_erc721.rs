@@ -257,6 +257,7 @@ async fn erc721_transfer_dto_get_info_provider_error() {
         .expect_token_info()
         .times(1)
         .return_once(move |_| bail!("No token info"));
+
     let expected = TransferInfo::Erc721(Erc721Transfer {
         token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
         token_id: "37".to_string(),

@@ -264,6 +264,7 @@ async fn erc20_transfer_dto_get_info_provider_error() {
         .expect_token_info()
         .times(1)
         .return_once(|_| bail!("No token info"));
+
     let expected = TransferInfo::Erc20(Erc20Transfer {
         token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
         token_name: None,

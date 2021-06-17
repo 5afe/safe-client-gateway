@@ -1,7 +1,7 @@
 extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
@@ -10,7 +10,7 @@ use crate::models::service::transactions::{
     TransactionIdParts, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX,
     ID_PREFIX_MULTISIG_TX, ID_SEPARATOR,
 };
-use crate::providers::info::DefaultInfoProvider;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
@@ -19,14 +19,11 @@ use log::debug;
 
 pub(super) async fn get_multisig_transaction_details(
     context: &Context<'_>,
+    chain_id: &str,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
-    let mut info_provider = DefaultInfoProvider::new(context);
-    let url = format!(
-        "{}/v1/multisig-transactions/{}/",
-        base_transaction_service_url(),
-        safe_tx_hash
-    );
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
+    let url = core_uri!(info_provider, "/v1/multisig-transactions/{}/", safe_tx_hash)?;
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())
@@ -35,6 +32,7 @@ pub(super) async fn get_multisig_transaction_details(
 
     let rejections = fetch_rejections(
         context,
+        chain_id,
         &multisig_tx.safe_transaction.safe,
         multisig_tx.nonce,
     )
@@ -49,17 +47,18 @@ pub(super) async fn get_multisig_transaction_details(
 
 async fn get_ethereum_transaction_details(
     context: &Context<'_>,
+    chain_id: &str,
     safe: &str,
     tx_hash: &str,
     detail_hash: &str,
 ) -> ApiResult<TransactionDetails> {
-    let mut info_provider = DefaultInfoProvider::new(context);
-    let url = format!(
-        "{}/v1/safes/{}/transfers/?transaction_hash={}&limit=1000",
-        base_transaction_service_url(),
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/transfers/?transaction_hash={}&limit=1000",
         safe,
         tx_hash
-    );
+    )?;
     debug!("url: {}", url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
@@ -84,18 +83,20 @@ async fn get_ethereum_transaction_details(
 
 async fn get_module_transaction_details(
     context: &Context<'_>,
-    safe: &str,
-    tx_hash: &str,
+    chain_id: &str,
+    safe_address: &str,
+    safe_tx_hash: &str,
     detail_hash: &str,
 ) -> ApiResult<TransactionDetails> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
 
-    let url = format!(
-        "{}/v1/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
-        base_transaction_service_url(),
-        safe,
-        tx_hash
-    );
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/module-transactions/?transaction_hash={}&limit=1000",
+        safe_address,
+        safe_tx_hash
+    )?;
+
     debug!("url: {}", url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
@@ -116,6 +117,7 @@ async fn get_module_transaction_details(
 
 pub async fn get_transactions_details(
     context: &Context<'_>,
+    chain_id: &str,
     details_id: &String,
 ) -> ApiResult<TransactionDetails> {
     let id_parts = parse_id(details_id)?;
@@ -128,6 +130,7 @@ pub async fn get_transactions_details(
         } => {
             get_ethereum_transaction_details(
                 context,
+                &chain_id,
                 &safe_address,
                 &transaction_hash,
                 &details_hash,
@@ -139,14 +142,20 @@ pub async fn get_transactions_details(
             transaction_hash,
             details_hash,
         } => {
-            get_module_transaction_details(context, &safe_address, &transaction_hash, &details_hash)
-                .await
+            get_module_transaction_details(
+                context,
+                chain_id,
+                &safe_address,
+                &transaction_hash,
+                &details_hash,
+            )
+            .await
         }
         TransactionIdParts::Multisig { safe_tx_hash, .. } => {
-            get_multisig_transaction_details(context, &safe_tx_hash).await
+            get_multisig_transaction_details(context, chain_id, &safe_tx_hash).await
         }
         TransactionIdParts::TransactionHash(safe_tx_hash) => {
-            get_multisig_transaction_details(context, &safe_tx_hash).await
+            get_multisig_transaction_details(context, chain_id, &safe_tx_hash).await
         }
         _ => Err(client_error!(422, "Bad transaction id")),
     }

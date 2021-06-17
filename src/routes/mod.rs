@@ -30,7 +30,7 @@ pub fn active_routes() -> Vec<Route> {
     routes![
         root,
         about::backbone,
-        about::info,
+        about::get_about,
         about::redis,
         balances::get_balances,
         balances::get_supported_fiat,

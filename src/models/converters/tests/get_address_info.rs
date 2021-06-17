@@ -17,6 +17,7 @@ async fn get_address_info_address_diff_than_safe() {
                 logo_uri: None,
             })
         });
+
     let expected = AddressInfo {
         name: "".to_string(),
         logo_uri: None,

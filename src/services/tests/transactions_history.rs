@@ -56,6 +56,7 @@ async fn backend_txs_to_summary_txs_empty() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+
     let mut back_end_txs_iter = backend_txs.results.into_iter();
 
     let actual = backend_txs_to_summary_txs(&mut back_end_txs_iter, &mut mock_info_provider, "")
@@ -613,6 +614,7 @@ async fn peek_timestamp_and_remove_item_empty() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+
     let backend_txs: Vec<Transaction> = vec![];
     let mut backend_txs_iter = backend_txs.into_iter();
 

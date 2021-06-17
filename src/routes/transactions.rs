@@ -36,7 +36,9 @@ pub async fn get_transactions(
     details_id: String,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
-        .resp_generator(|| transactions_details::get_transactions_details(&context, &details_id))
+        .resp_generator(|| {
+            transactions_details::get_transactions_details(&context, &chain_id, &details_id)
+        })
         .execute(context.cache())
         .await
 }
@@ -74,13 +76,16 @@ pub async fn post_confirmation<'e>(
 ) -> ApiResult<content::Json<String>> {
     transactions_proposal::submit_confirmation(
         &context,
+        &chain_id,
         &safe_tx_hash,
         &tx_confirmation_request?.0.signed_safe_tx_hash,
     )
     .await?;
 
     CacheResponse::new(context.uri())
-        .resp_generator(|| transactions_details::get_transactions_details(&context, &safe_tx_hash))
+        .resp_generator(|| {
+            transactions_details::get_transactions_details(&context, &chain_id, &safe_tx_hash)
+        })
         .execute(context.cache())
         .await
 }
@@ -223,6 +228,7 @@ pub async fn post_transaction<'e>(
 ) -> ApiResult<()> {
     transactions_proposal::propose_transaction(
         &context,
+        &chain_id,
         &safe_address,
         &multisig_transaction_request?.0,
     )

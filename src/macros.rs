@@ -69,16 +69,16 @@ macro_rules! to_hex_string {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! core_uri {
-    ($info_provider:tt, $chain_id:expr, $path:expr) => {{
+    ($info_provider:tt, $path:expr) => {{
         let result: ApiResult<String> =
-        match $info_provider.chain_info($chain_id).await {
-            Ok(chain_info) => Ok(format!("{}{}",chain_info.tx_service_url, $path)),
+        match $info_provider.chain_info().await {
+            Ok(chain_info) => Ok(format!("{}/api{}",chain_info.transaction_service, $path)),
             Err(error) => Err(error,)
         };
         result
     }};
-    ($info_provider:tt, $chain_id:expr, $path:literal, $($arg:tt)*) => {{
+    ($info_provider:tt, $path:literal, $($arg:tt)*) => {{
         let full_path: String = format!($path, $($arg)*);
-        core_uri!($info_provider, $chain_id, full_path)
+        core_uri!($info_provider, full_path)
     }};
 }

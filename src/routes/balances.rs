@@ -40,6 +40,7 @@ pub async fn get_balances(
         .resp_generator(|| {
             balances(
                 &context,
+                chain_id.as_str(),
                 safe_address.as_str(),
                 fiat.as_str(),
                 trusted.unwrap_or(false),

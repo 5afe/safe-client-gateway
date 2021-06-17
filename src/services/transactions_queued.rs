@@ -1,5 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{ConflictType, Label, TransactionListItem};
@@ -19,7 +19,7 @@ pub async fn get_queued_transactions(
     timezone_offset: &Option<String>,
     trusted: &Option<bool>,
 ) -> ApiResult<Page<TransactionListItem>> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
 
     // Parse page meta (offset and limit)
     let page_meta = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
@@ -31,14 +31,14 @@ pub async fn get_queued_transactions(
 
     // As we require the Safe nonce later we use it here explicitely to query transaction that are in the future
     let safe_nonce = info_provider.safe_info(safe_address).await?.nonce as i64;
-    let url = format!(
-        "{}/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
-        base_transaction_service_url(),
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
         safe_address,
         adjusted_page_meta.to_url_string(),
         safe_nonce,
         display_trusted_only
-    );
+    )?;
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())

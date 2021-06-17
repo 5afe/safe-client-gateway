@@ -3,6 +3,7 @@ use std::cmp::max;
 
 pub mod about;
 pub mod balances;
+pub mod collectibles;
 pub mod hooks;
 pub mod safes;
 pub mod transactions_details;

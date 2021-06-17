@@ -2,11 +2,10 @@ use crate::cache::cache_operations::RequestCached;
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
-    address_info_cache_duration, base_config_service_url, base_exchange_api_url,
-    chain_info_cache_duration, chain_info_request_timeout, exchange_api_cache_duration,
-    long_error_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
-    safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
-    token_info_cache_duration, token_info_request_timeout,
+    address_info_cache_duration, base_config_service_url, chain_info_cache_duration,
+    chain_info_request_timeout, long_error_duration, safe_app_info_request_timeout,
+    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
+    short_error_duration, token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::chains::ChainInfo;
 use crate::models::commons::Page;
@@ -70,12 +69,6 @@ struct Manifest {
     pub(super) description: String,
     #[serde(rename(deserialize = "iconPath"))]
     pub(super) icon_path: String,
-}
-
-#[derive(Deserialize, Clone, Debug)]
-pub struct Exchange {
-    pub rates: Option<HashMap<String, f64>>,
-    pub base: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
@@ -204,10 +197,6 @@ impl<'a> DefaultInfoProvider<'a, ServiceCache<'a>> {
             token_cache: Default::default(),
         }
     }
-
-    pub fn new_no_net(context: &'a Context) -> Self {
-        Self::new("No network", context)
-    }
 }
 
 impl<C: Cache> DefaultInfoProvider<'_, C> {
@@ -283,42 +272,5 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }
-    }
-
-    pub async fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
-        if &currency_code.to_lowercase() == "usd" {
-            return Ok(1.0);
-        }
-
-        let currency_code = currency_code.to_uppercase();
-        let exchange = self.fetch_exchange().await?;
-        match exchange.rates {
-            Some(rates) => {
-                let base_to_usd = rates.get("USD").unwrap_or(&0.0);
-                rates
-                    .get(&currency_code)
-                    .cloned()
-                    .map(|base_to_requested_code| base_to_requested_code / base_to_usd)
-                    .ok_or(client_error!(422, "Currency not found"))
-            }
-            None => Err(client_error!(422, "Currency not found")),
-        }
-    }
-
-    pub async fn available_currency_codes(&self) -> ApiResult<Vec<String>> {
-        let exchange = self.fetch_exchange().await?;
-        Ok(exchange
-            .rates
-            .map_or(vec![], |s| s.keys().cloned().collect::<Vec<_>>()))
-    }
-
-    async fn fetch_exchange(&self) -> ApiResult<Exchange> {
-        let url = base_exchange_api_url();
-        let body = RequestCached::new(url)
-            .cache_duration(exchange_api_cache_duration())
-            .error_cache_duration(short_error_duration())
-            .execute(self.client, self.cache)
-            .await?;
-        Ok(serde_json::from_str::<Exchange>(&body)?)
     }
 }

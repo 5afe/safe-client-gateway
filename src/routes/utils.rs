@@ -68,8 +68,8 @@ pub async fn post_data_decoder<'e>(
 }
 
 /**
- * `/<chain_id>/safes/<safe_address>/multisig-transactions/estimations`
- * Returns [SafeTransactionEstimation](crate::models::utils::SafeTransactionEstimation)
+ * `/<chain_id>/safes/<safe_address>/multisig-transactions/estimations` <br />
+ * Returns [SafeTransactionEstimation](crate::models::service::utils::SafeTransactionEstimation)
  *
  * # Safe Gas Estimation
  *

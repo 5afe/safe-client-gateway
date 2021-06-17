@@ -33,8 +33,8 @@ pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<cont
 }
 
 /**
- * `/<chain_id>/about/master-copies`
- * Returns a list of `MasterCopy`   
+ * `/<chain_id>/about/master-copies` <br />
+ * Returns a list of `MasterCopy`
  *
  * # Master Copies
  *

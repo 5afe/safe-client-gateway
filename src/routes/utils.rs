@@ -1,6 +1,5 @@
-use crate::models::service::utils::{
-    DataDecoderRequest, SafeTransactionEstimation, SafeTransactionEstimationRequest,
-};
+use crate::models::service::utils::{DataDecoderRequest, SafeTransactionEstimationRequest};
+use crate::services::utils;
 use crate::services::utils::request_data_decoded;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -86,7 +85,7 @@ pub async fn post_data_decoder<'e>(
  * ```json
  * {
  *   "to": "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02",
- *   "value": 0,
+ *   "value": "0",
  *   "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
  *   "operation": 0
  * }
@@ -111,11 +110,14 @@ pub async fn post_safe_gas_estimation<'e>(
     chain_id: String,
     safe_address: String,
     safe_transaction_estimation_request: Result<Json<SafeTransactionEstimationRequest>, Error<'e>>,
-) { //-> ApiResult<content::Json<String>> {
-     // transactions_proposal::propose_transaction(
-     //     &context,
-     //     &safe_address,
-     //     &multisig_transaction_request?.0,
-     // )
-     // .await
+) -> ApiResult<content::Json<String>> {
+    Ok(content::Json(serde_json::to_string(
+        &utils::estimate_safe_tx_gas(
+            &context,
+            &chain_id,
+            &safe_address,
+            &safe_transaction_estimation_request?.0,
+        )
+        .await?,
+    )?))
 }

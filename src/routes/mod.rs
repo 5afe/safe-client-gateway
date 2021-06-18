@@ -9,6 +9,8 @@ use rocket::Route;
 pub mod about;
 /// # Balance endpoints
 pub mod balances;
+/// # Chain endpoints
+pub mod chains;
 /// # Collectibles endpoint
 pub mod collectibles;
 #[doc(hidden)]
@@ -17,7 +19,6 @@ pub mod health;
 pub mod hooks;
 /// # Safe endpoints
 pub mod safes;
-
 /// # Transactions endpoints
 ///
 /// As presented by the endpoints in this service, we are taking in the types returned by the [transaction service](https://github.com/gnosis/safe-transaction-service-example), which to this data are `Multisig`, `Module` and `Ethereum` transaction types.
@@ -34,6 +35,8 @@ pub fn active_routes() -> Vec<Route> {
         about::redis,
         balances::get_balances,
         balances::get_supported_fiat,
+        chains::get_chain,
+        chains::get_chains,
         collectibles::get_collectibles,
         safes::get_safe_info,
         transactions::get_transactions,

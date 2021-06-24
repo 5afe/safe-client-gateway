@@ -1,6 +1,7 @@
-use crate::models::backend::chains::ChainInfo as BackendChainInfo;
+use crate::models::backend::chains::{ChainInfo as BackendChainInfo, GasPrice};
 use crate::models::service::chains::{
-    ChainInfo as ServiceChainInfo, NativeCurrency as ServiceNativeCurrency, Theme as ServiceTheme,
+    ChainInfo as ServiceChainInfo, GasPrice as ServiceGasPrice,
+    NativeCurrency as ServiceNativeCurrency, Theme as ServiceTheme,
 };
 
 impl From<BackendChainInfo> for ServiceChainInfo {
@@ -22,6 +23,18 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                 background_color: chain_info.theme.background_color,
             },
             ens_registry_address: chain_info.ens_registry_address,
+            gas_price: match chain_info.gas_price {
+                GasPrice::Oracle {
+                    url,
+                    gas_parameter,
+                    gwei_factor,
+                } => ServiceGasPrice::Oracle {
+                    url,
+                    gas_parameter,
+                    gwei_factor,
+                },
+                GasPrice::Fixed { wei_value } => ServiceGasPrice::Fixed { wei_value },
+            },
         }
     }
 }

@@ -25,6 +25,8 @@ pub mod safes;
 ///
 /// The types served by the gate way are `Transfer`, `SettingsChange` and `Custom`. Additionally, we treat the `Creation` transaction as one additional type, as it is meant to be group with the rest of the items in the same UI component in the apps.
 pub mod transactions;
+/// # Utility endpoints
+pub mod utils;
 
 #[doc(hidden)]
 pub fn active_routes() -> Vec<Route> {
@@ -33,6 +35,7 @@ pub fn active_routes() -> Vec<Route> {
         about::backbone,
         about::get_about,
         about::redis,
+        about::get_master_copies,
         balances::get_balances,
         balances::get_supported_fiat,
         chains::get_chain,
@@ -46,7 +49,9 @@ pub fn active_routes() -> Vec<Route> {
         transactions::post_confirmation,
         hooks::update,
         hooks::flush,
-        health::health
+        health::health,
+        utils::post_data_decoder,
+        utils::post_safe_gas_estimation
     ]
 }
 

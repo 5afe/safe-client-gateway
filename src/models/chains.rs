@@ -9,6 +9,7 @@ pub struct ChainInfo {
     pub rpc_url: String,
     pub block_explorer_url: String,
     pub native_currency: NativeCurrency,
+    pub theme: Theme,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
@@ -17,4 +18,11 @@ pub struct NativeCurrency {
     pub name: String,
     pub symbol: String,
     pub decimals: u64,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Theme {
+    pub text_color: String,
+    pub background_color: String,
 }

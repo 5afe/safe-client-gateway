@@ -1,4 +1,4 @@
-use crate::models::chains::{ChainInfo, NativeCurrency};
+use crate::models::chains::{ChainInfo, NativeCurrency, Theme};
 use crate::providers::info::*;
 use crate::utils::errors::ApiResult;
 
@@ -18,6 +18,10 @@ async fn core_uri_success_with_params() {
             symbol: "".to_string(),
             decimals: 0,
         },
+        theme: Theme {
+            text_color: "#fff".to_string(),
+            background_color: "#000".to_string(),
+        },
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -32,7 +36,7 @@ async fn core_uri_success_with_params() {
         exclude_spam
     );
 
-    assert_eq!(url.unwrap(),"https://safe-transaction.mainnet.gnosis.io/api/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/balances/usd/?trusted=false&exclude_spam=true".to_string());
+    assert_eq!(url.unwrap(), "https://safe-transaction.mainnet.gnosis.io/api/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/balances/usd/?trusted=false&exclude_spam=true".to_string());
 }
 
 #[rocket::async_test]
@@ -47,6 +51,10 @@ async fn core_uri_success_without_params() {
             name: "".to_string(),
             symbol: "".to_string(),
             decimals: 0,
+        },
+        theme: Theme {
+            text_color: "#fff".to_string(),
+            background_color: "#000".to_string(),
         },
     };
     let mut mock_info_provider = MockInfoProvider::new();

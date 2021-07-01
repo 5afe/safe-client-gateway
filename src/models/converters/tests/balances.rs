@@ -1,5 +1,6 @@
 use crate::json::{BALANCE_COMPOUND_ETHER, BALANCE_ETHER};
 use crate::models::backend::balances::Balance as BalanceDto;
+use crate::models::chains::NativeCurrency;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
 
@@ -22,7 +23,12 @@ fn ether_balance() {
     };
 
     let usd_to_fiat = 1.0;
-    let actual = balance_dto.to_balance(usd_to_fiat);
+    let native_currency = NativeCurrency {
+        name: "Ether".to_string(),
+        symbol: "ETH".to_string(),
+        decimals: 18,
+    };
+    let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }
@@ -46,7 +52,12 @@ fn erc20_token_balance_usd_balance() {
     };
 
     let usd_to_fiat = 1.0;
-    let actual = balance_dto.to_balance(usd_to_fiat);
+    let native_currency = NativeCurrency {
+        name: "Compound Ether 📈".to_string(),
+        symbol: "cETH".to_string(),
+        decimals: 8,
+    };
+    let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }
@@ -70,7 +81,12 @@ fn erc20_token_balance_fiat_is_twice_usd() {
     };
 
     let usd_to_fiat = 2.0;
-    let actual = balance_dto.to_balance(usd_to_fiat);
+    let native_currency = NativeCurrency {
+        name: "Compound Ether 📈".to_string(),
+        symbol: "cETH".to_string(),
+        decimals: 8,
+    };
+    let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }

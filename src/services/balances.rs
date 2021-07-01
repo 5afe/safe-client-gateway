@@ -38,12 +38,14 @@ pub async fn balances(
         .await
         .unwrap_or(0.0);
 
+    let native_currency = info_provider.chain_info().await?.native_currency;
+
     let mut total_fiat = 0.0;
 
     let mut service_balances: Vec<Balance> = backend_balances
         .into_iter()
         .map(|it| {
-            let balance = it.to_balance(usd_to_fiat);
+            let balance = it.to_balance(usd_to_fiat, &native_currency);
             total_fiat += balance.fiat_balance.parse::<f64>().unwrap_or(0.0);
             balance
         })

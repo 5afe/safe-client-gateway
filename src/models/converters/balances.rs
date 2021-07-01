@@ -1,10 +1,10 @@
-use crate::config::{native_coin_decimals, native_coin_name, native_coin_symbol};
 use crate::models::backend::balances::Balance as BalanceDto;
+use crate::models::chains::NativeCurrency;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
 
 impl BalanceDto {
-    pub fn to_balance(&self, usd_to_fiat: f64) -> Balance {
+    pub fn to_balance(&self, usd_to_fiat: f64, native_coin: &NativeCurrency) -> Balance {
         let fiat_conversion = self.fiat_conversion.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
         let fiat_balance = self.fiat_balance.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
         let token_type = self
@@ -23,17 +23,17 @@ impl BalanceDto {
                     .token
                     .as_ref()
                     .map(|it| it.decimals)
-                    .unwrap_or(native_coin_decimals()),
+                    .unwrap_or(native_coin.decimals),
                 symbol: self
                     .token
                     .as_ref()
                     .map(|it| it.symbol.to_string())
-                    .unwrap_or(native_coin_symbol()),
+                    .unwrap_or(native_coin.symbol.to_string()),
                 name: self
                     .token
                     .as_ref()
                     .map(|it| it.name.to_string())
-                    .unwrap_or(native_coin_name()),
+                    .unwrap_or(native_coin.name.to_string()),
                 logo_uri: self.token.as_ref().map(|it| it.logo_uri.to_string()),
             },
             balance: self.balance.to_owned(),

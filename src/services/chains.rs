@@ -7,18 +7,10 @@ use crate::models::commons::Page;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use reqwest::Url;
-use std::collections::HashMap;
 
-pub async fn get_chains_paginated(
-    context: &Context<'_>,
-    limit: &Option<String>,
-) -> ApiResult<Page<ChainInfo>> {
-    let mut queries: HashMap<&str, String> = HashMap::new();
-    if let Some(limit) = limit {
-        queries.insert("limit", limit.to_string());
-    }
-    let mut url = Url::parse_with_params(base_config_service_url().as_str(), queries)
-        .expect("Bad base config service url");
+pub async fn get_chains_paginated(context: &Context<'_>) -> ApiResult<Page<ChainInfo>> {
+    let mut url =
+        Url::parse(base_config_service_url().as_str()).expect("Bad base config service url");
     url.path_segments_mut()
         .expect("Cannot add chain_id to path")
         .extend(["v1", "chains"]);

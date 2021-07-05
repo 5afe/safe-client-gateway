@@ -1,11 +1,12 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{balances_cache_duration, balances_request_timeout};
 use crate::models::backend::balances::Balance as BalanceDto;
+use crate::models::chains::{ChainInfo, NativeCurrency};
 use crate::models::service::balances::{Balance, Balances};
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiError, ApiResult};
 use std::cmp::Ordering;
 
 pub async fn balances(
@@ -38,12 +39,21 @@ pub async fn balances(
         .await
         .unwrap_or(0.0);
 
+    let native_currency: NativeCurrency = match info_provider.chain_info().await {
+        Ok(chainInfo) => chainInfo.native_currency,
+        Err(_) => NativeCurrency {
+            name: "Ether".to_string(),
+            symbol: "ETH".to_string(),
+            decimals: 18,
+        },
+    };
+
     let mut total_fiat = 0.0;
 
     let mut service_balances: Vec<Balance> = backend_balances
         .into_iter()
         .map(|it| {
-            let balance = it.to_balance(usd_to_fiat);
+            let balance = it.to_balance(usd_to_fiat, &native_currency);
             total_fiat += balance.fiat_balance.parse::<f64>().unwrap_or(0.0);
             balance
         })

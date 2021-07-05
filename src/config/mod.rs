@@ -154,22 +154,6 @@ pub fn build_number() -> Option<String> {
     option_env!("BUILD_NUMBER").map(|it| it.to_string())
 }
 
-pub fn native_coin_decimals() -> u64 {
-    u64_with_default("NATIVE_COIN_DECIMALS", 18)
-}
-
-pub fn native_coin_symbol() -> String {
-    env::var("NATIVE_COIN_SYMBOL")
-        .unwrap_or(String::from("ETH"))
-        .to_string()
-}
-
-pub fn native_coin_name() -> String {
-    env::var("NATIVE_COIN_NAME")
-        .unwrap_or(String::from("Ether"))
-        .to_string()
-}
-
 pub fn version() -> String {
     option_env!("VERSION")
         .unwrap_or(env!("CARGO_PKG_VERSION"))

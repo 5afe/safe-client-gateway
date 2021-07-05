@@ -1,8 +1,7 @@
-use crate::cache::cache_operations::{CacheResponse, RequestCached};
-use crate::config::{
-    base_config_service_url, chain_info_cache_duration, chain_info_request_timeout,
-};
+use crate::cache::cache_operations::CacheResponse;
+use crate::config::chain_info_cache_duration;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::services::chains::get_chains_paginated;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -47,17 +46,8 @@ pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<cont
  */
 #[get("/v1/chains")]
 pub async fn get_chains(context: Context<'_>) -> ApiResult<content::Json<String>> {
-    let mut url = reqwest::Url::parse(base_config_service_url().as_str())
-        .expect("Bad base config service url");
-    url.path_segments_mut()
-        .expect("Cannot add chain_id to path")
-        .extend(["v1", "chains"]);
-
-    Ok(content::Json(
-        RequestCached::new(url.to_string())
-            .request_timeout(chain_info_request_timeout())
-            .cache_duration(chain_info_cache_duration())
-            .execute(context.client(), context.cache())
-            .await?,
-    ))
+    CacheResponse::new(context.uri())
+        .resp_generator(|| get_chains_paginated(&context))
+        .execute(context.cache())
+        .await
 }

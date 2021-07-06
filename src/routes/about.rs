@@ -67,9 +67,10 @@ pub async fn get_master_copies(
     context: Context<'_>,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
-    let url = ""; // TODO: once other PR is merged use core_uri!
+    let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
+    let url = core_uri!(info_provider, "/v1/about/master-copies/")?;
     Ok(content::Json(
-        RequestCached::new(url.to_string())
+        RequestCached::new(url)
             .cache_duration(about_cache_duration())
             .execute(context.client(), context.cache())
             .await?,

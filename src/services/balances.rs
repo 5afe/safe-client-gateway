@@ -1,12 +1,12 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{balances_cache_duration, balances_request_timeout};
 use crate::models::backend::balances::Balance as BalanceDto;
-use crate::models::chains::{ChainInfo, NativeCurrency};
+use crate::models::chains::NativeCurrency;
 use crate::models::service::balances::{Balance, Balances};
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiResult;
 use std::cmp::Ordering;
 
 pub async fn balances(
@@ -40,7 +40,7 @@ pub async fn balances(
         .unwrap_or(0.0);
 
     let native_currency: NativeCurrency = match info_provider.chain_info().await {
-        Ok(chainInfo) => chainInfo.native_currency,
+        Ok(chain_info) => chain_info.native_currency,
         Err(_) => NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),

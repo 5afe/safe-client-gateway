@@ -27,6 +27,7 @@ fn ether_balance() {
         name: "Ether".to_string(),
         symbol: "ETH".to_string(),
         decimals: 18,
+        logo_url: "https://test.token.image.url".to_string(),
     };
     let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
 
@@ -56,6 +57,7 @@ fn erc20_token_balance_usd_balance() {
         name: "Compound Ether 📈".to_string(),
         symbol: "cETH".to_string(),
         decimals: 8,
+        logo_url: "https://test.token.image.url".to_string(),
     };
     let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
 
@@ -85,6 +87,7 @@ fn erc20_token_balance_fiat_is_twice_usd() {
         name: "Compound Ether 📈".to_string(),
         symbol: "cETH".to_string(),
         decimals: 8,
+        logo_url: "https://test.token.image.url".to_string(),
     };
     let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
 

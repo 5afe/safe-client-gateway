@@ -18,6 +18,7 @@ pub struct NativeCurrency {
     pub name: String,
     pub symbol: String,
     pub decimals: u64,
+    pub logo_url: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]

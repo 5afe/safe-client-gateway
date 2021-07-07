@@ -17,6 +17,8 @@ pub mod collectibles;
 pub mod health;
 #[doc(hidden)]
 pub mod hooks;
+/// # Notification endpoints
+pub mod notifications;
 /// # Safe endpoints
 pub mod safes;
 /// # Transactions endpoints

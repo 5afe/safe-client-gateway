@@ -8,7 +8,7 @@ use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
 /**
- * `/<chain_id>/data-decoder` <br/>
+ * `/v1/chains/<chain_id>/data-decoder` <br/>
  * Returns [DataDecoded](crate::models::commons::DataDecoded)
  *
  * # Data Decoder
@@ -19,7 +19,7 @@ use rocket::serde::json::Json;
  *
  * ## Path
  *
- * - `/<chain_id>/data-decoder`
+ * - `/v1/chains/<chain_id>/data-decoder`
  *
  * ## Examples
  *
@@ -52,7 +52,7 @@ use rocket::serde::json::Json;
  *
  */
 #[post(
-    "/<chain_id>/data-decoder",
+    "/v1/chains/<chain_id>/data-decoder",
     format = "application/json",
     data = "<data_decoder_request>"
 )]
@@ -67,7 +67,7 @@ pub async fn post_data_decoder<'e>(
 }
 
 /**
- * `/<chain_id>/safes/<safe_address>/multisig-transactions/estimations` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations` <br />
  * Returns [SafeTransactionEstimation](crate::models::service::utils::SafeTransactionEstimation)
  *
  * # Safe Gas Estimation
@@ -76,7 +76,7 @@ pub async fn post_data_decoder<'e>(
  *
  * ## Path
  *
- * - `/<chain_id>/safes/<safe_address>/multisig-transactions/estimations
+ * - `/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations
  *
  * ## Examples
  *
@@ -101,7 +101,7 @@ pub async fn post_data_decoder<'e>(
  *
  */
 #[post(
-    "/<chain_id>/safes/<safe_address>/multisig-transactions/estimations",
+    "/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations",
     format = "application/json",
     data = "<safe_transaction_estimation_request>"
 )]

@@ -8,7 +8,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 /**
- * `/<chain_id>/about` <br />
+ * `/v1/chains/<chain_id>/about` <br />
  * Returns [About](crate::models::service::about::About)
  *
  * # About
@@ -17,13 +17,13 @@ use rocket::response::content;
  *
  * ## Path
  *
- * `/<chain_id>/about`
+ * `/v1/chains/<chain_id>/about`
  *
  * ## Query parameters
  *
  * There are no query parameters for this endpoint
  */
-#[get("/<chain_id>/about")]
+#[get("/v1/chains/<chain_id>/about")]
 pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .duration(about_cache_duration())
@@ -33,7 +33,7 @@ pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<cont
 }
 
 /**
- * `/<chain_id>/about/master-copies` <br />
+ * `/v1/chains/<chain_id>/about/master-copies` <br />
  * Returns a list of `MasterCopy`
  *
  * # Master Copies
@@ -42,7 +42,7 @@ pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<cont
  *
  * ## Path
  *
- * `/<chain_id>/about/master-copies` where `chain_id` correspond to the chain id of the desired network
+ * `/v1/chains/<chain_id>/about/master-copies` where `chain_id` correspond to the chain id of the desired network
  *
  * ## Sample Json
  * <details>
@@ -62,7 +62,7 @@ pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<cont
  * </details>
  */
 
-#[get("/<chain_id>/about/master-copies")]
+#[get("/v1/chains/<chain_id>/about/master-copies")]
 pub async fn get_master_copies(
     context: Context<'_>,
     chain_id: String,
@@ -78,7 +78,7 @@ pub async fn get_master_copies(
 }
 
 #[doc(hidden)]
-#[get("/<chain_id>/about/backbone")]
+#[get("/v1/chains/<chain_id>/about/backbone")]
 pub async fn backbone(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
     let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
     let url = core_uri!(info_provider, "/v1/about/")?;

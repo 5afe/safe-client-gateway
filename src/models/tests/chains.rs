@@ -18,7 +18,8 @@ fn chain_info_json() {
           "theme": {
             "textColor": "#fff",
             "backgroundColor": "#000"
-      },
+          },
+          "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"
     });
 
     let expected = ChainInfo {
@@ -37,6 +38,7 @@ fn chain_info_json() {
             text_color: "#fff".to_string(),
             background_color: "#000".to_string(),
         },
+        ens_registry_address: Some("0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF".to_string()),
     };
 
     let actual = serde_json::from_str::<ChainInfo>(&chain_info_json.to_string());

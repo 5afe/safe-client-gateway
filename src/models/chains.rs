@@ -10,6 +10,7 @@ pub struct ChainInfo {
     pub block_explorer_url: String,
     pub native_currency: NativeCurrency,
     pub theme: Theme,
+    pub ens_registry_address: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]

@@ -39,15 +39,7 @@ pub async fn balances(
         .await
         .unwrap_or(0.0);
 
-    let native_currency: NativeCurrency = match info_provider.chain_info().await {
-        Ok(chain_info) => chain_info.native_currency,
-        Err(_) => NativeCurrency {
-            name: "Ether".to_string(),
-            symbol: "ETH".to_string(),
-            decimals: 18,
-            logo_url: "https://cryptologos.cc/logos/ethereum-eth-logo.png".to_string(),
-        },
-    };
+    let native_currency: NativeCurrency = info_provider.chain_info().await?.native_currency;
 
     let mut total_fiat = 0.0;
 

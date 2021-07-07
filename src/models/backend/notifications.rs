@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct NotificationRegistrationResult {
     #[serde(flatten)]
     pub notification_device_data: DeviceData,
+    pub safes: Vec<String>,
     pub signatures: Option<Vec<String>>,
     pub owners_registered: Option<Vec<String>>,
     pub owners_not_registered: Option<Vec<String>>,

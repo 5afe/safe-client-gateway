@@ -1,5 +1,6 @@
 use crate::models::backend::notifications::{
     DeviceData, NotificationRegistrationRequest as BackendRegistrationRequest,
+    NotificationRegistrationResult,
 };
 use crate::models::service::notifications::{NotificationRegistrationRequest, SafeRegistration};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
@@ -11,19 +12,23 @@ pub async fn post_registration(
     registration_request: NotificationRegistrationRequest,
 ) -> ApiResult<content::Json<String>> {
     let client = context.client();
+    let mut results: Vec<NotificationRegistrationResult> = vec![];
 
     for safe_registration in registration_request.safe_registrations.iter() {
         let info_provider = DefaultInfoProvider::new(&safe_registration.chain_id, &context);
         let url = core_uri!(info_provider, "/notification/devices")?;
         let backend_request =
             build_backend_request(&registration_request.device_data, safe_registration);
-        // client.post(url.to_string())?.await;
+        let response = client
+            .post(url.to_string())
+            .json(&backend_request)
+            .send()
+            .await?;
 
-        log::error!("URL: {:#? }", url);
-        log::error!("backend request: {:#? }", backend_request);
+        results.push(serde_json::from_str(&response.text().await?)?);
     }
 
-    Ok(content::Json(String::new()))
+    Ok(content::Json(serde_json::to_string(&results)?))
 }
 
 fn build_backend_request(

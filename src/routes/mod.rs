@@ -43,6 +43,7 @@ pub fn active_routes() -> Vec<Route> {
         chains::get_chain,
         chains::get_chains,
         collectibles::get_collectibles,
+        notifications::post_notification_registration,
         safes::get_safe_info,
         transactions::get_transactions,
         transactions::get_transactions_history,

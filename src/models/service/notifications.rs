@@ -40,7 +40,7 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "camelCase")]
 pub struct NotificationRegistrationRequest {
     #[serde(flatten)]
-    pub notification_device_data: DeviceData,
+    pub device_data: DeviceData,
     pub safe_registrations: Vec<SafeRegistration>,
 }
 

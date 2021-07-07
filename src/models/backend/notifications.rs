@@ -9,7 +9,7 @@ pub struct NotificationRegistrationResult {
     pub owners_not_registered: Option<Vec<String>>,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct NotificationRegistrationRequest {
     #[serde(flatten)]
@@ -18,7 +18,7 @@ pub struct NotificationRegistrationRequest {
     pub signatures: Vec<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct DeviceData {
     pub uuid: Option<String>,
@@ -30,7 +30,7 @@ pub struct DeviceData {
     pub timestamp: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum DeviceType {
     Android,

@@ -1,4 +1,4 @@
-use crate::models::backend::notifications::DeviceType;
+use crate::models::backend::notifications::{DeviceData, DeviceType};
 use serde::{Deserialize, Serialize};
 
 /// NotificationRegistrationRequest
@@ -39,13 +39,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct NotificationRegistrationRequest {
-    pub uuid: Option<String>,
-    pub cloud_messaging_token: String,
-    pub build_number: String,
-    pub bundle: String,
-    pub device_type: DeviceType,
-    pub version: String,
-    pub timestamp: Option<String>,
+    #[serde(flatten)]
+    pub notification_device_data: DeviceData,
     pub safe_registrations: Vec<SafeRegistration>,
 }
 

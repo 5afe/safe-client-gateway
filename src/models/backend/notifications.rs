@@ -2,6 +2,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct NotificationRegistrationResult {
+    #[serde(flatten)]
+    pub notification_device_data: NotificationDeviceData,
+    pub signatures: Option<Vec<String>>,
+    pub owners_registered: Option<Vec<String>>,
+    pub owners_not_registered: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct DeviceData {
     pub uuid: Option<String>,
     pub cloud_messaging_token: String,
     pub build_number: String,
@@ -9,9 +19,6 @@ pub struct NotificationRegistrationResult {
     pub device_type: DeviceType,
     pub version: String,
     pub timestamp: Option<String>,
-    pub signatures: Option<Vec<String>>,
-    pub owners_registered: Option<Vec<String>>,
-    pub owners_not_registered: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -25,13 +32,8 @@ pub enum DeviceType {
 #[derive(Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct NotificationRegistrationRequest {
-    pub uuid: Option<String>,
+    #[serde(flatten)]
+    pub notification_device_data: DeviceData,
     pub safes: Vec<String>,
-    pub cloud_messaging_token: String,
-    pub build_number: String,
-    pub bundle: String,
-    pub device_type: DeviceType,
-    pub version: String,
-    pub timestamp: Option<String>,
     pub signatures: Vec<String>,
 }

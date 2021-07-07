@@ -1,4 +1,4 @@
-use crate::models::backend::notifications::{DeviceData, DeviceType};
+use crate::models::backend::notifications::DeviceData;
 use serde::{Deserialize, Serialize};
 
 /// NotificationRegistrationRequest

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct NotificationRegistrationResult {
     #[serde(flatten)]
-    pub notification_device_data: NotificationDeviceData,
+    pub notification_device_data: DeviceData,
     pub signatures: Option<Vec<String>>,
     pub owners_registered: Option<Vec<String>>,
     pub owners_not_registered: Option<Vec<String>>,

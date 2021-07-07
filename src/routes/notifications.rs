@@ -1,6 +1,7 @@
 use crate::utils::context::Context;
 
 use crate::models::service::notifications::NotificationRegistrationRequest;
+use crate::services::notifications::post_registration;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
@@ -35,4 +36,5 @@ pub async fn post_notification_registration<'e>(
     context: Context<'_>,
     registration_request: Result<Json<NotificationRegistrationRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {
+    post_registration(context, registration_request?.0).await
 }

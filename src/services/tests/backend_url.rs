@@ -17,6 +17,7 @@ async fn core_uri_success_with_params() {
             name: "".to_string(),
             symbol: "".to_string(),
             decimals: 0,
+            logo_url: "https://test.token.image.url".to_string(),
         },
         theme: Theme {
             text_color: "#fff".to_string(),
@@ -51,6 +52,7 @@ async fn core_uri_success_without_params() {
             name: "".to_string(),
             symbol: "".to_string(),
             decimals: 0,
+            logo_url: "https://test.token.image.url".to_string(),
         },
         theme: Theme {
             text_color: "#fff".to_string(),

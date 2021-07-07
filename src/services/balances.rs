@@ -45,6 +45,7 @@ pub async fn balances(
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
             decimals: 18,
+            logo_url: "https://cryptologos.cc/logos/ethereum-eth-logo.png".to_string(),
         },
     };
 

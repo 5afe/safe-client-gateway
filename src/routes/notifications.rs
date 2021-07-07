@@ -1,5 +1,6 @@
 use crate::utils::context::Context;
 
+use crate::models::service::notifications::NotificationRegistrationRequest;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
@@ -26,14 +27,12 @@ use rocket::serde::json::Json;
  * No query parameters available for this endpoint.
  */
 #[post(
-    "/v1/transactions/<safe_tx_hash>/confirmations",
+    "/v1/register/notifications",
     format = "application/json",
     data = "<registration_request>"
 )]
 pub async fn post_notification_registration<'e>(
     context: Context<'_>,
-    chain_id: String,
-    safe_tx_hash: String,
     registration_request: Result<Json<NotificationRegistrationRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {
 }

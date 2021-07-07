@@ -12,7 +12,7 @@ use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
 /**
- * `/<chain_id>/v1/transactions/<transaction_id>` <br />
+ * `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
  * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Details
@@ -21,7 +21,7 @@ use rocket::serde::json::Json;
  *
  * ## Path
  *
- * `GET /<chain_id>/v1/transactions/<transaction_id>`
+ * `GET /v1/chains/<chain_id>/transactions/<transaction_id>`
  *
  * `<transaction_id>` can be either an `id` returned by the transaction summary list endpoint or a `safe_tx_hash` from the Safe Transaction API.
  *
@@ -29,7 +29,7 @@ use rocket::serde::json::Json;
  *
  * There aren't any query parameters that can be passed to this endpoint.
  */
-#[get("/<chain_id>/v1/transactions/<details_id>")]
+#[get("/v1/chains/<chain_id>/transactions/<details_id>")]
 pub async fn get_transactions(
     context: Context<'_>,
     chain_id: String,
@@ -44,7 +44,7 @@ pub async fn get_transactions(
 }
 
 /**
- * `/<chain_id>/v1/transactions/<safe_tx_hash>/confirmations` <br />
+ * `/v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations` <br />
  * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Confirmation
@@ -55,7 +55,7 @@ pub async fn get_transactions(
  *
  * ## Path
  *
- * `POST /<chain_id>/v1/transactions/<safe_tx_hash>/confirmations`
+ * `POST /v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations`
  *
  * The expected [crate::models::service::transactions::requests::ConfirmationRequest] body for this request, as well as the returned [crate::models::service::transactions::details::TransactionDetails]
  *
@@ -64,7 +64,7 @@ pub async fn get_transactions(
  * No query parameters available for this endpoint.
  */
 #[post(
-    "/<chain_id>/v1/transactions/<safe_tx_hash>/confirmations",
+    "/v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations",
     format = "application/json",
     data = "<tx_confirmation_request>"
 )]
@@ -91,7 +91,7 @@ pub async fn post_confirmation<'e>(
 }
 
 /**
- * `/<chain_id>/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions History
@@ -114,7 +114,7 @@ pub async fn post_confirmation<'e>(
  *
  * ## Path
  *
- * `GET /<chain_id>/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>`
  *
  * ## Query parameters
  *
@@ -123,7 +123,9 @@ pub async fn post_confirmation<'e>(
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get("/<chain_id>/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>")]
+#[get(
+    "/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>"
+)]
 pub async fn get_transactions_history(
     context: Context<'_>,
     chain_id: String,
@@ -146,7 +148,7 @@ pub async fn get_transactions_history(
 }
 
 /**
- * `/<chain_id>/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of  [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions Queued
@@ -161,7 +163,7 @@ pub async fn get_transactions_history(
  *
  * ## Path
  *
- * `GET /<chain_id>/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>`
  *
  * The response is a list of [crate::models::service::transactions::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
  *
@@ -172,7 +174,7 @@ pub async fn get_transactions_history(
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get("/<chain_id>/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
 pub async fn get_transactions_queued(
     context: Context<'_>,
     chain_id: String,
@@ -197,7 +199,7 @@ pub async fn get_transactions_queued(
 }
 
 /**
- * `/<chain_id>/v1/transactions/<safe_address>/propose` <br />
+ * `/v1/chains/<chain_id>/transactions/<safe_address>/propose` <br />
  * No return value
  *
  * # Transaction Proposal
@@ -207,7 +209,7 @@ pub async fn get_transactions_queued(
  *
  * ## Path
  *
- * `POST /<chain_id>/v1/transactions/<safe_address>/propose`
+ * `POST /v1/chains/<chain_id>/transactions/<safe_address>/propose`
  *
  * The expected [crate::models::service::transactions::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
  *
@@ -216,7 +218,7 @@ pub async fn get_transactions_queued(
  * No query parameters available for this endpoint.
  */
 #[post(
-    "/<chain_id>/v1/transactions/<safe_address>/propose",
+    "/v1/chains/<chain_id>/transactions/<safe_address>/propose",
     format = "application/json",
     data = "<multisig_transaction_request>"
 )]

@@ -12,7 +12,8 @@ fn chain_info_json() {
           "nativeCurrency": {
             "name": "Ether",
             "symbol": "ETH",
-            "decimals": 18
+            "decimals": 18,
+            "logoUrl": "https://test.token.image.url",
           },
           "theme": {
             "textColor": "#fff",
@@ -30,6 +31,7 @@ fn chain_info_json() {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
             decimals: 18,
+            logo_url: "https://test.token.image.url".to_string(),
         },
         theme: Theme {
             text_color: "#fff".to_string(),

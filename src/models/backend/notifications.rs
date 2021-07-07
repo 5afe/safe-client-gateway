@@ -9,6 +9,15 @@ pub struct NotificationRegistrationResult {
     pub owners_not_registered: Option<Vec<String>>,
 }
 
+#[derive(Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct NotificationRegistrationRequest {
+    #[serde(flatten)]
+    pub notification_device_data: DeviceData,
+    pub safes: Vec<String>,
+    pub signatures: Vec<String>,
+}
+
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct DeviceData {
@@ -27,13 +36,4 @@ pub enum DeviceType {
     Android,
     Ios,
     Web,
-}
-
-#[derive(Deserialize, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct NotificationRegistrationRequest {
-    #[serde(flatten)]
-    pub notification_device_data: DeviceData,
-    pub safes: Vec<String>,
-    pub signatures: Vec<String>,
 }

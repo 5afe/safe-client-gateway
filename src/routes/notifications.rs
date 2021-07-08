@@ -8,20 +8,18 @@ use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
 /**
- * `/v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations` <br />
- * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
+ * `/v1/register/notifications` <br />
+ * Returns `()`
  *
- * # Transaction Confirmation
+ * # Register notifications
  *
- * This endpoint provides a way for submitting confirmations for clients making use of the `safe_tx_hash` as part of the path, and the very same `safe_tx_hash` signed by an owner corresponding to the safe from which the transaction is being sent.
+ * This endpoint provides a way for registering devices for push notifications.
  *
- * If the confirmation is submitted successfully to the core services, then the local cache for that specific transaction is invalidated and the updated transaction details with the confirmation are returned in the request.
+ * One can subscribe to as many safes in different chains as [SafeRegistration](crate::models::service::notifications::SafeRegistration) provided in the payload
  *
  * ## Path
  *
- * `POST /v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations`
- *
- * The expected [crate::models::service::transactions::requests::ConfirmationRequest] body for this request, as well as the returned [crate::models::service::transactions::details::TransactionDetails]
+ * `POST /v1/register/notifications`
  *
  * ## Query parameters
  *
@@ -39,6 +37,24 @@ pub async fn post_notification_registration<'e>(
     post_registration(context, registration_request?.0).await
 }
 
+/**
+ * `/v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>` <br />
+ * Returns `()`
+ *
+ * # Register notifications
+ *
+ * This endpoint provides a way to unsubscribe from push notifications for a given `uuid`.
+ *
+ * Clients are expected to manage the `uuid` provided originally to the backend.
+ *
+ * ## Path
+ *
+ * `DELETE /v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>`
+ *
+ * ## Query parameters
+ *
+ * No query parameters available for this endpoint.
+ */
 #[delete("/v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>")]
 pub async fn delete_notification_registration(
     context: Context<'_>,

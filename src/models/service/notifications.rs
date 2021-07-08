@@ -30,8 +30,10 @@ use serde::{Deserialize, Serialize};
 ///          "0x00E17aA063fbDB3BFdEfc2c3b2c13173d2711a35",
 ///          "0x00e17Aa063FbDB3bFdEfC2c3b2C13173D2711A36"
 ///        ],
-///        "signatures": "0x4b574e7c729db54b427dd17a6b2ae3481221642a9d61c52a53f77500d98ddc1d739c39dfb117619fb09a20e3f5070d018e62c37f89fb622ae10b56a6be9af5c11b"
-///      }
+///        "signatures": [
+///          "0x4b574e7c729db54b427dd17a6b2ae3481221642a9d61c52a53f77500d98ddc1d739c39dfb117619fb09a20e3f5070d018e62c37f89fb622ae10b56a6be9af5c11b"
+///        ]
+///       }
 ///    ]
 ///  }
 /// ```

@@ -8,6 +8,27 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
+pub async fn delete_registration(
+    context: Context<'_>,
+    chain_id: String,
+    uuid: String,
+    safe_address: String,
+) -> ApiResult<()> {
+    let client = context.client();
+
+    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+    let url = core_uri!(
+        info_provider,
+        "/notifications/devices/{}/safes/{}/",
+        uuid,
+        safe_address
+    )?;
+
+    client.delete(url).send().await?;
+
+    Ok(())
+}
+
 pub async fn post_registration(
     context: Context<'_>,
     registration_request: NotificationRegistrationRequest,

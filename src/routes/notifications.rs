@@ -3,7 +3,6 @@ use crate::utils::context::Context;
 use crate::models::service::notifications::NotificationRegistrationRequest;
 use crate::services::notifications::{delete_registration, post_registration};
 use crate::utils::errors::ApiResult;
-use rocket::response::content;
 use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 

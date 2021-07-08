@@ -1,12 +1,10 @@
-use crate::models::backend::notifications::{
-    DeviceData, NotificationRegistrationRequest as BackendRegistrationRequest,
-    NotificationRegistrationResult,
+use crate::models::backend::notifications::NotificationRegistrationRequest as BackendRegistrationRequest;
+use crate::models::service::notifications::{
+    DeviceData, NotificationRegistrationRequest, SafeRegistration,
 };
-use crate::models::service::notifications::{NotificationRegistrationRequest, SafeRegistration};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use rocket::response::content;
 
 pub async fn delete_registration(
     context: Context<'_>,

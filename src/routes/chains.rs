@@ -44,10 +44,13 @@ pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<cont
  * - `/v1/chains/` Returns the `ChainInfo` for our services supported networks
  *
  */
-#[get("/v1/chains")]
-pub async fn get_chains(context: Context<'_>) -> ApiResult<content::Json<String>> {
+#[get("/v1/chains?<limit>")]
+pub async fn get_chains(
+    context: Context<'_>,
+    limit: Option<String>,
+) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
-        .resp_generator(|| get_chains_paginated(&context))
+        .resp_generator(|| get_chains_paginated(&context, &limit))
         .execute(context.cache())
         .await
 }

@@ -49,5 +49,5 @@ pub struct NotificationRegistrationRequest {
 pub struct SafeRegistration {
     pub chain_id: String,
     pub safes: Vec<String>,
-    pub signatures: String,
+    pub signatures: Vec<String>,
 }

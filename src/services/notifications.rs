@@ -60,6 +60,6 @@ fn build_backend_request(
     BackendRegistrationRequest {
         notification_device_data: device_data.clone(),
         safes: safe_registration.safes.to_owned(),
-        signatures: vec![safe_registration.signatures.clone()],
+        signatures: safe_registration.signatures.to_owned(),
     }
 }

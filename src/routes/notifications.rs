@@ -40,7 +40,7 @@ pub async fn post_notification_registration<'e>(
  * `/v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>` <br />
  * Returns `()`
  *
- * # Register notifications
+ * # Unregister notifications
  *
  * This endpoint provides a way to unsubscribe from push notifications for a given `uuid`.
  *

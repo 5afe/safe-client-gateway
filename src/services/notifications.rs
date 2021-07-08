@@ -19,7 +19,7 @@ pub async fn delete_registration(
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);
     let url = core_uri!(
         info_provider,
-        "/notifications/devices/{}/safes/{}/",
+        "/v1/notifications/devices/{}/safes/{}/",
         uuid,
         safe_address
     )?;
@@ -32,25 +32,22 @@ pub async fn delete_registration(
 pub async fn post_registration(
     context: Context<'_>,
     registration_request: NotificationRegistrationRequest,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<()> {
     let client = context.client();
-    let mut results: Vec<NotificationRegistrationResult> = vec![];
 
     for safe_registration in registration_request.safe_registrations.iter() {
         let info_provider = DefaultInfoProvider::new(&safe_registration.chain_id, &context);
-        let url = core_uri!(info_provider, "/notification/devices")?;
+        let url = core_uri!(info_provider, "/v1/notifications/devices/")?;
         let backend_request =
             build_backend_request(&registration_request.device_data, safe_registration);
-        let response = client
+        client
             .post(url.to_string())
             .json(&backend_request)
             .send()
             .await?;
-
-        results.push(serde_json::from_str(&response.text().await?)?);
     }
 
-    Ok(content::Json(serde_json::to_string(&results)?))
+    Ok(())
 }
 
 fn build_backend_request(

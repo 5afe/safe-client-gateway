@@ -35,11 +35,11 @@ use rocket::serde::json::Json;
 pub async fn post_notification_registration<'e>(
     context: Context<'_>,
     registration_request: Result<Json<NotificationRegistrationRequest>, Error<'e>>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<()> {
     post_registration(context, registration_request?.0).await
 }
 
-#[delete("/v1/chains/<chain_id>/notificaitons/devices/<uuid>/safes/<safe_address>")]
+#[delete("/v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>")]
 pub async fn delete_notification_registration(
     context: Context<'_>,
     chain_id: String,

@@ -14,7 +14,7 @@ use crate::models::backend::transactions::{
 use crate::models::commons::{DataDecoded, Operation};
 use crate::models::converters::get_address_info;
 use crate::models::service::transactions::{
-    Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, TransactionInfo,
+    Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, TransactionInfo,
     TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
@@ -153,7 +153,7 @@ impl SafeTransaction {
             recipient_info: info_provider.full_address_info_search(&self.to).await.ok(),
             recipient: self.to.to_owned(),
             direction: TransferDirection::Outgoing,
-            transfer_info: TransferInfo::Ether(EtherTransfer {
+            transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: self.value.as_ref().unwrap().to_string(),
             }),
         }

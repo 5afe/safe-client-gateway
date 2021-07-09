@@ -78,7 +78,7 @@ pub enum TransferDirection {
 pub enum TransferInfo {
     Erc20(Erc20Transfer),
     Erc721(Erc721Transfer),
-    Ether(EtherTransfer),
+    NativeCoin(NativeCoinTransfer),
 }
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -104,7 +104,7 @@ pub struct Erc721Transfer {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct EtherTransfer {
+pub struct NativeCoinTransfer {
     pub value: String,
 }
 

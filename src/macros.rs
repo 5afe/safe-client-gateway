@@ -27,10 +27,10 @@ macro_rules! create_id {
 
 macro_rules! bail {
     ($msg:literal $(,)?) => {
-        return Err($crate::api_error!($msg))
+        return Err($crate::api_error!($msg));
     };
     ($fmt:expr, $($arg:tt)*) => {
-        return Err($crate::api_error!($fmt, $($arg)*))
+        return Err($crate::api_error!($fmt, $($arg)*));
     };
 }
 
@@ -44,7 +44,6 @@ macro_rules! api_error {
     };
     ($fmt:expr, $($arg:tt)*) => {
         $crate::utils::errors::ApiError::new_from_message(format!($fmt, $($arg)*))
-        $crate::private::new_adhoc()
     };
 }
 

@@ -15,7 +15,7 @@ fn native_token_balance() {
             decimals: 18,
             symbol: "ETH".to_string(),
             name: "Ether".to_string(),
-            logo_uri: None,
+            logo_uri: Some("https://test.token.image.url".to_string()),
         },
         balance: "7457594371050000001".to_string(),
         fiat_balance: "2523.7991".to_string(),

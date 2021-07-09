@@ -12,6 +12,12 @@ impl BalanceDto {
             .as_ref()
             .map(|_| TokenType::Erc20)
             .unwrap_or(TokenType::NativeToken);
+
+        let logo_uri = if token_type == TokenType::NativeToken {
+            Some(native_coin.logo_url.to_string())
+        } else {
+            self.token.as_ref().map(|it| it.logo_uri.to_string())
+        };
         Balance {
             token_info: TokenInfo {
                 token_type,
@@ -34,7 +40,7 @@ impl BalanceDto {
                     .as_ref()
                     .map(|it| it.name.to_string())
                     .unwrap_or(native_coin.name.to_string()),
-                logo_uri: self.token.as_ref().map(|it| it.logo_uri.to_string()),
+                logo_uri,
             },
             balance: self.balance.to_owned(),
             fiat_balance: fiat_balance.to_string(),

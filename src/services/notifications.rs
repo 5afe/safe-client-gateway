@@ -60,11 +60,14 @@ pub async fn post_registration(
         let mut output: Vec<&str> = vec![];
 
         for (chain_id, request) in requests.into_iter() {
-            // we have to hid http errors here (like bad url in the config server)
             if let Ok(response) = request.await {
+                // tx service errors
                 if let Err(_) = forward_error(response).await {
                     output.push(chain_id);
                 }
+            } else {
+                // reqwest failures (unreachable urls, do we need to handle?)
+                output.push(chain_id);
             };
         }
         output

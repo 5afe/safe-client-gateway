@@ -11,7 +11,7 @@ impl BalanceDto {
             .token_address
             .as_ref()
             .map(|_| TokenType::Erc20)
-            .unwrap_or(TokenType::Ether);
+            .unwrap_or(TokenType::NativeToken);
         Balance {
             token_info: TokenInfo {
                 token_type,

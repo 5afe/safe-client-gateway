@@ -5,12 +5,12 @@ use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
 
 #[test]
-fn ether_balance() {
+fn native_token_balance() {
     let balance_dto = serde_json::from_str::<BalanceDto>(BALANCE_ETHER).unwrap();
 
     let expected = Balance {
         token_info: TokenInfo {
-            token_type: TokenType::Ether,
+            token_type: TokenType::NativeToken,
             address: "0x0000000000000000000000000000000000000000".to_string(),
             decimals: 18,
             symbol: "ETH".to_string(),

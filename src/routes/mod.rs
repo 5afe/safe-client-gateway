@@ -17,6 +17,8 @@ pub mod collectibles;
 pub mod health;
 #[doc(hidden)]
 pub mod hooks;
+/// # Notification endpoints
+pub mod notifications;
 /// # Safe endpoints
 pub mod safes;
 /// # Transactions endpoints
@@ -41,6 +43,8 @@ pub fn active_routes() -> Vec<Route> {
         chains::get_chain,
         chains::get_chains,
         collectibles::get_collectibles,
+        notifications::post_notification_registration,
+        notifications::delete_notification_registration,
         safes::get_safe_info,
         transactions::get_transactions,
         transactions::get_transactions_history,

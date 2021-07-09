@@ -23,6 +23,7 @@ async fn core_uri_success_with_params() {
             text_color: "#fff".to_string(),
             background_color: "#000".to_string(),
         },
+        ens_registry_address: None,
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -58,6 +59,7 @@ async fn core_uri_success_without_params() {
             text_color: "#fff".to_string(),
             background_color: "#000".to_string(),
         },
+        ens_registry_address: None,
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider

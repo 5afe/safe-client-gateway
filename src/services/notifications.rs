@@ -98,7 +98,7 @@ async fn forward_error(response: reqwest::Response) -> ApiResult<()> {
     if !response.status().is_success() {
         Err(ApiError::from_http_response(
             response,
-            String::from("Unexpected tx confirmation error"),
+            String::from("Unexpected notification registration error"),
         )
         .await)
     } else {

@@ -5,6 +5,7 @@ use crate::models::service::notifications::{
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use rocket::futures::{self, stream, StreamExt, TryFuture, TryStream, TryStreamExt};
 
 pub async fn delete_registration(
     context: Context<'_>,
@@ -33,28 +34,32 @@ pub async fn post_registration(
 ) -> ApiResult<()> {
     let client = context.client();
 
-    for safe_registration in registration_request.safe_registrations.iter() {
-        let info_provider = DefaultInfoProvider::new(&safe_registration.chain_id, &context);
-        let url = core_uri!(info_provider, "/v1/notifications/devices/")?;
-        let backend_request =
-            build_backend_request(&registration_request.device_data, safe_registration);
-        client
-            .post(url.to_string())
-            .json(&backend_request)
-            .send()
-            .await?;
-    }
+    let stream = stream::iter(registration_request.safe_registrations.into_iter());
+    stream
+        .try_for_each_concurrent(32, |safe_registration| async move {
+            let info_provider = DefaultInfoProvider::new(&safe_registration.chain_id, &context);
+            let url = core_uri!(info_provider, "/v1/notifications/devices/")?;
+            let backend_request =
+                build_backend_request(&registration_request.device_data, safe_registration);
+            client
+                .post(url.to_string())
+                .json(&backend_request)
+                .send()
+                .await?;
+            Ok(())
+        })
+        .await?;
 
     Ok(())
 }
 
 fn build_backend_request(
     device_data: &DeviceData,
-    safe_registration: &SafeRegistration,
+    safe_registration: SafeRegistration,
 ) -> BackendRegistrationRequest {
     BackendRegistrationRequest {
         notification_device_data: device_data.clone(),
-        safes: safe_registration.safes.to_owned(),
-        signatures: safe_registration.signatures.to_owned(),
+        safes: safe_registration.safes,
+        signatures: safe_registration.signatures,
     }
 }

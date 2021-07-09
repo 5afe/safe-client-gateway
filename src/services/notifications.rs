@@ -1,3 +1,4 @@
+use crate::config::default_request_timeout;
 use crate::models::backend::notifications::NotificationRegistrationRequest as BackendRegistrationRequest;
 use crate::models::service::notifications::{
     DeviceData, NotificationRegistrationRequest, SafeRegistration,
@@ -5,7 +6,8 @@ use crate::models::service::notifications::{
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use rocket::futures::{self, stream, StreamExt, TryFuture, TryStream, TryStreamExt};
+use std::time::Duration;
+// use rocket::futures::{self, stream, StreamExt, TryFuture, TryStream, TryStreamExt};
 
 pub async fn delete_registration(
     context: Context<'_>,
@@ -23,7 +25,11 @@ pub async fn delete_registration(
         safe_address
     )?;
 
-    client.delete(url).send().await?;
+    client
+        .delete(url)
+        .timeout(Duration::from_millis(default_request_timeout()))
+        .send()
+        .await?;
 
     Ok(())
 }
@@ -33,22 +39,26 @@ pub async fn post_registration(
     registration_request: NotificationRegistrationRequest,
 ) -> ApiResult<()> {
     let client = context.client();
+    let mut requests = Vec::with_capacity(registration_request.safe_registrations.len());
 
-    let stream = stream::iter(registration_request.safe_registrations.into_iter());
-    stream
-        .try_for_each_concurrent(32, |safe_registration| async move {
-            let info_provider = DefaultInfoProvider::new(&safe_registration.chain_id, &context);
-            let url = core_uri!(info_provider, "/v1/notifications/devices/")?;
-            let backend_request =
-                build_backend_request(&registration_request.device_data, safe_registration);
+    for safe_registration in registration_request.safe_registrations.into_iter() {
+        let info_provider = DefaultInfoProvider::new(&safe_registration.chain_id, &context);
+        let url = core_uri!(info_provider, "/v1/notifications/devices/")?;
+        let backend_request =
+            build_backend_request(&registration_request.device_data, safe_registration);
+
+        requests.push(
             client
                 .post(url.to_string())
                 .json(&backend_request)
-                .send()
-                .await?;
-            Ok(())
-        })
-        .await?;
+                .timeout(Duration::from_millis(default_request_timeout()))
+                .send(),
+        );
+    }
+
+    for request in requests.into_iter() {
+        request.await?;
+    }
 
     Ok(())
 }

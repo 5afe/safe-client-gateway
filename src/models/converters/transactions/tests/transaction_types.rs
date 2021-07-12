@@ -2,7 +2,7 @@ use crate::models::backend::transactions::{ModuleTransaction, MultisigTransactio
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Parameter};
 use crate::models::service::transactions::{
-    Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, SettingsInfo,
+    Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, SettingsInfo,
     TransactionInfo, Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::address_info::AddressInfo;
@@ -121,7 +121,7 @@ async fn transaction_data_size_0_value_greater_than_0() {
         recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
         recipient_info: None,
         direction: TransferDirection::Outgoing,
-        transfer_info: TransferInfo::Ether(EtherTransfer {
+        transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "100000000000000000".to_string(),
         }),
     });
@@ -149,7 +149,7 @@ async fn module_transaction_data_size_0_value_greater_than_0() {
         recipient: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
         recipient_info: None,
         direction: TransferDirection::Outgoing,
-        transfer_info: TransferInfo::Ether(EtherTransfer {
+        transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "100000000000000000".to_string(),
         }),
     });

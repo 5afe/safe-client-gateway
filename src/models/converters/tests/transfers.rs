@@ -4,8 +4,8 @@ use crate::models::backend::transfers::{
 };
 use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::{
-    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, Transfer,
-    TransferDirection, TransferInfo,
+    Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, TransactionStatus,
+    Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::info::*;
 
@@ -115,7 +115,7 @@ async fn ether_transfer_dto_to_transaction_info() {
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         recipient_info: None,
         direction: TransferDirection::Incoming,
-        transfer_info: (TransferInfo::Ether(EtherTransfer {
+        transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "1000000000000000".to_string(),
         })),
     });
@@ -186,7 +186,7 @@ async fn transfer_dto_to_transaction_details() {
             recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
             recipient_info: None,
             direction: TransferDirection::Incoming,
-            transfer_info: (TransferInfo::Ether(EtherTransfer {
+            transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: "1000000000000000".to_string(),
             })),
         }),

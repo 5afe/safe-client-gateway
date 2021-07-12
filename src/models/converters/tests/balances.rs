@@ -5,17 +5,17 @@ use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
 
 #[test]
-fn ether_balance() {
+fn native_token_balance() {
     let balance_dto = serde_json::from_str::<BalanceDto>(BALANCE_ETHER).unwrap();
 
     let expected = Balance {
         token_info: TokenInfo {
-            token_type: TokenType::Ether,
+            token_type: TokenType::NativeToken,
             address: "0x0000000000000000000000000000000000000000".to_string(),
             decimals: 18,
             symbol: "ETH".to_string(),
             name: "Ether".to_string(),
-            logo_uri: None,
+            logo_uri: Some("https://test.token.image.url".to_string()),
         },
         balance: "7457594371050000001".to_string(),
         fiat_balance: "2523.7991".to_string(),

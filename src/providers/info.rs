@@ -36,7 +36,7 @@ lazy_static! {
 pub enum TokenType {
     Erc721,
     Erc20,
-    Ether,
+    NativeToken,
     #[serde(other)]
     Unknown,
 }

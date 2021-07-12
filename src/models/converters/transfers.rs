@@ -7,7 +7,8 @@ use crate::models::converters::get_address_info;
 use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::Transfer as ServiceTransfer;
 use crate::models::service::transactions::{
-    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, TransferInfo,
+    Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, TransactionStatus,
+    TransferInfo,
 };
 use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use crate::utils::errors::ApiResult;
@@ -142,7 +143,7 @@ impl EtherTransferDto {
     }
 
     pub(super) fn to_transfer_info(&self) -> TransferInfo {
-        TransferInfo::Ether(EtherTransfer {
+        TransferInfo::NativeCoin(NativeCoinTransfer {
             value: self.value.clone(),
         })
     }

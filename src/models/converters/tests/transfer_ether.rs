@@ -2,7 +2,7 @@ use crate::models::backend::transfers::{
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
 use crate::models::service::transactions::{
-    EtherTransfer, Transfer, TransferDirection, TransferInfo,
+    NativeCoinTransfer, Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
@@ -24,7 +24,7 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction() {
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         recipient_info: None,
         direction: TransferDirection::Incoming,
-        transfer_info: (TransferInfo::Ether(EtherTransfer {
+        transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "1000000000000000".to_string(),
         })),
     };
@@ -64,7 +64,7 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_inf
         recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         recipient_info: None,
         direction: TransferDirection::Incoming,
-        transfer_info: (TransferInfo::Ether(EtherTransfer {
+        transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "1000000000000000".to_string(),
         })),
     };
@@ -104,7 +104,7 @@ async fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_inf
             logo_uri: None,
         }),
         direction: TransferDirection::Outgoing,
-        transfer_info: (TransferInfo::Ether(EtherTransfer {
+        transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "1000000000000000".to_string(),
         })),
     };
@@ -123,7 +123,7 @@ async fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_inf
 fn ether_transfer_dto_to_transfer_info() {
     let ether_transfer_dto =
         serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap();
-    let expected = TransferInfo::Ether(EtherTransfer {
+    let expected = TransferInfo::NativeCoin(NativeCoinTransfer {
         value: "1000000000000000".to_string(),
     });
 

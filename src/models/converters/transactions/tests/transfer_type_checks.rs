@@ -2,8 +2,8 @@ use crate::models::backend::transactions::{Confirmation, MultisigTransaction, Sa
 use crate::models::commons::Operation;
 use crate::models::commons::{DataDecoded, Parameter};
 use crate::models::service::transactions::{
-    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, Transfer, TransferDirection,
-    TransferInfo,
+    Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, Transfer,
+    TransferDirection, TransferInfo,
 };
 use crate::providers::info::*;
 use chrono::Utc;
@@ -286,7 +286,7 @@ async fn multisig_tx_check_ether_transfer() {
         recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
         recipient_info: None,
         direction: TransferDirection::Outgoing,
-        transfer_info: TransferInfo::Ether(EtherTransfer {
+        transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "50000000000000".to_string(),
         }),
     });

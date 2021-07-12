@@ -10,8 +10,8 @@ use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::converters::transactions::data_size;
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
-    Creation, Custom, Erc20Transfer, Erc721Transfer, EtherTransfer, SettingsChange, SettingsInfo,
-    TransactionInfo, TransactionStatus, Transfer, TransferDirection, TransferInfo,
+    Creation, Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange,
+    SettingsInfo, TransactionInfo, TransactionStatus, Transfer, TransferDirection, TransferInfo,
     ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
 };
 use crate::providers::address_info::AddressInfo;
@@ -237,7 +237,7 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
                 recipient: "".to_string(),
                 recipient_info: None,
                 direction: TransferDirection::Unknown,
-                transfer_info: TransferInfo::Ether(EtherTransfer {
+                transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                     value: "1".to_string(),
                 }),
             }),
@@ -259,7 +259,7 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
                 recipient: "".to_string(),
                 recipient_info: None,
                 direction: TransferDirection::Unknown,
-                transfer_info: TransferInfo::Ether(EtherTransfer {
+                transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                     value: "1".to_string(),
                 }),
             }),
@@ -522,7 +522,7 @@ async fn multisig_transaction_to_ether_transfer_summary() {
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
             recipient_info: None,
             direction: TransferDirection::Outgoing,
-            transfer_info: TransferInfo::Ether(EtherTransfer {
+            transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: "100000000000000000".to_string(),
             }),
         }),
@@ -689,7 +689,7 @@ async fn multisig_transaction_with_missing_signers() {
             recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
             recipient_info: None,
             direction: TransferDirection::Outgoing,
-            transfer_info: TransferInfo::Ether(EtherTransfer {
+            transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: "100000000000000000".to_string(),
             }),
         }),

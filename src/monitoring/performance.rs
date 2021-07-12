@@ -47,7 +47,8 @@ impl Fairing for PerformanceMonitor {
 
 pub(super) fn extract_chain_id(path: &Path) -> String {
     let chain_id = path.segments().get(2);
-    if path.to_string().starts_with("/v1/chains/") && chain_id.is_some() {
+    let contains_chains = path.segments().get(1).map_or(false, |it| it == "chains");
+    if contains_chains && chain_id.is_some() {
         chain_id.unwrap().to_string()
     } else {
         String::from("-1")

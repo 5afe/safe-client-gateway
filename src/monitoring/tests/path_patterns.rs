@@ -23,3 +23,11 @@ fn chain_info_all() {
     let actual = extract_chain_id(&uri.path());
     assert_eq!("-1", actual);
 }
+
+#[test]
+fn chain_independent_endpoint() {
+    let uri = uri!("/about/redis/");
+
+    let actual = extract_chain_id(&uri.path());
+    assert_eq!("-1", actual);
+}

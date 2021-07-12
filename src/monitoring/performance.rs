@@ -20,6 +20,7 @@ impl Fairing for PerformanceMonitor {
 
     async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
         let request_path = request.uri().path();
+
         let chain_id = extract_chain_id(&request_path);
 
         let route = request
@@ -38,7 +39,7 @@ impl Fairing for PerformanceMonitor {
             route,
             delta,
             status_code,
-            request_path.to_string(),
+            request.uri().to_string(), // full path with query params
             chain_id
         );
     }

@@ -1,5 +1,6 @@
 use chrono::Utc;
 use lazy_static::lazy_static;
+use regex::Regex;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::{Data, Request, Response};
 

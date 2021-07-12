@@ -95,13 +95,13 @@ fn build_backend_request(
 }
 
 async fn forward_error(response: reqwest::Response) -> ApiResult<()> {
-    if !response.status().is_success() {
+    if response.status().is_success() {
+        Ok(())
+    } else {
         Err(ApiError::from_http_response(
             response,
             String::from("Unexpected notification registration error"),
         )
         .await)
-    } else {
-        Ok(())
     }
 }

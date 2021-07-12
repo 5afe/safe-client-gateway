@@ -152,7 +152,7 @@ jobs:
       - name: Deploy interstellar
         if: github.ref == 'refs/heads/interstellar'
         run: |
-          bash scripts/deploy_docker.sh interstellar |
+          bash scripts/deploy_docker.sh interstellar
           curl -H "Content-Type: application/json" -X POST -d '{"push_data": {"tag": "staging" }}' ${{ secrets.AUTODEPLOY_URL }}
 
       - name: Deploy tag

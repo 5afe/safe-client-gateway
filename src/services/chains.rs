@@ -1,27 +1,18 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{
-    base_config_service_url, chain_info_cache_duration, chain_info_request_timeout,
-};
+use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
 use crate::models::chains::ChainInfo;
 use crate::models::commons::Page;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use reqwest::Url;
-use std::collections::HashMap;
 
 pub async fn get_chains_paginated(
     context: &Context<'_>,
     limit: &Option<String>,
 ) -> ApiResult<Page<ChainInfo>> {
-    let mut queries: HashMap<&str, String> = HashMap::new();
-    if let Some(limit) = limit {
-        queries.insert("limit", limit.to_string());
-    }
-    let mut url = Url::parse_with_params(base_config_service_url().as_str(), queries)
-        .expect("Bad base config service url");
-    url.path_segments_mut()
-        .expect("Cannot add chain_id to path")
-        .extend(["v1", "chains"]);
+    let url = config_uri!(
+        "/v1/chains/?limit={}",
+        limit.as_ref().unwrap_or(&"".to_string())
+    );
 
     let body = RequestCached::new(url.to_string())
         .request_timeout(chain_info_request_timeout())

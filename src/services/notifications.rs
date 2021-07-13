@@ -5,9 +5,8 @@ use crate::models::service::notifications::{
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiError, ApiResult};
 use std::time::Duration;
-// use rocket::futures::{self, stream, StreamExt, TryFuture, TryStream, TryStreamExt};
 
 pub async fn delete_registration(
     context: Context<'_>,
@@ -25,13 +24,13 @@ pub async fn delete_registration(
         safe_address
     )?;
 
-    client
+    let response = client
         .delete(url)
         .timeout(Duration::from_millis(default_request_timeout()))
         .send()
         .await?;
 
-    Ok(())
+    forward_error(response).await
 }
 
 pub async fn post_registration(
@@ -41,35 +40,68 @@ pub async fn post_registration(
     let client = context.client();
     let mut requests = Vec::with_capacity(registration_request.safe_registrations.len());
 
-    for safe_registration in registration_request.safe_registrations.into_iter() {
+    for safe_registration in registration_request.safe_registrations.iter() {
         let info_provider = DefaultInfoProvider::new(&safe_registration.chain_id, &context);
         let url = core_uri!(info_provider, "/v1/notifications/devices/")?;
         let backend_request =
             build_backend_request(&registration_request.device_data, safe_registration);
 
-        requests.push(
+        requests.push((
+            &safe_registration.chain_id,
             client
                 .post(url.to_string())
                 .json(&backend_request)
                 .timeout(Duration::from_millis(default_request_timeout()))
                 .send(),
-        );
+        ));
     }
 
-    for request in requests.into_iter() {
-        request.await?;
-    }
+    let chain_id_errors = {
+        let mut output: Vec<&str> = vec![];
 
-    Ok(())
+        for (chain_id, request) in requests.into_iter() {
+            if let Ok(response) = request.await {
+                // tx service errors
+                if let Err(_) = forward_error(response).await {
+                    output.push(chain_id);
+                }
+            } else {
+                // reqwest failures (unreachable urls, do we need to handle?)
+                output.push(chain_id);
+            };
+        }
+        output
+    };
+
+    if chain_id_errors.is_empty() {
+        Ok(())
+    } else {
+        bail!(
+            "Push notification registration failed for chain ids: {}",
+            chain_id_errors.join(", ")
+        )
+    }
 }
 
 fn build_backend_request(
     device_data: &DeviceData,
-    safe_registration: SafeRegistration,
+    safe_registration: &SafeRegistration,
 ) -> BackendRegistrationRequest {
     BackendRegistrationRequest {
         notification_device_data: device_data.clone(),
-        safes: safe_registration.safes,
-        signatures: safe_registration.signatures,
+        safes: safe_registration.safes.to_owned(),
+        signatures: safe_registration.signatures.to_owned(),
+    }
+}
+
+async fn forward_error(response: reqwest::Response) -> ApiResult<()> {
+    if response.status().is_success() {
+        Ok(())
+    } else {
+        Err(ApiError::from_http_response(
+            response,
+            String::from("Unexpected notification registration error"),
+        )
+        .await)
     }
 }

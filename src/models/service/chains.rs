@@ -33,7 +33,7 @@ pub struct Theme {
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(tag = "type")]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum GasPrice {
     #[serde(rename_all = "camelCase")]
     Oracle {

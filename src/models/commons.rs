@@ -71,3 +71,16 @@ impl From<String> for ParamValue {
         ParamValue::SingleValue(item)
     }
 }
+
+impl<T> Page<T> {
+    pub fn map_inner<U>(self) -> Page<U>
+    where
+        U: From<T>,
+    {
+        Page {
+            next: self.next,
+            previous: self.previous,
+            results: self.results.into_iter().map(|it| U::from(it)).collect(),
+        }
+    }
+}

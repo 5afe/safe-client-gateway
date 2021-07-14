@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
-use crate::models::chains::ChainInfo;
+use crate::models::backend::chains::ChainInfo as BackendChainInfo;
 use crate::models::commons::Page;
 use crate::models::service::chains::ChainInfo as ServiceChainInfo;
 use crate::utils::context::Context;
@@ -9,7 +9,7 @@ use crate::utils::errors::ApiResult;
 pub async fn get_chains_paginated(
     context: &Context<'_>,
     limit: &Option<String>,
-) -> ApiResult<Page<ChainInfo>> {
+) -> ApiResult<Page<ServiceChainInfo>> {
     let url = config_uri!(
         "/v1/chains/?limit={}",
         limit.as_ref().unwrap_or(&"".to_string())

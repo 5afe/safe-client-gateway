@@ -12,6 +12,7 @@ pub struct SafeInfoEx {
     pub fallback_handler: Option<AddressEx>,
     pub guard: Option<AddressEx>,
     pub version: Option<String>,
+    pub implementation_version_state: ImplementationVersionState,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -39,4 +40,12 @@ pub struct SafeState {
     pub safe_config: SafeInfoEx,
     #[serde(flatten)]
     pub safe_state: SafeLastChanges,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ImplementationVersionState {
+    UpToDate,
+    OutDated { link: String }, // link to latest release in github to contract repo?
+    Unknown,
 }

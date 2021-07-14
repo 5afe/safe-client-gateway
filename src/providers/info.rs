@@ -2,10 +2,10 @@ use crate::cache::cache_operations::RequestCached;
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
-    address_info_cache_duration, base_config_service_url, chain_info_cache_duration,
-    chain_info_request_timeout, long_error_duration, safe_app_info_request_timeout,
-    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
-    short_error_duration, token_info_cache_duration, token_info_request_timeout,
+    address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,
+    long_error_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
+    safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
+    token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::chains::ChainInfo;
 use crate::models::commons::Page;
@@ -106,12 +106,8 @@ pub struct DefaultInfoProvider<'p, C: Cache> {
 #[rocket::async_trait]
 impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     async fn chain_info(&self) -> ApiResult<ChainInfo> {
-        let mut url = reqwest::Url::parse(base_config_service_url().as_str())
-            .expect("Bad base config service url");
-        url.path_segments_mut()
-            .expect("Cannot add chain_id to path")
-            .extend(["v1", "chains", self.chain_id]);
-        let data = RequestCached::new(url.into_string())
+        let url = config_uri!("/v1/chains/{}", self.chain_id);
+        let data = RequestCached::new(url)
             .cache_duration(chain_info_cache_duration())
             .error_cache_duration(short_error_duration())
             .request_timeout(chain_info_request_timeout())

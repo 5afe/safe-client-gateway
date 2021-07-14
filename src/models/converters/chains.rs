@@ -1,4 +1,5 @@
 use crate::models::backend::chains::ChainInfo as BackendChainInfo;
+use crate::models::commons::Page;
 use crate::models::service::chains::{
     ChainInfo as ServiceChainInfo, NativeCurrency as ServiceNativeCurrency, Theme as ServiceTheme,
 };
@@ -22,6 +23,19 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                 background_color: chain_info.theme.background_color,
             },
             ens_registry_address: chain_info.ens_registry_address,
+        }
+    }
+}
+
+impl<T> Page<T> {
+    pub fn map_inner<U>(self) -> Page<U>
+    where
+        U: From<T>,
+    {
+        Page {
+            next: self.next,
+            previous: self.previous,
+            results: self.results.into_iter().map(|it| U::from(it)).collect(),
         }
     }
 }

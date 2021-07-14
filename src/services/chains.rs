@@ -22,10 +22,5 @@ pub async fn get_chains_paginated(
         .await?;
 
     let page = serde_json::from_str::<Page<BackendChainInfo>>(&body)?;
-    let page: Page<ServiceChainInfo> = Page {
-        next: page.next,
-        previous: page.previous,
-        results: page.results.into_iter().map(|it| it.into()).collect(),
-    };
-    Ok(page.into())
+    Ok(page.map_inner())
 }

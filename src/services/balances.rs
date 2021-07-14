@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{balances_cache_duration, balances_request_timeout};
 use crate::models::backend::balances::Balance as BalanceDto;
-use crate::models::chains::NativeCurrency;
+use crate::models::backend::chains::NativeCurrency;
 use crate::models::service::balances::{Balance, Balances};
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};

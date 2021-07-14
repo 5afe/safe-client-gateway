@@ -3,6 +3,7 @@ use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
 use crate::models::backend::chains::ChainInfo as BackendChainInfo;
 use crate::models::commons::Page;
 use crate::models::service::chains::ChainInfo as ServiceChainInfo;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 
@@ -23,4 +24,12 @@ pub async fn get_chains_paginated(
 
     let page = serde_json::from_str::<Page<BackendChainInfo>>(&body)?;
     Ok(page.map_inner())
+}
+
+pub async fn get_single_chain(
+    context: &Context<'_>,
+    chain_id: &str,
+) -> ApiResult<ServiceChainInfo> {
+    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+    Ok(info_provider.chain_info().await?.into())
 }

@@ -1,7 +1,6 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::chain_info_cache_duration;
-use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::services::chains::get_chains_paginated;
+use crate::services::chains::{get_chains_paginated, get_single_chain};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -23,10 +22,7 @@ use rocket::response::content;
 pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .duration(chain_info_cache_duration())
-        .resp_generator(async || {
-            let info_provider = DefaultInfoProvider::new(&chain_id, &context);
-            info_provider.chain_info().await
-        })
+        .resp_generator(|| get_single_chain(&context, &chain_id))
         .execute(context.cache())
         .await
 }

@@ -7,7 +7,7 @@ use crate::config::{
     safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
     token_info_cache_duration, token_info_request_timeout,
 };
-use crate::models::chains::ChainInfo;
+use crate::models::backend::chains::ChainInfo;
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
 use crate::utils::context::Context;

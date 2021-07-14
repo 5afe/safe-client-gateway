@@ -1,4 +1,5 @@
 pub mod balances;
+pub mod chains;
 pub mod data_decoded;
 pub mod page_metadata;
 pub mod safes;

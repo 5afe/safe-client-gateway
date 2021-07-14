@@ -1,9 +1,9 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ChainInfo {
-    pub transaction_service: String,
+    pub transaction_service: String, // do we need to expose this?
     pub chain_id: String,
     pub chain_name: String,
     pub rpc_url: String,
@@ -13,7 +13,7 @@ pub struct ChainInfo {
     pub ens_registry_address: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct NativeCurrency {
     pub name: String,
@@ -22,7 +22,7 @@ pub struct NativeCurrency {
     pub logo_url: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Theme {
     pub text_color: String,

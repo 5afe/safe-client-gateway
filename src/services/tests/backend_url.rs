@@ -1,4 +1,4 @@
-use crate::models::chains::{ChainInfo, NativeCurrency, Theme};
+use crate::models::backend::chains::{ChainInfo, NativeCurrency, Theme};
 use crate::providers::info::*;
 use crate::utils::errors::ApiResult;
 

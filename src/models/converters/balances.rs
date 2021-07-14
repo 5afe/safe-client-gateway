@@ -1,5 +1,5 @@
 use crate::models::backend::balances::Balance as BalanceDto;
-use crate::models::chains::NativeCurrency;
+use crate::models::backend::chains::NativeCurrency;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
 

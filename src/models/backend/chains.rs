@@ -43,4 +43,6 @@ pub enum GasPrice {
     },
     #[serde(rename_all = "camelCase")]
     Fixed { wei_value: String },
+    #[serde(other)]
+    Unknown,
 }

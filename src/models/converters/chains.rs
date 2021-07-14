@@ -34,6 +34,7 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                     gwei_factor,
                 },
                 GasPrice::Fixed { wei_value } => ServiceGasPrice::Fixed { wei_value },
+                GasPrice::Unknown => ServiceGasPrice::Unknown,
             },
         }
     }

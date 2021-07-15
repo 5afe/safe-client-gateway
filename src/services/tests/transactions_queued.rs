@@ -202,7 +202,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -363,7 +363,7 @@ async fn process_transactions_conflicts_in_queued() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -528,7 +528,7 @@ async fn process_transactions_conflicts_in_next() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -694,7 +694,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 

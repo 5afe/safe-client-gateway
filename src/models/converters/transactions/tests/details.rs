@@ -31,7 +31,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
         .times(1)
         .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(2) // to_info and data_decoded "spender" address parameter
         .returning(move |_| bail!("No address info"));
 
@@ -121,7 +121,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .returning(move |address| {
             Ok(AddressEx {
@@ -131,7 +131,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
             })
         });
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -182,11 +182,11 @@ async fn module_transaction_to_transaction_details_success() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .returning(move |_| bail!("No address info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -233,11 +233,11 @@ async fn module_transaction_to_transaction_details_failed() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .returning(move |_| bail!("No address info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -311,7 +311,7 @@ async fn ethereum_tx_transfer_to_transaction_details() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -353,7 +353,7 @@ async fn multisig_transaction_with_origin() {
             })
         });
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(7) // 1 + 6 calls within data decoded multisig
         .returning(move |_| bail!("no address info"));
 

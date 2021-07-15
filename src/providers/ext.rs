@@ -13,13 +13,13 @@ pub trait InfoProviderExt: InfoProvider {
         self.token_info(address).await.ok()
     }
 
-    async fn add_address_info_from_contract_info_or_empty(&self, address: &String) -> AddressEx {
-        self.add_address_info_from_contract_info(&address)
+    async fn address_ex_from_contracts_or_default(&self, address: &String) -> AddressEx {
+        self.address_ex_from_contracts(&address)
             .await
             .unwrap_or(AddressEx::address_only(address))
     }
 
-    async fn add_multiple_address_info_from_contract_info(
+    async fn multiple_address_ex_from_contracts(
         &self,
         addresses: &Option<Vec<String>>,
     ) -> Option<Vec<AddressEx>> {
@@ -30,20 +30,20 @@ pub trait InfoProviderExt: InfoProvider {
         let mut results = Vec::with_capacity(addresses.len());
         for address in addresses {
             results.push(
-                self.add_address_info_from_contract_info_or_empty(address)
+                self.address_ex_from_contracts_or_default(address)
                     .await,
             )
         }
         Some(results)
     }
 
-    async fn add_address_info_from_contract_info_optional(
+    async fn address_ex_from_contracts_optional(
         &self,
         address: &String,
     ) -> Option<AddressEx> {
         if address != "0x0000000000000000000000000000000000000000" {
             Some(
-                self.add_address_info_from_contract_info_or_empty(address)
+                self.address_ex_from_contracts_or_default(address)
                     .await,
             )
         } else {
@@ -51,12 +51,12 @@ pub trait InfoProviderExt: InfoProvider {
         }
     }
 
-    async fn add_optional_address_info_from_contract_info(
+    async fn optional_address_ex_from_contracts(
         &self,
         address: &Option<String>,
     ) -> Option<AddressEx> {
         OptionFuture::from(address.as_ref().map(|address| async move {
-            self.add_address_info_from_contract_info_or_empty(address)
+            self.address_ex_from_contracts_or_default(address)
                 .await
         }))
         .await

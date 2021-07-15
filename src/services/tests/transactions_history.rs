@@ -77,7 +77,7 @@ async fn backend_txs_to_summary_txs_with_values() {
         .times(3)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(6)
         .returning(move |_| bail!("No address info"));
 
@@ -259,7 +259,7 @@ async fn service_txs_to_tx_list_items_last_timestamp_undefined() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -318,7 +318,7 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -378,7 +378,7 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -432,7 +432,7 @@ async fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -489,7 +489,7 @@ async fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -550,7 +550,7 @@ async fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -632,7 +632,7 @@ async fn peek_timestamp_and_remove_item_with_items() {
         .times(1)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

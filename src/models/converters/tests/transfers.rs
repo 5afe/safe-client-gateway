@@ -24,7 +24,7 @@ async fn erc_20_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -65,7 +65,7 @@ async fn erc_721_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -102,7 +102,7 @@ async fn ether_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -131,7 +131,7 @@ async fn unknown_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(0);
 
     let actual = unknown_transfer_dto
@@ -170,7 +170,7 @@ async fn transfer_dto_to_transaction_details() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -207,7 +207,7 @@ async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

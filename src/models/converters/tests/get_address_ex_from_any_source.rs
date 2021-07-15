@@ -9,7 +9,7 @@ async fn get_address_info_address_diff_than_safe() {
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| {
             Ok(AddressEx {
@@ -37,7 +37,7 @@ async fn get_address_info_address_diff_than_safe_error() {
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -52,7 +52,7 @@ async fn get_address_info_address_equal_to_safe() {
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(0);
 
     let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;

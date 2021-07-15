@@ -26,7 +26,7 @@ async fn multisig_tx_check_erc721_transfer() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -129,7 +129,7 @@ async fn multisig_tx_check_erc20_transfer() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -222,7 +222,7 @@ async fn multisig_tx_check_ether_transfer() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

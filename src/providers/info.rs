@@ -94,8 +94,8 @@ pub trait InfoProvider {
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
-    async fn add_address_info_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
-    async fn add_address_info_from_contract_info(&self, address: &str) -> ApiResult<AddressEx>;
+    async fn address_ex_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
+    async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx>;
 }
 
 pub struct DefaultInfoProvider<'p, C: Cache> {
@@ -158,7 +158,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         })
     }
 
-    async fn add_address_info_from_contract_info(&self, address: &str) -> ApiResult<AddressEx> {
+    async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx> {
         let url = core_uri!(self, "/v1/contracts/{}/", address)?;
         let contract_info_json = RequestCached::new(url)
             .cache_duration(address_info_cache_duration())
@@ -177,14 +177,14 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         }
     }
 
-    async fn add_address_info_from_any_source(&self, address: &str) -> ApiResult<AddressEx> {
+    async fn address_ex_from_any_source(&self, address: &str) -> ApiResult<AddressEx> {
         self.token_info(&address)
             .map_ok(|it| AddressEx {
                 value: address.to_owned(),
                 name: Some(it.name),
                 logo_url: it.logo_uri,
             })
-            .or_else(|_| async move { self.add_address_info_from_contract_info(&address).await })
+            .or_else(|_| async move { self.address_ex_from_contracts(&address).await })
             .await
     }
 }

@@ -20,7 +20,7 @@ impl DataDecoded {
                 let handler = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::SetFallbackHandler {
                     handler: info_provider
-                        .add_address_info_from_contract_info_or_empty(&handler)
+                        .address_ex_from_contracts_or_default(&handler)
                         .await,
                 })
             }
@@ -50,7 +50,7 @@ impl DataDecoded {
                 let implementation = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::ChangeImplementation {
                     implementation: info_provider
-                        .add_address_info_from_contract_info_or_empty(&implementation)
+                        .address_ex_from_contracts_or_default(&implementation)
                         .await,
                 })
             }
@@ -58,7 +58,7 @@ impl DataDecoded {
                 let module = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::EnableModule {
                     module: info_provider
-                        .add_address_info_from_contract_info_or_empty(&module)
+                        .address_ex_from_contracts_or_default(&module)
                         .await,
                 })
             }
@@ -66,7 +66,7 @@ impl DataDecoded {
                 let module = self.get_parameter_single_value_at(1)?;
                 Some(SettingsInfo::DisableModule {
                     module: info_provider
-                        .add_address_info_from_contract_info_or_empty(&module)
+                        .address_ex_from_contracts_or_default(&module)
                         .await,
                 })
             }
@@ -156,7 +156,7 @@ async fn insert_value_into_index(
         && !index.contains_key(value)
     {
         if let Some(address_ex) = info_provider
-            .add_address_info_from_any_source(&value)
+            .address_ex_from_any_source(&value)
             .await
             .ok()
         {

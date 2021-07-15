@@ -123,7 +123,7 @@ impl ModuleTransaction {
     ) -> ApiResult<TransactionDetails> {
         let safe_transaction = &self.safe_transaction;
         let module_info = info_provider
-            .add_address_info_from_contract_info_or_empty(&self.module)
+            .address_ex_from_contracts_or_default(&self.module)
             .await;
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),

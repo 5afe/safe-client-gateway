@@ -147,14 +147,14 @@ impl CreationTransaction {
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {
                 creator: info_provider
-                    .add_address_info_from_contract_info_or_empty(&self.creator)
+                    .address_ex_from_contracts_or_default(&self.creator)
                     .await,
                 transaction_hash: self.transaction_hash.clone(),
                 implementation: info_provider
-                    .add_optional_address_info_from_contract_info(&self.master_copy)
+                    .optional_address_ex_from_contracts(&self.master_copy)
                     .await,
                 factory: info_provider
-                    .add_optional_address_info_from_contract_info(&self.factory_address)
+                    .optional_address_ex_from_contracts(&self.factory_address)
                     .await,
             }),
             execution_info: None,

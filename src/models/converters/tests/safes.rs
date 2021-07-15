@@ -10,7 +10,7 @@ async fn to_safe_info_ex_no_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(5)
         .returning(move |_| bail!("No safe info"));
     mock_info_provider
@@ -95,7 +95,7 @@ async fn to_safe_info_ex_no_address_info_up_to_date() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(5)
         .returning(move |_| bail!("No safe info"));
     mock_info_provider
@@ -182,7 +182,7 @@ async fn to_safe_info_ex_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(5)
         .returning(move |address| {
             Ok(AddressEx {
@@ -285,7 +285,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| bail!("No address info"));
     mock_info_provider
@@ -329,7 +329,7 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
         serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_GUARD_SAFE_V130).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(3)
         .returning(move |address| {
             Ok(AddressEx {

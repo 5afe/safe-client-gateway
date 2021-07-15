@@ -10,7 +10,7 @@ use std::collections::HashMap;
 async fn data_decoded_set_fallback_handler_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -34,7 +34,7 @@ async fn data_decoded_set_fallback_handler_to_settings_info() {
 async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| {
             Ok(AddressEx {
@@ -68,7 +68,7 @@ async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() 
 async fn data_decoded_add_owner_with_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(0);
 
     let data_decoded =
@@ -92,7 +92,7 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info() {
 async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(0);
 
     let data_decoded =
@@ -116,7 +116,7 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_inf
 async fn data_decoded_remove_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(0);
 
     let data_decoded =
@@ -139,7 +139,7 @@ async fn data_decoded_remove_owner_to_settings_info() {
 async fn data_decoded_swap_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(0);
 
     let data_decoded =
@@ -162,7 +162,7 @@ async fn data_decoded_swap_owner_to_settings_info() {
 async fn data_decoded_change_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(0);
 
     let data_decoded =
@@ -182,7 +182,7 @@ async fn data_decoded_change_threshold_to_settings_info() {
 async fn data_decoded_change_implementation_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -205,7 +205,7 @@ async fn data_decoded_change_implementation_to_settings_info() {
 async fn data_decoded_change_implementation_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| {
             Ok(AddressEx {
@@ -238,7 +238,7 @@ async fn data_decoded_change_implementation_to_settings_info_with_address_info()
 async fn data_decoded_enable_module_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -261,7 +261,7 @@ async fn data_decoded_enable_module_to_settings_info() {
 async fn data_decoded_enable_module_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| {
             Ok(AddressEx {
@@ -294,7 +294,7 @@ async fn data_decoded_enable_module_to_settings_info_with_address_info() {
 async fn data_decoded_disable_module_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| bail!("Some http error"));
 
@@ -317,7 +317,7 @@ async fn data_decoded_disable_module_to_settings_info() {
 async fn data_decoded_disable_module_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| {
             Ok(AddressEx {
@@ -444,7 +444,7 @@ fn data_decoded_with_nested_safe_transaction() {
 async fn address_info_index_not_multi_send_address_single_value() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A"))
         .times(1)
         .return_once(move |_| {
@@ -492,7 +492,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
     let mut sequence = Sequence::new();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x4FB84d2dFc50017aFa759107a389759c8fD077DE"))
         .times(1)
         .return_once(move |address| {
@@ -505,7 +505,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x111111111117dC0aa78b770fA6A738034120C302"))
         .times(1)
         .return_once(move |address| {
@@ -518,21 +518,21 @@ async fn address_info_index_not_multi_send_address_array_value() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
         .times(1)
         .return_once(move |_| bail!("no address"))
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
         .times(1)
         .return_once(move |_| bail!("no address"))
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B"))
         .times(1)
         .return_once(move |address| {
@@ -591,7 +591,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
     let mut sequence = Sequence::new();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x111111125434b319222CdBf8C261674aDB56F3ae"))
         .times(1)
         .return_once(move |address| {
@@ -604,7 +604,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5"))
         .times(1)
         .return_once(move |address| {
@@ -617,7 +617,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
         .times(1)
         .return_once(move |address| {
@@ -630,7 +630,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"))
         .times(1)
         .return_once(move |address| {
@@ -643,7 +643,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xBc79855178842FDBA0c353494895DEEf509E26bB"))
         .times(1)
         .return_once(move |address| {
@@ -722,7 +722,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
     let mut sequence = Sequence::new();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"))
         .times(1)
         .return_once(move |address| {
@@ -735,7 +735,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B"))
         .times(1)
         .return_once(move |address| {
@@ -748,7 +748,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
         .in_sequence(&mut sequence);
 
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x68881260bd04E9dAc7F77a314360ce05435B4818"))
         .times(1)
         .return_once(move |address| {
@@ -809,7 +809,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
 async fn address_info_index_skip_address_info_for_0x0() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x441E604Ad49602c0B9C0B08D0781eCF96740786a"))
         .times(1)
         .return_once(move |address| {
@@ -850,7 +850,7 @@ async fn address_info_index_skip_address_info_for_0x0() {
 async fn address_info_index_no_results_returns_none() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .with(eq("0x441E604Ad49602c0B9C0B08D0781eCF96740786a"))
         .times(1)
         .return_once(move |_| bail!("no address info"));

@@ -33,7 +33,7 @@ pub(super) async fn get_address_ex_from_any_source(
 ) -> AddressEx {
     if safe != address {
         info_provider
-            .add_address_info_from_any_source(address)
+            .address_ex_from_any_source(address)
             .await
             .unwrap_or(AddressEx::address_only(address))
     } else {

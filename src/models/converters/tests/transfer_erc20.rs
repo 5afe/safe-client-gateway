@@ -17,7 +17,7 @@ async fn erc20_transfer_dto_to_incoming_transfer_transaction() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -58,7 +58,7 @@ async fn erc20_transfer_dto_to_incoming_transfer_transaction_with_address_info()
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
@@ -109,7 +109,7 @@ async fn erc20_transfer_dto_to_outgoing_transfer_transaction_with_address_info()
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_add_address_info_from_any_source()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {

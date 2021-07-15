@@ -16,10 +16,8 @@
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
   "gasPrice": {
-    "type": "oracle",
-    "url": "https://gaspriceoracle.com/",
-    "gasParameter": "average",
-    "gweiFactor": "10"
+    "type": "very fancy oracle",
+    "fancyValue": "fancy"
   },
   "recommendedMasterCopyVersion": "1.1.1"
 }

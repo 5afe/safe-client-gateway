@@ -32,6 +32,7 @@ lazy_static! {
     pub static ref SAFE_V_1_3_0: Version = Version::new(1, 3, 0);
 }
 
+// TODO: move models that are (de)serialized into models module.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TokenType {
@@ -85,6 +86,7 @@ pub struct TokenInfo {
     pub name: String,
     pub logo_uri: Option<String>,
 }
+
 #[automock]
 #[rocket::async_trait]
 pub trait InfoProvider {

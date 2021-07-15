@@ -116,10 +116,73 @@ async fn multisig_custom_transaction_to_transaction_details() {
 }
 
 #[rocket::async_test]
+async fn module_transaction_to_transaction_details_module_info_success() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(1)
+        .returning(move |address| Ok(AddressEx {
+            value: address.to_string(),
+            name: Some(format!("{}_name", address).to_string()),
+            logo_url: None,
+        }));
+    mock_info_provider
+        .expect_add_address_info_from_any_source()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
+
+    let module_transaction =
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+
+    let expected = TransactionDetails {
+        executed_at: Some(module_transaction.execution_date.timestamp_millis()),
+        tx_status: TransactionStatus::Success,
+        tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
+        tx_info: TransactionInfo::Custom(Custom {
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
+            data_size: "132".to_string(),
+            value: "0".to_string(),
+            method_name: None,
+            action_count: None,
+            is_cancellation: false,
+        }),
+        tx_data: Some(TransactionData {
+            hex_data: Some(String::from("0x59f96ae500000000000000000000000000df91984582e6e96288307e9c2f20b38c8fece9000000000000000000000000c778417e063141139fce010982780140aa0cd5ab0000000000000000000000000000000000000000000000000000000000000475000000000000000000000000000000000000000000000003d962c8be3053def2")),
+            data_decoded: None,
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
+            value: Some(String::from("0")),
+            operation: Operation::CALL,
+            address_info_index: None
+        }),
+        detailed_execution_info: Some(DetailedExecutionInfo::Module(
+            ModuleExecutionDetails {
+                address: AddressEx {
+                    value: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string(),
+                    name: Some("0xfa559f0932b7B60d90B4af0b8813d4088465096b_name".to_string()),
+                    logo_url: None,
+                }
+            })),
+        safe_app_info: None,
+    };
+
+    let actual =
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider)
+            .await;
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[rocket::async_test]
 async fn module_transaction_to_transaction_details_success() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
     mock_info_provider
         .expect_add_address_info_from_any_source()
         .times(1)
@@ -167,6 +230,10 @@ async fn module_transaction_to_transaction_details_failed() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
     mock_info_provider
         .expect_add_address_info_from_any_source()
         .times(1)

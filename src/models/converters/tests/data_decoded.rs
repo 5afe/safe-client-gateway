@@ -487,7 +487,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0x4FB84d2dFc50017aFa759107a389759c8fD077DE".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -500,7 +500,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0x111111111117dC0aa78b770fA6A738034120C302".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -527,7 +527,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -551,7 +551,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
         map.insert(
             "0x111111111117dC0aa78b770fA6A738034120C302".to_string(),
             AddressEx {
-                value: "0x4FB84d2dFc50017aFa759107a389759c8fD077DE".to_owned(),
+                value: "0x111111111117dC0aa78b770fA6A738034120C302".to_owned(),
                 name: Some("0x111111111117dC0aa78b770fA6A738034120C302_name".to_string()),
                 logo_url: Some("0x111111111117dC0aa78b770fA6A738034120C302_url".to_string()),
             },
@@ -586,7 +586,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0x111111125434b319222CdBf8C261674aDB56F3ae".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -599,7 +599,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -612,7 +612,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -625,7 +625,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -638,7 +638,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .times(1)
         .return_once(move |address| {
             Ok(AddressEx {
-                value: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_owned(),
+                value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
                 logo_url: Some(format!("{}_url", &address)),
             })
@@ -655,7 +655,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         map.insert(
             "0x111111125434b319222CdBf8C261674aDB56F3ae".to_string(),
             AddressEx {
-                value: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_owned(),
+                value: "0x111111125434b319222CdBf8C261674aDB56F3ae".to_owned(),
                 name: Some("0x111111125434b319222CdBf8C261674aDB56F3ae_name".to_string()),
                 logo_url: Some("0x111111125434b319222CdBf8C261674aDB56F3ae_url".to_string()),
             },
@@ -664,7 +664,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         map.insert(
             "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_string(),
             AddressEx {
-                value: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_owned(),
+                value: "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_owned(),
                 name: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_name".to_string()),
                 logo_url: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_url".to_string()),
             },
@@ -673,7 +673,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         map.insert(
             "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_string(),
             AddressEx {
-                value: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_owned(),
+                value: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_owned(),
                 name: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_name".to_string()),
                 logo_url: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
             },
@@ -682,7 +682,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         map.insert(
             "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".to_string(),
             AddressEx {
-                value: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_owned(),
+                value: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".to_owned(),
                 name: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_name".to_string()),
                 logo_url: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_url".to_string()),
             },

@@ -60,12 +60,12 @@ pub(super) fn calculate_version_state(
             return ImplementationVersionState::Unknown;
         }
 
-        return match sem_ver_safe.unwrap().cmp(&sem_ver_min.unwrap()) {
+        match sem_ver_safe.unwrap().cmp(&sem_ver_min.unwrap()) {
             Ordering::Less => ImplementationVersionState::Outdated,
             Ordering::Equal => ImplementationVersionState::UpToDate,
             Ordering::Greater => ImplementationVersionState::UpToDate,
-        };
+        }
+    } else {
+        ImplementationVersionState::Unknown
     }
-
-    ImplementationVersionState::Unknown
 }

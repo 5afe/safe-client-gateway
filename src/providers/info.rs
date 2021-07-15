@@ -8,8 +8,9 @@ use crate::config::{
     token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::backend::chains::ChainInfo;
+use crate::models::service::addresses::AddressEx;
 use crate::models::commons::Page;
-use crate::providers::address_info::{AddressInfo, ContractInfo};
+use crate::providers::address_info::ContractInfo;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;
@@ -76,6 +77,7 @@ struct Manifest {
 pub struct TokenInfo {
     #[serde(rename = "type")]
     pub token_type: TokenType,
+    // No need to map to AddressEx as the information are present in this struct
     pub address: String,
     #[serde(deserialize_with = "default_if_null")]
     pub decimals: u64,
@@ -90,8 +92,8 @@ pub trait InfoProvider {
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
-    async fn contract_info(&self, address: &str) -> ApiResult<AddressInfo>;
-    async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo>;
+    async fn add_address_info_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
+    async fn add_address_info_from_contract_info(&self, address: &str) -> ApiResult<AddressEx>;
 }
 
 pub struct DefaultInfoProvider<'p, C: Cache> {
@@ -154,7 +156,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         })
     }
 
-    async fn contract_info(&self, address: &str) -> ApiResult<AddressInfo> {
+    async fn add_address_info_from_contract_info(&self, address: &str) -> ApiResult<AddressEx> {
         let url = core_uri!(self, "/v1/contracts/{}/", address)?;
         let contract_info_json = RequestCached::new(url)
             .cache_duration(address_info_cache_duration())
@@ -165,20 +167,22 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         if contract_info.display_name.trim().is_empty() {
             bail!("No display name")
         } else {
-            Ok(AddressInfo {
-                name: contract_info.display_name.to_owned(),
-                logo_uri: contract_info.logo_uri.to_owned(),
+            Ok(AddressEx {
+                value: address.to_owned(),
+                name: Some(contract_info.display_name.to_owned()),
+                logo_url: contract_info.logo_uri.to_owned(),
             })
         }
     }
 
-    async fn full_address_info_search(&self, address: &str) -> ApiResult<AddressInfo> {
+    async fn add_address_info_from_any_source(&self, address: &str) -> ApiResult<AddressEx> {
         self.token_info(&address)
-            .map_ok(|it| AddressInfo {
-                name: it.name,
-                logo_uri: it.logo_uri,
+            .map_ok(|it| AddressEx {
+                value: address.to_owned(),
+                name: Some(it.name),
+                logo_url: it.logo_uri,
             })
-            .or_else(|_| async move { self.contract_info(&address).await })
+            .or_else(|_| async move { self.add_address_info_from_contract_info(&address).await })
             .await
     }
 }

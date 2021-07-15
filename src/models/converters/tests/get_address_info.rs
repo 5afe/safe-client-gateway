@@ -1,4 +1,4 @@
-use crate::models::converters::get_address_info;
+use crate::models::converters::get_address_ex_from_any_source;
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
@@ -23,7 +23,7 @@ async fn get_address_info_address_diff_than_safe() {
         logo_uri: None,
     };
 
-    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
+    let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;
 
     assert!(actual.is_some());
     assert_eq!(expected, actual.unwrap());
@@ -40,7 +40,7 @@ async fn get_address_info_address_diff_than_safe_error() {
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
-    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
+    let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;
     assert!(actual.is_none());
 }
 
@@ -52,6 +52,6 @@ async fn get_address_info_address_equal_to_safe() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
-    let actual = get_address_info(safe, address, &mut mock_info_provider).await;
+    let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;
     assert!(actual.is_none());
 }

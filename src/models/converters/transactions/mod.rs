@@ -12,19 +12,21 @@ use crate::models::backend::transactions::{
     ModuleTransaction, MultisigTransaction, SafeTransaction,
 };
 use crate::models::commons::{DataDecoded, Operation};
-use crate::models::converters::get_address_info;
+use crate::models::converters::get_address_ex_from_any_source;
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::{
     Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, TransactionInfo,
     TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
+use crate::providers::ext::InfoProviderExt;
 use crate::utils::TRANSFER_METHOD;
 use rocket::futures::future::OptionFuture;
 
 impl SafeTransaction {
     async fn transaction_info(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
         is_cancellation: bool,
     ) -> TransactionInfo {
         let value = self.value_as_uint();
@@ -71,10 +73,9 @@ impl SafeTransaction {
         }
     }
 
-    async fn to_custom(&self, info_provider: &impl InfoProvider, is_cancellation: bool) -> Custom {
+    async fn to_custom(&self, info_provider: &(impl InfoProvider + Sync), is_cancellation: bool) -> Custom {
         Custom {
-            to: self.to.to_owned(),
-            to_info: info_provider.full_address_info_search(&self.to).await.ok(),
+            to: info_provider.add_address_info_from_contract_info_or_empty(&self.to).await,
             is_cancellation,
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),
@@ -95,10 +96,8 @@ impl SafeTransaction {
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: get_address_info(&self.safe, &sender, info_provider).await,
-            sender,
-            recipient_info: get_address_info(&self.safe, &recipient, info_provider).await,
-            recipient,
+            sender: get_address_ex_from_any_source(&self.safe, &sender, info_provider).await,
+            recipient: get_address_ex_from_any_source(&self.safe, &recipient, info_provider).await,
             direction,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
                 token_address: token.address.to_owned(),
@@ -124,10 +123,8 @@ impl SafeTransaction {
         let recipient = get_to_param(&self.data_decoded, "0x0");
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
-            sender_info: get_address_info(&self.safe, &sender, info_provider).await,
-            sender,
-            recipient_info: get_address_info(&self.safe, &recipient, info_provider).await,
-            recipient,
+            sender: get_address_ex_from_any_source(&self.safe, &sender, info_provider).await,
+            recipient: get_address_ex_from_any_source(&self.safe, &recipient, info_provider).await,
             direction,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: token.address.to_owned(),
@@ -148,10 +145,8 @@ impl SafeTransaction {
 
     async fn to_ether_transfer(&self, info_provider: &impl InfoProvider) -> Transfer {
         Transfer {
-            sender_info: None,
-            sender: self.safe.to_owned(),
-            recipient_info: info_provider.full_address_info_search(&self.to).await.ok(),
-            recipient: self.to.to_owned(),
+            sender: AddressEx::address_only(&self.safe),
+            recipient: get_address_ex_from_any_source(&self.safe, &self.to, info_provider).await,
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: self.value.as_ref().unwrap().to_string(),
@@ -159,7 +154,7 @@ impl SafeTransaction {
         }
     }
 
-    async fn to_settings_change(&self, info_provider: &impl InfoProvider) -> SettingsChange {
+    async fn to_settings_change(&self, info_provider: &(impl InfoProvider + Sync)) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
             settings_info: OptionFuture::from(
@@ -182,7 +177,7 @@ impl SafeTransaction {
 }
 
 impl MultisigTransaction {
-    async fn transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
+    async fn transaction_info(&self, info_provider: &(impl InfoProvider + Sync)) -> TransactionInfo {
         self.safe_transaction
             .transaction_info(info_provider, self.is_cancellation())
             .await
@@ -198,15 +193,15 @@ impl MultisigTransaction {
         self.confirmations_required.unwrap_or(threshold)
     }
 
-    fn missing_signers(&self, owners: &Vec<String>) -> Vec<String> {
+    fn missing_signers(&self, owners: &Vec<String>) -> Vec<AddressEx> {
         self.confirmations.as_ref().map_or_else(
-            || owners.to_owned(),
+            || owners.iter().map(|owner| AddressEx::address_only(&owner)).collect(),
             |confirmations| {
                 owners
                     .iter()
                     .filter_map(|owner| {
                         if !confirmations.iter().any(|c| &c.owner == owner) {
-                            Some(owner.to_owned())
+                            Some(AddressEx::address_only(&owner))
                         } else {
                             None
                         }
@@ -266,7 +261,7 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    async fn transaction_info(&self, info_provider: &impl InfoProvider) -> TransactionInfo {
+    async fn transaction_info(&self, info_provider: &(impl InfoProvider + Sync)) -> TransactionInfo {
         self.safe_transaction
             .transaction_info(info_provider, false)
             .await

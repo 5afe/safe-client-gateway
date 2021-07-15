@@ -1,5 +1,5 @@
 use crate::models::commons::DataDecoded;
-use crate::providers::address_info::AddressInfo;
+use crate::models::service::addresses::AddressEx;
 use serde::Serialize;
 
 pub mod details;
@@ -55,12 +55,8 @@ pub enum TransactionInfo {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Transfer {
-    pub sender: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sender_info: Option<AddressInfo>,
-    pub recipient: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub recipient_info: Option<AddressInfo>,
+    pub sender: AddressEx,
+    pub recipient: AddressEx,
     pub direction: TransferDirection,
     pub transfer_info: TransferInfo,
 }
@@ -84,6 +80,7 @@ pub enum TransferInfo {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc20Transfer {
+    // No need to map to AddressEx as the information are present in this struct
     pub token_address: String,
     pub token_name: Option<String>,
     pub token_symbol: Option<String>,
@@ -95,6 +92,7 @@ pub struct Erc20Transfer {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Erc721Transfer {
+    // No need to map to AddressEx as the information are present in this struct
     pub token_address: String,
     pub token_id: String,
     pub token_name: Option<String>,
@@ -121,80 +119,56 @@ pub struct SettingsChange {
 pub enum SettingsInfo {
     #[serde(rename_all = "camelCase")]
     SetFallbackHandler {
-        handler: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        handler_info: Option<AddressInfo>,
+        handler: AddressEx,
     },
     #[serde(rename_all = "camelCase")]
     AddOwner {
-        owner: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        owner_info: Option<AddressInfo>,
+        owner: AddressEx,
         threshold: u64,
     },
     #[serde(rename_all = "camelCase")]
     RemoveOwner {
-        owner: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        owner_info: Option<AddressInfo>,
+        owner: AddressEx,
         threshold: u64,
     },
     #[serde(rename_all = "camelCase")]
     SwapOwner {
-        old_owner: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        old_owner_info: Option<AddressInfo>,
-        new_owner: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        new_owner_info: Option<AddressInfo>,
+        old_owner: AddressEx,
+        new_owner: AddressEx,
     },
     #[serde(rename_all = "camelCase")]
     ChangeThreshold { threshold: u64 },
     #[serde(rename_all = "camelCase")]
     ChangeImplementation {
-        implementation: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        implementation_info: Option<AddressInfo>,
+        implementation: AddressEx,
     },
     #[serde(rename_all = "camelCase")]
     EnableModule {
-        module: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        module_info: Option<AddressInfo>,
+        module: AddressEx,
     },
     #[serde(rename_all = "camelCase")]
     DisableModule {
-        module: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        module_info: Option<AddressInfo>,
+        module: AddressEx,
     },
 }
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Custom {
-    pub to: String,
+    pub to: AddressEx,
     pub data_size: String,
     pub value: String,
     pub method_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub action_count: Option<usize>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub to_info: Option<AddressInfo>,
     pub is_cancellation: bool,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Creation {
-    pub creator: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub creator_info: Option<AddressInfo>,
+    pub creator: AddressEx,
     pub transaction_hash: String,
-    pub implementation: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub implementation_info: Option<AddressInfo>,
-    pub factory: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub factory_info: Option<AddressInfo>,
+    pub implementation: Option<AddressEx>,
+    pub factory: Option<AddressEx>,
 }

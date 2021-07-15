@@ -32,6 +32,7 @@ pub struct ConfirmationRequest {
 /// </details>
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+// Addresses are not mapped to AddressEx as this is a request body that is forwarded to the core services
 pub struct MultisigTransactionRequest {
     pub to: String,
     pub value: String,

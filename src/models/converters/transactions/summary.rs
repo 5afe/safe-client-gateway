@@ -19,7 +19,7 @@ use rocket::futures::future::OptionFuture;
 impl Transaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
         safe: &str,
     ) -> ApiResult<Vec<TransactionSummary>> {
         match self {
@@ -40,7 +40,7 @@ impl Transaction {
 impl MultisigTransaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<Vec<TransactionSummary>> {
         let safe_info = info_provider
             .safe_info(&self.safe_transaction.safe.to_string())
@@ -117,7 +117,7 @@ impl EthereumTransaction {
 impl ModuleTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> Vec<TransactionSummary> {
         vec![TransactionSummary {
             id: create_id!(
@@ -146,13 +146,10 @@ impl CreationTransaction {
             timestamp: self.created.timestamp_millis(),
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {
-                creator: self.creator.clone(),
-                creator_info: info_provider.contract_info(&self.creator).await.ok(),
+                creator: info_provider.add_address_info_from_contract_info_or_empty(&self.creator).await,
                 transaction_hash: self.transaction_hash.clone(),
-                implementation: self.master_copy.clone(),
-                implementation_info: info_provider.to_address_info(&self.master_copy).await,
-                factory: self.factory_address.clone(),
-                factory_info: info_provider.to_address_info(&self.factory_address).await,
+                implementation: info_provider.add_optional_address_info_from_contract_info(&self.master_copy).await,
+                factory: info_provider.add_optional_address_info_from_contract_info(&self.factory_address).await,
             }),
             execution_info: None,
             safe_app_info: None,

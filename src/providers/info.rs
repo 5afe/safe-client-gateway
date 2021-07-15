@@ -8,8 +8,8 @@ use crate::config::{
     token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::backend::chains::ChainInfo;
-use crate::models::service::addresses::AddressEx;
 use crate::models::commons::Page;
+use crate::models::service::addresses::AddressEx;
 use crate::providers::address_info::ContractInfo;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;

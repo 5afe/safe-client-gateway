@@ -72,7 +72,11 @@ impl SafeTransaction {
         }
     }
 
-    async fn to_custom(&self, info_provider: &(impl InfoProvider + Sync), is_cancellation: bool) -> Custom {
+    async fn to_custom(
+        &self,
+        info_provider: &(impl InfoProvider + Sync),
+        is_cancellation: bool,
+    ) -> Custom {
         Custom {
             to: get_address_ex_from_any_source(&self.safe, &self.to, info_provider).await,
             is_cancellation,
@@ -153,7 +157,10 @@ impl SafeTransaction {
         }
     }
 
-    async fn to_settings_change(&self, info_provider: &(impl InfoProvider + Sync)) -> SettingsChange {
+    async fn to_settings_change(
+        &self,
+        info_provider: &(impl InfoProvider + Sync),
+    ) -> SettingsChange {
         SettingsChange {
             data_decoded: self.data_decoded.as_ref().unwrap().to_owned(),
             settings_info: OptionFuture::from(
@@ -176,7 +183,10 @@ impl SafeTransaction {
 }
 
 impl MultisigTransaction {
-    async fn transaction_info(&self, info_provider: &(impl InfoProvider + Sync)) -> TransactionInfo {
+    async fn transaction_info(
+        &self,
+        info_provider: &(impl InfoProvider + Sync),
+    ) -> TransactionInfo {
         self.safe_transaction
             .transaction_info(info_provider, self.is_cancellation())
             .await
@@ -194,7 +204,12 @@ impl MultisigTransaction {
 
     fn missing_signers(&self, owners: &Vec<String>) -> Vec<AddressEx> {
         self.confirmations.as_ref().map_or_else(
-            || owners.iter().map(|owner| AddressEx::address_only(&owner)).collect(),
+            || {
+                owners
+                    .iter()
+                    .map(|owner| AddressEx::address_only(&owner))
+                    .collect()
+            },
             |confirmations| {
                 owners
                     .iter()
@@ -260,7 +275,10 @@ impl MultisigTransaction {
 }
 
 impl ModuleTransaction {
-    async fn transaction_info(&self, info_provider: &(impl InfoProvider + Sync)) -> TransactionInfo {
+    async fn transaction_info(
+        &self,
+        info_provider: &(impl InfoProvider + Sync),
+    ) -> TransactionInfo {
         self.safe_transaction
             .transaction_info(info_provider, false)
             .await

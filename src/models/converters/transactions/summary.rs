@@ -146,10 +146,16 @@ impl CreationTransaction {
             timestamp: self.created.timestamp_millis(),
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {
-                creator: info_provider.add_address_info_from_contract_info_or_empty(&self.creator).await,
+                creator: info_provider
+                    .add_address_info_from_contract_info_or_empty(&self.creator)
+                    .await,
                 transaction_hash: self.transaction_hash.clone(),
-                implementation: info_provider.add_optional_address_info_from_contract_info(&self.master_copy).await,
-                factory: info_provider.add_optional_address_info_from_contract_info(&self.factory_address).await,
+                implementation: info_provider
+                    .add_optional_address_info_from_contract_info(&self.master_copy)
+                    .await,
+                factory: info_provider
+                    .add_optional_address_info_from_contract_info(&self.factory_address)
+                    .await,
             }),
             execution_info: None,
             safe_app_info: None,

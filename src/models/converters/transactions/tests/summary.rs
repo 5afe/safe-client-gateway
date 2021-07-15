@@ -539,7 +539,9 @@ async fn multisig_transaction_to_settings_change_summary() {
         .expect_safe_info()
         .times(1)
         .return_once(move |_| Ok(safe_info));
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
     mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionSummary {

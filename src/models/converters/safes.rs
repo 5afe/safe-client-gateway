@@ -24,17 +24,23 @@ impl SafeInfo {
             address: AddressEx::address_only(&self.address),
             nonce: self.nonce,
             threshold: self.threshold,
-            implementation: info_provider.add_address_info_from_contract_info_or_empty(&self.master_copy).await,
+            implementation: info_provider
+                .add_address_info_from_contract_info_or_empty(&self.master_copy)
+                .await,
             owners: self
                 .owners
                 .iter()
                 .map(|owner| AddressEx::address_only(&owner))
                 .collect(),
-            modules: info_provider.add_multiple_address_info_from_contract_info(&self.modules).await,
+            modules: info_provider
+                .add_multiple_address_info_from_contract_info(&self.modules)
+                .await,
             fallback_handler: info_provider
                 .add_address_info_from_contract_info_optional(&self.fallback_handler)
                 .await,
-            guard: info_provider.add_address_info_from_contract_info_optional(&self.guard).await,
+            guard: info_provider
+                .add_address_info_from_contract_info_optional(&self.guard)
+                .await,
             version: self.version.to_owned(),
             implementation_version_state,
         }

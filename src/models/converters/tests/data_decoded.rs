@@ -67,7 +67,9 @@ async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() 
 #[rocket::async_test]
 async fn data_decoded_add_owner_with_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -89,7 +91,9 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info() {
 #[rocket::async_test]
 async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
@@ -111,7 +115,9 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_inf
 #[rocket::async_test]
 async fn data_decoded_remove_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
@@ -132,7 +138,9 @@ async fn data_decoded_remove_owner_to_settings_info() {
 #[rocket::async_test]
 async fn data_decoded_swap_owner_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
@@ -153,7 +161,9 @@ async fn data_decoded_swap_owner_to_settings_info() {
 #[rocket::async_test]
 async fn data_decoded_change_threshold_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
 
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_THRESHOLD).unwrap();
@@ -238,7 +248,7 @@ async fn data_decoded_enable_module_to_settings_info() {
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
         settings_info: Some(SettingsInfo::EnableModule {
-            module: AddressEx::address_only("0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d")
+            module: AddressEx::address_only("0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d"),
         }),
     };
 

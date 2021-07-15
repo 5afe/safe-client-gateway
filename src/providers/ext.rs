@@ -14,7 +14,9 @@ pub trait InfoProviderExt: InfoProvider {
     }
 
     async fn add_address_info_from_contract_info_or_empty(&self, address: &String) -> AddressEx {
-        self.add_address_info_from_contract_info(&address).await.unwrap_or(AddressEx::address_only(address))
+        self.add_address_info_from_contract_info(&address)
+            .await
+            .unwrap_or(AddressEx::address_only(address))
     }
 
     async fn add_multiple_address_info_from_contract_info(
@@ -27,25 +29,36 @@ pub trait InfoProviderExt: InfoProvider {
         }
         let mut results = Vec::with_capacity(addresses.len());
         for address in addresses {
-            results.push(self.add_address_info_from_contract_info_or_empty(address).await)
+            results.push(
+                self.add_address_info_from_contract_info_or_empty(address)
+                    .await,
+            )
         }
         Some(results)
     }
 
-    async fn add_address_info_from_contract_info_optional(&self, address: &String) -> Option<AddressEx> {
+    async fn add_address_info_from_contract_info_optional(
+        &self,
+        address: &String,
+    ) -> Option<AddressEx> {
         if address != "0x0000000000000000000000000000000000000000" {
-            Some(self.add_address_info_from_contract_info_or_empty(address).await)
+            Some(
+                self.add_address_info_from_contract_info_or_empty(address)
+                    .await,
+            )
         } else {
             None
         }
     }
 
-    async fn add_optional_address_info_from_contract_info(&self, address: &Option<String>) -> Option<AddressEx> {
-        OptionFuture::from(
-            address
-                .as_ref()
-                .map(|address| async move { self.add_address_info_from_contract_info_or_empty(address).await }),
-        )
+    async fn add_optional_address_info_from_contract_info(
+        &self,
+        address: &Option<String>,
+    ) -> Option<AddressEx> {
+        OptionFuture::from(address.as_ref().map(|address| async move {
+            self.add_address_info_from_contract_info_or_empty(address)
+                .await
+        }))
         .await
     }
 }

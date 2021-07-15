@@ -9,8 +9,8 @@ pub mod transfers;
 #[cfg(test)]
 mod tests;
 
-use crate::models::service::transactions::TransferDirection;
 use crate::models::service::addresses::AddressEx;
+use crate::models::service::transactions::TransferDirection;
 use crate::providers::info::InfoProvider;
 
 pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> TransferDirection {
@@ -32,7 +32,10 @@ pub(super) async fn get_address_ex_from_any_source(
     info_provider: &impl InfoProvider,
 ) -> AddressEx {
     if safe != address {
-        info_provider.add_address_info_from_any_source(address).await.unwrap_or(AddressEx::address_only(address))
+        info_provider
+            .add_address_info_from_any_source(address)
+            .await
+            .unwrap_or(AddressEx::address_only(address))
     } else {
         AddressEx::address_only(address)
     }

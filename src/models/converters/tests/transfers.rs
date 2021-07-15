@@ -130,7 +130,9 @@ async fn unknown_transfer_dto_to_transaction_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
 
     let actual = unknown_transfer_dto
         .to_transfer(&mut mock_info_provider, safe_address)

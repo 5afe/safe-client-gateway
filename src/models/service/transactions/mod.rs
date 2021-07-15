@@ -118,19 +118,11 @@ pub struct SettingsChange {
 #[serde(tag = "type")]
 pub enum SettingsInfo {
     #[serde(rename_all = "camelCase")]
-    SetFallbackHandler {
-        handler: AddressEx,
-    },
+    SetFallbackHandler { handler: AddressEx },
     #[serde(rename_all = "camelCase")]
-    AddOwner {
-        owner: AddressEx,
-        threshold: u64,
-    },
+    AddOwner { owner: AddressEx, threshold: u64 },
     #[serde(rename_all = "camelCase")]
-    RemoveOwner {
-        owner: AddressEx,
-        threshold: u64,
-    },
+    RemoveOwner { owner: AddressEx, threshold: u64 },
     #[serde(rename_all = "camelCase")]
     SwapOwner {
         old_owner: AddressEx,
@@ -139,17 +131,11 @@ pub enum SettingsInfo {
     #[serde(rename_all = "camelCase")]
     ChangeThreshold { threshold: u64 },
     #[serde(rename_all = "camelCase")]
-    ChangeImplementation {
-        implementation: AddressEx,
-    },
+    ChangeImplementation { implementation: AddressEx },
     #[serde(rename_all = "camelCase")]
-    EnableModule {
-        module: AddressEx,
-    },
+    EnableModule { module: AddressEx },
     #[serde(rename_all = "camelCase")]
-    DisableModule {
-        module: AddressEx,
-    },
+    DisableModule { module: AddressEx },
 }
 
 #[derive(Serialize, Debug, PartialEq)]

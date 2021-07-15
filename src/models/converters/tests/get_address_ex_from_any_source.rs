@@ -51,7 +51,9 @@ async fn get_address_info_address_equal_to_safe() {
     let safe = "0x1234";
 
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
+    mock_info_provider
+        .expect_add_address_info_from_contract_info()
+        .times(0);
 
     let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;
     assert_eq!(AddressEx::address_only(address), actual);

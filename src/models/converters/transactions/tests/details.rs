@@ -123,11 +123,13 @@ async fn module_transaction_to_transaction_details_module_info_success() {
     mock_info_provider
         .expect_add_address_info_from_contract_info()
         .times(1)
-        .returning(move |address| Ok(AddressEx {
-            value: address.to_string(),
-            name: Some(format!("{}_name", address).to_string()),
-            logo_url: None,
-        }));
+        .returning(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some(format!("{}_name", address).to_string()),
+                logo_url: None,
+            })
+        });
     mock_info_provider
         .expect_add_address_info_from_any_source()
         .times(1)

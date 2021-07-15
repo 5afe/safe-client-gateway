@@ -68,8 +68,15 @@ impl MultisigTransaction {
             submitted_at: self.submission_date.timestamp_millis(),
             nonce: self.nonce,
             safe_tx_hash: self.safe_tx_hash.to_owned(),
-            executor: self.executor.as_ref().map(|address| AddressEx::address_only(&address)),
-            signers: safe_info.owners.iter().map(|rejection| AddressEx::address_only(rejection)).collect(),
+            executor: self
+                .executor
+                .as_ref()
+                .map(|address| AddressEx::address_only(&address)),
+            signers: safe_info
+                .owners
+                .iter()
+                .map(|rejection| AddressEx::address_only(rejection))
+                .collect(),
             confirmations_required: self.confirmations_required.unwrap_or(safe_info.threshold),
             confirmations: self
                 .confirmations
@@ -100,7 +107,11 @@ impl MultisigTransaction {
                 .unwrap_or(&String::from("0"))
                 .to_owned(),
             gas_token_info,
-            rejectors: rejections.map(|r| r.iter().map(|rejection| AddressEx::address_only(rejection)).collect()),
+            rejectors: rejections.map(|r| {
+                r.iter()
+                    .map(|rejection| AddressEx::address_only(rejection))
+                    .collect()
+            }),
         }
     }
 }
@@ -111,7 +122,9 @@ impl ModuleTransaction {
         info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
         let safe_transaction = &self.safe_transaction;
-        let module_info = info_provider.add_address_info_from_contract_info_or_empty(&self.module).await;
+        let module_info = info_provider
+            .add_address_info_from_contract_info_or_empty(&self.module)
+            .await;
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),

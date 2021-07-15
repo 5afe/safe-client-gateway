@@ -1,9 +1,9 @@
 use crate::config::feature_flag_nested_decoding;
-use crate::models::service::addresses::AddressEx;
 use crate::models::commons::{DataDecoded, ParamValue, Parameter, ValueDecodedType};
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::SettingsInfo;
-use crate::providers::info::InfoProvider;
 use crate::providers::ext::InfoProviderExt;
+use crate::providers::info::InfoProvider;
 use crate::utils::{
     ADD_OWNER_WITH_THRESHOLD, CHANGE_MASTER_COPY, CHANGE_THRESHOLD, DISABLE_MODULE, ENABLE_MODULE,
     MULTI_SEND, MULTI_SEND_TRANSACTIONS_PARAM, REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
@@ -19,7 +19,9 @@ impl DataDecoded {
             SET_FALLBACK_HANDLER => {
                 let handler = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::SetFallbackHandler {
-                    handler: info_provider.add_address_info_from_contract_info_or_empty(&handler).await,
+                    handler: info_provider
+                        .add_address_info_from_contract_info_or_empty(&handler)
+                        .await,
                 })
             }
             ADD_OWNER_WITH_THRESHOLD => {
@@ -47,19 +49,25 @@ impl DataDecoded {
             CHANGE_MASTER_COPY => {
                 let implementation = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::ChangeImplementation {
-                    implementation: info_provider.add_address_info_from_contract_info_or_empty(&implementation).await,
+                    implementation: info_provider
+                        .add_address_info_from_contract_info_or_empty(&implementation)
+                        .await,
                 })
             }
             ENABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(0)?;
                 Some(SettingsInfo::EnableModule {
-                    module: info_provider.add_address_info_from_contract_info_or_empty(&module).await,
+                    module: info_provider
+                        .add_address_info_from_contract_info_or_empty(&module)
+                        .await,
                 })
             }
             DISABLE_MODULE => {
                 let module = self.get_parameter_single_value_at(1)?;
                 Some(SettingsInfo::DisableModule {
-                    module: info_provider.add_address_info_from_contract_info_or_empty(&module).await,
+                    module: info_provider
+                        .add_address_info_from_contract_info_or_empty(&module)
+                        .await,
                 })
             }
             CHANGE_THRESHOLD => Some(SettingsInfo::ChangeThreshold {
@@ -147,7 +155,11 @@ async fn insert_value_into_index(
         && value != "0x0000000000000000000000000000000000000000"
         && !index.contains_key(value)
     {
-        if let Some(address_ex) = info_provider.add_address_info_from_any_source(&value).await.ok() {
+        if let Some(address_ex) = info_provider
+            .add_address_info_from_any_source(&value)
+            .await
+            .ok()
+        {
             index.insert(value.to_owned(), address_ex);
         };
     }

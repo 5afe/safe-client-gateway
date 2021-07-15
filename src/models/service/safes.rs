@@ -46,6 +46,6 @@ pub struct SafeState {
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ImplementationVersionState {
     UpToDate,
-    OutDated,
+    Outdated,
     Unknown,
 }

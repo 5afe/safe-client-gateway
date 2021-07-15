@@ -1,4 +1,5 @@
 use crate::models::backend::chains::ChainInfo;
+use crate::models::converters::safes::calculate_version_state;
 use crate::models::service::safes::{AddressEx, ImplementationVersionState, SafeInfoEx};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
@@ -376,4 +377,27 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
     let actual = safe_info.to_safe_info_ex(&mock_info_provider).await;
 
     assert_eq!(expected, actual);
+}
+
+#[test]
+fn calculate_version_state_up_to_date() {
+    let actual_equal = calculate_version_state("1.3.0", &Some("1.1.1".to_string()));
+    let actual_older = calculate_version_state("1.1.1", &Some("1.1.1".to_string()));
+
+    assert_eq!(actual_equal, ImplementationVersionState::UpToDate);
+    assert_eq!(actual_older, ImplementationVersionState::UpToDate);
+}
+
+#[test]
+fn calculate_version_state_outdated() {
+    let actual = calculate_version_state("1.1.1", &Some("1.3.0".to_string()));
+
+    assert_eq!(actual, ImplementationVersionState::Outdated);
+}
+
+#[test]
+fn calculate_version_state_unknown() {
+    let actual = calculate_version_state("1.1.1", &None);
+
+    assert_eq!(actual, ImplementationVersionState::Unknown);
 }

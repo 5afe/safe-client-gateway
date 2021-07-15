@@ -61,7 +61,7 @@ pub(super) fn calculate_version_state(
         }
 
         return match sem_ver_safe.unwrap().cmp(&sem_ver_min.unwrap()) {
-            Ordering::Less => ImplementationVersionState::OutDated,
+            Ordering::Less => ImplementationVersionState::Outdated,
             Ordering::Equal => ImplementationVersionState::UpToDate,
             Ordering::Greater => ImplementationVersionState::UpToDate,
         };

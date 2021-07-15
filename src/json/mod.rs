@@ -119,3 +119,5 @@ pub const BALANCE_ETHER: &str = include_str!("balances/balance_ether.json");
 pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound_ether.json");
 
 pub const TX_DETAILS_WITH_ORIGIN: &str = include_str!("results/tx_details_with_origin.json");
+
+pub const CHAIN_INFO_RINKEBY: &str = include_str!("chains/rinkeby.json");

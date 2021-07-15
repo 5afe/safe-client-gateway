@@ -3,6 +3,7 @@ use serde::Deserialize;
 #[derive(Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ChainInfo {
+    pub recommended_master_copy_version: String,
     pub transaction_service: String,
     pub chain_id: String,
     pub chain_name: String,

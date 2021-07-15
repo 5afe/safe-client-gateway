@@ -8,6 +8,7 @@ async fn core_uri_success_with_params() {
     let trusted = false;
     let exclude_spam = true;
     let chain_info = ChainInfo {
+        recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
@@ -44,6 +45,7 @@ async fn core_uri_success_with_params() {
 #[rocket::async_test]
 async fn core_uri_success_without_params() {
     let chain_info = ChainInfo {
+        recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),

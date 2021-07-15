@@ -1,6 +1,8 @@
 use crate::models::service::safes::{AddressEx, ImplementationVersionState, SafeInfoEx};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo};
+use semver::Version;
+use std::cmp::Ordering;
 
 // We need to add Sync as trait bound as info_provider moves across threads
 impl SafeInfo {
@@ -10,11 +12,12 @@ impl SafeInfo {
             .await
             .ok()
             .as_ref()
-            .map(|chain_info| chain_info.min_implementation_version);
+            .map(|chain_info| chain_info.min_master_copy_version.to_string());
         let implementation_version_state = self
             .version
-            .map_or(ImplementationVersionState::Unknown, |_| {
-                calculate_version_state(&self.version, min_chain_version)
+            .as_ref()
+            .map_or(ImplementationVersionState::Unknown, |it| {
+                calculate_version_state(it, &min_chain_version)
             });
         SafeInfoEx {
             address: AddressEx {
@@ -43,15 +46,26 @@ impl SafeInfo {
             implementation_version_state,
         }
     }
+}
 
-    fn calculate_version_state(
-        safe_version: &String,
-        min_chain_version: &Option<String>,
-    ) -> ImplementationVersionState {
-        if min_chain_version.is_none() {
-            ImplementationVersionState::Unknown
+pub(super) fn calculate_version_state(
+    safe_version: &str,
+    min_chain_version: &Option<String>,
+) -> ImplementationVersionState {
+    if let Some(min_chain_version) = min_chain_version {
+        let sem_ver_safe = Version::parse(safe_version);
+        let sem_ver_min = Version::parse(min_chain_version);
+
+        if sem_ver_min.is_err() || sem_ver_safe.is_err() {
+            return ImplementationVersionState::Unknown;
         }
 
-        ImplementationVersionState::Unknown
+        return match sem_ver_safe.unwrap().cmp(&sem_ver_min.unwrap()) {
+            Ordering::Less => ImplementationVersionState::OutDated,
+            Ordering::Equal => ImplementationVersionState::UpToDate,
+            Ordering::Greater => ImplementationVersionState::UpToDate,
+        };
     }
+
+    ImplementationVersionState::Unknown
 }

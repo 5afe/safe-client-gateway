@@ -12,7 +12,7 @@ impl SafeInfo {
             .await
             .ok()
             .as_ref()
-            .map(|chain_info| chain_info.min_master_copy_version.to_string());
+            .map(|chain_info| chain_info.recommended_master_copy_version.to_string());
         let implementation_version_state = self
             .version
             .as_ref()

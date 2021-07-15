@@ -19,7 +19,6 @@ use crate::models::service::transactions::{
     TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
-use crate::providers::ext::InfoProviderExt;
 use crate::utils::TRANSFER_METHOD;
 use rocket::futures::future::OptionFuture;
 
@@ -75,7 +74,7 @@ impl SafeTransaction {
 
     async fn to_custom(&self, info_provider: &(impl InfoProvider + Sync), is_cancellation: bool) -> Custom {
         Custom {
-            to: info_provider.add_address_info_from_contract_info_or_empty(&self.to).await,
+            to: get_address_ex_from_any_source(&self.safe, &self.to, info_provider).await,
             is_cancellation,
             data_size: data_size(&self.data).to_string(),
             value: self.value.as_ref().unwrap_or(&String::from("0")).clone(),

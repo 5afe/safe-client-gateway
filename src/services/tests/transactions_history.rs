@@ -1,6 +1,7 @@
 use crate::json::BACKEND_HISTORY_TRANSACTION_LIST_PAGE;
 use crate::models::backend::transactions::Transaction;
 use crate::models::commons::{Page, PageMetadata};
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::summary::{
     ConflictType, TransactionListItem, TransactionSummary,
 };
@@ -76,7 +77,7 @@ async fn backend_txs_to_summary_txs_with_values() {
         .times(3)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(6)
         .returning(move |_| bail!("No address info"));
 
@@ -88,12 +89,11 @@ async fn backend_txs_to_summary_txs_with_values() {
             tx_status: Success,
             tx_info: TransactionInfo::Custom(
                 Custom {
-                    to: "0xc778417E063141139Fce010982780140Aa0cD5Ab".into(),
+                    to: AddressEx::address_only("0xc778417E063141139Fce010982780140Aa0cD5Ab"),
                     data_size: "68".into(),
                     value: "0".into(),
                     method_name: Some("transfer".into()),
                     action_count: None,
-                    to_info: None,
                     is_cancellation: false,
                 },
             ),
@@ -106,12 +106,11 @@ async fn backend_txs_to_summary_txs_with_values() {
             tx_status: Success,
             tx_info: TransactionInfo::Custom(
                 Custom {
-                    to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".into(),
+                    to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
                     data_size: "68".into(),
                     value: "0".into(),
                     method_name: Some("transfer".into()),
                     action_count: None,
-                    to_info: None,
                     is_cancellation: false,
                 },
             ),
@@ -124,12 +123,11 @@ async fn backend_txs_to_summary_txs_with_values() {
             tx_status: Success,
             tx_info: TransactionInfo::Custom(
                 Custom {
-                    to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".into(),
+                    to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
                     data_size: "68".into(),
                     value: "0".into(),
                     method_name: Some("transfer".into()),
                     action_count: None,
-                    to_info: None,
                     is_cancellation: false,
                 },
             ),
@@ -142,10 +140,8 @@ async fn backend_txs_to_summary_txs_with_values() {
             tx_status: Success,
             tx_info: TransactionInfo::Transfer(
                 Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".into(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".into(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(
                         Erc20Transfer {
@@ -176,10 +172,8 @@ async fn backend_txs_to_summary_txs_with_values() {
             tx_status: Success,
             tx_info: TransactionInfo::Transfer(
                 Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".into(),
-                    sender_info: None,
-                    recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".into(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(
                         Erc20Transfer {
@@ -208,10 +202,8 @@ async fn backend_txs_to_summary_txs_with_values() {
             tx_status: Success,
             tx_info: TransactionInfo::Transfer(
                 Transfer {
-                    sender: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".into(),
-                    sender_info: None,
-                    recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".into(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
+                    recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
                     direction: Incoming,
                     transfer_info: TransferInfo::Erc20(
                         Erc20Transfer {
@@ -267,7 +259,7 @@ async fn service_txs_to_tx_list_items_last_timestamp_undefined() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -326,7 +318,7 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -386,7 +378,7 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -440,7 +432,7 @@ async fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -497,7 +489,7 @@ async fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -558,7 +550,7 @@ async fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
         .times(6)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(12)
         .returning(move |_| bail!("No address info"));
 
@@ -640,7 +632,7 @@ async fn peek_timestamp_and_remove_item_with_items() {
         .times(1)
         .returning(move |_| bail!("No token info"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 

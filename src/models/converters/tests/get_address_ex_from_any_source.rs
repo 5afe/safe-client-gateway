@@ -1,5 +1,5 @@
 use crate::models::converters::get_address_ex_from_any_source;
-use crate::providers::address_info::AddressInfo;
+use crate::models::service::addresses::AddressEx;
 use crate::providers::info::*;
 
 #[rocket::async_test]
@@ -9,24 +9,25 @@ async fn get_address_info_address_diff_than_safe() {
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some("".to_string()),
+                logo_url: None,
             })
         });
 
-    let expected = AddressInfo {
-        name: "".to_string(),
-        logo_uri: None,
+    let expected = AddressEx {
+        value: address.to_string(),
+        name: Some("".to_string()),
+        logo_url: None,
     };
 
     let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;
 
-    assert!(actual.is_some());
-    assert_eq!(expected, actual.unwrap());
+    assert_eq!(expected, actual);
 }
 
 #[rocket::async_test]
@@ -36,12 +37,12 @@ async fn get_address_info_address_diff_than_safe_error() {
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
     let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;
-    assert!(actual.is_none());
+    assert_eq!(AddressEx::address_only(address), actual);
 }
 
 #[rocket::async_test]
@@ -50,8 +51,8 @@ async fn get_address_info_address_equal_to_safe() {
     let safe = "0x1234";
 
     let mut mock_info_provider = MockInfoProvider::new();
-    mock_info_provider.expect_contract_info().times(0);
+    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
 
     let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;
-    assert!(actual.is_none());
+    assert_eq!(AddressEx::address_only(address), actual);
 }

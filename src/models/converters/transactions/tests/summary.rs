@@ -8,13 +8,13 @@ use crate::models::backend::transfers::{
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::converters::transactions::data_size;
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
 use crate::models::service::transactions::{
     Creation, Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange,
     SettingsInfo, TransactionInfo, TransactionStatus, Transfer, TransferDirection, TransferInfo,
     ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX, ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
 };
-use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 use crate::utils::hex_hash;
 use chrono::Utc;
@@ -48,7 +48,7 @@ async fn module_tx_to_summary_transaction_success() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -85,12 +85,11 @@ async fn module_tx_to_summary_transaction_success() {
         tx_status: TransactionStatus::Success,
         execution_info: None,
         tx_info: TransactionInfo::Custom(Custom {
-            to: expected_to,
+            to: AddressEx::address_only(&expected_to),
             data_size: String::from("0"),
             value: String::from("0"),
             method_name: None,
             action_count: None,
-            to_info: None,
             is_cancellation: false,
         }),
         safe_app_info: None,
@@ -104,7 +103,7 @@ async fn module_tx_to_summary_transaction_failed() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -141,12 +140,11 @@ async fn module_tx_to_summary_transaction_failed() {
         tx_status: TransactionStatus::Failed,
         execution_info: None,
         tx_info: TransactionInfo::Custom(Custom {
-            to: expected_to,
+            to: AddressEx::address_only(&expected_to),
             data_size: String::from("0"),
             value: String::from("0"),
             method_name: None,
             action_count: None,
-            to_info: None,
             is_cancellation: false,
         }),
         safe_app_info: None,
@@ -182,7 +180,7 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
     let safe_address = String::from("0x2323");
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(4)
         .returning(move |_| bail!("No address info"));
     let timestamp = Utc::now();
@@ -232,10 +230,8 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
             timestamp: timestamp_millis,
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Transfer(Transfer {
-                sender: "".to_string(),
-                sender_info: None,
-                recipient: "".to_string(),
-                recipient_info: None,
+                sender: AddressEx::address_only(""),
+                recipient: AddressEx::address_only(""),
                 direction: TransferDirection::Unknown,
                 transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                     value: "1".to_string(),
@@ -254,10 +250,8 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
             timestamp: timestamp_millis,
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Transfer(Transfer {
-                sender: "".to_string(),
-                sender_info: None,
-                recipient: "".to_string(),
-                recipient_info: None,
+                sender: AddressEx::address_only(""),
+                recipient: AddressEx::address_only(""),
                 direction: TransferDirection::Unknown,
                 transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                     value: "1".to_string(),
@@ -274,7 +268,7 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
 async fn creation_transaction_to_summary_no_address_info_available() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_add_address_info_from_contract_info()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -298,13 +292,10 @@ async fn creation_transaction_to_summary_no_address_info_available() {
         timestamp: created_date.timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Creation(Creation {
-            creator,
-            creator_info: None,
+            creator: AddressEx::address_only(&creator),
             transaction_hash,
-            implementation: Some(master_copy),
-            implementation_info: None,
-            factory: Some(factory_address),
-            factory_info: None,
+            implementation: Some(AddressEx::address_only(&master_copy)),
+            factory: Some(AddressEx::address_only(&factory_address)),
         }),
         execution_info: None,
         safe_app_info: None,
@@ -322,12 +313,13 @@ async fn creation_transaction_to_summary_no_address_info_available() {
 async fn creation_transaction_to_summary_address_info_available() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_add_address_info_from_contract_info()
         .times(3)
-        .returning(move |_| {
-            Ok(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+        .returning(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some("".to_string()),
+                logo_url: None,
             })
         });
 
@@ -351,21 +343,21 @@ async fn creation_transaction_to_summary_address_info_available() {
         timestamp: created_date.timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Creation(Creation {
-            creator,
-            creator_info: Some(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
-            }),
+            creator: AddressEx {
+                value: creator,
+                name: Some("".to_string()),
+                logo_url: None,
+            },
             transaction_hash,
-            implementation: Some(master_copy),
-            implementation_info: Some(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+            implementation: Some(AddressEx {
+                value: master_copy,
+                name: Some("".to_string()),
+                logo_url: None,
             }),
-            factory: Some(factory_address),
-            factory_info: Some(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+            factory: Some(AddressEx {
+                value: factory_address,
+                name: Some("".to_string()),
+                logo_url: None,
             }),
         }),
         execution_info: None,
@@ -397,7 +389,7 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -406,10 +398,8 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
-            sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-            sender_info: None,
-            recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
-            recipient_info: None,
+            sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+            recipient: AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Erc20(Erc20Transfer {
                 token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
@@ -453,7 +443,7 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -462,10 +452,8 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
-            sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-            sender_info: None,
-            recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-            recipient_info: None,
+            sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+            recipient: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
@@ -504,7 +492,7 @@ async fn multisig_transaction_to_ether_transfer_summary() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -517,10 +505,8 @@ async fn multisig_transaction_to_ether_transfer_summary() {
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
-            sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-            sender_info: None,
-            recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-            recipient_info: None,
+            sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+            recipient: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: "100000000000000000".to_string(),
@@ -553,7 +539,7 @@ async fn multisig_transaction_to_settings_change_summary() {
         .expect_safe_info()
         .times(1)
         .return_once(move |_| Ok(safe_info));
-    mock_info_provider.expect_contract_info().times(0);
+    mock_info_provider.expect_add_address_info_from_contract_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
     let expected = TransactionSummary {
@@ -566,8 +552,7 @@ async fn multisig_transaction_to_settings_change_summary() {
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::SettingsChange(SettingsChange {
             settings_info: Some(SettingsInfo::AddOwner {
-                owner: "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_string(),
-                owner_info: None,
+                owner: AddressEx::address_only("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"),
                 threshold: 2,
             }),
             data_decoded: DataDecoded {
@@ -618,7 +603,7 @@ async fn multisig_transaction_to_custom_summary() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -631,12 +616,11 @@ async fn multisig_transaction_to_custom_summary() {
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Custom(Custom {
-            to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
+            to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
             data_size: "68".to_string(),
             value: "0".to_string(),
             method_name: Some("approve".to_string()),
             action_count: None,
-            to_info: None,
             is_cancellation: false,
         }),
         execution_info: Some(ExecutionInfo {
@@ -671,7 +655,7 @@ async fn multisig_transaction_with_missing_signers() {
         .return_once(move |_| Ok(safe_info));
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -684,10 +668,8 @@ async fn multisig_transaction_with_missing_signers() {
         timestamp: multisig_tx.submission_date.timestamp_millis(),
         tx_status: TransactionStatus::AwaitingConfirmations,
         tx_info: TransactionInfo::Transfer(Transfer {
-            sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-            sender_info: None,
-            recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-            recipient_info: None,
+            sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+            recipient: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
             direction: TransferDirection::Outgoing,
             transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: "100000000000000000".to_string(),
@@ -698,10 +680,10 @@ async fn multisig_transaction_with_missing_signers() {
             confirmations_required: 2,
             confirmations_submitted: 1,
             missing_signers: Some(vec![
-                "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23".to_owned(),
-                "0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72".to_owned(),
-                "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D".to_owned(),
-                "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_owned(),
+                AddressEx::address_only("0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"),
+                AddressEx::address_only("0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"),
+                AddressEx::address_only("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"),
+                AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
             ]),
         }),
         safe_app_info: None,
@@ -724,7 +706,7 @@ async fn ethereum_transaction_with_inconsistent_token_types() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -744,10 +726,8 @@ async fn ethereum_transaction_with_inconsistent_token_types() {
         timestamp: ethereum_tx.execution_date.timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
-            sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
-            sender_info: None,
-            recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
-            recipient_info: None,
+            sender: AddressEx::address_only("0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2"),
+            recipient: AddressEx::address_only("0xBc79855178842FDBA0c353494895DEEf509E26bB"),
             direction: TransferDirection::Incoming,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0xb07de4b2989E180F8907B8C7e617637C26cE2776".to_string(),
@@ -779,7 +759,7 @@ async fn multisig_transaction_with_origin() {
         .times(1)
         .return_once(move |_| Ok(safe_info));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_add_address_info_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
     mock_info_provider
@@ -803,12 +783,11 @@ async fn multisig_transaction_with_origin() {
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Custom(Custom {
-            to: "0x8D29bE29923b68abfDD21e541b9374737B49cdAD".to_string(),
+            to: AddressEx::address_only("0x8D29bE29923b68abfDD21e541b9374737B49cdAD"),
             data_size: "3108".to_string(),
             value: "0".to_string(),
             method_name: Some("multiSend".to_string()),
             action_count: Some(1),
-            to_info: None,
             is_cancellation: false,
         }),
         execution_info: Some(ExecutionInfo {

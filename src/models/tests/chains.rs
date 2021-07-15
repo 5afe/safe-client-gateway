@@ -22,10 +22,12 @@ fn chain_info_json() {
             "textColor": "#fff",
             "backgroundColor": "#000"
           },
-          "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"
+          "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+          "recommendedMasterCopyVersion": "1.1.1"
     });
 
     let expected = ChainInfo {
+        recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
@@ -68,7 +70,8 @@ fn chain_info_json_to_service_chain_info() {
             "textColor": "#fff",
             "backgroundColor": "#000"
           },
-          "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"
+          "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+          "recommendedMasterCopyVersion": "1.1.1"
     });
 
     let expected = ServiceChainInfo {

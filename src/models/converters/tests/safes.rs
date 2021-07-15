@@ -1,4 +1,4 @@
-use crate::models::service::safes::{AddressEx, SafeInfoEx};
+use crate::models::service::safes::{AddressEx, ImplementationVersionState, SafeInfoEx};
 use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 use rocket::serde::json::json;
@@ -11,6 +11,10 @@ async fn to_safe_info_ex_no_address_info() {
         .expect_contract_info()
         .times(5)
         .returning(move |_| bail!("No safe info"));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(move || bail!("No chain info"));
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -76,6 +80,7 @@ async fn to_safe_info_ex_no_address_info() {
         }),
         guard: None,
         version: Some("1.1.1".to_string()),
+        implementation_version_state: ImplementationVersionState::Unknown,
     };
 
     let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
@@ -96,6 +101,10 @@ async fn to_safe_info_ex_address_info() {
                 logo_uri: Some(format!("logo_uri_{}", &address)),
             })
         });
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(move || bail!("No chain info"));
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -161,6 +170,7 @@ async fn to_safe_info_ex_address_info() {
         }),
         guard: None,
         version: Some("1.1.1".to_string()),
+        implementation_version_state: ImplementationVersionState::Unknown,
     };
 
     let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
@@ -188,6 +198,10 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
         .expect_contract_info()
         .times(1)
         .return_once(move |_| bail!("No address info"));
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(move || bail!("No chain info"));
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -211,6 +225,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
         fallback_handler: None,
         guard: None,
         version: None,
+        implementation_version_state: ImplementationVersionState::Unknown,
     };
 
     let actual = safe_info.to_safe_info_ex(&mut mock_info_provider).await;
@@ -232,6 +247,10 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
                 logo_uri: Some(format!("logo_uri_{}", &address)),
             })
         });
+    mock_info_provider
+        .expect_chain_info()
+        .times(1)
+        .returning(move || bail!("No chain info"));
 
     let expected = SafeInfoEx {
         address: AddressEx {
@@ -263,6 +282,7 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
             logo_url: Some("logo_uri_0x40A2aCCbd92BCA938b02010E17A5b8929b49130D".to_string()),
         }),
         version: Some("1.3.0".to_string()),
+        implementation_version_state: ImplementationVersionState::Unknown,
     };
 
     let actual = safe_info.to_safe_info_ex(&mock_info_provider).await;

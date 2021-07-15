@@ -139,13 +139,26 @@ pub struct TransactionSummary {
 }
 
 #[derive(Serialize, Debug, PartialEq)]
+#[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ExecutionInfo {
+    Multisig(MultisigExecutionInfo),
+    Module(ModuleExecutionInfo),
+}
+
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct ExecutionInfo {
+pub struct MultisigExecutionInfo {
     pub nonce: u64,
     pub confirmations_required: u64,
     pub confirmations_submitted: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub missing_signers: Option<Vec<AddressEx>>,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct ModuleExecutionInfo {
+    pub address: AddressEx,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

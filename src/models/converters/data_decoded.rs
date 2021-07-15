@@ -155,11 +155,7 @@ async fn insert_value_into_index(
         && value != "0x0000000000000000000000000000000000000000"
         && !index.contains_key(value)
     {
-        if let Some(address_ex) = info_provider
-            .address_ex_from_any_source(&value)
-            .await
-            .ok()
-        {
+        if let Some(address_ex) = info_provider.address_ex_from_any_source(&value).await.ok() {
             index.insert(value.to_owned(), address_ex);
         };
     }

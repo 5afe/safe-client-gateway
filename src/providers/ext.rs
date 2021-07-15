@@ -29,23 +29,14 @@ pub trait InfoProviderExt: InfoProvider {
         }
         let mut results = Vec::with_capacity(addresses.len());
         for address in addresses {
-            results.push(
-                self.address_ex_from_contracts_or_default(address)
-                    .await,
-            )
+            results.push(self.address_ex_from_contracts_or_default(address).await)
         }
         Some(results)
     }
 
-    async fn address_ex_from_contracts_optional(
-        &self,
-        address: &String,
-    ) -> Option<AddressEx> {
+    async fn address_ex_from_contracts_optional(&self, address: &String) -> Option<AddressEx> {
         if address != "0x0000000000000000000000000000000000000000" {
-            Some(
-                self.address_ex_from_contracts_or_default(address)
-                    .await,
-            )
+            Some(self.address_ex_from_contracts_or_default(address).await)
         } else {
             None
         }
@@ -55,10 +46,11 @@ pub trait InfoProviderExt: InfoProvider {
         &self,
         address: &Option<String>,
     ) -> Option<AddressEx> {
-        OptionFuture::from(address.as_ref().map(|address| async move {
-            self.address_ex_from_contracts_or_default(address)
-                .await
-        }))
+        OptionFuture::from(
+            address.as_ref().map(|address| async move {
+                self.address_ex_from_contracts_or_default(address).await
+            }),
+        )
         .await
     }
 }

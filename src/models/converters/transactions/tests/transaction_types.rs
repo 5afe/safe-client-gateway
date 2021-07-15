@@ -241,6 +241,7 @@ async fn module_transaction_data_size_greater_than_value_0_to_is_safe_is_setting
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    // We do not expect any address info loading as it is a call to the Safe itself
     mock_info_provider
         .expect_add_address_info_from_any_source()
         .times(0);
@@ -281,10 +282,10 @@ async fn transaction_data_size_greater_than_value_0_to_is_safe_is_not_settings_m
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    // We do not expect any address info loading as it is a call to the Safe itself
     mock_info_provider
         .expect_add_address_info_from_any_source()
-        .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .times(0);
 
     let tx = serde_json::from_str::<MultisigTransaction>(
         crate::json::MULTISIG_TX_UNKNOWN_SETTINGS_CHANGE,
@@ -309,10 +310,10 @@ async fn module_transaction_data_size_greater_than_value_0_to_is_safe_is_not_set
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    // We do not expect any address info loading as it is a call to the Safe itself
     mock_info_provider
         .expect_add_address_info_from_any_source()
-        .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .times(0);
 
     let tx =
         serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_UNKNOWN_SETTINGS_CHANGE)
@@ -598,10 +599,10 @@ async fn cancellation_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    // We do not expect any address info loading as it is a call to the Safe itself
     mock_info_provider
         .expect_add_address_info_from_any_source()
-        .times(1)
-        .return_once(move |_| bail!("No address info"));
+        .times(0);
 
     let tx =
         serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CANCELLATION).unwrap();

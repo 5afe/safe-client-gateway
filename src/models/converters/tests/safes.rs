@@ -2,7 +2,6 @@ use crate::models::backend::chains::ChainInfo;
 use crate::models::converters::safes::calculate_version_state;
 use crate::models::service::addresses::AddressEx;
 use crate::models::service::safes::{ImplementationVersionState, SafeInfoEx};
-use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 use rocket::serde::json::json;
 
@@ -96,7 +95,7 @@ async fn to_safe_info_ex_no_address_info_up_to_date() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_add_address_info_from_contract_info()
         .times(5)
         .returning(move |_| bail!("No safe info"));
     mock_info_provider

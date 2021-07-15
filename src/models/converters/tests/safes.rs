@@ -381,11 +381,11 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
 
 #[test]
 fn calculate_version_state_up_to_date() {
-    let actual_equal = calculate_version_state("1.3.0", &Some("1.1.1".to_string()));
-    let actual_older = calculate_version_state("1.1.1", &Some("1.1.1".to_string()));
+    let actual_equal = calculate_version_state("1.1.1", &Some("1.1.1".to_string()));
+    let actual_newer = calculate_version_state("1.3.0", &Some("1.1.1".to_string()));
 
     assert_eq!(actual_equal, ImplementationVersionState::UpToDate);
-    assert_eq!(actual_older, ImplementationVersionState::UpToDate);
+    assert_eq!(actual_newer, ImplementationVersionState::UpToDate);
 }
 
 #[test]

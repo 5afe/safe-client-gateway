@@ -8,7 +8,8 @@ use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::summary::{
-    ConflictType, ExecutionInfo, MultisigExecutionInfo, Label, TransactionListItem, TransactionSummary,
+    ConflictType, ExecutionInfo, Label, MultisigExecutionInfo, TransactionListItem,
+    TransactionSummary,
 };
 use crate::models::service::transactions::TransferDirection::Outgoing;
 use crate::models::service::transactions::{

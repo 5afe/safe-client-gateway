@@ -9,7 +9,9 @@ use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::converters::transactions::data_size;
 use crate::models::service::addresses::AddressEx;
-use crate::models::service::transactions::summary::{ExecutionInfo, ModuleExecutionInfo, MultisigExecutionInfo, TransactionSummary};
+use crate::models::service::transactions::summary::{
+    ExecutionInfo, ModuleExecutionInfo, MultisigExecutionInfo, TransactionSummary,
+};
 use crate::models::service::transactions::{
     Creation, Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange,
     SettingsInfo, TransactionInfo, TransactionStatus, Transfer, TransferDirection, TransferInfo,
@@ -166,8 +168,7 @@ async fn module_tx_to_summary_transaction_failed() {
 
 #[rocket::async_test]
 async fn module_transaction_to_custom_summary_and_module_info() {
-    let module_tx =
-        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+    let module_tx = serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -175,11 +176,13 @@ async fn module_transaction_to_custom_summary_and_module_info() {
     mock_info_provider
         .expect_address_ex_from_contracts()
         .times(1)
-        .return_once(move |address| Ok(AddressEx {
-            value: address.to_string(),
-            name: Some(format!("{}_name", address)),
-            logo_url: None
-        }));
+        .return_once(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some(format!("{}_name", address)),
+                logo_url: None,
+            })
+        });
     mock_info_provider
         .expect_address_ex_from_any_source()
         .times(1)
@@ -206,8 +209,8 @@ async fn module_transaction_to_custom_summary_and_module_info() {
             address: AddressEx {
                 value: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string(),
                 name: Some("0xfa559f0932b7B60d90B4af0b8813d4088465096b_name".to_string()),
-                logo_url: None
-            }
+                logo_url: None,
+            },
         })),
         safe_app_info: None,
     };

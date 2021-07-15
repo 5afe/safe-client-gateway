@@ -5,7 +5,9 @@ use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
 use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
-use crate::models::service::transactions::summary::{ExecutionInfo, ModuleExecutionInfo, MultisigExecutionInfo, TransactionSummary};
+use crate::models::service::transactions::summary::{
+    ExecutionInfo, ModuleExecutionInfo, MultisigExecutionInfo, TransactionSummary,
+};
 use crate::models::service::transactions::{
     Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
     ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,

@@ -38,7 +38,7 @@ pub enum GasPrice {
     #[serde(rename_all = "camelCase")]
     Oracle {
         url: String,
-        gas_parameter: Option<String>,
+        gas_parameter: String,
         gwei_factor: String,
     },
     #[serde(rename_all = "camelCase")]

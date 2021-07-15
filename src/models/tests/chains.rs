@@ -26,7 +26,7 @@ fn chain_info_json() {
         ens_registry_address: Some("0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF".to_string()),
         gas_price: GasPrice::Oracle {
             url: "https://gaspriceoracle.com/".to_string(),
-            gas_parameter: Some("average".to_string()),
+            gas_parameter: "average".to_string(),
             gwei_factor: "10".to_string(),
         },
     };
@@ -119,7 +119,7 @@ fn chain_info_json_to_service_chain_info() {
         ens_registry_address: Some("0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF".to_string()),
         gas_price: ServiceGasPrice::Oracle {
             url: "https://gaspriceoracle.com/".to_string(),
-            gas_parameter: Some("average".to_string()),
+            gas_parameter: "average".to_string(),
             gwei_factor: "10".to_string(),
         },
     };

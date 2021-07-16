@@ -91,7 +91,7 @@ pub async fn post_confirmation<'e>(
 }
 
 /**
- * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions History
@@ -114,23 +114,21 @@ pub async fn post_confirmation<'e>(
  *
  * ## Path
  *
- * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>&<trusted>`
  *
  * ## Query parameters
  *
  * - `<safe_address>` should be the checksummed address of the safe to be observed.
- * - `<page_url>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
+ * - `<cursor>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get(
-    "/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>"
-)]
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>")]
 pub async fn get_transactions_history(
     context: Context<'_>,
     chain_id: String,
     safe_address: String,
-    page_url: Option<String>,
+    cursor: Option<String>,
     timezone_offset: Option<String>,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
@@ -139,7 +137,7 @@ pub async fn get_transactions_history(
                 &context,
                 &chain_id,
                 &safe_address,
-                &page_url,
+                &cursor,
                 &timezone_offset,
             )
         })
@@ -148,7 +146,7 @@ pub async fn get_transactions_history(
 }
 
 /**
- * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of  [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions Queued
@@ -163,23 +161,23 @@ pub async fn get_transactions_history(
  *
  * ## Path
  *
- * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>`
  *
  * The response is a list of [crate::models::service::transactions::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
  *
  * ## Query parameters
  *
  * - `<safe_address>` should be the checksummed address of the safe to be observed.
- * - `<page_url>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
+ * - `<cursor>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>")]
 pub async fn get_transactions_queued(
     context: Context<'_>,
     chain_id: String,
     safe_address: String,
-    page_url: Option<String>,
+    cursor: Option<String>,
     timezone_offset: Option<String>,
     trusted: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
@@ -189,7 +187,7 @@ pub async fn get_transactions_queued(
                 &context,
                 &chain_id,
                 &safe_address,
-                &page_url,
+                &cursor,
                 &timezone_offset,
                 &trusted,
             )

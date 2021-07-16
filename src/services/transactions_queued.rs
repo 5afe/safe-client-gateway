@@ -115,7 +115,7 @@ pub(super) fn get_previous_page_nonce(
 }
 
 pub(super) async fn process_transactions(
-    info_provider: &mut impl InfoProvider,
+    info_provider: &(impl InfoProvider + Sync),
     safe_nonce: i64,
     tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
     previous_page_nonce: i64,
@@ -240,7 +240,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 }
 
 pub(super) async fn add_transaction_as_summary(
-    info_provider: &mut impl InfoProvider,
+    info_provider: &(impl InfoProvider + Sync),
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,
     conflict_type: ConflictType,

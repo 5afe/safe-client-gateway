@@ -2,6 +2,7 @@ extern crate chrono;
 
 use crate::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
@@ -27,7 +28,7 @@ impl MultisigTransaction {
             tx_status: self.map_status(&safe_info),
             tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
-                to: self.safe_transaction.to.to_owned(),
+                to: AddressEx::address_only(&self.safe_transaction.to),
                 value: self.safe_transaction.value.to_owned(),
                 hex_data: self.safe_transaction.data.to_owned(),
                 data_decoded: self.safe_transaction.data_decoded.clone(),
@@ -67,8 +68,15 @@ impl MultisigTransaction {
             submitted_at: self.submission_date.timestamp_millis(),
             nonce: self.nonce,
             safe_tx_hash: self.safe_tx_hash.to_owned(),
-            executor: self.executor.to_owned(),
-            signers: safe_info.owners,
+            executor: self
+                .executor
+                .as_ref()
+                .map(|address| AddressEx::address_only(&address)),
+            signers: safe_info
+                .owners
+                .iter()
+                .map(|rejection| AddressEx::address_only(rejection))
+                .collect(),
             confirmations_required: self.confirmations_required.unwrap_or(safe_info.threshold),
             confirmations: self
                 .confirmations
@@ -76,7 +84,7 @@ impl MultisigTransaction {
                 .unwrap_or(&vec![])
                 .into_iter()
                 .map(|confirmation| MultisigConfirmation {
-                    signer: confirmation.owner.to_owned(),
+                    signer: AddressEx::address_only(&confirmation.owner),
                     signature: confirmation.signature.to_owned(),
                     submitted_at: confirmation.submission_date.timestamp_millis(),
                 })
@@ -84,8 +92,8 @@ impl MultisigTransaction {
             refund_receiver: self
                 .refund_receiver
                 .as_ref()
-                .unwrap_or(&String::from("0x0000000000000000000000000000000000000000"))
-                .to_owned(),
+                .map(|address| AddressEx::address_only(address))
+                .unwrap_or(AddressEx::zero()),
             gas_token: self
                 .gas_token
                 .as_ref()
@@ -99,7 +107,11 @@ impl MultisigTransaction {
                 .unwrap_or(&String::from("0"))
                 .to_owned(),
             gas_token_info,
-            rejectors: rejections,
+            rejectors: rejections.map(|r| {
+                r.iter()
+                    .map(|rejection| AddressEx::address_only(rejection))
+                    .collect()
+            }),
         }
     }
 }
@@ -107,15 +119,18 @@ impl MultisigTransaction {
 impl ModuleTransaction {
     pub async fn to_transaction_details(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
         let safe_transaction = &self.safe_transaction;
+        let module_info = info_provider
+            .address_ex_from_contracts_or_default(&self.module)
+            .await;
         Ok(TransactionDetails {
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
             tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
-                to: safe_transaction.to.to_owned(),
+                to: AddressEx::address_only(&safe_transaction.to),
                 value: safe_transaction.value.to_owned(),
                 hex_data: safe_transaction.data.to_owned(),
                 data_decoded: safe_transaction.data_decoded.clone(),
@@ -130,7 +145,7 @@ impl ModuleTransaction {
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {
-                address: self.module.to_owned(),
+                address: module_info,
             })),
             safe_app_info: None,
         })

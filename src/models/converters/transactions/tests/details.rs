@@ -2,6 +2,7 @@ use crate::models::backend::transactions::{ModuleTransaction, MultisigTransactio
 use crate::models::backend::transfers::Transfer as TransferDto;
 use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Operation, Parameter};
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
@@ -30,7 +31,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
         .times(1)
         .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(2) // to_info and data_decoded "spender" address parameter
         .returning(move |_| bail!("No address info"));
 
@@ -39,12 +40,11 @@ async fn multisig_custom_transaction_to_transaction_details() {
         tx_status: TransactionStatus::Success,
         tx_hash: Some("0x0ebb2c317f55c96469e0ed2014f5833dc02a70b42f0ac52f4630938900caa698".to_string()),
         tx_info: TransactionInfo::Custom(Custom {
-            to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
+            to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
             data_size: "68".to_string(),
             value: "0".to_string(),
             method_name: Some("approve".to_string()),
             action_count: None,
-            to_info: None,
             is_cancellation: false,
         }),
         tx_data: Some(TransactionData {
@@ -66,7 +66,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
                     }
                 ]),
             }),
-            to: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
+            to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None
@@ -79,24 +79,25 @@ async fn multisig_custom_transaction_to_transaction_details() {
                 base_gas: 0,
                 gas_price: "0".to_string(),
                 gas_token: "0x0000000000000000000000000000000000000000".to_string(),
-                refund_receiver: "0x0000000000000000000000000000000000000000".to_string(),
+                refund_receiver: AddressEx::address_only("0x0000000000000000000000000000000000000000"),
                 safe_tx_hash: "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621".to_string(),
-                executor: Some("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd".to_string()),
+                executor: Some(AddressEx::address_only("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd")),
                 signers: vec![
-                    String::from("0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"),
-                    String::from("0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"),
-                    String::from("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"),
-                    String::from("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"),
-                    String::from("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0")],
+                    AddressEx::address_only("0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"),
+                    AddressEx::address_only("0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"),
+                    AddressEx::address_only("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"),
+                    AddressEx::address_only("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"),
+                    AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0")
+                ],
                 confirmations_required: 2,
                 confirmations: vec![
                     MultisigConfirmation {
-                        signer: String::from("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
+                        signer: AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
                         signature: Some(String::from("0x83b1506c409918f21031e93ed2f62310a5e0c05b1be89242a6a266a7de4af7bc6094e206b33387b8d4465af6087a4d2158815e613aeb186d88d9a1973e00bbe81b")),
                         submitted_at: timestamp_confirmation0,
                     },
                     MultisigConfirmation {
-                        signer: String::from("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"),
+                        signer: AddressEx::address_only("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"),
                         signature: Some(String::from("0x000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001")),
                         submitted_at: timestamp_confirmation1,
                     },
@@ -115,12 +116,22 @@ async fn multisig_custom_transaction_to_transaction_details() {
 }
 
 #[rocket::async_test]
-async fn module_transaction_to_transaction_details_success() {
+async fn module_transaction_to_transaction_details_module_info_success() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_contracts()
+        .times(1)
+        .returning(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some(format!("{}_name", address).to_string()),
+                logo_url: None,
+            })
+        });
+    mock_info_provider
+        .expect_address_ex_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -132,25 +143,79 @@ async fn module_transaction_to_transaction_details_success() {
         tx_status: TransactionStatus::Success,
         tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
         tx_info: TransactionInfo::Custom(Custom {
-            to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
             data_size: "132".to_string(),
             value: "0".to_string(),
             method_name: None,
             action_count: None,
-            to_info: None,
             is_cancellation: false,
         }),
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x59f96ae500000000000000000000000000df91984582e6e96288307e9c2f20b38c8fece9000000000000000000000000c778417e063141139fce010982780140aa0cd5ab0000000000000000000000000000000000000000000000000000000000000475000000000000000000000000000000000000000000000003d962c8be3053def2")),
             data_decoded: None,
-            to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
-                address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
+                address: AddressEx {
+                    value: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string(),
+                    name: Some("0xfa559f0932b7B60d90B4af0b8813d4088465096b_name".to_string()),
+                    logo_url: None,
+                }
+            })),
+        safe_app_info: None,
+    };
+
+    let actual =
+        ModuleTransaction::to_transaction_details(&module_transaction, &mut mock_info_provider)
+            .await;
+
+    assert_eq!(expected, actual.unwrap());
+}
+
+#[rocket::async_test]
+async fn module_transaction_to_transaction_details_success() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
+    mock_info_provider
+        .expect_address_ex_from_any_source()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
+
+    let module_transaction =
+        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+
+    let expected = TransactionDetails {
+        executed_at: Some(module_transaction.execution_date.timestamp_millis()),
+        tx_status: TransactionStatus::Success,
+        tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
+        tx_info: TransactionInfo::Custom(Custom {
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
+            data_size: "132".to_string(),
+            value: "0".to_string(),
+            method_name: None,
+            action_count: None,
+            is_cancellation: false,
+        }),
+        tx_data: Some(TransactionData {
+            hex_data: Some(String::from("0x59f96ae500000000000000000000000000df91984582e6e96288307e9c2f20b38c8fece9000000000000000000000000c778417e063141139fce010982780140aa0cd5ab0000000000000000000000000000000000000000000000000000000000000475000000000000000000000000000000000000000000000003d962c8be3053def2")),
+            data_decoded: None,
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
+            value: Some(String::from("0")),
+            operation: Operation::CALL,
+            address_info_index: None
+        }),
+        detailed_execution_info: Some(DetailedExecutionInfo::Module(
+            ModuleExecutionDetails {
+                address: AddressEx::address_only("0xfa559f0932b7B60d90B4af0b8813d4088465096b")
             })),
         safe_app_info: None,
     };
@@ -168,7 +233,11 @@ async fn module_transaction_to_transaction_details_failed() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_contracts()
+        .times(1)
+        .returning(move |_| bail!("No address info"));
+    mock_info_provider
+        .expect_address_ex_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
 
@@ -180,25 +249,24 @@ async fn module_transaction_to_transaction_details_failed() {
         tx_status: TransactionStatus::Failed,
         tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
         tx_info: TransactionInfo::Custom(Custom {
-            to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
             data_size: "132".to_string(),
             value: "0".to_string(),
             method_name: None,
             action_count: None,
-            to_info: None,
             is_cancellation: false,
         }),
         tx_data: Some(TransactionData {
             hex_data: Some(String::from("0x59f96ae500000000000000000000000000df91984582e6e96288307e9c2f20b38c8fece9000000000000000000000000c778417e063141139fce010982780140aa0cd5ab0000000000000000000000000000000000000000000000000000000000000475000000000000000000000000000000000000000000000003d962c8be3053def2")),
             data_decoded: None,
-            to: "0xaAEb2035FF394fdB2C879190f95e7676f1A9444B".to_string(),
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
-                address: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string()
+                address: AddressEx::address_only("0xfa559f0932b7B60d90B4af0b8813d4088465096b")
             })),
         safe_app_info: None,
     };
@@ -223,10 +291,8 @@ async fn ethereum_tx_transfer_to_transaction_details() {
             "0x317db9d079e46fef2f758e37bd20efb14d5c83e2510307079207bc6f04cdee48".to_string(),
         ),
         tx_info: TransactionInfo::Transfer(Transfer {
-            sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
-            sender_info: None,
-            recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
-            recipient_info: None,
+            sender: AddressEx::address_only("0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2"),
+            recipient: AddressEx::address_only("0xBc79855178842FDBA0c353494895DEEf509E26bB"),
             direction: TransferDirection::Incoming,
             transfer_info: TransferInfo::Erc721(Erc721Transfer {
                 token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),
@@ -245,7 +311,7 @@ async fn ethereum_tx_transfer_to_transaction_details() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -287,7 +353,7 @@ async fn multisig_transaction_with_origin() {
             })
         });
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(7) // 1 + 6 calls within data decoded multisig
         .returning(move |_| bail!("no address info"));
 

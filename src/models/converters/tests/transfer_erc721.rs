@@ -1,9 +1,9 @@
 use crate::models::backend::transfers::{
     Erc721Transfer as Erc721TransferDto, Transfer as TransferDto,
 };
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::TransferInfo;
 use crate::models::service::transactions::{Erc721Transfer, Transfer, TransferDirection};
-use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
 #[rocket::async_test]
@@ -17,15 +17,13 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
     let expected = Transfer {
-        sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-        sender_info: None,
-        recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
+        recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(
             Erc721Transfer {
@@ -59,20 +57,19 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction_with_address_info(
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
-        .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+        .return_once(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some("".to_string()),
+                logo_url: None,
             })
         });
 
     let expected = Transfer {
-        sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-        sender_info: Some(AddressInfo{ name: "".to_string(), logo_uri: None }),
-        recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        recipient_info: None,
+        sender: AddressEx { value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_url: None },
+        recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(
             Erc721Transfer {
@@ -106,20 +103,19 @@ async fn erc721_transfer_dto_to_outgoing_transfer_transaction_with_address_info(
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
-        .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+        .return_once(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some("".to_string()),
+                logo_url: None,
             })
         });
 
     let expected = Transfer {
-        sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        sender_info: None,
-        recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-        recipient_info: Some(AddressInfo{ name: "".to_string(), logo_uri: None }),
+        sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+        recipient: AddressEx{ value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_url: None },
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc721(
             Erc721Transfer {

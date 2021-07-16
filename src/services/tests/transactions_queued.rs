@@ -8,7 +8,8 @@ use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::summary::{
-    ConflictType, ExecutionInfo, Label, TransactionListItem, TransactionSummary,
+    ConflictType, ExecutionInfo, Label, MultisigExecutionInfo, TransactionListItem,
+    TransactionSummary,
 };
 use crate::models::service::transactions::TransferDirection::Outgoing;
 use crate::models::service::transactions::{
@@ -243,7 +244,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         value: "10".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
                     nonce: 392,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -251,7 +252,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
 
@@ -276,7 +277,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -284,7 +285,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -307,7 +308,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -315,7 +316,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -404,7 +405,7 @@ async fn process_transactions_conflicts_in_queued() {
                         value: "10".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -412,7 +413,7 @@ async fn process_transactions_conflicts_in_queued() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -441,7 +442,7 @@ async fn process_transactions_conflicts_in_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -449,7 +450,7 @@ async fn process_transactions_conflicts_in_queued() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
@@ -472,7 +473,7 @@ async fn process_transactions_conflicts_in_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -480,7 +481,7 @@ async fn process_transactions_conflicts_in_queued() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::End,
@@ -573,7 +574,7 @@ async fn process_transactions_conflicts_in_next() {
                     }),
 
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -581,7 +582,7 @@ async fn process_transactions_conflicts_in_next() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
@@ -604,7 +605,7 @@ async fn process_transactions_conflicts_in_next() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -612,7 +613,7 @@ async fn process_transactions_conflicts_in_next() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::End,
@@ -638,7 +639,7 @@ async fn process_transactions_conflicts_in_next() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -646,7 +647,7 @@ async fn process_transactions_conflicts_in_next() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -733,7 +734,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         value: "10".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -741,7 +742,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::End,
@@ -767,7 +768,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -775,7 +776,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
@@ -798,7 +799,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
@@ -806,7 +807,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
                         AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
                     ])
-                }),
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,

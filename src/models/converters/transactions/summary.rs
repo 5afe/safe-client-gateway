@@ -5,7 +5,9 @@ use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
 use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
-use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
+use crate::models::service::transactions::summary::{
+    ExecutionInfo, ModuleExecutionInfo, MultisigExecutionInfo, TransactionSummary,
+};
 use crate::models::service::transactions::{
     Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
     ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
@@ -62,12 +64,12 @@ impl MultisigTransaction {
                 .unwrap_or(self.submission_date)
                 .timestamp_millis(),
             tx_status,
-            execution_info: Some(ExecutionInfo {
+            execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
                 nonce: self.nonce,
                 confirmations_submitted: self.confirmation_count(),
                 confirmations_required: self.confirmation_required(safe_info.threshold),
                 missing_signers,
-            }),
+            })),
             tx_info: self.transaction_info(info_provider).await,
             safe_app_info: OptionFuture::from(
                 self.origin
@@ -119,6 +121,9 @@ impl ModuleTransaction {
         &self,
         info_provider: &(impl InfoProvider + Sync),
     ) -> Vec<TransactionSummary> {
+        let module_info = info_provider
+            .address_ex_from_contracts_or_default(&self.module)
+            .await;
         vec![TransactionSummary {
             id: create_id!(
                 ID_PREFIX_MODULE_TX,
@@ -128,7 +133,9 @@ impl ModuleTransaction {
             ),
             timestamp: self.execution_date.timestamp_millis(),
             tx_status: self.map_status(),
-            execution_info: None,
+            execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+                address: module_info,
+            })),
             safe_app_info: None,
             tx_info: self.transaction_info(info_provider).await,
         }]

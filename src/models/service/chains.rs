@@ -7,8 +7,8 @@ pub struct ChainInfo {
     // do we need to expose this?
     pub chain_id: String,
     pub chain_name: String,
-    pub rpc_url: String,
-    pub block_explorer_url: String,
+    pub rpc_uri: String,
+    pub block_explorer_uri: String,
     pub native_currency: NativeCurrency,
     pub theme: Theme,
     pub ens_registry_address: Option<String>,
@@ -21,7 +21,7 @@ pub struct NativeCurrency {
     pub name: String,
     pub symbol: String,
     pub decimals: u64,
-    pub logo_url: String,
+    pub logo_uri: String,
 }
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
@@ -37,7 +37,7 @@ pub struct Theme {
 pub enum GasPrice {
     #[serde(rename_all = "camelCase")]
     Oracle {
-        url: String,
+        uri: String,
         gas_parameter: String,
         gwei_factor: String,
     },

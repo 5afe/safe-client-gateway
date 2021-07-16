@@ -7,7 +7,7 @@ pub struct AddressEx {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub logo_url: Option<String>,
+    pub logo_uri: Option<String>,
 }
 
 impl AddressEx {
@@ -15,14 +15,14 @@ impl AddressEx {
         AddressEx {
             value: "0x0000000000000000000000000000000000000000".to_owned(),
             name: None,
-            logo_url: None,
+            logo_uri: None,
         }
     }
     pub fn address_only(address: &str) -> Self {
         AddressEx {
             value: address.to_owned(),
             name: None,
-            logo_url: None,
+            logo_uri: None,
         }
     }
 }

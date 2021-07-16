@@ -89,14 +89,14 @@ async fn to_safe_app_info_correct() {
             Ok(SafeAppInfo {
                 name: "WalletConnect".to_string(),
                 url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
-                logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+                logo_uri: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
             })
         });
 
     let expected = SafeAppInfo {
         name: "WalletConnect".to_string(),
         url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
-        logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+        logo_uri: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
     };
 
     let actual = safe_app_info_from(origin, &mut mock_info_provider).await;
@@ -117,14 +117,14 @@ async fn valid_ipfs_origin_gets_replaced() {
             Ok(SafeAppInfo {
                 name: "WalletConnect".to_string(),
                 url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect".to_string(),
-                logo_url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect/walletConnect.jpg".to_string(),
+                logo_uri: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect/walletConnect.jpg".to_string(),
             })
         });
 
     let expected = SafeAppInfo {
         name: "WalletConnect".to_string(),
         url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect".to_string(),
-        logo_url: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect/walletConnect.jpg".to_string(),
+        logo_uri: "https://ipfs.io/ipfs/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5/walletConnect/walletConnect.jpg".to_string(),
     };
 
     let actual = safe_app_info_from(origin, &mut mock_info_provider).await;

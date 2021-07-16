@@ -319,7 +319,7 @@ async fn creation_transaction_to_summary_address_info_available() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
 
@@ -346,18 +346,18 @@ async fn creation_transaction_to_summary_address_info_available() {
             creator: AddressEx {
                 value: creator,
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             },
             transaction_hash,
             implementation: Some(AddressEx {
                 value: master_copy,
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             }),
             factory: Some(AddressEx {
                 value: factory_address,
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             }),
         }),
         execution_info: None,

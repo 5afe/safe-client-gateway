@@ -15,14 +15,14 @@ async fn get_address_info_address_diff_than_safe() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
 
     let expected = AddressEx {
         value: address.to_string(),
         name: Some("".to_string()),
-        logo_url: None,
+        logo_uri: None,
     };
 
     let actual = get_address_ex_from_any_source(safe, address, &mut mock_info_provider).await;

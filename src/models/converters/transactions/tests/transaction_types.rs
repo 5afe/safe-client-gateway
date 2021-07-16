@@ -76,7 +76,7 @@ async fn transaction_data_size_and_value_greater_than_0_with_address_info() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
 
@@ -88,7 +88,7 @@ async fn transaction_data_size_and_value_greater_than_0_with_address_info() {
         to: AddressEx {
             value: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
             name: Some("".to_string()),
-            logo_url: None,
+            logo_uri: None,
         },
         data_size: "68".to_string(),
         value: "100000000000000000".to_string(),

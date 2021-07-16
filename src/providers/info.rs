@@ -172,7 +172,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
             Ok(AddressEx {
                 value: address.to_owned(),
                 name: Some(contract_info.display_name.to_owned()),
-                logo_url: contract_info.logo_uri.to_owned(),
+                logo_uri: contract_info.logo_uri.to_owned(),
             })
         }
     }
@@ -182,7 +182,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
             .map_ok(|it| AddressEx {
                 value: address.to_owned(),
                 name: Some(it.name),
-                logo_url: it.logo_uri,
+                logo_uri: it.logo_uri,
             })
             .or_else(|_| async move { self.address_ex_from_contracts(&address).await })
             .await

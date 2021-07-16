@@ -9,7 +9,9 @@ use crate::models::commons::ParamValue::SingleValue;
 use crate::models::commons::{DataDecoded, Operation, Parameter};
 use crate::models::converters::transactions::data_size;
 use crate::models::service::addresses::AddressEx;
-use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
+use crate::models::service::transactions::summary::{
+    ExecutionInfo, ModuleExecutionInfo, MultisigExecutionInfo, TransactionSummary,
+};
 use crate::models::service::transactions::{
     Creation, Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange,
     SettingsInfo, TransactionInfo, TransactionStatus, Transfer, TransferDirection, TransferInfo,
@@ -48,6 +50,10 @@ async fn module_tx_to_summary_transaction_success() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(1)
+        .returning(move |_| bail!("No contract info"));
+    mock_info_provider
         .expect_address_ex_from_any_source()
         .times(1)
         .returning(move |_| bail!("No address info"));
@@ -83,7 +89,9 @@ async fn module_tx_to_summary_transaction_success() {
         ),
         timestamp: expected_date_in_millis,
         tx_status: TransactionStatus::Success,
-        execution_info: None,
+        execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+            address: AddressEx::address_only("module"),
+        })),
         tx_info: TransactionInfo::Custom(Custom {
             to: AddressEx::address_only(&expected_to),
             data_size: String::from("0"),
@@ -102,6 +110,10 @@ async fn module_tx_to_summary_transaction_failed() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(1)
+        .returning(move |_| bail!("No contract info"));
     mock_info_provider
         .expect_address_ex_from_any_source()
         .times(1)
@@ -138,7 +150,9 @@ async fn module_tx_to_summary_transaction_failed() {
         ),
         timestamp: expected_date_in_millis,
         tx_status: TransactionStatus::Failed,
-        execution_info: None,
+        execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+            address: AddressEx::address_only("module"),
+        })),
         tx_info: TransactionInfo::Custom(Custom {
             to: AddressEx::address_only(&expected_to),
             data_size: String::from("0"),
@@ -150,6 +164,61 @@ async fn module_tx_to_summary_transaction_failed() {
         safe_app_info: None,
     }];
     assert_eq!(actual, expected);
+}
+
+#[rocket::async_test]
+async fn module_transaction_to_custom_summary_and_module_info() {
+    let module_tx = serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider.expect_token_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(1)
+        .return_once(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some(format!("{}_name", address)),
+                logo_uri: None,
+            })
+        });
+    mock_info_provider
+        .expect_address_ex_from_any_source()
+        .times(1)
+        .return_once(move |_| bail!("No address info"));
+
+    let expected = TransactionSummary {
+        id: create_id!(
+            ID_PREFIX_MODULE_TX,
+            module_tx.safe_transaction.safe,
+            module_tx.transaction_hash,
+            hex_hash(&module_tx)
+        ),
+        timestamp: module_tx.execution_date.timestamp_millis(),
+        tx_status: TransactionStatus::Success,
+        tx_info: TransactionInfo::Custom(Custom {
+            to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
+            data_size: "132".to_string(),
+            value: "0".to_string(),
+            method_name: None,
+            action_count: None,
+            is_cancellation: false,
+        }),
+        execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+            address: AddressEx {
+                value: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string(),
+                name: Some("0xfa559f0932b7B60d90B4af0b8813d4088465096b_name".to_string()),
+                logo_uri: None,
+            },
+        })),
+        safe_app_info: None,
+    };
+
+    let actual =
+        ModuleTransaction::to_transaction_summary(&module_tx, &mut mock_info_provider).await;
+
+    assert_eq!(&expected, actual.get(0).unwrap());
 }
 
 #[rocket::async_test]
@@ -410,12 +479,12 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
                 value: "50000000000000".to_string(),
             }),
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
             nonce: 178,
             confirmations_required: 3,
             confirmations_submitted: 3,
             missing_signers: None,
-        }),
+        })),
         safe_app_info: None,
     };
 
@@ -463,12 +532,12 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
                 logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string()),
             }),
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
             nonce: 177,
             confirmations_required: 3,
             confirmations_submitted: 3,
             missing_signers: None,
-        }),
+        })),
         safe_app_info: None,
     };
 
@@ -512,12 +581,12 @@ async fn multisig_transaction_to_ether_transfer_summary() {
                 value: "100000000000000000".to_string(),
             }),
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
             nonce: 147,
             confirmations_required: 2,
             confirmations_submitted: 2,
             missing_signers: None,
-        }),
+        })),
         safe_app_info: None,
     };
 
@@ -577,12 +646,12 @@ async fn multisig_transaction_to_settings_change_summary() {
                 ]),
             },
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
             nonce: 135,
             confirmations_required: 2,
             confirmations_submitted: 2,
             missing_signers: None,
-        }),
+        })),
         safe_app_info: None,
     };
 
@@ -625,12 +694,12 @@ async fn multisig_transaction_to_custom_summary() {
             action_count: None,
             is_cancellation: false,
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
             nonce: 84,
             confirmations_required: 2,
             confirmations_submitted: 2,
             missing_signers: None,
-        }),
+        })),
         safe_app_info: None,
     };
 
@@ -677,7 +746,7 @@ async fn multisig_transaction_with_missing_signers() {
                 value: "100000000000000000".to_string(),
             }),
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
             nonce: 147,
             confirmations_required: 2,
             confirmations_submitted: 1,
@@ -687,7 +756,7 @@ async fn multisig_transaction_with_missing_signers() {
                 AddressEx::address_only("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"),
                 AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
             ]),
-        }),
+        })),
         safe_app_info: None,
     };
 
@@ -792,12 +861,12 @@ async fn multisig_transaction_with_origin() {
             action_count: Some(1),
             is_cancellation: false,
         }),
-        execution_info: Some(ExecutionInfo {
+        execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
             nonce: 160,
             confirmations_required: 2,
             confirmations_submitted: 2,
             missing_signers: None,
-        }),
+        })),
         safe_app_info: Some(SafeAppInfo {
             name: "WalletConnect".to_string(),
             url: "https://apps.gnosis-safe.io/walletConnect".to_string(),

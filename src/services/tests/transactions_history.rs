@@ -3,7 +3,7 @@ use crate::models::backend::transactions::Transaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::summary::{
-    ConflictType, TransactionListItem, TransactionSummary,
+    ConflictType, ExecutionInfo, ModuleExecutionInfo, TransactionListItem, TransactionSummary,
 };
 use crate::models::service::transactions::TransactionStatus::Success;
 use crate::models::service::transactions::TransferDirection::{Incoming, Outgoing};
@@ -73,6 +73,10 @@ async fn backend_txs_to_summary_txs_with_values() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(3)
+        .returning(move |_| bail!("No contract info"));
+    mock_info_provider
         .expect_token_info()
         .times(3)
         .returning(move |_| bail!("No token info"));
@@ -97,7 +101,9 @@ async fn backend_txs_to_summary_txs_with_values() {
                     is_cancellation: false,
                 },
             ),
-            execution_info: None,
+            execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+                address: AddressEx::address_only("0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134"),
+            })),
             safe_app_info: None,
         },
         TransactionSummary {
@@ -114,7 +120,9 @@ async fn backend_txs_to_summary_txs_with_values() {
                     is_cancellation: false,
                 },
             ),
-            execution_info: None,
+            execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+                address: AddressEx::address_only("0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134"),
+            })),
             safe_app_info: None,
         },
         TransactionSummary {
@@ -131,7 +139,9 @@ async fn backend_txs_to_summary_txs_with_values() {
                     is_cancellation: false,
                 },
             ),
-            execution_info: None,
+            execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+                address: AddressEx::address_only("0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134"),
+            })),
             safe_app_info: None,
         },
         TransactionSummary {
@@ -255,6 +265,10 @@ async fn service_txs_to_tx_list_items_last_timestamp_undefined() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(6)
+        .returning(move |_| bail!("No contract info"));
+    mock_info_provider
         .expect_token_info()
         .times(6)
         .returning(move |_| bail!("No token info"));
@@ -313,6 +327,10 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_but_different() {
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(6)
+        .returning(move |_| bail!("No contract info"));
     mock_info_provider
         .expect_token_info()
         .times(6)
@@ -374,6 +392,10 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(6)
+        .returning(move |_| bail!("No contract info"));
+    mock_info_provider
         .expect_token_info()
         .times(6)
         .returning(move |_| bail!("No token info"));
@@ -427,6 +449,10 @@ async fn service_txs_to_tx_list_items_last_timestamp_defined_and_same() {
 async fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(6)
+        .returning(move |_| bail!("No contract info"));
     mock_info_provider
         .expect_token_info()
         .times(6)
@@ -484,6 +510,10 @@ async fn service_txs_to_tx_list_items_date_label_berlin_timezone() {
 async fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(6)
+        .returning(move |_| bail!("No contract info"));
     mock_info_provider
         .expect_token_info()
         .times(6)
@@ -545,6 +575,10 @@ async fn service_txs_to_tx_list_items_date_label_melbourne_timezone() {
 async fn service_txs_to_tx_list_items_date_label_buenos_aires_timezone() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(6)
+        .returning(move |_| bail!("No contract info"));
     mock_info_provider
         .expect_token_info()
         .times(6)
@@ -627,6 +661,10 @@ async fn peek_timestamp_and_remove_item_with_items() {
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(1)
+        .returning(move |_| bail!("No contract info"));
     mock_info_provider
         .expect_token_info()
         .times(1)

@@ -29,7 +29,7 @@ pub async fn get_history_transactions(
         / 1000;
 
     let incoming_page_metadata =
-        PageMetadata::from_url_string(cursor.as_ref().unwrap_or(&"".to_string()));
+        PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
 
     let page_metadata = adjust_page_meta(&incoming_page_metadata);
     let extended_page_cursor = Some(page_metadata.to_url_string());
@@ -129,7 +129,7 @@ async fn fetch_backend_paged_txs(
     safe_address: &str,
     cursor: &Option<String>,
 ) -> ApiResult<Page<Transaction>> {
-    let page_metadata = PageMetadata::from_url_string(cursor.as_ref().unwrap_or(&"".to_string()));
+    let page_metadata = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",

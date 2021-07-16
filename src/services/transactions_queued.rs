@@ -22,7 +22,7 @@ pub async fn get_queued_transactions(
     let mut info_provider = DefaultInfoProvider::new(chain_id, context);
 
     // Parse page meta (offset and limit)
-    let page_meta = PageMetadata::from_url_string(cursor.as_ref().unwrap_or(&"".to_string()));
+    let page_meta = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
     // Adjust the page meta to fetch additional information of adjacent pages
     let adjusted_page_meta = adjust_page_meta(&page_meta);
 

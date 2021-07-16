@@ -105,20 +105,14 @@ pub struct DefaultInfoProvider<'p, C: Cache> {
     // Mutex is an async Mutex, meaning that the lock is non-blocking
     safe_cache: Mutex<HashMap<String, Option<SafeInfo>>>,
     token_cache: Mutex<HashMap<String, Option<TokenInfo>>>,
+    chain_cache: Mutex<HashMap<String, Option<ChainInfo>>>,
 }
 
 #[rocket::async_trait]
 impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     async fn chain_info(&self) -> ApiResult<ChainInfo> {
-        let url = config_uri!("/v1/chains/{}", self.chain_id);
-        let data = RequestCached::new(url)
-            .cache_duration(chain_info_cache_duration())
-            .error_cache_duration(short_error_duration())
-            .request_timeout(chain_info_request_timeout())
-            .execute(self.client, self.cache)
-            .await?;
-        let result = serde_json::from_str::<ChainInfo>(&data)?;
-        Ok(result)
+        let chain_cache = &mut self.chain_cache.lock().await;
+        Self::cached(chain_cache, || self.load_chain_info(), self.chain_id).await
     }
 
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo> {
@@ -197,6 +191,7 @@ impl<'a> DefaultInfoProvider<'a, ServiceCache<'a>> {
             cache: context.cache(),
             safe_cache: Default::default(),
             token_cache: Default::default(),
+            chain_cache: Default::default(),
         }
     }
 }
@@ -232,7 +227,7 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
             .request_timeout(safe_info_request_timeout())
             .execute(self.client, self.cache)
             .await?;
-        Ok(serde_json::from_str(&data).unwrap_or(None))
+        Ok(serde_json::from_str(&data).ok())
     }
 
     async fn populate_token_cache(&self) -> ApiResult<()> {
@@ -274,5 +269,17 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }
+    }
+
+    async fn load_chain_info(&self) -> ApiResult<Option<ChainInfo>> {
+        let url = config_uri!("/v1/chains/{}", self.chain_id);
+        let data = RequestCached::new(url)
+            .cache_duration(chain_info_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .request_timeout(chain_info_request_timeout())
+            .execute(self.client, self.cache)
+            .await?;
+        let result = serde_json::from_str::<ChainInfo>(&data).ok();
+        Ok(result)
     }
 }

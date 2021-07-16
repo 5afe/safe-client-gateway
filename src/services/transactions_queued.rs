@@ -15,14 +15,14 @@ pub async fn get_queued_transactions(
     context: &Context<'_>,
     chain_id: &String,
     safe_address: &String,
-    page_url: &Option<String>,
+    cursor: &Option<String>,
     timezone_offset: &Option<String>,
     trusted: &Option<bool>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let mut info_provider = DefaultInfoProvider::new(chain_id, context);
 
     // Parse page meta (offset and limit)
-    let page_meta = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
+    let page_meta = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
     // Adjust the page meta to fetch additional information of adjacent pages
     let adjusted_page_meta = adjust_page_meta(&page_meta);
 
@@ -65,7 +65,7 @@ pub async fn get_queued_transactions(
     .await;
 
     Ok(Page {
-        next: build_page_url(
+        next: build_cursor(
             context,
             &chain_id,
             &safe_address,
@@ -75,7 +75,7 @@ pub async fn get_queued_transactions(
             backend_transactions.next,
             1, // Direction forward
         ),
-        previous: build_page_url(
+        previous: build_cursor(
             context,
             &chain_id,
             &safe_address,
@@ -201,7 +201,7 @@ pub(super) async fn process_transactions(
     service_transactions
 }
 
-fn build_page_url(
+fn build_cursor(
     context: &Context,
     chain_id: &String,
     safe_address: &String,

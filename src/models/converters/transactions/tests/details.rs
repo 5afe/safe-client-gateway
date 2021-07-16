@@ -349,7 +349,7 @@ async fn multisig_transaction_with_origin() {
             Ok(SafeAppInfo {
                 name: "WalletConnect".to_string(),
                 url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
-                logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+                logo_uri: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
             })
         });
     mock_info_provider

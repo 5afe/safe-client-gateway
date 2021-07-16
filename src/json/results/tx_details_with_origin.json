@@ -142,6 +142,6 @@
   "safeAppInfo": {
     "name": "WalletConnect",
     "url": "https://apps.gnosis-safe.io/walletConnect",
-    "logoUrl": "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg"
+    "logoUri": "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg"
   }
 }

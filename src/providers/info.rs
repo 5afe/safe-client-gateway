@@ -62,7 +62,7 @@ pub struct SafeInfo {
 pub struct SafeAppInfo {
     pub name: String,
     pub url: String,
-    pub logo_url: String,
+    pub logo_uri: String,
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
@@ -154,7 +154,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         Ok(SafeAppInfo {
             name: manifest.name.to_owned(),
             url: url.to_owned(),
-            logo_url: format!("{}/{}", url, manifest.icon_path),
+            logo_uri: format!("{}/{}", url, manifest.icon_path),
         })
     }
 

@@ -12,7 +12,7 @@ fn chain_info_json() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         rpc_uri: "https://someurl.com/rpc".to_string(),
-        block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri: Some("https://blockexplorer.com".to_string()),
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -45,7 +45,7 @@ fn chain_info_json_with_fixed_gas_price() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         rpc_uri: "https://someurl.com/rpc".to_string(),
-        block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri: Some("https://blockexplorer.com".to_string()),
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -76,7 +76,7 @@ fn chain_info_json_with_unkown_gas_price_type() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         rpc_uri: "https://someurl.com/rpc".to_string(),
-        block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri: Some("https://blockexplorer.com".to_string()),
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -105,7 +105,7 @@ fn chain_info_json_to_service_chain_info() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         rpc_uri: "https://someurl.com/rpc".to_string(),
-        block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri: Some("https://blockexplorer.com".to_string()),
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -137,7 +137,7 @@ fn unknown_gas_price_type_to_service_chain_info() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         rpc_uri: "https://someurl.com/rpc".to_string(),
-        block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri: Some("https://blockexplorer.com".to_string()),
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),

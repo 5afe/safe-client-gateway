@@ -8,7 +8,7 @@ pub struct ChainInfo {
     pub chain_id: String,
     pub chain_name: String,
     pub rpc_uri: String,
-    pub block_explorer_uri: String,
+    pub block_explorer_uri: Option<String>,
     pub native_currency: NativeCurrency,
     pub theme: Theme,
     pub ens_registry_address: Option<String>,

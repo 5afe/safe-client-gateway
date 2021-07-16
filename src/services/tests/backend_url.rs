@@ -13,7 +13,7 @@ async fn core_uri_success_with_params() {
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
         rpc_uri: "".to_string(),
-        block_explorer_uri: "".to_string(),
+        block_explorer_uri: Some("".to_string()),
         native_currency: NativeCurrency {
             name: "".to_string(),
             symbol: "".to_string(),
@@ -53,7 +53,7 @@ async fn core_uri_success_without_params() {
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
         rpc_uri: "".to_string(),
-        block_explorer_uri: "".to_string(),
+        block_explorer_uri: Some("".to_string()),
         native_currency: NativeCurrency {
             name: "".to_string(),
             symbol: "".to_string(),

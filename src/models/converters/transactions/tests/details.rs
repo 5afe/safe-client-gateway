@@ -127,7 +127,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", address).to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
     mock_info_provider
@@ -163,7 +163,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
                 address: AddressEx {
                     value: "0xfa559f0932b7B60d90B4af0b8813d4088465096b".to_string(),
                     name: Some("0xfa559f0932b7B60d90B4af0b8813d4088465096b_name".to_string()),
-                    logo_url: None,
+                    logo_uri: None,
                 }
             })),
         safe_app_info: None,
@@ -349,7 +349,7 @@ async fn multisig_transaction_with_origin() {
             Ok(SafeAppInfo {
                 name: "WalletConnect".to_string(),
                 url: "https://apps.gnosis-safe.io/walletConnect".to_string(),
-                logo_url: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
+                logo_uri: "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg".to_string(),
             })
         });
     mock_info_provider

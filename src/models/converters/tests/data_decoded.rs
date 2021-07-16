@@ -40,7 +40,7 @@ async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() 
             Ok(AddressEx {
                 value: "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             })
         });
 
@@ -54,7 +54,7 @@ async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() 
             handler: AddressEx {
                 value: "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             },
         }),
     };
@@ -211,7 +211,7 @@ async fn data_decoded_change_implementation_to_settings_info_with_address_info()
             Ok(AddressEx {
                 value: "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             })
         });
 
@@ -224,7 +224,7 @@ async fn data_decoded_change_implementation_to_settings_info_with_address_info()
             implementation: AddressEx {
                 value: "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             },
         }),
     };
@@ -267,7 +267,7 @@ async fn data_decoded_enable_module_to_settings_info_with_address_info() {
             Ok(AddressEx {
                 value: "0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             })
         });
 
@@ -280,7 +280,7 @@ async fn data_decoded_enable_module_to_settings_info_with_address_info() {
             module: AddressEx {
                 value: "0xF5dC3718EEbC5b003F1672A499F2ACBE77Ba790d".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             },
         }),
     };
@@ -323,7 +323,7 @@ async fn data_decoded_disable_module_to_settings_info_with_address_info() {
             Ok(AddressEx {
                 value: "0x25F73b24B866963B0e560fFF9bbA7908be0263E8".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             })
         });
 
@@ -336,7 +336,7 @@ async fn data_decoded_disable_module_to_settings_info_with_address_info() {
             module: AddressEx {
                 value: "0x25F73b24B866963B0e560fFF9bbA7908be0263E8".to_string(),
                 name: Some("Address name".to_string()),
-                logo_url: Some("logo.url".to_string()),
+                logo_uri: Some("logo.url".to_string()),
             },
         }),
     };
@@ -451,7 +451,7 @@ async fn address_info_index_not_multi_send_address_single_value() {
             Ok(AddressEx {
                 value: "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string(),
                 name: Some("Master Copy".to_string()),
-                logo_url: Some("url.de".to_string()),
+                logo_uri: Some("url.de".to_string()),
             })
         });
 
@@ -465,7 +465,7 @@ async fn address_info_index_not_multi_send_address_single_value() {
             AddressEx {
                 value: "0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A".to_string(),
                 name: Some("Master Copy".to_string()),
-                logo_url: Some("url.de".to_string()),
+                logo_uri: Some("url.de".to_string()),
             },
         );
         map
@@ -499,7 +499,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -512,7 +512,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -539,7 +539,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -554,7 +554,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
             AddressEx {
                 value: "0x4FB84d2dFc50017aFa759107a389759c8fD077DE".to_owned(),
                 name: Some("0x4FB84d2dFc50017aFa759107a389759c8fD077DE_name".to_string()),
-                logo_url: Some("0x4FB84d2dFc50017aFa759107a389759c8fD077DE_url".to_string()),
+                logo_uri: Some("0x4FB84d2dFc50017aFa759107a389759c8fD077DE_url".to_string()),
             },
         );
 
@@ -563,7 +563,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
             AddressEx {
                 value: "0x111111111117dC0aa78b770fA6A738034120C302".to_owned(),
                 name: Some("0x111111111117dC0aa78b770fA6A738034120C302_name".to_string()),
-                logo_url: Some("0x111111111117dC0aa78b770fA6A738034120C302_url".to_string()),
+                logo_uri: Some("0x111111111117dC0aa78b770fA6A738034120C302_url".to_string()),
             },
         );
 
@@ -572,7 +572,7 @@ async fn address_info_index_not_multi_send_address_array_value() {
             AddressEx {
                 value: "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B".to_owned(),
                 name: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_name".to_string()),
-                logo_url: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
+                logo_uri: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
             },
         );
 
@@ -598,7 +598,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -611,7 +611,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -624,7 +624,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -637,7 +637,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -650,7 +650,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -667,7 +667,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             AddressEx {
                 value: "0x111111125434b319222CdBf8C261674aDB56F3ae".to_owned(),
                 name: Some("0x111111125434b319222CdBf8C261674aDB56F3ae_name".to_string()),
-                logo_url: Some("0x111111125434b319222CdBf8C261674aDB56F3ae_url".to_string()),
+                logo_uri: Some("0x111111125434b319222CdBf8C261674aDB56F3ae_url".to_string()),
             },
         );
 
@@ -676,7 +676,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             AddressEx {
                 value: "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5".to_owned(),
                 name: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_name".to_string()),
-                logo_url: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_url".to_string()),
+                logo_uri: Some("0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5_url".to_string()),
             },
         );
 
@@ -685,7 +685,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             AddressEx {
                 value: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_owned(),
                 name: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_name".to_string()),
-                logo_url: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
+                logo_uri: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
             },
         );
 
@@ -694,7 +694,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             AddressEx {
                 value: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".to_owned(),
                 name: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_name".to_string()),
-                logo_url: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_url".to_string()),
+                logo_uri: Some("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2_url".to_string()),
             },
         );
 
@@ -703,7 +703,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
             AddressEx {
                 value: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_owned(),
                 name: Some("0xBc79855178842FDBA0c353494895DEEf509E26bB_name".to_string()),
-                logo_url: Some("0xBc79855178842FDBA0c353494895DEEf509E26bB_url".to_string()),
+                logo_uri: Some("0xBc79855178842FDBA0c353494895DEEf509E26bB_url".to_string()),
             },
         );
 
@@ -729,7 +729,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
             Ok(AddressEx {
                 value: address.to_owned(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -742,7 +742,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
             Ok(AddressEx {
                 value: address.to_owned(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -755,7 +755,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
             Ok(AddressEx {
                 value: address.to_owned(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         })
         .in_sequence(&mut sequence);
@@ -773,7 +773,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
             AddressEx {
                 value: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".to_owned(),
                 name: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_name".to_string()),
-                logo_url: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
+                logo_uri: Some("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE_url".to_string()),
             },
         );
 
@@ -782,7 +782,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
             AddressEx {
                 value: "0x991c44331f0E59510Bcff76edBA06C3f552Eef8B".to_owned(),
                 name: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_name".to_string()),
-                logo_url: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
+                logo_uri: Some("0x991c44331f0E59510Bcff76edBA06C3f552Eef8B_url".to_string()),
             },
         );
 
@@ -791,7 +791,7 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
             AddressEx {
                 value: "0x68881260bd04E9dAc7F77a314360ce05435B4818".to_owned(),
                 name: Some("0x68881260bd04E9dAc7F77a314360ce05435B4818_name".to_string()),
-                logo_url: Some("0x68881260bd04E9dAc7F77a314360ce05435B4818_url".to_string()),
+                logo_uri: Some("0x68881260bd04E9dAc7F77a314360ce05435B4818_url".to_string()),
             },
         );
 
@@ -816,7 +816,7 @@ async fn address_info_index_skip_address_info_for_0x0() {
             Ok(AddressEx {
                 value: address.to_owned(),
                 name: Some(format!("{}_name", &address)),
-                logo_url: Some(format!("{}_url", &address)),
+                logo_uri: Some(format!("{}_url", &address)),
             })
         });
 
@@ -832,7 +832,7 @@ async fn address_info_index_skip_address_info_for_0x0() {
             AddressEx {
                 value: "0x441E604Ad49602c0B9C0B08D0781eCF96740786a".to_string(),
                 name: Some("0x441E604Ad49602c0B9C0B08D0781eCF96740786a_name".to_string()),
-                logo_url: Some("0x441E604Ad49602c0B9C0B08D0781eCF96740786a_url".to_string()),
+                logo_uri: Some("0x441E604Ad49602c0B9C0B08D0781eCF96740786a_url".to_string()),
             },
         );
 

@@ -63,12 +63,12 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction_with_address_info(
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
 
     let expected = Transfer {
-        sender: AddressEx { value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_url: None },
+        sender: AddressEx { value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_uri: None },
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(
@@ -109,13 +109,13 @@ async fn erc721_transfer_dto_to_outgoing_transfer_transaction_with_address_info(
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
 
     let expected = Transfer {
         sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
-        recipient: AddressEx{ value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_url: None },
+        recipient: AddressEx{ value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_uri: None },
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc721(
             Erc721Transfer {

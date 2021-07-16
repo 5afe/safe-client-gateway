@@ -47,7 +47,7 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_inf
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
 
@@ -58,7 +58,7 @@ async fn ether_transfer_dto_ether_incoming_transfer_transaction_with_address_inf
         sender: AddressEx {
             value: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
             name: Some("".to_string()),
-            logo_url: None,
+            logo_uri: None,
         },
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
@@ -87,7 +87,7 @@ async fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_inf
             Ok(AddressEx {
                 value: address.to_string(),
                 name: Some("".to_string()),
-                logo_url: None,
+                logo_uri: None,
             })
         });
 
@@ -99,7 +99,7 @@ async fn ether_transfer_dto_ether_outgoing_transfer_transaction_with_address_inf
         recipient: AddressEx {
             value: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
             name: Some("".to_string()),
-            logo_url: None,
+            logo_uri: None,
         },
         direction: TransferDirection::Outgoing,
         transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {

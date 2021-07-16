@@ -12,13 +12,13 @@ async fn core_uri_success_with_params() {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        rpc_url: "".to_string(),
-        block_explorer_url: "".to_string(),
+        rpc_uri: "".to_string(),
+        block_explorer_uri: "".to_string(),
         native_currency: NativeCurrency {
             name: "".to_string(),
             symbol: "".to_string(),
             decimals: 0,
-            logo_url: "https://test.token.image.url".to_string(),
+            logo_uri: "https://test.token.image.url".to_string(),
         },
         theme: Theme {
             text_color: "#fff".to_string(),
@@ -52,13 +52,13 @@ async fn core_uri_success_without_params() {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        rpc_url: "".to_string(),
-        block_explorer_url: "".to_string(),
+        rpc_uri: "".to_string(),
+        block_explorer_uri: "".to_string(),
         native_currency: NativeCurrency {
             name: "".to_string(),
             symbol: "".to_string(),
             decimals: 0,
-            logo_url: "https://test.token.image.url".to_string(),
+            logo_uri: "https://test.token.image.url".to_string(),
         },
         theme: Theme {
             text_color: "#fff".to_string(),

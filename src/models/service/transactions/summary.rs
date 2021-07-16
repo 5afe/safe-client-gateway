@@ -30,6 +30,7 @@ use serde::Serialize;
 ///           "methodName": "multiSend"
 ///         },
 ///         "executionInfo": {
+///           "type" : "MULTISIG_EXECUTION_INFO",
 ///           "nonce": 2,
 ///           "confirmationsRequired": 1,
 ///           "confirmationsSubmitted": 1
@@ -51,6 +52,7 @@ use serde::Serialize;
 ///           "methodName": "multiSend"
 ///         },
 ///         "executionInfo": {
+///           "type" : "MULTISIG_EXECUTION_INFO",
 ///           "nonce": 1,
 ///           "confirmationsRequired": 1,
 ///           "confirmationsSubmitted": 1
@@ -65,7 +67,7 @@ use serde::Serialize;
 ///     {
 ///       "type": "TRANSACTION",
 ///       "transaction": {
-///         "id": "multisig_0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f_0xb487741c687a81496034b08d7e6d94986cbae38dc6ebd2aa8e547cb8f8542cc0",
+///         "id": "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0xcd10b23687bf336d0f4c0a3383590d3d1722aaa99a41fd0d289a5f69a8266c8f_0x53b6e88b578a6313",
 ///         "timestamp": 1604533603000,
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
@@ -76,9 +78,10 @@ use serde::Serialize;
 ///           "methodName": "multiSend"
 ///         },
 ///         "executionInfo": {
-///           "nonce": 0,
-///           "confirmationsRequired": 1,
-///           "confirmationsSubmitted": 1
+///           "type" : "MODULE_EXECUTION_INFO",
+///           "address": {
+///             "value": "0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134"
+///           }
 ///         }
 ///       },
 ///       "conflictType": "None"

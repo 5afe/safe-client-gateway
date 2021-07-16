@@ -2,6 +2,7 @@ use crate::models::backend::transfers::{
     Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto,
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::{
     Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, TransactionStatus,
@@ -23,15 +24,13 @@ async fn erc_20_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
-        sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
-        sender_info: None,
-        recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only("0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F"),
+        recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc20(
             Erc20Transfer {
@@ -66,15 +65,13 @@ async fn erc_721_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
-        sender: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-        sender_info: None,
-        recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
+        recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(
             Erc721Transfer {
@@ -105,15 +102,13 @@ async fn ether_transfer_dto_to_transaction_info() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionInfo::Transfer(Transfer {
-        sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
-        sender_info: None,
-        recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only("0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F"),
+        recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "1000000000000000".to_string(),
@@ -135,7 +130,9 @@ async fn unknown_transfer_dto_to_transaction_info() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
-    mock_info_provider.expect_contract_info().times(0);
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .times(0);
 
     let actual = unknown_transfer_dto
         .to_transfer(&mut mock_info_provider, safe_address)
@@ -173,7 +170,7 @@ async fn transfer_dto_to_transaction_details() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -181,10 +178,8 @@ async fn transfer_dto_to_transaction_details() {
         executed_at: Some(1597733631000),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
-            sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
-            sender_info: None,
-            recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-            recipient_info: None,
+            sender: AddressEx::address_only("0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F"),
+            recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
             direction: TransferDirection::Incoming,
             transfer_info: (TransferInfo::NativeCoin(NativeCoinTransfer {
                 value: "1000000000000000".to_string(),
@@ -212,7 +207,7 @@ async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -223,10 +218,8 @@ async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
 
     let transfer = TransferDto::Erc20(erc_20_transfer);
     let expected = TransactionInfo::Transfer(Transfer {
-        sender: "0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2".to_string(),
-        sender_info: None,
-        recipient: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only("0xd31e655bC4Eb5BCFe25A47d636B25bb4aa4041B2"),
+        recipient: AddressEx::address_only("0xBc79855178842FDBA0c353494895DEEf509E26bB"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc721(Erc721Transfer {
             token_address: "0xa9517B2E61a57350D6555665292dBC632C76adFe".to_string(),

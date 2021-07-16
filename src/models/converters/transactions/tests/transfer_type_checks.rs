@@ -1,6 +1,7 @@
 use crate::models::backend::transactions::{Confirmation, MultisigTransaction, SafeTransaction};
 use crate::models::commons::Operation;
 use crate::models::commons::{DataDecoded, Parameter};
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::{
     Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, Transfer,
     TransferDirection, TransferInfo,
@@ -25,7 +26,7 @@ async fn multisig_tx_check_erc721_transfer() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -94,10 +95,8 @@ async fn multisig_tx_check_erc721_transfer() {
     };
 
     let expected = TransactionInfo::Transfer(Transfer {
-        sender: safe.to_string(),
-        sender_info: None,
-        recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only(safe),
+        recipient: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc721(Erc721Transfer {
             token_address: "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF".to_string(),
@@ -130,7 +129,7 @@ async fn multisig_tx_check_erc20_transfer() {
         .times(1)
         .return_once(move |_| Ok(token_info));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -199,10 +198,8 @@ async fn multisig_tx_check_erc20_transfer() {
     };
 
     let expected = TransactionInfo::Transfer(Transfer {
-        sender: safe.to_string(),
-        sender_info: None,
-        recipient: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only(safe),
+        recipient: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc20(Erc20Transfer {
             token_address: "0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85".to_string(),
@@ -225,7 +222,7 @@ async fn multisig_tx_check_ether_transfer() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
@@ -281,10 +278,8 @@ async fn multisig_tx_check_ether_transfer() {
     };
 
     let expected = TransactionInfo::Transfer(Transfer {
-        sender: safe.to_string(),
-        sender_info: None,
-        recipient: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only(safe),
+        recipient: AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
             value: "50000000000000".to_string(),

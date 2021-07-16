@@ -9,8 +9,8 @@ pub mod transfers;
 #[cfg(test)]
 mod tests;
 
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::TransferDirection;
-use crate::providers::address_info::AddressInfo;
 use crate::providers::info::InfoProvider;
 
 pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> TransferDirection {
@@ -26,14 +26,17 @@ pub(super) fn get_transfer_direction(safe: &str, from: &str, to: &str) -> Transf
 // This method is required to prevent polluting the cache with all the safe requests
 // This is done to prevent that every user that queries a transfer transaction, doesn't
 // leave a mark in our cache.
-pub(super) async fn get_address_info(
+pub(super) async fn get_address_ex_from_any_source(
     safe: &str,
     address: &str,
     info_provider: &impl InfoProvider,
-) -> Option<AddressInfo> {
+) -> AddressEx {
     if safe != address {
-        info_provider.full_address_info_search(address).await.ok()
+        info_provider
+            .address_ex_from_any_source(address)
+            .await
+            .unwrap_or(AddressEx::address_only(address))
     } else {
-        None
+        AddressEx::address_only(address)
     }
 }

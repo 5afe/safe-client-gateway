@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SafeTransactionEstimationRequest {
+    // Address will not be mapped to AddressEx as it is a POST body that is forwarded to the core services
     pub to: String,
     pub value: String,
     pub data: String,

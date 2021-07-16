@@ -1,5 +1,4 @@
-use crate::models::service::safes::AddressEx;
-use crate::providers::address_info::AddressInfo;
+use crate::models::service::addresses::AddressEx;
 use crate::providers::info::{InfoProvider, TokenInfo};
 use rocket::futures::future::OptionFuture;
 
@@ -14,7 +13,13 @@ pub trait InfoProviderExt: InfoProvider {
         self.token_info(address).await.ok()
     }
 
-    async fn addresses_to_address_ex(
+    async fn address_ex_from_contracts_or_default(&self, address: &String) -> AddressEx {
+        self.address_ex_from_contracts(&address)
+            .await
+            .unwrap_or(AddressEx::address_only(address))
+    }
+
+    async fn multiple_address_ex_from_contracts(
         &self,
         addresses: &Option<Vec<String>>,
     ) -> Option<Vec<AddressEx>> {
@@ -24,43 +29,27 @@ pub trait InfoProviderExt: InfoProvider {
         }
         let mut results = Vec::with_capacity(addresses.len());
         for address in addresses {
-            results.push(self.to_address_ex(address).await)
+            results.push(self.address_ex_from_contracts_or_default(address).await)
         }
         Some(results)
     }
 
-    async fn to_address_info(&self, address: &Option<String>) -> Option<AddressInfo> {
-        OptionFuture::from(
-            address
-                .as_ref()
-                .map(|address| async move { self.contract_info(address).await.ok() }),
-        )
-        .await
-        .flatten()
-    }
-
-    async fn to_address_ex(&self, address: &String) -> AddressEx {
-        let address_info = self.contract_info(&address).await.ok();
-        AddressEx {
-            value: address.to_owned(),
-            name: address_info.as_ref().map(|it| it.name.to_owned()),
-            logo_url: address_info.map(|it| it.logo_uri).to_owned().flatten(),
-        }
-    }
-
-    async fn to_address_ex_optional(&self, address: &String) -> Option<AddressEx> {
+    async fn address_ex_from_contracts_optional(&self, address: &String) -> Option<AddressEx> {
         if address != "0x0000000000000000000000000000000000000000" {
-            Some(self.to_address_ex(address).await)
+            Some(self.address_ex_from_contracts_or_default(address).await)
         } else {
             None
         }
     }
 
-    async fn optional_to_address_ex(&self, address: &Option<String>) -> Option<AddressEx> {
+    async fn optional_address_ex_from_contracts(
+        &self,
+        address: &Option<String>,
+    ) -> Option<AddressEx> {
         OptionFuture::from(
-            address
-                .as_ref()
-                .map(|address| async move { self.to_address_ex(address).await }),
+            address.as_ref().map(|address| async move {
+                self.address_ex_from_contracts_or_default(address).await
+            }),
         )
         .await
     }

@@ -155,15 +155,16 @@ pub struct MultisigExecutionDetails {
     pub safe_tx_gas: usize,
     pub base_gas: usize,
     pub gas_price: String,
+    // As this is a token we will keep the token information separated
     pub gas_token: String,
-    pub refund_receiver: String,
+    pub refund_receiver: AddressEx,
     pub safe_tx_hash: String,
-    pub executor: Option<String>,
-    pub signers: Vec<String>,
+    pub executor: Option<AddressEx>,
+    pub signers: Vec<AddressEx>,
     pub confirmations_required: u64,
     pub confirmations: Vec<MultisigConfirmation>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub rejectors: Option<Vec<String>>,
+    pub rejectors: Option<Vec<AddressEx>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gas_token_info: Option<TokenInfo>,
 }
@@ -171,7 +172,7 @@ pub struct MultisigExecutionDetails {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct MultisigConfirmation {
-    pub signer: String,
+    pub signer: AddressEx,
     pub signature: Option<String>,
     pub submitted_at: i64,
 }
@@ -179,7 +180,7 @@ pub struct MultisigConfirmation {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleExecutionDetails {
-    pub address: String,
+    pub address: AddressEx,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -187,9 +188,10 @@ pub struct ModuleExecutionDetails {
 pub struct TransactionData {
     pub hex_data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
-    pub to: String,
+    pub to: AddressEx,
     pub value: Option<String>,
     pub operation: Operation,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub address_info_index: Option<HashMap<String, AddressInfo>>,
+    // Mapping with info for the addresses in data_decoded
+    pub address_info_index: Option<HashMap<String, AddressEx>>,
 }

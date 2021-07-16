@@ -145,7 +145,7 @@ pub struct ExecutionInfo {
     pub confirmations_required: u64,
     pub confirmations_submitted: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub missing_signers: Option<Vec<String>>,
+    pub missing_signers: Option<Vec<AddressEx>>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

@@ -1,7 +1,7 @@
 use crate::models::backend::chains::ChainInfo;
 use crate::models::converters::safes::calculate_version_state;
-use crate::models::service::safes::{AddressEx, ImplementationVersionState, SafeInfoEx};
-use crate::providers::address_info::AddressInfo;
+use crate::models::service::addresses::AddressEx;
+use crate::models::service::safes::{ImplementationVersionState, SafeInfoEx};
 use crate::providers::info::*;
 use rocket::serde::json::json;
 
@@ -10,7 +10,7 @@ async fn to_safe_info_ex_no_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_address_ex_from_contracts()
         .times(5)
         .returning(move |_| bail!("No safe info"));
     mock_info_provider
@@ -95,7 +95,7 @@ async fn to_safe_info_ex_no_address_info_up_to_date() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_address_ex_from_contracts()
         .times(5)
         .returning(move |_| bail!("No safe info"));
     mock_info_provider
@@ -182,12 +182,13 @@ async fn to_safe_info_ex_address_info() {
     let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_address_ex_from_contracts()
         .times(5)
         .returning(move |address| {
-            Ok(AddressInfo {
-                name: format!("name_{}", &address),
-                logo_uri: Some(format!("logo_uri_{}", &address)),
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some(format!("name_{}", &address)),
+                logo_url: Some(format!("logo_uri_{}", &address)),
             })
         });
     mock_info_provider
@@ -284,7 +285,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_address_ex_from_contracts()
         .times(1)
         .return_once(move |_| bail!("No address info"));
     mock_info_provider
@@ -328,12 +329,13 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
         serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_GUARD_SAFE_V130).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
-        .expect_contract_info()
+        .expect_address_ex_from_contracts()
         .times(3)
         .returning(move |address| {
-            Ok(AddressInfo {
-                name: format!("name_{}", &address),
-                logo_uri: Some(format!("logo_uri_{}", &address)),
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some(format!("name_{}", &address)),
+                logo_url: Some(format!("logo_uri_{}", &address)),
             })
         });
     mock_info_provider

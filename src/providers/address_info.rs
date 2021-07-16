@@ -1,12 +1,5 @@
 use crate::utils::json::default_if_null;
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, PartialEq, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct AddressInfo {
-    pub name: String,
-    pub logo_uri: Option<String>,
-}
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]

@@ -1,9 +1,9 @@
 use crate::models::backend::transfers::{
     Erc20Transfer as Erc20TransferDto, Transfer as TransferDto,
 };
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::TransferInfo;
 use crate::models::service::transactions::{Erc20Transfer, Transfer, TransferDirection};
-use crate::providers::address_info::AddressInfo;
 use crate::providers::info::*;
 
 #[rocket::async_test]
@@ -17,15 +17,13 @@ async fn erc20_transfer_dto_to_incoming_transfer_transaction() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
         .return_once(move |_| bail!("No address info"));
 
     let expected = Transfer {
-        sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
-        sender_info: None,
-        recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        recipient_info: None,
+        sender: AddressEx::address_only("0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F"),
+        recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc20(
             Erc20Transfer {
@@ -60,23 +58,23 @@ async fn erc20_transfer_dto_to_incoming_transfer_transaction_with_address_info()
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
-        .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+        .return_once(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some("".to_string()),
+                logo_url: None,
             })
         });
 
     let expected = Transfer {
-        sender: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
-        sender_info: Some(AddressInfo{
-            name: "".to_string(),
-            logo_uri: None
-        }),
-        recipient: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        recipient_info: None,
+        sender: AddressEx{
+            value: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
+            name: Some("".to_string()),
+            logo_url: None
+        },
+        recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
         transfer_info: TransferInfo::Erc20(
             Erc20Transfer {
@@ -111,23 +109,23 @@ async fn erc20_transfer_dto_to_outgoing_transfer_transaction_with_address_info()
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(1)
-        .return_once(move |_| {
-            Ok(AddressInfo {
-                name: "".to_string(),
-                logo_uri: None,
+        .return_once(move |address| {
+            Ok(AddressEx {
+                value: address.to_string(),
+                name: Some("".to_string()),
+                logo_url: None,
             })
         });
 
     let expected = Transfer {
-        sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-        sender_info: None,
-        recipient: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
-        recipient_info: Some(AddressInfo{
-            name: "".to_string(),
-            logo_uri: None
-        }),
+        sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+        recipient: AddressEx{
+            value: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
+            name: Some("".to_string()),
+            logo_url: None
+        },
         direction: TransferDirection::Outgoing,
         transfer_info: TransferInfo::Erc20(
             Erc20Transfer {

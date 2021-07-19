@@ -19,7 +19,7 @@ async fn to_safe_info_ex_no_address_info() {
         .times(1)
         .returning(move || Ok(build_chain_info()));
     let supported_master_copies = vec![MasterCopy {
-        address: "".to_string(),
+        address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
         version: "1.1.1".to_string(),
         deployer: "".to_string(),
         deployed_block_number: 0,
@@ -113,7 +113,7 @@ async fn to_safe_info_ex_no_address_info_up_to_date() {
         .times(1)
         .returning(move || Ok(build_chain_info()));
     let supported_master_copies = vec![MasterCopy {
-        address: "".to_string(),
+        address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
         version: "1.1.1".to_string(),
         deployer: "".to_string(),
         deployed_block_number: 0,
@@ -213,7 +213,7 @@ async fn to_safe_info_ex_address_info() {
         .times(1)
         .returning(move || Ok(build_chain_info()));
     let supported_master_copies = vec![MasterCopy {
-        address: "".to_string(),
+        address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
         version: "1.1.1".to_string(),
         deployer: "".to_string(),
         deployed_block_number: 0,
@@ -378,8 +378,8 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
         .times(1)
         .returning(move || Ok(build_chain_info()));
     let supported_master_copies = vec![MasterCopy {
-        address: "".to_string(),
-        version: "1.3.0".to_string(),
+        address: "0x3E5c63644E683549055b9Be8653de26E0B4CD36E".to_string(),
+        version: "1.1.1".to_string(),
         deployer: "".to_string(),
         deployed_block_number: 0,
         last_indexed_block_number: 0,
@@ -472,7 +472,7 @@ fn calculate_version_state_outdated() {
             last_indexed_block_number: 0,
         },
         MasterCopy {
-            address: "".to_string(),
+            address: "0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552".to_string(),
             version: "1.3.0".to_string(),
             deployer: "".to_string(),
             deployed_block_number: 0,
@@ -503,44 +503,6 @@ fn calculate_version_state_unknown() {
 }
 
 #[test]
-fn calculate_version_state_1_3_0_plus_l2_safe_backend_not_supported() {
-    let supported_master_copies = vec![MasterCopy {
-        address: "0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552".to_string(),
-        version: "1.3.0".to_string(),
-        deployer: "".to_string(),
-        deployed_block_number: 0,
-        last_indexed_block_number: 0,
-    }];
-    let actual = calculate_version_state(
-        "1.3.0+L2",
-        "0x3E5c63644E683549055b9Be8653de26E0B4CD36E",
-        &supported_master_copies,
-        "1.1.1".to_string(),
-    );
-
-    assert_eq!(actual, ImplementationVersionState::UpToDate);
-}
-
-#[test]
-fn calculate_version_state_1_3_0_safe_backend_supports_1_3_0_plus_l2() {
-    let supported_master_copies = vec![MasterCopy {
-        address: "0x3E5c63644E683549055b9Be8653de26E0B4CD36E".to_string(),
-        version: "1.3.0+L2".to_string(),
-        deployer: "".to_string(),
-        deployed_block_number: 0,
-        last_indexed_block_number: 0,
-    }];
-    let actual = calculate_version_state(
-        "1.3.0",
-        "0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552",
-        &supported_master_copies,
-        "1.1.1".to_string(),
-    );
-
-    assert_eq!(actual, ImplementationVersionState::UpToDate);
-}
-
-#[test]
 fn calculate_version_state_version_up_to_date_but_address_mismatch() {
     let supported_master_copies = vec![MasterCopy {
         address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
@@ -551,7 +513,7 @@ fn calculate_version_state_version_up_to_date_but_address_mismatch() {
     }];
     let actual = calculate_version_state(
         "1.1.1",
-        "some_fake_address",
+        "some_unexpected_address",
         &supported_master_copies,
         "1.1.1".to_string(),
     );

@@ -66,19 +66,19 @@ pub(super) fn calculate_version_state(
     let sem_ver_safe = Version::parse(safe_version);
     let sem_ver_min = Version::parse(&min_chain_version);
 
-    let supported_versions = supported_master_copies
+    let supported_addresses = supported_master_copies
         .iter()
-        .filter_map(|it| Version::parse(&it.version).ok())
-        .collect::<Vec<Version>>();
+        .map(|it| it.address.as_str())
+        .collect::<Vec<&str>>();
 
-    if sem_ver_min.is_err() || sem_ver_safe.is_err() || supported_versions.is_empty() {
+    if sem_ver_min.is_err() || sem_ver_safe.is_err() {
         return ImplementationVersionState::Unknown;
     }
 
     let sem_ver_safe = sem_ver_safe.unwrap();
     let sem_ver_min = sem_ver_min.unwrap();
 
-    if !supported_versions.contains(&sem_ver_safe) {
+    if !supported_addresses.contains(&safe_implementation_address) {
         return ImplementationVersionState::Unknown;
     }
 

@@ -24,6 +24,7 @@ impl SafeInfo {
                 .map_or(ImplementationVersionState::Unknown, |safe_version| {
                     calculate_version_state(
                         safe_version,
+                        &self.master_copy,
                         &supported_master_copies,
                         min_chain_version,
                     )
@@ -58,6 +59,7 @@ impl SafeInfo {
 
 pub(super) fn calculate_version_state(
     safe_version: &str,
+    safe_implementation_address: &str,
     supported_master_copies: &Vec<MasterCopy>,
     min_chain_version: String,
 ) -> ImplementationVersionState {

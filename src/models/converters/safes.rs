@@ -3,7 +3,6 @@ use crate::models::service::addresses::AddressEx;
 use crate::models::service::safes::{ImplementationVersionState, SafeInfoEx};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo};
-use crate::utils::errors::ApiResult;
 use semver::Version;
 use std::cmp::Ordering;
 
@@ -12,20 +11,24 @@ impl SafeInfo {
     pub async fn to_safe_info_ex(
         &self,
         info_provider: &(impl InfoProvider + Sync),
-        // supported_master_copies: Vec<MasterCopy>,
+        supported_master_copies: Vec<MasterCopy>,
     ) -> SafeInfoEx {
         let min_chain_version = info_provider
             .chain_info()
             .await
             .expect("ChainInfo must be available")
             .recommended_master_copy_version;
+        let implementation_version_state =
+            self.version
+                .as_ref()
+                .map_or(ImplementationVersionState::Unknown, |safe_version| {
+                    calculate_version_state(
+                        safe_version,
+                        supported_master_copies,
+                        min_chain_version,
+                    )
+                });
 
-        let implementation_version_state = self
-            .version
-            .as_ref()
-            .map_or(ImplementationVersionState::Unknown, |it| {
-                calculate_version_state(it, min_chain_version)
-            });
         SafeInfoEx {
             address: AddressEx::address_only(&self.address),
             nonce: self.nonce,
@@ -55,18 +58,32 @@ impl SafeInfo {
 
 pub(super) fn calculate_version_state(
     safe_version: &str,
+    supported_master_copies: Vec<MasterCopy>,
     min_chain_version: String,
 ) -> ImplementationVersionState {
     let sem_ver_safe = Version::parse(safe_version);
     let sem_ver_min = Version::parse(&min_chain_version);
 
-    if sem_ver_min.is_err() || sem_ver_safe.is_err() {
+    let supported_versions = supported_master_copies
+        .iter()
+        .filter_map(|it| Version::parse(&it.version).ok())
+        .collect::<Vec<Version>>();
+
+    if sem_ver_min.is_err() || sem_ver_safe.is_err() || supported_versions.is_empty() {
         return ImplementationVersionState::Unknown;
     }
 
-    match sem_ver_safe.unwrap().cmp(&sem_ver_min.unwrap()) {
-        Ordering::Less => ImplementationVersionState::Outdated,
-        Ordering::Equal => ImplementationVersionState::UpToDate,
-        Ordering::Greater => ImplementationVersionState::UpToDate,
+    let sem_ver_safe = sem_ver_safe.unwrap();
+    let sem_ver_min = sem_ver_min.unwrap();
+
+    match sem_ver_safe.cmp(&sem_ver_min) {
+        Ordering::Less => {
+            if supported_versions.contains(&sem_ver_safe) {
+                ImplementationVersionState::Outdated
+            } else {
+                ImplementationVersionState::Unknown
+            }
+        }
+        Ordering::Equal | Ordering::Greater => ImplementationVersionState::UpToDate,
     }
 }

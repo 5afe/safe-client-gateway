@@ -1,7 +1,8 @@
-use crate::cache::cache_operations::{CacheResponse, RequestCached};
+use crate::cache::cache_operations::CacheResponse;
 use crate::cache::Cache;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::services;
 use crate::services::about;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -67,14 +68,11 @@ pub async fn get_master_copies(
     context: Context<'_>,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
-    let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
-    let url = core_uri!(info_provider, "/v1/about/master-copies/")?;
-    Ok(content::Json(
-        RequestCached::new(url)
-            .cache_duration(about_cache_duration())
-            .execute(context.client(), context.cache())
-            .await?,
-    ))
+    CacheResponse::new(context.uri())
+        .duration(about_cache_duration())
+        .resp_generator(|| services::about::get_master_copies(&context, chain_id.as_str()))
+        .execute(context.cache())
+        .await
 }
 
 #[doc(hidden)]

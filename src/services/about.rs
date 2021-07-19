@@ -1,7 +1,7 @@
 extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{about_cache_duration, build_number, version};
+use crate::config::{about_cache_duration, build_number, default_request_timeout, version};
 use crate::models::backend::safes::MasterCopy;
 use crate::models::service::about::About;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
@@ -34,6 +34,7 @@ pub async fn request_master_copies(
 ) -> ApiResult<Vec<MasterCopy>> {
     let body = RequestCached::new(url)
         .cache_duration(about_cache_duration())
+        .request_timeout(default_request_timeout())
         .execute(context.client(), context.cache())
         .await?;
 

@@ -3,11 +3,13 @@ use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,
-    long_error_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
-    safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
-    token_info_cache_duration, token_info_request_timeout,
+    default_request_timeout, long_error_duration, request_cache_duration,
+    safe_app_info_request_timeout, safe_app_manifest_cache_duration, safe_info_cache_duration,
+    safe_info_request_timeout, short_error_duration, token_info_cache_duration,
+    token_info_request_timeout,
 };
 use crate::models::backend::chains::ChainInfo;
+use crate::models::backend::safes::MasterCopy;
 use crate::models::commons::Page;
 use crate::models::service::addresses::AddressEx;
 use crate::providers::address_info::ContractInfo;
@@ -281,5 +283,18 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
             .await?;
         let result = serde_json::from_str::<ChainInfo>(&data).ok();
         Ok(result)
+    }
+
+    pub async fn master_copies(&self) -> ApiResult<Vec<MasterCopy>> {
+        let url = core_uri!(self, "/v1/about/master-copies/")?;
+
+        let body = RequestCached::new(url)
+            .cache_duration(request_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .request_timeout(default_request_timeout())
+            .execute(self.client, self.cache)
+            .await?;
+
+        Ok(serde_json::from_str(&body)?)
     }
 }

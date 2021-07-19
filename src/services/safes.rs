@@ -5,7 +5,6 @@ use crate::models::backend::transfers::Transfer;
 use crate::models::commons::Page;
 use crate::models::service::safes::{SafeLastChanges, SafeState};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::services::about::request_master_copies;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use chrono::Utc;
@@ -19,10 +18,7 @@ pub async fn get_safe_info_ex(
 ) -> ApiResult<SafeState> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let safe_info = info_provider.safe_info(safe_address).await?;
-    let master_copy_url = core_uri!(info_provider, "/v1/about/master-copies/")?;
-    let supported_master_copies = request_master_copies(&context, master_copy_url)
-        .await
-        .unwrap_or(vec![]);
+    let supported_master_copies = info_provider.master_copies().await.unwrap_or(vec![]);
     let safe_info_ex = safe_info
         .to_safe_info_ex(&info_provider, supported_master_copies)
         .await;

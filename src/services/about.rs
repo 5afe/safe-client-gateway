@@ -1,7 +1,6 @@
 extern crate reqwest;
 
-use crate::cache::cache_operations::RequestCached;
-use crate::config::{about_cache_duration, build_number, default_request_timeout, version};
+use crate::config::{build_number, version};
 use crate::models::backend::safes::MasterCopy;
 use crate::models::service::about::About;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
@@ -24,19 +23,5 @@ pub async fn get_master_copies(
     chain_id: &str,
 ) -> ApiResult<Vec<MasterCopy>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
-    let url = core_uri!(info_provider, "/v1/about/master-copies/")?;
-    request_master_copies(&context, url).await
-}
-
-pub async fn request_master_copies(
-    context: &Context<'_>,
-    url: String,
-) -> ApiResult<Vec<MasterCopy>> {
-    let body = RequestCached::new(url)
-        .cache_duration(about_cache_duration())
-        .request_timeout(default_request_timeout())
-        .execute(context.client(), context.cache())
-        .await?;
-
-    Ok(serde_json::from_str(&body)?)
+    info_provider.master_copies().await
 }

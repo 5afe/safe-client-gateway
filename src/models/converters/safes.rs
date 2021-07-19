@@ -24,7 +24,7 @@ impl SafeInfo {
                 .map_or(ImplementationVersionState::Unknown, |safe_version| {
                     calculate_version_state(
                         safe_version,
-                        supported_master_copies,
+                        &supported_master_copies,
                         min_chain_version,
                     )
                 });
@@ -58,7 +58,7 @@ impl SafeInfo {
 
 pub(super) fn calculate_version_state(
     safe_version: &str,
-    supported_master_copies: Vec<MasterCopy>,
+    supported_master_copies: &Vec<MasterCopy>,
     min_chain_version: String,
 ) -> ImplementationVersionState {
     let sem_ver_safe = Version::parse(safe_version);

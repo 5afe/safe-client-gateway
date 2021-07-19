@@ -484,6 +484,34 @@ fn calculate_version_state_unknown() {
     assert_eq!(actual, ImplementationVersionState::Unknown);
 }
 
+#[test]
+fn calculate_version_state_1_3_0_plus_l2_safe_backend_not_supported() {
+    let supported_master_copies = vec![MasterCopy {
+        address: "".to_string(),
+        version: "1.3.0".to_string(),
+        deployer: "".to_string(),
+        deployed_block_number: 0,
+        last_indexed_block_number: 0,
+    }];
+    let actual = calculate_version_state("1.3.0+L2", &supported_master_copies, "1.1.1".to_string());
+
+    assert_eq!(actual, ImplementationVersionState::UpToDate);
+}
+
+#[test]
+fn calculate_version_state_1_3_0_safe_backend_supports_1_3_0_plus_l2() {
+    let supported_master_copies = vec![MasterCopy {
+        address: "".to_string(),
+        version: "1.3.0+L2".to_string(),
+        deployer: "".to_string(),
+        deployed_block_number: 0,
+        last_indexed_block_number: 0,
+    }];
+    let actual = calculate_version_state("1.3.0", &supported_master_copies, "1.1.1".to_string());
+
+    assert_eq!(actual, ImplementationVersionState::UpToDate);
+}
+
 fn build_chain_info() -> ChainInfo {
     serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY).unwrap()
 }

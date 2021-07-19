@@ -18,6 +18,7 @@ pub async fn get_safe_info_ex(
 ) -> ApiResult<SafeState> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let safe_info = info_provider.safe_info(safe_address).await?;
+    // We want to be able to return the rest of `SafeInfo` in case the `about/master-copies` endpoint is not available
     let supported_master_copies = info_provider.master_copies().await.unwrap_or(vec![]);
     let safe_info_ex = safe_info
         .to_safe_info_ex(&info_provider, supported_master_copies)

@@ -379,7 +379,7 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
         .returning(move || Ok(build_chain_info()));
     let supported_master_copies = vec![MasterCopy {
         address: "".to_string(),
-        version: "1.1.1".to_string(),
+        version: "1.3.0".to_string(),
         deployer: "".to_string(),
         deployed_block_number: 0,
         last_indexed_block_number: 0,

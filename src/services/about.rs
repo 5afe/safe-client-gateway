@@ -25,7 +25,13 @@ pub async fn get_master_copies(
 ) -> ApiResult<Vec<MasterCopy>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let url = core_uri!(info_provider, "/v1/about/master-copies/")?;
+    request_master_copies(&context, url).await
+}
 
+pub async fn request_master_copies(
+    context: &Context<'_>,
+    url: String,
+) -> ApiResult<Vec<MasterCopy>> {
     let body = RequestCached::new(url)
         .cache_duration(about_cache_duration())
         .execute(context.client(), context.cache())

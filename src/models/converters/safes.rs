@@ -76,14 +76,12 @@ pub(super) fn calculate_version_state(
     let sem_ver_safe = sem_ver_safe.unwrap();
     let sem_ver_min = sem_ver_min.unwrap();
 
+    if !supported_versions.contains(&sem_ver_safe) {
+        return ImplementationVersionState::Unknown;
+    }
+
     match sem_ver_safe.cmp(&sem_ver_min) {
-        Ordering::Less => {
-            if supported_versions.contains(&sem_ver_safe) {
-                ImplementationVersionState::Outdated
-            } else {
-                ImplementationVersionState::Unknown
-            }
-        }
+        Ordering::Less => ImplementationVersionState::Outdated,
         Ordering::Equal | Ordering::Greater => ImplementationVersionState::UpToDate,
     }
 }

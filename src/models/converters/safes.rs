@@ -71,16 +71,15 @@ pub(super) fn calculate_version_state(
         .map(|it| it.address.as_str())
         .collect::<Vec<&str>>();
 
-    if sem_ver_min.is_err() || sem_ver_safe.is_err() {
+    if sem_ver_min.is_err()
+        || sem_ver_safe.is_err()
+        || !supported_addresses.contains(&safe_implementation_address)
+    {
         return ImplementationVersionState::Unknown;
     }
 
     let sem_ver_safe = sem_ver_safe.unwrap();
     let sem_ver_min = sem_ver_min.unwrap();
-
-    if !supported_addresses.contains(&safe_implementation_address) {
-        return ImplementationVersionState::Unknown;
-    }
 
     match sem_ver_safe.cmp(&sem_ver_min) {
         Ordering::Less => ImplementationVersionState::Outdated,

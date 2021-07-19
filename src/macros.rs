@@ -1,4 +1,3 @@
-use std::env;
 macro_rules! concat_parts {
     ($parts_head:expr) => {
         // `stringify!` will convert the expression *as it is* into a string.
@@ -95,22 +94,27 @@ macro_rules! config_uri {
     }};
 }
 
-#[test]
-fn config_uri_formats_correctly() {
-    env::set_var("CONFIG_SERVICE_URL", "https://config-url-example.com");
-    let expected = "https://config-url-example.com/api/example";
+#[cfg(test)]
+mod tests {
+    use std::env;
 
-    let actual = config_uri!("/example");
+    #[test]
+    fn config_uri_formats_correctly() {
+        env::set_var("CONFIG_SERVICE_URL", "https://config-url-example.com");
+        let expected = "https://config-url-example.com/api/example";
 
-    assert_eq!(expected, actual)
-}
+        let actual = config_uri!("/example");
 
-#[test]
-fn config_uri_formats_correctly_with_substitution() {
-    env::set_var("CONFIG_SERVICE_URL", "https://config-url-example.com");
-    let expected = "https://config-url-example.com/api/example/safe";
+        assert_eq!(expected, actual)
+    }
 
-    let actual = config_uri!("/example/{}", "safe");
+    #[test]
+    fn config_uri_formats_correctly_with_substitution() {
+        env::set_var("CONFIG_SERVICE_URL", "https://config-url-example.com");
+        let expected = "https://config-url-example.com/api/example/safe";
 
-    assert_eq!(expected, actual)
+        let actual = config_uri!("/example/{}", "safe");
+
+        assert_eq!(expected, actual)
+    }
 }

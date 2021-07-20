@@ -86,7 +86,7 @@ macro_rules! core_uri {
 #[macro_export]
 macro_rules! config_uri {
     ($path:expr) => {{
-        format!("{}/{}", $crate::config::base_config_service_url(), $path)
+        format!("{}{}", $crate::config::base_config_service_url(), $path)
     }};
     ($path:literal, $($arg:tt)*) => {{
         let full_path: String = format!($path, $($arg)*);

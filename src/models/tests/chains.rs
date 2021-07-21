@@ -78,7 +78,7 @@ fn chain_info_json_with_fixed_gas_price() {
 }
 
 #[test]
-fn chain_info_json_with_unkown_gas_price_type() {
+fn chain_info_json_with_unknown_gas_price_type() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
@@ -148,7 +148,7 @@ fn chain_info_json_with_no_rpc_authentication() {
 }
 
 #[test]
-fn chain_info_json_with_unkown_rpc_authentication() {
+fn chain_info_json_with_unknown_rpc_authentication() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
@@ -291,7 +291,7 @@ fn no_authentication_to_service_chain_info() {
 }
 
 #[test]
-fn unkown_authentication_to_service_chain_info() {
+fn unknown_authentication_to_service_chain_info() {
     let expected = ServiceChainInfo {
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
         chain_id: "4".to_string(),

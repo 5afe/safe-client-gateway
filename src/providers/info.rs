@@ -241,7 +241,7 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
             .send()
             .await?;
         let data: Page<TokenInfo> = response.json().await?;
-        let token_key = &self.generate_token_key();
+        let token_key = generate_token_key(self.chain_id);
         for token in data.results.iter() {
             self.cache
                 .insert_in_hash(&token_key, &token.address, &serde_json::to_string(&token)?);
@@ -250,7 +250,7 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
     }
 
     async fn check_token_cache(&self) -> ApiResult<()> {
-        let token_key = &self.generate_token_key();
+        let token_key = generate_token_key(&self.chain_id);
         if self.cache.has_key(&token_key) {
             return Ok(());
         }
@@ -269,7 +269,10 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
 
     async fn load_token_info(&self, token: String) -> ApiResult<Option<TokenInfo>> {
         self.check_token_cache().await?;
-        match self.cache.get_from_hash(&self.generate_token_key(), &token) {
+        match self
+            .cache
+            .get_from_hash(&generate_token_key(&self.chain_id), &token)
+        {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }
@@ -287,10 +290,6 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
         Ok(result)
     }
 
-    fn generate_token_key(&self) -> String {
-        format!("{}_{}", TOKENS_KEY_BASE, self.chain_id)
-    }
-
     pub async fn master_copies(&self) -> ApiResult<Vec<MasterCopy>> {
         let url = core_uri!(self, "/v1/about/master-copies/")?;
 
@@ -303,4 +302,8 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
 
         Ok(serde_json::from_str(&body)?)
     }
+}
+
+pub fn generate_token_key(chain_id: &str) -> String {
+    format!("{}_{}", TOKENS_KEY_BASE, chain_id)
 }

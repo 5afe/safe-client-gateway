@@ -40,7 +40,7 @@ pub enum InvalidationPattern {
     Transfers(InvalidationScope, String),
     Chains,
     Contracts,
-    Tokens,
+    Tokens { chain_id: String },
 }
 
 impl InvalidationPattern {
@@ -74,7 +74,7 @@ impl InvalidationPattern {
                 )
             }
             InvalidationPattern::Contracts => String::from("*contract*"),
-            InvalidationPattern::Tokens => String::from(TOKENS_KEY_BASE),
+            InvalidationPattern::Tokens { chain_id } => format!("{}_{}", TOKENS_KEY_BASE, chain_id),
             InvalidationPattern::Chains => {
                 format!("*{}*", base_config_service_url())
             }

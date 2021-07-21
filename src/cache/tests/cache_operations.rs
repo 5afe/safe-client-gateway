@@ -38,8 +38,10 @@ fn invalidation_pattern_transfers_string() {
 
 #[test]
 fn invalidation_pattern_tokens_string() {
-    let invalidation_pattern = InvalidationPattern::Tokens;
-    let expected = TOKENS_KEY_BASE.to_string();
+    let invalidation_pattern = InvalidationPattern::Tokens {
+        chain_id: "4".to_string(),
+    };
+    let expected = format!("{}_{}", TOKENS_KEY_BASE.to_string(), "4");
 
     let actual = invalidation_pattern.to_pattern_string();
 

@@ -4,7 +4,7 @@ use crate::config::{
     base_config_service_url, default_request_timeout, request_cache_duration,
     request_error_cache_duration,
 };
-use crate::providers::info::TOKENS_KEY;
+use crate::providers::info::generate_token_key;
 use crate::utils::errors::ApiResult;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
@@ -40,7 +40,7 @@ pub enum InvalidationPattern {
     Transfers(InvalidationScope, String),
     Chains,
     Contracts,
-    Tokens,
+    Tokens { chain_id: String },
 }
 
 impl InvalidationPattern {
@@ -74,7 +74,7 @@ impl InvalidationPattern {
                 )
             }
             InvalidationPattern::Contracts => String::from("*contract*"),
-            InvalidationPattern::Tokens => String::from(TOKENS_KEY),
+            InvalidationPattern::Tokens { chain_id } => generate_token_key(chain_id),
             InvalidationPattern::Chains => {
                 format!("*{}*", base_config_service_url())
             }

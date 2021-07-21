@@ -29,7 +29,7 @@ use std::collections::HashMap;
 use std::future::Future;
 use std::time::Duration;
 
-pub const TOKENS_KEY: &'static str = "dip_ti";
+pub const TOKENS_KEY_BASE: &'static str = "dip_ti";
 lazy_static! {
     pub static ref SAFE_V_1_3_0: Version = Version::new(1, 3, 0);
 }
@@ -241,33 +241,38 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
             .send()
             .await?;
         let data: Page<TokenInfo> = response.json().await?;
+        let token_key = generate_token_key(self.chain_id);
         for token in data.results.iter() {
             self.cache
-                .insert_in_hash(TOKENS_KEY, &token.address, &serde_json::to_string(&token)?);
+                .insert_in_hash(&token_key, &token.address, &serde_json::to_string(&token)?);
         }
         Ok(())
     }
 
     async fn check_token_cache(&self) -> ApiResult<()> {
-        if self.cache.has_key(TOKENS_KEY) {
+        let token_key = generate_token_key(&self.chain_id);
+        if self.cache.has_key(&token_key) {
             return Ok(());
         }
-        self.cache.insert_in_hash(TOKENS_KEY, "state", "populating");
+        self.cache.insert_in_hash(&token_key, "state", "populating");
         let result = self.populate_token_cache().await;
         if result.is_ok() {
             self.cache
-                .expire_entity(TOKENS_KEY, token_info_cache_duration());
-            self.cache.insert_in_hash(TOKENS_KEY, "state", "populated");
+                .expire_entity(&token_key, token_info_cache_duration());
+            self.cache.insert_in_hash(&token_key, "state", "populated");
         } else {
-            self.cache.expire_entity(TOKENS_KEY, short_error_duration());
-            self.cache.insert_in_hash(TOKENS_KEY, "state", "errored");
+            self.cache.expire_entity(&token_key, short_error_duration());
+            self.cache.insert_in_hash(&token_key, "state", "errored");
         }
         result
     }
 
     async fn load_token_info(&self, token: String) -> ApiResult<Option<TokenInfo>> {
         self.check_token_cache().await?;
-        match self.cache.get_from_hash(TOKENS_KEY, &token) {
+        match self
+            .cache
+            .get_from_hash(&generate_token_key(&self.chain_id), &token)
+        {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),
         }
@@ -297,4 +302,8 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
 
         Ok(serde_json::from_str(&body)?)
     }
+}
+
+pub fn generate_token_key(chain_id: &str) -> String {
+    format!("{}_{}", TOKENS_KEY_BASE, chain_id)
 }

@@ -1,4 +1,6 @@
-use crate::models::backend::chains::{ChainInfo, GasPrice, NativeCurrency, Theme};
+use crate::models::backend::chains::{
+    ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
+};
 use crate::providers::info::*;
 use crate::utils::errors::ApiResult;
 
@@ -12,7 +14,10 @@ async fn core_uri_success_with_params() {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        rpc_uri: "".to_string(),
+        rpc_uri: RpcUri {
+            authentication: RpcAuthentication::ApiKeyPath,
+            value: "".to_string(),
+        },
         block_explorer_uri: "".to_string(),
         native_currency: NativeCurrency {
             name: "".to_string(),
@@ -52,7 +57,10 @@ async fn core_uri_success_without_params() {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        rpc_uri: "".to_string(),
+        rpc_uri: RpcUri {
+            authentication: RpcAuthentication::ApiKeyPath,
+            value: "".to_string(),
+        },
         block_explorer_uri: "".to_string(),
         native_currency: NativeCurrency {
             name: "".to_string(),

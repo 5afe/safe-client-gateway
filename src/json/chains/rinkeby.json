@@ -1,7 +1,10 @@
 {
   "chainId": "4",
   "chainName": "Rinkeby",
-  "rpcUri": "https://someurl.com/rpc",
+  "rpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc"
+  },
   "blockExplorerUri": "https://blockexplorer.com",
   "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
   "nativeCurrency": {

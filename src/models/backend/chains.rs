@@ -7,7 +7,7 @@ pub struct ChainInfo {
     pub transaction_service: String,
     pub chain_id: String,
     pub chain_name: String,
-    pub rpc_uri: String,
+    pub rpc_uri: RpcUri,
     pub block_explorer_uri: String,
     pub native_currency: NativeCurrency,
     pub theme: Theme,
@@ -43,6 +43,22 @@ pub enum GasPrice {
     },
     #[serde(rename_all = "camelCase")]
     Fixed { wei_value: String },
+    #[serde(other)]
+    Unknown,
+}
+
+#[derive(Deserialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RpcUri {
+    pub authentication: RpcAuthentication,
+    pub value: String,
+}
+
+#[derive(Deserialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum RpcAuthentication {
+    ApiKeyPath,
+    NoAuthentication,
     #[serde(other)]
     Unknown,
 }

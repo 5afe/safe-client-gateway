@@ -1,7 +1,8 @@
-use crate::models::backend::chains::{ChainInfo as BackendChainInfo, GasPrice};
+use crate::models::backend::chains::{ChainInfo as BackendChainInfo, GasPrice, RpcAuthentication};
 use crate::models::service::chains::{
     ChainInfo as ServiceChainInfo, GasPrice as ServiceGasPrice,
-    NativeCurrency as ServiceNativeCurrency, Theme as ServiceTheme,
+    NativeCurrency as ServiceNativeCurrency, RpcAuthentication as ServiceRpcAuthentication,
+    RpcUri as ServiceRpcUri, Theme as ServiceTheme,
 };
 
 impl From<BackendChainInfo> for ServiceChainInfo {
@@ -10,7 +11,16 @@ impl From<BackendChainInfo> for ServiceChainInfo {
             transaction_service: chain_info.transaction_service,
             chain_id: chain_info.chain_id,
             chain_name: chain_info.chain_name,
-            rpc_uri: chain_info.rpc_uri,
+            rpc_uri: ServiceRpcUri {
+                authentication: match chain_info.rpc_uri.authentication {
+                    RpcAuthentication::ApiKeyPath => ServiceRpcAuthentication::ApiKeyPath,
+                    RpcAuthentication::NoAuthentication => {
+                        ServiceRpcAuthentication::NoAuthentication
+                    }
+                    RpcAuthentication::Unknown => ServiceRpcAuthentication::Unknown,
+                },
+                value: chain_info.rpc_uri.value,
+            },
             block_explorer_uri: chain_info.block_explorer_uri,
             native_currency: ServiceNativeCurrency {
                 name: chain_info.native_currency.name,

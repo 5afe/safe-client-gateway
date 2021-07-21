@@ -4,7 +4,7 @@ use crate::config::{
     base_config_service_url, default_request_timeout, request_cache_duration,
     request_error_cache_duration,
 };
-use crate::providers::info::TOKENS_KEY;
+use crate::providers::info::TOKENS_KEY_BASE;
 use crate::utils::errors::ApiResult;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
@@ -74,7 +74,7 @@ impl InvalidationPattern {
                 )
             }
             InvalidationPattern::Contracts => String::from("*contract*"),
-            InvalidationPattern::Tokens => String::from(TOKENS_KEY),
+            InvalidationPattern::Tokens => String::from(TOKENS_KEY_BASE),
             InvalidationPattern::Chains => {
                 format!("*{}*", base_config_service_url())
             }

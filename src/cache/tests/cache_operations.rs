@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::{InvalidationPattern, InvalidationScope};
 use crate::cache::{CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::config::base_config_service_url;
-use crate::providers::info::TOKENS_KEY;
+use crate::providers::info::TOKENS_KEY_BASE;
 
 #[test]
 fn invalidation_pattern_any_string() {
@@ -39,7 +39,7 @@ fn invalidation_pattern_transfers_string() {
 #[test]
 fn invalidation_pattern_tokens_string() {
     let invalidation_pattern = InvalidationPattern::Tokens;
-    let expected = TOKENS_KEY.to_string();
+    let expected = TOKENS_KEY_BASE.to_string();
 
     let actual = invalidation_pattern.to_pattern_string();
 

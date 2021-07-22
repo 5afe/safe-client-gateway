@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["safe_info","`/v1/safes/<safe_address>`  Returns SafeState"]]});
+initSidebarItems({"fn":[["get_safe_info","`/v1/chains/<chain_id>/safes/<safe_address>`  Returns SafeState"]]});

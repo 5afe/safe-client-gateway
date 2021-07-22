@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["info","`/about`  Returns About"]]});

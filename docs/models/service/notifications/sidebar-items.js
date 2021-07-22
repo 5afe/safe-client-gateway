@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["DeviceType",""]],"struct":[["DeviceData",""],["NotificationRegistrationRequest","NotificationRegistrationRequest"],["SafeRegistration",""]]});

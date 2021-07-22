@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["info","`/about`  Returns About"]]});
+initSidebarItems({"fn":[["get_about","`/v1/chains/<chain_id>/about`  Returns About"],["get_master_copies","`/v1/chains/<chain_id>/about/master-copies`  Returns a list of `MasterCopy`"]]});

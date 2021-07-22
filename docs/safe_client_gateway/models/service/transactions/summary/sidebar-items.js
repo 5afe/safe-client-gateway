@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["ConflictType",""],["Label",""],["TransactionListItem",""]],"struct":[["ExecutionInfo",""],["TransactionSummary","TransactionSummary - object returned for [TransactionListItem::Transaction]"]]});

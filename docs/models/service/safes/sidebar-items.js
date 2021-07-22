@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["AddressEx",""],["SafeInfoEx",""],["SafeLastChanges",""],["SafeState",""]]});
+initSidebarItems({"enum":[["ImplementationVersionState",""]],"struct":[["Implementation",""],["SafeInfoEx",""],["SafeLastChanges",""],["SafeState",""]]});

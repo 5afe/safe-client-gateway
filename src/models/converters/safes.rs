@@ -1,6 +1,6 @@
 use crate::models::backend::safes::MasterCopy;
 use crate::models::service::addresses::AddressEx;
-use crate::models::service::safes::{ImplementationVersionState, SafeInfoEx};
+use crate::models::service::safes::{Implementation, ImplementationVersionState, SafeInfoEx};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo};
 use semver::Version;
@@ -84,5 +84,14 @@ pub(super) fn calculate_version_state(
     match sem_ver_safe.cmp(&sem_ver_min) {
         Ordering::Less => ImplementationVersionState::Outdated,
         Ordering::Equal | Ordering::Greater => ImplementationVersionState::UpToDate,
+    }
+}
+
+impl From<MasterCopy> for Implementation {
+    fn from(master_copy: MasterCopy) -> Self {
+        Implementation {
+            address: master_copy.address,
+            version: master_copy.version,
+        }
     }
 }

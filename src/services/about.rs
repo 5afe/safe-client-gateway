@@ -1,8 +1,8 @@
 extern crate reqwest;
 
 use crate::config::{build_number, version};
-use crate::models::backend::safes::MasterCopy;
 use crate::models::service::about::About;
+use crate::models::service::safes::Implementation;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -21,7 +21,12 @@ pub async fn about(context: &Context<'_>, chain_id: &str) -> ApiResult<About> {
 pub async fn get_master_copies(
     context: &Context<'_>,
     chain_id: &str,
-) -> ApiResult<Vec<MasterCopy>> {
+) -> ApiResult<Vec<Implementation>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
-    info_provider.master_copies().await
+    Ok(info_provider
+        .master_copies()
+        .await?
+        .into_iter()
+        .map(|master_copy| master_copy.into())
+        .collect::<Vec<Implementation>>())
 }

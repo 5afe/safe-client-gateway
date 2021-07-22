@@ -28,5 +28,5 @@ pub async fn get_master_copies(
         .await?
         .into_iter()
         .map(|master_copy| master_copy.into())
-        .collect::<Vec<Implementation>>())
+        .collect())
 }

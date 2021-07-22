@@ -2,7 +2,7 @@ use crate::models::backend::chains::ChainInfo;
 use crate::models::backend::safes::MasterCopy;
 use crate::models::converters::safes::calculate_version_state;
 use crate::models::service::addresses::AddressEx;
-use crate::models::service::safes::{ImplementationVersionState, SafeInfoEx};
+use crate::models::service::safes::{Implementation, ImplementationVersionState, SafeInfoEx};
 use crate::providers::info::*;
 use rocket::serde::json::json;
 
@@ -519,6 +519,24 @@ fn calculate_version_state_version_up_to_date_but_address_mismatch() {
     );
 
     assert_eq!(actual, ImplementationVersionState::Unknown);
+}
+
+#[test]
+fn implementation_from_master_copy() {
+    let master_copy = MasterCopy {
+        address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
+        version: "1.1.1".to_string(),
+        deployer: "".to_string(),
+        deployed_block_number: 0,
+        last_indexed_block_number: 0,
+    };
+
+    let expected = Implementation {
+        address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
+        version: "1.1.1".to_string(),
+    };
+
+    assert_eq!(expected, master_copy.into());
 }
 
 fn build_chain_info() -> ChainInfo {

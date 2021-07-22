@@ -40,3 +40,10 @@ pub enum ImplementationVersionState {
     Outdated,
     Unknown,
 }
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct Implementation {
+    pub address: String,
+    pub version: String,
+}

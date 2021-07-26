@@ -9,7 +9,7 @@ use serde::Serialize;
 /// {
 ///   "transactionServiceBaseUri": "https://safe-transaction.staging.gnosisdev.com/api/v1",
 ///   "name": "safe-client-gateway",
-///   "version": "0.2.0-9-g17dcd40",
+///   "version": "3.0.0",
 ///   "buildNumber": "48"
 /// }
 /// ```

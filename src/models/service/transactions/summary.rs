@@ -16,7 +16,7 @@ use serde::Serialize;
 ///       "type": "DATE_LABEL",
 ///       "timestamp": 1604620800000
 ///     },
-///     {
+///      {
 ///       "type": "TRANSACTION",
 ///       "transaction": {
 ///         "id": "multisig_0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f_0x28b4cc29c036c2df40a1ba8d684cdab736abaf7d5cb84b217428462a2b4e3318",
@@ -24,36 +24,20 @@ use serde::Serialize;
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
 ///           "type": "Custom",
-///           "to": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+///           "to": {
+///             "value": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+///             "name": "Gnosis Safe: Multi Send 1.1.1",
+///             "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x8D29bE29923b68abfDD21e541b9374737B49cdAD.png"
+///           },
 ///           "dataSize": "580",
 ///           "value": "0",
-///           "methodName": "multiSend"
+///           "methodName": "multiSend",
+///           "actionCount": 6,
+///           "isCancellation": false
 ///         },
 ///         "executionInfo": {
-///           "type" : "MULTISIG_EXECUTION_INFO",
+///           "type": "MULTISIG_EXECUTION_INFO",
 ///           "nonce": 2,
-///           "confirmationsRequired": 1,
-///           "confirmationsSubmitted": 1
-///         }
-///       },
-///       "conflictType": "None"
-///     },
-///     {
-///       "type": "TRANSACTION",
-///       "transaction": {
-///         "id": "multisig_0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f_0x2729fd437ad8f523ea0b8ca7f46401de38fc96cd62f6a0b07ac5637c4c195f3b",
-///         "timestamp": 1604684216000,
-///         "txStatus": "SUCCESS",
-///         "txInfo": {
-///           "type": "Custom",
-///           "to": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
-///           "dataSize": "580",
-///           "value": "0",
-///           "methodName": "multiSend"
-///         },
-///         "executionInfo": {
-///           "type" : "MULTISIG_EXECUTION_INFO",
-///           "nonce": 1,
 ///           "confirmationsRequired": 1,
 ///           "confirmationsSubmitted": 1
 ///         }
@@ -94,15 +78,18 @@ use serde::Serialize;
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
 ///           "type": "Transfer",
-///           "sender": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9",
-///           "recipient": "0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f",
+///           "sender": {
+///             "value": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9"
+///           },
+///           "recipient": {
+///             "value": "0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f"
+///           },
 ///           "direction": "INCOMING",
 ///           "transferInfo": {
-///             "type": "ETHER",
+///             "type": "NATIVE_COIN",
 ///             "value": "100000000000000000"
 ///           }
-///         },
-///         "executionInfo": null
+///         }
 ///       },
 ///       "conflictType": "None"
 ///     },
@@ -114,12 +101,19 @@ use serde::Serialize;
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
 ///           "type": "Creation",
-///           "creator": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9",
+///           "creator": {
+///             "value": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9"
+///           },
 ///           "transactionHash": "0xbfe5f021d0cfaf98ec445f757802be9e86b818301e2d892bcf3a9ee5e688d37f",
-///           "implementation": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
-///           "factory": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B"
-///         },
-///         "executionInfo": null
+///           "implementation": {
+///             "value": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
+///             "name": "Gnosis Safe: Mastercopy 1.1.1",
+///             "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F.png"
+///           },
+///           "factory": {
+///             "value": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B"
+///           }
+///         }
 ///       },
 ///       "conflictType": "None"
 ///     }

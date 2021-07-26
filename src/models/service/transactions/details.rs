@@ -86,7 +86,7 @@ use std::collections::HashMap;
 ///     "direction": "INCOMING",
 ///     "transferInfo": {
 ///       "type": "NATIVE_COIN",
-///      "value": "100000000000000000"
+///       "value": "100000000000000000"
 ///     }
 ///   },
 ///   "txData": null,

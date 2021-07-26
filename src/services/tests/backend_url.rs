@@ -1,5 +1,5 @@
 use crate::models::backend::chains::{
-    ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
+    BlockExplorerUriTemplate, ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
 };
 use crate::providers::info::*;
 use crate::utils::errors::ApiResult;
@@ -19,6 +19,10 @@ async fn core_uri_success_with_params() {
             value: "".to_string(),
         },
         block_explorer_uri: "".to_string(),
+        block_explorer_uri_template: BlockExplorerUriTemplate {
+            address: "".to_string(),
+            tx_hash: "".to_string(),
+        },
         native_currency: NativeCurrency {
             name: "".to_string(),
             symbol: "".to_string(),
@@ -62,6 +66,10 @@ async fn core_uri_success_without_params() {
             value: "".to_string(),
         },
         block_explorer_uri: "".to_string(),
+        block_explorer_uri_template: BlockExplorerUriTemplate {
+            address: "".to_string(),
+            tx_hash: "".to_string(),
+        },
         native_currency: NativeCurrency {
             name: "".to_string(),
             symbol: "".to_string(),

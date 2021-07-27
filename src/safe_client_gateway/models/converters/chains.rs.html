@@ -52,12 +52,16 @@
 <span id="49">49</span>
 <span id="50">50</span>
 <span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::chains</span>::{<span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>, <span class="ident">GasPrice</span>, <span class="ident">RpcAuthentication</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::chains</span>::{
-    <span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">ServiceChainInfo</span>, <span class="ident">GasPrice</span> <span class="kw">as</span> <span class="ident">ServiceGasPrice</span>,
-    <span class="ident">NativeCurrency</span> <span class="kw">as</span> <span class="ident">ServiceNativeCurrency</span>, <span class="ident">RpcAuthentication</span> <span class="kw">as</span> <span class="ident">ServiceRpcAuthentication</span>,
-    <span class="ident">RpcUri</span> <span class="kw">as</span> <span class="ident">ServiceRpcUri</span>, <span class="ident">Theme</span> <span class="kw">as</span> <span class="ident">ServiceTheme</span>,
+    <span class="ident">BlockExplorerUriTemplate</span> <span class="kw">as</span> <span class="ident">ServiceBlockExplorerUriTemplate</span>, <span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">ServiceChainInfo</span>,
+    <span class="ident">GasPrice</span> <span class="kw">as</span> <span class="ident">ServiceGasPrice</span>, <span class="ident">NativeCurrency</span> <span class="kw">as</span> <span class="ident">ServiceNativeCurrency</span>,
+    <span class="ident">RpcAuthentication</span> <span class="kw">as</span> <span class="ident">ServiceRpcAuthentication</span>, <span class="ident">RpcUri</span> <span class="kw">as</span> <span class="ident">ServiceRpcUri</span>, <span class="ident">Theme</span> <span class="kw">as</span> <span class="ident">ServiceTheme</span>,
 };
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">BackendChainInfo</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ServiceChainInfo</span> {
@@ -77,6 +81,10 @@
                 <span class="ident">value</span>: <span class="ident">chain_info</span>.<span class="ident">rpc_uri</span>.<span class="ident">value</span>,
             },
             <span class="ident">block_explorer_uri</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri</span>,
+            <span class="ident">block_explorer_uri_template</span>: <span class="ident">ServiceBlockExplorerUriTemplate</span> {
+                <span class="ident">address</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">address</span>,
+                <span class="ident">tx_hash</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">tx_hash</span>,
+            },
             <span class="ident">native_currency</span>: <span class="ident">ServiceNativeCurrency</span> {
                 <span class="ident">name</span>: <span class="ident">chain_info</span>.<span class="ident">native_currency</span>.<span class="ident">name</span>,
                 <span class="ident">symbol</span>: <span class="ident">chain_info</span>.<span class="ident">native_currency</span>.<span class="ident">symbol</span>,

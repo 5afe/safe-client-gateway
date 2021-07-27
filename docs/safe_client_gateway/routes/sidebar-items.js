@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["about","About endpoint"],["balances","Balance endpoints"],["chains","Chain endpoints"],["collectibles","Collectibles endpoint"],["notifications","Notification endpoints"],["safes","Safe endpoints"],["transactions","Transactions endpoints"],["utils","Utility endpoints"]]});

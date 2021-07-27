@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["post_data_decoder","`/v1/chains/<chain_id>/data-decoder`  Returns DataDecoded"],["post_safe_gas_estimation","`/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations`  Returns SafeTransactionEstimation"]]});

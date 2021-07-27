@@ -65,6 +65,14 @@
 <span id="62">62</span>
 <span id="63">63</span>
 <span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
 
@@ -77,6 +85,7 @@
     <span class="kw">pub</span> <span class="ident">chain_name</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">rpc_uri</span>: <span class="ident">RpcUri</span>,
     <span class="kw">pub</span> <span class="ident">block_explorer_uri</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">block_explorer_uri_template</span>: <span class="ident">BlockExplorerUriTemplate</span>,
     <span class="kw">pub</span> <span class="ident">native_currency</span>: <span class="ident">NativeCurrency</span>,
     <span class="kw">pub</span> <span class="ident">theme</span>: <span class="ident">Theme</span>,
     <span class="kw">pub</span> <span class="ident">ens_registry_address</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -129,6 +138,13 @@
     <span class="ident">NoAuthentication</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">other</span>)]</span>
     <span class="ident">Unknown</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BlockExplorerUriTemplate</span> {
+    <span class="kw">pub</span> <span class="ident">address</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">tx_hash</span>: <span class="ident">String</span>,
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>

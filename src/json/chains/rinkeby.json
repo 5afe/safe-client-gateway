@@ -6,6 +6,10 @@
     "value": "https://someurl.com/rpc"
   },
   "blockExplorerUri": "https://blockexplorer.com",
+  "blockExplorerUriTemplate": {
+    "address": "https://blockexplorer.com/{{address}}",
+    "txHash": "https://blockexplorer.com/{{txHash}}"
+  },
   "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
   "nativeCurrency": {
     "name": "Ether",

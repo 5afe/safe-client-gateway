@@ -17,7 +17,7 @@ rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cb
 rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968" }
 
 # Force rocket peer-dependencies versions
-proc-macro2 = "1.0.27"
+proc-macro2 = "1.0.28"
 tokio = "1.6.1"
 
 reqwest = { version = "0.11.3", features = ["json"] }

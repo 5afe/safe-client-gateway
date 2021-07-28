@@ -1,7 +1,7 @@
 extern crate reqwest;
 
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{
@@ -16,11 +16,12 @@ use itertools::Itertools;
 
 pub async fn get_history_transactions(
     context: &Context<'_>,
+    chain_id: &String,
     safe_address: &String,
-    page_url: &Option<String>,
+    cursor: &Option<String>,
     timezone_offset: &Option<String>,
 ) -> ApiResult<Page<TransactionListItem>> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let request_timezone_offset = timezone_offset
         .as_ref()
         .and_then(|it| it.parse::<i32>().ok())
@@ -28,18 +29,19 @@ pub async fn get_history_transactions(
         / 1000;
 
     let incoming_page_metadata =
-        PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
+        PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
 
     let page_metadata = adjust_page_meta(&incoming_page_metadata);
-    let extended_page_url = Some(page_metadata.to_url_string());
+    let extended_page_cursor = Some(page_metadata.to_url_string());
 
     let backend_paged_txs =
-        fetch_backend_paged_txs(context, safe_address, &extended_page_url).await?;
+        fetch_backend_paged_txs(context, &info_provider, safe_address, &extended_page_cursor)
+            .await?;
     let mut backend_txs_iter = backend_paged_txs.results.into_iter();
     let prev_page_timestamp = if page_metadata.offset != 0 {
         peek_timestamp_and_remove_item(
             &mut backend_txs_iter,
-            &mut info_provider,
+            &info_provider,
             safe_address,
             request_timezone_offset,
         )
@@ -50,9 +52,11 @@ pub async fn get_history_transactions(
     };
 
     let mut service_txs =
-        backend_txs_to_summary_txs(&mut backend_txs_iter, &mut info_provider, safe_address).await?;
+        backend_txs_to_summary_txs(&mut backend_txs_iter, &info_provider, safe_address).await?;
     if backend_paged_txs.next.is_none() {
-        if let Ok(creation_tx) = get_creation_transaction_summary(context, safe_address).await {
+        if let Ok(creation_tx) =
+            get_creation_transaction_summary(context, &info_provider, safe_address).await
+        {
             service_txs.push(creation_tx);
         }
     }
@@ -61,16 +65,18 @@ pub async fn get_history_transactions(
         service_txs_to_tx_list_items(service_txs, prev_page_timestamp, request_timezone_offset)?;
 
     Ok(Page {
-        next: build_page_url(
+        next: build_cursor(
             context,
+            chain_id,
             safe_address,
             &incoming_page_metadata,
             timezone_offset,
             backend_paged_txs.next,
             1, // Direction forward
         ),
-        previous: build_page_url(
+        previous: build_cursor(
             context,
+            chain_id,
             safe_address,
             &incoming_page_metadata,
             timezone_offset,
@@ -81,8 +87,9 @@ pub async fn get_history_transactions(
     })
 }
 
-fn build_page_url(
+fn build_cursor(
     context: &Context<'_>,
+    chain_id: &str,
     safe_address: &str,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -90,14 +97,15 @@ fn build_page_url(
     direction: i64,
 ) -> Option<String> {
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(
-            crate::routes::transactions::history_transactions: safe_address,
+        context.build_absolute_url(uri!(crate::routes::transactions::get_transactions_history(
+            chain_id,
+            safe_address,
             Some(offset_page_meta(
                 page_meta,
                 direction * (page_meta.limit as i64)
             )),
-            Some(timezone_offset.clone().unwrap_or("0".to_string())),
-        ))
+            Some(timezone_offset.clone().unwrap_or("0".to_string()))
+        )))
     })
 }
 
@@ -117,18 +125,19 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 
 async fn fetch_backend_paged_txs(
     context: &Context<'_>,
+    info_provider: &impl InfoProvider,
     safe_address: &str,
-    page_url: &Option<String>,
+    cursor: &Option<String>,
 ) -> ApiResult<Page<Transaction>> {
-    let page_metadata = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
-    let url = format!(
-        "{}/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",
-        base_transaction_service_url(),
+    let page_metadata = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/all-transactions/?{}&queued=false&executed=true",
         safe_address,
         page_metadata.to_url_string()
-    );
+    )?;
     log::debug!("request URL: {}", &url);
-    log::debug!("page_url: {:#?}", &page_url);
+    log::debug!("cursor: {:#?}", &cursor);
     log::debug!("page_metadata: {:#?}", &page_metadata);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
@@ -139,7 +148,7 @@ async fn fetch_backend_paged_txs(
 
 pub(super) async fn backend_txs_to_summary_txs(
     txs: &mut impl Iterator<Item = Transaction>,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &(impl InfoProvider + Sync),
     safe_address: &str,
 ) -> ApiResult<Vec<TransactionSummary>> {
     let mut results = vec![];
@@ -183,7 +192,7 @@ pub(super) fn service_txs_to_tx_list_items(
 
 pub(super) async fn peek_timestamp_and_remove_item(
     transactions: &mut impl Iterator<Item = Transaction>,
-    info_provider: &mut impl InfoProvider,
+    info_provider: &(impl InfoProvider + Sync),
     safe_address: &str,
     timezone_offset: i32,
 ) -> ApiResult<i64> {
@@ -216,24 +225,19 @@ pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64, timezone_offset
 
 pub(super) async fn get_creation_transaction_summary(
     context: &Context<'_>,
+    info_provider: &(impl InfoProvider + Sync),
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
-    let url = format!(
-        "{}/v1/safes/{}/creation/",
-        base_transaction_service_url(),
-        safe
-    );
+    let url = core_uri!(info_provider, "/v1/safes/{}/creation/", safe)?;
     debug!("{}", &url);
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
         .execute(context.client(), context.cache())
         .await?;
 
-    let mut info_provider = DefaultInfoProvider::new(context);
-
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;
     let transaction_summary = creation_transaction_dto
-        .to_transaction_summary(safe, &mut info_provider)
+        .to_transaction_summary(safe, info_provider)
         .await;
     Ok(transaction_summary)
 }

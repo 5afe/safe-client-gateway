@@ -1,20 +1,22 @@
 use crate::cache::Cache;
-use crate::config::base_transaction_service_url;
 use crate::models::service::transactions::requests::MultisigTransactionRequest;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
 use std::collections::HashMap;
 
 pub async fn submit_confirmation(
     context: &Context<'_>,
+    chain_id: &str,
     safe_tx_hash: &str,
     signature: &str,
 ) -> ApiResult<()> {
-    let url = format!(
-        "{}/v1/multisig-transactions/{}/confirmations/",
-        base_transaction_service_url(),
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let url = core_uri!(
+        info_provider,
+        "/v1/multisig-transactions/{}/confirmations/",
         &safe_tx_hash
-    );
+    )?;
     let mut json = HashMap::new();
     json.insert("signature", signature);
 
@@ -36,14 +38,16 @@ pub async fn submit_confirmation(
 
 pub async fn propose_transaction(
     context: &Context<'_>,
+    chain_id: &str,
     safe_address: &str,
     transaction_request: &MultisigTransactionRequest,
 ) -> ApiResult<()> {
-    let url = format!(
-        "{}/v1/safes/{}/multisig-transactions/",
-        base_transaction_service_url(),
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/multisig-transactions/",
         &safe_address
-    );
+    )?;
     let response = context
         .client()
         .post(&url)

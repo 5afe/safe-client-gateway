@@ -3,7 +3,9 @@
   "txStatus": "SUCCESS",
   "txInfo": {
     "type": "Custom",
-    "to": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+    "to": {
+      "value": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD"
+    },
     "dataSize": "3108",
     "value": "0",
     "methodName": "multiSend",
@@ -80,7 +82,9 @@
         }
       ]
     },
-    "to": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+    "to": {
+      "value": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD"
+    },
     "value": "0",
     "operation": 1
   },
@@ -92,25 +96,43 @@
     "baseGas": 0,
     "gasPrice": "0",
     "gasToken": "0x0000000000000000000000000000000000000000",
-    "refundReceiver": "0x0000000000000000000000000000000000000000",
+    "refundReceiver": {
+      "value": "0x0000000000000000000000000000000000000000"
+    },
     "safeTxHash": "0x728e6dec56dc61523b56dc440e34c1c4c39c66895df8e5d3499ed1f7d4fcfe80",
-    "executor": "0xe965484BA4250c446779D4703f1598DC2EA00d12",
+    "executor": {
+      "value": "0xe965484BA4250c446779D4703f1598DC2EA00d12"
+    },
     "signers": [
-      "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23",
-      "0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72",
-      "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D",
-      "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd",
-      "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"
+      {
+        "value": "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"
+      },
+      {
+        "value": "0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"
+      },
+      {
+        "value": "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"
+      },
+      {
+        "value": "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"
+      },
+      {
+        "value": "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"
+      }
     ],
     "confirmationsRequired": 2,
     "confirmations": [
       {
-        "signer": "0xc9d486048A9B82172F6f2A2ce6D9024c9D1097dC",
+        "signer": {
+          "value": "0xc9d486048A9B82172F6f2A2ce6D9024c9D1097dC"
+        },
         "signature": "0xbd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c",
         "submittedAt": 1607346684686
       },
       {
-        "signer": "0xe965484BA4250c446779D4703f1598DC2EA00d12",
+        "signer": {
+          "value": "0xe965484BA4250c446779D4703f1598DC2EA00d12"
+        },
         "signature": "0x000000000000000000000000e965484ba4250c446779d4703f1598dc2ea00d12000000000000000000000000000000000000000000000000000000000000000001",
         "submittedAt": 1607346715000
       }
@@ -120,6 +142,6 @@
   "safeAppInfo": {
     "name": "WalletConnect",
     "url": "https://apps.gnosis-safe.io/walletConnect",
-    "logoUrl": "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg"
+    "logoUri": "https://apps.gnosis-safe.io/walletConnect/walletConnect.jpg"
   }
 }

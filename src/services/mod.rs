@@ -3,12 +3,16 @@ use std::cmp::max;
 
 pub mod about;
 pub mod balances;
+pub mod chains;
+pub mod collectibles;
 pub mod hooks;
+pub mod notifications;
 pub mod safes;
 pub mod transactions_details;
 pub mod transactions_history;
 pub mod transactions_proposal;
 pub mod transactions_queued;
+pub mod utils;
 
 #[cfg(test)]
 mod tests;

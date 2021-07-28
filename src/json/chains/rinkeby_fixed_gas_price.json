@@ -1,0 +1,30 @@
+{
+  "chainId": "4",
+  "chainName": "Rinkeby",
+  "rpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc"
+  },
+  "blockExplorerUri": "https://blockexplorer.com",
+  "blockExplorerUriTemplate": {
+    "address": "https://blockexplorer.com/{{address}}",
+    "txHash": "https://blockexplorer.com/{{txHash}}"
+  },
+  "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18,
+    "logoUri": "https://test.token.image.url"
+  },
+  "theme": {
+    "textColor": "#fff",
+    "backgroundColor": "#000"
+  },
+  "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+  "gasPrice": {
+    "type": "fixed",
+    "weiValue": "1000000000"
+  },
+  "recommendedMasterCopyVersion": "1.1.1"
+}

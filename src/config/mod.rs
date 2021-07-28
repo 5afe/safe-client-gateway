@@ -4,8 +4,8 @@ pub fn redis_url() -> String {
     env::var("REDIS_URL").unwrap()
 }
 
-pub fn base_transaction_service_url() -> String {
-    format!("{}{}", env::var("TRANSACTION_SERVICE_URL").unwrap(), "/api")
+pub fn base_config_service_url() -> String {
+    format!("{}{}", env::var("CONFIG_SERVICE_URL").unwrap(), "/api")
 }
 
 pub fn base_exchange_api_url() -> String {
@@ -71,6 +71,10 @@ pub fn token_info_cache_duration() -> usize {
     usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 60 * 24)
 }
 
+pub fn chain_info_cache_duration() -> usize {
+    usize_with_default("CHAIN_INFO_CACHE_DURATION", indefinite_timeout())
+}
+
 pub fn exchange_api_cache_duration() -> usize {
     usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12)
 }
@@ -112,6 +116,10 @@ pub fn token_info_request_timeout() -> u64 {
     u64_with_default("TOKEN_INFO_REQUEST_TIMEOUT", 15000)
 }
 
+pub fn chain_info_request_timeout() -> u64 {
+    u64_with_default("CHAIN_INFO_REQUEST_TIMEOUT", 15000)
+}
+
 pub fn balances_request_timeout() -> u64 {
     u64_with_default("BALANCES_REQUEST_TIMEOUT", 20000)
 }
@@ -146,28 +154,8 @@ pub fn build_number() -> Option<String> {
     option_env!("BUILD_NUMBER").map(|it| it.to_string())
 }
 
-pub fn native_coin_decimals() -> u64 {
-    u64_with_default("NATIVE_COIN_DECIMALS", 18)
-}
-
-pub fn native_coin_symbol() -> String {
-    env::var("NATIVE_COIN_SYMBOL")
-        .unwrap_or(String::from("ETH"))
-        .to_string()
-}
-
-pub fn native_coin_name() -> String {
-    env::var("NATIVE_COIN_NAME")
-        .unwrap_or(String::from("Ether"))
-        .to_string()
-}
-
 pub fn version() -> String {
     option_env!("VERSION")
         .unwrap_or(env!("CARGO_PKG_VERSION"))
         .to_string()
-}
-
-pub fn chain_id() -> u64 {
-    u64_with_default("CHAIN_ID", 1)
 }

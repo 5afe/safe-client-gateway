@@ -5,7 +5,9 @@ use crate::models::backend::transactions::{
     EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
 use crate::models::converters::transactions::safe_app_info::safe_app_info_from;
-use crate::models::service::transactions::summary::{ExecutionInfo, TransactionSummary};
+use crate::models::service::transactions::summary::{
+    ExecutionInfo, ModuleExecutionInfo, MultisigExecutionInfo, TransactionSummary,
+};
 use crate::models::service::transactions::{
     Creation, TransactionInfo, TransactionStatus, ID_PREFIX_CREATION_TX, ID_PREFIX_ETHEREUM_TX,
     ID_PREFIX_MODULE_TX, ID_PREFIX_MULTISIG_TX,
@@ -19,7 +21,7 @@ use rocket::futures::future::OptionFuture;
 impl Transaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
         safe: &str,
     ) -> ApiResult<Vec<TransactionSummary>> {
         match self {
@@ -40,7 +42,7 @@ impl Transaction {
 impl MultisigTransaction {
     pub async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<Vec<TransactionSummary>> {
         let safe_info = info_provider
             .safe_info(&self.safe_transaction.safe.to_string())
@@ -62,12 +64,12 @@ impl MultisigTransaction {
                 .unwrap_or(self.submission_date)
                 .timestamp_millis(),
             tx_status,
-            execution_info: Some(ExecutionInfo {
+            execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
                 nonce: self.nonce,
                 confirmations_submitted: self.confirmation_count(),
                 confirmations_required: self.confirmation_required(safe_info.threshold),
                 missing_signers,
-            }),
+            })),
             tx_info: self.transaction_info(info_provider).await,
             safe_app_info: OptionFuture::from(
                 self.origin
@@ -117,8 +119,11 @@ impl EthereumTransaction {
 impl ModuleTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> Vec<TransactionSummary> {
+        let module_info = info_provider
+            .address_ex_from_contracts_or_default(&self.module)
+            .await;
         vec![TransactionSummary {
             id: create_id!(
                 ID_PREFIX_MODULE_TX,
@@ -128,7 +133,9 @@ impl ModuleTransaction {
             ),
             timestamp: self.execution_date.timestamp_millis(),
             tx_status: self.map_status(),
-            execution_info: None,
+            execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
+                address: module_info,
+            })),
             safe_app_info: None,
             tx_info: self.transaction_info(info_provider).await,
         }]
@@ -146,13 +153,16 @@ impl CreationTransaction {
             timestamp: self.created.timestamp_millis(),
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {
-                creator: self.creator.clone(),
-                creator_info: info_provider.contract_info(&self.creator).await.ok(),
+                creator: info_provider
+                    .address_ex_from_contracts_or_default(&self.creator)
+                    .await,
                 transaction_hash: self.transaction_hash.clone(),
-                implementation: self.master_copy.clone(),
-                implementation_info: info_provider.to_address_info(&self.master_copy).await,
-                factory: self.factory_address.clone(),
-                factory_info: info_provider.to_address_info(&self.factory_address).await,
+                implementation: info_provider
+                    .optional_address_ex_from_contracts(&self.master_copy)
+                    .await,
+                factory: info_provider
+                    .optional_address_ex_from_contracts(&self.factory_address)
+                    .await,
             }),
             execution_info: None,
             safe_app_info: None,

@@ -1,11 +1,10 @@
-use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, collectibles_request_timeout};
+use crate::services::collectibles::collectibles;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 /**
- * `/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` <br />
  * Returns collectibles from the transaction service
  *
  * # Collectibles
@@ -14,7 +13,7 @@ use rocket::response::content;
  *
  * ## Path
  *
- * - `/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` : Returns a list of the ERC721 tokens stored in a safe
+ * - `/v1/chains/<chain_id>/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` : Returns a list of the ERC721 tokens stored in a safe
  *
  * ## Query parameters
  *
@@ -150,25 +149,20 @@ use rocket::response::content;
  * ```
  * </details>
  */
-#[get("/v1/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>")]
-pub async fn list(
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>")]
+pub async fn get_collectibles(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    let url = format!(
-        "{}/v1/safes/{}/collectibles/?trusted={}&exclude_spam={}",
-        base_transaction_service_url(),
-        safe_address,
-        trusted.unwrap_or(false),
-        exclude_spam.unwrap_or(true)
-    );
-
-    Ok(content::Json(
-        RequestCached::new(url)
-            .request_timeout(collectibles_request_timeout())
-            .execute(context.client(), context.cache())
-            .await?,
-    ))
+    collectibles(
+        &context,
+        chain_id.as_str(),
+        safe_address.as_str(),
+        trusted,
+        exclude_spam,
+    )
+    .await
 }

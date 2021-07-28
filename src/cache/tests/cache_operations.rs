@@ -1,6 +1,7 @@
 use crate::cache::cache_operations::{InvalidationPattern, InvalidationScope};
 use crate::cache::{CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
-use crate::providers::info::TOKENS_KEY;
+use crate::config::base_config_service_url;
+use crate::providers::info::TOKENS_KEY_BASE;
 
 #[test]
 fn invalidation_pattern_any_string() {
@@ -37,8 +38,10 @@ fn invalidation_pattern_transfers_string() {
 
 #[test]
 fn invalidation_pattern_tokens_string() {
-    let invalidation_pattern = InvalidationPattern::Tokens;
-    let expected = TOKENS_KEY.to_string();
+    let invalidation_pattern = InvalidationPattern::Tokens {
+        chain_id: "4".to_string(),
+    };
+    let expected = format!("{}_{}", TOKENS_KEY_BASE.to_string(), "4");
 
     let actual = invalidation_pattern.to_pattern_string();
 
@@ -71,6 +74,17 @@ fn invalidation_pattern_collectibles_string() {
     let invalidation_pattern =
         InvalidationPattern::Collectibles(InvalidationScope::Both, "some_address".to_string());
     let expected = format!("{}*/some_address/collectibles*", CACHE_REQS_RESP_PREFIX);
+
+    let actual = invalidation_pattern.to_pattern_string();
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn invalidation_pattern_chains_string() {
+    std::env::set_var("CONFIG_SERVICE_URL", "https://config-url-example.com");
+    let invalidation_pattern = InvalidationPattern::Chains;
+    let expected = format!("*{}*", base_config_service_url());
 
     let actual = invalidation_pattern.to_pattern_string();
 

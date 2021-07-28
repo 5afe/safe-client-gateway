@@ -16,7 +16,7 @@ use serde::Serialize;
 ///       "type": "DATE_LABEL",
 ///       "timestamp": 1604620800000
 ///     },
-///     {
+///      {
 ///       "type": "TRANSACTION",
 ///       "transaction": {
 ///         "id": "multisig_0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f_0x28b4cc29c036c2df40a1ba8d684cdab736abaf7d5cb84b217428462a2b4e3318",
@@ -24,34 +24,20 @@ use serde::Serialize;
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
 ///           "type": "Custom",
-///           "to": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+///           "to": {
+///             "value": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+///             "name": "Gnosis Safe: Multi Send 1.1.1",
+///             "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x8D29bE29923b68abfDD21e541b9374737B49cdAD.png"
+///           },
 ///           "dataSize": "580",
 ///           "value": "0",
-///           "methodName": "multiSend"
+///           "methodName": "multiSend",
+///           "actionCount": 6,
+///           "isCancellation": false
 ///         },
 ///         "executionInfo": {
+///           "type": "MULTISIG_EXECUTION_INFO",
 ///           "nonce": 2,
-///           "confirmationsRequired": 1,
-///           "confirmationsSubmitted": 1
-///         }
-///       },
-///       "conflictType": "None"
-///     },
-///     {
-///       "type": "TRANSACTION",
-///       "transaction": {
-///         "id": "multisig_0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f_0x2729fd437ad8f523ea0b8ca7f46401de38fc96cd62f6a0b07ac5637c4c195f3b",
-///         "timestamp": 1604684216000,
-///         "txStatus": "SUCCESS",
-///         "txInfo": {
-///           "type": "Custom",
-///           "to": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
-///           "dataSize": "580",
-///           "value": "0",
-///           "methodName": "multiSend"
-///         },
-///         "executionInfo": {
-///           "nonce": 1,
 ///           "confirmationsRequired": 1,
 ///           "confirmationsSubmitted": 1
 ///         }
@@ -65,7 +51,7 @@ use serde::Serialize;
 ///     {
 ///       "type": "TRANSACTION",
 ///       "transaction": {
-///         "id": "multisig_0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f_0xb487741c687a81496034b08d7e6d94986cbae38dc6ebd2aa8e547cb8f8542cc0",
+///         "id": "module_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0xcd10b23687bf336d0f4c0a3383590d3d1722aaa99a41fd0d289a5f69a8266c8f_0x53b6e88b578a6313",
 ///         "timestamp": 1604533603000,
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
@@ -76,9 +62,10 @@ use serde::Serialize;
 ///           "methodName": "multiSend"
 ///         },
 ///         "executionInfo": {
-///           "nonce": 0,
-///           "confirmationsRequired": 1,
-///           "confirmationsSubmitted": 1
+///           "type" : "MODULE_EXECUTION_INFO",
+///           "address": {
+///             "value": "0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134"
+///           }
 ///         }
 ///       },
 ///       "conflictType": "None"
@@ -91,15 +78,18 @@ use serde::Serialize;
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
 ///           "type": "Transfer",
-///           "sender": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9",
-///           "recipient": "0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f",
+///           "sender": {
+///             "value": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9"
+///           },
+///           "recipient": {
+///             "value": "0x126ab4d9e87b5cba98Ddeb75Df703E83500b6B7f"
+///           },
 ///           "direction": "INCOMING",
 ///           "transferInfo": {
-///             "type": "ETHER",
+///             "type": "NATIVE_COIN",
 ///             "value": "100000000000000000"
 ///           }
-///         },
-///         "executionInfo": null
+///         }
 ///       },
 ///       "conflictType": "None"
 ///     },
@@ -111,12 +101,19 @@ use serde::Serialize;
 ///         "txStatus": "SUCCESS",
 ///         "txInfo": {
 ///           "type": "Creation",
-///           "creator": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9",
+///           "creator": {
+///             "value": "0x05c85Ab5B09Eb8A55020d72daf6091E04e264af9"
+///           },
 ///           "transactionHash": "0xbfe5f021d0cfaf98ec445f757802be9e86b818301e2d892bcf3a9ee5e688d37f",
-///           "implementation": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
-///           "factory": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B"
-///         },
-///         "executionInfo": null
+///           "implementation": {
+///             "value": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
+///             "name": "Gnosis Safe: Mastercopy 1.1.1",
+///             "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F.png"
+///           },
+///           "factory": {
+///             "value": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B"
+///           }
+///         }
 ///       },
 ///       "conflictType": "None"
 ///     }
@@ -139,13 +136,26 @@ pub struct TransactionSummary {
 }
 
 #[derive(Serialize, Debug, PartialEq)]
+#[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ExecutionInfo {
+    Multisig(MultisigExecutionInfo),
+    Module(ModuleExecutionInfo),
+}
+
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct ExecutionInfo {
+pub struct MultisigExecutionInfo {
     pub nonce: u64,
     pub confirmations_required: u64,
     pub confirmations_submitted: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub missing_signers: Option<Vec<String>>,
+    pub missing_signers: Option<Vec<AddressEx>>,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct ModuleExecutionInfo {
+    pub address: AddressEx,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

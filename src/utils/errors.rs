@@ -3,7 +3,7 @@ use reqwest::Response as ReqwestResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
-use rocket_contrib::json::JsonError;
+use rocket::serde::json::Error;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::fmt;
@@ -112,10 +112,7 @@ impl<'r> Responder<'r, 'static> for ApiError {
         Response::build()
             .sized_body(resp.len(), Cursor::new(resp))
             .header(ContentType::JSON)
-            .status(
-                Status::from_code(self.status)
-                    .unwrap_or(Status::new(self.status, "Unknown status code")),
-            )
+            .status(Status::from_code(self.status).unwrap_or(Status::new(self.status)))
             .ok()
     }
 }
@@ -132,11 +129,11 @@ impl From<serde_json::error::Error> for ApiError {
     }
 }
 
-impl From<rocket_contrib::json::JsonError<'_>> for ApiError {
-    fn from(err: JsonError<'_>) -> Self {
+impl From<rocket::serde::json::Error<'_>> for ApiError {
+    fn from(err: Error<'_>) -> Self {
         let message = match err {
-            JsonError::Io(_) => String::from("Request deserialize IO error"),
-            JsonError::Parse(_request_json, json_error) => json_error.to_string(),
+            Error::Io(_) => String::from("Request deserialize IO error"),
+            Error::Parse(_request_json, json_error) => json_error.to_string(),
         };
         Self::new_from_message_with_code(422, message)
     }

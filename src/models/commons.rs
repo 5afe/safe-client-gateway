@@ -46,7 +46,7 @@ pub enum ValueDecodedType {
 #[serde(rename_all = "camelCase")]
 pub struct InternalTransaction {
     pub operation: Operation,
-    pub to: String,
+    pub to: String, // TODO: Address that will not be mapped to AddressEx for now
     pub value: Option<String>,
     pub data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
@@ -69,5 +69,18 @@ pub struct PageMetadata {
 impl From<String> for ParamValue {
     fn from(item: String) -> Self {
         ParamValue::SingleValue(item)
+    }
+}
+
+impl<T> Page<T> {
+    pub fn map_inner<U>(self) -> Page<U>
+    where
+        U: From<T>,
+    {
+        Page {
+            next: self.next,
+            previous: self.previous,
+            results: self.results.into_iter().map(|it| U::from(it)).collect(),
+        }
     }
 }

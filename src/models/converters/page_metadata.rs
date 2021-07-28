@@ -6,13 +6,13 @@ impl PageMetadata {
         return format!("limit={}&offset={}", self.limit, self.offset);
     }
 
-    pub fn from_url_string(encoded: &str) -> Self {
+    pub fn from_cursor(encoded_cursor: &str) -> Self {
         let mut output = Self {
             offset: 0,
             limit: 20,
         };
 
-        let chunked: Vec<Vec<&str>> = encoded
+        let chunked: Vec<Vec<&str>> = encoded_cursor
             .split("&")
             .map(|it| it.split("=").collect())
             .collect();

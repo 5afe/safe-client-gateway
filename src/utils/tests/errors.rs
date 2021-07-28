@@ -21,7 +21,7 @@ async fn api_error_responder_json() {
     let mut response = api_error.respond_to(&request).unwrap();
 
     let status_code: u16 = response.status().code;
-    let body_json = &response.body_string().await.unwrap();
+    let body_json = &response.body_mut().to_string().await.unwrap();
 
     assert_eq!(status_code, 418);
     assert_eq!(body_json, expected_error_json);

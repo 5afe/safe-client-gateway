@@ -3,11 +3,12 @@ use crate::models::backend::transfers::{
     Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto,
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
-use crate::models::converters::get_address_info;
+use crate::models::converters::get_address_ex_from_any_source;
 use crate::models::service::transactions::details::TransactionDetails;
 use crate::models::service::transactions::Transfer as ServiceTransfer;
 use crate::models::service::transactions::{
-    Erc20Transfer, Erc721Transfer, EtherTransfer, TransactionInfo, TransactionStatus, TransferInfo,
+    Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, TransactionStatus,
+    TransferInfo,
 };
 use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use crate::utils::errors::ApiResult;
@@ -74,10 +75,8 @@ impl Erc20TransferDto {
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
-            sender_info: get_address_info(safe, &self.from, info_provider).await,
-            sender: self.from.to_owned(),
-            recipient_info: get_address_info(safe, &self.to, info_provider).await,
-            recipient: self.to.to_owned(),
+            sender: get_address_ex_from_any_source(safe, &self.from, info_provider).await,
+            recipient: get_address_ex_from_any_source(safe, &self.to, info_provider).await,
             direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(info_provider).await,
         }
@@ -103,10 +102,8 @@ impl Erc721TransferDto {
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
-            sender_info: get_address_info(safe, &self.from, info_provider).await,
-            sender: self.from.to_owned(),
-            recipient_info: get_address_info(safe, &self.to, info_provider).await,
-            recipient: self.to.to_owned(),
+            sender: get_address_ex_from_any_source(safe, &self.from, info_provider).await,
+            recipient: get_address_ex_from_any_source(safe, &self.to, info_provider).await,
             direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(info_provider).await,
         }
@@ -132,17 +129,15 @@ impl EtherTransferDto {
         safe: &str,
     ) -> ServiceTransfer {
         ServiceTransfer {
-            sender_info: get_address_info(safe, &self.from, info_provider).await,
-            sender: self.from.to_owned(),
-            recipient_info: get_address_info(safe, &self.to, info_provider).await,
-            recipient: self.to.to_owned(),
+            sender: get_address_ex_from_any_source(safe, &self.from, info_provider).await,
+            recipient: get_address_ex_from_any_source(safe, &self.to, info_provider).await,
             direction: get_transfer_direction(safe, &self.from, &self.to),
             transfer_info: self.to_transfer_info(),
         }
     }
 
     pub(super) fn to_transfer_info(&self) -> TransferInfo {
-        TransferInfo::Ether(EtherTransfer {
+        TransferInfo::NativeCoin(NativeCoinTransfer {
             value: self.value.clone(),
         })
     }

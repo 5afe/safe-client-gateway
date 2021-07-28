@@ -8,11 +8,11 @@ use crate::services::{
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
-use rocket_contrib::json::Json;
-use rocket_contrib::json::JsonError;
+use rocket::serde::json::Error;
+use rocket::serde::json::Json;
 
 /**
- * `/v1/transactions/<transaction_id>` <br />
+ * `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
  * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Details
@@ -21,7 +21,7 @@ use rocket_contrib::json::JsonError;
  *
  * ## Path
  *
- * `/v1/transactions/<transaction_id>`
+ * `GET /v1/chains/<chain_id>/transactions/<transaction_id>`
  *
  * `<transaction_id>` can be either an `id` returned by the transaction summary list endpoint or a `safe_tx_hash` from the Safe Transaction API.
  *
@@ -29,16 +29,22 @@ use rocket_contrib::json::JsonError;
  *
  * There aren't any query parameters that can be passed to this endpoint.
  */
-#[get("/v1/transactions/<details_id>")]
-pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<content::Json<String>> {
+#[get("/v1/chains/<chain_id>/transactions/<details_id>")]
+pub async fn get_transactions(
+    context: Context<'_>,
+    chain_id: String,
+    details_id: String,
+) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
-        .resp_generator(|| transactions_details::get_transactions_details(&context, &details_id))
+        .resp_generator(|| {
+            transactions_details::get_transactions_details(&context, &chain_id, &details_id)
+        })
         .execute(context.cache())
         .await
 }
 
 /**
- * `/v1/transactions/<safe_tx_hash>/confirmations` <br />
+ * `/v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations` <br />
  * Returns [TransactionDetails](crate::models::service::transactions::details::TransactionDetails)
  *
  * # Transaction Confirmation
@@ -49,7 +55,7 @@ pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<cont
  *
  * ## Path
  *
- * `POST /v1/transactions/<safe_tx_hash>/confirmations`
+ * `POST /v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations`
  *
  * The expected [crate::models::service::transactions::requests::ConfirmationRequest] body for this request, as well as the returned [crate::models::service::transactions::details::TransactionDetails]
  *
@@ -58,30 +64,34 @@ pub async fn details(context: Context<'_>, details_id: String) -> ApiResult<cont
  * No query parameters available for this endpoint.
  */
 #[post(
-    "/v1/transactions/<safe_tx_hash>/confirmations",
+    "/v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations",
     format = "application/json",
     data = "<tx_confirmation_request>"
 )]
-pub async fn submit_confirmation<'e>(
+pub async fn post_confirmation<'e>(
     context: Context<'_>,
+    chain_id: String,
     safe_tx_hash: String,
-    tx_confirmation_request: Result<Json<ConfirmationRequest>, JsonError<'e>>,
+    tx_confirmation_request: Result<Json<ConfirmationRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {
     transactions_proposal::submit_confirmation(
         &context,
+        &chain_id,
         &safe_tx_hash,
         &tx_confirmation_request?.0.signed_safe_tx_hash,
     )
     .await?;
 
     CacheResponse::new(context.uri())
-        .resp_generator(|| transactions_details::get_transactions_details(&context, &safe_tx_hash))
+        .resp_generator(|| {
+            transactions_details::get_transactions_details(&context, &chain_id, &safe_tx_hash)
+        })
         .execute(context.cache())
         .await
 }
 
 /**
- * `/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions History
@@ -104,28 +114,30 @@ pub async fn submit_confirmation<'e>(
  *
  * ## Path
  *
- * `GET /v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>&<trusted>`
  *
  * ## Query parameters
  *
  * - `<safe_address>` should be the checksummed address of the safe to be observed.
- * - `<page_url>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
+ * - `<cursor>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get("/v1/safes/<safe_address>/transactions/history?<page_url>&<timezone_offset>")]
-pub async fn history_transactions(
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>")]
+pub async fn get_transactions_history(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
-    page_url: Option<String>,
+    cursor: Option<String>,
     timezone_offset: Option<String>,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .resp_generator(|| {
             transactions_history::get_history_transactions(
                 &context,
+                &chain_id,
                 &safe_address,
-                &page_url,
+                &cursor,
                 &timezone_offset,
             )
         })
@@ -134,7 +146,7 @@ pub async fn history_transactions(
 }
 
 /**
- * `/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>` <br />
+ * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>` <br />
  * Returns a [Page](crate::models::commons::Page) of  [TransactionListItem](crate::models::service::transactions::summary::TransactionListItem)
  *
  * # Transactions Queued
@@ -149,22 +161,23 @@ pub async fn history_transactions(
  *
  * ## Path
  *
- * `GET /v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>`
+ * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>`
  *
  * The response is a list of [crate::models::service::transactions::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
  *
  * ## Query parameters
  *
  * - `<safe_address>` should be the checksummed address of the safe to be observed.
- * - `<page_url>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
+ * - `<cursor>` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don't fiddle with the values of these 2 fields.
  * - `<timezone_offset>`: Currently ignored by the gateway.
  * - `<trusted>`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
  */
-#[get("/v1/safes/<safe_address>/transactions/queued?<page_url>&<timezone_offset>&<trusted>")]
-pub async fn queued_transactions(
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>")]
+pub async fn get_transactions_queued(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
-    page_url: Option<String>,
+    cursor: Option<String>,
     timezone_offset: Option<String>,
     trusted: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
@@ -172,8 +185,9 @@ pub async fn queued_transactions(
         .resp_generator(|| {
             transactions_queued::get_queued_transactions(
                 &context,
+                &chain_id,
                 &safe_address,
-                &page_url,
+                &cursor,
                 &timezone_offset,
                 &trusted,
             )
@@ -183,7 +197,7 @@ pub async fn queued_transactions(
 }
 
 /**
- * `/v1/transactions/<safe_address>/propose` <br />
+ * `/v1/chains/<chain_id>/transactions/<safe_address>/propose` <br />
  * No return value
  *
  * # Transaction Proposal
@@ -193,7 +207,7 @@ pub async fn queued_transactions(
  *
  * ## Path
  *
- * `POST /v1/transactions/<safe_address>/propose`
+ * `POST /v1/chains/<chain_id>/transactions/<safe_address>/propose`
  *
  * The expected [crate::models::service::transactions::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
  *
@@ -202,17 +216,19 @@ pub async fn queued_transactions(
  * No query parameters available for this endpoint.
  */
 #[post(
-    "/v1/transactions/<safe_address>/propose",
+    "/v1/chains/<chain_id>/transactions/<safe_address>/propose",
     format = "application/json",
     data = "<multisig_transaction_request>"
 )]
-pub async fn propose_transaction<'e>(
+pub async fn post_transaction<'e>(
     context: Context<'_>,
+    chain_id: String,
     safe_address: String,
-    multisig_transaction_request: Result<Json<MultisigTransactionRequest>, JsonError<'e>>,
+    multisig_transaction_request: Result<Json<MultisigTransactionRequest>, Error<'e>>,
 ) -> ApiResult<()> {
     transactions_proposal::propose_transaction(
         &context,
+        &chain_id,
         &safe_address,
         &multisig_transaction_request?.0,
     )

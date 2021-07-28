@@ -1,5 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{base_transaction_service_url, transaction_request_timeout};
+use crate::config::transaction_request_timeout;
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
 use crate::models::service::transactions::summary::{ConflictType, Label, TransactionListItem};
@@ -13,15 +13,16 @@ use std::collections::HashMap;
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
 pub async fn get_queued_transactions(
     context: &Context<'_>,
+    chain_id: &String,
     safe_address: &String,
-    page_url: &Option<String>,
+    cursor: &Option<String>,
     timezone_offset: &Option<String>,
     trusted: &Option<bool>,
 ) -> ApiResult<Page<TransactionListItem>> {
-    let mut info_provider = DefaultInfoProvider::new(context);
+    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
 
     // Parse page meta (offset and limit)
-    let page_meta = PageMetadata::from_url_string(page_url.as_ref().unwrap_or(&"".to_string()));
+    let page_meta = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
     // Adjust the page meta to fetch additional information of adjacent pages
     let adjusted_page_meta = adjust_page_meta(&page_meta);
 
@@ -30,14 +31,14 @@ pub async fn get_queued_transactions(
 
     // As we require the Safe nonce later we use it here explicitely to query transaction that are in the future
     let safe_nonce = info_provider.safe_info(safe_address).await?.nonce as i64;
-    let url = format!(
-        "{}/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
-        base_transaction_service_url(),
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/multisig-transactions/?{}&nonce__gte={}&ordering=nonce,submissionDate&trusted={}",
         safe_address,
         adjusted_page_meta.to_url_string(),
         safe_nonce,
         display_trusted_only
-    );
+    )?;
 
     let body = RequestCached::new(url)
         .request_timeout(transaction_request_timeout())
@@ -64,8 +65,9 @@ pub async fn get_queued_transactions(
     .await;
 
     Ok(Page {
-        next: build_page_url(
+        next: build_cursor(
             context,
+            &chain_id,
             &safe_address,
             &page_meta,
             timezone_offset,
@@ -73,8 +75,9 @@ pub async fn get_queued_transactions(
             backend_transactions.next,
             1, // Direction forward
         ),
-        previous: build_page_url(
+        previous: build_cursor(
             context,
+            &chain_id,
             &safe_address,
             &page_meta,
             timezone_offset,
@@ -112,7 +115,7 @@ pub(super) fn get_previous_page_nonce(
 }
 
 pub(super) async fn process_transactions(
-    info_provider: &mut impl InfoProvider,
+    info_provider: &(impl InfoProvider + Sync),
     safe_nonce: i64,
     tx_iter: &mut impl Iterator<Item = MultisigTransaction>,
     previous_page_nonce: i64,
@@ -198,8 +201,9 @@ pub(super) async fn process_transactions(
     service_transactions
 }
 
-fn build_page_url(
+fn build_cursor(
     context: &Context,
+    chain_id: &String,
     safe_address: &String,
     page_meta: &PageMetadata,
     timezone_offset: &Option<String>,
@@ -208,15 +212,16 @@ fn build_page_url(
     direction: i64,
 ) -> Option<String> {
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(
-            crate::routes::transactions::queued_transactions: safe_address,
+        context.build_absolute_url(uri!(crate::routes::transactions::get_transactions_queued(
+            chain_id,
+            safe_address,
             Some(offset_page_meta(
                 page_meta,
                 direction * (page_meta.limit as i64)
             )),
             Some(timezone_offset.clone().unwrap_or("0".to_string())),
             Some(display_trusted_only)
-        ))
+        )))
     })
 }
 
@@ -235,7 +240,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 }
 
 pub(super) async fn add_transaction_as_summary(
-    info_provider: &mut impl InfoProvider,
+    info_provider: &(impl InfoProvider + Sync),
     items: &mut Vec<TransactionListItem>,
     transaction: &MultisigTransaction,
     conflict_type: ConflictType,

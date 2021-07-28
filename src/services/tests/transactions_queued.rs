@@ -6,8 +6,10 @@ use crate::json::{
 };
 use crate::models::backend::transactions::MultisigTransaction;
 use crate::models::commons::{Page, PageMetadata};
+use crate::models::service::addresses::AddressEx;
 use crate::models::service::transactions::summary::{
-    ConflictType, ExecutionInfo, Label, TransactionListItem, TransactionSummary,
+    ConflictType, ExecutionInfo, Label, MultisigExecutionInfo, TransactionListItem,
+    TransactionSummary,
 };
 use crate::models::service::transactions::TransferDirection::Outgoing;
 use crate::models::service::transactions::{
@@ -185,6 +187,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )
@@ -200,7 +203,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -229,10 +232,8 @@ async fn process_transactions_no_conflicts_everything_queued() {
                 timestamp: 1607602242476,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -243,12 +244,15 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         value: "10".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
                     nonce: 392,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
 
@@ -261,10 +265,8 @@ async fn process_transactions_no_conflicts_everything_queued() {
                 timestamp: 1607602284354,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -275,12 +277,15 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -291,10 +296,8 @@ async fn process_transactions_no_conflicts_everything_queued() {
                 timestamp: 1607602424072,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -305,12 +308,15 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -342,6 +348,7 @@ async fn process_transactions_conflicts_in_queued() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )
@@ -357,7 +364,7 @@ async fn process_transactions_conflicts_in_queued() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -386,10 +393,8 @@ async fn process_transactions_conflicts_in_queued() {
                 timestamp: 1607602242476,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -400,12 +405,15 @@ async fn process_transactions_conflicts_in_queued() {
                         value: "10".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -422,10 +430,8 @@ async fn process_transactions_conflicts_in_queued() {
                 timestamp: 1607602284354,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -436,12 +442,15 @@ async fn process_transactions_conflicts_in_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
@@ -452,10 +461,8 @@ async fn process_transactions_conflicts_in_queued() {
                 timestamp: 1607602424072,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -466,12 +473,15 @@ async fn process_transactions_conflicts_in_queued() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::End,
@@ -503,6 +513,7 @@ async fn process_transactions_conflicts_in_next() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )
@@ -518,7 +529,7 @@ async fn process_transactions_conflicts_in_next() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -550,10 +561,8 @@ async fn process_transactions_conflicts_in_next() {
                 timestamp: 1607602242476,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -565,12 +574,15 @@ async fn process_transactions_conflicts_in_next() {
                     }),
 
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
@@ -581,10 +593,8 @@ async fn process_transactions_conflicts_in_next() {
                 timestamp: 1607602284354,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -595,12 +605,15 @@ async fn process_transactions_conflicts_in_next() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::End,
@@ -614,10 +627,8 @@ async fn process_transactions_conflicts_in_next() {
                 timestamp: 1607602424072,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -628,12 +639,15 @@ async fn process_transactions_conflicts_in_next() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::None,
@@ -665,6 +679,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
               "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F",
               "modules": [],
               "fallbackHandler": "0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44",
+              "guard": "0x0000000000000000000000000000000000000000",
               "version": "1.1.1"
             }"#,
     )
@@ -680,7 +695,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
         .times(3)
         .returning(move |_| Ok(bat_token_info.clone()));
     mock_info_provider
-        .expect_full_address_info_search()
+        .expect_address_ex_from_any_source()
         .times(3)
         .returning(move |_| bail!("No address info"));
 
@@ -707,10 +722,8 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                 timestamp: 1607602242476,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -721,12 +734,15 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         value: "10".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 393,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::End,
@@ -740,10 +756,8 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                 timestamp: 1607602284354,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -754,12 +768,15 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,
@@ -770,10 +787,8 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                 timestamp: 1607602424072,
                 tx_status: TransactionStatus::AwaitingConfirmations,
                 tx_info: TransactionInfo::Transfer(Transfer {
-                    sender: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
-                    sender_info: None,
-                    recipient: "0xF353eBBa77e5E71c210599236686D51cA1F88b84".to_string(),
-                    recipient_info: None,
+                    sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
+                    recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
                     direction: Outgoing,
                     transfer_info: TransferInfo::Erc20(Erc20Transfer {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
@@ -784,12 +799,15 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         value: "20".to_string()
                     })
                 }),
-                execution_info: Some(ExecutionInfo{
+                execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo{
                     nonce: 394,
                     confirmations_required: 3,
                     confirmations_submitted:1,
-                    missing_signers: Some(vec!["0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(), "0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164".to_string()])
-                }),
+                    missing_signers: Some(vec![
+                        AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"), 
+                        AddressEx::address_only("0x8bc9Ab35a2A8b20ad8c23410C61db69F2e5d8164")
+                    ])
+                })),
                 safe_app_info: None,
             },
             conflict_type: ConflictType::HasNext,

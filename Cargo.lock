@@ -181,12 +181,13 @@ checksum = "b700ce4376041dcd0a327fd0097c41095743c4c8af8887265942faf1100bd040"
 
 [[package]]
 name = "cargo-watch"
-version = "7.5.0"
+version = "7.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a79f21d4851f2d5310d241e7ec06b18537b45e8ec3263027e18cccae4148313d"
+checksum = "3b0f69d9a48b8c624913ea1643f03c17ab3d115d3a0d2cdd26605258f796cb6f"
 dependencies = [
  "clap",
  "log",
+ "shell-escape",
  "stderrlog",
  "watchexec",
 ]
@@ -2315,6 +2316,12 @@ dependencies = [
  "keccak",
  "opaque-debug",
 ]
+
+[[package]]
+name = "shell-escape"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "45bb67a18fa91266cc7807181f62f9178a6873bfad7dc788c42e6430db40184f"
 
 [[package]]
 name = "signal-hook-registry"

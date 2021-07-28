@@ -50,4 +50,4 @@ log = "0.4"
 env_logger = "0.7.1"
 
 [dev-dependencies]
-cargo-watch = "7.3.0"
+cargo-watch = "7.6.1"

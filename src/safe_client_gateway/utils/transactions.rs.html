@@ -158,9 +158,9 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">ethabi::Uint</span>;
+<span class="kw">use</span> <span class="ident">ethabi</span>::{<span class="ident">Address</span>, <span class="ident">Uint</span>};
 <span class="kw">use</span> <span class="ident">ethcontract_common::hash::keccak256</span>;
-<span class="kw">use</span> <span class="ident">ethereum_types</span>::{<span class="ident">Address</span>, <span class="ident">H256</span>};
+<span class="kw">use</span> <span class="ident">ethereum_types::H256</span>;
 <span class="kw">use</span> <span class="ident">semver::Version</span>;
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DOMAIN_SEPARATOR_TYPEHASH_LEGACY</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span>

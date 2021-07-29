@@ -119,7 +119,10 @@ jobs:
           args: --no-deps --workspace --locked
 
       - name: Move folder
-        run: mv target/doc/safe_client_gateway target/doc/docs && cp .github/landing_page/* target/doc
+        run: |
+          rm -rf target/doc/docs
+          mv target/doc/safe_client_gateway target/doc/docs
+          cp .github/landing_page/* target/doc
 
       - name: Fix internal links
         run: find ./target/doc/docs/ -type f -exec sed -i "s/safe_client_gateway/docs/g" {} \;

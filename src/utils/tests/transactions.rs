@@ -1,8 +1,8 @@
 use crate::utils::transactions::{
     cancellation_parts_hash, domain_hash_v100, domain_hash_v130, hash, use_legacy_domain_separator,
 };
+use ethabi::Address;
 use ethcontract_common::hash::keccak256;
-use ethereum_types::Address;
 use semver::Version;
 
 #[test]

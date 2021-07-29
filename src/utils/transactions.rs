@@ -5,9 +5,9 @@ use crate::providers::info::SAFE_V_1_3_0;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
-use ethabi::Uint;
+use ethabi::{Address, Uint};
 use ethcontract_common::hash::keccak256;
-use ethereum_types::{Address, H256};
+use ethereum_types::H256;
 use semver::Version;
 
 pub const DOMAIN_SEPARATOR_TYPEHASH_LEGACY: &'static str =

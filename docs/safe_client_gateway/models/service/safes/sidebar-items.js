@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["ImplementationVersionState",""]],"struct":[["Implementation",""],["SafeInfoEx",""],["SafeLastChanges",""],["SafeState",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["GasPrice",""],["RpcAuthentication",""]],"struct":[["ChainInfo",""],["NativeCurrency",""],["RpcUri",""],["Theme",""]]});
+initSidebarItems({"enum":[["GasPrice",""],["RpcAuthentication",""]],"struct":[["BlockExplorerUriTemplate",""],["ChainInfo",""],["NativeCurrency",""],["RpcUri",""],["Theme",""]]});

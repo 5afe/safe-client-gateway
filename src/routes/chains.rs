@@ -7,11 +7,11 @@ use rocket::response::content;
 
 /**
  * `/v1/chains/<chain_id>/` <br/>
- * Returns [ChainInfo](crate::models::chains::ChainInfo)
+ * Returns [ChainInfo](crate::models::service::chains::ChainInfo)
  *
  * # Chains
  *
- * This endpoint returns the [ChainInfo](crate::models::chains::ChainInfo) for a given `chainId`
+ * This endpoint returns the [ChainInfo](crate::models::service::chains::ChainInfo) for a given `chainId`
  *
  * ## Path
  *
@@ -29,11 +29,11 @@ pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<cont
 
 /**
  * `/v1/chains/` <br/>
- * Returns a [Page](crate::models::commons::Page) of [ChainInfo](crate::models::chains::ChainInfo)
+ * Returns a [Page](crate::models::commons::Page) of [ChainInfo](crate::models::service::chains::ChainInfo)
  *
  * # Chains
  *
- * Returns a paginated list of all the supported [ChainInfo](crate::models::chains::ChainInfo)
+ * Returns a paginated list of all the supported [ChainInfo](crate::models::service::chains::ChainInfo)
  *
  * ## Path
  *

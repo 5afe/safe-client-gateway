@@ -41,6 +41,7 @@ mod utils;
 #[cfg(test)]
 mod json;
 
+use crate::monitoring::rate_limiter::RateLimiterConfig;
 use crate::routes::error_catchers;
 use cache::redis::create_pool;
 use dotenv::dotenv;
@@ -66,6 +67,7 @@ fn rocket() -> _ {
         .register("/", error_catchers())
         .manage(create_pool())
         .manage(client)
+        .manage(RateLimiterConfig::new())
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
 }

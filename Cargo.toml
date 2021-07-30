@@ -16,6 +16,9 @@ lazy_static = "1.4.0"
 rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968", features = ["tls", "json"] }
 rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968" }
 
+governor = "0.3.2"
+nonzero_ext = "0.2.0"
+
 # Force rocket peer-dependencies versions
 proc-macro2 = "1.0.28"
 tokio = "1.6.1"

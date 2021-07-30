@@ -8,7 +8,7 @@ use rocket::{request, Request};
 pub struct RateLimiterConfig {
     pub rate_limiter: RateLimiter<String, DefaultKeyedStateStore<String>, clock::DefaultClock>,
 }
-const QUOTA: u32 = 1;
+const QUOTA: u32 = 1; // second
 
 #[derive(Debug)]
 pub enum RateLimiterGuard {

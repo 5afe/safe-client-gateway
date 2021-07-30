@@ -1,4 +1,5 @@
 use crate::models::service::utils::{DataDecoderRequest, SafeTransactionEstimationRequest};
+use crate::monitoring::rate_limiter::RateLimiterGuard;
 use crate::services::utils;
 use crate::services::utils::request_data_decoded;
 use crate::utils::context::Context;
@@ -120,4 +121,11 @@ pub async fn post_safe_gas_estimation<'e>(
         )
         .await?,
     )?))
+}
+
+#[get("/bomb-me")]
+pub async fn get_bomb_me(_rate_limiter: RateLimiterGuard) -> ApiResult<content::Json<String>> {
+    Ok(content::Json(
+        "{ \"successfully\": \"bombed\" }".to_string(),
+    ))
 }

@@ -5,7 +5,6 @@
     "authentication": "API_KEY_PATH",
     "value": "https://someurl.com/rpc"
   },
-  "blockExplorerUri": "https://blockexplorer.com",
   "blockExplorerUriTemplate": {
     "address": "https://blockexplorer.com/{{address}}",
     "txHash": "https://blockexplorer.com/{{txHash}}"

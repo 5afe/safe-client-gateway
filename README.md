@@ -1,13 +1,14 @@
 # Safe Client Gateway
 [![Actions Status](https://github.com/gnosis/safe-client-gateway/workflows/safe-client-gateway/badge.svg?branch=main)](https://github.com/gnosis/safe-client-gateway/actions)
 [![Coverage Status](https://coveralls.io/repos/github/gnosis/safe-client-gateway/badge.svg)](https://coveralls.io/github/gnosis/safe-client-gateway)
+
 ## Motivation
 
 This project is a gateway between the Safe clients ([Android](https://github.com/gnosis/safe-android)/ [iOS](https://github.com/gnosis/safe-ios)/ [web](https://github.com/gnosis/safe-react)) and the Safe backend services ([transaction service](https://github.com/gnosis/safe-transaction-service) and Ethereum nodes). It is providing a more UI-oriented mapping and multi-sourced data structures for ease of integration and rendering.
 
 ## Documentation
 
-- [Client Gateway Wiki](https://github.com/gnosis/safe-client-gateway/wiki)
+- [Client Gateway Wiki](https://gnosis.github.io/safe-client-gateway/)
 - [Safe developer documentation](https://docs.gnosis.io/safe/)
 
 ## Quickstart
@@ -38,20 +39,7 @@ For configurations specific to this service the `.env` file can be used. See nex
 
 Place a `.env` file in the root of the project containing URL pointing to the environment in which you want the gateway to run.
 
-The contents of the file should be the following (see `.env.sample` for an example):
-
-```
-TRANSACTION_SERVICE_URL=<Transaction service host>
-``` 
-
-(NOTE: don't include any form of quotation marks)
-
-Useful links:
-- Staging(rinkeby): https://safe-transaction.staging.gnosisdev.com/
-- Production(rinkeby): https://safe-transaction.rinkeby.gnosis.io/
-- Production(mainnet): https://safe-transaction.gnosis.io/
-
-Additional NOTE: the `structs` defined in this project match those in staging. Therefore, using this in any other environment could potentially panic if the endpoint in the transaction service API is not deployed to production yet, or the data layout looks differently.  
+The contents of the file should be the following (see `.env.sample` for an example)
 
 ## Tests
 

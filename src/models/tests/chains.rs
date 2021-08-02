@@ -1,10 +1,10 @@
 use crate::models::backend::chains::{
-    ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
+    BlockExplorerUriTemplate, ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
 };
 use crate::models::service::chains::{
-    ChainInfo as ServiceChainInfo, GasPrice as ServiceGasPrice,
-    NativeCurrency as ServiceNativeCurrency, RpcAuthentication as ServiceRpcAuthentication,
-    RpcUri as ServiceRpcUri, Theme as ServiceTheme,
+    BlockExplorerUriTemplate as ServiceBlockExplorerUriTemplate, ChainInfo as ServiceChainInfo,
+    GasPrice as ServiceGasPrice, NativeCurrency as ServiceNativeCurrency,
+    RpcAuthentication as ServiceRpcAuthentication, RpcUri as ServiceRpcUri, Theme as ServiceTheme,
 };
 
 #[test]
@@ -19,6 +19,10 @@ fn chain_info_json() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: BlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -55,6 +59,10 @@ fn chain_info_json_with_fixed_gas_price() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: BlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -89,6 +97,10 @@ fn chain_info_json_with_unknown_gas_price_type() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: BlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -122,6 +134,10 @@ fn chain_info_json_with_no_rpc_authentication() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: BlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -159,6 +175,10 @@ fn chain_info_json_with_unknown_rpc_authentication() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: BlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -196,6 +216,10 @@ fn chain_info_json_to_service_chain_info() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -231,6 +255,10 @@ fn unknown_gas_price_type_to_service_chain_info() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -264,6 +292,10 @@ fn no_authentication_to_service_chain_info() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),
@@ -301,6 +333,10 @@ fn unknown_authentication_to_service_chain_info() {
             value: "https://someurl.com/rpc".to_string(),
         },
         block_explorer_uri: "https://blockexplorer.com".to_string(),
+        block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+        },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
             symbol: "ETH".to_string(),

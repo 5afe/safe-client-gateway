@@ -1,8 +1,8 @@
 use crate::models::backend::chains::{ChainInfo as BackendChainInfo, GasPrice, RpcAuthentication};
 use crate::models::service::chains::{
-    ChainInfo as ServiceChainInfo, GasPrice as ServiceGasPrice,
-    NativeCurrency as ServiceNativeCurrency, RpcAuthentication as ServiceRpcAuthentication,
-    RpcUri as ServiceRpcUri, Theme as ServiceTheme,
+    BlockExplorerUriTemplate as ServiceBlockExplorerUriTemplate, ChainInfo as ServiceChainInfo,
+    GasPrice as ServiceGasPrice, NativeCurrency as ServiceNativeCurrency,
+    RpcAuthentication as ServiceRpcAuthentication, RpcUri as ServiceRpcUri, Theme as ServiceTheme,
 };
 
 impl From<BackendChainInfo> for ServiceChainInfo {
@@ -22,6 +22,10 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                 value: chain_info.rpc_uri.value,
             },
             block_explorer_uri: chain_info.block_explorer_uri,
+            block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
+                address: chain_info.block_explorer_uri_template.address,
+                tx_hash: chain_info.block_explorer_uri_template.tx_hash,
+            },
             native_currency: ServiceNativeCurrency {
                 name: chain_info.native_currency.name,
                 symbol: chain_info.native_currency.symbol,

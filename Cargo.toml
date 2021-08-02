@@ -17,7 +17,7 @@ rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cb
 rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968" }
 
 # Force rocket peer-dependencies versions
-proc-macro2 = "1.0.27"
+proc-macro2 = "1.0.28"
 tokio = "1.6.1"
 
 reqwest = { version = "0.11.3", features = ["json"] }
@@ -26,7 +26,7 @@ r2d2 = "0.8.9"
 redis = { version = "0.20", features = ["r2d2"] }
 
 ethcontract-common = "0.11.1"
-ethereum-types = { version = "0.9.2", features = ["serialize"] }
+ethereum-types = { version = "0.10.0", features = ["serialize"] }
 ethabi = "12.0.0"
 
 serde = { version = "1.0", features = ["derive"] }
@@ -47,7 +47,7 @@ semver = "0.11.0"
 
 # Logging
 log = "0.4"
-env_logger = "0.7.1"
+env_logger = "0.9.0"
 
 [dev-dependencies]
-cargo-watch = "7.3.0"
+cargo-watch = "7.6.1"

@@ -9,6 +9,7 @@ pub struct ChainInfo {
     pub chain_name: String,
     pub rpc_uri: RpcUri,
     pub block_explorer_uri: String,
+    pub block_explorer_uri_template: BlockExplorerUriTemplate,
     pub native_currency: NativeCurrency,
     pub theme: Theme,
     pub ens_registry_address: Option<String>,
@@ -62,4 +63,11 @@ pub enum RpcAuthentication {
     NoAuthentication,
     #[serde(other)]
     Unknown,
+}
+
+#[derive(Serialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct BlockExplorerUriTemplate {
+    pub address: String,
+    pub tx_hash: String,
 }

@@ -53,10 +53,7 @@ pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<cont
  * [
  *   {
  *     "address": "0x8942595A2dC5181Df0465AF0D7be08c8f23C93af",
- *     "version": "0.1.0",
- *     "deployer": "Gnosis",
- *     "deployedBlockNumber": 3392692,
- *     "lastIndexedBlockNumber": 8774331
+ *     "version": "0.1.0"
  *   }
  * ]
  * ```

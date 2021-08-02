@@ -55,7 +55,6 @@
 <span id="52">52</span>
 <span id="53">53</span>
 <span id="54">54</span>
-<span id="55">55</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::chains</span>::{<span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>, <span class="ident">GasPrice</span>, <span class="ident">RpcAuthentication</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::chains</span>::{
@@ -80,7 +79,6 @@
                 },
                 <span class="ident">value</span>: <span class="ident">chain_info</span>.<span class="ident">rpc_uri</span>.<span class="ident">value</span>,
             },
-            <span class="ident">block_explorer_uri</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri</span>,
             <span class="ident">block_explorer_uri_template</span>: <span class="ident">ServiceBlockExplorerUriTemplate</span> {
                 <span class="ident">address</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">address</span>,
                 <span class="ident">tx_hash</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">tx_hash</span>,

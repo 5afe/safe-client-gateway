@@ -10,7 +10,7 @@ edition = "2018"
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 
-regex = "1"
+regex = "1.4.6"
 lazy_static = "1.4.0"
 
 rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968", features = ["tls", "json"] }

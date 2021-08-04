@@ -40,7 +40,7 @@ We need to collect the metadata for a chain. The following section contains a sa
     "decimals": 18,
     "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/ethereum-eth-logo.png"
     },
-    "transactionService": "http://safe-transaction.mainnet.staging.gnosisdev.com",
+    "transactionService": "http://safe-transaction.gnosis.io",
     "theme": {
     "textColor": "#001428",
     "backgroundColor": "#E8E7E6"

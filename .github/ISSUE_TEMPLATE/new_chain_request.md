@@ -20,41 +20,39 @@ We need to collect the metadata for a chain. The following section contains a sa
 
 ```json
 {
-  {
-      "chainId": "1",
-      "chainName": "Mainnet",
-      "rpcUri": {
-        "authentication": "API_KEY_PATH",
-        "value": "https://mainnet.infura.io/v3/"
-      },
-      "safeAppsRpcUri": {
-        "authentication": "API_KEY_PATH",
-        "value": "https://mainnet.infura.io/v3/"
-      },
-      "blockExplorerUriTemplate": {
-        "address": "https://etherscan.io/address/{{address}}",
-        "txHash": "https://etherscan.io/tx/{{txHash}}"
-      },
-      "nativeCurrency": {
-        "name": "Ether",
-        "symbol": "ETH",
-        "decimals": 18,
-        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/ethereum-eth-logo.png"
-      },
-      "transactionService": "http://safe-transaction.mainnet.staging.gnosisdev.com",
-      "theme": {
-        "textColor": "#001428",
-        "backgroundColor": "#E8E7E6"
-      },
-      "gasPrice": {
-        "type": "oracle",
-        "uri": "https://ethgasstation.info/json/ethgasAPI.json",
-        "gasParameter": "average",
-        "gweiFactor": "1.000000000"
-      },
-      "ensRegistryAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-      "recommendedMasterCopyVersion": "1.1.1"
-    }
+    "chainId": "1",
+    "chainName": "Mainnet",
+    "rpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://mainnet.infura.io/v3/"
+    },
+    "safeAppsRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://mainnet.infura.io/v3/"
+    },
+    "blockExplorerUriTemplate": {
+    "address": "https://etherscan.io/address/{{address}}",
+    "txHash": "https://etherscan.io/tx/{{txHash}}"
+    },
+    "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18,
+    "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/ethereum-eth-logo.png"
+    },
+    "transactionService": "http://safe-transaction.mainnet.staging.gnosisdev.com",
+    "theme": {
+    "textColor": "#001428",
+    "backgroundColor": "#E8E7E6"
+    },
+    "gasPrice": {
+    "type": "oracle",
+    "uri": "https://ethgasstation.info/json/ethgasAPI.json",
+    "gasParameter": "average",
+    "gweiFactor": "1.000000000"
+    },
+    "ensRegistryAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+    "recommendedMasterCopyVersion": "1.1.1"
 }
 ```
 </details>

@@ -100,6 +100,10 @@ pub fn safe_app_info_request_timeout() -> u64 {
     u64_with_default("SAFE_APP_INFO_REQUEST_TIMEOUT", 3000)
 }
 
+pub fn contract_info_request_timeout() -> u64 {
+    u64_with_default("CONTRACT_INFO_REQUEST_TIMEOUT", 3000)
+}
+
 pub fn transaction_request_timeout() -> u64 {
     u64_with_default("TRANSACTION_REQUEST_TIMEOUT", 30000)
 }

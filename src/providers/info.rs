@@ -3,9 +3,10 @@ use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, base_exchange_api_url, base_transaction_service_url,
-    exchange_api_cache_duration, long_error_duration, safe_app_info_request_timeout,
-    safe_app_manifest_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
-    short_error_duration, token_info_cache_duration, token_info_request_timeout,
+    contract_info_request_timeout, exchange_api_cache_duration, long_error_duration,
+    safe_app_info_request_timeout, safe_app_manifest_cache_duration, safe_info_cache_duration,
+    safe_info_request_timeout, short_error_duration, token_info_cache_duration,
+    token_info_request_timeout,
 };
 use crate::models::commons::Page;
 use crate::providers::address_info::{AddressInfo, ContractInfo};
@@ -151,6 +152,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
             address
         );
         let contract_info_json = RequestCached::new(url)
+            .request_timeout(contract_info_request_timeout())
             .cache_duration(address_info_cache_duration())
             .error_cache_duration(long_error_duration())
             .execute(self.client, self.cache)

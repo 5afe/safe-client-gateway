@@ -3,10 +3,10 @@ use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{
     address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,
-    default_request_timeout, long_error_duration, request_cache_duration,
-    safe_app_info_request_timeout, safe_app_manifest_cache_duration, safe_info_cache_duration,
-    safe_info_request_timeout, short_error_duration, token_info_cache_duration,
-    token_info_request_timeout,
+    contract_info_request_timeout, default_request_timeout, long_error_duration,
+    request_cache_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
+    safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
+    token_info_cache_duration, token_info_request_timeout,
 };
 use crate::models::backend::chains::ChainInfo;
 use crate::models::backend::safes::MasterCopy;
@@ -159,6 +159,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
         let contract_info_json = RequestCached::new(url)
             .cache_duration(address_info_cache_duration())
             .error_cache_duration(long_error_duration())
+            .request_timeout(contract_info_request_timeout())
             .execute(self.client, self.cache)
             .await?;
         let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;

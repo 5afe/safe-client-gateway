@@ -120,6 +120,10 @@ pub fn chain_info_request_timeout() -> u64 {
     u64_with_default("CHAIN_INFO_REQUEST_TIMEOUT", 15000)
 }
 
+pub fn contract_info_request_timeout() -> u64 {
+    u64_with_default("CONTRACT_INFO_REQUEST_TIMEOUT", 3000)
+}
+
 pub fn balances_request_timeout() -> u64 {
     u64_with_default("BALANCES_REQUEST_TIMEOUT", 20000)
 }

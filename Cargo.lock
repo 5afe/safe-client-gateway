@@ -572,19 +572,6 @@ dependencies = [
 
 [[package]]
 name = "ethbloom"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "22a621dcebea74f2a6f2002d0a885c81ccf6cbdf86760183316a7722b5707ca4"
-dependencies = [
- "crunchy",
- "fixed-hash 0.7.0",
- "impl-rlp 0.3.0",
- "impl-serde",
- "tiny-keccak 2.0.2",
-]
-
-[[package]]
-name = "ethbloom"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "779864b9c7f7ead1f092972c3257496c6a84b46dba2ce131dd8a282cb2cc5972"
@@ -624,20 +611,6 @@ dependencies = [
  "impl-serde",
  "primitive-types 0.7.3",
  "uint 0.8.5",
-]
-
-[[package]]
-name = "ethereum-types"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05dc5f0df4915fa6dff7f975a8366ecfaaa8959c74235469495153e7bb1b280e"
-dependencies = [
- "ethbloom 0.10.0",
- "fixed-hash 0.7.0",
- "impl-rlp 0.3.0",
- "impl-serde",
- "primitive-types 0.8.0",
- "uint 0.9.0",
 ]
 
 [[package]]
@@ -1792,19 +1765,6 @@ dependencies = [
 
 [[package]]
 name = "primitive-types"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b3824ae2c5e27160113b9e029a10ec9e3f0237bad8029f69c7724393c9fdefd8"
-dependencies = [
- "fixed-hash 0.7.0",
- "impl-codec 0.4.2",
- "impl-rlp 0.3.0",
- "impl-serde",
- "uint 0.9.0",
-]
-
-[[package]]
-name = "primitive-types"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06345ee39fbccfb06ab45f3a1a5798d9dafa04cb8921a76d227040003a234b0e"
@@ -2255,7 +2215,7 @@ dependencies = [
  "env_logger 0.9.0",
  "ethabi 12.0.0",
  "ethcontract-common",
- "ethereum-types 0.10.0",
+ "ethereum-types 0.11.0",
  "itertools",
  "lazy_static 1.4.0",
  "log",

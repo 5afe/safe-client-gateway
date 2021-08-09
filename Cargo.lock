@@ -598,9 +598,9 @@ dependencies = [
 
 [[package]]
 name = "ethcontract-common"
-version = "0.13.1"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fcbca652571fb9bad74da74506cdbaa4d764c2c334f5e4099a66f2f4ba9aa1a5"
+checksum = "1398231b1b8c21ec3e4e8da2fd501357de132e289bff2fa44f9735107e499db3"
 dependencies = [
  "ethabi 14.1.0",
  "hex",
@@ -1232,9 +1232,9 @@ dependencies = [
 
 [[package]]
 name = "jsonrpc-core"
-version = "17.1.0"
+version = "18.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4467ab6dfa369b69e52bd0692e480c4d117410538526a57a304a0f2250fd95e"
+checksum = "14f7f76aef2d054868398427f6c54943cf3d1caa9a7ec7d0c38d69df97a965eb"
 dependencies = [
  "futures",
  "futures-executor",
@@ -3212,9 +3212,9 @@ dependencies = [
 
 [[package]]
 name = "web3"
-version = "0.16.0"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc4c18ae15621f764fab919f7e4a83d87163494cbc3460884debef7c6bc1bc6b"
+checksum = "cd24abe6f2b68e0677f843059faea87bcbd4892e39f02886f366d8222c3c540d"
 dependencies = [
  "arrayvec 0.5.2",
  "derive_more",

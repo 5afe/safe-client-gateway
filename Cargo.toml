@@ -13,8 +13,8 @@ dotenv_codegen = "0.15.0"
 regex = "1.4.6"
 lazy_static = "1.4.0"
 
-rocket = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968", features = ["tls", "json"] }
-rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket", rev = "dd9629697a3cbe45f50645579f41f1a957a92968" }
+rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
+rocket_codegen = { version = "0.5.0-rc.1" }
 
 # Force rocket peer-dependencies versions
 proc-macro2 = "1.0.28"

@@ -162,6 +162,10 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::env</span>;
 
@@ -283,6 +287,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain_info_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
     <span class="ident">u64_with_default</span>(<span class="string">&quot;CHAIN_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">15000</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contract_info_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="ident">u64_with_default</span>(<span class="string">&quot;CONTRACT_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">3000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">balances_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {

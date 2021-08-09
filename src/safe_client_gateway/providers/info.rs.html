@@ -310,16 +310,17 @@
 <span id="307">307</span>
 <span id="308">308</span>
 <span id="309">309</span>
+<span id="310">310</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::redis::ServiceCache</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::Cache</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{
     <span class="ident">address_info_cache_duration</span>, <span class="ident">chain_info_cache_duration</span>, <span class="ident">chain_info_request_timeout</span>,
-    <span class="ident">default_request_timeout</span>, <span class="ident">long_error_duration</span>, <span class="ident">request_cache_duration</span>,
-    <span class="ident">safe_app_info_request_timeout</span>, <span class="ident">safe_app_manifest_cache_duration</span>, <span class="ident">safe_info_cache_duration</span>,
-    <span class="ident">safe_info_request_timeout</span>, <span class="ident">short_error_duration</span>, <span class="ident">token_info_cache_duration</span>,
-    <span class="ident">token_info_request_timeout</span>,
+    <span class="ident">contract_info_request_timeout</span>, <span class="ident">default_request_timeout</span>, <span class="ident">long_error_duration</span>,
+    <span class="ident">request_cache_duration</span>, <span class="ident">safe_app_info_request_timeout</span>, <span class="ident">safe_app_manifest_cache_duration</span>,
+    <span class="ident">safe_info_cache_duration</span>, <span class="ident">safe_info_request_timeout</span>, <span class="ident">short_error_duration</span>,
+    <span class="ident">token_info_cache_duration</span>, <span class="ident">token_info_request_timeout</span>,
 };
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::chains::ChainInfo</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::safes::MasterCopy</span>;
@@ -472,6 +473,7 @@
         <span class="kw">let</span> <span class="ident">contract_info_json</span> <span class="op">=</span> <span class="ident">RequestCached::new</span>(<span class="ident">url</span>)
             .<span class="ident">cache_duration</span>(<span class="ident">address_info_cache_duration</span>())
             .<span class="ident">error_cache_duration</span>(<span class="ident">long_error_duration</span>())
+            .<span class="ident">request_timeout</span>(<span class="ident">contract_info_request_timeout</span>())
             .<span class="ident">execute</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">cache</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">contract_info</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>::<span class="op">&lt;</span><span class="ident">ContractInfo</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">contract_info_json</span>)<span class="question-mark">?</span>;

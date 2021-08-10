@@ -100,6 +100,6 @@ async fn fetch_latest_nonce(context: &Context<'_>, request_url: String) -> ApiRe
     )?
     .results
     .first()
-    .unwrap()
-    .nonce)
+    .map(|it| it.nonce)
+    .unwrap_or(0))
 }

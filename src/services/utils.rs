@@ -68,7 +68,7 @@ pub async fn estimate_safe_tx_gas(
     })
 }
 
-pub(super) async fn fetch_estimation(
+async fn fetch_estimation(
     context: &Context<'_>,
     request_url: String,
     safe_transaction_estimation_request: &SafeTransactionEstimationRequest,
@@ -87,10 +87,7 @@ pub(super) async fn fetch_estimation(
     .safe_tx_gas)
 }
 
-pub(super) async fn fetch_latest_nonce(
-    context: &Context<'_>,
-    request_url: String,
-) -> ApiResult<u64> {
+async fn fetch_latest_nonce(context: &Context<'_>, request_url: String) -> ApiResult<u64> {
     let latest_multisig_tx_response = context
         .client()
         .get(request_url)

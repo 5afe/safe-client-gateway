@@ -3,7 +3,7 @@ use crate::models::backend::transactions::{
     MultisigTransaction as BackendMultisigTransaction,
     SafeTransactionEstimation as BackendSafeTransactionEstimation,
 };
-use crate::models::commons::DataDecoded;
+use crate::models::commons::{DataDecoded, Page};
 use crate::models::service::utils::{
     DataDecoderRequest, SafeTransactionEstimation, SafeTransactionEstimationRequest,
 };
@@ -95,8 +95,11 @@ async fn fetch_latest_nonce(context: &Context<'_>, request_url: String) -> ApiRe
         .send()
         .await?;
 
-    Ok(serde_json::from_str::<BackendMultisigTransaction>(
+    Ok(serde_json::from_str::<Page<BackendMultisigTransaction>>(
         &latest_multisig_tx_response.text().await?,
     )?
+    .results
+    .first()
+    .unwrap()
     .nonce)
 }

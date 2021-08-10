@@ -50,7 +50,7 @@ pub async fn estimate_safe_tx_gas(
     )?;
     let latest_multisig_tx_url = core_uri!(
         info_provider,
-        "/v1/safes/{}/multisig-transactions/?ordering=nonce&trusted=true&limit=1",
+        "/v1/safes/{}/multisig-transactions/?ordering=-nonce&trusted=true&limit=1",
         safe_address
     )?;
 

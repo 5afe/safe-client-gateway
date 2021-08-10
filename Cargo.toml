@@ -26,7 +26,6 @@ r2d2 = "0.8.9"
 redis = { version = "0.20", features = ["r2d2"] }
 
 ethcontract-common = "0.13.1"
-ethereum-types = { version = "0.10.0", features = ["serialize"] }
 ethabi = "14.1.0"
 
 serde = { version = "1.0", features = ["derive"] }

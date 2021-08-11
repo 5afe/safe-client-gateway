@@ -24,6 +24,7 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
+<span id="24">24</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::commons::Operation</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -37,9 +38,10 @@
     <span class="kw">pub</span> <span class="ident">operation</span>: <span class="ident">Operation</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeTransactionEstimation</span> {
+    <span class="kw">pub</span> <span class="ident">latest_nonce</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">safe_tx_gas</span>: <span class="ident">String</span>,
 }
 

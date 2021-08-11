@@ -106,6 +106,12 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span><span class="ident">::commons::Operation</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::transfers::Transfer</span>;
@@ -211,6 +217,12 @@
     <span class="kw">pub</span> <span class="ident">master_copy</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">setup_data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">data_decoded</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeTransactionEstimation</span> {
+    <span class="kw">pub</span> <span class="ident">safe_tx_gas</span>: <span class="ident">String</span>,
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>

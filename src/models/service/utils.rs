@@ -10,9 +10,10 @@ pub struct SafeTransactionEstimationRequest {
     pub operation: Operation,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct SafeTransactionEstimation {
+    pub latest_nonce: u64,
     pub safe_tx_gas: String,
 }
 

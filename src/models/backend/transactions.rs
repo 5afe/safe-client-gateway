@@ -103,3 +103,9 @@ pub struct CreationTransaction {
     pub setup_data: Option<String>,
     pub data_decoded: Option<DataDecoded>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct SafeTransactionEstimation {
+    pub safe_tx_gas: String,
+}

@@ -95,11 +95,13 @@ async fn fetch_latest_nonce(context: &Context<'_>, request_url: String) -> ApiRe
         .send()
         .await?;
 
-    Ok(serde_json::from_str::<Page<BackendMultisigTransaction>>(
+    let nonce = serde_json::from_str::<Page<BackendMultisigTransaction>>(
         &latest_multisig_tx_response.text().await?,
     )?
     .results
     .first()
     .map(|it| it.nonce)
-    .unwrap_or(0))
+    .unwrap_or(0);
+
+    Ok(nonce)
 }

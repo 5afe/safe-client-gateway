@@ -1,9 +1,9 @@
 name: 'CLA Assistant'
 on:
   issue_comment:
-    types: [created]
+    types: [ created ]
   pull_request_target:
-    types: [opened, closed, synchronize]
+    types: [ opened, closed, synchronize ]
 
 jobs:
   CLAssistant:
@@ -21,6 +21,4 @@ jobs:
           path-to-signatures: 'signatures/version1/cla.json'
           path-to-cla-document: 'https://gnosis-safe.io/cla/'
           branch: 'cla-signatures'
-          allowlist: jpalvarezl,rmeissner,Uxio0,bot*,fmrsabino
-          empty-commit-flag: false
-          blockchain-storage-flag: false
+          allowlist: jpalvarezl,fmrsabino,rmeissner,Uxio0,*bot # may need to update this expression if we add new bots

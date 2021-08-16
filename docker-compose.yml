@@ -16,7 +16,7 @@ services:
     env_file:
       - .env
     environment:
-      - REDIS_URL="redis://redis"
+      - REDIS_URL=redis://redis
     depends_on:
       - redis
     ports:

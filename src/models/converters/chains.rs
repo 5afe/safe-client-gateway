@@ -21,7 +21,6 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                 },
                 value: chain_info.rpc_uri.value,
             },
-            block_explorer_uri: chain_info.block_explorer_uri,
             block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
                 address: chain_info.block_explorer_uri_template.address,
                 tx_hash: chain_info.block_explorer_uri_template.tx_hash,

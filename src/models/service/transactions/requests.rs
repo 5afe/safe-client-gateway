@@ -47,6 +47,6 @@ pub struct MultisigTransactionRequest {
     #[serde(rename(serialize = "contractTransactionHash"))]
     pub safe_tx_hash: String,
     pub sender: String,
-    pub signature: String,
+    pub signature: Option<String>,
     pub origin: Option<String>,
 }

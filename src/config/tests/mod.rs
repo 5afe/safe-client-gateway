@@ -73,6 +73,41 @@ fn build_u64_test_cases() -> Vec<U64EnvValue> {
             env_key: String::from("SAFE_APP_INFO_REQUEST_TIMEOUT"),
             generator: Box::new(super::safe_app_info_request_timeout),
         },
+        U64EnvValue {
+            expected_default: 30000,
+            env_key: String::from("TRANSACTION_REQUEST_TIMEOUT"),
+            generator: Box::new(super::transaction_request_timeout),
+        },
+        U64EnvValue {
+            expected_default: 10000,
+            env_key: String::from("SAFE_INFO_REQUEST_TIMEOUT"),
+            generator: Box::new(super::safe_info_request_timeout),
+        },
+        U64EnvValue {
+            expected_default: 15000,
+            env_key: String::from("TOKEN_INFO_REQUEST_TIMEOUT"),
+            generator: Box::new(super::token_info_request_timeout),
+        },
+        U64EnvValue {
+            expected_default: 3000,
+            env_key: String::from("CONTRACT_INFO_REQUEST_TIMEOUT"),
+            generator: Box::new(super::contract_info_request_timeout),
+        },
+        U64EnvValue {
+            expected_default: 20000,
+            env_key: String::from("BALANCES_REQUEST_TIMEOUT"),
+            generator: Box::new(super::balances_request_timeout),
+        },
+        U64EnvValue {
+            expected_default: 20000,
+            env_key: String::from("COLLECTIBLES_REQUEST_TIMEOUT"),
+            generator: Box::new(super::collectibles_request_timeout),
+        },
+        U64EnvValue {
+            expected_default: 10000,
+            env_key: String::from("DEFAULT_REQUEST_TIMEOUT"),
+            generator: Box::new(super::default_request_timeout),
+        },
     ]
 }
 

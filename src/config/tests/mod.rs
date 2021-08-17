@@ -1,6 +1,6 @@
 #[test]
 fn test_env() {
-    for test_case in build_test_cases().into_iter() {
+    for test_case in build_test_cases() {
         test_case.assert_default();
         test_case.assert_env_var();
     }

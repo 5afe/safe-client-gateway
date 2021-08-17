@@ -1,5 +1,8 @@
 use std::env;
 
+#[cfg(test)]
+mod tests;
+
 pub fn redis_url() -> String {
     env::var("REDIS_URL").unwrap()
 }

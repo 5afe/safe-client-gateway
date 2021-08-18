@@ -10,7 +10,7 @@ edition = "2018"
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 
-regex = "1.4.6"
+regex = "1.5.4"
 lazy_static = "1.4.0"
 
 rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
@@ -18,7 +18,7 @@ rocket_codegen = { version = "0.5.0-rc.1" }
 
 # Force rocket peer-dependencies versions
 proc-macro2 = "1.0.28"
-tokio = "1.9.0"
+tokio = "1.10.0"
 
 reqwest = { version = "0.11.3", features = ["json"] }
 

@@ -40,7 +40,7 @@ chrono = { version = "0.4", features = ["serde"] }
 
 thiserror = "1.0.20"
 
-mockall = "0.9.1"
+mockall = "0.10.2"
 
 semver = "0.11.0"
 

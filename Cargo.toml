@@ -10,7 +10,7 @@ edition = "2018"
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 
-regex = "1.4.6"
+regex = "1.5.4"
 lazy_static = "1.4.0"
 
 rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }

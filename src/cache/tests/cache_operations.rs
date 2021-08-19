@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::{InvalidationPattern, InvalidationScope};
 use crate::cache::{CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
-use crate::config::base_config_service_url;
+use crate::config::base_config_service_uri;
 use crate::providers::info::TOKENS_KEY_BASE;
 
 #[test]
@@ -82,9 +82,9 @@ fn invalidation_pattern_collectibles_string() {
 
 #[test]
 fn invalidation_pattern_chains_string() {
-    std::env::set_var("CONFIG_SERVICE_URL", "https://config-url-example.com");
+    std::env::set_var("CONFIG_SERVICE_URI", "https://config-url-example.com");
     let invalidation_pattern = InvalidationPattern::Chains;
-    let expected = format!("*{}*", base_config_service_url());
+    let expected = format!("*{}*", base_config_service_uri());
 
     let actual = invalidation_pattern.to_pattern_string();
 

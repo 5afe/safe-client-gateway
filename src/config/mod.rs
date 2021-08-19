@@ -3,18 +3,18 @@ use std::env;
 #[cfg(test)]
 mod tests;
 
-pub fn redis_url() -> String {
-    env::var("REDIS_URL").unwrap()
+pub fn redis_uri() -> String {
+    env::var("REDIS_URI").unwrap()
 }
 
-pub fn base_config_service_url() -> String {
-    format!("{}{}", env::var("CONFIG_SERVICE_URL").unwrap(), "/api")
+pub fn base_config_service_uri() -> String {
+    format!("{}{}", env::var("CONFIG_SERVICE_URI").unwrap(), "/api")
 }
 
-pub fn base_exchange_api_url() -> String {
+pub fn base_exchange_api_uri() -> String {
     format!(
         "{}?access_key={}",
-        env::var("EXCHANGE_API_BASE_URL").unwrap(),
+        env::var("EXCHANGE_API_BASE_URI").unwrap(),
         env::var("EXCHANGE_API_KEY").unwrap()
     )
 }

@@ -10,3 +10,4 @@ updates:
       - "fmrsabino"
       - "jpalvarezl"
       - "rmeissner"
+    open-pull-requests-limit: 3

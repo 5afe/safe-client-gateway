@@ -25,16 +25,16 @@ pub async fn get_safe_info(
  * `/v1/chains/<chain_id>/owners/<safe_address>/safes` <br/>
  * Returns [Vec] of [String]
  *
- * Returns a list of owner addresses for a given Safe
+ * Returns a list of Safes for which the address is an owner
  */
-#[get("/v1/chains/<chain_id>/owners/<safe_address>/safes")]
+#[get("/v1/chains/<chain_id>/owners/<owner_address>/safes")]
 pub async fn get_owners(
     context: Context<'_>,
     chain_id: String,
-    safe_address: String,
+    owner_address: String,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
-        .resp_generator(|| get_owners_for_safe(&context, &chain_id, &safe_address))
+        .resp_generator(|| get_owners_for_safe(&context, &chain_id, &owner_address))
         .duration(owners_for_safes_cache_duration())
         .execute(context.cache())
         .await

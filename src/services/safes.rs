@@ -149,17 +149,16 @@ async fn get_last_history_tx(
 pub async fn get_owners_for_safe(
     context: &Context<'_>,
     chain_id: &str,
-    safe_address: &str,
+    owner_address: &str,
 ) -> ApiResult<SafeList> {
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);
 
-    let core_uri = core_uri!(info_provider, "/v1/owners/{}/safes", safe_address)?;
+    let core_uri = core_uri!(info_provider, "/v1/owners/{}/safes", owner_address)?;
     let body = RequestCached::new(core_uri)
         .request_timeout(default_request_timeout())
         .cache_duration(owners_for_safes_cache_duration())
         .execute(context.client(), context.cache())
         .await?;
 
-    log::error!("{}", &body);
     Ok(serde_json::from_str(&body)?)
 }

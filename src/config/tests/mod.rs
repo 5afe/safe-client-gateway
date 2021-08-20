@@ -14,47 +14,47 @@ fn test_env() {
 fn build_usize_test_cases() -> Vec<USizeEnvValue> {
     vec![
         USizeEnvValue {
-            expected_default: 60 * 60,
+            expected_default: 60 * 60 * 1000,
             env_key: String::from("SAFE_INFO_CACHE_DURATION"),
             generator: Box::new(super::safe_info_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60 * 60,
+            expected_default: 60 * 60 * 1000,
             env_key: String::from("ADDRESS_INFO_CACHE_DURATION"),
             generator: Box::new(super::address_info_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60 * 60 * 24,
+            expected_default: 60 * 60 * 24 * 1000,
             env_key: String::from("TOKEN_INFO_CACHE_DURATION"),
             generator: Box::new(super::token_info_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60 * 60,
+            expected_default: 60 * 60 * 1000,
             env_key: String::from("CHAIN_INFO_CACHE_DURATION"),
             generator: Box::new(super::chain_info_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60 * 60 * 12,
+            expected_default: 60 * 60 * 12 * 1000,
             env_key: String::from("EXCHANGE_API_CACHE_DURATION"),
             generator: Box::new(super::exchange_api_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60 * 60,
+            expected_default: 60 * 60 * 1000,
             env_key: String::from("REQUEST_CACHE_DURATION"),
             generator: Box::new(super::request_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60 * 15,
+            expected_default: 60 * 15 * 1000,
             env_key: String::from("ABOUT_CACHE_DURATION"),
             generator: Box::new(super::about_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60,
+            expected_default: 60 * 1000,
             env_key: String::from("BALANCES_REQUEST_CACHE_DURATION"),
             generator: Box::new(super::balances_cache_duration),
         },
         USizeEnvValue {
-            expected_default: 60 * 60,
+            expected_default: 60 * 60 * 1000,
             env_key: String::from("SAFE_APP_MANIFEST_CACHE_DURATION"),
             generator: Box::new(super::safe_app_manifest_cache_duration),
         },
@@ -138,8 +138,7 @@ impl TestCase for USizeEnvValue {
         std::env::set_var(&self.env_key, &mock_env_var_value.to_string());
         let actual_env = (&self.generator)();
         assert_eq!(
-            mock_env_var_value / 1000,
-            actual_env,
+            mock_env_var_value, actual_env,
             "Test env var for env key: {}",
             &self.env_key
         );

@@ -54,48 +54,48 @@ fn indefinite_timeout() -> usize {
 }
 
 pub fn short_error_duration() -> usize {
-    usize_with_default("SHORT_ERROR_DURATION", 60 * 1000) / 1000
+    usize_with_default("SHORT_ERROR_DURATION", 60 * 1000)
 }
 
 pub fn long_error_duration() -> usize {
-    usize_with_default("LONG_ERROR_DURATION", 60 * 15 * 1000) / 1000
+    usize_with_default("LONG_ERROR_DURATION", 60 * 15 * 1000)
 }
 
 // FUNCTIONAL TIMEOUTS
 pub fn safe_info_cache_duration() -> usize {
-    usize_with_default("SAFE_INFO_CACHE_DURATION", indefinite_timeout()) / 1000
+    usize_with_default("SAFE_INFO_CACHE_DURATION", indefinite_timeout())
 }
 
 pub fn address_info_cache_duration() -> usize {
-    usize_with_default("ADDRESS_INFO_CACHE_DURATION", indefinite_timeout()) / 1000
+    usize_with_default("ADDRESS_INFO_CACHE_DURATION", indefinite_timeout())
 }
 
 pub fn token_info_cache_duration() -> usize {
-    usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 60 * 24 * 1000) / 1000
+    usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 60 * 24 * 1000)
 }
 
 pub fn chain_info_cache_duration() -> usize {
-    usize_with_default("CHAIN_INFO_CACHE_DURATION", indefinite_timeout()) / 1000
+    usize_with_default("CHAIN_INFO_CACHE_DURATION", indefinite_timeout())
 }
 
 pub fn exchange_api_cache_duration() -> usize {
-    usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12 * 1000) / 1000
+    usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12 * 1000)
 }
 
 pub fn request_cache_duration() -> usize {
-    usize_with_default("REQUEST_CACHE_DURATION", indefinite_timeout()) / 1000
+    usize_with_default("REQUEST_CACHE_DURATION", indefinite_timeout())
 }
 
 pub fn about_cache_duration() -> usize {
-    usize_with_default("ABOUT_CACHE_DURATION", 60 * 15 * 1000) / 1000
+    usize_with_default("ABOUT_CACHE_DURATION", 60 * 15 * 1000)
 }
 
 pub fn balances_cache_duration() -> usize {
-    usize_with_default("BALANCES_REQUEST_CACHE_DURATION", 60 * 1000) / 1000
+    usize_with_default("BALANCES_REQUEST_CACHE_DURATION", 60 * 1000)
 }
 
 pub fn safe_app_manifest_cache_duration() -> usize {
-    usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout()) / 1000
+    usize_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }
 
 pub fn owners_for_safes_cache_duration() -> usize {
@@ -145,7 +145,7 @@ pub fn default_request_timeout() -> u64 {
 
 // ERRORS
 pub fn request_error_cache_duration() -> usize {
-    usize_with_default("REQS_ERROR_CACHE_DURATION", short_error_duration()) / 1000
+    usize_with_default("REQS_ERROR_CACHE_DURATION", short_error_duration())
 }
 
 pub fn log_all_error_responses() -> bool {

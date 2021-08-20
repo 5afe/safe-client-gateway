@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_safe_info","`/v1/chains/<chain_id>/safes/<safe_address>`  Returns SafeState"]]});
+initSidebarItems({"fn":[["get_owners","`/v1/chains/<chain_id>/owners/<safe_address>/safes`  Returns [Vec] of [String]"],["get_safe_info","`/v1/chains/<chain_id>/safes/<safe_address>`  Returns SafeState"]]});

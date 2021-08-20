@@ -13,7 +13,6 @@ jobs:
     env:
       DOCKERHUB_ORG: gnosispm
       DOCKERHUB_PROJECT: safe-client-gateway
-#    needs: [ rustfmt, tests ] # Figure out how to set this workflow dependency
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2

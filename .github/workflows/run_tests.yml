@@ -1,0 +1,88 @@
+name: safe-client-gateway
+
+on: pull_request
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+
+  rustfmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+
+      - name: Set variables
+        run: |
+          TOOLCHAIN=$(cat rust-toolchain)
+          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.TOOLCHAIN }}
+          override: true
+          components: rustfmt
+
+      - name: Run rustfmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+
+      - name: Set variables
+        run: |
+          TOOLCHAIN=$(cat rust-toolchain)
+          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.TOOLCHAIN }}
+          override: true
+          components: rustfmt
+
+      - name: Cargo cache
+        uses: Swatinem/rust-cache@v1
+
+      - name: Run tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose --all --locked
+        env:
+          CARGO_INCREMENTAL: '0'
+          RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
+
+      - name: Cache grcov
+        id: grcov-cache
+        uses: actions/cache@v2.1.5
+        with:
+          path: /home/runner/.cargo/bin/
+          key: ${{ runner.os }}-grcov-v080
+
+      - name: Fetch grcov
+        if: steps.grcov-cache.outputs.cache-hit != 'true'
+        run: curl --location https://github.com/mozilla/grcov/releases/download/v0.8.0/grcov-linux-x86_64.tar.bz2 | tar jxf -
+
+      - name: Run grcov
+        id: coverage
+        uses: actions-rs/grcov@v0.1
+        with:
+          config: ./.github/action-rs/grcov.yml
+
+      - name: Coveralls upload
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ${{ github.workspace }}/lcov.info
+

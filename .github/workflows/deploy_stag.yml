@@ -1,0 +1,79 @@
+name: Deploy staging
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+
+  docs:
+    runs-on: ubuntu-latest
+#    needs: [ rustfmt, tests ] # check workflow dependencies
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # checks out all branches and tags, necessary for versioning /about endpoint
+
+      - name: Set variables
+        run: |
+          TOOLCHAIN=$(cat rust-toolchain)
+          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.TOOLCHAIN }}
+          override: true
+          components: rustfmt
+
+      - name: Cargo cache
+        uses: Swatinem/rust-cache@v1
+
+      - name: Generate docs
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --no-deps --workspace --locked
+
+      - name: Move folder
+        run: |
+          rm -rf target/doc/docs
+          mv target/doc/safe_client_gateway target/doc/docs
+          cp .github/landing_page/* target/doc
+
+      - name: Fix internal links
+        run: find ./target/doc/docs/ -type f -exec sed -i "s/safe_client_gateway/docs/g" {} \;
+
+      - name: Update docs
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/doc
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_ORG: gnosispm
+      DOCKERHUB_PROJECT: safe-client-gateway
+    needs: [ rustfmt, tests ] # Figure out how to set this workflow dependency
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # checks out all branches and tags, necessary for versioning /about endpoint
+
+      - name: Dockerhub login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Deploy main
+        run: bash scripts/deploy_docker.sh staging

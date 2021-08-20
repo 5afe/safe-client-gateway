@@ -1,0 +1,30 @@
+name: Deploy production
+
+on:
+  release:
+    types: [ released ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_ORG: gnosispm
+      DOCKERHUB_PROJECT: safe-client-gateway
+#    needs: [ rustfmt, tests ] # Figure out how to set this workflow dependency
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # checks out all branches and tags, necessary for versioning /about endpoint
+
+      - name: Dockerhub login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Deploy tag
+        run: bash scripts/deploy_docker.sh ${GITHUB_REF##*/}

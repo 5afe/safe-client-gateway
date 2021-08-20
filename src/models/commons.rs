@@ -66,6 +66,11 @@ pub struct PageMetadata {
     pub limit: u64,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SafeList {
+    safes: Vec<String>,
+}
+
 impl From<String> for ParamValue {
     fn from(item: String) -> Self {
         ParamValue::SingleValue(item)

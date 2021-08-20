@@ -1,5 +1,6 @@
 use crate::cache::cache_operations::CacheResponse;
-use crate::services::safes::get_safe_info_ex;
+use crate::config::owners_for_safes_cache_duration;
+use crate::services::safes::{get_owners_for_safe, get_safe_info_ex};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
@@ -16,6 +17,25 @@ pub async fn get_safe_info(
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .resp_generator(|| get_safe_info_ex(&context, &chain_id, &safe_address))
+        .execute(context.cache())
+        .await
+}
+
+/**
+ * `/v1/chains/<chain_id>/owners/<safe_address>/safes` <br/>
+ * Returns [Vec] of [String]
+ *
+ * Returns a list of Safes for which the address is an owner
+ */
+#[get("/v1/chains/<chain_id>/owners/<owner_address>/safes")]
+pub async fn get_owners(
+    context: Context<'_>,
+    chain_id: String,
+    owner_address: String,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(context.uri())
+        .resp_generator(|| get_owners_for_safe(&context, &chain_id, &owner_address))
+        .duration(owners_for_safes_cache_duration())
         .execute(context.cache())
         .await
 }

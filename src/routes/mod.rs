@@ -46,6 +46,7 @@ pub fn active_routes() -> Vec<Route> {
         notifications::post_notification_registration,
         notifications::delete_notification_registration,
         safes::get_safe_info,
+        safes::get_owners,
         transactions::get_transactions,
         transactions::get_transactions_history,
         transactions::get_transactions_queued,

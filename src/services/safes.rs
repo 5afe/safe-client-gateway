@@ -1,8 +1,10 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::transaction_request_timeout;
+use crate::config::{
+    default_request_timeout, owners_for_safes_cache_duration, transaction_request_timeout,
+};
 use crate::models::backend::transactions::{MultisigTransaction, Transaction};
 use crate::models::backend::transfers::Transfer;
-use crate::models::commons::Page;
+use crate::models::commons::{Page, SafeList};
 use crate::models::service::safes::{SafeLastChanges, SafeState};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
@@ -142,4 +144,21 @@ async fn get_last_history_tx(
             Transaction::Unknown => Utc::now().timestamp(),
         })
         .ok_or(api_error!("Couldn't get tx timestamps"))
+}
+
+pub async fn get_owners_for_safe(
+    context: &Context<'_>,
+    chain_id: &str,
+    owner_address: &str,
+) -> ApiResult<SafeList> {
+    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+
+    let core_uri = core_uri!(info_provider, "/v1/owners/{}/safes", owner_address)?;
+    let body = RequestCached::new(core_uri)
+        .request_timeout(default_request_timeout())
+        .cache_duration(owners_for_safes_cache_duration())
+        .execute(context.client(), context.cache())
+        .await?;
+
+    Ok(serde_json::from_str(&body)?)
 }

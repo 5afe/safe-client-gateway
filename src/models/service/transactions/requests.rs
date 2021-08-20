@@ -43,10 +43,13 @@ pub struct MultisigTransactionRequest {
     pub base_gas: String,
     pub gas_price: String,
     pub gas_token: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub refund_receiver: Option<String>,
     #[serde(rename(serialize = "contractTransactionHash"))]
     pub safe_tx_hash: String,
     pub sender: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub signature: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub origin: Option<String>,
 }

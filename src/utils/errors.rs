@@ -119,7 +119,11 @@ impl<'r> Responder<'r, 'static> for ApiError {
 
 impl From<reqwest::Error> for ApiError {
     fn from(err: reqwest::Error) -> Self {
-        Self::new_from_message(format!("{:?}", err))
+        if err.is_timeout() {
+            Self::new_from_message_with_code(504, format!("{:?}", err))
+        } else {
+            Self::new_from_message(format!("{:?}", err))
+        }
     }
 }
 

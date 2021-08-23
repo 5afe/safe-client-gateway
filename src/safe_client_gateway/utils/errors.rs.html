@@ -141,6 +141,10 @@
 <span id="138">138</span>
 <span id="139">139</span>
 <span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config::log_all_error_responses</span>;
 <span class="kw">use</span> <span class="ident">reqwest::Response</span> <span class="kw">as</span> <span class="ident">ReqwestResponse</span>;
@@ -263,7 +267,11 @@
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">reqwest::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ApiError</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">reqwest::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span><span class="ident">::new_from_message</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>))
+        <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_timeout</span>() {
+            <span class="self">Self</span><span class="ident">::new_from_message_with_code</span>(<span class="number">504</span>, <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>))
+        } <span class="kw">else</span> {
+            <span class="self">Self</span><span class="ident">::new_from_message</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>))
+        }
     }
 }
 

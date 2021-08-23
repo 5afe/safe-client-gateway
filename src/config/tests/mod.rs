@@ -139,7 +139,7 @@ impl TestCase for USizeEnvValue {
     }
 
     fn assert_env_key(&self) {
-        let mock_env_var_value = 1000;
+        let mock_env_var_value = 1;
         std::env::set_var(&self.env_key, &mock_env_var_value.to_string());
         let actual_env = (&self.generator)();
         assert_eq!(

@@ -58,6 +58,11 @@ fn build_usize_test_cases() -> Vec<USizeEnvValue> {
             env_key: String::from("SAFE_APP_MANIFEST_CACHE_DURATION"),
             generator: Box::new(super::safe_app_manifest_cache_duration),
         },
+        USizeEnvValue {
+            expected_default: 60 * 1000,
+            env_key: String::from("OWNERS_FOR_SAFES_CACHE_DURATION"),
+            generator: Box::new(super::owners_for_safes_cache_duration),
+        },
     ]
 }
 

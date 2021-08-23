@@ -99,7 +99,7 @@ pub fn safe_app_manifest_cache_duration() -> usize {
 }
 
 pub fn owners_for_safes_cache_duration() -> usize {
-    usize_with_default("OWNERS_FOR_SAFES_CACHE_DURATION", 60)
+    usize_with_default("OWNERS_FOR_SAFES_CACHE_DURATION", 60 * 1000)
 }
 
 // REQUEST TIMEOUTS

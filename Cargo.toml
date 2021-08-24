@@ -47,6 +47,3 @@ semver = "1.0.4"
 # Logging
 log = "0.4"
 env_logger = "0.9.0"
-
-[dev-dependencies]
-cargo-watch = "7.6.1"

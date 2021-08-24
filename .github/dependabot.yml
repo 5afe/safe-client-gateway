@@ -11,3 +11,6 @@ updates:
       - "jpalvarezl"
       - "rmeissner"
     open-pull-requests-limit: 3
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]

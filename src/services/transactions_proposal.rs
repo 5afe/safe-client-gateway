@@ -1,4 +1,4 @@
-use crate::cache::Cache;
+use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
 use crate::models::service::transactions::requests::MultisigTransactionRequest;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
@@ -23,9 +23,11 @@ pub async fn submit_confirmation(
     let response = context.client().post(&url).json(&json).send().await?;
 
     if response.status().is_success() {
-        context
-            .cache()
-            .invalidate_pattern(&format!("*{}*", &safe_tx_hash));
+        Invalidate::new(InvalidationPattern::Any(
+            InvalidationScope::Both,
+            String::from(safe_tx_hash),
+        ))
+        .execute(context.cache());
         Ok(())
     } else {
         Err(ApiError::from_http_response(
@@ -56,9 +58,16 @@ pub async fn propose_transaction(
         .await?;
 
     if response.status().is_success() {
-        context
-            .cache()
-            .invalidate_pattern(&format!("*{}*", &safe_address));
+        Invalidate::new(InvalidationPattern::Any(
+            InvalidationScope::Both,
+            String::from(safe_address),
+        ))
+        .execute(context.cache());
+        Invalidate::new(InvalidationPattern::Any(
+            InvalidationScope::Both,
+            String::from(&transaction_request.safe_tx_hash),
+        ))
+        .execute(context.cache());
         Ok(())
     } else {
         Err(ApiError::from_http_response(

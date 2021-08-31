@@ -1,6 +1,6 @@
 [package]
 name = "safe-client-gateway"
-version = "3.0.1"
+version = "3.2.1"
 authors = ["jpalvarezl <jose.alvarez@gnosis.io>", "rmeissner <richard@gnosis.io>", "fmrsabino <frederico@gnosis.io>"]
 edition = "2018"
 
@@ -23,7 +23,7 @@ tokio = "1.10.0"
 reqwest = { version = "0.11.3", features = ["json"] }
 
 r2d2 = "0.8.9"
-redis = { version = "0.20", features = ["r2d2"] }
+redis = { version = "0.21", features = ["r2d2"] }
 
 ethcontract-common = "0.15.1"
 ethabi = "14.1.0"
@@ -47,6 +47,3 @@ semver = "1.0.4"
 # Logging
 log = "0.4"
 env_logger = "0.9.0"
-
-[dev-dependencies]
-cargo-watch = "7.6.1"

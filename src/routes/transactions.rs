@@ -225,12 +225,22 @@ pub async fn post_transaction<'e>(
     chain_id: String,
     safe_address: String,
     multisig_transaction_request: Result<Json<MultisigTransactionRequest>, Error<'e>>,
-) -> ApiResult<()> {
-    transactions_proposal::propose_transaction(
-        &context,
-        &chain_id,
-        &safe_address,
-        &multisig_transaction_request?.0,
-    )
-    .await
+) -> ApiResult<content::Json<String>> {
+    let request: MultisigTransactionRequest = multisig_transaction_request?.0;
+
+    transactions_proposal::propose_transaction(&context, &chain_id, &safe_address, &request)
+        .await?;
+
+    let tx_details = CacheResponse::new(context.uri())
+        .resp_generator(|| {
+            transactions_details::get_transactions_details(
+                &context,
+                &chain_id,
+                &request.safe_tx_hash,
+            )
+        })
+        .execute(context.cache())
+        .await;
+
+    return tx_details;
 }

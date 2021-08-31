@@ -65,7 +65,7 @@ pub async fn propose_transaction(
         .execute(context.cache());
         Invalidate::new(InvalidationPattern::Any(
             InvalidationScope::Both,
-            String::from(&transaction_request.safe_tx_gas),
+            String::from(&transaction_request.safe_tx_hash),
         ))
         .execute(context.cache());
         Ok(())

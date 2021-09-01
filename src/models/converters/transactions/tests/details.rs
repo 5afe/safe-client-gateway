@@ -75,8 +75,8 @@ async fn multisig_custom_transaction_to_transaction_details() {
             MultisigExecutionDetails {
                 submitted_at: multisig_tx.submission_date.timestamp_millis(),
                 nonce: 84,
-                safe_tx_gas: 43485,
-                base_gas: 0,
+                safe_tx_gas: "43485".to_string(),
+                base_gas: "0".to_string(),
                 gas_price: "0".to_string(),
                 gas_token: "0x0000000000000000000000000000000000000000".to_string(),
                 refund_receiver: AddressEx::address_only("0x0000000000000000000000000000000000000000"),

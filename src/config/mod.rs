@@ -1,17 +1,20 @@
 use std::env;
 
-pub fn redis_url() -> String {
-    env::var("REDIS_URL").unwrap()
+#[cfg(test)]
+mod tests;
+
+pub fn redis_uri() -> String {
+    env::var("REDIS_URI").unwrap()
 }
 
-pub fn base_config_service_url() -> String {
-    format!("{}{}", env::var("CONFIG_SERVICE_URL").unwrap(), "/api")
+pub fn base_config_service_uri() -> String {
+    format!("{}{}", env::var("CONFIG_SERVICE_URI").unwrap(), "/api")
 }
 
-pub fn base_exchange_api_url() -> String {
+pub fn base_exchange_api_uri() -> String {
     format!(
         "{}?access_key={}",
-        env::var("EXCHANGE_API_BASE_URL").unwrap(),
+        env::var("EXCHANGE_API_BASE_URI").unwrap(),
         env::var("EXCHANGE_API_KEY").unwrap()
     )
 }
@@ -47,15 +50,15 @@ fn bool_with_default(key: &str, default: bool) -> bool {
 
 // TIME DURATION VALUES
 fn indefinite_timeout() -> usize {
-    usize_with_default("INDEFINITE_TIMEOUT", 60 * 60)
+    usize_with_default("INDEFINITE_TIMEOUT", 60 * 60 * 1000)
 }
 
 pub fn short_error_duration() -> usize {
-    usize_with_default("SHORT_ERROR_DURATION", 60)
+    usize_with_default("SHORT_ERROR_DURATION", 60 * 1000)
 }
 
 pub fn long_error_duration() -> usize {
-    usize_with_default("LONG_ERROR_DURATION", 60 * 15)
+    usize_with_default("LONG_ERROR_DURATION", 60 * 15 * 1000)
 }
 
 // FUNCTIONAL TIMEOUTS
@@ -68,7 +71,7 @@ pub fn address_info_cache_duration() -> usize {
 }
 
 pub fn token_info_cache_duration() -> usize {
-    usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 60 * 24)
+    usize_with_default("TOKEN_INFO_CACHE_DURATION", 60 * 60 * 24 * 1000)
 }
 
 pub fn chain_info_cache_duration() -> usize {
@@ -76,7 +79,7 @@ pub fn chain_info_cache_duration() -> usize {
 }
 
 pub fn exchange_api_cache_duration() -> usize {
-    usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12)
+    usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12 * 1000)
 }
 
 pub fn request_cache_duration() -> usize {
@@ -84,11 +87,11 @@ pub fn request_cache_duration() -> usize {
 }
 
 pub fn about_cache_duration() -> usize {
-    usize_with_default("ABOUT_CACHE_DURATION", 60 * 15)
+    usize_with_default("ABOUT_CACHE_DURATION", 60 * 15 * 1000)
 }
 
 pub fn balances_cache_duration() -> usize {
-    usize_with_default("BALANCES_REQUEST_CACHE_DURATION", 60)
+    usize_with_default("BALANCES_REQUEST_CACHE_DURATION", 60 * 1000)
 }
 
 pub fn safe_app_manifest_cache_duration() -> usize {
@@ -96,7 +99,7 @@ pub fn safe_app_manifest_cache_duration() -> usize {
 }
 
 pub fn owners_for_safes_cache_duration() -> usize {
-    usize_with_default("OWNERS_FOR_SAFES_CACHE_DURATION", 60)
+    usize_with_default("OWNERS_FOR_SAFES_CACHE_DURATION", 60 * 1000)
 }
 
 // REQUEST TIMEOUTS

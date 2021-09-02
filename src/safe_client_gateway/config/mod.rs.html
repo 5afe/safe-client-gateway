@@ -170,21 +170,27 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::env</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis_url</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="ident">env::var</span>(<span class="string">&quot;REDIS_URL&quot;</span>).<span class="ident">unwrap</span>()
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span>;
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis_uri</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="ident">env::var</span>(<span class="string">&quot;REDIS_URI&quot;</span>).<span class="ident">unwrap</span>()
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base_config_service_url</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">env::var</span>(<span class="string">&quot;CONFIG_SERVICE_URL&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;/api&quot;</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base_config_service_uri</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">env::var</span>(<span class="string">&quot;CONFIG_SERVICE_URI&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;/api&quot;</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base_exchange_api_url</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base_exchange_api_uri</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
     <span class="macro">format!</span>(
         <span class="string">&quot;{}?access_key={}&quot;</span>,
-        <span class="ident">env::var</span>(<span class="string">&quot;EXCHANGE_API_BASE_URL&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="ident">env::var</span>(<span class="string">&quot;EXCHANGE_API_BASE_URI&quot;</span>).<span class="ident">unwrap</span>(),
         <span class="ident">env::var</span>(<span class="string">&quot;EXCHANGE_API_KEY&quot;</span>).<span class="ident">unwrap</span>()
     )
 }
@@ -220,15 +226,15 @@
 
 <span class="comment">// TIME DURATION VALUES</span>
 <span class="kw">fn</span> <span class="ident">indefinite_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;INDEFINITE_TIMEOUT&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;INDEFINITE_TIMEOUT&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">short_error_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;SHORT_ERROR_DURATION&quot;</span>, <span class="number">60</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;SHORT_ERROR_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">long_error_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;LONG_ERROR_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;LONG_ERROR_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="comment">// FUNCTIONAL TIMEOUTS</span>
@@ -241,7 +247,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_info_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;TOKEN_INFO_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">24</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;TOKEN_INFO_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">24</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain_info_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
@@ -249,7 +255,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exchange_api_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;EXCHANGE_API_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">12</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;EXCHANGE_API_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">12</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
@@ -257,11 +263,11 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">about_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;ABOUT_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;ABOUT_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">balances_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;BALANCES_REQUEST_CACHE_DURATION&quot;</span>, <span class="number">60</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;BALANCES_REQUEST_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_app_manifest_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
@@ -269,7 +275,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">owners_for_safes_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;OWNERS_FOR_SAFES_CACHE_DURATION&quot;</span>, <span class="number">60</span>)
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;OWNERS_FOR_SAFES_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="comment">// REQUEST TIMEOUTS</span>

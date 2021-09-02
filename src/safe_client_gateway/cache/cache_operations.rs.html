@@ -220,7 +220,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_op_executors</span>::{<span class="ident">cache_response</span>, <span class="ident">invalidate</span>, <span class="ident">request_cached</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache</span>::{<span class="ident">Cache</span>, <span class="ident">CACHE_REQS_PREFIX</span>, <span class="ident">CACHE_REQS_RESP_PREFIX</span>, <span class="ident">CACHE_RESP_PREFIX</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{
-    <span class="ident">base_config_service_url</span>, <span class="ident">default_request_timeout</span>, <span class="ident">request_cache_duration</span>,
+    <span class="ident">base_config_service_uri</span>, <span class="ident">default_request_timeout</span>, <span class="ident">request_cache_duration</span>,
     <span class="ident">request_error_cache_duration</span>,
 };
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::providers::info::generate_token_key</span>;
@@ -295,7 +295,7 @@
             <span class="ident">InvalidationPattern::Contracts</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="string">&quot;*contract*&quot;</span>),
             <span class="ident">InvalidationPattern::Tokens</span> { <span class="ident">chain_id</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">generate_token_key</span>(<span class="ident">chain_id</span>),
             <span class="ident">InvalidationPattern::Chains</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">format!</span>(<span class="string">&quot;*{}*&quot;</span>, <span class="ident">base_config_service_url</span>())
+                <span class="macro">format!</span>(<span class="string">&quot;*{}*&quot;</span>, <span class="ident">base_config_service_uri</span>())
             }
         }
     }

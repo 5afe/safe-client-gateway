@@ -70,7 +70,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::redis::ServiceCache</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::Cache</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{<span class="ident">base_exchange_api_url</span>, <span class="ident">exchange_api_cache_duration</span>, <span class="ident">short_error_duration</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{<span class="ident">base_exchange_api_uri</span>, <span class="ident">exchange_api_cache_duration</span>, <span class="ident">short_error_duration</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
@@ -123,7 +123,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch_exchange</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Exchange</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">base_exchange_api_url</span>();
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">base_exchange_api_uri</span>();
         <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new</span>(<span class="ident">url</span>)
             .<span class="ident">cache_duration</span>(<span class="ident">exchange_api_cache_duration</span>())
             .<span class="ident">error_cache_duration</span>(<span class="ident">short_error_duration</span>())

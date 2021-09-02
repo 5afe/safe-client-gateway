@@ -1,5 +1,5 @@
 use crate::cache::Cache;
-use crate::config::{redis_scan_count, redis_url};
+use crate::config::{redis_scan_count, redis_uri};
 use r2d2::{Pool, PooledConnection};
 use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 use rocket::request::{self, FromRequest, Request};
@@ -10,7 +10,7 @@ type RedisConnection = PooledConnection<redis::Client>;
 pub struct ServiceCache<'r>(&'r RedisPool);
 
 pub fn create_pool() -> RedisPool {
-    let client = redis::Client::open(redis_url()).unwrap();
+    let client = redis::Client::open(redis_uri()).unwrap();
     Pool::builder().max_size(15).build(client).unwrap()
 }
 
@@ -39,7 +39,7 @@ impl Cache for ServiceCache<'_> {
     }
 
     fn create(&self, id: &str, dest: &str, timeout: usize) {
-        let _: () = self.conn().set_ex(id, dest, timeout).unwrap();
+        let _: () = self.conn().pset_ex(id, dest, timeout).unwrap();
     }
 
     fn insert_in_hash(&self, hash: &str, id: &str, dest: &str) {
@@ -56,7 +56,7 @@ impl Cache for ServiceCache<'_> {
     }
 
     fn expire_entity(&self, id: &str, timeout: usize) {
-        let _: () = self.conn().expire(id, timeout).unwrap();
+        let _: () = self.conn().pexpire(id, timeout).unwrap();
     }
 
     fn invalidate_pattern(&self, pattern: &str) {

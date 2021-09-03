@@ -80,13 +80,24 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations</span>::{<span class="ident">Invalidate</span>, <span class="ident">InvalidationPattern</span>, <span class="ident">InvalidationScope</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config::default_request_timeout</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::transactions::requests::MultisigTransactionRequest</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors</span>::{<span class="ident">ApiError</span>, <span class="ident">ApiResult</span>};
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
+<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">submit_confirmation</span>(
     <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
@@ -103,7 +114,13 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
     <span class="ident">json</span>.<span class="ident">insert</span>(<span class="string">&quot;signature&quot;</span>, <span class="ident">signature</span>);
 
-    <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">client</span>().<span class="ident">post</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>).<span class="ident">json</span>(<span class="kw-2">&amp;</span><span class="ident">json</span>).<span class="ident">send</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="ident">context</span>
+        .<span class="ident">client</span>()
+        .<span class="ident">post</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>)
+        .<span class="ident">json</span>(<span class="kw-2">&amp;</span><span class="ident">json</span>)
+        .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">default_request_timeout</span>()))
+        .<span class="ident">send</span>()
+        .<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">if</span> <span class="ident">response</span>.<span class="ident">status</span>().<span class="ident">is_success</span>() {
         <span class="ident">Invalidate::new</span>(<span class="ident">InvalidationPattern::Any</span>(
@@ -137,6 +154,7 @@
         .<span class="ident">client</span>()
         .<span class="ident">post</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>)
         .<span class="ident">json</span>(<span class="kw-2">&amp;</span><span class="ident">transaction_request</span>)
+        .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">default_request_timeout</span>()))
         .<span class="ident">send</span>()
         .<span class="kw">await</span><span class="question-mark">?</span>;
 

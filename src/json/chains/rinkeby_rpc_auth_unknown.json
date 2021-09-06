@@ -21,11 +21,13 @@
     "backgroundColor": "#000000"
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
-  "gasPrice": {
-    "type": "oracle",
-    "uri": "https://gaspriceoracle.com/",
-    "gasParameter": "average",
-    "gweiFactor": "10"
-  },
+  "gasPrice": [
+    {
+      "type": "oracle",
+      "uri": "https://gaspriceoracle.com/",
+      "gasParameter": "average",
+      "gweiFactor": "10"
+    }
+  ],
   "recommendedMasterCopyVersion": "1.1.1"
 }

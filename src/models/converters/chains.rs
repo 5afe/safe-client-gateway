@@ -36,19 +36,25 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                 background_color: chain_info.theme.background_color,
             },
             ens_registry_address: chain_info.ens_registry_address,
-            gas_price: match chain_info.gas_price {
-                GasPrice::Oracle {
-                    uri,
-                    gas_parameter,
-                    gwei_factor,
-                } => ServiceGasPrice::Oracle {
-                    uri,
-                    gas_parameter,
-                    gwei_factor,
-                },
-                GasPrice::Fixed { wei_value } => ServiceGasPrice::Fixed { wei_value },
-                GasPrice::Unknown => ServiceGasPrice::Unknown,
-            },
+            gas_price: chain_info
+                .gas_price
+                .iter()
+                .map(|gas_price| match gas_price {
+                    GasPrice::Oracle {
+                        uri,
+                        gas_parameter,
+                        gwei_factor,
+                    } => ServiceGasPrice::Oracle {
+                        uri: uri.to_string(),
+                        gas_parameter: gas_parameter.to_string(),
+                        gwei_factor: gwei_factor.to_string(),
+                    },
+                    GasPrice::Fixed { wei_value } => ServiceGasPrice::Fixed {
+                        wei_value: wei_value.to_string(),
+                    },
+                    GasPrice::Unknown => ServiceGasPrice::Unknown,
+                })
+                .collect::<Vec<ServiceGasPrice>>(),
         }
     }
 }

@@ -1,6 +1,4 @@
-use crate::models::backend::safe_app::{
-    SafeApp as BackendSafeApp, SafeAppProvider as BackendSafeAppProvider,
-};
+use crate::models::backend::safe_app::SafeApp as BackendSafeApp;
 use crate::models::service::safe_app::{SafeApp, SafeAppProvider};
 
 impl From<BackendSafeApp> for SafeApp {

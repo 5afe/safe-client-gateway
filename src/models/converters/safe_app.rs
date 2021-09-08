@@ -12,7 +12,7 @@ impl From<BackendSafeApp> for SafeApp {
             chain_ids: safe_app
                 .chain_ids
                 .into_iter()
-                .map(|chain_id| chain_id.into())
+                .map(|chain_id| chain_id.to_string())
                 .collect(),
             provider: safe_app.provider.as_ref().map(|provider| SafeAppProvider {
                 url: provider.url.to_string(),

@@ -8,7 +8,7 @@ pub struct SafeApp {
     pub name: String,
     pub icon_url: String,
     pub description: String,
-    pub chain_ids: Vec<u64>,
+    pub chain_ids: Vec<String>,
     pub provider: Option<SafeAppProvider>,
 }
 

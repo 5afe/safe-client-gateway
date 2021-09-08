@@ -121,9 +121,16 @@ pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound
 pub const TX_DETAILS_WITH_ORIGIN: &str = include_str!("results/tx_details_with_origin.json");
 
 pub const CHAIN_INFO_RINKEBY: &str = include_str!("chains/rinkeby.json");
-pub const CHAIN_INFO_RINKEBY_FIXED_GAS_PRICE: &str = include_str!("chains/rinkeby_fixed_gas_price.json");
-pub const CHAIN_INFO_RINKEBY_MULTIPLE_GAS_PRICE: &str = include_str!("chains/rinkeby_multiple_gas_price.json");
+pub const CHAIN_INFO_RINKEBY_FIXED_GAS_PRICE: &str =
+    include_str!("chains/rinkeby_fixed_gas_price.json");
+pub const CHAIN_INFO_RINKEBY_MULTIPLE_GAS_PRICE: &str =
+    include_str!("chains/rinkeby_multiple_gas_price.json");
 pub const CHAIN_INFO_RINKEBY_NO_GAS_PRICE: &str = include_str!("chains/rinkeby_no_gas_price.json");
-pub const CHAIN_INFO_RINKEBY_UNKNOWN_GAS_PRICE: &str = include_str!("chains/rinkeby_unknown_gas_price.json");
-pub const CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION: &str = include_str!("chains/rinkeby_rpc_no_auth.json");
-pub const CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION: &str = include_str!("chains/rinkeby_rpc_auth_unknown.json");
+pub const CHAIN_INFO_RINKEBY_UNKNOWN_GAS_PRICE: &str =
+    include_str!("chains/rinkeby_unknown_gas_price.json");
+pub const CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION: &str =
+    include_str!("chains/rinkeby_rpc_no_auth.json");
+pub const CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION: &str =
+    include_str!("chains/rinkeby_rpc_auth_unknown.json");
+
+pub const POLYGON_SAFE_APPS: &str = include_str!("safe_apps/polygon_safe_apps.json");

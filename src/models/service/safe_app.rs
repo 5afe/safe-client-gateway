@@ -9,7 +9,7 @@ pub struct SafeApp {
     pub icon_url: String,
     pub description: String,
     pub chain_ids: Vec<u64>,
-    pub provider: Vec<SafeAppProvider>,
+    pub provider: Option<SafeAppProvider>,
 }
 
 #[derive(Serialize, Debug, PartialEq, Clone)]

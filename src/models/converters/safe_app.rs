@@ -14,14 +14,10 @@ impl From<BackendSafeApp> for SafeApp {
                 .into_iter()
                 .map(|chain_id| chain_id.into())
                 .collect(),
-            provider: safe_app
-                .provider
-                .into_iter()
-                .map(|provider| SafeAppProvider {
-                    url: provider.url.to_string(),
-                    name: provider.name.to_string(),
-                })
-                .collect(),
+            provider: safe_app.provider.as_ref().map(|provider| SafeAppProvider {
+                url: provider.url.to_string(),
+                name: provider.name.to_string(),
+            }),
         }
     }
 }

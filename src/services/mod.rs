@@ -7,6 +7,7 @@ pub mod chains;
 pub mod collectibles;
 pub mod hooks;
 pub mod notifications;
+pub mod safe_apps;
 pub mod safes;
 pub mod transactions_details;
 pub mod transactions_history;

@@ -102,6 +102,10 @@ pub fn owners_for_safes_cache_duration() -> usize {
     usize_with_default("OWNERS_FOR_SAFES_CACHE_DURATION", 60 * 1000)
 }
 
+pub fn safe_apps_cache_duration() -> usize {
+    usize_with_default("SAFE_APPS_CACHE_DURATION", indefinite_timeout())
+}
+
 // REQUEST TIMEOUTS
 pub fn internal_client_connect_timeout() -> u64 {
     u64_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)

@@ -1,9 +1,11 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
+use crate::config::default_request_timeout;
 use crate::models::service::transactions::requests::MultisigTransactionRequest;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
 use std::collections::HashMap;
+use std::time::Duration;
 
 pub async fn submit_confirmation(
     context: &Context<'_>,
@@ -20,7 +22,13 @@ pub async fn submit_confirmation(
     let mut json = HashMap::new();
     json.insert("signature", signature);
 
-    let response = context.client().post(&url).json(&json).send().await?;
+    let response = context
+        .client()
+        .post(&url)
+        .json(&json)
+        .timeout(Duration::from_millis(default_request_timeout()))
+        .send()
+        .await?;
 
     if response.status().is_success() {
         Invalidate::new(InvalidationPattern::Any(
@@ -54,6 +62,7 @@ pub async fn propose_transaction(
         .client()
         .post(&url)
         .json(&transaction_request)
+        .timeout(Duration::from_millis(default_request_timeout()))
         .send()
         .await?;
 

@@ -21,9 +21,11 @@
     "backgroundColor": "#000000"
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
-  "gasPrice": {
-    "type": "very fancy oracle",
-    "fancyValue": "fancy"
-  },
+  "gasPrice": [
+    {
+      "type": "very fancy oracle",
+      "fancyValue": "fancy"
+    }
+  ],
   "recommendedMasterCopyVersion": "1.1.1"
 }

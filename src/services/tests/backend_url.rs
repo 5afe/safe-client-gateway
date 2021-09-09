@@ -33,9 +33,9 @@ async fn core_uri_success_with_params() {
             background_color: "#000".to_string(),
         },
         ens_registry_address: None,
-        gas_price: GasPrice::Fixed {
+        gas_price: vec![GasPrice::Fixed {
             wei_value: "1000000".to_string(),
-        },
+        }],
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -79,9 +79,9 @@ async fn core_uri_success_without_params() {
             background_color: "#000".to_string(),
         },
         ens_registry_address: None,
-        gas_price: GasPrice::Fixed {
+        gas_price: vec![GasPrice::Fixed {
             wei_value: "1000000".to_string(),
-        },
+        }],
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider

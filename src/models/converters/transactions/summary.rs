@@ -16,7 +16,7 @@ use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::InfoProvider;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
-use rocket::futures::future::OptionFuture;
+use futures::future::OptionFuture;
 
 impl Transaction {
     pub async fn to_transaction_summary(

@@ -10,7 +10,7 @@ use crate::models::service::transactions::details::{
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::utils::errors::ApiResult;
-use rocket::futures::future::OptionFuture;
+use futures::future::OptionFuture;
 
 impl MultisigTransaction {
     pub async fn to_transaction_details(

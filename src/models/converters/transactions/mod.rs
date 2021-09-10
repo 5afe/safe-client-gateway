@@ -20,7 +20,7 @@ use crate::models::service::transactions::{
 };
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
 use crate::utils::TRANSFER_METHOD;
-use rocket::futures::future::OptionFuture;
+use futures::future::OptionFuture;
 
 impl SafeTransaction {
     async fn transaction_info(

@@ -1,9 +1,9 @@
 use crate::models::service::addresses::AddressEx;
 use crate::providers::info::{InfoProvider, TokenInfo};
-use rocket::futures::future::OptionFuture;
+use futures::future::OptionFuture;
 
 // Using the pattern here:
-// use rocket::futures::stream::StreamExt;
+// use futures::stream::StreamExt;
 impl<T: ?Sized> InfoProviderExt for T where T: InfoProvider {}
 
 #[rocket::async_trait]

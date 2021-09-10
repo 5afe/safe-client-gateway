@@ -16,6 +16,8 @@ lazy_static = "1.4.0"
 rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
 rocket_codegen = { version = "0.5.0-rc.1" }
 
+futures = "0.3.17"
+
 # Force rocket peer-dependencies versions
 proc-macro2 = "1.0.28"
 tokio = "1.10.0"

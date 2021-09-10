@@ -6,8 +6,8 @@ use crate::config::{
 };
 use crate::providers::info::generate_token_key;
 use crate::utils::errors::ApiResult;
-use rocket::futures::future::BoxFuture;
-use rocket::futures::FutureExt;
+use futures::future::BoxFuture;
+use futures::future::FutureExt;
 use rocket::response::content;
 use serde::Deserialize;
 use serde::Serialize;

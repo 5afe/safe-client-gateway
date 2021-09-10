@@ -1,0 +1,27 @@
+{
+  "chainId": "1285",
+  "chainName": "Moonbase",
+  "rpcUri": {
+    "authentication": "NO_AUTHENTICATION",
+    "value": "https://rpc.testnet.moonbeam.network"
+  },
+  "blockExplorerUriTemplate": {
+    "address": "https://moonbase-blockscout.testnet.moonbeam.network/{{address}}",
+    "txHash": "https://moonbase-blockscout.testnet.moonbeam.network/{{txHash}}"
+  },
+  "transactionService": "https://transaction.moonbase.multisig.moonbeam.network",
+  "nativeCurrency": {
+    "name": "Dev",
+    "symbol": "DEV",
+    "decimals": 18,
+    "logoUri": "https://test.token.image.url"
+  },
+  "theme": {
+    "textColor": "#ffffff",
+    "backgroundColor": "#000000"
+  },
+  "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+  "gasPrice": [
+  ],
+  "recommendedMasterCopyVersion": "1.3.0"
+}

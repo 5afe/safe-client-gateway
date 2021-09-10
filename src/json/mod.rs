@@ -121,6 +121,7 @@ pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound
 pub const TX_DETAILS_WITH_ORIGIN: &str = include_str!("results/tx_details_with_origin.json");
 
 pub const CHAIN_INFO_RINKEBY: &str = include_str!("chains/rinkeby.json");
+pub const CHAIN_INFO_MOONBASE: &str = include_str!("chains/moonbase.json");
 pub const CHAIN_INFO_RINKEBY_FIXED_GAS_PRICE: &str = include_str!("chains/rinkeby_fixed_gas_price.json");
 pub const CHAIN_INFO_RINKEBY_MULTIPLE_GAS_PRICE: &str = include_str!("chains/rinkeby_multiple_gas_price.json");
 pub const CHAIN_INFO_RINKEBY_NO_GAS_PRICE: &str = include_str!("chains/rinkeby_no_gas_price.json");

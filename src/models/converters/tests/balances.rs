@@ -22,6 +22,7 @@ fn native_token_balance() {
         fiat_conversion: "338.42".to_string(),
     };
 
+    let token_to_usd = 338.42;
     let usd_to_fiat = 1.0;
     let native_currency = NativeCurrency {
         name: "Ether".to_string(),
@@ -29,7 +30,7 @@ fn native_token_balance() {
         decimals: 18,
         logo_uri: "https://test.token.image.url".to_string(),
     };
-    let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
+    let actual = balance_dto.to_balance(token_to_usd, usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }
@@ -52,6 +53,7 @@ fn erc20_token_balance_usd_balance() {
         fiat_conversion: "28.5462".to_string(),
     };
 
+    let token_to_usd = 28.5462;
     let usd_to_fiat = 1.0;
     let native_currency = NativeCurrency {
         name: "Compound Ether 📈".to_string(),
@@ -59,7 +61,7 @@ fn erc20_token_balance_usd_balance() {
         decimals: 8,
         logo_uri: "https://test.token.image.url".to_string(),
     };
-    let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
+    let actual = balance_dto.to_balance(token_to_usd, usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }
@@ -82,6 +84,7 @@ fn erc20_token_balance_fiat_is_twice_usd() {
         fiat_conversion: "57.0924".to_string(),
     };
 
+    let token_to_usd = 28.5462;
     let usd_to_fiat = 2.0;
     let native_currency = NativeCurrency {
         name: "Compound Ether 📈".to_string(),
@@ -89,7 +92,7 @@ fn erc20_token_balance_fiat_is_twice_usd() {
         decimals: 8,
         logo_uri: "https://test.token.image.url".to_string(),
     };
-    let actual = balance_dto.to_balance(usd_to_fiat, &native_currency);
+    let actual = balance_dto.to_balance(token_to_usd, usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }

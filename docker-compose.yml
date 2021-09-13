@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 volumes:
   nginx-shared:
@@ -16,8 +16,8 @@ services:
     env_file:
       - .env
     environment:
-      - REDIS_URL=redis://redis
+      - REDIS_URI=redis://redis
     depends_on:
       - redis
     ports:
-      - "8000:3666"
+      - "8000:8000"

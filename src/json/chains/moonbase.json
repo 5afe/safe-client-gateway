@@ -1,6 +1,6 @@
 {
-  "chainId": "1285",
-  "chainName": "Moonbase",
+  "chainId": "1287",
+  "chainName": "moonbase",
   "rpcUri": {
     "authentication": "NO_AUTHENTICATION",
     "value": "https://rpc.testnet.moonbeam.network"

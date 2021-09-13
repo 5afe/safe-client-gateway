@@ -18,7 +18,7 @@ rocket_codegen = { version = "0.5.0-rc.1" }
 
 # Force rocket peer-dependencies versions
 proc-macro2 = "1.0.28"
-tokio = "1.10.0"
+tokio = "1.11.0"
 
 reqwest = { version = "0.11.3", features = ["json"] }
 

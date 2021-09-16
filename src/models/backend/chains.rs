@@ -7,6 +7,7 @@ pub struct ChainInfo {
     pub transaction_service: String,
     pub chain_id: String,
     pub chain_name: String,
+    pub l2: bool,
     pub rpc_uri: RpcUri,
     pub block_explorer_uri_template: BlockExplorerUriTemplate,
     pub native_currency: NativeCurrency,

@@ -15,6 +15,7 @@ async fn core_uri_success_with_params() {
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),
@@ -62,6 +63,7 @@ async fn core_uri_success_without_params() {
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),

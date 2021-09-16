@@ -2,6 +2,7 @@
   "chainId": "4",
   "chainName": "Rinkeby",
   "l2": false,
+  "description": "Random description",
   "rpcUri": {
     "authentication": "NO_AUTHENTICATION",
     "value": "https://someurl.com/rpc"

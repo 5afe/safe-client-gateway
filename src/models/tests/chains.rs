@@ -15,6 +15,7 @@ fn chain_info_json() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "https://someurl.com/rpc".to_string(),
@@ -55,6 +56,7 @@ fn chain_info_json_with_fixed_gas_price() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "https://someurl.com/rpc".to_string(),
@@ -93,6 +95,7 @@ fn chain_info_json_with_no_gas_price() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "https://someurl.com/rpc".to_string(),
@@ -129,6 +132,7 @@ fn chain_info_json_with_multiple_gas_price() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "https://someurl.com/rpc".to_string(),
@@ -175,6 +179,7 @@ fn chain_info_json_with_unknown_gas_price_type() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "https://someurl.com/rpc".to_string(),
@@ -212,6 +217,7 @@ fn chain_info_json_with_no_rpc_authentication() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::NoAuthentication,
             value: "https://someurl.com/rpc".to_string(),
@@ -253,6 +259,7 @@ fn chain_info_json_with_unknown_rpc_authentication() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::Unknown,
             value: "https://someurl.com/rpc".to_string(),
@@ -294,6 +301,7 @@ fn chain_info_json_to_service_chain_info() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {
             authentication: ServiceRpcAuthentication::ApiKeyPath,
             value: "https://someurl.com/rpc".to_string(),
@@ -333,6 +341,7 @@ fn unknown_gas_price_type_to_service_chain_info() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {
             authentication: ServiceRpcAuthentication::ApiKeyPath,
             value: "https://someurl.com/rpc".to_string(),
@@ -370,6 +379,7 @@ fn no_authentication_to_service_chain_info() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {
             authentication: ServiceRpcAuthentication::NoAuthentication,
             value: "https://someurl.com/rpc".to_string(),
@@ -411,6 +421,7 @@ fn unknown_authentication_to_service_chain_info() {
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
+        description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {
             authentication: ServiceRpcAuthentication::Unknown,
             value: "https://someurl.com/rpc".to_string(),

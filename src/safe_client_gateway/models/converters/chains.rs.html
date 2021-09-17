@@ -61,6 +61,7 @@
 <span id="58">58</span>
 <span id="59">59</span>
 <span id="60">60</span>
+<span id="61">61</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::chains</span>::{<span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>, <span class="ident">GasPrice</span>, <span class="ident">RpcAuthentication</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::chains</span>::{
@@ -75,6 +76,7 @@
             <span class="ident">transaction_service</span>: <span class="ident">chain_info</span>.<span class="ident">transaction_service</span>,
             <span class="ident">chain_id</span>: <span class="ident">chain_info</span>.<span class="ident">chain_id</span>,
             <span class="ident">chain_name</span>: <span class="ident">chain_info</span>.<span class="ident">chain_name</span>,
+            <span class="ident">l2</span>: <span class="ident">chain_info</span>.<span class="ident">l2</span>,
             <span class="ident">rpc_uri</span>: <span class="ident">ServiceRpcUri</span> {
                 <span class="ident">authentication</span>: <span class="kw">match</span> <span class="ident">chain_info</span>.<span class="ident">rpc_uri</span>.<span class="ident">authentication</span> {
                     <span class="ident">RpcAuthentication::ApiKeyPath</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ServiceRpcAuthentication::ApiKeyPath</span>,

@@ -12,7 +12,7 @@ pub struct ChainInfo {
     pub native_currency: NativeCurrency,
     pub theme: Theme,
     pub ens_registry_address: Option<String>,
-    pub gas_price: GasPrice,
+    pub gas_price: Vec<GasPrice>,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]

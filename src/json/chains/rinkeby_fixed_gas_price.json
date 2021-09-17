@@ -21,9 +21,11 @@
     "backgroundColor": "#000"
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
-  "gasPrice": {
-    "type": "fixed",
-    "weiValue": "1000000000"
-  },
+  "gasPrice": [
+    {
+      "type": "fixed",
+      "weiValue": "1000000000"
+    }
+  ],
   "recommendedMasterCopyVersion": "1.1.1"
 }

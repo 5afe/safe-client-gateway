@@ -7,6 +7,8 @@ pub struct ChainInfo {
     // do we need to expose this?
     pub chain_id: String,
     pub chain_name: String,
+    pub l2: bool,
+    pub description: String,
     pub rpc_uri: RpcUri,
     pub block_explorer_uri_template: BlockExplorerUriTemplate,
     pub native_currency: NativeCurrency,

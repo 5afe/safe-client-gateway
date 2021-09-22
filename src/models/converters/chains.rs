@@ -11,6 +11,8 @@ impl From<BackendChainInfo> for ServiceChainInfo {
             transaction_service: chain_info.transaction_service,
             chain_id: chain_info.chain_id,
             chain_name: chain_info.chain_name,
+            l2: chain_info.l2,
+            description: chain_info.description,
             rpc_uri: ServiceRpcUri {
                 authentication: match chain_info.rpc_uri.authentication {
                     RpcAuthentication::ApiKeyPath => ServiceRpcAuthentication::ApiKeyPath,

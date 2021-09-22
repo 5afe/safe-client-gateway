@@ -14,6 +14,8 @@ async fn core_uri_success_with_params() {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
+        l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),
@@ -60,6 +62,8 @@ async fn core_uri_success_without_params() {
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
+        l2: false,
+        description: "Random description".to_string(),
         rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),

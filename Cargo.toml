@@ -7,43 +7,27 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+derivative = "2.2.0"
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
-
-regex = "1.5.4"
-lazy_static = "1.4.0"
-
-rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
-rocket_codegen = { version = "0.5.0-rc.1" }
-
-# Force rocket peer-dependencies versions
-proc-macro2 = "1.0.28"
-tokio = "1.10.0"
-
-reqwest = { version = "0.11.3", features = ["json"] }
-
-r2d2 = "0.8.9"
-redis = { version = "0.21", features = ["r2d2"] }
-
+env_logger = "0.9.0"
 ethcontract-common = "0.15.1"
 ethabi = "14.1.0"
-
+itertools = "0.10.1"
+lazy_static = "1.4.0"
+log = "0.4"
+mockall = "0.10.2"
+proc-macro2 = "1.0.28"
+r2d2 = "0.8.9"
+regex = "1.5.4"
+reqwest = { version = "0.11.3", features = ["json"] }
+rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
+rocket_codegen = { version = "0.5.0-rc.1" }
+redis = { version = "0.21", features = ["r2d2"] }
+semver = "1.0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_repr = "0.1"
-
-itertools = "0.10.1"
-
-derivative = "2.2.0"
-
-chrono = { version = "0.4", features = ["serde"] }
-
 thiserror = "1.0.20"
-
-mockall = "0.10.2"
-
-semver = "1.0.4"
-
-# Logging
-log = "0.4"
-env_logger = "0.9.0"
+tokio = "1.11.0"

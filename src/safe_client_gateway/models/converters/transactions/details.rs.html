@@ -256,8 +256,8 @@
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">String::from</span>(<span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>))
                 .<span class="ident">to_owned</span>(),
-            <span class="ident">base_gas</span>: <span class="self">self</span>.<span class="ident">base_gas</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>),
-            <span class="ident">safe_tx_gas</span>: <span class="self">self</span>.<span class="ident">safe_tx_gas</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>),
+            <span class="ident">base_gas</span>: <span class="self">self</span>.<span class="ident">base_gas</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>).<span class="ident">to_string</span>(),
+            <span class="ident">safe_tx_gas</span>: <span class="self">self</span>.<span class="ident">safe_tx_gas</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>).<span class="ident">to_string</span>(),
             <span class="ident">gas_price</span>: <span class="self">self</span>
                 .<span class="ident">gas_price</span>
                 .<span class="ident">as_ref</span>()

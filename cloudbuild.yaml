@@ -1,0 +1,6 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'us.gcr.io/$PROJECT_ID/safe-client-gateway:$COMMIT_SHA', '.' ]
+images:
+- us.gcr.io/$PROJECT_ID/safe-client-gateway:$COMMIT_SHA
+timeout: 2000s

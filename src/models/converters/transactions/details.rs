@@ -99,8 +99,8 @@ impl MultisigTransaction {
                 .as_ref()
                 .unwrap_or(&String::from("0x0000000000000000000000000000000000000000"))
                 .to_owned(),
-            base_gas: self.base_gas.unwrap_or(0),
-            safe_tx_gas: self.safe_tx_gas.unwrap_or(0),
+            base_gas: self.base_gas.unwrap_or(0).to_string(),
+            safe_tx_gas: self.safe_tx_gas.unwrap_or(0).to_string(),
             gas_price: self
                 .gas_price
                 .as_ref()

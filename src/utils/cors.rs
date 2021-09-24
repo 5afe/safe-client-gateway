@@ -1,5 +1,5 @@
 use rocket::fairing::{Fairing, Info, Kind};
-use rocket::http::{ContentType, Header, Method};
+use rocket::http::{ContentType, Header, Method, Status};
 use rocket::{Request, Response};
 use std::io::Cursor;
 
@@ -33,6 +33,7 @@ impl Fairing for CORS {
         if request.method() == Method::Options {
             response.set_header(ContentType::Plain);
             response.set_sized_body(0, Cursor::new(""));
+            response.set_status(Status::Ok);
         }
     }
 }

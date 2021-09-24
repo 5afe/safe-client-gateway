@@ -243,8 +243,8 @@ pub enum DetailedExecutionInfo {
 pub struct MultisigExecutionDetails {
     pub submitted_at: i64,
     pub nonce: u64,
-    pub safe_tx_gas: usize,
-    pub base_gas: usize,
+    pub safe_tx_gas: String,
+    pub base_gas: String,
     pub gas_price: String,
     // As this is a token we will keep the token information separated
     pub gas_token: String,

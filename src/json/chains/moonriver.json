@@ -1,24 +1,24 @@
 {
-  "chainId": "1287",
-  "chainName": "moonbase",
+  "chainId": "1285",
+  "chainName": "moonriver",
   "rpcUri": {
     "authentication": "NO_AUTHENTICATION",
-    "value": "https://rpc.testnet.moonbeam.network"
+    "value": "https://rpc.moonriver.moonbeam.network"
   },
   "blockExplorerUriTemplate": {
-    "address": "https://moonbase-blockscout.testnet.moonbeam.network/{{address}}",
-    "txHash": "https://moonbase-blockscout.testnet.moonbeam.network/{{txHash}}"
+    "address": "https://blockscout.moonriver.moonbeam.network/{{address}}",
+    "txHash": "https://blockscout.moonriver.moonbeam.network/{{txHash}}"
   },
-  "transactionService": "https://transaction.moonbase.multisig.moonbeam.network",
+  "transactionService": "https://transaction.moonriver.multisig.moonbeam.network",
   "nativeCurrency": {
-    "name": "Dev",
-    "symbol": "DEV",
+    "name": "moonriver",
+    "symbol": "MOVR",
     "decimals": 18,
     "logoUri": "https://test.token.image.url"
   },
   "theme": {
     "textColor": "#ffffff",
-    "backgroundColor": "#222B60"
+    "backgroundColor": "#F2A007"
   },
   "ensRegistryAddress": "0x0000000000000000000000000000000000000000",
   "gasPrice": [

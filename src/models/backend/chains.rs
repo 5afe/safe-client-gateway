@@ -5,6 +5,7 @@ use serde::Deserialize;
 pub struct ChainInfo {
     pub recommended_master_copy_version: String,
     pub transaction_service: String,
+    pub vpc_transaction_service: String,
     pub chain_id: String,
     pub chain_name: String,
     pub l2: bool,

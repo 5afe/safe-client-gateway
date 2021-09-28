@@ -1,0 +1,133 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ECS Service
+
+Parameters:
+  TaskDefinitionArn:
+    Default: ${TaskDefinitionArn}
+    Type: String
+  TaskDefinitionContainerName:
+    Default: ${TaskDefinitionContainerName}
+    Type: String
+  TaskDefinitionContainerPort:
+    Default: ${TaskDefinitionContainerPort}
+    Type: Number
+  ServiceLaunchType:
+    Default: ${ServiceLaunchType}
+    Type: String
+  ServiceClusterName:
+    Default: ${ServiceClusterName}
+    Type: String
+  ServiceName:
+    Default: ${ServiceName}
+    Type: String
+  ServiceDesiredCount:
+    Default: ${ServiceDesiredCount}
+    Type: Number
+  ServiceRole:
+    Default: ${ServiceRole}
+    Type: String
+  TargetGroupName:
+    Default: ${TargetGroupName}
+    Type: String
+  TargetGroupProtocol:
+    Default: ${TargetGroupProtocol}
+    Type: String
+  TargetGroupPort:
+    Default: ${TargetGroupPort}
+    Type: Number
+  TargetGroupVpcId:
+    Default: ${TargetGroupVpcId}
+    Type: String
+  TargetGroupProtocolVersion:
+    Default: ${TargetGroupProtocolVersion}
+    Type: String
+  TargetGroupHealthCheckProtocol:
+    Default: ${TargetGroupHealthCheckProtocol}
+    Type: String
+  TargetGroupHealthCheckPath:
+    Default: ${TargetGroupHealthCheckPath}
+    Type: String
+  TargetGroupHealthyThresholdCount:
+    Default: ${TargetGroupHealthyThresholdCount}
+    Type: Number
+  TargetGroupUnhealthyThresholdCount:
+    Default: ${TargetGroupUnhealthyThresholdCount}
+    Type: Number
+  TargetGroupHealthCheckTimeoutSeconds:
+    Default: ${TargetGroupHealthCheckTimeoutSeconds}
+    Type: Number
+  TargetGroupHealthCheckIntervalSeconds:
+    Default: ${TargetGroupHealthCheckIntervalSeconds}
+    Type: Number
+  TargetGroupHttpCode:
+    Default: ${TargetGroupHttpCode}
+    Type: String
+  TargetGroupDeregistrationDelay:
+    Default: ${TargetGroupDeregistrationDelay}
+    Type: Number
+  TargetGroupStickiness:
+    Default: ${TargetGroupStickiness}
+    Type: String
+  ListenerRuleArn:
+    Default: ${ListenerRuleArn}
+    Type: String
+  ListenerRulePriority:
+    Default: ${ListenerRulePriority}
+    Type: Number
+  ListenerRuleHostHeader:
+    Default: ${ListenerRuleHostHeader}
+    Type: String
+
+Resources:
+  Service:
+    Type: AWS::ECS::Service
+    DependsOn: ListenerRule
+    Properties:
+      LaunchType: !Ref ServiceLaunchType
+      TaskDefinition: !Ref TaskDefinitionArn
+      Cluster: !Ref ServiceClusterName
+      ServiceName: !Ref ServiceName
+      DesiredCount: !Ref ServiceDesiredCount
+      PlacementStrategies:
+        - Type: spread
+          Field: attribute:ecs.availability-zone
+      LoadBalancers:
+        - ContainerName: !Ref TaskDefinitionContainerName
+          ContainerPort: !Ref TaskDefinitionContainerPort
+          TargetGroupArn: !Ref TargetGroup
+      Role: !Ref ServiceRole
+
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Ref TargetGroupName
+      Protocol: !Ref TargetGroupProtocol
+      Port: !Ref TargetGroupPort
+      VpcId: !Ref TargetGroupVpcId
+      ProtocolVersion: !Ref TargetGroupProtocolVersion
+      HealthCheckProtocol: !Ref TargetGroupHealthCheckProtocol
+      HealthCheckPath: !Ref TargetGroupHealthCheckPath
+      HealthyThresholdCount: !Ref TargetGroupHealthyThresholdCount
+      UnhealthyThresholdCount: !Ref TargetGroupUnhealthyThresholdCount
+      HealthCheckTimeoutSeconds: !Ref TargetGroupHealthCheckTimeoutSeconds
+      HealthCheckIntervalSeconds: !Ref TargetGroupHealthCheckIntervalSeconds
+      Matcher:
+        HttpCode: !Ref TargetGroupHttpCode
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: !Ref TargetGroupDeregistrationDelay
+        - Key: stickiness.enabled
+          Value: !Ref TargetGroupStickiness
+
+  ListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ListenerRuleArn
+      Priority: !Ref ListenerRulePriority
+      Conditions:
+        - Field: host-header
+          Values:
+            - !Ref ListenerRuleHostHeader
+      Actions:
+        - TargetGroupArn: !Ref TargetGroup
+          Type: forward

@@ -2,6 +2,7 @@ pub mod balances;
 pub mod chains;
 pub mod data_decoded;
 pub mod page_metadata;
+pub mod safe_app;
 pub mod safes;
 pub mod transactions;
 pub mod transfers;

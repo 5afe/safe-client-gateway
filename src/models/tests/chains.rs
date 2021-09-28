@@ -12,6 +12,8 @@ fn chain_info_json() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        vpc_transaction_service: "http://rinkeby-safe-transaction-web.safe.svc.cluster.local"
+            .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
@@ -53,6 +55,8 @@ fn chain_info_json_with_fixed_gas_price() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        vpc_transaction_service: "http://rinkeby-safe-transaction-web.safe.svc.cluster.local"
+            .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
@@ -92,6 +96,8 @@ fn chain_info_json_with_no_gas_price() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        vpc_transaction_service: "http://rinkeby-safe-transaction-web.safe.svc.cluster.local"
+            .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
@@ -129,6 +135,8 @@ fn chain_info_json_with_multiple_gas_price() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        vpc_transaction_service: "http://rinkeby-safe-transaction-web.safe.svc.cluster.local"
+            .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
@@ -176,6 +184,8 @@ fn chain_info_json_with_unknown_gas_price_type() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        vpc_transaction_service: "http://rinkeby-safe-transaction-web.safe.svc.cluster.local"
+            .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
@@ -214,6 +224,8 @@ fn chain_info_json_with_no_rpc_authentication() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        vpc_transaction_service: "http://rinkeby-safe-transaction-web.safe.svc.cluster.local"
+            .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,
@@ -256,6 +268,8 @@ fn chain_info_json_with_unknown_rpc_authentication() {
     let expected = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        vpc_transaction_service: "http://rinkeby-safe-transaction-web.safe.svc.cluster.local"
+            .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
         l2: false,

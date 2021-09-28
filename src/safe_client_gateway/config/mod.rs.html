@@ -173,6 +173,10 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::env</span>;
 
@@ -276,6 +280,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">owners_for_safes_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
     <span class="ident">usize_with_default</span>(<span class="string">&quot;OWNERS_FOR_SAFES_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_apps_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;SAFE_APPS_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="comment">// REQUEST TIMEOUTS</span>

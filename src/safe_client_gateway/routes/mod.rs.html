@@ -91,6 +91,9 @@
 <span id="88">88</span>
 <span id="89">89</span>
 <span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
 </pre><pre class="rust">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rocket</span>;
 
@@ -113,6 +116,8 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">hooks</span>;
 <span class="doccomment">/// # Notification endpoints</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">notifications</span>;
+<span class="doccomment">/// # SafeApps endpoints</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">safe_apps</span>;
 <span class="doccomment">/// # Safe endpoints</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">safes</span>;
 <span class="doccomment">/// # Transactions endpoints</span>
@@ -141,6 +146,7 @@
         <span class="ident">notifications::delete_notification_registration</span>,
         <span class="ident">safes::get_safe_info</span>,
         <span class="ident">safes::get_owners</span>,
+        <span class="ident">safe_apps::get_safe_apps</span>,
         <span class="ident">transactions::get_transactions</span>,
         <span class="ident">transactions::get_transactions_history</span>,
         <span class="ident">transactions::get_transactions_queued</span>,

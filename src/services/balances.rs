@@ -47,28 +47,7 @@ pub async fn balances(
 
     let mut total_fiat = 0.0;
 
-    let token_addresses = backend_balances
-        .iter()
-        .map(|balance| {
-            balance
-                .token_address
-                .to_owned()
-                .unwrap_or("0x0000000000000000000000000000000000000000".to_string())
-        })
-        .collect::<Vec<_>>();
-
-    // We collect the TokenPrice which were successful – unsuccessful ones are ignored
-    let token_prices: Vec<TokenPrice> = stream::iter(token_addresses)
-        .map(|token_address| get_token_usd_rate(context, chain_id, token_address))
-        .buffer_unordered(N_CONCURRENT_TOKEN_REQUESTS)
-        .filter_map(|t| async move {
-            match t {
-                Ok(token_price) => Some(token_price),
-                Err(_) => None,
-            }
-        })
-        .collect::<Vec<_>>()
-        .await;
+    let token_prices: Vec<TokenPrice> = get_token_prices(&context, &info_provider, &backend_balances).await;
 
     let service_balances: Vec<Balance> = backend_balances
         .iter()
@@ -96,6 +75,35 @@ pub async fn balances(
     })
 }
 
+async fn get_token_prices(
+    context: &Context<'_>,
+    info_provider: &impl InfoProvider,
+    backend_balances: &Vec<BalanceDto>,
+) -> Vec<TokenPrice> {
+    let token_addresses: Vec<String> = backend_balances
+        .iter()
+        .map(|balance| {
+            balance
+                .token_address
+                .to_owned()
+                .unwrap_or("0x0000000000000000000000000000000000000000".to_string())
+        })
+        .collect();
+
+    // We collect the TokenPrice which were successful – unsuccessful ones are ignored
+    return stream::iter(token_addresses)
+        .map(|token_address| get_token_usd_rate(context, token_address, info_provider))
+        .buffer_unordered(N_CONCURRENT_TOKEN_REQUESTS)
+        .filter_map(|t| async move {
+            match t {
+                Ok(token_price) => Some(token_price),
+                Err(_) => None,
+            }
+        })
+        .collect()
+        .await;
+}
+
 /// Gets the [TokenPrice] of the token with address [token_address] for the chain [chain_id]
 /// To retrieve the Native Currency fiat price of the chain (eg.: Ether), 0x0000000000000000000000000000000000000000 should be used
 ///
@@ -109,10 +117,9 @@ pub async fn balances(
 ///
 async fn get_token_usd_rate(
     context: &Context<'_>,
-    chain_id: &str,
     token_address: String,
+    info_provider: &impl InfoProvider,
 ) -> ApiResult<TokenPrice> {
-    let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let endpoint: String = core_uri!(info_provider, "/v1/tokens/{}/prices/usd/", token_address)?;
 
     let body = RequestCached::new(endpoint.to_owned())

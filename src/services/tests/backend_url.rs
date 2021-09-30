@@ -1,4 +1,3 @@
-#[cfg(not(debug_assertions))]
 use crate::models::backend::chains::{
     BlockExplorerUriTemplate, ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
 };
@@ -6,7 +5,6 @@ use crate::providers::info::*;
 use crate::utils::errors::ApiResult;
 
 #[rocket::async_test]
-#[cfg(not(debug_assertions))]
 async fn core_uri_success_with_params() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let trusted = false;
@@ -56,11 +54,10 @@ async fn core_uri_success_with_params() {
         exclude_spam
     );
 
-    assert_eq!(url.unwrap(), "http://mainnet-safe-transaction-web.safe.svc.cluster.local/api/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/balances/usd/?trusted=false&exclude_spam=true".to_string());
+    assert_eq!(url.unwrap(), "https://safe-transaction.mainnet.gnosis.io/api/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/balances/usd/?trusted=false&exclude_spam=true".to_string());
 }
 
 #[rocket::async_test]
-#[cfg(not(debug_assertions))]
 async fn core_uri_success_without_params() {
     let chain_info = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
@@ -102,7 +99,7 @@ async fn core_uri_success_without_params() {
     let url = core_uri!(mock_info_provider, "/some/path");
 
     assert_eq!(
-        "http://mainnet-safe-transaction-web.safe.svc.cluster.local/api/some/path",
+        "https://safe-transaction.mainnet.gnosis.io/api/some/path",
         url.unwrap()
     );
 }

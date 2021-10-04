@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-/// About
+/// ChainAbout
 ///
 /// <details>
 /// <summary>Sample</summary>
@@ -16,9 +16,29 @@ use serde::Serialize;
 /// </details>
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct About {
+pub struct ChainAbout {
     /// base URI string used for backend requests
     pub transaction_service_base_uri: String,
+    #[serde(flatten)]
+    pub about: About,
+}
+
+/// ChainAbout
+///
+/// <details>
+/// <summary>Sample</summary>
+///
+/// ```json
+/// {
+///   "name": "safe-client-gateway",
+///   "version": "3.0.0",
+///   "buildNumber": "48"
+/// }
+/// ```
+/// </details>
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct About {
     /// crate name
     pub name: String,
     /// env variable `VERSION`, defaults to crate version

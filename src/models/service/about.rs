@@ -30,7 +30,6 @@ pub struct ChainAbout {
 ///
 /// ```json
 /// {
-///   "transactionServiceBaseUri": "https://safe-transaction.mainnet.staging.gnosisdev.com",
 ///   "name": "safe-client-gateway",
 ///   "version": "3.0.0",
 ///   "buildNumber": "48"

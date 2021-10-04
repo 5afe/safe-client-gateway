@@ -4,6 +4,7 @@ llvm: true
 filter: covered
 output-type: lcov
 output-path: ./lcov.info
+binary-path: ./target/release
 coveralls-token: ${{ secrets.COVERALLS_TOKEN }}
 prefix-dir: .
 ignore:

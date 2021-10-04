@@ -33,25 +33,47 @@
 <span id="30">30</span>
 <span id="31">31</span>
 <span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
 </pre><pre class="rust">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">reqwest</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{<span class="ident">build_number</span>, <span class="ident">version</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::about::About</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::about</span>::{<span class="ident">About</span>, <span class="ident">ChainAbout</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::safes::Implementation</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">about</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">About</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">chains_about</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">ChainAbout</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>);
     <span class="kw">let</span> <span class="ident">chain_info</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">chain_info</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">About</span> {
+    <span class="kw">let</span> <span class="ident">about</span> <span class="op">=</span> <span class="ident">about</span>();
+    <span class="prelude-val">Ok</span>(<span class="ident">ChainAbout</span> {
         <span class="ident">transaction_service_base_uri</span>: <span class="ident">chain_info</span>.<span class="ident">transaction_service</span>,
+        <span class="ident">about</span>: <span class="ident">About</span> {
+            <span class="ident">name</span>: <span class="ident">about</span>.<span class="ident">name</span>,
+            <span class="ident">version</span>: <span class="ident">about</span>.<span class="ident">version</span>,
+            <span class="ident">build_number</span>: <span class="ident">about</span>.<span class="ident">build_number</span>,
+        },
+    })
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">about</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">About</span> {
+    <span class="ident">About</span> {
         <span class="ident">name</span>: <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_NAME&quot;</span>).<span class="ident">to_string</span>(),
         <span class="ident">version</span>: <span class="ident">version</span>(),
         <span class="ident">build_number</span>: <span class="ident">build_number</span>(),
-    })
+    }
 }
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_master_copies</span>(

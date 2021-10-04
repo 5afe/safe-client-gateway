@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["About","About"]]});
+initSidebarItems({"struct":[["About","ChainAbout"],["ChainAbout","ChainAbout"]]});

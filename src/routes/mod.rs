@@ -38,6 +38,7 @@ pub fn active_routes() -> Vec<Route> {
         root,
         about::backbone,
         about::get_about,
+        about::get_chains_about,
         about::redis,
         about::get_master_copies,
         balances::get_balances,

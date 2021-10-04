@@ -5,7 +5,7 @@ use crate::models::service::notifications::{
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
 use std::time::Duration;
 
 pub async fn delete_registration(
@@ -57,18 +57,19 @@ pub async fn post_registration(
     }
 
     let chain_id_errors = {
-        let mut output: Vec<&str> = vec![];
-
+        let mut output: Vec<(&str, ErrorDetails)> = vec![];
         for (chain_id, request) in requests.into_iter() {
-            if let Ok(response) = request.await {
-                // tx service errors
-                if let Err(_) = forward_error(response).await {
-                    output.push(chain_id);
+            match request.await {
+                Ok(response) => {
+                    if let Err(response_error) = forward_error(response).await {
+                        output.push((chain_id, response_error.details))
+                    }
                 }
-            } else {
-                // reqwest failures (unreachable urls, do we need to handle?)
-                output.push(chain_id);
-            };
+                Err(reqwest_error) => {
+                    let api_error: ApiError = reqwest_error.into();
+                    output.push((chain_id, api_error.details))
+                }
+            }
         }
         output
     };
@@ -76,10 +77,16 @@ pub async fn post_registration(
     if chain_id_errors.is_empty() {
         Ok(())
     } else {
-        bail!(
+        let mapped_errors = chain_id_errors
+            .into_iter()
+            .map(|(chain_id, error)| {
+                format!("{:#?} : {:#?}", &chain_id, serde_json::to_string(&error))
+            })
+            .collect::<Vec<String>>();
+        Err(ApiError::new_from_message_with_arguments(
             "Push notification registration failed for chain ids: {}",
-            chain_id_errors.join(", ")
-        )
+            Some(mapped_errors),
+        ))
     }
 }
 

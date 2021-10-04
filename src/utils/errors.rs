@@ -58,6 +58,20 @@ impl ApiError {
         )
     }
 
+    pub fn new_from_message_with_arguments(
+        message: impl Into<String>,
+        arguments: Option<Vec<String>>,
+    ) -> Self {
+        Self::new(
+            500,
+            ErrorDetails {
+                code: 1337,
+                message: Some(message.into()),
+                arguments,
+            },
+        )
+    }
+
     pub fn new_from_message_with_code(status_code: u16, message: String) -> Self {
         Self::new(
             status_code,

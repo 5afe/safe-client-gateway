@@ -233,16 +233,15 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
         Ok(serde_json::from_str(&data).ok())
     }
 
-    async fn populate_token_cache(&self) -> ApiResult<()> {
+    async fn populate_token_cache(&self, token_key: &str) -> ApiResult<()> {
         let url = core_uri!(self, "/v1/tokens/?limit=10000")?;
         let response = self
             .client
-            .get(&url)
+            .get("https://gist.githubusercontent.com/jpalvarezl/70f15436eb86197dcaabf7b1b7d308e9/raw/234d6f8d22f09dad93c9aa4f3eab8f303fe2ffa0/token_info_error_mixed.json")
             .timeout(Duration::from_millis(token_info_request_timeout()))
             .send()
             .await?;
-        let data: Page<TokenInfo> = response.json().await?;
-        let token_key = generate_token_key(self.chain_id);
+        let data: Page<TokenInfo> = serde_json::from_str(&response.text().await?)?;
         for token in data.results.iter() {
             self.cache
                 .insert_in_hash(&token_key, &token.address, &serde_json::to_string(&token)?);
@@ -256,7 +255,7 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
             return Ok(());
         }
         self.cache.insert_in_hash(&token_key, "state", "populating");
-        let result = self.populate_token_cache().await;
+        let result = self.populate_token_cache(&token_key).await;
         if result.is_ok() {
             self.cache
                 .expire_entity(&token_key, token_info_cache_duration());

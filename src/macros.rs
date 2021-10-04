@@ -71,7 +71,7 @@ macro_rules! core_uri {
     ($info_provider:tt, $path:expr) => {{
         let result: ApiResult<String> =
         match $info_provider.chain_info().await {
-            Ok(chain_info) => Ok(format!("{}/api{}",chain_info.vpc_transaction_service, $path)),
+            Ok(chain_info) => Ok(format!("{}/api{}",chain_info.transaction_service, $path)),
             Err(error) => Err(error,)
         };
         result

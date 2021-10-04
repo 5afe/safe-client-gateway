@@ -59,7 +59,8 @@ pub fn active_routes() -> Vec<Route> {
         hooks::flush,
         health::health,
         utils::post_data_decoder,
-        utils::post_safe_gas_estimation
+        utils::post_safe_gas_estimation,
+        utils::get_token
     ]
 }
 

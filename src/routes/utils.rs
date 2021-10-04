@@ -1,4 +1,5 @@
 use crate::models::service::utils::{DataDecoderRequest, SafeTransactionEstimationRequest};
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::services::utils;
 use crate::services::utils::request_data_decoded;
 use crate::utils::context::Context;
@@ -120,4 +121,15 @@ pub async fn post_safe_gas_estimation<'e>(
         )
         .await?,
     )?))
+}
+
+#[get("/v1/chains/<chain_id>/tokens/<token_address>")]
+pub async fn get_token(
+    context: Context<'_>,
+    chain_id: String,
+    token_address: String,
+) -> ApiResult<content::Json<String>> {
+    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+    let token_info = info_provider.token_info(&token_address).await?;
+    Ok(content::Json(serde_json::to_string(&token_info)?))
 }

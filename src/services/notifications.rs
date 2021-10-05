@@ -5,7 +5,9 @@ use crate::models::service::notifications::{
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
-use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
+use crate::utils::errors::{ApiError, ApiResult};
+use itertools::Itertools;
+use std::collections::HashMap;
 use std::time::Duration;
 
 pub async fn delete_registration(
@@ -24,13 +26,13 @@ pub async fn delete_registration(
         safe_address
     )?;
 
-    let response = client
+    client
         .delete(url)
         .timeout(Duration::from_millis(default_request_timeout()))
         .send()
         .await?;
 
-    forward_error(response).await
+    Ok(())
 }
 
 pub async fn post_registration(
@@ -57,17 +59,19 @@ pub async fn post_registration(
     }
 
     let chain_id_errors = {
-        let mut output: Vec<(&str, ErrorDetails)> = vec![];
+        let mut output: HashMap<&str, String> = Default::default();
         for (chain_id, request) in requests.into_iter() {
             match request.await {
                 Ok(response) => {
-                    if let Err(response_error) = forward_error(response).await {
-                        output.push((chain_id, response_error.details))
+                    if !response.status().is_success() {
+                        output.insert(
+                            chain_id,
+                            response.text().await.expect("Error response issue"),
+                        );
                     }
                 }
                 Err(reqwest_error) => {
-                    let api_error: ApiError = reqwest_error.into();
-                    output.push((chain_id, api_error.details))
+                    output.insert(chain_id, reqwest_error.to_string());
                 }
             }
         }
@@ -78,14 +82,23 @@ pub async fn post_registration(
         Ok(())
     } else {
         let mapped_errors = chain_id_errors
-            .into_iter()
+            .iter()
             .map(|(chain_id, error)| {
-                format!("{:#?} : {:#?}", &chain_id, serde_json::to_string(&error))
+                format!(
+                    "{} : {}",
+                    &chain_id,
+                    serde_json::to_string(&error)
+                        .expect("Error deserializing error details")
+                        .replace("\\", "")
+                )
             })
             .collect::<Vec<String>>();
         Err(ApiError::new_from_message_with_arguments(
-            "Push notification registration failed for chain ids: {}",
-            Some(mapped_errors),
+            format!(
+                "Push notification registration failed for chain IDs: {}",
+                chain_id_errors.keys().join(", ")
+            ),
+            Some(mapped_errors.to_vec()),
         ))
     }
 }
@@ -98,17 +111,5 @@ fn build_backend_request(
         notification_device_data: device_data.clone(),
         safes: safe_registration.safes.to_owned(),
         signatures: safe_registration.signatures.to_owned(),
-    }
-}
-
-async fn forward_error(response: reqwest::Response) -> ApiResult<()> {
-    if response.status().is_success() {
-        Ok(())
-    } else {
-        Err(ApiError::from_http_response(
-            response,
-            String::from("Unexpected notification registration error"),
-        )
-        .await)
     }
 }

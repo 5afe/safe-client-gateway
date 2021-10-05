@@ -6,7 +6,6 @@ use crate::models::service::notifications::{
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
-use itertools::Itertools;
 use std::collections::HashMap;
 use std::time::Duration;
 
@@ -88,7 +87,11 @@ pub async fn post_registration(
         Err(ApiError::new_from_message_with_arguments(
             format!(
                 "Push notification registration failed for chain IDs: {}",
-                chain_id_errors.keys().join(", ")
+                chain_id_errors
+                    .keys()
+                    .map(|it| it.to_string())
+                    .collect::<Vec<String>>()
+                    .join(", ")
             ),
             Some(mapped_errors.to_vec()),
         ))

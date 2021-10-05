@@ -166,7 +166,7 @@ pub fn feature_flag_nested_decoding() -> bool {
 }
 
 pub fn vpc_transaction_service_uri() -> bool {
-    bool_with_default("VPC_TRANSACTION_SERVICE_URI", false)
+    bool_with_default("VPC_TRANSACTION_SERVICE_URI", true)
 }
 
 pub fn build_number() -> Option<String> {

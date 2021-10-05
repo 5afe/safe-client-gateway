@@ -78,6 +78,10 @@ pub fn chain_info_cache_duration() -> usize {
     usize_with_default("CHAIN_INFO_CACHE_DURATION", indefinite_timeout())
 }
 
+pub fn chain_info_response_cache_duration() -> usize {
+    usize_with_default("CHAIN_INFO_RESPONSE_CACHE_DURATION", 1) // set to negligible value
+}
+
 pub fn exchange_api_cache_duration() -> usize {
     usize_with_default("EXCHANGE_API_CACHE_DURATION", 60 * 60 * 12 * 1000)
 }

@@ -1,3 +1,4 @@
+use crate::config::vpc_transaction_service_uri;
 use crate::models::backend::chains::ChainInfo;
 macro_rules! concat_parts {
     ($parts_head:expr) => {
@@ -66,14 +67,12 @@ macro_rules! to_hex_string {
     }};
 }
 
-#[cfg(debug_assertions)]
 pub fn get_transaction_service_host(chain_info: ChainInfo) -> String {
-    return chain_info.transaction_service;
-}
-
-#[cfg(not(debug_assertions))]
-pub fn get_transaction_service_host(chain_info: ChainInfo) -> String {
-    return chain_info.vpc_transaction_service;
+    if vpc_transaction_service_uri() {
+        chain_info.vpc_transaction_service
+    } else {
+        chain_info.transaction_service
+    }
 }
 
 #[doc(hidden)]

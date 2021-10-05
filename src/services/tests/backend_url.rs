@@ -5,8 +5,8 @@ use crate::providers::info::*;
 use crate::utils::errors::ApiResult;
 
 #[rocket::async_test]
-#[cfg(not(debug_assertions))]
-async fn core_uri_success_with_params() {
+async fn core_uri_success_with_params_prod() {
+    std::env::set_var("VPC_TRANSACTION_SERVICE_URI", "true");
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let trusted = false;
     let exclude_spam = true;
@@ -59,8 +59,8 @@ async fn core_uri_success_with_params() {
 }
 
 #[rocket::async_test]
-#[cfg(not(debug_assertions))]
-async fn core_uri_success_without_params() {
+async fn core_uri_success_without_params_prod() {
+    std::env::set_var("VPC_TRANSACTION_SERVICE_URI", "true");
     let chain_info = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
@@ -107,8 +107,8 @@ async fn core_uri_success_without_params() {
 }
 
 #[rocket::async_test]
-#[cfg(debug_assertions)]
-async fn core_uri_success_with_params() {
+async fn core_uri_success_with_params_local() {
+    std::env::set_var("VPC_TRANSACTION_SERVICE_URI", "false");
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let trusted = false;
     let exclude_spam = true;
@@ -161,8 +161,8 @@ async fn core_uri_success_with_params() {
 }
 
 #[rocket::async_test]
-#[cfg(debug_assertions)]
-async fn core_uri_success_without_params() {
+async fn core_uri_success_without_params_local() {
+    std::env::set_var("VPC_TRANSACTION_SERVICE_URI", "false");
     let chain_info = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
         transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),

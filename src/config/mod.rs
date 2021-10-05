@@ -165,6 +165,10 @@ pub fn feature_flag_nested_decoding() -> bool {
     bool_with_default("FEATURE_FLAG_NESTED_DECODING", true)
 }
 
+pub fn vpc_transaction_service_uri() -> bool {
+    bool_with_default("VPC_TRANSACTION_SERVICE_URI", false)
+}
+
 pub fn build_number() -> Option<String> {
     option_env!("BUILD_NUMBER").map(|it| it.to_string())
 }

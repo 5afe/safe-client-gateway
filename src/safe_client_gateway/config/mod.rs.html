@@ -177,6 +177,10 @@
 <span id="174">174</span>
 <span id="175">175</span>
 <span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::env</span>;
 
@@ -343,6 +347,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">feature_flag_nested_decoding</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">bool_with_default</span>(<span class="string">&quot;FEATURE_FLAG_NESTED_DECODING&quot;</span>, <span class="bool-val">true</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vpc_transaction_service_uri</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="ident">bool_with_default</span>(<span class="string">&quot;VPC_TRANSACTION_SERVICE_URI&quot;</span>, <span class="bool-val">true</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_number</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {

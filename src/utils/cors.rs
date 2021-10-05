@@ -14,7 +14,7 @@ impl Fairing for CORS {
     }
 
     async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
-        // TODO https://github.com/lawliet89/rocket_cors/blob/master/examples/fairing.rs
+        //https://github.com/lawliet89/rocket_cors/blob/master/examples/fairing.rs
         if request.method() == Method::Options || response.content_type() == Some(ContentType::JSON)
         {
             response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
@@ -28,7 +28,6 @@ impl Fairing for CORS {
             ));
             response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
         }
-
         if request.method() == Method::Options && request.route().is_none() {
             response.set_header(ContentType::Plain);
             response.set_status(Status::NoContent);

@@ -83,15 +83,7 @@ pub async fn post_registration(
     } else {
         let mapped_errors = chain_id_errors
             .iter()
-            .map(|(chain_id, error)| {
-                format!(
-                    "{} : {}",
-                    &chain_id,
-                    serde_json::to_string(&error)
-                        .expect("Error deserializing error details")
-                        .replace("\\", "")
-                )
-            })
+            .map(|(chain_id, error)| format!("{} : {}", &chain_id, &error))
             .collect::<Vec<String>>();
         Err(ApiError::new_from_message_with_arguments(
             format!(

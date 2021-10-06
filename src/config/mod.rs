@@ -159,6 +159,10 @@ pub fn vpc_transaction_service_uri() -> bool {
     env_with_default("VPC_TRANSACTION_SERVICE_URI", true)
 }
 
+pub fn log_threshold() -> f32 {
+    env_with_default("LOG_THRESHOLD", 1.0)
+}
+
 pub fn build_number() -> Option<String> {
     option_env!("BUILD_NUMBER").map(|it| it.to_string())
 }

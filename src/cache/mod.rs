@@ -3,6 +3,7 @@ pub mod cache_operations;
 mod inner_cache;
 pub mod redis;
 
+mod redis_manager;
 #[cfg(test)]
 mod tests;
 

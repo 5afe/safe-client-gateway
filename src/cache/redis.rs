@@ -5,6 +5,10 @@ use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 use rocket::request::{self, FromRequest, Request};
 
 type RedisPool = Pool<redis::Client>;
+type DefaultRedisPool = Pool<redis::Client>;
+type InfoRedisPool = Pool<redis::Client>;
+type LogsRedisPool = Pool<redis::Client>;
+
 type RedisConnection = PooledConnection<redis::Client>;
 
 pub struct ServiceCache<'r>(&'r RedisPool);
@@ -16,6 +20,8 @@ pub fn create_pool() -> RedisPool {
         .build(client)
         .expect("Redis pool builder failed")
 }
+
+// pub fn default_redis_pool() -> DefaultRedisPool {}
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for ServiceCache<'r> {

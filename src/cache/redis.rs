@@ -10,8 +10,11 @@ type RedisConnection = PooledConnection<redis::Client>;
 pub struct ServiceCache<'r>(&'r RedisPool);
 
 pub fn create_pool() -> RedisPool {
-    let client = redis::Client::open(redis_uri()).unwrap();
-    Pool::builder().max_size(15).build(client).unwrap()
+    let client = redis::Client::open(redis_uri()).expect("Redis client failed");
+    Pool::builder()
+        .max_size(15)
+        .build(client)
+        .expect("Redis pool builder failed")
 }
 
 #[rocket::async_trait]
@@ -19,14 +22,17 @@ impl<'r> FromRequest<'r> for ServiceCache<'r> {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let pool = request.rocket().state::<RedisPool>().unwrap();
+        let pool = request
+            .rocket()
+            .state::<RedisPool>()
+            .expect("Redis fairing failed");
         return request::Outcome::Success(ServiceCache(pool));
     }
 }
 
 impl ServiceCache<'_> {
     fn conn(&self) -> RedisConnection {
-        self.0.get().unwrap()
+        self.0.get().expect("Redis connection failed")
     }
 }
 

@@ -11,11 +11,9 @@ pub fn redis_uri() -> String {
 pub fn default_redis_uri() -> String {
     env::var("REDIS_DEFT_URI").unwrap()
 }
+
 pub fn info_redis_uri() -> String {
     env::var("REDIS_INFO_URI").unwrap()
-}
-pub fn logs_redis_uri() -> String {
-    env::var("REDIS_LOGS_URI").unwrap()
 }
 
 pub fn base_config_service_uri() -> String {
@@ -151,8 +149,16 @@ pub fn redis_scan_count() -> usize {
     env_with_default("REDIS_SCAN_COUNT", 300)
 }
 
+pub fn default_redis_pool_size() -> u32 {
+    env_with_default("REDIS_DEFT_POOL_SIZE", 15)
+}
+
+pub fn info_redis_pool_size() -> u32 {
+    env_with_default("REDIS_DEFT_POOL_SIZE", 15)
+}
+
 pub fn feature_flag_nested_decoding() -> bool {
-    env_with_default("FEATURE_FLAG_NESTED_DECODING", true)
+    env_with_default("REDIS_INFO_POOL_SIZE", true)
 }
 
 pub fn vpc_transaction_service_uri() -> bool {

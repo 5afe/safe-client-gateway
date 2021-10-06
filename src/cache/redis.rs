@@ -1,5 +1,8 @@
 use crate::cache::Cache;
-use crate::config::{redis_scan_count, redis_uri};
+use crate::config::{
+    default_redis_pool_size, default_redis_uri, info_redis_pool_size, info_redis_uri,
+    redis_scan_count, redis_uri,
+};
 use r2d2::{Pool, PooledConnection};
 use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 use rocket::request::{self, FromRequest, Request};
@@ -7,7 +10,6 @@ use rocket::request::{self, FromRequest, Request};
 type RedisPool = Pool<redis::Client>;
 type DefaultRedisPool = Pool<redis::Client>;
 type InfoRedisPool = Pool<redis::Client>;
-type LogsRedisPool = Pool<redis::Client>;
 
 type RedisConnection = PooledConnection<redis::Client>;
 
@@ -21,7 +23,21 @@ pub fn create_pool() -> RedisPool {
         .expect("Redis pool builder failed")
 }
 
-// pub fn default_redis_pool() -> DefaultRedisPool {}
+pub fn info_redis_pool() -> InfoRedisPool {
+    let client = redis::Client::open(info_redis_uri()).expect("Redis client failed");
+    Pool::builder()
+        .max_size(info_redis_pool_size())
+        .build(client)
+        .expect("Redis pool builder failed")
+}
+
+pub fn default_redis_pool() -> DefaultRedisPool {
+    let client = redis::Client::open(default_redis_uri()).expect("Redis client failed");
+    Pool::builder()
+        .max_size(default_redis_pool_size())
+        .build(client)
+        .expect("Redis pool builder failed")
+}
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for ServiceCache<'r> {

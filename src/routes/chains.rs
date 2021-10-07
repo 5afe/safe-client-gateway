@@ -1,3 +1,5 @@
+use crate::cache::cache_operations::CacheResponse;
+use crate::config::chain_info_response_cache_duration;
 use crate::services::chains::{get_chains_paginated, get_single_chain};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
@@ -18,9 +20,11 @@ use rocket::response::content;
  */
 #[get("/v1/chains/<chain_id>")]
 pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
-    Ok(content::Json(serde_json::to_string(
-        &get_single_chain(&context, &chain_id).await?,
-    )?))
+    CacheResponse::new(context.uri())
+        .duration(chain_info_response_cache_duration())
+        .resp_generator(|| get_single_chain(&context, &chain_id))
+        .execute(context.cache())
+        .await
 }
 
 /**
@@ -41,7 +45,9 @@ pub async fn get_chains(
     context: Context<'_>,
     limit: Option<String>,
 ) -> ApiResult<content::Json<String>> {
-    Ok(content::Json(serde_json::to_string(
-        &get_chains_paginated(&context, &limit).await?,
-    )?))
+    CacheResponse::new(context.uri())
+        .duration(chain_info_response_cache_duration())
+        .resp_generator(|| get_chains_paginated(&context, &limit))
+        .execute(context.cache())
+        .await
 }

@@ -16,6 +16,7 @@ fn chain_info_json() {
             .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: Some(String::from("rin")),
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -59,6 +60,7 @@ fn chain_info_json_with_fixed_gas_price() {
             .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -100,6 +102,7 @@ fn chain_info_json_with_no_gas_price() {
             .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -139,6 +142,7 @@ fn chain_info_json_with_multiple_gas_price() {
             .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -188,6 +192,7 @@ fn chain_info_json_with_unknown_gas_price_type() {
             .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -228,6 +233,7 @@ fn chain_info_json_with_no_rpc_authentication() {
             .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -272,6 +278,7 @@ fn chain_info_json_with_unknown_rpc_authentication() {
             .to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -314,6 +321,7 @@ fn chain_info_json_to_service_chain_info() {
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: Some(String::from("rin")),
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {
@@ -354,6 +362,7 @@ fn unknown_gas_price_type_to_service_chain_info() {
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {
@@ -392,6 +401,7 @@ fn no_authentication_to_service_chain_info() {
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {
@@ -434,6 +444,7 @@ fn unknown_authentication_to_service_chain_info() {
         transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
         chain_id: "4".to_string(),
         chain_name: "Rinkeby".to_string(),
+        short_name: None,
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: ServiceRpcUri {

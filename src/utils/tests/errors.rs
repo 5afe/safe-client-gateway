@@ -11,6 +11,7 @@ async fn api_error_responder_json() {
             code: 1337,
             message: Some("Not found".to_string()),
             arguments: None,
+            debug: None,
         },
     };
     let expected_error_json = r#"{"code":1337,"message":"Not found"}"#;
@@ -34,6 +35,7 @@ fn api_error_from_anyhow_error() {
         code: 1337,
         message: Some("Error message".to_string()),
         arguments: None,
+        debug: None,
     };
 
     let actual = ApiError::from(error);
@@ -49,6 +51,7 @@ fn api_error_from_serde_error() {
         code: 1337,
         message: Some(format!("{:?}", &error)),
         arguments: None,
+        debug: None,
     };
 
     let actual = ApiError::from(error);
@@ -72,6 +75,7 @@ fn api_error_known_error_json_structure() {
         arguments: Some(vec![
             "0x1230b3d59858296A31053C1b8562Ecf89A2f888b".to_string()
         ]),
+        debug: None,
     };
 
     let actual = ApiError::from_backend_error(422, &expected_error_json);
@@ -93,6 +97,7 @@ fn api_error_unknown_error_json_structure() {
         code: 42,
         message: Some(expected_error_json.to_owned()),
         arguments: None,
+        debug: None,
     };
 
     let actual = ApiError::from_backend_error(422, &expected_error_json);

@@ -98,6 +98,7 @@ fn cache_with_code_unwrap_err() {
             code: 42,
             message: Some(String::from("teapot")),
             arguments: None,
+            debug: None,
         },
     };
 

@@ -181,18 +181,15 @@
 <span id="178">178</span>
 <span id="179">179</span>
 <span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::env</span>;
+<span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span>;
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis_uri</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="ident">env::var</span>(<span class="string">&quot;REDIS_URI&quot;</span>).<span class="ident">unwrap</span>()
+    <span class="ident">env::var</span>(<span class="string">&quot;REDIS_URI&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;REDIS_URI missing in env&quot;</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base_config_service_uri</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
@@ -208,157 +205,140 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">webhook_token</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="ident">env::var</span>(<span class="string">&quot;WEBHOOK_TOKEN&quot;</span>).<span class="ident">unwrap</span>()
+    <span class="ident">env::var</span>(<span class="string">&quot;WEBHOOK_TOKEN&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;WEBHOOK_TOKEN missing in env&quot;</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scheme</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="ident">env::var</span>(<span class="string">&quot;SCHEME&quot;</span>).<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="string">&quot;https&quot;</span>))
-}
-
-<span class="kw">fn</span> <span class="ident">usize_with_default</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">default</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="kw">match</span> <span class="ident">env::var</span>(<span class="ident">key</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">value</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">default</span>,
-    }
-}
-
-<span class="kw">fn</span> <span class="ident">u64_with_default</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">default</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="kw">match</span> <span class="ident">env::var</span>(<span class="ident">key</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">value</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">default</span>,
-    }
-}
-
-<span class="kw">fn</span> <span class="ident">bool_with_default</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">default</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-    <span class="kw">match</span> <span class="ident">env::var</span>(<span class="ident">key</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">value</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">default</span>,
-    }
+    <span class="ident">env_with_default</span>(<span class="string">&quot;SCHEME&quot;</span>, <span class="string">&quot;https&quot;</span>.<span class="ident">into</span>())
 }
 
 <span class="comment">// TIME DURATION VALUES</span>
 <span class="kw">fn</span> <span class="ident">indefinite_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;INDEFINITE_TIMEOUT&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;INDEFINITE_TIMEOUT&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">short_error_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;SHORT_ERROR_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;SHORT_ERROR_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">long_error_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;LONG_ERROR_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;LONG_ERROR_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="comment">// FUNCTIONAL TIMEOUTS</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_info_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;SAFE_INFO_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
+    <span class="ident">env_with_default</span>(<span class="string">&quot;SAFE_INFO_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">address_info_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;ADDRESS_INFO_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
+    <span class="ident">env_with_default</span>(<span class="string">&quot;ADDRESS_INFO_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_info_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;TOKEN_INFO_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">24</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;TOKEN_INFO_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">24</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain_info_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;CHAIN_INFO_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
+    <span class="ident">env_with_default</span>(<span class="string">&quot;CHAIN_INFO_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain_info_response_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;CHAIN_INFO_RESPONSE_CACHE_DURATION&quot;</span>, <span class="number">1</span>) <span class="comment">// set to negligible value</span>
+    <span class="ident">env_with_default</span>(<span class="string">&quot;CHAIN_INFO_RESPONSE_CACHE_DURATION&quot;</span>, <span class="number">1</span>) <span class="comment">// set to negligible value</span>
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exchange_api_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;EXCHANGE_API_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">12</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;EXCHANGE_API_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">60</span> <span class="op">*</span> <span class="number">12</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;REQUEST_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
+    <span class="ident">env_with_default</span>(<span class="string">&quot;REQUEST_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">about_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;ABOUT_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;ABOUT_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">15</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">balances_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;BALANCES_REQUEST_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;BALANCES_REQUEST_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_app_manifest_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;SAFE_APP_MANIFEST_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
+    <span class="ident">env_with_default</span>(<span class="string">&quot;SAFE_APP_MANIFEST_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">owners_for_safes_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;OWNERS_FOR_SAFES_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;OWNERS_FOR_SAFES_CACHE_DURATION&quot;</span>, <span class="number">60</span> <span class="op">*</span> <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_apps_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;SAFE_APPS_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
+    <span class="ident">env_with_default</span>(<span class="string">&quot;SAFE_APPS_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="comment">// REQUEST TIMEOUTS</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">internal_client_connect_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;INTERNAL_CLIENT_CONNECT_TIMEOUT&quot;</span>, <span class="number">1000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;INTERNAL_CLIENT_CONNECT_TIMEOUT&quot;</span>, <span class="number">1000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_app_info_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;SAFE_APP_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">3000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;SAFE_APP_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">3000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transaction_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;TRANSACTION_REQUEST_TIMEOUT&quot;</span>, <span class="number">30000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;TRANSACTION_REQUEST_TIMEOUT&quot;</span>, <span class="number">30000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_info_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;SAFE_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">10000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;SAFE_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">10000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_info_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;TOKEN_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">15000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;TOKEN_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">15000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain_info_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;CHAIN_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">15000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;CHAIN_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">15000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contract_info_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;CONTRACT_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">3000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;CONTRACT_INFO_REQUEST_TIMEOUT&quot;</span>, <span class="number">3000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">balances_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;BALANCES_REQUEST_TIMEOUT&quot;</span>, <span class="number">20000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;BALANCES_REQUEST_TIMEOUT&quot;</span>, <span class="number">20000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">collectibles_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;COLLECTIBLES_REQUEST_TIMEOUT&quot;</span>, <span class="number">20000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;COLLECTIBLES_REQUEST_TIMEOUT&quot;</span>, <span class="number">20000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_request_timeout</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
-    <span class="ident">u64_with_default</span>(<span class="string">&quot;DEFAULT_REQUEST_TIMEOUT&quot;</span>, <span class="number">10000</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;DEFAULT_REQUEST_TIMEOUT&quot;</span>, <span class="number">10000</span>)
 }
 
 <span class="comment">// ERRORS</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_error_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;REQS_ERROR_CACHE_DURATION&quot;</span>, <span class="ident">short_error_duration</span>())
+    <span class="ident">env_with_default</span>(<span class="string">&quot;REQS_ERROR_CACHE_DURATION&quot;</span>, <span class="ident">short_error_duration</span>())
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log_all_error_responses</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-    <span class="ident">bool_with_default</span>(<span class="string">&quot;LOG_ALL_ERROR_RESPONSES&quot;</span>, <span class="bool-val">false</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;LOG_ALL_ERROR_RESPONSES&quot;</span>, <span class="bool-val">false</span>)
 }
 
 <span class="comment">// OTHERS</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis_scan_count</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-    <span class="ident">usize_with_default</span>(<span class="string">&quot;REDIS_SCAN_COUNT&quot;</span>, <span class="number">300</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;REDIS_SCAN_COUNT&quot;</span>, <span class="number">300</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">feature_flag_nested_decoding</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-    <span class="ident">bool_with_default</span>(<span class="string">&quot;FEATURE_FLAG_NESTED_DECODING&quot;</span>, <span class="bool-val">true</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;FEATURE_FLAG_NESTED_DECODING&quot;</span>, <span class="bool-val">true</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vpc_transaction_service_uri</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-    <span class="ident">bool_with_default</span>(<span class="string">&quot;VPC_TRANSACTION_SERVICE_URI&quot;</span>, <span class="bool-val">true</span>)
+    <span class="ident">env_with_default</span>(<span class="string">&quot;VPC_TRANSACTION_SERVICE_URI&quot;</span>, <span class="bool-val">true</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log_threshold</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f32</span> {
+    <span class="ident">env_with_default</span>(<span class="string">&quot;LOG_THRESHOLD&quot;</span>, <span class="number">1.0</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_number</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
@@ -369,6 +349,18 @@
     <span class="macro">option_env!</span>(<span class="string">&quot;VERSION&quot;</span>)
         .<span class="ident">unwrap_or</span>(<span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>))
         .<span class="ident">to_string</span>()
+}
+
+<span class="kw">fn</span> <span class="ident">env_with_default</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">FromStr</span><span class="op">&gt;</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">default</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span><span class="ident">::Err</span>: <span class="ident">std::fmt::Debug</span>,
+{
+    <span class="kw">match</span> <span class="ident">env::var</span>(<span class="ident">key</span>) {
+        <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">value</span>
+            .<span class="ident">parse</span>()
+            .<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Parsing of {} env var key failed&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>)),
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">default</span>,
+    }
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>

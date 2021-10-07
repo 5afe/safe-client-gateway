@@ -181,6 +181,10 @@
 <span id="178">178</span>
 <span id="179">179</span>
 <span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::env</span>;
 
@@ -260,6 +264,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain_info_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
     <span class="ident">usize_with_default</span>(<span class="string">&quot;CHAIN_INFO_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain_info_response_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="ident">usize_with_default</span>(<span class="string">&quot;CHAIN_INFO_RESPONSE_CACHE_DURATION&quot;</span>, <span class="number">1</span>) <span class="comment">// set to negligible value</span>
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exchange_api_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {

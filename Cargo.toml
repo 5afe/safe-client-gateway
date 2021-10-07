@@ -19,6 +19,7 @@ lazy_static = "1.4.0"
 log = "0.4"
 mockall = "0.10.2"
 proc-macro2 = "1.0.28"
+rand = "0.8.4"
 r2d2 = "0.8.9"
 regex = "1.5.4"
 reqwest = { version = "0.11.3", features = ["json"] }

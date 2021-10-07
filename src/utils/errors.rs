@@ -5,7 +5,7 @@ use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
 use rocket::serde::json::Error;
 use serde::{Deserialize, Serialize};
-use serde_json;
+use serde_json::{self, value::Value};
 use std::fmt;
 use std::io::Cursor;
 use std::result::Result;
@@ -25,6 +25,8 @@ pub struct ErrorDetails {
     pub message: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub arguments: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub debug: Option<Value>,
 }
 
 impl ApiError {
@@ -35,6 +37,7 @@ impl ApiError {
                 code: 42,
                 message: Some(raw_error.to_owned()),
                 arguments: None,
+                debug: None,
             },
         };
         Self::new(status_code, error_details)
@@ -54,20 +57,19 @@ impl ApiError {
                 code: 1337,
                 message: Some(message.into()),
                 arguments: None,
+                debug: None,
             },
         )
     }
 
-    pub fn new_from_message_with_arguments(
-        message: impl Into<String>,
-        arguments: Option<Vec<String>>,
-    ) -> Self {
+    pub fn new_from_message_with_debug(message: impl Into<String>, debug: Option<Value>) -> Self {
         Self::new(
             500,
             ErrorDetails {
                 code: 1337,
                 message: Some(message.into()),
-                arguments,
+                arguments: None,
+                debug,
             },
         )
     }
@@ -79,6 +81,7 @@ impl ApiError {
                 code: 1337,
                 message: Some(message),
                 arguments: None,
+                debug: None,
             },
         )
     }

@@ -6,7 +6,9 @@ use crate::models::service::notifications::{
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
-use std::collections::HashMap;
+use serde_json::json;
+use serde_json::value::RawValue;
+use serde_json::{self, value::Value};
 use std::time::Duration;
 
 pub async fn delete_registration(
@@ -57,43 +59,40 @@ pub async fn post_registration(
         ));
     }
 
-    let chain_id_errors = {
-        let mut output: HashMap<&str, String> = Default::default();
+    let (error_chain_ids, error_body) = {
+        let mut error_chain_ids: Vec<&str> = vec![];
+        let mut errors: Vec<Value> = vec![];
         for (chain_id, request) in requests.into_iter() {
             match request.await {
                 Ok(response) => {
                     if !response.status().is_success() {
-                        output.insert(
-                            chain_id,
-                            response.text().await.expect("Error response issue"),
-                        );
+                        error_chain_ids.push(chain_id);
+                        errors.push(json!({
+                            chain_id : RawValue::from_string(response.text().await.expect("Error response issue"))?
+                            }
+                        ))
                     }
                 }
                 Err(reqwest_error) => {
-                    output.insert(chain_id, reqwest_error.to_string());
+                    error_chain_ids.push(chain_id);
+                    errors.push(json!({
+                        chain_id : serde_json::to_value(reqwest_error.to_string())?
+                    }))
                 }
             }
         }
-        output
+        (error_chain_ids, json!(errors))
     };
 
-    if chain_id_errors.is_empty() {
+    if error_chain_ids.is_empty() {
         Ok(())
     } else {
-        let mapped_errors = chain_id_errors
-            .iter()
-            .map(|(chain_id, error)| format!("{} : {}", &chain_id, &error))
-            .collect::<Vec<String>>();
-        Err(ApiError::new_from_message_with_arguments(
+        Err(ApiError::new_from_message_with_debug(
             format!(
                 "Push notification registration failed for chain IDs: {}",
-                chain_id_errors
-                    .keys()
-                    .map(|it| it.to_string())
-                    .collect::<Vec<String>>()
-                    .join(", ")
+                error_chain_ids.join(", ")
             ),
-            Some(mapped_errors.to_vec()),
+            Some(error_body),
         ))
     }
 }

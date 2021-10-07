@@ -1,21 +1,32 @@
 extern crate reqwest;
 
 use crate::config::{build_number, version};
-use crate::models::service::about::About;
+use crate::models::service::about::{About, ChainAbout};
 use crate::models::service::safes::Implementation;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 
-pub async fn about(context: &Context<'_>, chain_id: &str) -> ApiResult<About> {
+pub async fn chains_about(context: &Context<'_>, chain_id: &str) -> ApiResult<ChainAbout> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let chain_info = info_provider.chain_info().await?;
-    Ok(About {
+    let about = about();
+    Ok(ChainAbout {
         transaction_service_base_uri: chain_info.transaction_service,
+        about: About {
+            name: about.name,
+            version: about.version,
+            build_number: about.build_number,
+        },
+    })
+}
+
+pub fn about() -> About {
+    About {
         name: env!("CARGO_PKG_NAME").to_string(),
         version: version(),
         build_number: build_number(),
-    })
+    }
 }
 
 pub async fn get_master_copies(

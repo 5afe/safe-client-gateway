@@ -3,6 +3,7 @@ mod data_decoded;
 mod get_address_ex_from_any_source;
 mod get_transfer_direction;
 mod page_metadata;
+mod safe_app;
 mod safes;
 mod transfer_erc20;
 mod transfer_erc721;

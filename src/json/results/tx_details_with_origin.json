@@ -92,8 +92,8 @@
     "type": "MULTISIG",
     "submittedAt": 1607346684674,
     "nonce": 160,
-    "safeTxGas": 124625,
-    "baseGas": 0,
+    "safeTxGas": "124625",
+    "baseGas": "0",
     "gasPrice": "0",
     "gasToken": "0x0000000000000000000000000000000000000000",
     "refundReceiver": {

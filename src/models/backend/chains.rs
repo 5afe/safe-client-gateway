@@ -5,8 +5,12 @@ use serde::Deserialize;
 pub struct ChainInfo {
     pub recommended_master_copy_version: String,
     pub transaction_service: String,
+    pub vpc_transaction_service: String,
     pub chain_id: String,
     pub chain_name: String,
+    pub short_name: Option<String>,
+    pub l2: bool,
+    pub description: String,
     pub rpc_uri: RpcUri,
     pub block_explorer_uri_template: BlockExplorerUriTemplate,
     pub native_currency: NativeCurrency,

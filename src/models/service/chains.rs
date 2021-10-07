@@ -7,10 +7,15 @@ pub struct ChainInfo {
     // do we need to expose this?
     pub chain_id: String,
     pub chain_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub short_name: Option<String>,
+    pub l2: bool,
+    pub description: String,
     pub rpc_uri: RpcUri,
     pub block_explorer_uri_template: BlockExplorerUriTemplate,
     pub native_currency: NativeCurrency,
     pub theme: Theme,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ens_registry_address: Option<String>,
     pub gas_price: Vec<GasPrice>,
 }

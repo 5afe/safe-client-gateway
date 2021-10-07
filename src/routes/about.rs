@@ -10,9 +10,9 @@ use rocket::response::content;
 
 /**
  * `/v1/chains/<chain_id>/about` <br />
- * Returns [About](crate::models::service::about::About)
+ * Returns [ChainAbout](crate::models::service::about::ChainAbout)
  *
- * # About
+ * # Chain's About
  *
  * The about endpoint provides information of the environmental variables set for the instance of `safe-client-gateway`. This would allow to identify on which commit and version the last deployment happened and to which safe transaction service backend environment the current instance of the gateway is pointing to.
  *
@@ -25,14 +25,34 @@ use rocket::response::content;
  * There are no query parameters for this endpoint
  */
 #[get("/v1/chains/<chain_id>/about")]
-pub async fn get_about(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
+pub async fn get_chains_about(
+    context: Context<'_>,
+    chain_id: String,
+) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())
         .duration(about_cache_duration())
-        .resp_generator(|| about::about(&context, &chain_id))
+        .resp_generator(|| about::chains_about(&context, &chain_id))
         .execute(context.cache())
         .await
 }
 
+/**
+ * `/about` <br />
+ * [About](crate::models::service::about::About)
+ *
+ * # About
+ *
+ * This endpoint is chain independent, and returns non cached information regarding this current CGW instance.
+ *
+ * ## Path
+ *
+ * `/about`
+ *
+ */
+#[get("/about")]
+pub async fn get_about() -> ApiResult<content::Json<String>> {
+    Ok(content::Json(serde_json::to_string(&about::about())?))
+}
 /**
  * `/v1/chains/<chain_id>/about/master-copies` <br />
  * Returns a list of `MasterCopy`

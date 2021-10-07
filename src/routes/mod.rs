@@ -19,6 +19,8 @@ pub mod health;
 pub mod hooks;
 /// # Notification endpoints
 pub mod notifications;
+/// # SafeApps endpoints
+pub mod safe_apps;
 /// # Safe endpoints
 pub mod safes;
 /// # Transactions endpoints
@@ -36,6 +38,7 @@ pub fn active_routes() -> Vec<Route> {
         root,
         about::backbone,
         about::get_about,
+        about::get_chains_about,
         about::redis,
         about::get_master_copies,
         balances::get_balances,
@@ -47,6 +50,7 @@ pub fn active_routes() -> Vec<Route> {
         notifications::delete_notification_registration,
         safes::get_safe_info,
         safes::get_owners,
+        safe_apps::get_safe_apps,
         transactions::get_transactions,
         transactions::get_transactions_history,
         transactions::get_transactions_queued,

@@ -10,6 +10,7 @@ use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use chrono::Utc;
+use rocket::futures::join;
 
 // We use Utc::now().timestamp() as the fallback value so that we don't block clients from reloading
 // as returning always 0, and the clients invalidating on value changes, would prevent reloading
@@ -26,21 +27,20 @@ pub async fn get_safe_info_ex(
         .to_safe_info_ex(&info_provider, supported_master_copies)
         .await;
 
+    let (collectibles_tag, tx_queued_tag, tx_history_tag) = join!(
+        get_last_collectible(context, &info_provider, safe_address),
+        get_last_queued_tx(context, &info_provider, safe_address),
+        get_last_history_tx(context, &info_provider, safe_address)
+    );
+
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
-            collectibles_tag: get_last_collectible(context, &info_provider, safe_address)
-                .await
+            collectibles_tag: collectibles_tag
                 .unwrap_or(Utc::now().timestamp())
                 .to_string(),
-            tx_queued_tag: get_last_queued_tx(context, &info_provider, safe_address)
-                .await
-                .unwrap_or(Utc::now().timestamp())
-                .to_string(),
-            tx_history_tag: get_last_history_tx(context, &info_provider, safe_address)
-                .await
-                .unwrap_or(Utc::now().timestamp())
-                .to_string(),
+            tx_queued_tag: tx_queued_tag.unwrap_or(Utc::now().timestamp()).to_string(),
+            tx_history_tag: tx_history_tag.unwrap_or(Utc::now().timestamp()).to_string(),
         },
     };
 

@@ -5,9 +5,9 @@ volumes:
 
 services:
   redis:
-    image: redis:5-alpine
+    image: redis:6-alpine
     ports:
-      - "6379:6379"
+      - "6379"
 
   web:
     build:
@@ -16,8 +16,10 @@ services:
     env_file:
       - .env
     environment:
-      - REDIS_URI=redis://redis
+      - REDIS_URI=redis://redis:6379
+      - ROCKET_PORT=3666
+      - ROCKET_ADDRESS=0.0.0.0
     depends_on:
       - redis
     ports:
-      - "8000:8000"
+      - "8000:3666"

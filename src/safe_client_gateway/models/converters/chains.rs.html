@@ -63,6 +63,7 @@
 <span id="60">60</span>
 <span id="61">61</span>
 <span id="62">62</span>
+<span id="63">63</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::chains</span>::{<span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>, <span class="ident">GasPrice</span>, <span class="ident">RpcAuthentication</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::chains</span>::{
@@ -77,6 +78,7 @@
             <span class="ident">transaction_service</span>: <span class="ident">chain_info</span>.<span class="ident">transaction_service</span>,
             <span class="ident">chain_id</span>: <span class="ident">chain_info</span>.<span class="ident">chain_id</span>,
             <span class="ident">chain_name</span>: <span class="ident">chain_info</span>.<span class="ident">chain_name</span>,
+            <span class="ident">short_name</span>: <span class="ident">chain_info</span>.<span class="ident">short_name</span>,
             <span class="ident">l2</span>: <span class="ident">chain_info</span>.<span class="ident">l2</span>,
             <span class="ident">description</span>: <span class="ident">chain_info</span>.<span class="ident">description</span>,
             <span class="ident">rpc_uri</span>: <span class="ident">ServiceRpcUri</span> {

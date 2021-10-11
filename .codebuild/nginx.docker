@@ -6,6 +6,8 @@ RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/ng
 
 COPY .codebuild/nginx.conf /etc/nginx/nginx.conf
 
+RUN echo `date` >/usr/share/nginx/html/version.txt
+
 STOPSIGNAL SIGTERM
 
 CMD ["nginx", "-g", "daemon off;"]

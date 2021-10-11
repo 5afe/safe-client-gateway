@@ -6,6 +6,9 @@ use crate::models::service::notifications::{
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::{ApiError, ApiResult};
+use serde_json::json;
+use serde_json::value::RawValue;
+use serde_json::{self, value::Value};
 use std::time::Duration;
 
 pub async fn delete_registration(
@@ -24,13 +27,13 @@ pub async fn delete_registration(
         safe_address
     )?;
 
-    let response = client
+    client
         .delete(url)
         .timeout(Duration::from_millis(default_request_timeout()))
         .send()
         .await?;
 
-    forward_error(response).await
+    Ok(())
 }
 
 pub async fn post_registration(
@@ -56,30 +59,41 @@ pub async fn post_registration(
         ));
     }
 
-    let chain_id_errors = {
-        let mut output: Vec<&str> = vec![];
-
+    let (error_chain_ids, error_body) = {
+        let mut error_chain_ids: Vec<&str> = vec![];
+        let mut errors: Vec<Value> = vec![];
         for (chain_id, request) in requests.into_iter() {
-            if let Ok(response) = request.await {
-                // tx service errors
-                if let Err(_) = forward_error(response).await {
-                    output.push(chain_id);
+            match request.await {
+                Ok(response) => {
+                    if !response.status().is_success() {
+                        error_chain_ids.push(chain_id);
+                        errors.push(json!({
+                            chain_id : RawValue::from_string(response.text().await.expect("Error response issue"))?
+                            }
+                        ))
+                    }
                 }
-            } else {
-                // reqwest failures (unreachable urls, do we need to handle?)
-                output.push(chain_id);
-            };
+                Err(reqwest_error) => {
+                    error_chain_ids.push(chain_id);
+                    errors.push(json!({
+                        chain_id : serde_json::to_value(reqwest_error.to_string())?
+                    }))
+                }
+            }
         }
-        output
+        (error_chain_ids, json!(errors))
     };
 
-    if chain_id_errors.is_empty() {
+    if error_chain_ids.is_empty() {
         Ok(())
     } else {
-        bail!(
-            "Push notification registration failed for chain ids: {}",
-            chain_id_errors.join(", ")
-        )
+        Err(ApiError::new_from_message_with_debug(
+            format!(
+                "Push notification registration failed for chain IDs: {}",
+                error_chain_ids.join(", ")
+            ),
+            Some(error_body),
+        ))
     }
 }
 
@@ -91,17 +105,5 @@ fn build_backend_request(
         notification_device_data: device_data.clone(),
         safes: safe_registration.safes.to_owned(),
         signatures: safe_registration.signatures.to_owned(),
-    }
-}
-
-async fn forward_error(response: reqwest::Response) -> ApiResult<()> {
-    if response.status().is_success() {
-        Ok(())
-    } else {
-        Err(ApiError::from_http_response(
-            response,
-            String::from("Unexpected notification registration error"),
-        )
-        .await)
     }
 }

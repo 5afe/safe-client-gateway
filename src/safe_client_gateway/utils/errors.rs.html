@@ -145,6 +145,23 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config::log_all_error_responses</span>;
 <span class="kw">use</span> <span class="ident">reqwest::Response</span> <span class="kw">as</span> <span class="ident">ReqwestResponse</span>;
@@ -153,7 +170,7 @@
 <span class="kw">use</span> <span class="ident">rocket::response</span>::{<span class="self">self</span>, <span class="ident">Responder</span>, <span class="ident">Response</span>};
 <span class="kw">use</span> <span class="ident">rocket::serde::json::Error</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">serde_json</span>;
+<span class="kw">use</span> <span class="ident">serde_json</span>::{<span class="self">self</span>, <span class="ident">value::Value</span>};
 <span class="kw">use</span> <span class="ident">std::fmt</span>;
 <span class="kw">use</span> <span class="ident">std::io::Cursor</span>;
 <span class="kw">use</span> <span class="ident">std::result::Result</span>;
@@ -173,6 +190,8 @@
     <span class="kw">pub</span> <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">arguments</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">debug</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ApiError</span> {
@@ -183,6 +202,7 @@
                 <span class="ident">code</span>: <span class="number">42</span>,
                 <span class="ident">message</span>: <span class="prelude-val">Some</span>(<span class="ident">raw_error</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">arguments</span>: <span class="prelude-val">None</span>,
+                <span class="ident">debug</span>: <span class="prelude-val">None</span>,
             },
         };
         <span class="self">Self</span><span class="ident">::new</span>(<span class="ident">status_code</span>, <span class="ident">error_details</span>)
@@ -202,6 +222,19 @@
                 <span class="ident">code</span>: <span class="number">1337</span>,
                 <span class="ident">message</span>: <span class="prelude-val">Some</span>(<span class="ident">message</span>.<span class="ident">into</span>()),
                 <span class="ident">arguments</span>: <span class="prelude-val">None</span>,
+                <span class="ident">debug</span>: <span class="prelude-val">None</span>,
+            },
+        )
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_message_with_debug</span>(<span class="ident">message</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">debug</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span><span class="ident">::new</span>(
+            <span class="number">500</span>,
+            <span class="ident">ErrorDetails</span> {
+                <span class="ident">code</span>: <span class="number">1337</span>,
+                <span class="ident">message</span>: <span class="prelude-val">Some</span>(<span class="ident">message</span>.<span class="ident">into</span>()),
+                <span class="ident">arguments</span>: <span class="prelude-val">None</span>,
+                <span class="ident">debug</span>,
             },
         )
     }
@@ -213,6 +246,7 @@
                 <span class="ident">code</span>: <span class="number">1337</span>,
                 <span class="ident">message</span>: <span class="prelude-val">Some</span>(<span class="ident">message</span>),
                 <span class="ident">arguments</span>: <span class="prelude-val">None</span>,
+                <span class="ident">debug</span>: <span class="prelude-val">None</span>,
             },
         )
     }

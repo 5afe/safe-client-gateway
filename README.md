@@ -46,13 +46,3 @@ The contents of the file should be the following (see `.env.sample` for an examp
 To run all tests use the `cargo test` command. If you want to run a specific subset of tests, then add additionally any info regarding the path of the tests and `cargo` will match it.
 
 Example: `cargo test converters` will run every tests under the `converters` module. Matching occurs also at a test name level, so by writing the full name of a test, that single test can be run.
-
-Additionally, for cache testing, we have included a script that fills up the cache as it would happen in production. You can find the script in `./scripts/load_tester/start.py`. To run the script, use the following commands: 
-
-```shell
-python3 -m venv venv
-source venv/bin/activate && pip install -r scripts/cache_warmer/requirements.txt
-python scripts/cache_warmer/start.py
-# once you are done testing
-deactivate
-```

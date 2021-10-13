@@ -4,7 +4,7 @@ use crate::models::backend::transactions::{
     SafeTransactionEstimation as BackendSafeTransactionEstimation,
 };
 use crate::models::commons::Page;
-use crate::models::service::utils::{SafeTransactionEstimation, SafeTransactionEstimationRequest};
+use crate::models::service::safes::{SafeTransactionEstimation, SafeTransactionEstimationRequest};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;

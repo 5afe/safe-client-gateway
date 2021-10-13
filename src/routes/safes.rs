@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::owners_for_safes_cache_duration;
-use crate::models::service::utils::SafeTransactionEstimationRequest;
+use crate::models::service::safes::SafeTransactionEstimationRequest;
 use crate::services::estimations;
 use crate::services::safes::{get_owners_for_safe, get_safe_info_ex};
 use crate::utils::context::Context;

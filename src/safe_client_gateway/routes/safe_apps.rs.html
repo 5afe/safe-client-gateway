@@ -15,12 +15,114 @@
 <span id="12">12</span>
 <span id="13">13</span>
 <span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::services::safe_apps::safe_apps</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 
+<span class="doccomment">/**
+ * `/v1/chains/&lt;chain_id&gt;/safe-apps` &lt;br /&gt;
+ * Returns [SafeApp](crate::models::service::safe_app::SafeApp)
+ *
+ * # Safe Apps
+ *
+ * This endpoint returns the list of Safe apps supported on a network
+ *
+ * ## Path
+ *
+ * - `/v1/chains/&lt;chain_id&gt;/safe-apps
+ *
+ * ## Examples
+ * [
+ *     {
+ *         &quot;id&quot;: 24,
+ *         &quot;url&quot;: &quot;https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs&quot;,
+ *         &quot;name&quot;: &quot;Transaction Builder&quot;,
+ *         &quot;iconUrl&quot;: &quot;https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png&quot;,
+ *         &quot;description&quot;: &quot;A Safe app to compose custom transactions&quot;,
+ *         &quot;chainIds&quot;: [
+ *             &quot;1&quot;,
+ *             &quot;4&quot;,
+ *             &quot;56&quot;,
+ *             &quot;100&quot;,
+ *             &quot;137&quot;,
+ *             &quot;246&quot;,
+ *             &quot;73799&quot;
+ *         ],
+ *         &quot;provider&quot;: null
+ *     },
+ *     {
+ *         &quot;id&quot;: 25,
+ *         &quot;url&quot;: &quot;https://cloudflare-ipfs.com/ipfs/QmTpLhxSiD1H94BFxeV2P6RfJf6EyCxxUCVYpcDffyMmmZ&quot;,
+ *         &quot;name&quot;: &quot;WalletConnect&quot;,
+ *         &quot;iconUrl&quot;: &quot;https://cloudflare-ipfs.com/ipfs/QmTpLhxSiD1H94BFxeV2P6RfJf6EyCxxUCVYpcDffyMmmZ/wallet-connect.svg&quot;,
+ *         &quot;description&quot;: &quot;Allows your Gnosis Safe Multisig to connect to dapps via WalletConnect.&quot;,
+ *         &quot;chainIds&quot;: [
+ *             &quot;1&quot;,
+ *             &quot;4&quot;,
+ *             &quot;56&quot;,
+ *             &quot;100&quot;,
+ *             &quot;137&quot;,
+ *             &quot;246&quot;,
+ *             &quot;73799&quot;,
+ *             &quot;42161&quot;
+ *         ],
+ *         &quot;provider&quot;: null
+ *     }
+ * ]
+ */</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safe-apps&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_safe_apps</span>(
     <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,

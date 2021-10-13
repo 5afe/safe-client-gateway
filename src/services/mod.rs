@@ -5,6 +5,7 @@ pub mod about;
 pub mod balances;
 pub mod chains;
 pub mod collectibles;
+pub mod estimations;
 pub mod hooks;
 pub mod notifications;
 pub mod safe_apps;

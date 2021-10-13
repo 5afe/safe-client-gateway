@@ -50,6 +50,7 @@ pub fn active_routes() -> Vec<Route> {
         notifications::delete_notification_registration,
         safes::get_safe_info,
         safes::get_owners,
+        safes::post_safe_gas_estimation,
         safe_apps::get_safe_apps,
         transactions::get_transactions,
         transactions::get_transactions_history,
@@ -59,8 +60,7 @@ pub fn active_routes() -> Vec<Route> {
         hooks::update,
         hooks::flush,
         health::health,
-        utils::post_data_decoder,
-        utils::post_safe_gas_estimation
+        utils::post_data_decoder
     ]
 }
 

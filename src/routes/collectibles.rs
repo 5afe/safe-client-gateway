@@ -63,7 +63,7 @@ use rocket::response::content;
  *     "description": "This token is meant for testing. ",
  *     "imageUri": "https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I",
  *     "metadata": {
- *      "minter": "0x4d3101d77aac1b90ae42efa38d235a81af270d40",
+ *       "minter": "0x4d3101d77aac1b90ae42efa38d235a81af270d40",
  *       "mintedOn": "2020-12-29T13:49:02.654Z",
  *       "contractAddress": "0xd753e03c05533f85ba9695c139771b1e9698a53c",
  *       "minted": "Minted on Mintbase.io",

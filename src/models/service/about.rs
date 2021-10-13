@@ -23,7 +23,7 @@ pub struct ChainAbout {
     pub about: About,
 }
 
-/// ChainAbout
+/// About
 ///
 /// <details>
 /// <summary>Sample</summary>

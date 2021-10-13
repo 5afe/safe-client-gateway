@@ -1,5 +1,5 @@
-use crate::models::service::utils::DataDecoderRequest;
-use crate::services::utils::request_data_decoded;
+use crate::models::service::contracts::DataDecoderRequest;
+use crate::services::contracts::request_data_decoded;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;

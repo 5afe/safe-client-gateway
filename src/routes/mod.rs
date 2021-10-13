@@ -13,6 +13,8 @@ pub mod balances;
 pub mod chains;
 /// # Collectibles endpoint
 pub mod collectibles;
+/// # Utility endpoints
+pub mod contracts;
 #[doc(hidden)]
 pub mod health;
 #[doc(hidden)]
@@ -29,8 +31,6 @@ pub mod safes;
 ///
 /// The types served by the gate way are `Transfer`, `SettingsChange` and `Custom`. Additionally, we treat the `Creation` transaction as one additional type, as it is meant to be group with the rest of the items in the same UI component in the apps.
 pub mod transactions;
-/// # Utility endpoints
-pub mod utils;
 
 #[doc(hidden)]
 pub fn active_routes() -> Vec<Route> {
@@ -46,6 +46,7 @@ pub fn active_routes() -> Vec<Route> {
         chains::get_chain,
         chains::get_chains,
         collectibles::get_collectibles,
+        contracts::post_data_decoder,
         notifications::post_notification_registration,
         notifications::delete_notification_registration,
         safes::get_safe_info,
@@ -59,8 +60,7 @@ pub fn active_routes() -> Vec<Route> {
         transactions::post_confirmation,
         hooks::update,
         hooks::flush,
-        health::health,
-        utils::post_data_decoder
+        health::health
     ]
 }
 

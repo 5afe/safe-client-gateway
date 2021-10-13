@@ -1,6 +1,6 @@
 use crate::config::default_request_timeout;
 use crate::models::commons::DataDecoded;
-use crate::models::service::utils::DataDecoderRequest;
+use crate::models::service::contracts::DataDecoderRequest;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;

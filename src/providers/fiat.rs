@@ -4,12 +4,13 @@ use crate::cache::Cache;
 use crate::config::{base_exchange_api_uri, exchange_api_cache_duration, short_error_duration};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use bigdecimal::BigDecimal;
 use serde::Deserialize;
 use std::collections::HashMap;
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct Exchange {
-    pub rates: Option<HashMap<String, f64>>,
+    pub rates: Option<HashMap<String, BigDecimal>>,
     pub base: String,
 }
 
@@ -26,16 +27,16 @@ impl<'a> FiatInfoProvider<'a, ServiceCache<'a>> {
         }
     }
 
-    pub async fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<f64> {
+    pub async fn exchange_usd_to(&self, currency_code: &str) -> ApiResult<BigDecimal> {
         if &currency_code.to_lowercase() == "usd" {
-            return Ok(1.0);
+            return Ok(BigDecimal::from(1));
         }
 
         let currency_code = currency_code.to_uppercase();
         let exchange = self.fetch_exchange().await?;
         match exchange.rates {
             Some(rates) => {
-                let base_to_usd = rates.get("USD").unwrap_or(&0.0);
+                let base_to_usd = rates.get("USD").unwrap_or(&BigDecimal::from(0)).to_owned();
                 rates
                     .get(&currency_code)
                     .cloned()

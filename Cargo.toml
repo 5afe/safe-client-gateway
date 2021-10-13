@@ -7,6 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+bigdecimal = { version = "0.3.0", features = ["serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 derivative = "2.2.0"
 dotenv = "0.15.0"
@@ -18,7 +19,6 @@ itertools = "0.10.1"
 lazy_static = "1.4.0"
 log = "0.4"
 mockall = "0.10.2"
-num-traits = "0.2.14"
 proc-macro2 = "1.0.28"
 rand = "0.8.4"
 r2d2 = "0.8.9"

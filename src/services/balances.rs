@@ -8,8 +8,8 @@ use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use bigdecimal::BigDecimal;
 use rocket::futures::{stream, StreamExt};
-use std::str::FromStr;
 
 const N_CONCURRENT_TOKEN_REQUESTS: usize = 5;
 
@@ -41,13 +41,14 @@ pub async fn balances(
     let usd_to_fiat = fiat_info_provider
         .exchange_usd_to(fiat)
         .await
-        .unwrap_or(0.0);
+        .unwrap_or(BigDecimal::from(0));
 
     let native_currency: NativeCurrency = info_provider.chain_info().await?.native_currency;
 
     let mut total_fiat = 0.0;
 
-    let token_prices: Vec<TokenPrice> = get_token_prices(&context, &info_provider, &backend_balances).await;
+    let token_prices: Vec<TokenPrice> =
+        get_token_prices(&context, &info_provider, &backend_balances).await;
 
     let service_balances: Vec<Balance> = backend_balances
         .iter()
@@ -59,11 +60,11 @@ pub async fn balances(
             let token_price: Option<&TokenPrice> = token_prices
                 .iter()
                 .find(|&token_price| token_price.address == token_address);
-            let token_to_usd: f64 = token_price
-                .and_then(|t| Some(t.fiat_price))
-                .unwrap_or(f64::from(0));
+            let token_to_usd: BigDecimal = token_price
+                .and_then(|t| Some(t.fiat_price.to_owned()))
+                .unwrap_or(BigDecimal::from(0));
 
-            let balance = it.to_balance(token_to_usd, usd_to_fiat, &native_currency);
+            let balance = it.to_balance(&token_to_usd, &usd_to_fiat, &native_currency);
             total_fiat += balance.fiat_balance.parse::<f64>().unwrap_or(0.0);
             balance
         })
@@ -128,12 +129,10 @@ async fn get_token_usd_rate(
         .await?;
     let response: TokenPriceCore = serde_json::from_str(&body)?;
 
-    let fiat_price = f64::from_str(&response.fiat_price).unwrap_or(0.0);
-
     return Ok(TokenPrice {
         address: token_address.to_string(),
         fiat_code: response.fiat_code,
-        fiat_price,
+        fiat_price: response.fiat_price,
         timestamp: response.timestamp,
     });
 }

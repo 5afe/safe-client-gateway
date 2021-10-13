@@ -3,6 +3,8 @@ use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::backend::chains::NativeCurrency;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
+use bigdecimal::BigDecimal;
+use std::str::FromStr;
 
 #[test]
 fn native_token_balance() {
@@ -18,19 +20,19 @@ fn native_token_balance() {
             logo_uri: Some("https://test.token.image.url".to_string()),
         },
         balance: "7457594371050000001".to_string(),
-        fiat_balance: "2523.7991".to_string(),
-        fiat_conversion: "338.42".to_string(),
+        fiat_balance: "2523.7990".to_string(),
+        fiat_conversion: "338.420".to_string(),
     };
 
-    let token_to_usd = 338.42;
-    let usd_to_fiat = 1.0;
+    let token_to_usd = BigDecimal::from_str("338.42").unwrap();
+    let usd_to_fiat = BigDecimal::from_str("1.0").unwrap();
     let native_currency = NativeCurrency {
         name: "Ether".to_string(),
         symbol: "ETH".to_string(),
         decimals: 18,
         logo_uri: "https://test.token.image.url".to_string(),
     };
-    let actual = balance_dto.to_balance(token_to_usd, usd_to_fiat, &native_currency);
+    let actual = balance_dto.to_balance(&token_to_usd, &usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }
@@ -50,18 +52,18 @@ fn erc20_token_balance_usd_balance() {
         },
         balance: "5002".to_string(),
         fiat_balance: "0.0014".to_string(),
-        fiat_conversion: "28.5462".to_string(),
+        fiat_conversion: "28.54620".to_string(),
     };
 
-    let token_to_usd = 28.5462;
-    let usd_to_fiat = 1.0;
+    let token_to_usd = BigDecimal::from_str("28.5462").unwrap();
+    let usd_to_fiat = BigDecimal::from_str("1.0").unwrap();
     let native_currency = NativeCurrency {
         name: "Compound Ether 📈".to_string(),
         symbol: "cETH".to_string(),
         decimals: 8,
         logo_uri: "https://test.token.image.url".to_string(),
     };
-    let actual = balance_dto.to_balance(token_to_usd, usd_to_fiat, &native_currency);
+    let actual = balance_dto.to_balance(&token_to_usd, &usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }
@@ -81,18 +83,18 @@ fn erc20_token_balance_fiat_is_twice_usd() {
         },
         balance: "5002".to_string(),
         fiat_balance: "0.0028".to_string(),
-        fiat_conversion: "57.0924".to_string(),
+        fiat_conversion: "57.09240".to_string(),
     };
 
-    let token_to_usd = 28.5462;
-    let usd_to_fiat = 2.0;
+    let token_to_usd = BigDecimal::from_str("28.5462").unwrap();
+    let usd_to_fiat = BigDecimal::from_str("2.0").unwrap();
     let native_currency = NativeCurrency {
         name: "Compound Ether 📈".to_string(),
         symbol: "cETH".to_string(),
         decimals: 8,
         logo_uri: "https://test.token.image.url".to_string(),
     };
-    let actual = balance_dto.to_balance(token_to_usd, usd_to_fiat, &native_currency);
+    let actual = balance_dto.to_balance(&token_to_usd, &usd_to_fiat, &native_currency);
 
     assert_eq!(actual, expected);
 }

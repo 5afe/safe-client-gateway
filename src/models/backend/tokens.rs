@@ -1,10 +1,11 @@
+use bigdecimal::BigDecimal;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenPriceCore {
     pub fiat_code: String,
-    pub fiat_price: String,
+    pub fiat_price: BigDecimal,
     pub timestamp: String,
 }
 
@@ -13,6 +14,6 @@ pub struct TokenPriceCore {
 pub struct TokenPrice {
     pub address: String,
     pub fiat_code: String,
-    pub fiat_price: f64,
+    pub fiat_price: BigDecimal,
     pub timestamp: String,
 }

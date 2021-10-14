@@ -1,9 +1,11 @@
+use rocket::futures::FutureExt;
 use crate::cache::cache_operations::CacheResponse;
-use crate::config::balances_cache_duration;
-use crate::services::balances::*;
+use crate::config::{balances_cache_duration, feature_flag_balances_rate_implementation};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
+use crate::services::{balances, balances_v2};
+use crate::services::balances::fiat_codes;
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
@@ -38,14 +40,25 @@ pub async fn get_balances(
     CacheResponse::new(context.uri())
         .duration(balances_cache_duration())
         .resp_generator(|| {
-            balances(
-                &context,
-                chain_id.as_str(),
-                safe_address.as_str(),
-                fiat.as_str(),
-                trusted.unwrap_or(false),
-                exclude_spam.unwrap_or(true),
-            )
+            if feature_flag_balances_rate_implementation() {
+                balances_v2::balances(
+                    &context,
+                    chain_id.as_str(),
+                    safe_address.as_str(),
+                    fiat.as_str(),
+                    trusted.unwrap_or(false),
+                    exclude_spam.unwrap_or(true),
+                ).left_future()
+            } else {
+                balances::balances(
+                    &context,
+                    chain_id.as_str(),
+                    safe_address.as_str(),
+                    fiat.as_str(),
+                    trusted.unwrap_or(false),
+                    exclude_spam.unwrap_or(true),
+                ).right_future()
+            }
         })
         .execute(context.cache())
         .await
@@ -58,7 +71,7 @@ pub async fn get_balances(
  * Supported fiat codes for balances
  * `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `<fiat>` segment of the balance endpoint.
  * The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
-*/
+ */
 #[get("/v1/balances/supported-fiat-codes")]
 pub async fn get_supported_fiat(context: Context<'_>) -> ApiResult<content::Json<String>> {
     CacheResponse::new(context.uri())

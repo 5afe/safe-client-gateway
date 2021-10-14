@@ -149,6 +149,10 @@ pub fn feature_flag_nested_decoding() -> bool {
     env_with_default("FEATURE_FLAG_NESTED_DECODING", true)
 }
 
+pub fn feature_flag_balances_rate_implementation() -> bool {
+    env_with_default("FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION", false)
+}
+
 pub fn vpc_transaction_service_uri() -> bool {
     env_with_default("VPC_TRANSACTION_SERVICE_URI", true)
 }

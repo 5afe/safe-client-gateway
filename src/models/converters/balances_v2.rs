@@ -1,12 +1,29 @@
-use crate::models::backend::balances::Balance as BalanceDto;
+use crate::models::backend::balances_v2::Balance as BalanceDto;
 use crate::models::backend::chains::NativeCurrency;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
+use bigdecimal::{num_bigint::BigInt, BigDecimal, ToPrimitive, Zero};
+use std::str::FromStr;
 
 impl BalanceDto {
-    pub fn to_balance(&self, usd_to_fiat: f64, native_coin: &NativeCurrency) -> Balance {
-        let fiat_conversion = self.fiat_conversion.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
-        let fiat_balance = self.fiat_balance.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
+    pub fn to_balance_v2(
+        &self,
+        token_to_usd: &BigDecimal,
+        usd_to_fiat: &BigDecimal,
+        native_coin: &NativeCurrency,
+    ) -> Balance {
+        let token_decimals = self
+            .token
+            .as_ref()
+            .and_then(|token| Some(token.decimals))
+            .and_then(|decimals| decimals.to_i64())
+            .unwrap_or(native_coin.decimals.to_i64().unwrap());
+
+        let balance = BigInt::from_str(&self.balance).unwrap_or(Zero::zero());
+        let token_balance = BigDecimal::new(balance, token_decimals);
+        let fiat_conversion = token_to_usd * usd_to_fiat;
+        let fiat_balance = (token_balance * token_to_usd * usd_to_fiat).with_scale(4);
+
         let token_type = self
             .token_address
             .as_ref()

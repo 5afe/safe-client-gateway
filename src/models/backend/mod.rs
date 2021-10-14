@@ -1,5 +1,6 @@
 pub mod about;
 pub mod balances;
+pub mod balances_v2;
 pub mod chains;
 pub mod notifications;
 pub mod safe_app;

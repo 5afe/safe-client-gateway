@@ -39,7 +39,8 @@ pub async fn balances(
         .exchange_usd_to(fiat)
         .await
         .unwrap_or(BigDecimal::from(0))
-        .to_f64().unwrap_or(f64::from(0));
+        .to_f64()
+        .unwrap_or(f64::from(0));
 
     let native_currency: NativeCurrency = info_provider.chain_info().await?.native_currency;
 

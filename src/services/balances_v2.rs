@@ -1,5 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::config::{balances_cache_duration, balances_request_timeout};
+use crate::config::{
+    balances_cache_duration, balances_request_timeout, concurrent_balance_token_requests,
+};
 use crate::models::backend::balances_v2::Balance as BalanceDto;
 use crate::models::backend::chains::NativeCurrency;
 use crate::models::backend::tokens::TokenPriceCore;
@@ -11,8 +13,6 @@ use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use bigdecimal::BigDecimal;
 use rocket::futures::{stream, StreamExt};
-
-const N_CONCURRENT_TOKEN_REQUESTS: usize = 5;
 
 pub async fn balances(
     context: &Context<'_>,
@@ -95,7 +95,7 @@ async fn get_token_prices(
     // We collect the TokenPrice which were successful – unsuccessful ones are ignored
     return stream::iter(token_addresses)
         .map(|token_address| get_token_usd_rate(context, token_address, info_provider))
-        .buffer_unordered(N_CONCURRENT_TOKEN_REQUESTS)
+        .buffer_unordered(concurrent_balance_token_requests())
         .filter_map(|t| async move {
             match t {
                 Ok(token_price) => Some(token_price),

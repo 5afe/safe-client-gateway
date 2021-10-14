@@ -1,11 +1,11 @@
-use rocket::futures::FutureExt;
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::{balances_cache_duration, feature_flag_balances_rate_implementation};
+use crate::services::balances::fiat_codes;
+use crate::services::{balances, balances_v2};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use rocket::futures::FutureExt;
 use rocket::response::content;
-use crate::services::{balances, balances_v2};
-use crate::services::balances::fiat_codes;
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
@@ -48,7 +48,8 @@ pub async fn get_balances(
                     fiat.as_str(),
                     trusted.unwrap_or(false),
                     exclude_spam.unwrap_or(true),
-                ).left_future()
+                )
+                .left_future()
             } else {
                 balances::balances(
                     &context,
@@ -57,7 +58,8 @@ pub async fn get_balances(
                     fiat.as_str(),
                     trusted.unwrap_or(false),
                     exclude_spam.unwrap_or(true),
-                ).right_future()
+                )
+                .right_future()
             }
         })
         .execute(context.cache())

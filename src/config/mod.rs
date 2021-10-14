@@ -157,6 +157,10 @@ pub fn vpc_transaction_service_uri() -> bool {
     env_with_default("VPC_TRANSACTION_SERVICE_URI", true)
 }
 
+pub fn concurrent_balance_token_requests() -> usize {
+    env_with_default("CONCURRENT_BALANCE_TOKEN_REQUESTS", 5)
+}
+
 pub fn log_threshold() -> f32 {
     env_with_default("LOG_THRESHOLD", 1.0)
 }

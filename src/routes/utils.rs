@@ -95,7 +95,8 @@ pub async fn post_data_decoder<'e>(
  *
  * ```json
  * {
- *   "safeTxGas": "43585"
+ *   "latestNonce": 76,
+ *   "safeTxGas": "63417"
  * }
  * ```
  *

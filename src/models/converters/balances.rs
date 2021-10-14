@@ -2,7 +2,7 @@ use crate::models::backend::balances::Balance as BalanceDto;
 use crate::models::backend::chains::NativeCurrency;
 use crate::models::service::balances::Balance;
 use crate::providers::info::{TokenInfo, TokenType};
-use bigdecimal::{BigDecimal, ToPrimitive};
+use bigdecimal::{num_bigint::BigInt, BigDecimal, ToPrimitive, Zero};
 use std::str::FromStr;
 
 impl BalanceDto {
@@ -19,9 +19,8 @@ impl BalanceDto {
             .and_then(|decimals| decimals.to_i64())
             .unwrap_or(native_coin.decimals.to_i64().unwrap());
 
-        let token_balance =
-            BigDecimal::from_str(format!("{}e-{}", &self.balance, &token_decimals).as_str())
-                .unwrap_or(BigDecimal::from(0));
+        let balance = BigInt::from_str(&self.balance).unwrap_or(Zero::zero());
+        let token_balance = BigDecimal::new(balance, token_decimals);
         let fiat_conversion = token_to_usd * usd_to_fiat;
         let fiat_balance = (token_balance * token_to_usd * usd_to_fiat).with_scale(4);
 

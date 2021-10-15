@@ -1,4 +1,5 @@
 pub(super) mod balances;
+pub(super) mod balances_v2;
 mod data_decoded;
 mod get_address_ex_from_any_source;
 mod get_transfer_direction;

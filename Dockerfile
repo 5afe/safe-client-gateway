@@ -1,6 +1,5 @@
 # Build Image
-# We use a stable rust image as we will switch to nightly via the toolchain file.
-FROM rust:1.52.0-slim-buster as builder
+FROM rust:1.55.0-slim-buster as builder
 
 RUN set -ex; \ 
   apt-get update; \

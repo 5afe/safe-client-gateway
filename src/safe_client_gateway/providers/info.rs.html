@@ -311,6 +311,11 @@
 <span id="308">308</span>
 <span id="309">309</span>
 <span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::redis::ServiceCache</span>;
@@ -412,6 +417,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">safe_app_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">SafeAppInfo</span><span class="op">&gt;</span>;
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">AddressEx</span><span class="op">&gt;</span>;
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">address_ex_from_contracts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">AddressEx</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">chain_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span>;
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DefaultInfoProvider</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span>, <span class="ident">C</span>: <span class="ident">Cache</span><span class="op">&gt;</span> {
@@ -426,6 +432,10 @@
 
 <span class="attribute">#[<span class="ident">rocket::async_trait</span>]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Cache</span><span class="op">&gt;</span> <span class="ident">InfoProvider</span> <span class="kw">for</span> <span class="ident">DefaultInfoProvider</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">C</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">chain_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">self</span>.<span class="ident">chain_id</span>
+    }
+
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">chain_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">ChainInfo</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">chain_cache</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">chain_cache</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
         <span class="self">Self</span><span class="ident">::cached</span>(<span class="ident">chain_cache</span>, <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">load_chain_info</span>(), <span class="self">self</span>.<span class="ident">chain_id</span>).<span class="kw">await</span>

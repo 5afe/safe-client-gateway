@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Hash)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Balance {
     pub token_address: Option<String>,
@@ -8,7 +8,7 @@ pub struct Balance {
     pub balance: String,
 }
 
-#[derive(Deserialize, Debug, Hash)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BalanceToken {
     pub name: String,

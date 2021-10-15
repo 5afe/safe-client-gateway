@@ -22,19 +22,20 @@ impl BalanceDto {
         let balance = BigInt::from_str(&self.balance).unwrap_or(Zero::zero());
         let token_balance = BigDecimal::new(balance, token_decimals);
         let fiat_conversion = token_to_usd * usd_to_fiat;
-        let fiat_balance = (token_balance * token_to_usd * usd_to_fiat).with_scale(4);
+        let fiat_balance = (token_balance * token_to_usd * usd_to_fiat).with_scale(5);
 
-        let token_type = self
-            .token_address
-            .as_ref()
-            .map(|_| TokenType::Erc20)
-            .unwrap_or(TokenType::NativeToken);
-
-        let logo_uri = if token_type == TokenType::NativeToken {
-            Some(native_coin.logo_uri.to_string())
+        let (token_type, logo_uri) = if self.token_address.is_some() {
+            (
+                TokenType::Erc20,
+                self.token.as_ref().map(|it| it.logo_uri.to_string()),
+            )
         } else {
-            self.token.as_ref().map(|it| it.logo_uri.to_string())
+            (
+                TokenType::NativeToken,
+                Some(native_coin.logo_uri.to_string()),
+            )
         };
+
         Balance {
             token_info: TokenInfo {
                 token_type,

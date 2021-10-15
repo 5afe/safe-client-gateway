@@ -4,7 +4,7 @@ use crate::config::{
 };
 use crate::models::backend::balances_v2::Balance as BalanceDto;
 use crate::models::backend::chains::NativeCurrency;
-use crate::models::backend::tokens::TokenPriceCore;
+use crate::models::backend::tokens::TokenPrice as BackendTokenPrice;
 use crate::models::service::balances::{Balance, Balances};
 use crate::models::service::tokens::TokenPrice;
 use crate::providers::fiat::FiatInfoProvider;
@@ -128,7 +128,7 @@ async fn get_token_usd_rate(
         // TODO – cache duration and timeout
         .execute(context.client(), context.cache())
         .await?;
-    let response: TokenPriceCore = serde_json::from_str(&body)?;
+    let response: BackendTokenPrice = serde_json::from_str(&body)?;
 
     return Ok(TokenPrice {
         address: token_address.to_string(),

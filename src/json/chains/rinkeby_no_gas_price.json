@@ -2,6 +2,7 @@
   "chainId": "4",
   "chainName": "Rinkeby",
   "l2": false,
+  "shortName": "rin",
   "description": "Random description",
   "rpcUri": {
     "authentication": "API_KEY_PATH",

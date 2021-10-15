@@ -90,6 +90,10 @@ pub fn safe_apps_cache_duration() -> usize {
     env_with_default("SAFE_APPS_CACHE_DURATION", indefinite_timeout())
 }
 
+pub fn token_price_cache_duration() -> usize {
+    env_with_default("TOKEN_PRICE_CACHE_DURATION", 1) // set to negligible value
+}
+
 // REQUEST TIMEOUTS
 pub fn internal_client_connect_timeout() -> u64 {
     env_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)
@@ -149,8 +153,16 @@ pub fn feature_flag_nested_decoding() -> bool {
     env_with_default("FEATURE_FLAG_NESTED_DECODING", true)
 }
 
+pub fn feature_flag_balances_rate_implementation() -> bool {
+    env_with_default("FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION", false)
+}
+
 pub fn vpc_transaction_service_uri() -> bool {
     env_with_default("VPC_TRANSACTION_SERVICE_URI", true)
+}
+
+pub fn concurrent_balance_token_requests() -> usize {
+    env_with_default("CONCURRENT_BALANCE_TOKEN_REQUESTS", 5)
 }
 
 pub fn log_threshold() -> f32 {

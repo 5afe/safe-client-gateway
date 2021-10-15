@@ -131,10 +131,6 @@ pub fn collectibles_request_timeout() -> u64 {
     env_with_default("COLLECTIBLES_REQUEST_TIMEOUT", 20000)
 }
 
-pub fn token_price_request_timeout() -> u64 {
-    env_with_default("TOKEN_PRICE_REQUEST_TIMEOUT", 1000)
-}
-
 pub fn default_request_timeout() -> u64 {
     env_with_default("DEFAULT_REQUEST_TIMEOUT", 10000)
 }

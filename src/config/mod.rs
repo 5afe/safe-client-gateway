@@ -90,6 +90,10 @@ pub fn safe_apps_cache_duration() -> usize {
     env_with_default("SAFE_APPS_CACHE_DURATION", indefinite_timeout())
 }
 
+pub fn token_price_cache_duration() -> usize {
+    env_with_default("TOKEN_PRICE_CACHE_DURATION", 1) // set to negligible value
+}
+
 // REQUEST TIMEOUTS
 pub fn internal_client_connect_timeout() -> u64 {
     env_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)
@@ -125,6 +129,10 @@ pub fn balances_request_timeout() -> u64 {
 
 pub fn collectibles_request_timeout() -> u64 {
     env_with_default("COLLECTIBLES_REQUEST_TIMEOUT", 20000)
+}
+
+pub fn token_price_request_timeout() -> u64 {
+    env_with_default("TOKEN_PRICE_REQUEST_TIMEOUT", 1000)
 }
 
 pub fn default_request_timeout() -> u64 {

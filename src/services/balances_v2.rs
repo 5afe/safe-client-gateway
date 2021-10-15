@@ -1,6 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::{
     balances_cache_duration, balances_request_timeout, concurrent_balance_token_requests,
+    token_price_cache_duration, token_price_request_timeout,
 };
 use crate::models::backend::balances_v2::Balance as BalanceDto;
 use crate::models::backend::chains::NativeCurrency;
@@ -125,7 +126,8 @@ async fn get_token_usd_rate(
     let endpoint: String = core_uri!(info_provider, "/v1/tokens/{}/prices/usd/", token_address)?;
 
     let body = RequestCached::new(endpoint.to_owned())
-        // TODO – cache duration and timeout
+        .cache_duration(token_price_cache_duration())
+        .request_timeout(token_price_request_timeout())
         .execute(context.client(), context.cache())
         .await?;
     let response: BackendTokenPrice = serde_json::from_str(&body)?;

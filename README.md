@@ -16,7 +16,6 @@ This project is a gateway between the Safe clients ([Android](https://github.com
 This project requires `rustup` and `redis`
 
 ```bash
-rustup default nightly # (Rocket currently requires a nightly version)
 git clone https://github.com/gnosis/safe-client-gateway.git
 cd safe-client-gateway
 cp .env.sample .env

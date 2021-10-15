@@ -7,6 +7,7 @@ use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
+use bigdecimal::{BigDecimal, ToPrimitive};
 use std::cmp::Ordering;
 
 pub async fn balances(
@@ -37,7 +38,9 @@ pub async fn balances(
     let usd_to_fiat = fiat_info_provider
         .exchange_usd_to(fiat)
         .await
-        .unwrap_or(0.0);
+        .unwrap_or(BigDecimal::from(0))
+        .to_f64()
+        .unwrap_or(f64::from(0));
 
     let native_currency: NativeCurrency = info_provider.chain_info().await?.native_currency;
 

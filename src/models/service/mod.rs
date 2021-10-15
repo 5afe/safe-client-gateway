@@ -6,4 +6,5 @@ pub mod contracts;
 pub mod notifications;
 pub mod safe_app;
 pub mod safes;
+pub mod tokens;
 pub mod transactions;

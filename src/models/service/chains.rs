@@ -7,8 +7,7 @@ pub struct ChainInfo {
     // do we need to expose this?
     pub chain_id: String,
     pub chain_name: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub short_name: Option<String>,
+    pub short_name: String,
     pub l2: bool,
     pub description: String,
     pub rpc_uri: RpcUri,

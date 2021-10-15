@@ -8,7 +8,7 @@ pub struct ChainInfo {
     pub vpc_transaction_service: String,
     pub chain_id: String,
     pub chain_name: String,
-    pub short_name: Option<String>,
+    pub short_name: String,
     pub l2: bool,
     pub description: String,
     pub rpc_uri: RpcUri,

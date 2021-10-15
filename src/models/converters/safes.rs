@@ -32,6 +32,7 @@ impl SafeInfo {
 
         SafeInfoEx {
             address: AddressEx::address_only(&self.address),
+            chain_id: info_provider.chain_id().to_string(),
             nonce: self.nonce,
             threshold: self.threshold,
             implementation: info_provider

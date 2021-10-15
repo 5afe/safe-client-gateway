@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "camelCase")]
 pub struct SafeInfoEx {
     pub address: AddressEx,
+    pub chain_id: String,
     pub nonce: u64,
     pub threshold: u64,
     pub owners: Vec<AddressEx>,

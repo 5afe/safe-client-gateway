@@ -18,6 +18,10 @@ async fn to_safe_info_ex_no_address_info() {
         .expect_chain_info()
         .times(1)
         .returning(move || Ok(build_chain_info()));
+    mock_info_provider
+        .expect_chain_id()
+        .times(1)
+        .return_const("4".to_string());
     let supported_master_copies = vec![MasterCopy {
         address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
         version: "1.1.1".to_string(),
@@ -32,6 +36,7 @@ async fn to_safe_info_ex_no_address_info() {
             name: None,
             logo_uri: None,
         },
+        chain_id: "4".to_string(),
         nonce: 180,
         threshold: 3,
         owners: vec![
@@ -112,6 +117,10 @@ async fn to_safe_info_ex_no_address_info_up_to_date() {
         .expect_chain_info()
         .times(1)
         .returning(move || Ok(build_chain_info()));
+    mock_info_provider
+        .expect_chain_id()
+        .times(1)
+        .return_const("4".to_string());
     let supported_master_copies = vec![MasterCopy {
         address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
         version: "1.1.1".to_string(),
@@ -126,6 +135,7 @@ async fn to_safe_info_ex_no_address_info_up_to_date() {
             name: None,
             logo_uri: None,
         },
+        chain_id: "4".to_string(),
         nonce: 180,
         threshold: 3,
         owners: vec![
@@ -212,6 +222,10 @@ async fn to_safe_info_ex_address_info() {
         .expect_chain_info()
         .times(1)
         .returning(move || Ok(build_chain_info()));
+    mock_info_provider
+        .expect_chain_id()
+        .times(1)
+        .return_const("4".to_string());
     let supported_master_copies = vec![MasterCopy {
         address: "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F".to_string(),
         version: "1.1.1".to_string(),
@@ -226,6 +240,7 @@ async fn to_safe_info_ex_address_info() {
             name: None,
             logo_uri: None,
         },
+        chain_id: "4".to_string(),
         nonce: 180,
         threshold: 3,
         owners: vec![
@@ -318,6 +333,10 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
         .expect_chain_info()
         .times(1)
         .returning(move || Ok(build_chain_info()));
+    mock_info_provider
+        .expect_chain_id()
+        .times(1)
+        .return_const("4".to_string());
     let supported_master_copies = vec![MasterCopy {
         address: "".to_string(),
         version: "1.1.1".to_string(),
@@ -332,6 +351,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
             name: None,
             logo_uri: None,
         },
+        chain_id: "4".to_string(),
         nonce: 180,
         threshold: 3,
         owners: vec![AddressEx {
@@ -377,6 +397,10 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
         .expect_chain_info()
         .times(1)
         .returning(move || Ok(build_chain_info()));
+    mock_info_provider
+        .expect_chain_id()
+        .times(1)
+        .return_const("4".to_string());
     let supported_master_copies = vec![MasterCopy {
         address: "0x3E5c63644E683549055b9Be8653de26E0B4CD36E".to_string(),
         version: "1.1.1".to_string(),
@@ -391,6 +415,7 @@ async fn to_safe_info_guard_and_fallback_handler_defined() {
             name: None,
             logo_uri: None,
         },
+        chain_id: "4".to_string(),
         nonce: 7,
         threshold: 1,
         owners: vec![AddressEx {

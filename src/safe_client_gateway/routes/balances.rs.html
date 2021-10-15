@@ -69,12 +69,29 @@
 <span id="66">66</span>
 <span id="67">67</span>
 <span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations::CacheResponse</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config::balances_cache_duration</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::services::balances</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{<span class="ident">balances_cache_duration</span>, <span class="ident">feature_flag_balances_rate_implementation</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::services::balances::fiat_codes</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::services</span>::{<span class="ident">balances</span>, <span class="ident">balances_v2</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;
+<span class="kw">use</span> <span class="ident">rocket::futures::FutureExt</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 
 <span class="doccomment">/**
@@ -110,14 +127,27 @@
     <span class="ident">CacheResponse::new</span>(<span class="ident">context</span>.<span class="ident">uri</span>())
         .<span class="ident">duration</span>(<span class="ident">balances_cache_duration</span>())
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">balances</span>(
-                <span class="kw-2">&amp;</span><span class="ident">context</span>,
-                <span class="ident">chain_id</span>.<span class="ident">as_str</span>(),
-                <span class="ident">safe_address</span>.<span class="ident">as_str</span>(),
-                <span class="ident">fiat</span>.<span class="ident">as_str</span>(),
-                <span class="ident">trusted</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>),
-                <span class="ident">exclude_spam</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>),
-            )
+            <span class="kw">if</span> <span class="ident">feature_flag_balances_rate_implementation</span>() {
+                <span class="ident">balances_v2::balances</span>(
+                    <span class="kw-2">&amp;</span><span class="ident">context</span>,
+                    <span class="ident">chain_id</span>.<span class="ident">as_str</span>(),
+                    <span class="ident">safe_address</span>.<span class="ident">as_str</span>(),
+                    <span class="ident">fiat</span>.<span class="ident">as_str</span>(),
+                    <span class="ident">trusted</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>),
+                    <span class="ident">exclude_spam</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>),
+                )
+                .<span class="ident">left_future</span>()
+            } <span class="kw">else</span> {
+                <span class="ident">balances::balances</span>(
+                    <span class="kw-2">&amp;</span><span class="ident">context</span>,
+                    <span class="ident">chain_id</span>.<span class="ident">as_str</span>(),
+                    <span class="ident">safe_address</span>.<span class="ident">as_str</span>(),
+                    <span class="ident">fiat</span>.<span class="ident">as_str</span>(),
+                    <span class="ident">trusted</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>),
+                    <span class="ident">exclude_spam</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>),
+                )
+                .<span class="ident">right_future</span>()
+            }
         })
         .<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>())
         .<span class="kw">await</span>
@@ -130,7 +160,7 @@
  * Supported fiat codes for balances
  * `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `&lt;fiat&gt;` segment of the balance endpoint.
  * The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
-*/</span>
+ */</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/balances/supported-fiat-codes&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_supported_fiat</span>(<span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">CacheResponse::new</span>(<span class="ident">context</span>.<span class="ident">uri</span>())

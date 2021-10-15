@@ -85,6 +85,9 @@
 <span id="82">82</span>
 <span id="83">83</span>
 <span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{<span class="ident">balances_cache_duration</span>, <span class="ident">balances_request_timeout</span>};
@@ -95,6 +98,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;
+<span class="kw">use</span> <span class="ident">bigdecimal</span>::{<span class="ident">BigDecimal</span>, <span class="ident">ToPrimitive</span>};
 <span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">balances</span>(
@@ -125,7 +129,9 @@
     <span class="kw">let</span> <span class="ident">usd_to_fiat</span> <span class="op">=</span> <span class="ident">fiat_info_provider</span>
         .<span class="ident">exchange_usd_to</span>(<span class="ident">fiat</span>)
         .<span class="kw">await</span>
-        .<span class="ident">unwrap_or</span>(<span class="number">0.0</span>);
+        .<span class="ident">unwrap_or</span>(<span class="ident">BigDecimal::from</span>(<span class="number">0</span>))
+        .<span class="ident">to_f64</span>()
+        .<span class="ident">unwrap_or</span>(<span class="ident">f64::from</span>(<span class="number">0</span>));
 
     <span class="kw">let</span> <span class="ident">native_currency</span>: <span class="ident">NativeCurrency</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">chain_info</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">native_currency</span>;
 

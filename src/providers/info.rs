@@ -98,6 +98,7 @@ pub trait InfoProvider {
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
     async fn address_ex_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
     async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx>;
+    fn chain_id(&self) -> &str;
 }
 
 pub struct DefaultInfoProvider<'p, C: Cache> {
@@ -112,6 +113,10 @@ pub struct DefaultInfoProvider<'p, C: Cache> {
 
 #[rocket::async_trait]
 impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
+    fn chain_id(&self) -> &str {
+        self.chain_id
+    }
+
     async fn chain_info(&self) -> ApiResult<ChainInfo> {
         let chain_cache = &mut self.chain_cache.lock().await;
         Self::cached(chain_cache, || self.load_chain_info(), self.chain_id).await

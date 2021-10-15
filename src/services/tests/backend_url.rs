@@ -17,7 +17,7 @@ async fn core_uri_success_with_params_prod() {
             .to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        short_name: None,
+        short_name: "eth".to_string(),
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -69,7 +69,7 @@ async fn core_uri_success_without_params_prod() {
             .to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        short_name: None,
+        short_name: "eth".to_string(),
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -121,7 +121,7 @@ async fn core_uri_success_with_params_local() {
             .to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        short_name: None,
+        short_name: "eth".to_string(),
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {
@@ -173,7 +173,7 @@ async fn core_uri_success_without_params_local() {
             .to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
-        short_name: None,
+        short_name: "eth".to_string(),
         l2: false,
         description: "Random description".to_string(),
         rpc_uri: RpcUri {

@@ -1,6 +1,7 @@
 {
   "chainId": "4",
   "chainName": "Rinkeby",
+  "shortName": "rin",
   "l2": false,
   "description": "Random description",
   "rpcUri": {

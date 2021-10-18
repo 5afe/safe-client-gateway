@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["about",""],["addresses",""],["balances",""],["chains",""],["notifications",""],["safe_app",""],["safes",""],["tokens",""],["transactions",""],["utils",""]]});
+initSidebarItems({"mod":[["about",""],["addresses",""],["balances",""],["chains",""],["contracts",""],["notifications",""],["safe_app",""],["safes",""],["tokens",""],["transactions",""]]});

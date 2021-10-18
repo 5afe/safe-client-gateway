@@ -79,7 +79,6 @@ pub async fn get_about() -> ApiResult<content::Json<String>> {
  * ```
  * </details>
  */
-
 #[get("/v1/chains/<chain_id>/about/master-copies")]
 pub async fn get_master_copies(
     context: Context<'_>,

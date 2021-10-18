@@ -15,8 +15,7 @@ jobs:
 
       - name: Set variables
         run: |
-          TOOLCHAIN=$(cat rust-toolchain)
-          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+          echo "TOOLCHAIN=$(rustup show active-toolchain | cut -d " " -f1)" >> $GITHUB_ENV
 
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
@@ -40,8 +39,7 @@ jobs:
 
       - name: Set variables
         run: |
-          TOOLCHAIN=$(cat rust-toolchain)
-          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+          echo "TOOLCHAIN=$(rustup show active-toolchain | cut -d " " -f1)" >> $GITHUB_ENV
 
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
@@ -98,8 +96,7 @@ jobs:
 
       - name: Set variables
         run: |
-          TOOLCHAIN=$(cat rust-toolchain)
-          echo "TOOLCHAIN_VER=$TOOLCHAIN" >> $GITHUB_ENV
+          echo "TOOLCHAIN=$(rustup show active-toolchain | cut -d " " -f1)" >> $GITHUB_ENV
 
       - name: Install toolchain
         uses: actions-rs/toolchain@v1

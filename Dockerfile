@@ -13,7 +13,7 @@ WORKDIR "/app"
 # Cache dependencies
 # We copy the toolchain requirements first. 
 # This will make it possible that all the stages after the init can be cached.
-COPY rust-toolchain rust-toolchain
+COPY rust-toolchain.toml rust-toolchain.toml
 RUN cargo init
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock

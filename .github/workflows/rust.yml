@@ -33,6 +33,8 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    env:
+      RUSTC_BOOTSTRAP: 1 # grcov requires a nightly build. See https://github.com/mozilla/grcov#usage
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2

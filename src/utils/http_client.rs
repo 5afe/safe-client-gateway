@@ -1,5 +1,5 @@
 use crate::utils::errors::ApiResult;
-use chrono::Duration;
+use core::time::Duration;
 use mockall::automock;
 
 pub struct Request {
@@ -23,7 +23,11 @@ pub trait HttpClient: Send + Sync + 'static {
 #[cfg(not(test))]
 impl HttpClient for reqwest::Client {
     async fn get(&self, request: &Request) -> ApiResult<Response> {
-        let response = self.get(&request.url).send().await?;
+        let response = self
+            .get(&request.url)
+            .timeout(request.timeout)
+            .send()
+            .await?;
         let status_code = response.status().as_u16();
         let body = &response.text().await?;
         Ok(Response {

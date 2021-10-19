@@ -34,3 +34,6 @@ async fn testing_mocked_http_client() {
         .expect("response error");
     assert_eq!(response_json, actual.body.unwrap());
 }
+
+#[rocket::async_test]
+async fn testing_mocked_cache() {}

@@ -10,7 +10,7 @@ use std::sync::Arc;
 pub struct Context<'r> {
     uri: String,
     host: Option<String>,
-    cache: ServiceCache<'r>,
+    cache: &'r ServiceCache,
     client: &'r reqwest::Client,
 }
 
@@ -18,6 +18,16 @@ pub struct RequestContext {
     pub request_id: String, // this will be host+uri , will be used for cache keys
     pub http_client: Arc<dyn HttpClient>,
     pub cache: Arc<dyn Cache>,
+}
+
+impl RequestContext {
+    pub fn http_client(&self) -> Arc<dyn HttpClient> {
+        self.http_client.clone()
+    }
+
+    pub fn cache(&self) -> Arc<dyn Cache> {
+        self.cache.clone()
+    }
 }
 
 #[cfg(test)]
@@ -40,7 +50,7 @@ impl<'r> Context<'r> {
         self.client
     }
 
-    pub fn cache(&self) -> &ServiceCache<'r> {
+    pub fn cache(&self) -> &ServiceCache {
         &self.cache
     }
 
@@ -64,7 +74,7 @@ impl<'r> FromRequest<'r> for Context<'r> {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let cache = request.guard().await.unwrap();
+        let cache = request.rocket().state::<ServiceCache>().unwrap();
         let client = request.rocket().state::<reqwest::Client>().unwrap();
         // TODO: I couldn't get the request to be part of the context ... not sure if we want that for the future
         let host = request
@@ -77,6 +87,32 @@ impl<'r> FromRequest<'r> for Context<'r> {
             uri,
             cache,
             client,
+        });
+    }
+}
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for RequestContext {
+    type Error = ();
+
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        let cache = request.rocket().state::<Arc<dyn Cache>>().unwrap().clone();
+        let http_client = request
+            .rocket()
+            .state::<Arc<dyn HttpClient>>()
+            .unwrap()
+            .clone();
+        let host = request
+            .headers()
+            .get_one("Host")
+            .map(|host| host.to_string())
+            .unwrap_or(String::from(""));
+
+        let uri = request.uri().to_string();
+        return request::Outcome::Success(RequestContext {
+            request_id: format!("{}{}", host, uri),
+            cache,
+            http_client,
         });
     }
 }

@@ -1,4 +1,4 @@
-use crate::cache::cache_operations::RequestCached;
+use crate::cache::cache_operations::{NewRequestCached, RequestCached};
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::common::models::addresses::AddressEx;
@@ -13,8 +13,9 @@ use crate::config::{
     token_info_cache_duration, token_info_request_timeout,
 };
 use crate::providers::address_info::ContractInfo;
-use crate::utils::context::Context;
+use crate::utils::context::{Context, RequestContext};
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::HttpClient;
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
 use lazy_static::lazy_static;
@@ -27,6 +28,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
 use std::future::Future;
+use std::sync::Arc;
 use std::time::Duration;
 
 pub const TOKENS_KEY_BASE: &'static str = "dip_ti";
@@ -111,6 +113,12 @@ pub struct DefaultInfoProvider<'p, C: Cache> {
     chain_cache: Mutex<HashMap<String, Option<ChainInfo>>>,
 }
 
+pub struct NewDefaultInfoProvider {
+    pub chain_id: String,
+    client: Arc<dyn HttpClient>,
+    cache: Arc<dyn Cache>,
+}
+
 #[rocket::async_trait]
 impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     fn chain_id(&self) -> &str {
@@ -191,7 +199,7 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     }
 }
 
-impl<'a> DefaultInfoProvider<'a, ServiceCache<'a>> {
+impl<'a> DefaultInfoProvider<'a, ServiceCache> {
     pub fn new(chain_id: &'a str, context: &'a Context) -> Self {
         DefaultInfoProvider {
             chain_id,
@@ -201,6 +209,28 @@ impl<'a> DefaultInfoProvider<'a, ServiceCache<'a>> {
             token_cache: Default::default(),
             chain_cache: Default::default(),
         }
+    }
+}
+
+impl NewDefaultInfoProvider {
+    pub fn new_new(chain_id: &str, request_context: &RequestContext) -> Self {
+        NewDefaultInfoProvider {
+            chain_id: chain_id.to_string(),
+            client: Arc::clone(&request_context.http_client),
+            cache: Arc::clone(&request_context.cache),
+        }
+    }
+
+    pub async fn chain_info(&self) -> ApiResult<ChainInfo> {
+        let url = config_uri!("/v1/chains/{}", self.chain_id);
+        let data = NewRequestCached::new(url, self.client.clone(), self.cache.clone())
+            .cache_duration(chain_info_cache_duration())
+            .error_cache_duration(short_error_duration())
+            .request_timeout(chain_info_request_timeout())
+            .execute()
+            .await?;
+        let result = serde_json::from_str::<ChainInfo>(&data)?;
+        Ok(result)
     }
 }
 

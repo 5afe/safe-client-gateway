@@ -42,6 +42,16 @@ mod utils;
 #[cfg(test)]
 mod tests;
 
+use crate::cache::redis::create_service_cache;
+use crate::cache::Cache;
+use crate::routes::error_catchers;
+use crate::utils::http_client::HttpClient;
+use dotenv::dotenv;
+use routes::active_routes;
+use std::sync::Arc;
+use std::time::Duration;
+use utils::cors::CORS;
+
 #[doc(hidden)]
 #[launch]
 fn rocket() -> _ {
@@ -55,11 +65,14 @@ fn rocket() -> _ {
         .build()
         .unwrap();
 
+    let new_service_cache = create_service_cache();
+
     rocket::build()
         .mount("/", active_routes())
         .register("/", error_catchers())
-        .manage(create_pool())
-        .manage(client)
+        // .manage(create_pool())
+        .manage(Arc::new(new_service_cache) as Arc<dyn Cache>)
+        .manage(Arc::new(client) as Arc<dyn HttpClient>)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
 }

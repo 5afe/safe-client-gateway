@@ -1,9 +1,9 @@
-use crate::cache::cache_operations::CacheResponse;
+use crate::cache::cache_operations::{CacheResponse, NewCacheResponse};
 use crate::cache::Cache;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::handlers;
-use crate::utils::context::Context;
+use crate::utils::context::{Context, RequestContext};
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
@@ -25,13 +25,13 @@ use rocket::response::content;
  */
 #[get("/v1/chains/<chain_id>/about")]
 pub async fn get_chains_about(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    NewCacheResponse::new(&context)
         .duration(about_cache_duration())
         .resp_generator(|| handlers::chains_about(&context, &chain_id))
-        .execute(context.cache())
+        .execute_dyn()
         .await
 }
 

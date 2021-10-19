@@ -13,6 +13,18 @@ pub struct Response {
     pub status_code: u16,
 }
 
+impl Response {
+    pub fn is_server_error(&self) -> bool {
+        600 > self.status_code && self.status_code >= 500
+    }
+    pub fn is_client_error(&self) -> bool {
+        500 > self.status_code && self.status_code >= 400
+    }
+    pub fn is_success(&self) -> bool {
+        300 > self.status_code && self.status_code >= 200
+    }
+}
+
 #[automock]
 #[rocket::async_trait]
 pub trait HttpClient: Send + Sync {
@@ -20,7 +32,6 @@ pub trait HttpClient: Send + Sync {
 }
 
 #[rocket::async_trait]
-#[cfg(not(test))]
 impl HttpClient for reqwest::Client {
     async fn get(&self, request: &Request) -> ApiResult<Response> {
         let response = self

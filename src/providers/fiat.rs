@@ -19,7 +19,7 @@ pub struct FiatInfoProvider<'p, C: Cache> {
     cache: &'p C,
 }
 
-impl<'a> FiatInfoProvider<'a, ServiceCache<'a>> {
+impl<'a> FiatInfoProvider<'a, ServiceCache> {
     pub fn new(context: &'a Context) -> Self {
         FiatInfoProvider {
             client: context.client(),

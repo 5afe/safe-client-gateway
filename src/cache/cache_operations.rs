@@ -1,17 +1,22 @@
-use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+use crate::cache::cache_op_executors::{
+    cache_response, invalidate, new_cache_response, new_request_cached, request_cached,
+};
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::config::{
     base_config_service_uri, default_request_timeout, request_cache_duration,
     request_error_cache_duration,
 };
 use crate::providers::info::generate_token_key;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::HttpClient;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
 use rocket::response::content;
 use serde::Deserialize;
 use serde::Serialize;
 use std::future::Future;
+use std::sync::Arc;
 
 pub enum Database {
     Info = 1,
@@ -211,5 +216,118 @@ impl RequestCached {
     pub async fn execute(&self, client: &reqwest::Client, cache: &impl Cache) -> ApiResult<String> {
         assert!(self.request_timeout > 0);
         request_cached(cache, &client, self).await
+    }
+}
+
+// Replacement implementations
+pub struct NewCacheResponse<'a, R>
+where
+    R: Serialize,
+{
+    database: Database,
+    client: Arc<dyn HttpClient>,
+    cache: Arc<dyn Cache>,
+    pub key: String,
+    pub duration: usize,
+    // "dyn" allows setting the type of the BoxFuture to different times in runtime
+    pub resp_generator: Option<Box<dyn Fn() -> BoxFuture<'a, ApiResult<R>> + Send + Sync + 'a>>,
+}
+
+impl<'a, R> NewCacheResponse<'a, R>
+where
+    R: Serialize,
+{
+    pub fn new(context: &RequestContext) -> Self {
+        NewCacheResponse {
+            key: context.request_id.to_string(),
+            client: context.http_client.clone(),
+            cache: context.cache.clone(),
+            database: Database::Default,
+            duration: request_cache_duration(),
+            resp_generator: None,
+        }
+    }
+
+    pub fn database(&mut self, database: Database) -> &mut Self {
+        self.database = database;
+        self
+    }
+
+    pub fn duration(&mut self, duration: usize) -> &mut Self {
+        self.duration = duration;
+        self
+    }
+
+    pub fn resp_generator<F, Fut>(&mut self, resp_generator: F) -> &mut Self
+    where
+        F: Fn() -> Fut + Send + Sync + 'a,
+        Fut: Future<Output = ApiResult<R>> + Send + 'a,
+    {
+        self.resp_generator = Some(Box::new(move || resp_generator().boxed()));
+        self
+    }
+
+    pub async fn generate(&self) -> ApiResult<R> {
+        (self.resp_generator.as_ref().unwrap())().await
+    }
+
+    pub async fn execute_dyn(&self) -> ApiResult<content::Json<String>> {
+        new_cache_response(self.cache.clone(), &self).await
+    }
+}
+
+pub struct NewRequestCached {
+    database: Database,
+    pub url: String,
+    pub client: Arc<dyn HttpClient>,
+    pub cache: Arc<dyn Cache>,
+    pub request_timeout: u64,
+    pub cache_duration: usize,
+    pub error_cache_duration: usize,
+    pub cache_all_errors: bool,
+}
+
+impl NewRequestCached {
+    pub fn new(url: String, client: Arc<dyn HttpClient>, cache: Arc<dyn Cache>) -> Self {
+        NewRequestCached {
+            database: Database::Default,
+            url,
+            client,
+            cache,
+            request_timeout: default_request_timeout(),
+            cache_duration: request_cache_duration(),
+            error_cache_duration: request_error_cache_duration(),
+            cache_all_errors: false,
+        }
+    }
+
+    pub fn database(&mut self, database: Database) -> &mut Self {
+        self.database = database;
+        self
+    }
+
+    pub fn request_timeout(&mut self, request_timeout: u64) -> &mut Self {
+        self.request_timeout = request_timeout;
+        self
+    }
+
+    pub fn cache_duration(&mut self, cache_duration: usize) -> &mut Self {
+        self.cache_duration = cache_duration;
+        self
+    }
+
+    pub fn error_cache_duration(&mut self, error_cache_duration: usize) -> &mut Self {
+        self.error_cache_duration = error_cache_duration;
+        self
+    }
+
+    pub fn cache_all_errors(&mut self) -> &mut Self {
+        self.cache_all_errors = true;
+        self
+    }
+
+    pub async fn execute(&self) -> ApiResult<String> {
+        assert!(self.request_timeout > 0);
+        new_request_cached(&self.cache, &self.client, self).await
     }
 }

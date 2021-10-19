@@ -1,6 +1,6 @@
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
-use crate::cache::*;
+use crate::cache::MockCache;
 use crate::config::scheme;
 use crate::utils::http_client::{HttpClient, MockHttpClient};
 use rocket::http::uri::Origin;

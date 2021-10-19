@@ -30,6 +30,9 @@ impl HttpClient for reqwest::Client {
             .await?;
         let status_code = response.status().as_u16();
         let body = response.text().await?;
-        Ok(Response { body, status_code })
+        Ok(Response {
+            body: Some(body),
+            status_code,
+        })
     }
 }

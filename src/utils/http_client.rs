@@ -9,7 +9,7 @@ pub struct Request {
 }
 
 pub struct Response {
-    pub body: String,
+    pub body: Option<String>,
     pub status_code: u16,
 }
 

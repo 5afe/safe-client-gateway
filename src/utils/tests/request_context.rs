@@ -14,7 +14,7 @@ async fn testing_mocked_http_client() {
         .return_once(move |_| {
             Ok(Response {
                 status_code: 200,
-                body: String::from(response_json),
+                body: Some(String::from(response_json)),
             })
         });
 
@@ -32,5 +32,5 @@ async fn testing_mocked_http_client() {
         .get(&request)
         .await
         .expect("response error");
-    assert_eq!(response_json, actual.body);
+    assert_eq!(response_json, actual.body.unwrap());
 }

@@ -1,6 +1,8 @@
 use crate::cache::redis::ServiceCache;
+use crate::cache::Cache;
+use crate::cache::*;
 use crate::config::scheme;
-use crate::utils::http_client::*;
+use crate::utils::http_client::{HttpClient, MockHttpClient};
 use rocket::http::uri::Origin;
 use rocket::request::{self, FromRequest, Request};
 use std::sync::Arc;
@@ -15,15 +17,20 @@ pub struct Context<'r> {
 pub struct RequestContext {
     pub request_id: String, // this will be host+uri , will be used for cache keys
     pub http_client: Arc<dyn HttpClient>,
-    // pub cache : Arc<dyn Cache>
+    pub cache: Arc<dyn Cache>,
 }
 
 #[cfg(test)]
 impl RequestContext {
-    pub fn mock(request_id: String, mock_http_client: MockHttpClient) -> Self {
+    pub fn mock(
+        request_id: String,
+        mock_http_client: MockHttpClient,
+        mock_cache: MockCache,
+    ) -> Self {
         RequestContext {
             request_id,
             http_client: Arc::new(mock_http_client),
+            cache: Arc::new(mock_cache),
         }
     }
 }

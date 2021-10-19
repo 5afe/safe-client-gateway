@@ -15,7 +15,7 @@ pub struct Response {
 
 #[automock]
 #[rocket::async_trait]
-pub trait HttpClient: Send + Sync + 'static {
+pub trait HttpClient: Send + Sync {
     async fn get(&self, request: &Request) -> ApiResult<Response>;
 }
 

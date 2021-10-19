@@ -1,10 +1,8 @@
-use rocket::http::uri::Origin;
-use rocket::request::{self, FromRequest, Request};
-
 use crate::cache::redis::ServiceCache;
 use crate::config::scheme;
-use crate::utils::errors::ApiResult;
-use mockall::automock;
+use crate::utils::http_client::*;
+use rocket::http::uri::Origin;
+use rocket::request::{self, FromRequest, Request};
 use std::sync::Arc;
 
 pub struct Context<'r> {
@@ -18,20 +16,6 @@ pub struct RequestContext {
     pub request_id: String, // this will be host+uri , will be used for cache keys
     pub http_client: Arc<dyn HttpClient>,
     // pub cache : Arc<dyn Cache>
-}
-
-#[automock]
-#[rocket::async_trait]
-pub trait HttpClient: Send + Sync + 'static {
-    async fn get(&self, url: &str) -> ApiResult<String>;
-}
-
-#[rocket::async_trait]
-#[cfg(not(test))]
-impl HttpClient for reqwest::Client {
-    async fn get(&self, url: &str) -> ApiResult<String> {
-        Ok(self.get(url).send().await?.text().await?)
-    }
 }
 
 #[cfg(test)]

@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::config::transaction_request_timeout;
-use crate::models::backend::transactions::MultisigTransaction;
 use crate::providers::info::SAFE_V_1_3_0;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::Context;

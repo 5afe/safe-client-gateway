@@ -15,16 +15,10 @@ pub mod macros;
 #[doc(hidden)]
 mod cache;
 #[doc(hidden)]
+mod common;
+#[doc(hidden)]
 mod config;
 
-/// Models exposed by this service
-///
-/// *Important:* Names, Enums and Polymorphism
-///
-/// Every field in the structs that you will see in this documentation is **camelCased** on serialisation.
-///
-/// Enums are **SCREAMING_SNAKE_CASED** on serialization and the variant is always put into a `type` json field for polymorphic cases.
-mod models;
 #[doc(hidden)]
 mod monitoring;
 #[doc(hidden)]

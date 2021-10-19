@@ -1,4 +1,4 @@
-use crate::models::commons::{
+use crate::common::models::{
     DataDecoded, InternalTransaction, Operation, ParamValue, Parameter, ValueDecodedType,
 };
 

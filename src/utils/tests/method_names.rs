@@ -1,4 +1,4 @@
-use crate::models::commons::DataDecoded;
+use crate::common::models::DataDecoded;
 use crate::utils::{ERC20_TRANSFER_METHODS, ERC721_TRANSFER_METHODS, SETTINGS_CHANGE_METHODS};
 
 #[test]

@@ -27,7 +27,7 @@ pub mod safe_apps;
 pub mod safes;
 /// # Transactions endpoints
 ///
-/// As presented by the endpoints in this service, we are taking in the types returned by the [transaction service](https://github.com/gnosis/safe-transaction-service-example), which to this data are `Multisig`, `Module` and `Ethereum` transaction types.
+/// As presented by the endpoints in this handlers, we are taking in the types returned by the [transaction handlers](https://github.com/gnosis/safe-transaction-service-example), which to this data are `Multisig`, `Module` and `Ethereum` transaction types.
 ///
 /// The types served by the gate way are `Transfer`, `SettingsChange` and `Custom`. Additionally, we treat the `Creation` transaction as one additional type, as it is meant to be group with the rest of the items in the same UI component in the apps.
 pub mod transactions;
@@ -36,31 +36,31 @@ pub mod transactions;
 pub fn active_routes() -> Vec<Route> {
     routes![
         root,
-        about::backbone,
-        about::get_about,
-        about::get_chains_about,
-        about::redis,
-        about::get_master_copies,
-        balances::get_balances,
-        balances::get_supported_fiat,
-        chains::get_chain,
-        chains::get_chains,
-        collectibles::get_collectibles,
-        contracts::post_data_decoder,
-        notifications::post_notification_registration,
-        notifications::delete_notification_registration,
-        safes::get_safe_info,
-        safes::get_owners,
-        safes::post_safe_gas_estimation,
-        safe_apps::get_safe_apps,
-        transactions::get_transactions,
-        transactions::get_transactions_history,
-        transactions::get_transactions_queued,
-        transactions::post_transaction,
-        transactions::post_confirmation,
-        hooks::update,
-        hooks::flush,
-        health::health
+        about::routes::backbone,
+        about::routes::get_about,
+        about::routes::get_chains_about,
+        about::routes::redis,
+        about::routes::get_master_copies,
+        balances::routes::get_balances,
+        balances::routes::get_supported_fiat,
+        chains::routes::get_chain,
+        chains::routes::get_chains,
+        collectibles::routes::get_collectibles,
+        contracts::routes::post_data_decoder,
+        notifications::routes::post_notification_registration,
+        notifications::routes::delete_notification_registration,
+        safes::routes::get_safe_info,
+        safes::routes::get_owners,
+        safes::routes::post_safe_gas_estimation,
+        safe_apps::routes::get_safe_apps,
+        transactions::routes::get_transactions,
+        transactions::routes::get_transactions_history,
+        transactions::routes::get_transactions_queued,
+        transactions::routes::post_transaction,
+        transactions::routes::post_confirmation,
+        hooks::routes::update,
+        hooks::routes::flush,
+        health::routes::health
     ]
 }
 

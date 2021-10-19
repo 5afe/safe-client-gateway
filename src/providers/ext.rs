@@ -1,4 +1,4 @@
-use crate::models::service::addresses::AddressEx;
+use crate::common::models::service::addresses::AddressEx;
 use crate::providers::info::{InfoProvider, TokenInfo};
 use rocket::futures::future::OptionFuture;
 

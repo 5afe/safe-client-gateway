@@ -1,22 +1,11 @@
 #![deny(unused_must_use)]
 
+extern crate dotenv;
 extern crate log;
 extern crate semver;
 
 #[macro_use]
 extern crate rocket;
-
-extern crate dotenv;
-
-use std::time::Duration;
-
-use dotenv::dotenv;
-
-use cache::redis::create_pool;
-use routes::active_routes;
-use utils::cors::CORS;
-
-use crate::routes::error_catchers;
 
 #[doc(hidden)]
 #[macro_use]

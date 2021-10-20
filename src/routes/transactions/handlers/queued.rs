@@ -3,7 +3,7 @@ use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::handlers::offset_page_meta;
+use crate::routes::transactions::handlers::{build_absolute_uri, offset_page_meta};
 use crate::routes::transactions::models::summary::{ConflictType, Label, TransactionListItem};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
@@ -212,18 +212,21 @@ fn build_cursor(
     direction: i64,
 ) -> Option<String> {
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(
-            crate::routes::transactions::routes::get_transactions_queued(
-                chain_id,
-                safe_address,
-                Some(offset_page_meta(
-                    page_meta,
-                    direction * (page_meta.limit as i64)
-                )),
-                Some(timezone_offset.clone().unwrap_or("0".to_string())),
-                Some(display_trusted_only)
-            )
-        ))
+        build_absolute_uri(
+            context,
+            uri!(
+                crate::routes::transactions::routes::get_transactions_queued(
+                    chain_id,
+                    safe_address,
+                    Some(offset_page_meta(
+                        page_meta,
+                        direction * (page_meta.limit as i64)
+                    )),
+                    Some(timezone_offset.clone().unwrap_or("0".to_string())),
+                    Some(display_trusted_only)
+                )
+            ),
+        )
     })
 }
 

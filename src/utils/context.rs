@@ -9,7 +9,7 @@ use std::sync::Arc;
 
 pub struct RequestContext {
     pub request_id: String,
-    pub absolute_uri: String,
+    pub host: String,
     http_client: Arc<dyn HttpClient>,
     cache: Arc<dyn Cache>,
 }
@@ -28,13 +28,13 @@ impl RequestContext {
 impl RequestContext {
     pub fn mock(
         request_id: String,
-        absolute_uri: String,
+        host: String,
         mock_http_client: MockHttpClient,
         mock_cache: MockCache,
     ) -> Self {
         RequestContext {
             request_id,
-            absolute_uri,
+            host,
             http_client: Arc::new(mock_http_client),
             cache: Arc::new(mock_cache),
         }
@@ -62,13 +62,13 @@ impl<'r> FromRequest<'r> for RequestContext {
             .expect("Request Host must be available");
 
         let uri = request.uri().to_string();
-        let absolute_uri = format!("{}://{}{}", scheme(), host, &uri);
+        let host = host.to_string();
 
         log::error!("{}", &absolute_uri);
         log::error!("{}", &uri);
         return request::Outcome::Success(RequestContext {
             request_id: uri,
-            absolute_uri,
+            host,
             cache,
             http_client,
         });

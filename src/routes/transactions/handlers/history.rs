@@ -5,7 +5,7 @@ use crate::common::models::backend::transactions::{CreationTransaction, Transact
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::handlers::offset_page_meta;
+use crate::routes::transactions::handlers::{build_absolute_uri, offset_page_meta};
 use crate::routes::transactions::models::summary::{
     ConflictType, TransactionListItem, TransactionSummary,
 };
@@ -98,17 +98,20 @@ fn build_cursor(
 ) -> Option<String> {
     //TODO messed this one up badly, maybe?
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(
-            crate::routes::transactions::routes::get_transactions_history(
-                chain_id,
-                safe_address,
-                Some(offset_page_meta(
-                    page_meta,
-                    direction * (page_meta.limit as i64)
-                )),
-                Some(timezone_offset.clone().unwrap_or("0".to_string()))
-            )
-        ))
+        build_absolute_uri(
+            context,
+            uri!(
+                crate::routes::transactions::routes::get_transactions_history(
+                    chain_id,
+                    safe_address,
+                    Some(offset_page_meta(
+                        page_meta,
+                        direction * (page_meta.limit as i64)
+                    )),
+                    Some(timezone_offset.clone().unwrap_or("0".to_string()))
+                )
+            ),
+        )
     })
 }
 

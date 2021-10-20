@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::chain_info_response_cache_duration;
 use crate::routes::chains::handlers::{get_chains_paginated, get_single_chain};
-use crate::utils::context::{Context, RequestContext};
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 

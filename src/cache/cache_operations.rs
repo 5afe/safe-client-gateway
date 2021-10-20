@@ -22,6 +22,7 @@ pub enum Database {
 }
 
 pub struct Invalidate {
+    pub(super) cache: Arc<dyn Cache>,
     pattern: InvalidationPattern,
     database: Database,
 }
@@ -96,8 +97,9 @@ impl InvalidationScope {
 }
 
 impl Invalidate {
-    pub fn new(pattern: InvalidationPattern) -> Self {
+    pub fn new(pattern: InvalidationPattern, cache: Arc<dyn Cache>) -> Self {
         Invalidate {
+            cache,
             pattern,
             database: Database::Default,
         }
@@ -108,8 +110,8 @@ impl Invalidate {
         self
     }
 
-    pub fn execute(&self, cache: &impl Cache) {
-        invalidate(cache, &self.pattern)
+    pub fn execute(&self) {
+        invalidate(self.cache.clone(), &self.pattern)
     }
 }
 

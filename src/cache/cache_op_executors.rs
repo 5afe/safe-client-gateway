@@ -1,5 +1,6 @@
 use crate::cache::cache_operations::{
-    CacheResponse, InvalidationPattern, NewCacheResponse, NewRequestCached, RequestCached,
+    CacheResponse, Invalidate, InvalidationPattern, NewCacheResponse, NewRequestCached,
+    RequestCached,
 };
 use crate::cache::inner_cache::CachedWithCode;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_RESP_PREFIX};
@@ -10,7 +11,7 @@ use serde::Serialize;
 use std::sync::Arc;
 use std::time::Duration;
 
-pub(super) fn invalidate(cache: &impl Cache, pattern: &InvalidationPattern) {
+pub(super) fn invalidate(cache: Arc<dyn Cache>, pattern: &InvalidationPattern) {
     cache.invalidate_pattern(pattern.to_pattern_string().as_str());
 }
 

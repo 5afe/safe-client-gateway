@@ -2,28 +2,31 @@ use crate::common::models::data_decoded::DataDecoded;
 use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::contracts::models::DataDecoderRequest;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::Request;
 use std::collections::HashMap;
 use std::time::Duration;
 
 pub async fn request_data_decoded(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     data_decoder_request: &DataDecoderRequest,
 ) -> ApiResult<DataDecoded> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let url = core_uri!(info_provider, "/v1/data-decoder/")?;
-    let mut json = HashMap::new();
-    json.insert("data", &data_decoder_request.data);
+    // TODO handle posts properly
+    // let mut json = HashMap::new();
+    // json.insert("data", &data_decoder_request.data);
+    let body = json!({"data": &data_decoder_request.data});
 
-    let response = context
-        .client()
-        .post(url)
-        .json(&json)
-        .timeout(Duration::from_millis(default_request_timeout()))
-        .send()
-        .await?;
+    let request = {
+        let mut request = Request::new(url);
+        request.body = Some(body.to_string());
+        request
+    };
+
+    let response = context.client().post(request).await?;
 
     Ok(serde_json::from_str::<DataDecoded>(
         &response.text().await?,

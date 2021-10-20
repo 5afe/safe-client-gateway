@@ -242,8 +242,12 @@ impl DefaultInfoProvider<'_> {
 
     async fn populate_token_cache(&self) -> ApiResult<()> {
         let url = core_uri!(self, "/v1/tokens/?limit=10000")?;
-        let request =
-            Request::new_with_timeout(url, Duration::from_millis(token_info_request_timeout()));
+        let request = {
+            let mut request = Request::new(url);
+            request.timeout = Duration::from_millis(token_info_request_timeout());
+            request
+        };
+
         let response = self.client.get(&request).await?;
         let data: Page<TokenInfo> = serde_json::from_str(&response.body.expect("Token response"))?; //response.json().await?;
         let token_key = generate_token_key(self.chain_id);

@@ -18,12 +18,14 @@ impl Request {
         }
     }
 
-    pub fn new_with_timeout(url: String, timeout: Duration) -> Self {
-        Request {
-            url,
-            body: None,
-            timeout,
-        }
+    pub fn timeout(&mut self, timeout: Duration) -> &mut Self {
+        self.timeout = timeout;
+        self
+    }
+
+    pub fn body(&mut self, body: Option<String>) -> &mut Self {
+        self.body = body;
+        self
     }
 }
 
@@ -48,6 +50,7 @@ impl Response {
 #[rocket::async_trait]
 pub trait HttpClient: Send + Sync {
     async fn get(&self, request: &Request) -> ApiResult<Response>;
+    async fn post(&self, request: &Request) -> ApiResult<Response>;
 }
 
 #[rocket::async_trait]
@@ -60,6 +63,22 @@ impl HttpClient for reqwest::Client {
             .await?;
         let status_code = response.status().as_u16();
         let body = response.text().await?;
+        Ok(Response {
+            body: Some(body),
+            status_code,
+        })
+    }
+
+    async fn post(&self, request: &Request) -> ApiResult<Response> {
+        let response = self
+            .post(&request.url)
+            // .json(json!)
+            .timeout(request.timeout)
+            .send()
+            .await?;
+        let status_code = response.status().as_u16();
+        let body = response.text().await?;
+
         Ok(Response {
             body: Some(body),
             status_code,

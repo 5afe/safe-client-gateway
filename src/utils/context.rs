@@ -16,6 +16,7 @@ pub struct Context<'r> {
 
 pub struct RequestContext {
     pub request_id: String, // this will be host+uri , will be used for cache keys
+    pub absolute_uri: String,
     pub http_client: Arc<dyn HttpClient>,
     pub cache: Arc<dyn Cache>,
 }
@@ -34,11 +35,13 @@ impl RequestContext {
 impl RequestContext {
     pub fn mock(
         request_id: String,
+        absolute_uri: String,
         mock_http_client: MockHttpClient,
         mock_cache: MockCache,
     ) -> Self {
         RequestContext {
             request_id,
+            absolute_uri,
             http_client: Arc::new(mock_http_client),
             cache: Arc::new(mock_cache),
         }
@@ -82,8 +85,9 @@ impl<'r> FromRequest<'r> for Context<'r> {
             .get_one("Host")
             .map(|host| host.to_string());
         let uri = request.uri().to_string();
-        log::error!("URI  : {}", &uri);
-        log::error!("HOST : {:#?}", &host);
+        log::error!("URI   : {}", &uri);
+        log::error!("HOST  : {:#?}", &host);
+        log::error!("TO_STR: {}", request.to_string());
         return request::Outcome::Success(Context {
             host,
             uri,
@@ -98,21 +102,29 @@ impl<'r> FromRequest<'r> for RequestContext {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let cache = request.rocket().state::<Arc<dyn Cache>>().unwrap().clone();
+        let cache = request
+            .rocket()
+            .state::<Arc<dyn Cache>>()
+            .expect("ServiceCache unavailable. Is it added to rocket instance?")
+            .clone();
         let http_client = request
             .rocket()
             .state::<Arc<dyn HttpClient>>()
-            .unwrap()
+            .expect("HttpClient unavailable. Is it added to rocket instance?")
             .clone();
         let host = request
             .headers()
             .get_one("Host")
-            .map(|host| host.to_string())
-            .unwrap_or(String::from(""));
+            .expect("Request Host must be available");
 
         let uri = request.uri().to_string();
+        let absolute_uri = format!("{}://{}{}", scheme(), host, &uri);
+
+        log::error!("{}", &absolute_uri);
+        log::error!("{}", &uri);
         return request::Outcome::Success(RequestContext {
-            request_id: format!("{}{}", host, uri),
+            request_id: uri,
+            absolute_uri,
             cache,
             http_client,
         });

@@ -5,13 +5,13 @@ use crate::config::{balances_cache_duration, balances_request_timeout};
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::balances::models::{Balance, Balances};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use bigdecimal::{BigDecimal, ToPrimitive};
 use std::cmp::Ordering;
 
 pub async fn balances(
-    context: &Context<'_>,
+    context: RequestContext,
     chain_id: &str,
     safe_address: &str,
     fiat: &str,
@@ -28,10 +28,10 @@ pub async fn balances(
         exclude_spam
     )?;
 
-    let body = RequestCached::new(url)
+    let body = RequestCached::new(url, &context)
         .cache_duration(balances_cache_duration())
         .request_timeout(balances_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;
 
@@ -68,7 +68,7 @@ pub async fn balances(
     })
 }
 
-pub async fn fiat_codes(context: &Context<'_>) -> ApiResult<Vec<String>> {
+pub async fn fiat_codes(context: &RequestContext) -> ApiResult<Vec<String>> {
     let info_provider = FiatInfoProvider::new(&context);
     let mut fiat_codes = info_provider.available_currency_codes().await?;
 

@@ -14,25 +14,29 @@ async fn testing_mocked_http_client() {
         .return_once(move |_| {
             Ok(Response {
                 status_code: 200,
-                body: Some(String::from(response_json)),
+                body: String::from(response_json),
             })
         });
 
     let mock_cache = MockCache::new();
 
-    let request_context =
-        RequestContext::mock("request_id".to_string(), mock_http_client, mock_cache);
+    let request_context = RequestContext::mock(
+        "request_id".to_string(),
+        "host".to_string(),
+        mock_http_client,
+        mock_cache,
+    );
     let request = Request {
         url: "https://example.com".to_string(),
         body: None,
         timeout: Duration::from_millis(0),
     };
     let actual = request_context
-        .http_client
-        .get(&request)
+        .http_client()
+        .get(request)
         .await
         .expect("response error");
-    assert_eq!(response_json, actual.body.unwrap());
+    assert_eq!(response_json, actual.body);
 }
 
 #[rocket::async_test]

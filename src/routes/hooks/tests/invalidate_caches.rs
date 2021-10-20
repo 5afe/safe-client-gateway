@@ -6,6 +6,7 @@ use crate::common::models::backend::hooks::{
 use crate::routes::hooks::handlers::invalidate_caches;
 use mockall::predicate::*;
 use mockall::Sequence;
+use std::sync::Arc;
 
 #[test]
 fn invalidate_with_empty_payload() {
@@ -26,7 +27,7 @@ fn invalidate_with_empty_payload() {
         .return_const(())
         .with(eq("c_re*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"));
 
-    invalidate_caches(&mock_cache, &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
 }
 
 #[test]
@@ -61,7 +62,7 @@ fn invalidate_new_confirmation_payload() {
         ))
         .in_sequence(&mut sequence);
 
-    invalidate_caches(&mock_cache, &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
 }
 
 #[test]
@@ -99,7 +100,7 @@ fn invalidate_executed_multisig_transaction_payload() {
         ))
         .in_sequence(&mut sequence);
 
-    invalidate_caches(&mock_cache, &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
 }
 
 #[test]
@@ -134,5 +135,5 @@ fn invalidate_pending_multisig_transaction_payload() {
         ))
         .in_sequence(&mut sequence);
 
-    invalidate_caches(&mut mock_cache, &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
 }

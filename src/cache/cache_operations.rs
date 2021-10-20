@@ -194,6 +194,19 @@ impl RequestCached {
         }
     }
 
+    pub fn new_from_context(url: String, context: &RequestContext) -> Self {
+        RequestCached {
+            database: Database::Default,
+            client: context.http_client(),
+            cache: context.cache(),
+            url,
+            request_timeout: default_request_timeout(),
+            cache_duration: request_cache_duration(),
+            error_cache_duration: request_error_cache_duration(),
+            cache_all_errors: false,
+        }
+    }
+
     pub fn database(&mut self, database: Database) -> &mut Self {
         self.database = database;
         self

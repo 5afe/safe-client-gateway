@@ -4,11 +4,11 @@ use crate::common::models::page::Page;
 use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::chains::models::ChainInfo as ServiceChainInfo;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
 pub async fn get_chains_paginated(
-    context: &Context<'_>,
+    context: &RequestContext,
     limit: &Option<String>,
 ) -> ApiResult<Page<ServiceChainInfo>> {
     let url = config_uri!(
@@ -16,10 +16,10 @@ pub async fn get_chains_paginated(
         limit.as_ref().unwrap_or(&"".to_string())
     );
 
-    let body = RequestCached::new(url)
+    let body = RequestCached::new(url, &context)
         .request_timeout(chain_info_request_timeout())
         .cache_duration(chain_info_cache_duration())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
 
     let page = serde_json::from_str::<Page<BackendChainInfo>>(&body)?;
@@ -27,7 +27,7 @@ pub async fn get_chains_paginated(
 }
 
 pub async fn get_single_chain(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
 ) -> ApiResult<ServiceChainInfo> {
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);

@@ -5,6 +5,7 @@ use crate::routes::contracts::models::DataDecoderRequest;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
+use serde_json::json;
 use std::collections::HashMap;
 use std::time::Duration;
 
@@ -13,7 +14,8 @@ pub async fn request_data_decoded(
     chain_id: &str,
     data_decoder_request: &DataDecoderRequest,
 ) -> ApiResult<DataDecoded> {
-    let info_provider = DefaultInfoProvider::new(chain_id, &context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let client = context.http_client();
     let url = core_uri!(info_provider, "/v1/data-decoder/")?;
     // TODO handle posts properly
     // let mut json = HashMap::new();
@@ -26,9 +28,6 @@ pub async fn request_data_decoded(
         request
     };
 
-    let response = context.client().post(request).await?;
-
-    Ok(serde_json::from_str::<DataDecoded>(
-        &response.text().await?,
-    )?)
+    let response_body = client.post(request).await?.body;
+    Ok(serde_json::from_str::<DataDecoded>(&response_body)?)
 }

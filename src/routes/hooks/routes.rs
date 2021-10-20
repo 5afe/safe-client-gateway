@@ -11,7 +11,7 @@ pub fn update(context: RequestContext, token: String, update: Json<Payload>) -> 
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    invalidate_caches(&context.cache(), &update)
+    invalidate_caches(context.cache(), &update)
 }
 
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]

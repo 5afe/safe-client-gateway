@@ -12,24 +12,24 @@ pub fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiResult<
     .execute();
     payload.details.as_ref().map(|d| match d {
         PayloadDetails::NewConfirmation(data) => {
-            Invalidate::new(InvalidationPattern::Any(
-                InvalidationScope::Both,
-                String::from(&data.safe_tx_hash),
-            ))
+            Invalidate::new(
+                InvalidationPattern::Any(InvalidationScope::Both, String::from(&data.safe_tx_hash)),
+                cache.clone(),
+            )
             .execute();
         }
         PayloadDetails::ExecutedMultisigTransaction(data) => {
-            Invalidate::new(InvalidationPattern::Any(
-                InvalidationScope::Both,
-                String::from(&data.safe_tx_hash),
-            ))
+            Invalidate::new(
+                InvalidationPattern::Any(InvalidationScope::Both, String::from(&data.safe_tx_hash)),
+                cache.clone(),
+            )
             .execute();
         }
         PayloadDetails::PendingMultisigTransaction(data) => {
-            Invalidate::new(InvalidationPattern::Any(
-                InvalidationScope::Both,
-                String::from(&data.safe_tx_hash),
-            ))
+            Invalidate::new(
+                InvalidationPattern::Any(InvalidationScope::Both, String::from(&data.safe_tx_hash)),
+                cache.clone(),
+            )
             .execute();
         }
         _ => {}

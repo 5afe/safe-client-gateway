@@ -16,7 +16,7 @@ pub async fn get_chains_paginated(
         limit.as_ref().unwrap_or(&"".to_string())
     );
 
-    let body = RequestCached::new(url, &context)
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(chain_info_request_timeout())
         .cache_duration(chain_info_cache_duration())
         .execute()

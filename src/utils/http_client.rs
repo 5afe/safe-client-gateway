@@ -30,7 +30,7 @@ impl Request {
 }
 
 pub struct Response {
-    pub body: Option<String>,
+    pub body: String,
     pub status_code: u16,
 }
 
@@ -49,14 +49,14 @@ impl Response {
 #[automock]
 #[rocket::async_trait]
 pub trait HttpClient: Send + Sync {
-    async fn get(&self, request: &Request) -> ApiResult<Response>;
-    async fn post(&self, request: &Request) -> ApiResult<Response>;
-    async fn delete(&self, request: &Request) -> ApiResult<Response>;
+    async fn get(&self, request: Request) -> ApiResult<Response>;
+    async fn post(&self, request: Request) -> ApiResult<Response>;
+    async fn delete(&self, request: Request) -> ApiResult<Response>;
 }
 
 #[rocket::async_trait]
 impl HttpClient for reqwest::Client {
-    async fn get(&self, request: &Request) -> ApiResult<Response> {
+    async fn get(&self, request: Request) -> ApiResult<Response> {
         let response = self
             .get(&request.url)
             .timeout(request.timeout)
@@ -64,13 +64,10 @@ impl HttpClient for reqwest::Client {
             .await?;
         let status_code = response.status().as_u16();
         let body = response.text().await?;
-        Ok(Response {
-            body: Some(body),
-            status_code,
-        })
+        Ok(Response { body, status_code })
     }
 
-    async fn post(&self, request: &Request) -> ApiResult<Response> {
+    async fn post(&self, request: Request) -> ApiResult<Response> {
         let response = self
             .post(&request.url)
             // .json(json!)
@@ -80,13 +77,10 @@ impl HttpClient for reqwest::Client {
         let status_code = response.status().as_u16();
         let body = response.text().await?;
 
-        Ok(Response {
-            body: Some(body),
-            status_code,
-        })
+        Ok(Response { body, status_code })
     }
 
-    async fn delete(&self, request: &Request) -> ApiResult<Response> {
+    async fn delete(&self, request: Request) -> ApiResult<Response> {
         let response = self
             .delete(&request.url)
             .timeout(request.timeout)
@@ -94,9 +88,6 @@ impl HttpClient for reqwest::Client {
             .await?;
         let status_code = response.status().as_u16();
         let body = response.text().await?;
-        Ok(Response {
-            body: Some(body),
-            status_code,
-        })
+        Ok(Response { body, status_code })
     }
 }

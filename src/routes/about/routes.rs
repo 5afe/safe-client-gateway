@@ -1,4 +1,4 @@
-use crate::cache::cache_operations::{CacheResponse, NewCacheResponse};
+use crate::cache::cache_operations::CacheResponse;
 use crate::cache::Cache;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
@@ -29,10 +29,10 @@ pub async fn get_chains_about(
     context: RequestContext,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
-    NewCacheResponse::new(&context)
+    CacheResponse::new(&context)
         .duration(about_cache_duration())
         .resp_generator(|| handlers::chains_about(&context, &chain_id))
-        .execute_dyn()
+        .execute()
         .await
 }
 
@@ -101,13 +101,7 @@ pub async fn backbone(
     let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
     let url = core_uri!(info_provider, "/v1/about/")?;
     let request = Request::new(url);
-    Ok(content::Json(
-        client
-            .get(&request)
-            .await?
-            .body
-            .unwrap_or(String::from("No backbone about")),
-    ))
+    Ok(content::Json(client.get(request).await?.body))
 }
 
 #[doc(hidden)]

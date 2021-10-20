@@ -248,8 +248,8 @@ impl DefaultInfoProvider<'_> {
             request
         };
 
-        let response = self.client.get(&request).await?;
-        let data: Page<TokenInfo> = serde_json::from_str(&response.body.expect("Token response"))?; //response.json().await?;
+        let response = self.client.get(request).await?;
+        let data: Page<TokenInfo> = serde_json::from_str(&response.body)?;
         let token_key = generate_token_key(self.chain_id);
         for token in data.results.iter() {
             self.cache

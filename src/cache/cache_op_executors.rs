@@ -123,7 +123,7 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                 timeout: Duration::from_millis(operation.request_timeout),
             };
 
-            let response = client.get(&http_request).await;
+            let response = client.get(http_request).await;
 
             match response {
                 Err(error) => {
@@ -140,7 +140,7 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                     let status_code = response.status_code;
                     let is_server_error = response.is_server_error();
                     let is_client_error = response.is_client_error();
-                    let response_body = &response.body.unwrap();
+                    let response_body = response.body;
 
                     // Early return and no caching if the error is a 500 or greater
                     if !operation.cache_all_errors && is_server_error {

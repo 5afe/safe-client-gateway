@@ -49,26 +49,26 @@ async fn fetch_estimation(
     safe_transaction_estimation_request: &SafeTransactionEstimationRequest,
 ) -> ApiResult<String> {
     let client = context.http_client();
-    let estimation_response = client
-        .post(request_url)
-        .json(safe_transaction_estimation_request)
-        .timeout(Duration::from_millis(default_request_timeout()))
-        .send()
-        .await?;
+    let request = {
+        let mut request = Request::new(request_url);
+        request.body = Some(serde_json::to_string(safe_transaction_estimation_request)?);
+        request
+    };
+    let estimation_response = client.post(request).await?;
 
-    Ok(serde_json::from_str::<BackendSafeTransactionEstimation>(
-        &estimation_response.text().await?,
-    )?
-    .safe_tx_gas)
+    Ok(
+        serde_json::from_str::<BackendSafeTransactionEstimation>(&estimation_response.body)?
+            .safe_tx_gas,
+    )
 }
 
 async fn fetch_latest_nonce(context: &RequestContext, request_url: String) -> ApiResult<u64> {
     let client = context.http_client();
     let request = Request::new(request_url);
-    let latest_multisig_tx_response = client.get(&request).await?;
+    let latest_multisig_tx_response = client.get(request).await?;
 
     let nonce = serde_json::from_str::<Page<BackendMultisigTransaction>>(
-        &latest_multisig_tx_response.text().await?,
+        &latest_multisig_tx_response.body,
     )?
     .results
     .first()

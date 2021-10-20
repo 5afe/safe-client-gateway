@@ -28,7 +28,7 @@ pub async fn balances(
         exclude_spam
     )?;
 
-    let body = RequestCached::new(url, &context)
+    let body = RequestCached::new_from_context(url, context)
         .cache_duration(balances_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()

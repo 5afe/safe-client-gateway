@@ -27,7 +27,7 @@ pub async fn delete_registration(
     )?;
 
     let request = Request::new(url);
-    context.http_client().delete(&request).await?;
+    context.http_client().delete(request).await?;
 
     Ok(())
 }
@@ -36,7 +36,7 @@ pub async fn post_registration(
     context: &RequestContext,
     registration_request: NotificationRegistrationRequest,
 ) -> ApiResult<()> {
-    let client = context.client();
+    let client = context.http_client();
     let mut requests = Vec::with_capacity(registration_request.safe_registrations.len());
 
     for safe_registration in registration_request.safe_registrations.iter() {
@@ -45,14 +45,12 @@ pub async fn post_registration(
         let backend_request =
             build_backend_request(&registration_request.device_data, safe_registration);
 
-        requests.push((
-            &safe_registration.chain_id,
-            client
-                .post(url.to_string())
-                .json(&backend_request)
-                .timeout(Duration::from_millis(default_request_timeout()))
-                .send(),
-        ));
+        let request = {
+            let mut request = Request::new(url);
+            request.body = Some(serde_json::to_string(&backend_request)?);
+            request
+        };
+        requests.push((&safe_registration.chain_id, client.post(request)));
     }
 
     let (error_chain_ids, error_body) = {
@@ -61,10 +59,10 @@ pub async fn post_registration(
         for (chain_id, request) in requests.into_iter() {
             match request.await {
                 Ok(response) => {
-                    if !response.status().is_success() {
+                    if !response.is_success() {
                         error_chain_ids.push(chain_id);
                         errors.push(json!({
-                            chain_id : RawValue::from_string(response.text().await.expect("Error response issue"))?
+                            chain_id : RawValue::from_string(response.body)?
                             }
                         ))
                     }

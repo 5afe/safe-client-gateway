@@ -9,21 +9,21 @@ use crate::config::{
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::balances::models::{Balance, Balances, TokenPrice};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use bigdecimal::BigDecimal;
 use rocket::futures::{stream, StreamExt};
 
 pub async fn balances(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     fiat: &str,
     trusted: bool,
     exclude_spam: bool,
 ) -> ApiResult<Balances> {
-    let info_provider = DefaultInfoProvider::new(chain_id, &context);
-    let fiat_info_provider = FiatInfoProvider::new(&context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let fiat_info_provider = FiatInfoProvider::new(context);
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
@@ -32,10 +32,10 @@ pub async fn balances(
         exclude_spam
     )?;
 
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, context)
         .cache_duration(balances_cache_duration())
         .request_timeout(balances_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let backend_balances: Vec<BalanceDto> = serde_json::from_str(&body)?;
 
@@ -49,7 +49,7 @@ pub async fn balances(
     let mut total_fiat = 0.0;
 
     let token_prices: Vec<TokenPrice> =
-        get_token_prices(&context, &info_provider, &backend_balances).await;
+        get_token_prices(context, &info_provider, &backend_balances).await;
 
     let service_balances: Vec<Balance> = backend_balances
         .iter()
@@ -78,7 +78,7 @@ pub async fn balances(
 }
 
 async fn get_token_prices(
-    context: &Context<'_>,
+    context: &RequestContext,
     info_provider: &impl InfoProvider,
     backend_balances: &Vec<BalanceDto>,
 ) -> Vec<TokenPrice> {
@@ -118,15 +118,15 @@ async fn get_token_prices(
 /// returns: Result<TokenPrice, ApiError>
 ///
 async fn get_token_usd_rate(
-    context: &Context<'_>,
+    context: &RequestContext,
     token_address: String,
     info_provider: &impl InfoProvider,
 ) -> ApiResult<TokenPrice> {
-    let endpoint: String = core_uri!(info_provider, "/v1/tokens/{}/prices/usd/", token_address)?;
+    let url = core_uri!(info_provider, "/v1/tokens/{}/prices/usd/", token_address)?;
 
-    let body = RequestCached::new(endpoint.to_owned())
+    let body = RequestCached::new_from_context(url, context)
         .cache_duration(token_price_cache_duration())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let response: BackendTokenPrice = serde_json::from_str(&body)?;
 

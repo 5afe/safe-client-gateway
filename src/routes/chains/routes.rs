@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::chain_info_response_cache_duration;
 use crate::routes::chains::handlers::{get_chains_paginated, get_single_chain};
-use crate::utils::context::Context;
+use crate::utils::context::{Context, RequestContext};
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
@@ -19,11 +19,14 @@ use rocket::response::content;
  *
  */
 #[get("/v1/chains/<chain_id>")]
-pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+pub async fn get_chain(
+    context: RequestContext,
+    chain_id: String,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context)
         .duration(chain_info_response_cache_duration())
         .resp_generator(|| get_single_chain(&context, &chain_id))
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -42,12 +45,12 @@ pub async fn get_chain(context: Context<'_>, chain_id: String) -> ApiResult<cont
  */
 #[get("/v1/chains?<limit>")]
 pub async fn get_chains(
-    context: Context<'_>,
+    context: RequestContext,
     limit: Option<String>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .duration(chain_info_response_cache_duration())
         .resp_generator(|| get_chains_paginated(&context, &limit))
-        .execute(context.cache())
+        .execute()
         .await
 }

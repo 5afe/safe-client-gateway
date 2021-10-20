@@ -11,7 +11,7 @@ use bigdecimal::{BigDecimal, ToPrimitive};
 use std::cmp::Ordering;
 
 pub async fn balances(
-    context: RequestContext,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     fiat: &str,

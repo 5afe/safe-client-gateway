@@ -1,12 +1,6 @@
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::common::models::{Page, PageMetadata};
-use crate::json::{
-    BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_393,
-    BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_394,
-    BACKEND_QUEUED_TRANSACTION_LIST_PAGE_NO_CONFLICTS, MULTISIG_TX_AWAITING_EXECUTION,
-    MULTISIG_TX_SETTINGS_CHANGE, TOKEN_BAT,
-};
 use crate::providers::info::*;
 use crate::routes::transactions::handlers::queued::{
     adjust_page_meta, get_edge_nonce, get_previous_page_nonce, process_transactions,
@@ -18,6 +12,12 @@ use crate::routes::transactions::models::summary::{
 use crate::routes::transactions::models::TransferDirection::Outgoing;
 use crate::routes::transactions::models::{
     Erc20Transfer, TransactionInfo, TransactionStatus, Transfer, TransferInfo,
+};
+use crate::tests::json::{
+    BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_393,
+    BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_394,
+    BACKEND_QUEUED_TRANSACTION_LIST_PAGE_NO_CONFLICTS, MULTISIG_TX_AWAITING_EXECUTION,
+    MULTISIG_TX_SETTINGS_CHANGE, TOKEN_BAT,
 };
 
 #[test]

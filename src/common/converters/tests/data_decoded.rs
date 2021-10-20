@@ -15,7 +15,7 @@ async fn data_decoded_set_fallback_handler_to_settings_info() {
         .return_once(move |_| bail!("Some http error"));
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SET_FALLBACK_HANDLER)
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SET_FALLBACK_HANDLER)
             .unwrap();
 
     let expected = SettingsChange {
@@ -45,7 +45,7 @@ async fn data_decoded_set_fallback_handler_to_settings_info_with_address_info() 
         });
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SET_FALLBACK_HANDLER)
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SET_FALLBACK_HANDLER)
             .unwrap();
 
     let expected = SettingsChange {
@@ -71,9 +71,10 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info() {
         .expect_address_ex_from_contracts()
         .times(0);
 
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
-            .unwrap();
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD,
+    )
+    .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -95,9 +96,10 @@ async fn data_decoded_add_owner_with_threshold_to_settings_info_with_address_inf
         .expect_address_ex_from_contracts()
         .times(0);
 
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
-            .unwrap();
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD,
+    )
+    .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -120,7 +122,7 @@ async fn data_decoded_remove_owner_to_settings_info() {
         .times(0);
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_REMOVE_OWNER).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_REMOVE_OWNER).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -143,7 +145,7 @@ async fn data_decoded_swap_owner_to_settings_info() {
         .times(0);
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_OWNER).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SWAP_OWNER).unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -166,7 +168,8 @@ async fn data_decoded_change_threshold_to_settings_info() {
         .times(0);
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_THRESHOLD).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_CHANGE_THRESHOLD)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -187,7 +190,8 @@ async fn data_decoded_change_implementation_to_settings_info() {
         .return_once(move |_| bail!("Some http error"));
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_CHANGE_MASTER_COPY)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -216,7 +220,8 @@ async fn data_decoded_change_implementation_to_settings_info_with_address_info()
         });
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_CHANGE_MASTER_COPY)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -243,7 +248,8 @@ async fn data_decoded_enable_module_to_settings_info() {
         .return_once(move |_| bail!("Some http error"));
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ENABLE_MODULE).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_ENABLE_MODULE)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -272,7 +278,8 @@ async fn data_decoded_enable_module_to_settings_info_with_address_info() {
         });
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ENABLE_MODULE).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_ENABLE_MODULE)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -299,7 +306,8 @@ async fn data_decoded_disable_module_to_settings_info() {
         .return_once(move |_| bail!("Some http error"));
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_DISABLE_MODULE).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_DISABLE_MODULE)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -328,7 +336,8 @@ async fn data_decoded_disable_module_to_settings_info_with_address_info() {
         });
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_DISABLE_MODULE).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_DISABLE_MODULE)
+            .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -350,9 +359,10 @@ async fn data_decoded_disable_module_to_settings_info_with_address_info() {
 async fn data_decoded_unknown_to_settings_info() {
     let mut mock_info_provider = MockInfoProvider::new();
 
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE)
-            .unwrap();
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DATA_DECODED_EXEC_TRANSACTION_FROM_MODULE,
+    )
+    .unwrap();
 
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
@@ -367,7 +377,7 @@ async fn data_decoded_unknown_to_settings_info() {
 #[test]
 fn data_decoded_with_nested_safe_transaction() {
     let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+        crate::tests::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
     )
     .unwrap();
 
@@ -456,7 +466,8 @@ async fn address_info_index_not_multi_send_address_single_value() {
         });
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_CHANGE_MASTER_COPY).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_CHANGE_MASTER_COPY)
+            .unwrap();
 
     let expected = {
         let mut map = HashMap::new();
@@ -545,7 +556,8 @@ async fn address_info_index_not_multi_send_address_array_value() {
         .in_sequence(&mut sequence);
 
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SWAP_ARRAY_VALUES)
+            .unwrap();
 
     let expected = {
         let mut map = HashMap::new();
@@ -656,7 +668,7 @@ async fn address_info_index_multi_send_single_level_of_nesting() {
         .in_sequence(&mut sequence);
 
     let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
+        crate::tests::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
     .unwrap();
 
@@ -762,9 +774,10 @@ async fn address_info_index_multi_send_two_levels_of_nesting() {
 
     // Had to doctor the json in order to have different address in the nested calls and verify that we
     // don't call them, not because they are duplicate, but because they are 1 level further nested
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DOCTORED_DATA_DECODED_NESTED_MULTI_SENDS)
-            .unwrap();
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DOCTORED_DATA_DECODED_NESTED_MULTI_SENDS,
+    )
+    .unwrap();
 
     let expected = {
         let mut map = HashMap::new();
@@ -821,7 +834,7 @@ async fn address_info_index_skip_address_info_for_0x0() {
         });
 
     let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+        crate::tests::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
     )
     .unwrap();
 
@@ -856,7 +869,7 @@ async fn address_info_index_no_results_returns_none() {
         .return_once(move |_| bail!("no address info"));
 
     let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+        crate::tests::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
     )
     .unwrap();
 

@@ -168,7 +168,8 @@ async fn module_tx_to_summary_transaction_failed() {
 
 #[rocket::async_test]
 async fn module_transaction_to_custom_summary_and_module_info() {
-    let module_tx = serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+    let module_tx =
+        serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -443,10 +444,11 @@ async fn creation_transaction_to_summary_address_info_available() {
 #[rocket::async_test]
 async fn multisig_transaction_to_erc20_transfer_summary() {
     let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC20_TRANSFER)
+        serde_json::from_str::<MultisigTransaction>(crate::tests::json::MULTISIG_TX_ERC20_TRANSFER)
             .unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
-    let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_USDT).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
+    let token_info = serde_json::from_str::<TokenInfo>(crate::tests::json::TOKEN_USDT).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -496,11 +498,14 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
 
 #[rocket::async_test]
 async fn multisig_transaction_to_erc721_transfer_summary() {
-    let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ERC721_TRANSFER)
-            .unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
-    let token_info = serde_json::from_str::<TokenInfo>(crate::json::TOKEN_CRYPTO_KITTIES).unwrap();
+    let multisig_tx = serde_json::from_str::<MultisigTransaction>(
+        crate::tests::json::MULTISIG_TX_ERC721_TRANSFER,
+    )
+    .unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
+    let token_info =
+        serde_json::from_str::<TokenInfo>(crate::tests::json::TOKEN_CRYPTO_KITTIES).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -550,9 +555,10 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
 #[rocket::async_test]
 async fn multisig_transaction_to_ether_transfer_summary() {
     let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_ETHER_TRANSFER)
+        serde_json::from_str::<MultisigTransaction>(crate::tests::json::MULTISIG_TX_ETHER_TRANSFER)
             .unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -598,10 +604,12 @@ async fn multisig_transaction_to_ether_transfer_summary() {
 
 #[rocket::async_test]
 async fn multisig_transaction_to_settings_change_summary() {
-    let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_SETTINGS_CHANGE)
-            .unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let multisig_tx = serde_json::from_str::<MultisigTransaction>(
+        crate::tests::json::MULTISIG_TX_SETTINGS_CHANGE,
+    )
+    .unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -664,8 +672,10 @@ async fn multisig_transaction_to_settings_change_summary() {
 #[rocket::async_test]
 async fn multisig_transaction_to_custom_summary() {
     let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CUSTOM).unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+        serde_json::from_str::<MultisigTransaction>(crate::tests::json::MULTISIG_TX_CUSTOM)
+            .unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
 
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -712,10 +722,11 @@ async fn multisig_transaction_to_custom_summary() {
 #[rocket::async_test]
 async fn multisig_transaction_with_missing_signers() {
     let multisig_tx = serde_json::from_str::<MultisigTransaction>(
-        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS,
+        crate::tests::json::MULTISIG_TX_AWAITING_CONFIRMATIONS,
     )
     .unwrap();
-    let mut safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let mut safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
     // Lower nonce so that transaction is pending again
     safe_info.nonce = 140;
 
@@ -769,7 +780,7 @@ async fn multisig_transaction_with_missing_signers() {
 #[rocket::async_test]
 async fn ethereum_transaction_with_inconsistent_token_types() {
     let ethereum_tx = serde_json::from_str::<EthereumTransaction>(
-        crate::json::ETHEREUM_TX_INCONSISTENT_TOKEN_TYPES,
+        crate::tests::json::ETHEREUM_TX_INCONSISTENT_TOKEN_TYPES,
     )
     .unwrap();
 
@@ -819,8 +830,10 @@ async fn ethereum_transaction_with_inconsistent_token_types() {
 #[rocket::async_test]
 async fn multisig_transaction_with_origin() {
     let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_WITH_ORIGIN).unwrap();
-    let mut safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+        serde_json::from_str::<MultisigTransaction>(crate::tests::json::MULTISIG_TX_WITH_ORIGIN)
+            .unwrap();
+    let mut safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
     // Lower nonce so that transaction is pending again
     safe_info.nonce = 140;
 

@@ -18,8 +18,9 @@ fn safe_apps_empty() {
 
 #[test]
 fn safe_apps_several_apps() {
-    let response = serde_json::from_str::<Vec<BackendSafeApp>>(crate::json::POLYGON_SAFE_APPS)
-        .expect("SafeApps deserialization failure");
+    let response =
+        serde_json::from_str::<Vec<BackendSafeApp>>(crate::tests::json::POLYGON_SAFE_APPS)
+            .expect("SafeApps deserialization failure");
 
     let actual = response
         .into_iter()

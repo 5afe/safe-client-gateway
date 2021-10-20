@@ -15,7 +15,7 @@ async fn erc_20_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc_20_transfer = TransferDto::Erc20(
         serde_json::from_str::<Erc20TransferDto>(
-            crate::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+            crate::tests::json::ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING,
         )
         .unwrap(),
     );
@@ -56,7 +56,7 @@ async fn erc_721_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc_721_transfer = TransferDto::Erc721(
         serde_json::from_str::<Erc721TransferDto>(
-            crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+            crate::tests::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
         )
         .unwrap(),
     );
@@ -95,7 +95,8 @@ async fn erc_721_transfer_dto_to_transaction_info() {
 async fn ether_transfer_dto_to_transaction_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
-        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
+        serde_json::from_str::<EtherTransferDto>(crate::tests::json::ETHER_TRANSFER_INCOMING)
+            .unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();
@@ -163,7 +164,8 @@ fn unknown_transfer_dto_get_transaction_hash() {
 async fn transfer_dto_to_transaction_details() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let ether_transfer_dto = TransferDto::Ether(
-        serde_json::from_str::<EtherTransferDto>(crate::json::ETHER_TRANSFER_INCOMING).unwrap(),
+        serde_json::from_str::<EtherTransferDto>(crate::tests::json::ETHER_TRANSFER_INCOMING)
+            .unwrap(),
     );
 
     let mut mock_info_provider = MockInfoProvider::new();
@@ -212,7 +214,7 @@ async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
         .return_once(move |_| bail!("No address info"));
 
     let erc_20_transfer = serde_json::from_str::<Erc20TransferDto>(
-        crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
+        crate::tests::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
     )
     .unwrap();
 

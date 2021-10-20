@@ -8,6 +8,16 @@ extern crate rocket;
 
 extern crate dotenv;
 
+use std::time::Duration;
+
+use dotenv::dotenv;
+
+use cache::redis::create_pool;
+use routes::active_routes;
+use utils::cors::CORS;
+
+use crate::routes::error_catchers;
+
 #[doc(hidden)]
 #[macro_use]
 pub mod macros;
@@ -30,17 +40,7 @@ mod routes;
 mod utils;
 
 #[cfg(test)]
-mod json;
-
-#[cfg(test)]
 mod tests;
-
-use crate::routes::error_catchers;
-use cache::redis::create_pool;
-use dotenv::dotenv;
-use routes::active_routes;
-use std::time::Duration;
-use utils::cors::CORS;
 
 #[doc(hidden)]
 #[launch]

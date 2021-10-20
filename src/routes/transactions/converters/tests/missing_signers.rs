@@ -5,10 +5,11 @@ use crate::providers::info::SafeInfo;
 #[test]
 fn missing_signers_on_awaiting_confirmation_empty() {
     let tx = serde_json::from_str::<MultisigTransaction>(
-        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_EMPTY,
+        crate::tests::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_EMPTY,
     )
     .unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
 
     let actual = tx.missing_signers(&safe_info.owners);
     let expected: Vec<AddressEx> = vec![
@@ -24,10 +25,11 @@ fn missing_signers_on_awaiting_confirmation_empty() {
 #[test]
 fn missing_signers_on_awaiting_confirmation_null() {
     let tx = serde_json::from_str::<MultisigTransaction>(
-        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_NULL,
+        crate::tests::json::MULTISIG_TX_AWAITING_CONFIRMATIONS_NULL,
     )
     .unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
 
     let actual = tx.missing_signers(&safe_info.owners);
     let expected: Vec<AddressEx> = vec![
@@ -43,10 +45,11 @@ fn missing_signers_on_awaiting_confirmation_null() {
 #[test]
 fn missing_signers_on_awaiting_confirmation() {
     let tx = serde_json::from_str::<MultisigTransaction>(
-        crate::json::MULTISIG_TX_AWAITING_CONFIRMATIONS,
+        crate::tests::json::MULTISIG_TX_AWAITING_CONFIRMATIONS,
     )
     .unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
 
     let actual = tx.missing_signers(&safe_info.owners);
     let expected: Vec<AddressEx> = vec![

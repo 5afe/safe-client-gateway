@@ -1,7 +1,7 @@
 use crate::common::models::{
     DataDecoded, InternalTransaction, Operation, ParamValue, Parameter, ValueDecodedType,
 };
-use crate::json;
+use crate::tests::json;
 
 #[test]
 fn deserialise_params_value_as_string() {

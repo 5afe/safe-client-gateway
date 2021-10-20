@@ -45,7 +45,7 @@ fn chain_info_json() {
         }],
     };
 
-    let actual = serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY);
+    let actual = serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY);
 
     assert!(actual.is_ok());
     assert_eq!(expected, actual.unwrap());
@@ -87,7 +87,8 @@ fn chain_info_json_with_fixed_gas_price() {
         }],
     };
 
-    let actual = serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY_FIXED_GAS_PRICE);
+    let actual =
+        serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY_FIXED_GAS_PRICE);
 
     assert!(actual.is_ok());
     assert_eq!(expected, actual.unwrap());
@@ -127,7 +128,8 @@ fn chain_info_json_with_no_gas_price() {
         gas_price: vec![],
     };
 
-    let actual = serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY_NO_GAS_PRICE);
+    let actual =
+        serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY_NO_GAS_PRICE);
 
     assert!(actual.is_ok());
     assert_eq!(expected, actual.unwrap());
@@ -176,8 +178,9 @@ fn chain_info_json_with_multiple_gas_price() {
         ],
     };
 
-    let actual =
-        serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY_MULTIPLE_GAS_PRICE);
+    let actual = serde_json::from_str::<ChainInfo>(
+        crate::tests::json::CHAIN_INFO_RINKEBY_MULTIPLE_GAS_PRICE,
+    );
 
     assert!(actual.is_ok());
     assert_eq!(expected, actual.unwrap());
@@ -218,7 +221,7 @@ fn chain_info_json_with_unknown_gas_price_type() {
     };
 
     let actual =
-        serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY_UNKNOWN_GAS_PRICE);
+        serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY_UNKNOWN_GAS_PRICE);
 
     assert!(actual.is_ok());
     assert_eq!(expected, actual.unwrap());
@@ -262,8 +265,9 @@ fn chain_info_json_with_no_rpc_authentication() {
         }],
     };
 
-    let actual =
-        serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION);
+    let actual = serde_json::from_str::<ChainInfo>(
+        crate::tests::json::CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION,
+    );
 
     assert!(actual.is_ok());
     assert_eq!(expected, actual.unwrap());
@@ -308,7 +312,7 @@ fn chain_info_json_with_unknown_rpc_authentication() {
     };
 
     let actual = serde_json::from_str::<ChainInfo>(
-        crate::json::CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION,
+        crate::tests::json::CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION,
     );
 
     assert!(actual.is_ok());
@@ -350,7 +354,8 @@ fn chain_info_json_to_service_chain_info() {
         }],
     };
 
-    let from_json = serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY).unwrap();
+    let from_json =
+        serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY).unwrap();
     let actual: ServiceChainInfo = from_json.into();
 
     assert_eq!(expected, actual);
@@ -388,7 +393,7 @@ fn unknown_gas_price_type_to_service_chain_info() {
     };
 
     let from_json =
-        serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY_UNKNOWN_GAS_PRICE)
+        serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY_UNKNOWN_GAS_PRICE)
             .unwrap();
     let actual: ServiceChainInfo = from_json.into();
 
@@ -430,9 +435,10 @@ fn no_authentication_to_service_chain_info() {
         }],
     };
 
-    let from_json =
-        serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION)
-            .unwrap();
+    let from_json = serde_json::from_str::<ChainInfo>(
+        crate::tests::json::CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION,
+    )
+    .unwrap();
     let actual: ServiceChainInfo = from_json.into();
 
     assert_eq!(expected, actual);
@@ -474,7 +480,7 @@ fn unknown_authentication_to_service_chain_info() {
     };
 
     let from_json = serde_json::from_str::<ChainInfo>(
-        crate::json::CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION,
+        crate::tests::json::CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION,
     )
     .unwrap();
     let actual: ServiceChainInfo = from_json.into();

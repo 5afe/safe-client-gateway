@@ -4,9 +4,10 @@ use crate::common::models::{
 
 #[test]
 fn get_parameter_single_value_success() {
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
-            .unwrap();
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD,
+    )
+    .unwrap();
     let expected = "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23";
 
     let actual = data_decoded.get_parameter_single_value("owner");
@@ -16,9 +17,10 @@ fn get_parameter_single_value_success() {
 
 #[test]
 fn get_parameter_single_value_wrong_name() {
-    let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD)
-            .unwrap();
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DATA_DECODED_ADD_OWNER_WITH_THRESHOLD,
+    )
+    .unwrap();
     let expected = None;
 
     let actual = data_decoded.get_parameter_single_value("threshold");
@@ -29,7 +31,8 @@ fn get_parameter_single_value_wrong_name() {
 #[test]
 fn get_parameter_single_value_right_name_but_array_value() {
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SWAP_ARRAY_VALUES)
+            .unwrap();
     let expected = None;
 
     let actual = data_decoded.get_parameter_single_value("data");
@@ -40,7 +43,7 @@ fn get_parameter_single_value_right_name_but_array_value() {
 #[test]
 fn get_parameter_value_decoded_success() {
     let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
+        crate::tests::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
     .unwrap();
 
@@ -114,7 +117,7 @@ fn get_parameter_value_decoded_success() {
 #[test]
 fn get_parameter_value_decoded_wrong_name() {
     let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
+        crate::tests::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
     .unwrap();
     let expected = None;
@@ -127,7 +130,8 @@ fn get_parameter_value_decoded_wrong_name() {
 #[test]
 fn get_parameter_value_decoded_right_name_but_array_value() {
     let data_decoded =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_SWAP_ARRAY_VALUES).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SWAP_ARRAY_VALUES)
+            .unwrap();
     let expected = None;
 
     let actual = data_decoded.get_parameter_value_decoded("swap");
@@ -138,12 +142,12 @@ fn get_parameter_value_decoded_right_name_but_array_value() {
 #[test]
 fn get_action_count_multisig_call() {
     let data_decoded_action_count_1 = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
+        crate::tests::json::DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION,
     )
     .unwrap();
 
     let data_decoded_action_count_3 =
-        serde_json::from_str::<DataDecoded>(crate::json::DATA_DECODED_MULTI_SEND).unwrap();
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
 
     assert_eq!(Some(1), data_decoded_action_count_1.get_action_count());
     assert_eq!(Some(3), data_decoded_action_count_3.get_action_count());
@@ -152,7 +156,7 @@ fn get_action_count_multisig_call() {
 #[test]
 fn get_action_count_non_multisig_call() {
     let data_decoded = serde_json::from_str::<DataDecoded>(
-        crate::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
+        crate::tests::json::DATA_DECODED_EXEC_TRANSACTION_WITH_VALUE_DECODED,
     )
     .unwrap();
     let expected = None;

@@ -8,7 +8,8 @@ use rocket::serde::json::json;
 
 #[rocket::async_test]
 async fn to_safe_info_ex_no_address_info() {
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_ex_from_contracts()
@@ -107,7 +108,8 @@ async fn to_safe_info_ex_no_address_info() {
 
 #[rocket::async_test]
 async fn to_safe_info_ex_no_address_info_up_to_date() {
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_ex_from_contracts()
@@ -206,7 +208,8 @@ async fn to_safe_info_ex_no_address_info_up_to_date() {
 
 #[rocket::async_test]
 async fn to_safe_info_ex_address_info() {
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_ex_from_contracts()
@@ -381,7 +384,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
 #[rocket::async_test]
 async fn to_safe_info_guard_and_fallback_handler_defined() {
     let safe_info =
-        serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_GUARD_SAFE_V130).unwrap();
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_GUARD_SAFE_V130).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_ex_from_contracts()
@@ -565,5 +568,5 @@ fn implementation_from_master_copy() {
 }
 
 fn build_chain_info() -> ChainInfo {
-    serde_json::from_str::<ChainInfo>(crate::json::CHAIN_INFO_RINKEBY).unwrap()
+    serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY).unwrap()
 }

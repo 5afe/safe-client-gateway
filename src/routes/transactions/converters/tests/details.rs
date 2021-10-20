@@ -16,8 +16,10 @@ use crate::routes::transactions::models::{
 #[rocket::async_test]
 async fn multisig_custom_transaction_to_transaction_details() {
     let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_CUSTOM).unwrap();
-    let safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+        serde_json::from_str::<MultisigTransaction>(crate::tests::json::MULTISIG_TX_CUSTOM)
+            .unwrap();
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
     let timestamp_confirmation0: i64 = 1592837914055;
     let timestamp_confirmation1: i64 = 1592838142231;
 
@@ -136,7 +138,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
         .returning(move |_| bail!("No address info"));
 
     let module_transaction =
-        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+        serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
@@ -191,7 +193,7 @@ async fn module_transaction_to_transaction_details_success() {
         .returning(move |_| bail!("No address info"));
 
     let module_transaction =
-        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX).unwrap();
+        serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
@@ -242,7 +244,7 @@ async fn module_transaction_to_transaction_details_failed() {
         .returning(move |_| bail!("No address info"));
 
     let module_transaction =
-        serde_json::from_str::<ModuleTransaction>(crate::json::MODULE_TX_FAILED).unwrap();
+        serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX_FAILED).unwrap();
 
     let expected = TransactionDetails {
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
@@ -280,9 +282,10 @@ async fn module_transaction_to_transaction_details_failed() {
 
 #[rocket::async_test]
 async fn ethereum_tx_transfer_to_transaction_details() {
-    let transfer =
-        serde_json::from_str::<TransferDto>(crate::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO)
-            .unwrap();
+    let transfer = serde_json::from_str::<TransferDto>(
+        crate::tests::json::ERC_20_TRANSFER_WITH_ERC721_TOKEN_INFO,
+    )
+    .unwrap();
 
     let expected = TransactionDetails {
         executed_at: Some(transfer.get_execution_time().unwrap()),
@@ -328,8 +331,10 @@ async fn ethereum_tx_transfer_to_transaction_details() {
 #[rocket::async_test]
 async fn multisig_transaction_with_origin() {
     let multisig_tx =
-        serde_json::from_str::<MultisigTransaction>(crate::json::MULTISIG_TX_WITH_ORIGIN).unwrap();
-    let mut safe_info = serde_json::from_str::<SafeInfo>(crate::json::SAFE_WITH_MODULES).unwrap();
+        serde_json::from_str::<MultisigTransaction>(crate::tests::json::MULTISIG_TX_WITH_ORIGIN)
+            .unwrap();
+    let mut safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
     // Lower nonce so that transaction is pending again
     safe_info.nonce = 140;
 
@@ -357,7 +362,7 @@ async fn multisig_transaction_with_origin() {
         .times(7) // 1 + 6 calls within data decoded multisig
         .returning(move |_| bail!("no address info"));
 
-    let mut expected = crate::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
+    let mut expected = crate::tests::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
     expected.retain(|c| !c.is_whitespace());
 
     let actual =

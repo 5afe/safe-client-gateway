@@ -10,7 +10,7 @@ use crate::routes::transactions::models::{Erc721Transfer, Transfer, TransferDire
 async fn erc721_transfer_dto_to_incoming_transfer_transaction() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
-        crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+        crate::tests::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
     )
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
@@ -50,7 +50,7 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction() {
 async fn erc721_transfer_dto_to_incoming_transfer_transaction_with_address_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
-        crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+        crate::tests::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
     )
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
@@ -96,7 +96,7 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction_with_address_info(
 async fn erc721_transfer_dto_to_outgoing_transfer_transaction_with_address_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
-        crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_OUTGOING,
+        crate::tests::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_OUTGOING,
     )
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
@@ -141,7 +141,7 @@ async fn erc721_transfer_dto_to_outgoing_transfer_transaction_with_address_info(
 #[rocket::async_test]
 async fn erc721_transfer_dto_to_transfer_info_token_available() {
     let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
-        crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+        crate::tests::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
     )
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
@@ -166,9 +166,10 @@ async fn erc721_transfer_dto_to_transfer_info_token_available() {
 
 #[rocket::async_test]
 async fn erc721_transfer_dto_to_transfer_info_token_unavailable() {
-    let erc721_transfer =
-        serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO)
-            .unwrap();
+    let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
+        crate::tests::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO,
+    )
+    .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
@@ -193,7 +194,7 @@ async fn erc721_transfer_dto_to_transfer_info_token_unavailable() {
 #[rocket::async_test]
 async fn erc721_transfer_dto_get_token_info_present() {
     let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
-        crate::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
+        crate::tests::json::ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING,
     )
     .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
@@ -216,11 +217,12 @@ async fn erc721_transfer_dto_get_token_info_present() {
 
 #[rocket::async_test]
 async fn erc721_transfer_dto_get_token_info_not_present() {
-    let erc721_transfer =
-        serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO)
-            .unwrap();
+    let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
+        crate::tests::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO,
+    )
+    .unwrap();
     let token_info =
-        serde_json::from_str::<TokenInfo>(crate::json::TOKEN_PV_MEMORIAL_TOKEN).unwrap();
+        serde_json::from_str::<TokenInfo>(crate::tests::json::TOKEN_PV_MEMORIAL_TOKEN).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
@@ -244,9 +246,10 @@ async fn erc721_transfer_dto_get_token_info_not_present() {
 
 #[rocket::async_test]
 async fn erc721_transfer_dto_get_info_provider_error() {
-    let erc721_transfer =
-        serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO)
-            .unwrap();
+    let erc721_transfer = serde_json::from_str::<Erc721TransferDto>(
+        crate::tests::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO,
+    )
+    .unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider
@@ -271,8 +274,10 @@ async fn erc721_transfer_dto_get_info_provider_error() {
 #[test]
 fn erc721_transfer_dto_get_execution_time() {
     let ether_transfer_dto = TransferDto::Erc721(
-        serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO)
-            .unwrap(),
+        serde_json::from_str::<Erc721TransferDto>(
+            crate::tests::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO,
+        )
+        .unwrap(),
     );
 
     let actual = TransferDto::get_execution_time(&ether_transfer_dto);
@@ -283,8 +288,10 @@ fn erc721_transfer_dto_get_execution_time() {
 #[test]
 fn erc721_transfer_dto_get_transaction_hash() {
     let ether_transfer_dto = TransferDto::Erc721(
-        serde_json::from_str::<Erc721TransferDto>(crate::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO)
-            .unwrap(),
+        serde_json::from_str::<Erc721TransferDto>(
+            crate::tests::json::ERC_721_TRANSFER_WITHOUT_TOKEN_INFO,
+        )
+        .unwrap(),
     );
 
     let actual = TransferDto::get_transaction_hash(&ether_transfer_dto);

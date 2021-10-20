@@ -122,7 +122,7 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">safes</span>;
 <span class="doccomment">/// # Transactions endpoints</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// As presented by the endpoints in this service, we are taking in the types returned by the [transaction service](https://github.com/gnosis/safe-transaction-service-example), which to this data are `Multisig`, `Module` and `Ethereum` transaction types.</span>
+<span class="doccomment">/// As presented by the endpoints in this handlers, we are taking in the types returned by the [transaction handlers](https://github.com/gnosis/safe-transaction-service-example), which to this data are `Multisig`, `Module` and `Ethereum` transaction types.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The types served by the gate way are `Transfer`, `SettingsChange` and `Custom`. Additionally, we treat the `Creation` transaction as one additional type, as it is meant to be group with the rest of the items in the same UI component in the apps.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transactions</span>;
@@ -131,31 +131,31 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">active_routes</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Route</span><span class="op">&gt;</span> {
     <span class="macro">routes!</span>[
         <span class="ident">root</span>,
-        <span class="ident">about::backbone</span>,
-        <span class="ident">about::get_about</span>,
-        <span class="ident">about::get_chains_about</span>,
-        <span class="ident">about::redis</span>,
-        <span class="ident">about::get_master_copies</span>,
-        <span class="ident">balances::get_balances</span>,
-        <span class="ident">balances::get_supported_fiat</span>,
-        <span class="ident">chains::get_chain</span>,
-        <span class="ident">chains::get_chains</span>,
-        <span class="ident">collectibles::get_collectibles</span>,
-        <span class="ident">contracts::post_data_decoder</span>,
-        <span class="ident">notifications::post_notification_registration</span>,
-        <span class="ident">notifications::delete_notification_registration</span>,
-        <span class="ident">safes::get_safe_info</span>,
-        <span class="ident">safes::get_owners</span>,
-        <span class="ident">safes::post_safe_gas_estimation</span>,
-        <span class="ident">safe_apps::get_safe_apps</span>,
-        <span class="ident">transactions::get_transactions</span>,
-        <span class="ident">transactions::get_transactions_history</span>,
-        <span class="ident">transactions::get_transactions_queued</span>,
-        <span class="ident">transactions::post_transaction</span>,
-        <span class="ident">transactions::post_confirmation</span>,
-        <span class="ident">hooks::update</span>,
-        <span class="ident">hooks::flush</span>,
-        <span class="ident">health::health</span>
+        <span class="ident">about::routes::backbone</span>,
+        <span class="ident">about::routes::get_about</span>,
+        <span class="ident">about::routes::get_chains_about</span>,
+        <span class="ident">about::routes::redis</span>,
+        <span class="ident">about::routes::get_master_copies</span>,
+        <span class="ident">balances::routes::get_balances</span>,
+        <span class="ident">balances::routes::get_supported_fiat</span>,
+        <span class="ident">chains::routes::get_chain</span>,
+        <span class="ident">chains::routes::get_chains</span>,
+        <span class="ident">collectibles::routes::get_collectibles</span>,
+        <span class="ident">contracts::routes::post_data_decoder</span>,
+        <span class="ident">notifications::routes::post_notification_registration</span>,
+        <span class="ident">notifications::routes::delete_notification_registration</span>,
+        <span class="ident">safes::routes::get_safe_info</span>,
+        <span class="ident">safes::routes::get_owners</span>,
+        <span class="ident">safes::routes::post_safe_gas_estimation</span>,
+        <span class="ident">safe_apps::routes::get_safe_apps</span>,
+        <span class="ident">transactions::routes::get_transactions</span>,
+        <span class="ident">transactions::routes::get_transactions_history</span>,
+        <span class="ident">transactions::routes::get_transactions_queued</span>,
+        <span class="ident">transactions::routes::post_transaction</span>,
+        <span class="ident">transactions::routes::post_confirmation</span>,
+        <span class="ident">hooks::routes::update</span>,
+        <span class="ident">hooks::routes::flush</span>,
+        <span class="ident">health::routes::health</span>
     ]
 }
 

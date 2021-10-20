@@ -317,6 +317,10 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::redis::ServiceCache</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::cache::Cache</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::common::models::addresses::AddressEx</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::common::models::backend::chains::ChainInfo</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::common::models::backend::safes::MasterCopy</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::common::models::page::Page</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config</span>::{
     <span class="ident">address_info_cache_duration</span>, <span class="ident">chain_info_cache_duration</span>, <span class="ident">chain_info_request_timeout</span>,
     <span class="ident">contract_info_request_timeout</span>, <span class="ident">default_request_timeout</span>, <span class="ident">long_error_duration</span>,
@@ -324,10 +328,6 @@
     <span class="ident">safe_info_cache_duration</span>, <span class="ident">safe_info_request_timeout</span>, <span class="ident">short_error_duration</span>,
     <span class="ident">token_info_cache_duration</span>, <span class="ident">token_info_request_timeout</span>,
 };
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::chains::ChainInfo</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::safes::MasterCopy</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::commons::Page</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::service::addresses::AddressEx</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::providers::address_info::ContractInfo</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::context::Context</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::errors::ApiResult</span>;

@@ -63,11 +63,6 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
-<span id="66">66</span>
-<span id="67">67</span>
-<span id="68">68</span>
-<span id="69">69</span>
-<span id="70">70</span>
 </pre><pre class="rust">
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">unused_must_use</span>)]</span>
 
@@ -79,6 +74,16 @@
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">dotenv</span>;
 
+<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
+
+<span class="kw">use</span> <span class="ident">dotenv::dotenv</span>;
+
+<span class="kw">use</span> <span class="ident">cache::redis::create_pool</span>;
+<span class="kw">use</span> <span class="ident">routes::active_routes</span>;
+<span class="kw">use</span> <span class="ident">utils::cors::CORS</span>;
+
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::routes::error_catchers</span>;
+
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">macros</span>;
@@ -86,16 +91,10 @@
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">mod</span> <span class="ident">cache</span>;
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="kw">mod</span> <span class="ident">common</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">mod</span> <span class="ident">config</span>;
 
-<span class="doccomment">/// Models exposed by this service</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// *Important:* Names, Enums and Polymorphism</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Every field in the structs that you will see in this documentation is **camelCased** on serialisation.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Enums are **SCREAMING_SNAKE_CASED** on serialization and the variant is always put into a `type` json field for polymorphic cases.</span>
-<span class="kw">mod</span> <span class="ident">models</span>;
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">mod</span> <span class="ident">monitoring</span>;
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
@@ -104,19 +103,10 @@
 <span class="doccomment">/// Collection of all endpoints all endpoints</span>
 <span class="kw">mod</span> <span class="ident">routes</span>;
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">mod</span> <span class="ident">services</span>;
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">mod</span> <span class="ident">utils</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">json</span>;
-
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::routes::error_catchers</span>;
-<span class="kw">use</span> <span class="ident">cache::redis::create_pool</span>;
-<span class="kw">use</span> <span class="ident">dotenv::dotenv</span>;
-<span class="kw">use</span> <span class="ident">routes::active_routes</span>;
-<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
-<span class="kw">use</span> <span class="ident">utils::cors::CORS</span>;
+<span class="kw">mod</span> <span class="ident">tests</span>;
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">launch</span>]</span>

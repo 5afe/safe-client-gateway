@@ -104,14 +104,14 @@
 <span id="104">104</span>
 <span id="105">105</span>
 </pre><pre class="rust">
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::common::models::backend::chains::ChainInfo</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::config::vpc_transaction_service_uri</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::models::backend::chains::ChainInfo</span>;
 <span class="macro">macro_rules!</span> <span class="ident">concat_parts</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_head</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="comment">// `stringify!` will convert the expression *as it is* into a string.</span>
         <span class="macro">format!</span>(
             <span class="string">&quot;{}{}&quot;</span>,
-            <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::models::service::transactions::ID_SEPARATOR</span>,
+            <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::routes::transactions::models::ID_SEPARATOR</span>,
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_head</span>
         )
     };
@@ -119,7 +119,7 @@
         <span class="comment">// `stringify!` will convert the expression *as it is* into a string.</span>
         <span class="macro">format!</span>(
             <span class="string">&quot;{}{}{}&quot;</span>,
-            <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::models::service::transactions::ID_SEPARATOR</span>,
+            <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::routes::transactions::models::ID_SEPARATOR</span>,
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_head</span>,
             <span class="macro">concat_parts!</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_tail</span>),<span class="op">+</span>)
         )

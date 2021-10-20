@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
 use crate::cache::Cache;
-use crate::common::models::backend::webhooks::{Payload, PayloadDetails};
+use crate::routes::hooks::backend::{Payload, PayloadDetails};
 use crate::utils::errors::ApiResult;
 
 pub fn invalidate_caches(cache: &impl Cache, payload: &Payload) -> ApiResult<()> {

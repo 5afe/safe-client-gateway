@@ -1,8 +1,8 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::common::models::backend::chains::ChainInfo as BackendChainInfo;
 use crate::common::models::Page;
 use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::routes::chains::backend::ChainInfo as BackendChainInfo;
 use crate::routes::chains::models::ChainInfo as ServiceChainInfo;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;

@@ -1,8 +1,6 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
-use crate::common::models::backend::chains::ChainInfo;
-use crate::common::models::backend::safes::MasterCopy;
 use crate::common::models::service::addresses::AddressEx;
 use crate::common::models::Page;
 use crate::config::{
@@ -13,6 +11,8 @@ use crate::config::{
     token_info_cache_duration, token_info_request_timeout,
 };
 use crate::providers::address_info::ContractInfo;
+use crate::routes::chains::backend::ChainInfo;
+use crate::routes::safes::backend::MasterCopy;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use crate::utils::json::default_if_null;

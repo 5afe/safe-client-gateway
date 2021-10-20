@@ -1,7 +1,7 @@
-use crate::common::models::backend::chains::ChainInfo;
-use crate::common::models::backend::safes::MasterCopy;
 use crate::common::models::service::addresses::AddressEx;
 use crate::providers::info::*;
+use crate::routes::chains::backend::ChainInfo;
+use crate::routes::safes::backend::MasterCopy;
 use crate::routes::safes::converters::calculate_version_state;
 use crate::routes::safes::models::{Implementation, ImplementationVersionState, SafeInfoEx};
 use rocket::serde::json::json;

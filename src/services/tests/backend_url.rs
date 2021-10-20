@@ -1,7 +1,7 @@
-use crate::common::models::backend::chains::{
+use crate::providers::info::*;
+use crate::routes::chains::backend::{
     BlockExplorerUriTemplate, ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
 };
-use crate::providers::info::*;
 use crate::utils::errors::ApiResult;
 
 #[rocket::async_test]

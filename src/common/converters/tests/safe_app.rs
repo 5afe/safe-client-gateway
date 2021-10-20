@@ -1,4 +1,4 @@
-use crate::common::models::backend::safe_app::SafeApp as BackendSafeApp;
+use crate::routes::safe_apps::backend::SafeApp as BackendSafeApp;
 use crate::routes::safe_apps::models::{SafeApp, SafeAppProvider};
 
 #[test]

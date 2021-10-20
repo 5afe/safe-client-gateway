@@ -1,6 +1,4 @@
-use crate::common::models::backend::chains::{
-    ChainInfo as BackendChainInfo, GasPrice, RpcAuthentication,
-};
+use crate::routes::chains::backend::{ChainInfo as BackendChainInfo, GasPrice, RpcAuthentication};
 use crate::routes::chains::models::{
     BlockExplorerUriTemplate as ServiceBlockExplorerUriTemplate, ChainInfo as ServiceChainInfo,
     GasPrice as ServiceGasPrice, NativeCurrency as ServiceNativeCurrency,

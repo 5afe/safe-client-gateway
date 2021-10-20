@@ -1,10 +1,10 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::common::models::backend::balances::Balance as BalanceDto;
-use crate::common::models::backend::chains::NativeCurrency;
 use crate::config::{balances_cache_duration, balances_request_timeout};
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::routes::balances::backend::Balance as BalanceDto;
 use crate::routes::balances::models::{Balance, Balances};
+use crate::routes::chains::backend::NativeCurrency;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use bigdecimal::{BigDecimal, ToPrimitive};

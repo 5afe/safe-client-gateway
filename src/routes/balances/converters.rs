@@ -1,7 +1,7 @@
-use crate::common::models::backend::balances::Balance as BalanceDto;
-use crate::common::models::backend::chains::NativeCurrency;
 use crate::providers::info::{TokenInfo, TokenType};
+use crate::routes::balances::backend::Balance as BalanceDto;
 use crate::routes::balances::models::Balance;
+use crate::routes::chains::backend::NativeCurrency;
 
 impl BalanceDto {
     pub fn to_balance(&self, usd_to_fiat: f64, native_coin: &NativeCurrency) -> Balance {

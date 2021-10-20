@@ -1,14 +1,14 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::common::models::backend::balances_v2::Balance as BalanceDto;
-use crate::common::models::backend::chains::NativeCurrency;
-use crate::common::models::backend::tokens::TokenPrice as BackendTokenPrice;
 use crate::config::{
     balances_cache_duration, balances_request_timeout, concurrent_balance_token_requests,
     token_price_cache_duration,
 };
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::routes::balances::backend_v2::Balance as BalanceDto;
+use crate::routes::balances::backend_v2::TokenPrice as BackendTokenPrice;
 use crate::routes::balances::models::{Balance, Balances, TokenPrice};
+use crate::routes::chains::backend::NativeCurrency;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;
 use bigdecimal::BigDecimal;

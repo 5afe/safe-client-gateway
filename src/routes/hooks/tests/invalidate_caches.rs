@@ -1,5 +1,5 @@
 use crate::cache::*;
-use crate::common::models::backend::webhooks::{
+use crate::routes::hooks::backend::{
     ExecutedMultisigTransaction, NewConfirmation, Payload, PayloadDetails,
     PendingMultisigTransaction,
 };

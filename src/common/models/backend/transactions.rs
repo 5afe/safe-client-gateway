@@ -1,7 +1,7 @@
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::{DataDecoded, Operation};
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 #[serde(tag = "txType")]
@@ -81,7 +81,7 @@ pub struct ModuleTransaction {
     // pub transfers: Option<Vec<Transfer>>,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Confirmation {
     pub owner: String,

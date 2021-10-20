@@ -3,7 +3,7 @@ use crate::cache::Cache;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::handlers;
-use crate::utils::context::{Context, RequestContext};
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
 use rocket::response::content;
@@ -97,11 +97,16 @@ pub async fn backbone(
     context: RequestContext,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
+    let client = context.http_client();
     let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
     let url = core_uri!(info_provider, "/v1/about/")?;
     let request = Request::new(url);
     Ok(content::Json(
-        context.client().get(request).await?.text().await?,
+        client
+            .get(&request)
+            .await?
+            .body
+            .unwrap_or(String::from("No backbone about")),
     ))
 }
 

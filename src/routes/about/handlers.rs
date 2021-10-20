@@ -1,14 +1,14 @@
 extern crate reqwest;
 
 use crate::config::{build_number, version};
-use crate::providers::info::{DefaultInfoProvider, InfoProvider, NewDefaultInfoProvider};
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::models::{About, ChainAbout};
 use crate::routes::safes::models::Implementation;
-use crate::utils::context::{Context, RequestContext};
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
 pub async fn chains_about(context: &RequestContext, chain_id: &str) -> ApiResult<ChainAbout> {
-    let info_provider = NewDefaultInfoProvider::new_new(chain_id, &context);
+    let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let chain_info = info_provider.chain_info().await?;
     let about = about();
     Ok(ChainAbout {

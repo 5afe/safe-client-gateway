@@ -1,5 +1,5 @@
 use crate::cache::cache_operations::CacheResponse;
-use crate::utils::context::{Context, RequestContext};
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 

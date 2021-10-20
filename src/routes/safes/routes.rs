@@ -33,14 +33,14 @@ pub async fn get_safe_info(
  */
 #[get("/v1/chains/<chain_id>/owners/<owner_address>/safes")]
 pub async fn get_owners(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     owner_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .resp_generator(|| get_owners_for_safe(&context, &chain_id, &owner_address))
         .duration(owners_for_safes_cache_duration())
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -85,7 +85,7 @@ pub async fn get_owners(
     data = "<safe_transaction_estimation_request>"
 )]
 pub async fn post_safe_gas_estimation<'e>(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     safe_transaction_estimation_request: Result<Json<SafeTransactionEstimationRequest>, Error<'e>>,

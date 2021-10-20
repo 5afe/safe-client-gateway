@@ -13,7 +13,7 @@ use crate::config::{
     token_info_cache_duration, token_info_request_timeout,
 };
 use crate::providers::address_info::ContractInfo;
-use crate::utils::context::{Context, RequestContext};
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::{HttpClient, Request};
 use crate::utils::json::default_if_null;

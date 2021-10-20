@@ -1,6 +1,5 @@
 use crate::cache::cache_operations::{
-    CacheResponse, Invalidate, InvalidationPattern, NewCacheResponse, NewRequestCached,
-    RequestCached,
+    CacheResponse, Invalidate, InvalidationPattern, RequestCached,
 };
 use crate::cache::inner_cache::CachedWithCode;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_RESP_PREFIX};

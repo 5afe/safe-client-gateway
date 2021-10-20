@@ -1,4 +1,4 @@
-use crate::common::models::service::addresses::AddressEx;
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::DataDecoded;
 use serde::Serialize;
 

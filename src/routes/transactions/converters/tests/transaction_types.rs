@@ -1,5 +1,5 @@
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
-use crate::common::models::service::addresses::AddressEx;
 use crate::common::models::ParamValue::SingleValue;
 use crate::common::models::{DataDecoded, Parameter};
 use crate::providers::info::*;

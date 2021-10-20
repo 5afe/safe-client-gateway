@@ -1,5 +1,5 @@
 use crate::common::converters::get_address_ex_from_any_source;
-use crate::common::models::service::addresses::AddressEx;
+use crate::common::models::addresses::AddressEx;
 use crate::providers::info::*;
 
 #[rocket::async_test]

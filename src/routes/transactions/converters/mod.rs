@@ -8,10 +8,10 @@ pub mod summary;
 mod tests;
 
 use crate::common::converters::{get_address_ex_from_any_source, get_transfer_direction};
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{
     ModuleTransaction, MultisigTransaction, SafeTransaction,
 };
-use crate::common::models::service::addresses::AddressEx;
 use crate::common::models::{DataDecoded, Operation};
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
 use crate::routes::transactions::models::{

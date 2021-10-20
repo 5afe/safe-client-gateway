@@ -1,3 +1,4 @@
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{
     CreationTransaction, EthereumTransaction, ModuleTransaction, MultisigTransaction,
     SafeTransaction, Transaction as TransactionDto,
@@ -5,7 +6,6 @@ use crate::common::models::backend::transactions::{
 use crate::common::models::backend::transfers::{
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
-use crate::common::models::service::addresses::AddressEx;
 use crate::common::models::ParamValue::SingleValue;
 use crate::common::models::{DataDecoded, Operation, Parameter};
 use crate::providers::info::*;

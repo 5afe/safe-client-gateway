@@ -1,4 +1,4 @@
-use crate::common::models::service::addresses::AddressEx;
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::{DataDecoded, ParamValue, Parameter};
 use crate::providers::info::*;
 use crate::routes::transactions::models::{SettingsChange, SettingsInfo};

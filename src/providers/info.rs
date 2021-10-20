@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
-use crate::common::models::service::addresses::AddressEx;
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::Page;
 use crate::config::{
     address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,

@@ -1,7 +1,7 @@
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transfers::{
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
-use crate::common::models::service::addresses::AddressEx;
 use crate::providers::info::*;
 use crate::routes::transactions::models::{
     NativeCoinTransfer, Transfer, TransferDirection, TransferInfo,

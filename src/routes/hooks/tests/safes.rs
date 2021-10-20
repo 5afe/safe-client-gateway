@@ -1,4 +1,4 @@
-use crate::common::models::service::addresses::AddressEx;
+use crate::common::models::addresses::AddressEx;
 use crate::providers::info::*;
 use crate::routes::chains::backend::ChainInfo;
 use crate::routes::safes::backend::MasterCopy;

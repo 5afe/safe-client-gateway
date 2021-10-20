@@ -1,5 +1,5 @@
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::MultisigTransaction;
-use crate::common::models::service::addresses::AddressEx;
 use crate::common::models::{Page, PageMetadata};
 use crate::json::{
     BACKEND_QUEUED_TRANSACTION_LIST_PAGE_CONFLICT_393,

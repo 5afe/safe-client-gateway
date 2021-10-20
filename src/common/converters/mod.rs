@@ -5,7 +5,7 @@ pub mod transfers;
 #[cfg(test)]
 mod tests;
 
-use crate::common::models::service::addresses::AddressEx;
+use crate::common::models::addresses::AddressEx;
 use crate::providers::info::InfoProvider;
 use crate::routes::transactions::models::TransferDirection;
 

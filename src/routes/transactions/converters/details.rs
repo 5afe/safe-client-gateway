@@ -1,7 +1,7 @@
 extern crate chrono;
 
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
-use crate::common::models::service::addresses::AddressEx;
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::routes::transactions::converters::safe_app_info::safe_app_info_from;

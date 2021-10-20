@@ -1,9 +1,10 @@
-pub mod backend;
-pub mod service;
-
-use crate::utils::json;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
+
+use crate::utils::json;
+
+pub mod addresses;
+pub mod backend;
 
 #[derive(Serialize_repr, Deserialize_repr, PartialEq, Debug, Clone, Copy, Hash)]
 #[repr(u8)]

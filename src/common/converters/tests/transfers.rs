@@ -1,8 +1,8 @@
+use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transfers::{
     Erc20Transfer as Erc20TransferDto, Erc721Transfer as Erc721TransferDto,
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
-use crate::common::models::service::addresses::AddressEx;
 use crate::providers::info::*;
 use crate::routes::transactions::models::details::TransactionDetails;
 use crate::routes::transactions::models::{

@@ -27,12 +27,13 @@ mod providers;
 /// Collection of all endpoints all endpoints
 mod routes;
 #[doc(hidden)]
-mod services;
-#[doc(hidden)]
 mod utils;
 
 #[cfg(test)]
 mod json;
+
+#[cfg(test)]
+mod tests;
 
 use crate::routes::error_catchers;
 use cache::redis::create_pool;

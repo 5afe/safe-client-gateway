@@ -1,7 +1,6 @@
-use crate::utils::context::Context;
-
 use crate::routes::notifications::handlers::{delete_registration, post_registration};
 use crate::routes::notifications::models::NotificationRegistrationRequest;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::serde::json::Error;
 use rocket::serde::json::Json;
@@ -30,10 +29,10 @@ use rocket::serde::json::Json;
     data = "<registration_request>"
 )]
 pub async fn post_notification_registration<'e>(
-    context: Context<'_>,
+    context: RequestContext,
     registration_request: Result<Json<NotificationRegistrationRequest>, Error<'e>>,
 ) -> ApiResult<()> {
-    post_registration(context, registration_request?.0).await
+    post_registration(&context, registration_request?.0).await
 }
 
 /**
@@ -56,10 +55,10 @@ pub async fn post_notification_registration<'e>(
  */
 #[delete("/v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>")]
 pub async fn delete_notification_registration(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     uuid: String,
     safe_address: String,
 ) -> ApiResult<()> {
-    delete_registration(context, chain_id, uuid, safe_address).await
+    delete_registration(&context, chain_id, uuid, safe_address).await
 }

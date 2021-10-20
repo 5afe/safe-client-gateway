@@ -51,6 +51,7 @@ impl Response {
 pub trait HttpClient: Send + Sync {
     async fn get(&self, request: &Request) -> ApiResult<Response>;
     async fn post(&self, request: &Request) -> ApiResult<Response>;
+    async fn delete(&self, request: &Request) -> ApiResult<Response>;
 }
 
 #[rocket::async_trait]
@@ -79,6 +80,20 @@ impl HttpClient for reqwest::Client {
         let status_code = response.status().as_u16();
         let body = response.text().await?;
 
+        Ok(Response {
+            body: Some(body),
+            status_code,
+        })
+    }
+
+    async fn delete(&self, request: &Request) -> ApiResult<Response> {
+        let response = self
+            .delete(&request.url)
+            .timeout(request.timeout)
+            .send()
+            .await?;
+        let status_code = response.status().as_u16();
+        let body = response.text().await?;
         Ok(Response {
             body: Some(body),
             status_code,

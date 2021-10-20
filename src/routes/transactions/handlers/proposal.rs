@@ -2,13 +2,13 @@ use crate::cache::cache_operations::{Invalidate, InvalidationPattern, Invalidati
 use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::models::requests::MultisigTransactionRequest;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult};
 use std::collections::HashMap;
 use std::time::Duration;
 
 pub async fn submit_confirmation(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_tx_hash: &str,
     signature: &str,
@@ -22,8 +22,9 @@ pub async fn submit_confirmation(
     let mut json = HashMap::new();
     json.insert("signature", signature);
 
-    let response = context
-        .client()
+    let client = context.http_client();
+
+    let response = client
         .post(&url)
         .json(&json)
         .timeout(Duration::from_millis(default_request_timeout()))
@@ -31,11 +32,11 @@ pub async fn submit_confirmation(
         .await?;
 
     if response.status().is_success() {
-        Invalidate::new(InvalidationPattern::Any(
-            InvalidationScope::Both,
-            String::from(safe_tx_hash),
-        ))
-        .execute(context.cache());
+        Invalidate::new(
+            InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
+            context.cache(),
+        )
+        .execute();
         Ok(())
     } else {
         Err(ApiError::from_http_response(
@@ -47,7 +48,7 @@ pub async fn submit_confirmation(
 }
 
 pub async fn propose_transaction(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     transaction_request: &MultisigTransactionRequest,
@@ -58,8 +59,10 @@ pub async fn propose_transaction(
         "/v1/safes/{}/multisig-transactions/",
         &safe_address
     )?;
-    let response = context
-        .client()
+
+    let client = context.http_client();
+
+    let response = client
         .post(&url)
         .json(&transaction_request)
         .timeout(Duration::from_millis(default_request_timeout()))
@@ -67,16 +70,19 @@ pub async fn propose_transaction(
         .await?;
 
     if response.status().is_success() {
-        Invalidate::new(InvalidationPattern::Any(
-            InvalidationScope::Both,
-            String::from(safe_address),
-        ))
-        .execute(context.cache());
-        Invalidate::new(InvalidationPattern::Any(
-            InvalidationScope::Both,
-            String::from(&transaction_request.safe_tx_hash),
-        ))
-        .execute(context.cache());
+        Invalidate::new(
+            InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
+            context.cache(),
+        )
+        .execute();
+        Invalidate::new(
+            InvalidationPattern::Any(
+                InvalidationScope::Both,
+                String::from(&transaction_request.safe_tx_hash),
+            ),
+            context.cache(),
+        )
+        .execute();
         Ok(())
     } else {
         Err(ApiError::from_http_response(

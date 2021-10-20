@@ -5,14 +5,14 @@ use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::handlers::offset_page_meta;
 use crate::routes::transactions::models::summary::{ConflictType, Label, TransactionListItem};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use itertools::Itertools;
 use std::collections::HashMap;
 
 // use https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.peekable
 pub async fn get_queued_transactions(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &String,
     safe_address: &String,
     cursor: &Option<String>,
@@ -40,9 +40,9 @@ pub async fn get_queued_transactions(
         display_trusted_only
     )?;
 
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
@@ -202,7 +202,7 @@ pub(super) async fn process_transactions(
 }
 
 fn build_cursor(
-    context: &Context,
+    context: &RequestContext,
     chain_id: &String,
     safe_address: &String,
     page_meta: &PageMetadata,

@@ -8,22 +8,22 @@ use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::models::details::TransactionDetails;
 use crate::routes::transactions::models::{TransactionIdParts, ID_SEPARATOR};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
 use crate::utils::transactions::fetch_rejections;
 use log::debug;
 
 pub(super) async fn get_multisig_transaction_details(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
     let mut info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(info_provider, "/v1/multisig-transactions/{}/", safe_tx_hash)?;
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 
@@ -43,7 +43,7 @@ pub(super) async fn get_multisig_transaction_details(
 }
 
 async fn get_ethereum_transaction_details(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe: &str,
     tx_hash: &str,
@@ -57,9 +57,9 @@ async fn get_ethereum_transaction_details(
         tx_hash
     )?;
     debug!("url: {}", url);
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let transfers: Page<Transfer> = serde_json::from_str(&body)?;
     let transfer = transfers
@@ -79,7 +79,7 @@ async fn get_ethereum_transaction_details(
 }
 
 async fn get_module_transaction_details(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     safe_tx_hash: &str,
@@ -95,9 +95,9 @@ async fn get_module_transaction_details(
     )?;
 
     debug!("url: {}", url);
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let transactions: Page<ModuleTransaction> = serde_json::from_str(&body)?;
     let transaction = transactions
@@ -113,7 +113,7 @@ async fn get_module_transaction_details(
 }
 
 pub async fn get_transactions_details(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     details_id: &String,
 ) -> ApiResult<TransactionDetails> {

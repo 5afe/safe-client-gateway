@@ -8,6 +8,16 @@ extern crate rocket;
 
 extern crate dotenv;
 
+use std::time::Duration;
+
+use dotenv::dotenv;
+
+use cache::redis::create_pool;
+use routes::active_routes;
+use utils::cors::CORS;
+
+use crate::routes::error_catchers;
+
 #[doc(hidden)]
 #[macro_use]
 pub mod macros;
@@ -15,16 +25,10 @@ pub mod macros;
 #[doc(hidden)]
 mod cache;
 #[doc(hidden)]
+mod common;
+#[doc(hidden)]
 mod config;
 
-/// Models exposed by this service
-///
-/// *Important:* Names, Enums and Polymorphism
-///
-/// Every field in the structs that you will see in this documentation is **camelCased** on serialisation.
-///
-/// Enums are **SCREAMING_SNAKE_CASED** on serialization and the variant is always put into a `type` json field for polymorphic cases.
-mod models;
 #[doc(hidden)]
 mod monitoring;
 #[doc(hidden)]
@@ -33,19 +37,10 @@ mod providers;
 /// Collection of all endpoints all endpoints
 mod routes;
 #[doc(hidden)]
-mod services;
-#[doc(hidden)]
 mod utils;
 
 #[cfg(test)]
-mod json;
-
-use crate::routes::error_catchers;
-use cache::redis::create_pool;
-use dotenv::dotenv;
-use routes::active_routes;
-use std::time::Duration;
-use utils::cors::CORS;
+mod tests;
 
 #[doc(hidden)]
 #[launch]

@@ -1,4 +1,4 @@
-use crate::models::backend::transactions::MultisigTransaction;
+use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::rocket::response::Responder;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use rocket::local::asynchronous::Client;

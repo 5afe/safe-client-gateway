@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::MultisigTransaction;
-use crate::common::models::{Page, PageMetadata};
+use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::handlers::offset_page_meta;

@@ -2,7 +2,7 @@ use crate::common::models::backend::transactions::{
     MultisigTransaction as BackendMultisigTransaction,
     SafeTransactionEstimation as BackendSafeTransactionEstimation,
 };
-use crate::common::models::Page;
+use crate::common::models::page::Page;
 use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeTransactionEstimation, SafeTransactionEstimationRequest};

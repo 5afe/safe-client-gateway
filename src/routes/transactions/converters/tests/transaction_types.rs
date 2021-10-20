@@ -1,7 +1,7 @@
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
-use crate::common::models::ParamValue::SingleValue;
-use crate::common::models::{DataDecoded, Parameter};
+use crate::common::models::data_decoded::ParamValue::SingleValue;
+use crate::common::models::data_decoded::{DataDecoded, Parameter};
 use crate::providers::info::*;
 use crate::routes::transactions::models::{
     Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, SettingsInfo,

@@ -2,8 +2,8 @@ use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{
     Confirmation, MultisigTransaction, SafeTransaction,
 };
-use crate::common::models::Operation;
-use crate::common::models::{DataDecoded, Parameter};
+use crate::common::models::data_decoded::Operation;
+use crate::common::models::data_decoded::{DataDecoded, Parameter};
 use crate::providers::info::*;
 use crate::routes::transactions::models::{
     Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, Transfer,

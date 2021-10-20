@@ -1,5 +1,5 @@
-use crate::common::models::ParamValue::SingleValue;
-use crate::common::models::{DataDecoded, Parameter};
+use crate::common::models::data_decoded::ParamValue::SingleValue;
+use crate::common::models::data_decoded::{DataDecoded, Parameter};
 use crate::routes::transactions::converters::check_sender_or_receiver;
 
 #[test]

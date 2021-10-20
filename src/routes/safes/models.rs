@@ -1,5 +1,5 @@
 use crate::common::models::addresses::AddressEx;
-use crate::common::models::Operation;
+use crate::common::models::data_decoded::Operation;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug, PartialEq)]

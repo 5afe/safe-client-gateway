@@ -1,5 +1,5 @@
 use crate::common::models::addresses::AddressEx;
-use crate::common::models::{DataDecoded, ParamValue, Parameter, ValueDecodedType};
+use crate::common::models::data_decoded::{DataDecoded, ParamValue, Parameter, ValueDecodedType};
 use crate::config::feature_flag_nested_decoding;
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::InfoProvider;

@@ -1,5 +1,5 @@
 use crate::common::models::addresses::AddressEx;
-use crate::common::models::DataDecoded;
+use crate::common::models::data_decoded::DataDecoded;
 use serde::Serialize;
 
 pub mod details;

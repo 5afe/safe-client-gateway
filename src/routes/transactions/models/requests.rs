@@ -1,4 +1,4 @@
-use crate::common::models::Operation;
+use crate::common::models::data_decoded::Operation;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]

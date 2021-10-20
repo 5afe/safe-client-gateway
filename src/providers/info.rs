@@ -4,7 +4,7 @@ use crate::cache::Cache;
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::chains::ChainInfo;
 use crate::common::models::backend::safes::MasterCopy;
-use crate::common::models::Page;
+use crate::common::models::page::Page;
 use crate::config::{
     address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,
     contract_info_request_timeout, default_request_timeout, long_error_duration,

@@ -1,4 +1,4 @@
-use crate::common::models::DataDecoded;
+use crate::common::models::data_decoded::DataDecoded;
 use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::contracts::models::DataDecoderRequest;

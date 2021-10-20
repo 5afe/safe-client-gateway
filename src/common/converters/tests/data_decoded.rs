@@ -1,5 +1,5 @@
 use crate::common::models::addresses::AddressEx;
-use crate::common::models::{DataDecoded, ParamValue, Parameter};
+use crate::common::models::data_decoded::{DataDecoded, ParamValue, Parameter};
 use crate::providers::info::*;
 use crate::routes::transactions::models::{SettingsChange, SettingsInfo};
 use mockall::predicate::eq;

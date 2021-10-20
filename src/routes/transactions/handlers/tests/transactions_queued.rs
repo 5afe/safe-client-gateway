@@ -1,6 +1,6 @@
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::MultisigTransaction;
-use crate::common::models::{Page, PageMetadata};
+use crate::common::models::page::{Page, PageMetadata};
 use crate::providers::info::*;
 use crate::routes::transactions::handlers::queued::{
     adjust_page_meta, get_edge_nonce, get_previous_page_nonce, process_transactions,

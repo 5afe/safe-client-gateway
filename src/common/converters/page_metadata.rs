@@ -1,4 +1,4 @@
-use crate::common::models::PageMetadata;
+use crate::common::models::page::PageMetadata;
 use std::ops::Deref;
 
 impl PageMetadata {

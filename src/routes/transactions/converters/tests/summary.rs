@@ -6,8 +6,8 @@ use crate::common::models::backend::transactions::{
 use crate::common::models::backend::transfers::{
     EtherTransfer as EtherTransferDto, Transfer as TransferDto,
 };
-use crate::common::models::ParamValue::SingleValue;
-use crate::common::models::{DataDecoded, Operation, Parameter};
+use crate::common::models::data_decoded::ParamValue::SingleValue;
+use crate::common::models::data_decoded::{DataDecoded, Operation, Parameter};
 use crate::providers::info::*;
 use crate::routes::transactions::converters::data_size;
 use crate::routes::transactions::models::summary::{

@@ -1,4 +1,4 @@
-use crate::common::models::PageMetadata;
+use crate::common::models::page::PageMetadata;
 
 #[test]
 fn page_metadata_with_valid_non_zero_data() {

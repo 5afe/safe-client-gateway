@@ -1,5 +1,5 @@
 use super::*;
-use crate::common::models::{DataDecoded, Operation};
+use crate::common::models::data_decoded::{DataDecoded, Operation};
 use crate::providers::info::{SafeAppInfo, TokenInfo};
 use serde::Serialize;
 use std::collections::HashMap;

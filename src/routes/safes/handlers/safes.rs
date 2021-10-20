@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::{MultisigTransaction, Transaction};
 use crate::common::models::backend::transfers::Transfer;
-use crate::common::models::{Page, SafeList};
+use crate::common::models::page::{Page, SafeList};
 use crate::config::{
     default_request_timeout, owners_for_safes_cache_duration, transaction_request_timeout,
 };

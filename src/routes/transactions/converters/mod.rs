@@ -12,7 +12,7 @@ use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{
     ModuleTransaction, MultisigTransaction, SafeTransaction,
 };
-use crate::common::models::{DataDecoded, Operation};
+use crate::common::models::data_decoded::{DataDecoded, Operation};
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
 use crate::routes::transactions::models::{
     Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, TransactionInfo,

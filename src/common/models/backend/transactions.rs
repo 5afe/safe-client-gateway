@@ -1,5 +1,5 @@
 use crate::common::models::backend::transfers::Transfer;
-use crate::common::models::{DataDecoded, Operation};
+use crate::common::models::data_decoded::{DataDecoded, Operation};
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 

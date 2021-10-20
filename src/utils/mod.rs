@@ -1,5 +1,5 @@
-use crate::common::models::ValueDecodedType::InternalTransaction;
-use crate::common::models::{DataDecoded, ParamValue, ValueDecodedType};
+use crate::common::models::data_decoded::ValueDecodedType::InternalTransaction;
+use crate::common::models::data_decoded::{DataDecoded, ParamValue, ValueDecodedType};
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 

@@ -1,6 +1,6 @@
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::Transaction;
-use crate::common::models::{Page, PageMetadata};
+use crate::common::models::page::{Page, PageMetadata};
 use crate::providers::info::*;
 use crate::routes::transactions::handlers::history::{
     adjust_page_meta, backend_txs_to_summary_txs, get_day_timestamp_millis,

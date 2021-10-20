@@ -133,8 +133,8 @@ where
     pub fn new(context: &RequestContext) -> Self {
         CacheResponse {
             key: context.request_id.to_string(),
-            client: context.http_client.clone(),
-            cache: context.cache.clone(),
+            client: context.http_client(),
+            cache: context.cache(),
             database: Database::Default,
             duration: request_cache_duration(),
             resp_generator: None,

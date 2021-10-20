@@ -1,3 +1,4 @@
+use crate::config::default_request_timeout;
 use crate::utils::errors::ApiResult;
 use core::time::Duration;
 use mockall::automock;
@@ -6,6 +7,24 @@ pub struct Request {
     pub url: String,
     pub body: Option<String>,
     pub timeout: Duration,
+}
+
+impl Request {
+    pub fn new(url: String) -> Self {
+        Request {
+            url,
+            body: None,
+            timeout: Duration::from_millis(default_request_timeout()),
+        }
+    }
+
+    pub fn new_with_timeout(url: String, timeout: Duration) -> Self {
+        Request {
+            url,
+            body: None,
+            timeout,
+        }
+    }
 }
 
 pub struct Response {

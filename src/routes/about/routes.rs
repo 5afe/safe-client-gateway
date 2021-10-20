@@ -5,6 +5,7 @@ use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::handlers;
 use crate::utils::context::{Context, RequestContext};
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::Request;
 use rocket::response::content;
 
 /**
@@ -92,17 +93,21 @@ pub async fn get_master_copies(
 
 #[doc(hidden)]
 #[get("/v1/chains/<chain_id>/about/backbone")]
-pub async fn backbone(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
+pub async fn backbone(
+    context: RequestContext,
+    chain_id: String,
+) -> ApiResult<content::Json<String>> {
     let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
     let url = core_uri!(info_provider, "/v1/about/")?;
+    let request = Request::new(url);
     Ok(content::Json(
-        context.client().get(&url).send().await?.text().await?,
+        context.client().get(request).await?.text().await?,
     ))
 }
 
 #[doc(hidden)]
 #[get("/about/redis/<token>")]
-pub fn redis(context: Context<'_>, token: String) -> ApiResult<String> {
+pub fn redis(context: RequestContext, token: String) -> ApiResult<String> {
     if token != webhook_token() {
         bail!("Invalid token");
     }

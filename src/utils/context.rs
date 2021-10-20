@@ -82,6 +82,8 @@ impl<'r> FromRequest<'r> for Context<'r> {
             .get_one("Host")
             .map(|host| host.to_string());
         let uri = request.uri().to_string();
+        log::error!("URI  : {}", &uri);
+        log::error!("HOST : {:#?}", &host);
         return request::Outcome::Success(Context {
             host,
             uri,

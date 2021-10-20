@@ -7,7 +7,7 @@ use std::sync::Arc;
 pub fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiResult<()> {
     Invalidate::new(
         InvalidationPattern::Any(InvalidationScope::Both, payload.address.to_owned()),
-        cache,
+        cache.clone(),
     )
     .execute();
     payload.details.as_ref().map(|d| match d {

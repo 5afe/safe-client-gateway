@@ -64,8 +64,6 @@ impl<'r> FromRequest<'r> for RequestContext {
         let uri = request.uri().to_string();
         let host = host.to_string();
 
-        log::error!("{}", &absolute_uri);
-        log::error!("{}", &uri);
         return request::Outcome::Success(RequestContext {
             request_id: uri,
             host,

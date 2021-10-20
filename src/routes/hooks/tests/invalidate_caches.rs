@@ -1,5 +1,5 @@
 use crate::cache::*;
-use crate::routes::hooks::backend::{
+use crate::common::models::backend::hooks::{
     ExecutedMultisigTransaction, NewConfirmation, Payload, PayloadDetails,
     PendingMultisigTransaction,
 };

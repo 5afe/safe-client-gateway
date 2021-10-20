@@ -1,4 +1,4 @@
-use crate::routes::chains::backend::{
+use crate::common::models::backend::chains::{
     BlockExplorerUriTemplate, ChainInfo, GasPrice, NativeCurrency, RpcAuthentication, RpcUri, Theme,
 };
 use crate::routes::chains::models::{

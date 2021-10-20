@@ -1,2 +1,10 @@
+pub mod about;
+pub mod balances;
+pub mod balances_v2;
+pub mod chains;
+pub mod hooks;
+pub mod notifications;
+pub mod safe_apps;
+pub mod safes;
 pub mod transactions;
 pub mod transfers;

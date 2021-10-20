@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::common::models::backend::safe_apps::SafeApp as BackendSafeApp;
 use crate::config::safe_apps_cache_duration;
-use crate::routes::safe_apps::backend::SafeApp as BackendSafeApp;
 use crate::routes::safe_apps::models::SafeApp;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;

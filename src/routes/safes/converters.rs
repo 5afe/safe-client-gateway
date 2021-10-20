@@ -1,7 +1,7 @@
 use crate::common::models::addresses::AddressEx;
+use crate::common::models::backend::safes::MasterCopy;
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo};
-use crate::routes::safes::backend::MasterCopy;
 use crate::routes::safes::models::{Implementation, ImplementationVersionState, SafeInfoEx};
 use semver::Version;
 use std::cmp::Ordering;

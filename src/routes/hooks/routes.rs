@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern};
+use crate::common::models::backend::hooks::Payload;
 use crate::config::webhook_token;
-use crate::routes::hooks::backend::Payload;
 use crate::routes::hooks::handlers::invalidate_caches;
 use crate::utils::context::Context;
 use crate::utils::errors::ApiResult;

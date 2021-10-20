@@ -1,6 +1,6 @@
+use crate::common::models::backend::notifications::NotificationRegistrationRequest as BackendRegistrationRequest;
 use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::notifications::backend::NotificationRegistrationRequest as BackendRegistrationRequest;
 use crate::routes::notifications::models::{
     DeviceData, NotificationRegistrationRequest, SafeRegistration,
 };

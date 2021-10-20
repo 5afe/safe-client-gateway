@@ -1,5 +1,5 @@
+use crate::common::models::backend::chains::ChainInfo;
 use crate::config::vpc_transaction_service_uri;
-use crate::routes::chains::backend::ChainInfo;
 macro_rules! concat_parts {
     ($parts_head:expr) => {
         // `stringify!` will convert the expression *as it is* into a string.

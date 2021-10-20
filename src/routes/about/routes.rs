@@ -80,13 +80,13 @@ pub async fn get_about() -> ApiResult<content::Json<String>> {
  */
 #[get("/v1/chains/<chain_id>/about/master-copies")]
 pub async fn get_master_copies(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .duration(about_cache_duration())
         .resp_generator(|| handlers::get_master_copies(&context, chain_id.as_str()))
-        .execute(context.cache())
+        .execute()
         .await
 }
 

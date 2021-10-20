@@ -30,7 +30,7 @@ pub fn about() -> About {
 }
 
 pub async fn get_master_copies(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
 ) -> ApiResult<Vec<Implementation>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);

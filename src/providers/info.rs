@@ -1,4 +1,4 @@
-use crate::cache::cache_operations::{NewRequestCached, RequestCached};
+use crate::cache::cache_operations::RequestCached;
 use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::common::models::addresses::AddressEx;
@@ -15,7 +15,7 @@ use crate::config::{
 use crate::providers::address_info::ContractInfo;
 use crate::utils::context::{Context, RequestContext};
 use crate::utils::errors::ApiResult;
-use crate::utils::http_client::HttpClient;
+use crate::utils::http_client::{HttpClient, Request};
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
 use lazy_static::lazy_static;
@@ -103,24 +103,18 @@ pub trait InfoProvider {
     fn chain_id(&self) -> &str;
 }
 
-pub struct DefaultInfoProvider<'p, C: Cache> {
+pub struct DefaultInfoProvider<'p> {
     pub chain_id: &'p str,
-    client: &'p reqwest::Client,
-    cache: &'p C,
+    client: Arc<dyn HttpClient>,
+    cache: Arc<dyn Cache>,
     // Mutex is an async Mutex, meaning that the lock is non-blocking
     safe_cache: Mutex<HashMap<String, Option<SafeInfo>>>,
     token_cache: Mutex<HashMap<String, Option<TokenInfo>>>,
     chain_cache: Mutex<HashMap<String, Option<ChainInfo>>>,
 }
 
-pub struct NewDefaultInfoProvider {
-    pub chain_id: String,
-    client: Arc<dyn HttpClient>,
-    cache: Arc<dyn Cache>,
-}
-
 #[rocket::async_trait]
-impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
+impl InfoProvider for DefaultInfoProvider<'_> {
     fn chain_id(&self) -> &str {
         self.chain_id
     }
@@ -152,12 +146,12 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo> {
         let manifest_url = build_manifest_url(url)?;
 
-        let manifest_json = RequestCached::new(manifest_url)
+        let manifest_json = RequestCached::new(manifest_url, &self.client, &self.cache)
             .cache_duration(safe_app_manifest_cache_duration())
             .error_cache_duration(long_error_duration())
             .cache_all_errors()
             .request_timeout(safe_app_info_request_timeout())
-            .execute(self.client, self.cache)
+            .execute()
             .await?;
         let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
         Ok(SafeAppInfo {
@@ -169,11 +163,11 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
 
     async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx> {
         let url = core_uri!(self, "/v1/contracts/{}/", address)?;
-        let contract_info_json = RequestCached::new(url)
+        let contract_info_json = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(address_info_cache_duration())
             .error_cache_duration(long_error_duration())
             .request_timeout(contract_info_request_timeout())
-            .execute(self.client, self.cache)
+            .execute()
             .await?;
         let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
         if contract_info.display_name.trim().is_empty() {
@@ -199,12 +193,12 @@ impl<C: Cache> InfoProvider for DefaultInfoProvider<'_, C> {
     }
 }
 
-impl<'a> DefaultInfoProvider<'a, ServiceCache> {
-    pub fn new(chain_id: &'a str, context: &'a Context) -> Self {
+impl<'a> DefaultInfoProvider<'a> {
+    pub fn new(chain_id: &'a str, context: &RequestContext) -> Self {
         DefaultInfoProvider {
             chain_id,
-            client: context.client(),
-            cache: context.cache(),
+            client: context.http_client.clone(),
+            cache: context.cache.clone(),
             safe_cache: Default::default(),
             token_cache: Default::default(),
             chain_cache: Default::default(),
@@ -212,29 +206,7 @@ impl<'a> DefaultInfoProvider<'a, ServiceCache> {
     }
 }
 
-impl NewDefaultInfoProvider {
-    pub fn new_new(chain_id: &str, request_context: &RequestContext) -> Self {
-        NewDefaultInfoProvider {
-            chain_id: chain_id.to_string(),
-            client: Arc::clone(&request_context.http_client),
-            cache: Arc::clone(&request_context.cache),
-        }
-    }
-
-    pub async fn chain_info(&self) -> ApiResult<ChainInfo> {
-        let url = config_uri!("/v1/chains/{}", self.chain_id);
-        let data = NewRequestCached::new(url, self.client.clone(), self.cache.clone())
-            .cache_duration(chain_info_cache_duration())
-            .error_cache_duration(short_error_duration())
-            .request_timeout(chain_info_request_timeout())
-            .execute()
-            .await?;
-        let result = serde_json::from_str::<ChainInfo>(&data)?;
-        Ok(result)
-    }
-}
-
-impl<C: Cache> DefaultInfoProvider<'_, C> {
+impl DefaultInfoProvider<'_> {
     async fn cached<'a, T, Fut>(
         local_cache: &'a mut HashMap<String, Option<T>>,
         generator: impl FnOnce() -> Fut,
@@ -259,24 +231,24 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
 
     async fn load_safe_info(&self, safe: String) -> ApiResult<Option<SafeInfo>> {
         let url = core_uri!(self, "/v1/safes/{}/", safe)?;
-        let data = RequestCached::new(url)
+        let data = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(safe_info_cache_duration())
             .error_cache_duration(short_error_duration())
             .request_timeout(safe_info_request_timeout())
-            .execute(self.client, self.cache)
+            .execute()
             .await?;
         Ok(serde_json::from_str(&data).ok())
     }
 
     async fn populate_token_cache(&self) -> ApiResult<()> {
         let url = core_uri!(self, "/v1/tokens/?limit=10000")?;
-        let response = self
-            .client
-            .get(&url)
-            .timeout(Duration::from_millis(token_info_request_timeout()))
-            .send()
-            .await?;
-        let data: Page<TokenInfo> = response.json().await?;
+        let request = Request {
+            url,
+            body: None,
+            timeout: Duration::from_millis(token_info_request_timeout()),
+        };
+        let response = self.client.get(&request).await?;
+        let data: Page<TokenInfo> = serde_json::from_str(&response.body.expect("Token response"))?; //response.json().await?;
         let token_key = generate_token_key(self.chain_id);
         for token in data.results.iter() {
             self.cache
@@ -316,11 +288,11 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
 
     async fn load_chain_info(&self) -> ApiResult<Option<ChainInfo>> {
         let url = config_uri!("/v1/chains/{}", self.chain_id);
-        let data = RequestCached::new(url)
+        let data = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(chain_info_cache_duration())
             .error_cache_duration(short_error_duration())
             .request_timeout(chain_info_request_timeout())
-            .execute(self.client, self.cache)
+            .execute()
             .await?;
         let result = serde_json::from_str::<ChainInfo>(&data).ok();
         Ok(result)
@@ -329,11 +301,11 @@ impl<C: Cache> DefaultInfoProvider<'_, C> {
     pub async fn master_copies(&self) -> ApiResult<Vec<MasterCopy>> {
         let url = core_uri!(self, "/v1/about/master-copies/")?;
 
-        let body = RequestCached::new(url)
+        let body = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(request_cache_duration())
             .error_cache_duration(short_error_duration())
             .request_timeout(default_request_timeout())
-            .execute(self.client, self.cache)
+            .execute()
             .await?;
 
         Ok(serde_json::from_str(&body)?)

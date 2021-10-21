@@ -73,7 +73,33 @@ async fn get_chains_about() {
 }
 
 #[rocket::async_test]
-async fn get_about() {}
+async fn get_about() {
+    let mock_http_client = {
+        let mut mock_http_client = MockHttpClient::new();
+        mock_http_client.expect_get().times(0);
+        mock_http_client
+    };
+    let expected = About {
+        name: env!("CARGO_PKG_NAME").to_string(),
+        version: version(),
+        build_number: build_number(),
+    };
+
+    let client = Client::tracked(setup_rocket(mock_http_client))
+        .await
+        .expect("valid rocket instance");
+    let response = {
+        let mut response = client.get("/about");
+        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.dispatch().await
+    };
+
+    assert_eq!(response.status(), Status::Ok);
+    assert_eq!(
+        response.into_string().await.unwrap(),
+        serde_json::to_string(&expected).unwrap()
+    );
+}
 
 #[rocket::async_test]
 async fn get_master_copies() {}

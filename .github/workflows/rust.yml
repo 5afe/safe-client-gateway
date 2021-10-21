@@ -47,9 +47,8 @@ jobs:
           --health-retries 5
     env:
       RUSTC_BOOTSTRAP: 1 # grcov requires a nightly build. See https://github.com/mozilla/grcov#usage
-      REDIS_URI: redis
-      REDIS_PORT: 6379
-      
+      REDIS_URI: redis://127.0.0.1:6379
+
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2

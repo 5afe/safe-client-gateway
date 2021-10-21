@@ -1,10 +1,8 @@
-use crate::cache::cache_operations::{
-    CacheResponse, Invalidate, InvalidationPattern, RequestCached,
-};
+use crate::cache::cache_operations::{CacheResponse, InvalidationPattern, RequestCached};
 use crate::cache::inner_cache::CachedWithCode;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_RESP_PREFIX};
 use crate::utils::errors::{ApiError, ApiResult};
-use crate::utils::http_client::{HttpClient, Request};
+use crate::utils::http_client::Request;
 use rocket::response::content;
 use serde::Serialize;
 use std::sync::Arc;
@@ -40,10 +38,10 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
     match cache.fetch(&cache_key) {
         Some(cached) => CachedWithCode::split(&cached).to_result(),
         None => {
-            let http_request = Request {
-                url: String::from(&operation.url),
-                body: None,
-                timeout: Duration::from_millis(operation.request_timeout),
+            let http_request = {
+                let mut request = Request::new(String::from(&operation.url));
+                request.timeout(Duration::from_millis(operation.request_timeout));
+                request
             };
 
             let response = client.get(http_request).await;

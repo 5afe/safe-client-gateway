@@ -1,5 +1,4 @@
 use crate::common::models::backend::notifications::NotificationRegistrationRequest as BackendRegistrationRequest;
-use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::notifications::models::{
     DeviceData, NotificationRegistrationRequest, SafeRegistration,
@@ -10,7 +9,6 @@ use crate::utils::http_client::Request;
 use serde_json::json;
 use serde_json::value::RawValue;
 use serde_json::{self, value::Value};
-use std::time::Duration;
 
 pub async fn delete_registration(
     context: &RequestContext,
@@ -47,7 +45,7 @@ pub async fn post_registration(
 
         let request = {
             let mut request = Request::new(url);
-            request.body = Some(serde_json::to_string(&backend_request)?);
+            request.body(Some(serde_json::to_string(&backend_request)?));
             request
         };
         requests.push((&safe_registration.chain_id, client.post(request)));

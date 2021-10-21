@@ -1,9 +1,6 @@
-use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
-use crate::cache::MockCache;
 use crate::config::scheme;
-use crate::utils::http_client::{HttpClient, MockHttpClient};
-use rocket::http::uri::Origin;
+use crate::utils::http_client::HttpClient;
 use rocket::request::{self, FromRequest, Request};
 use std::sync::Arc;
 
@@ -62,7 +59,7 @@ impl<'r> FromRequest<'r> for RequestContext {
             .expect("Request Host must be available");
 
         let uri = request.uri().to_string();
-        let host = host.to_string();
+        let host = format!("{}://{}", scheme(), host.to_string());
 
         return request::Outcome::Success(RequestContext {
             request_id: uri,

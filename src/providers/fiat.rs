@@ -1,5 +1,4 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{base_exchange_api_uri, exchange_api_cache_duration, short_error_duration};
 use crate::utils::context::RequestContext;

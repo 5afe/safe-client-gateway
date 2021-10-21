@@ -3,13 +3,11 @@ use crate::common::models::backend::transactions::{
     SafeTransactionEstimation as BackendSafeTransactionEstimation,
 };
 use crate::common::models::page::Page;
-use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeTransactionEstimation, SafeTransactionEstimationRequest};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
-use std::time::Duration;
 
 pub async fn estimate_safe_tx_gas(
     context: &RequestContext,
@@ -51,7 +49,9 @@ async fn fetch_estimation(
     let client = context.http_client();
     let request = {
         let mut request = Request::new(request_url);
-        request.body = Some(serde_json::to_string(safe_transaction_estimation_request)?);
+        request.body(Some(serde_json::to_string(
+            safe_transaction_estimation_request,
+        )?));
         request
     };
     let estimation_response = client.post(request).await?;

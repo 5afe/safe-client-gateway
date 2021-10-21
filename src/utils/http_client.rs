@@ -4,9 +4,9 @@ use core::time::Duration;
 use mockall::automock;
 
 pub struct Request {
-    pub url: String,
-    pub body: Option<String>,
-    pub timeout: Duration,
+    url: String,
+    body: Option<String>,
+    timeout: Duration,
 }
 
 impl Request {

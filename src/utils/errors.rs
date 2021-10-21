@@ -1,6 +1,5 @@
 use crate::config::log_all_error_responses;
 use crate::utils::http_client::Response as HttpClientResponse;
-use reqwest::Response as ReqwestResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};

@@ -1,13 +1,10 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
-use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::models::requests::MultisigTransactionRequest;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult};
 use crate::utils::http_client::Request;
 use serde_json::json;
-use std::collections::HashMap;
-use std::time::Duration;
 
 pub async fn submit_confirmation(
     context: &RequestContext,
@@ -25,7 +22,9 @@ pub async fn submit_confirmation(
     let client = context.http_client();
     let request = {
         let mut request = Request::new(url);
-        request.body = Some(serde_json::from_value(json!({ "signature": signature }))?);
+        request.body(Some(serde_json::from_value(json!({
+            "signature": signature
+        }))?));
         request
     };
 
@@ -58,7 +57,7 @@ pub async fn propose_transaction(
     let client = context.http_client();
     let request = {
         let mut request = Request::new(url);
-        request.body = Some(serde_json::to_string(&transaction_request)?);
+        request.body(Some(serde_json::to_string(&transaction_request)?));
         request
     };
     let response = client.post(request).await?;

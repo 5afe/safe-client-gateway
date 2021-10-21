@@ -1,5 +1,4 @@
 use crate::cache::cache_operations::CacheResponse;
-use crate::cache::Cache;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::handlers;

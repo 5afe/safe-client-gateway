@@ -1,5 +1,4 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::chains::ChainInfo;
@@ -244,7 +243,7 @@ impl DefaultInfoProvider<'_> {
         let url = core_uri!(self, "/v1/tokens/?limit=10000")?;
         let request = {
             let mut request = Request::new(url);
-            request.timeout = Duration::from_millis(token_info_request_timeout());
+            request.timeout(Duration::from_millis(token_info_request_timeout()));
             request
         };
 

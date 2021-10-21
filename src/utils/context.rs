@@ -26,8 +26,8 @@ impl RequestContext {
     pub fn mock(
         request_id: String,
         host: String,
-        mock_http_client: MockHttpClient,
-        mock_cache: MockCache,
+        mock_http_client: crate::utils::http_client::MockHttpClient,
+        mock_cache: crate::cache::MockCache,
     ) -> Self {
         RequestContext {
             request_id,

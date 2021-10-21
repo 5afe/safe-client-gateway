@@ -1,7 +1,6 @@
 use crate::cache::MockCache;
 use crate::utils::context::RequestContext;
 use crate::utils::http_client::{MockHttpClient, Request, Response};
-use core::time::Duration;
 
 #[rocket::async_test]
 async fn testing_mocked_http_client() {
@@ -26,11 +25,8 @@ async fn testing_mocked_http_client() {
         mock_http_client,
         mock_cache,
     );
-    let request = Request {
-        url: "https://example.com".to_string(),
-        body: None,
-        timeout: Duration::from_millis(0),
-    };
+    let request = Request::new("https://example.com".to_string());
+
     let actual = request_context
         .http_client()
         .get(request)

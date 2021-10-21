@@ -96,7 +96,6 @@ fn build_cursor(
     url: Option<String>,
     direction: i64,
 ) -> Option<String> {
-    //TODO messed this one up badly, maybe?
     url.as_ref().map(|_| {
         build_absolute_uri(
             context,

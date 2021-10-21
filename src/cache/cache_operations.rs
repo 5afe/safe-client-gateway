@@ -236,7 +236,6 @@ impl RequestCached {
 
     pub async fn execute(&self) -> ApiResult<String> {
         assert!(self.request_timeout > 0);
-        // request_cached(cache, &client, self).await
         request_cached(self).await
     }
 }

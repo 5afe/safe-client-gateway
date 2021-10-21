@@ -3,6 +3,7 @@ use crate::utils::errors::ApiResult;
 use core::time::Duration;
 use mockall::automock;
 
+#[derive(PartialEq, Debug)]
 pub struct Request {
     url: String,
     body: Option<String>,

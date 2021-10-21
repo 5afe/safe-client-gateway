@@ -2,11 +2,14 @@ extern crate dotenv;
 
 use crate::cache::redis::create_service_cache;
 use crate::cache::{Cache, MockCache};
-use crate::config::{build_number, version};
+use crate::config::{build_number, chain_info_request_timeout, version};
 use crate::routes::about::models::{About, ChainAbout};
+use crate::routes::safes::models::Implementation;
 use crate::utils::context::RequestContext;
 use crate::utils::http_client::{HttpClient, MockHttpClient, Request, Response};
+use core::time::Duration;
 use dotenv::dotenv;
+use mockall::predicate::eq;
 use rocket::http::{Header, Status};
 use rocket::local::asynchronous::Client;
 use rocket::{Build, Rocket};
@@ -102,7 +105,67 @@ async fn get_about() {
 }
 
 #[rocket::async_test]
-async fn get_master_copies() {}
+async fn get_master_copies() {
+    let chain_request = {
+        let mut chain_request =
+            Request::new("https://config-url-example.com/api/v1/chains/137".to_string());
+        chain_request.timeout(Duration::from_millis(chain_info_request_timeout()));
+        chain_request
+    };
+    println!("from test: {:#?}", &chain_request);
+    let mock_http_client = {
+        let mut mock_http_client = MockHttpClient::new();
+        mock_http_client
+            .expect_get()
+            .times(1)
+            .with(eq(chain_request))
+            .return_once(move |_| {
+                Ok(Response {
+                    status_code: 200,
+                    body: String::from(crate::tests::json::CHAIN_INFO_POLYGON),
+                })
+            });
+        mock_http_client
+            .expect_get()
+            .times(1)
+            .with(eq(Request::new(
+                "https://safe-transaction-polygon.staging.gnosisdev.com/api/v1/about/master-copies/"
+                    .to_string(),
+            )))
+            .return_once(move |_| {
+                Ok(Response {
+                    status_code: 200,
+                    body: String::from(crate::tests::json::POLYGON_MASTER_COPIES),
+                })
+            });
+        mock_http_client
+    };
+    let expected = vec![
+        Implementation {
+            address: "0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552".to_string(),
+            version: "1.3.0".to_string(),
+        },
+        Implementation {
+            address: "0x3E5c63644E683549055b9Be8653de26E0B4CD36E".to_string(),
+            version: "1.3.0+L2".to_string(),
+        },
+    ];
+
+    let client = Client::tracked(setup_rocket(mock_http_client))
+        .await
+        .expect("valid rocket instance");
+    let response = {
+        let mut response = client.get("/v1/chains/137/about/master-copies");
+        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.dispatch().await
+    };
+
+    assert_eq!(response.status(), Status::Ok);
+    assert_eq!(
+        response.into_string().await.unwrap(),
+        serde_json::to_string(&expected).unwrap()
+    );
+}
 
 #[rocket::async_test]
 async fn get_backbone() {}

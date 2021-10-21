@@ -300,14 +300,12 @@ impl DefaultInfoProvider<'_> {
 
     pub async fn master_copies(&self) -> ApiResult<Vec<MasterCopy>> {
         let url = core_uri!(self, "/v1/about/master-copies/")?;
-
         let body = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(request_cache_duration())
             .error_cache_duration(short_error_duration())
             .request_timeout(default_request_timeout())
             .execute()
             .await?;
-
         Ok(serde_json::from_str(&body)?)
     }
 }

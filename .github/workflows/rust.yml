@@ -33,8 +33,23 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       RUSTC_BOOTSTRAP: 1 # grcov requires a nightly build. See https://github.com/mozilla/grcov#usage
+      REDIS_URI: redis
+      REDIS_PORT: 6379
+      
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2

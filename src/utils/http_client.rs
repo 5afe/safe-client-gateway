@@ -2,6 +2,7 @@ use crate::config::default_request_timeout;
 use crate::utils::errors::ApiResult;
 use core::time::Duration;
 use mockall::automock;
+use reqwest::header::CONTENT_TYPE;
 
 #[derive(PartialEq, Debug)]
 pub struct Request {
@@ -30,6 +31,7 @@ impl Request {
     }
 }
 
+#[derive(PartialEq, Debug)]
 pub struct Response {
     pub body: String,
     pub status_code: u16,
@@ -69,9 +71,11 @@ impl HttpClient for reqwest::Client {
     }
 
     async fn post(&self, request: Request) -> ApiResult<Response> {
+        let body = request.body.unwrap_or(String::from(""));
         let response = self
             .post(&request.url)
-            // .json(json!)
+            .header(CONTENT_TYPE, "application/json")
+            .body(body)
             .timeout(request.timeout)
             .send()
             .await?;

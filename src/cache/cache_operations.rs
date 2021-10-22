@@ -120,7 +120,6 @@ where
     R: Serialize,
 {
     database: Database,
-    pub(super) client: Arc<dyn HttpClient>,
     pub(super) cache: Arc<dyn Cache>,
     pub key: String,
     pub duration: usize,
@@ -135,7 +134,6 @@ where
     pub fn new(context: &RequestContext) -> Self {
         CacheResponse {
             key: context.request_id.to_string(),
-            client: context.http_client(),
             cache: context.cache(),
             database: Database::Default,
             duration: request_cache_duration(),

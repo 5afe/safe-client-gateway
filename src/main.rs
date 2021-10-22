@@ -54,12 +54,12 @@ fn rocket() -> _ {
         .build()
         .unwrap();
 
-    let new_service_cache = create_service_cache();
+    let cache = create_service_cache();
 
     rocket::build()
         .mount("/", active_routes())
         .register("/", error_catchers())
-        .manage(Arc::new(new_service_cache) as Arc<dyn Cache>)
+        .manage(Arc::new(cache) as Arc<dyn Cache>)
         .manage(Arc::new(client) as Arc<dyn HttpClient>)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())

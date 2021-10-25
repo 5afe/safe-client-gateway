@@ -92,6 +92,11 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
 </pre><pre class="rust">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rocket</span>;
 
@@ -110,6 +115,7 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">collectibles</span>;
 <span class="doccomment">/// # Utility endpoints</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">contracts</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">delegates</span>;
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">health</span>;
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
@@ -142,6 +148,10 @@
         <span class="ident">chains::routes::get_chains</span>,
         <span class="ident">collectibles::routes::get_collectibles</span>,
         <span class="ident">contracts::routes::post_data_decoder</span>,
+        <span class="ident">delegates::routes::delete_delegate</span>,
+        <span class="ident">delegates::routes::delete_safe_delegate</span>,
+        <span class="ident">delegates::routes::get_delegates</span>,
+        <span class="ident">delegates::routes::post_delegate</span>,
         <span class="ident">notifications::routes::post_notification_registration</span>,
         <span class="ident">notifications::routes::delete_notification_registration</span>,
         <span class="ident">safes::routes::get_safe_info</span>,

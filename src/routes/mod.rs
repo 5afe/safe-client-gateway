@@ -15,6 +15,7 @@ pub mod chains;
 pub mod collectibles;
 /// # Utility endpoints
 pub mod contracts;
+pub mod delegates;
 #[doc(hidden)]
 pub mod health;
 #[doc(hidden)]
@@ -47,6 +48,10 @@ pub fn active_routes() -> Vec<Route> {
         chains::routes::get_chains,
         collectibles::routes::get_collectibles,
         contracts::routes::post_data_decoder,
+        delegates::routes::delete_delegate,
+        delegates::routes::delete_safe_delegate,
+        delegates::routes::get_delegates,
+        delegates::routes::post_delegate,
         notifications::routes::post_notification_registration,
         notifications::routes::delete_notification_registration,
         safes::routes::get_safe_info,

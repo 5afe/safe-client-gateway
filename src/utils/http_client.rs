@@ -39,13 +39,13 @@ pub struct Response {
 
 impl Response {
     pub fn is_server_error(&self) -> bool {
-        600 > self.status_code && self.status_code >= 500
+        500 <= self.status_code && self.status_code < 600
     }
     pub fn is_client_error(&self) -> bool {
-        500 > self.status_code && self.status_code >= 400
+        400 <= self.status_code && self.status_code < 500
     }
     pub fn is_success(&self) -> bool {
-        300 > self.status_code && self.status_code >= 200
+        200 <= self.status_code && self.status_code < 300
     }
 }
 

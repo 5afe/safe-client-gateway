@@ -1,5 +1,5 @@
 # Build Image
-FROM rust:1.55.0-slim-buster as builder
+FROM rust:1.56.0-slim-buster as builder
 
 RUN set -ex; \ 
   apt-get update; \

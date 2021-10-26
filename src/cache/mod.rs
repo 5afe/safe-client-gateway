@@ -1,6 +1,7 @@
 mod cache_op_executors;
 pub mod cache_operations;
 mod inner_cache;
+pub mod manager;
 pub mod redis;
 
 #[cfg(test)]

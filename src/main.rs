@@ -31,6 +31,7 @@ mod utils;
 #[cfg(test)]
 mod tests;
 
+use crate::cache::manager::{CacheManager, RedisCacheManager};
 use crate::cache::redis::create_service_cache;
 use crate::cache::Cache;
 use crate::routes::error_catchers;
@@ -55,12 +56,14 @@ fn rocket() -> _ {
         .unwrap();
 
     let cache = create_service_cache();
+    let cache_manager = RedisCacheManager::new();
 
     rocket::build()
         .mount("/", active_routes())
         .register("/", error_catchers())
         .manage(Arc::new(cache) as Arc<dyn Cache>)
         .manage(Arc::new(client) as Arc<dyn HttpClient>)
+        .manage(Arc::new(cache_manager) as Arc<dyn CacheManager>)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
 }

@@ -8,6 +8,14 @@ pub fn redis_uri() -> String {
     env::var("REDIS_URI").expect("REDIS_URI missing in env")
 }
 
+pub fn default_redis_uri() -> String {
+    env::var("REDIS_DEFT_URI").unwrap()
+}
+
+pub fn info_redis_uri() -> String {
+    env::var("REDIS_INFO_URI").unwrap()
+}
+
 pub fn base_config_service_uri() -> String {
     format!("{}{}", env::var("CONFIG_SERVICE_URI").unwrap(), "/api")
 }
@@ -147,6 +155,14 @@ pub fn log_all_error_responses() -> bool {
 // OTHERS
 pub fn redis_scan_count() -> usize {
     env_with_default("REDIS_SCAN_COUNT", 300)
+}
+
+pub fn default_redis_pool_size() -> u32 {
+    env_with_default("REDIS_DEFT_POOL_SIZE", 15)
+}
+
+pub fn info_redis_pool_size() -> u32 {
+    env_with_default("REDIS_INFO_POOL_SIZE", 15)
 }
 
 pub fn feature_flag_nested_decoding() -> bool {

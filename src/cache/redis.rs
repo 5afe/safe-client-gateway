@@ -3,13 +3,19 @@ use crate::config::{redis_scan_count, redis_uri};
 use r2d2::{Pool, PooledConnection};
 use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 
-type RedisPool = Pool<redis::Client>;
+pub(super) type RedisPool = Pool<redis::Client>;
 type RedisConnection = PooledConnection<redis::Client>;
 
 pub struct ServiceCache(RedisPool);
 
+impl ServiceCache {
+    pub fn new(pool: RedisPool) -> Self {
+        ServiceCache(pool)
+    }
+}
+
 pub fn create_service_cache() -> ServiceCache {
-    ServiceCache(create_pool())
+    ServiceCache::new(create_pool())
 }
 
 fn create_pool() -> RedisPool {

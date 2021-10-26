@@ -62,11 +62,9 @@
 <span id="62">62</span>
 <span id="63">63</span>
 <span id="64">64</span>
-<span id="65">65</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::Context</span>;
-
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::handlers</span>::{<span class="ident">delete_registration</span>, <span class="ident">post_registration</span>};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::handlers</span>::{<span class="ident">delete_registration</span>, <span class="ident">post_registration</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::models::NotificationRegistrationRequest</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json::Error</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
@@ -95,10 +93,10 @@
     <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;registration_request&gt;&quot;</span>
 )]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post_notification_registration</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">registration_request</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Json</span><span class="op">&lt;</span><span class="ident">NotificationRegistrationRequest</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="ident">post_registration</span>(<span class="ident">context</span>, <span class="ident">registration_request</span><span class="question-mark">?</span>.<span class="number">0</span>).<span class="kw">await</span>
+    <span class="ident">post_registration</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">registration_request</span><span class="question-mark">?</span>.<span class="number">0</span>).<span class="kw">await</span>
 }
 
 <span class="doccomment">/**
@@ -121,12 +119,12 @@
  */</span>
 <span class="attribute">#[<span class="ident">delete</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_notification_registration</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="ident">String</span>,
     <span class="ident">uuid</span>: <span class="ident">String</span>,
     <span class="ident">safe_address</span>: <span class="ident">String</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="ident">delete_registration</span>(<span class="ident">context</span>, <span class="ident">chain_id</span>, <span class="ident">uuid</span>, <span class="ident">safe_address</span>).<span class="kw">await</span>
+    <span class="ident">delete_registration</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">chain_id</span>, <span class="ident">uuid</span>, <span class="ident">safe_address</span>).<span class="kw">await</span>
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>

@@ -99,35 +99,24 @@
 <span id="99"> 99</span>
 <span id="100">100</span>
 <span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::notifications::NotificationRegistrationRequest</span> <span class="kw">as</span> <span class="ident">BackendRegistrationRequest</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::default_request_timeout</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::models</span>::{
     <span class="ident">DeviceData</span>, <span class="ident">NotificationRegistrationRequest</span>, <span class="ident">SafeRegistration</span>,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::Context</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors</span>::{<span class="ident">ApiError</span>, <span class="ident">ApiResult</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Request</span>;
 <span class="kw">use</span> <span class="ident">serde_json::json</span>;
 <span class="kw">use</span> <span class="ident">serde_json::value::RawValue</span>;
 <span class="kw">use</span> <span class="ident">serde_json</span>::{<span class="self">self</span>, <span class="ident">value::Value</span>};
-<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_registration</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="ident">String</span>,
     <span class="ident">uuid</span>: <span class="ident">String</span>,
     <span class="ident">safe_address</span>: <span class="ident">String</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">client</span>();
-
     <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>);
     <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
         <span class="ident">info_provider</span>,
@@ -136,20 +125,17 @@
         <span class="ident">safe_address</span>
     )<span class="question-mark">?</span>;
 
-    <span class="ident">client</span>
-        .<span class="ident">delete</span>(<span class="ident">url</span>)
-        .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">default_request_timeout</span>()))
-        .<span class="ident">send</span>()
-        .<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">url</span>);
+    <span class="ident">context</span>.<span class="ident">http_client</span>().<span class="ident">delete</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
 }
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post_registration</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
     <span class="ident">registration_request</span>: <span class="ident">NotificationRegistrationRequest</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">client</span>();
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">http_client</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">requests</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">registration_request</span>.<span class="ident">safe_registrations</span>.<span class="ident">len</span>());
 
     <span class="kw">for</span> <span class="ident">safe_registration</span> <span class="kw">in</span> <span class="ident">registration_request</span>.<span class="ident">safe_registrations</span>.<span class="ident">iter</span>() {
@@ -158,14 +144,12 @@
         <span class="kw">let</span> <span class="ident">backend_request</span> <span class="op">=</span>
             <span class="ident">build_backend_request</span>(<span class="kw-2">&amp;</span><span class="ident">registration_request</span>.<span class="ident">device_data</span>, <span class="ident">safe_registration</span>);
 
-        <span class="ident">requests</span>.<span class="ident">push</span>((
-            <span class="kw-2">&amp;</span><span class="ident">safe_registration</span>.<span class="ident">chain_id</span>,
-            <span class="ident">client</span>
-                .<span class="ident">post</span>(<span class="ident">url</span>.<span class="ident">to_string</span>())
-                .<span class="ident">json</span>(<span class="kw-2">&amp;</span><span class="ident">backend_request</span>)
-                .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">default_request_timeout</span>()))
-                .<span class="ident">send</span>(),
-        ));
+        <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">url</span>);
+            <span class="ident">request</span>.<span class="ident">body</span>(<span class="prelude-val">Some</span>(<span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">backend_request</span>)<span class="question-mark">?</span>));
+            <span class="ident">request</span>
+        };
+        <span class="ident">requests</span>.<span class="ident">push</span>((<span class="kw-2">&amp;</span><span class="ident">safe_registration</span>.<span class="ident">chain_id</span>, <span class="ident">client</span>.<span class="ident">post</span>(<span class="ident">request</span>)));
     }
 
     <span class="kw">let</span> (<span class="ident">error_chain_ids</span>, <span class="ident">error_body</span>) <span class="op">=</span> {
@@ -174,10 +158,10 @@
         <span class="kw">for</span> (<span class="ident">chain_id</span>, <span class="ident">request</span>) <span class="kw">in</span> <span class="ident">requests</span>.<span class="ident">into_iter</span>() {
             <span class="kw">match</span> <span class="ident">request</span>.<span class="kw">await</span> {
                 <span class="prelude-val">Ok</span>(<span class="ident">response</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">response</span>.<span class="ident">status</span>().<span class="ident">is_success</span>() {
+                    <span class="kw">if</span> <span class="op">!</span><span class="ident">response</span>.<span class="ident">is_success</span>() {
                         <span class="ident">error_chain_ids</span>.<span class="ident">push</span>(<span class="ident">chain_id</span>);
                         <span class="ident">errors</span>.<span class="ident">push</span>(<span class="macro">json!</span>({
-                            <span class="ident">chain_id</span> : <span class="ident">RawValue::from_string</span>(<span class="ident">response</span>.<span class="ident">text</span>().<span class="kw">await</span>.<span class="ident">expect</span>(<span class="string">&quot;Error response issue&quot;</span>))<span class="question-mark">?</span>
+                            <span class="ident">chain_id</span> : <span class="ident">RawValue::from_string</span>(<span class="ident">response</span>.<span class="ident">body</span>)<span class="question-mark">?</span>
                             }
                         ))
                     }

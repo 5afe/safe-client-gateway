@@ -91,7 +91,7 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::balances::handlers</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::balances::handlers::fiat_codes</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::balances::handlers_v2</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::Context</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 
 <span class="doccomment">/**
@@ -117,14 +117,14 @@
  */</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/balances/&lt;fiat&gt;?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_balances</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="ident">String</span>,
     <span class="ident">safe_address</span>: <span class="ident">String</span>,
     <span class="ident">fiat</span>: <span class="ident">String</span>,
     <span class="ident">trusted</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="ident">exclude_spam</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="ident">context</span>.<span class="ident">uri</span>())
+    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>)
         .<span class="ident">duration</span>(<span class="ident">balances_cache_duration</span>())
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
             <span class="kw">if</span> <span class="ident">feature_flag_balances_rate_implementation</span>() {
@@ -149,7 +149,7 @@
                 .<span class="ident">right_future</span>()
             }
         })
-        .<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>())
+        .<span class="ident">execute</span>()
         .<span class="kw">await</span>
 }
 
@@ -162,10 +162,10 @@
  * The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
  */</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/balances/supported-fiat-codes&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_supported_fiat</span>(<span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="ident">context</span>.<span class="ident">uri</span>())
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_supported_fiat</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>)
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">fiat_codes</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>))
-        .<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>())
+        .<span class="ident">execute</span>()
         .<span class="kw">await</span>
 }
 </code></pre></div>

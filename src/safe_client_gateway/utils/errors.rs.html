@@ -156,11 +156,8 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::log_all_error_responses</span>;
-<span class="kw">use</span> <span class="ident">reqwest::Response</span> <span class="kw">as</span> <span class="ident">ReqwestResponse</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Response</span> <span class="kw">as</span> <span class="ident">HttpClientResponse</span>;
 <span class="kw">use</span> <span class="ident">rocket::http</span>::{<span class="ident">ContentType</span>, <span class="ident">Status</span>};
 <span class="kw">use</span> <span class="ident">rocket::request::Request</span>;
 <span class="kw">use</span> <span class="ident">rocket::response</span>::{<span class="self">self</span>, <span class="ident">Responder</span>, <span class="ident">Response</span>};
@@ -204,11 +201,8 @@
         <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">status_code</span>, <span class="ident">error_details</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">from_http_response</span>(<span class="ident">response</span>: <span class="ident">ReqwestResponse</span>, <span class="ident">default_message</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new_from_message_with_code</span>(
-            <span class="ident">response</span>.<span class="ident">status</span>().<span class="ident">as_u16</span>(),
-            <span class="ident">response</span>.<span class="ident">text</span>().<span class="kw">await</span>.<span class="ident">unwrap_or</span>(<span class="ident">default_message</span>),
-        )
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">from_http_response</span>(<span class="ident">response</span>: <span class="kw-2">&amp;</span><span class="ident">HttpClientResponse</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::new_from_message_with_code</span>(<span class="ident">response</span>.<span class="ident">status_code</span>, <span class="ident">response</span>.<span class="ident">body</span>.<span class="ident">to_string</span>())
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_message</span>(<span class="ident">message</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {

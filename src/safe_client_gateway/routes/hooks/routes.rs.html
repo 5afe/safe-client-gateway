@@ -30,12 +30,12 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::hooks::Payload</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::webhook_token</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::hooks::handlers::invalidate_caches</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::Context</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
 
 <span class="attribute">#[<span class="ident">post</span>(<span class="string">&quot;/v1/hook/update/&lt;token&gt;&quot;</span>, <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>, <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;update&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">update</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>, <span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">update</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
         <span class="macro">bail!</span>(<span class="string">&quot;Invalid token&quot;</span>);
     }
@@ -44,14 +44,14 @@
 
 <span class="attribute">#[<span class="ident">post</span>(<span class="string">&quot;/v1/flush/&lt;token&gt;&quot;</span>, <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>, <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;invalidation_pattern&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span>,
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">token</span>: <span class="ident">String</span>,
     <span class="ident">invalidation_pattern</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">InvalidationPattern</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
         <span class="macro">bail!</span>(<span class="string">&quot;Invalid token&quot;</span>);
     }
-    <span class="ident">Invalidate::new</span>(<span class="ident">invalidation_pattern</span>.<span class="number">0</span>).<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>());
+    <span class="ident">Invalidate::new</span>(<span class="ident">invalidation_pattern</span>.<span class="number">0</span>, <span class="ident">context</span>.<span class="ident">cache</span>()).<span class="ident">execute</span>();
     <span class="prelude-val">Ok</span>(())
 }
 </code></pre></div>

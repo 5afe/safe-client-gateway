@@ -108,13 +108,16 @@
 <span id="108">108</span>
 <span id="109">109</span>
 <span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::Cache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">about_cache_duration</span>, <span class="ident">webhook_token</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::about::handlers</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::Context</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Request</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 
 <span class="doccomment">/**
@@ -135,13 +138,13 @@
  */</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_chains_about</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="ident">String</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="ident">context</span>.<span class="ident">uri</span>())
+    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>)
         .<span class="ident">duration</span>(<span class="ident">about_cache_duration</span>())
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">handlers::chains_about</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>))
-        .<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>())
+        .<span class="ident">execute</span>()
         .<span class="kw">await</span>
 }
 
@@ -190,29 +193,32 @@
  */</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/master-copies&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_master_copies</span>(
-    <span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="ident">String</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="ident">context</span>.<span class="ident">uri</span>())
+    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>)
         .<span class="ident">duration</span>(<span class="ident">about_cache_duration</span>())
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">handlers::get_master_copies</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">execute</span>(<span class="ident">context</span>.<span class="ident">cache</span>())
+        .<span class="ident">execute</span>()
         .<span class="kw">await</span>
 }
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/backbone&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backbone</span>(<span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">chain_id</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backbone</span>(
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
+    <span class="ident">chain_id</span>: <span class="ident">String</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">http_client</span>();
     <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>(), <span class="kw-2">&amp;</span><span class="ident">context</span>);
     <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(<span class="ident">info_provider</span>, <span class="string">&quot;/v1/about/&quot;</span>)<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">content::Json</span>(
-        <span class="ident">context</span>.<span class="ident">client</span>().<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>).<span class="ident">send</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>,
-    ))
+    <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">url</span>);
+    <span class="prelude-val">Ok</span>(<span class="ident">content::Json</span>(<span class="ident">client</span>.<span class="ident">get</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">body</span>))
 }
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/about/redis/&lt;token&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis</span>(<span class="ident">context</span>: <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">token</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>, <span class="ident">token</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
         <span class="macro">bail!</span>(<span class="string">&quot;Invalid token&quot;</span>);
     }

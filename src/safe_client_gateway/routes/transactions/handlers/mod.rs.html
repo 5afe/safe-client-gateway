@@ -16,7 +16,15 @@
 <span id="16">16</span>
 <span id="17">17</span>
 <span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page::PageMetadata</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
+<span class="kw">use</span> <span class="ident">rocket::http::uri::Origin</span>;
 <span class="kw">use</span> <span class="ident">std::cmp::max</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">details</span>;
@@ -27,12 +35,16 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">offset_page_meta</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">PageMetadata</span>, <span class="ident">offset</span>: <span class="ident">i64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">offset_page_meta</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">PageMetadata</span>, <span class="ident">offset</span>: <span class="ident">i64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
     <span class="ident">PageMetadata</span> {
         <span class="ident">offset</span>: (<span class="ident">max</span>(<span class="number">0</span>, (<span class="ident">meta</span>.<span class="ident">offset</span> <span class="kw">as</span> <span class="ident">i64</span>) <span class="op">+</span> <span class="ident">offset</span>)) <span class="kw">as</span> <span class="ident">u64</span>,
         <span class="ident">limit</span>: <span class="ident">meta</span>.<span class="ident">limit</span>,
     }
     .<span class="ident">to_url_string</span>()
+}
+
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">build_absolute_uri</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>, <span class="ident">origin</span>: <span class="ident">Origin</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">context</span>.<span class="ident">host</span>, <span class="ident">origin</span>)
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-search-index-js="../../../../../search-index.js" data-search-js="../../../../../search.js"></div>

@@ -77,22 +77,19 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
-<span id="80">80</span>
-<span id="81">81</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions</span>::{
     <span class="ident">MultisigTransaction</span> <span class="kw">as</span> <span class="ident">BackendMultisigTransaction</span>,
     <span class="ident">SafeTransactionEstimation</span> <span class="kw">as</span> <span class="ident">BackendSafeTransactionEstimation</span>,
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page::Page</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::default_request_timeout</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::safes::models</span>::{<span class="ident">SafeTransactionEstimation</span>, <span class="ident">SafeTransactionEstimationRequest</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::Context</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Request</span>;
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">estimate_safe_tx_gas</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">safe_transaction_estimation_request</span>: <span class="kw-2">&amp;</span><span class="ident">SafeTransactionEstimationRequest</span>,
@@ -124,34 +121,33 @@
 }
 
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch_estimation</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
     <span class="ident">request_url</span>: <span class="ident">String</span>,
     <span class="ident">safe_transaction_estimation_request</span>: <span class="kw-2">&amp;</span><span class="ident">SafeTransactionEstimationRequest</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">estimation_response</span> <span class="op">=</span> <span class="ident">context</span>
-        .<span class="ident">client</span>()
-        .<span class="ident">post</span>(<span class="ident">request_url</span>)
-        .<span class="ident">json</span>(<span class="ident">safe_transaction_estimation_request</span>)
-        .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">default_request_timeout</span>()))
-        .<span class="ident">send</span>()
-        .<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">http_client</span>();
+    <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">request_url</span>);
+        <span class="ident">request</span>.<span class="ident">body</span>(<span class="prelude-val">Some</span>(<span class="ident">serde_json::to_string</span>(
+            <span class="ident">safe_transaction_estimation_request</span>,
+        )<span class="question-mark">?</span>));
+        <span class="ident">request</span>
+    };
+    <span class="kw">let</span> <span class="ident">estimation_response</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">post</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="prelude-val">Ok</span>(<span class="ident">serde_json::from_str</span>::<span class="op">&lt;</span><span class="ident">BackendSafeTransactionEstimation</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="ident">estimation_response</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>,
-    )<span class="question-mark">?</span>
-    .<span class="ident">safe_tx_gas</span>)
+    <span class="prelude-val">Ok</span>(
+        <span class="ident">serde_json::from_str</span>::<span class="op">&lt;</span><span class="ident">BackendSafeTransactionEstimation</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">estimation_response</span>.<span class="ident">body</span>)<span class="question-mark">?</span>
+            .<span class="ident">safe_tx_gas</span>,
+    )
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch_latest_nonce</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">request_url</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">latest_multisig_tx_response</span> <span class="op">=</span> <span class="ident">context</span>
-        .<span class="ident">client</span>()
-        .<span class="ident">get</span>(<span class="ident">request_url</span>)
-        .<span class="ident">timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">default_request_timeout</span>()))
-        .<span class="ident">send</span>()
-        .<span class="kw">await</span><span class="question-mark">?</span>;
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch_latest_nonce</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>, <span class="ident">request_url</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">http_client</span>();
+    <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">request_url</span>);
+    <span class="kw">let</span> <span class="ident">latest_multisig_tx_response</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">nonce</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>::<span class="op">&lt;</span><span class="ident">Page</span><span class="op">&lt;</span><span class="ident">BackendMultisigTransaction</span><span class="op">&gt;</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="ident">latest_multisig_tx_response</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>,
+        <span class="kw-2">&amp;</span><span class="ident">latest_multisig_tx_response</span>.<span class="ident">body</span>,
     )<span class="question-mark">?</span>
     .<span class="ident">results</span>
     .<span class="ident">first</span>()

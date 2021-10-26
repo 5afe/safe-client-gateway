@@ -1,6 +1,7 @@
 use crate::cache::redis::{RedisPool, ServiceCache};
 use crate::cache::Cache;
 use crate::config::{default_redis_uri, info_redis_pool_size, info_redis_uri, redis_uri};
+use mockall::automock;
 use r2d2::Pool;
 use std::sync::Arc;
 
@@ -20,6 +21,7 @@ fn create_default_pool() -> RedisPool {
         .unwrap()
 }
 
+#[automock]
 pub trait CacheManager: Sync + Send {
     fn info_cache(&self) -> Arc<dyn Cache>;
     fn default_cache(&self) -> Arc<dyn Cache>;

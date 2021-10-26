@@ -1,3 +1,4 @@
+use crate::cache::manager::CacheManager;
 use crate::cache::Cache;
 use crate::config::scheme;
 use crate::utils::http_client::HttpClient;
@@ -9,6 +10,7 @@ pub struct RequestContext {
     pub host: String,
     http_client: Arc<dyn HttpClient>,
     cache: Arc<dyn Cache>,
+    cache_manager: Arc<dyn CacheManager>,
 }
 
 impl RequestContext {
@@ -28,12 +30,14 @@ impl RequestContext {
         host: String,
         mock_http_client: crate::utils::http_client::MockHttpClient,
         mock_cache: crate::cache::MockCache,
+        mock_cache_manager: crate::cache::manager::MockCacheManager,
     ) -> Self {
         RequestContext {
             request_id,
             host,
             http_client: Arc::new(mock_http_client),
             cache: Arc::new(mock_cache),
+            cache_manager: Arc::new(mock_cache_manager),
         }
     }
 }
@@ -53,6 +57,11 @@ impl<'r> FromRequest<'r> for RequestContext {
             .state::<Arc<dyn HttpClient>>()
             .expect("HttpClient unavailable. Is it added to rocket instance?")
             .clone();
+        let cache_manager = request
+            .rocket()
+            .state::<Arc<dyn CacheManager>>()
+            .expect("CacheManager unavailable. Is it added to rocket instance?")
+            .clone();
         let host = request
             .headers()
             .get_one("Host")
@@ -66,6 +75,7 @@ impl<'r> FromRequest<'r> for RequestContext {
             host,
             cache,
             http_client,
+            cache_manager,
         });
     }
 }

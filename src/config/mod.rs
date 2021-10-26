@@ -9,10 +9,11 @@ pub fn redis_uri() -> String {
 }
 
 pub fn default_redis_uri() -> String {
-    env::var("REDIS_DEFT_URI").unwrap()
+    env::var("REDIS_DEFAULT_URI").unwrap()
 }
 
 pub fn info_redis_uri() -> String {
+    println!("{:#?}", env::var("REDIS_INFO_URI"));
     env::var("REDIS_INFO_URI").unwrap()
 }
 

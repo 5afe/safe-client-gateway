@@ -9,12 +9,11 @@ pub fn redis_uri() -> String {
 }
 
 pub fn default_redis_uri() -> String {
-    env::var("REDIS_DEFAULT_URI").unwrap()
+    env::var("REDIS_DEFAULT_URI").expect("REDIS_DEFAULT_URI missing in env")
 }
 
 pub fn info_redis_uri() -> String {
-    println!("{:#?}", env::var("REDIS_INFO_URI"));
-    env::var("REDIS_INFO_URI").unwrap()
+    env::var("REDIS_INFO_URI").expect("REDIS_INFO_URI missing in env")
 }
 
 pub fn base_config_service_uri() -> String {

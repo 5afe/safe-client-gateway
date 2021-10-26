@@ -51,6 +51,8 @@ jobs:
     env:
       RUSTC_BOOTSTRAP: 1 # grcov requires a nightly build. See https://github.com/mozilla/grcov#usage
       REDIS_URI: redis://localhost:6379
+      REDIS_DEFAULT_URI: redis://localhost:6379/0
+      REDIS_INFO_URI: redis://localhost:6379/1
       WEBHOOK_TOKEN: test_webhook_token
       CONFIG_SERVICE_URI: https://config.service.url
 

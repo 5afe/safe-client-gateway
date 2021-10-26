@@ -4,11 +4,12 @@ use crate::providers::info::InfoProvider;
 use crate::routes::delegates::models::{
     Delegate, DelegateCreate, DelegateDelete, SafeDelegateDelete,
 };
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::http_client::Request;
 
 pub async fn get_delegates(
-    context: Context<'_>,
+    context: &RequestContext,
     chain_id: String,
     safe: Option<String>,
     delegate: Option<String>,
@@ -25,45 +26,42 @@ pub async fn get_delegates(
         label.unwrap_or(String::from("")),
     )?;
 
-    let safe_delegates: Page<Delegate> = context
-        .client()
-        .get(&url)
-        .send()
-        .await?
-        .json::<Page<Delegate>>()
-        .await?;
+    let request = Request::new(url);
+
+    let response = context.http_client().get(request).await?;
+    let safe_delegates = serde_json::from_str::<Page<Delegate>>(&response.body)?;
 
     return Ok(safe_delegates);
 }
 
 pub async fn post_delegate(
-    context: Context<'_>,
+    context: &RequestContext,
     chain_id: String,
     safe_delegate_create: DelegateCreate,
 ) -> ApiResult<()> {
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);
     let url = core_uri!(info_provider, "/v1/delegates/",)?;
 
-    let response = context
-        .client()
-        .post(&url)
-        .json(&safe_delegate_create)
-        .send()
-        .await?;
+    let request = {
+        let mut request = Request::new(url);
+        request.body(serde_json::to_string(&safe_delegate_create).ok());
+        request
+    };
 
-    return if response.status().is_success() {
+    let response = context.http_client().post(request).await?;
+
+    return if response.is_success() {
         Ok(())
     } else {
-        Err(ApiError::from_http_response(
-            response,
+        Err(ApiError::new_from_message_with_code(
+            response.status_code,
             String::from("Unexpected delegate creation error"),
-        )
-        .await)
+        ))
     };
 }
 
 pub async fn delete_delegate(
-    context: Context<'_>,
+    context: &RequestContext,
     chain_id: String,
     delegate_address: String,
     delegate_delete: DelegateDelete,
@@ -71,26 +69,26 @@ pub async fn delete_delegate(
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);
     let url = core_uri!(info_provider, "/v1/delegates/{}", delegate_address)?;
 
-    let response = context
-        .client()
-        .delete(&url)
-        .json(&delegate_delete)
-        .send()
-        .await?;
+    let request = {
+        let mut request = Request::new(url);
+        request.body(serde_json::to_string(&delegate_delete).ok());
+        request
+    };
 
-    return if response.status().is_success() {
+    let response = context.http_client().delete(request).await?;
+
+    return if response.is_success() {
         Ok(())
     } else {
-        Err(ApiError::from_http_response(
-            response,
+        Err(ApiError::new_from_message_with_code(
+            response.status_code,
             String::from("Unexpected delegate deletion error"),
-        )
-        .await)
+        ))
     };
 }
 
 pub async fn delete_safe_delegate(
-    context: Context<'_>,
+    context: &RequestContext,
     chain_id: String,
     safe_address: String,
     delegate_address: String,
@@ -104,20 +102,20 @@ pub async fn delete_safe_delegate(
         delegate_address
     )?;
 
-    let response = context
-        .client()
-        .delete(&url)
-        .json(&safe_delegate_delete)
-        .send()
-        .await?;
+    let request = {
+        let mut request = Request::new(url);
+        request.body(serde_json::to_string(&safe_delegate_delete).ok());
+        request
+    };
 
-    return if response.status().is_success() {
+    let response = context.http_client().delete(request).await?;
+
+    return if response.is_success() {
         Ok(())
     } else {
-        Err(ApiError::from_http_response(
-            response,
+        Err(ApiError::new_from_message_with_code(
+            response.status_code,
             String::from("Unexpected delegate deletion error"),
-        )
-        .await)
+        ))
     };
 }

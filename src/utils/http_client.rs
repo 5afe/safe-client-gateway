@@ -81,13 +81,15 @@ impl HttpClient for reqwest::Client {
             .await?;
         let status_code = response.status().as_u16();
         let body = response.text().await?;
-
         Ok(Response { body, status_code })
     }
 
     async fn delete(&self, request: Request) -> ApiResult<Response> {
+        let body = request.body.unwrap_or(String::from(""));
         let response = self
             .delete(&request.url)
+            .header(CONTENT_TYPE, "application/json")
+            .body(body)
             .timeout(request.timeout)
             .send()
             .await?;

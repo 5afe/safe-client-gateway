@@ -197,7 +197,7 @@ impl<'a> DefaultInfoProvider<'a> {
         DefaultInfoProvider {
             chain_id,
             client: context.http_client(),
-            cache: context.cache(),
+            cache: context.cache_manager.info_cache(), //context.cache(),
             safe_cache: Default::default(),
             token_cache: Default::default(),
             chain_cache: Default::default(),

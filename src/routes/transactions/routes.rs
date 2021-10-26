@@ -3,7 +3,7 @@ use crate::routes::transactions::handlers::{details, history, proposal, queued};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
 };
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
@@ -29,13 +29,13 @@ use rocket::serde::json::Json;
  */
 #[get("/v1/chains/<chain_id>/transactions/<details_id>")]
 pub async fn get_transactions(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     details_id: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .resp_generator(|| details::get_transactions_details(&context, &chain_id, &details_id))
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -65,7 +65,7 @@ pub async fn get_transactions(
     data = "<tx_confirmation_request>"
 )]
 pub async fn post_confirmation<'e>(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_tx_hash: String,
     tx_confirmation_request: Result<Json<ConfirmationRequest>, Error<'e>>,
@@ -78,9 +78,9 @@ pub async fn post_confirmation<'e>(
     )
     .await?;
 
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .resp_generator(|| details::get_transactions_details(&context, &chain_id, &safe_tx_hash))
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -119,13 +119,13 @@ pub async fn post_confirmation<'e>(
  */
 #[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>")]
 pub async fn get_transactions_history(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     cursor: Option<String>,
     timezone_offset: Option<String>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .resp_generator(|| {
             history::get_history_transactions(
                 &context,
@@ -135,7 +135,7 @@ pub async fn get_transactions_history(
                 &timezone_offset,
             )
         })
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -168,14 +168,14 @@ pub async fn get_transactions_history(
  */
 #[get("/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>")]
 pub async fn get_transactions_queued(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     cursor: Option<String>,
     timezone_offset: Option<String>,
     trusted: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .resp_generator(|| {
             queued::get_queued_transactions(
                 &context,
@@ -186,7 +186,7 @@ pub async fn get_transactions_queued(
                 &trusted,
             )
         })
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -215,7 +215,7 @@ pub async fn get_transactions_queued(
     data = "<multisig_transaction_request>"
 )]
 pub async fn post_transaction<'e>(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     multisig_transaction_request: Result<Json<MultisigTransactionRequest>, Error<'e>>,
@@ -224,11 +224,11 @@ pub async fn post_transaction<'e>(
 
     proposal::propose_transaction(&context, &chain_id, &safe_address, &request).await?;
 
-    let tx_details = CacheResponse::new(context.uri())
+    let tx_details = CacheResponse::new(&context)
         .resp_generator(|| {
             details::get_transactions_details(&context, &chain_id, &request.safe_tx_hash)
         })
-        .execute(context.cache())
+        .execute()
         .await;
 
     return tx_details;

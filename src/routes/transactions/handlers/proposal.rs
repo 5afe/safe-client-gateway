@@ -1,14 +1,13 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
-use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::models::requests::MultisigTransactionRequest;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult};
-use std::collections::HashMap;
-use std::time::Duration;
+use crate::utils::http_client::Request;
+use serde_json::json;
 
 pub async fn submit_confirmation(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_tx_hash: &str,
     signature: &str,
@@ -19,35 +18,31 @@ pub async fn submit_confirmation(
         "/v1/multisig-transactions/{}/confirmations/",
         &safe_tx_hash
     )?;
-    let mut json = HashMap::new();
-    json.insert("signature", signature);
 
-    let response = context
-        .client()
-        .post(&url)
-        .json(&json)
-        .timeout(Duration::from_millis(default_request_timeout()))
-        .send()
-        .await?;
+    let client = context.http_client();
+    let request = {
+        let mut request = Request::new(url);
+        request.body(Some(serde_json::from_value(json!({
+            "signature": signature
+        }))?));
+        request
+    };
 
-    if response.status().is_success() {
-        Invalidate::new(InvalidationPattern::Any(
-            InvalidationScope::Both,
-            String::from(safe_tx_hash),
-        ))
-        .execute(context.cache());
+    let response = client.post(request).await?;
+    if response.is_success() {
+        Invalidate::new(
+            InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
+            context.cache(),
+        )
+        .execute();
         Ok(())
     } else {
-        Err(ApiError::from_http_response(
-            response,
-            String::from("Unexpected tx confirmation error"),
-        )
-        .await)
+        Err(ApiError::from_http_response(&response).await)
     }
 }
 
 pub async fn propose_transaction(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     transaction_request: &MultisigTransactionRequest,
@@ -58,31 +53,31 @@ pub async fn propose_transaction(
         "/v1/safes/{}/multisig-transactions/",
         &safe_address
     )?;
-    let response = context
-        .client()
-        .post(&url)
-        .json(&transaction_request)
-        .timeout(Duration::from_millis(default_request_timeout()))
-        .send()
-        .await?;
 
-    if response.status().is_success() {
-        Invalidate::new(InvalidationPattern::Any(
-            InvalidationScope::Both,
-            String::from(safe_address),
-        ))
-        .execute(context.cache());
-        Invalidate::new(InvalidationPattern::Any(
-            InvalidationScope::Both,
-            String::from(&transaction_request.safe_tx_hash),
-        ))
-        .execute(context.cache());
+    let client = context.http_client();
+    let request = {
+        let mut request = Request::new(url);
+        request.body(Some(serde_json::to_string(&transaction_request)?));
+        request
+    };
+    let response = client.post(request).await?;
+
+    if response.is_success() {
+        Invalidate::new(
+            InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
+            context.cache(),
+        )
+        .execute();
+        Invalidate::new(
+            InvalidationPattern::Any(
+                InvalidationScope::Both,
+                String::from(&transaction_request.safe_tx_hash),
+            ),
+            context.cache(),
+        )
+        .execute();
         Ok(())
     } else {
-        Err(ApiError::from_http_response(
-            response,
-            String::from("Unexpected multisig tx proposal error"),
-        )
-        .await)
+        Err(ApiError::from_http_response(&response).await)
     }
 }

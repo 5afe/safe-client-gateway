@@ -1,5 +1,5 @@
 use crate::routes::safe_apps::handlers::safe_apps;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
@@ -56,7 +56,7 @@ use rocket::response::content;
  */
 #[get("/v1/chains/<chain_id>/safe-apps")]
 pub async fn get_safe_apps(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
     Ok(content::Json(serde_json::to_string(

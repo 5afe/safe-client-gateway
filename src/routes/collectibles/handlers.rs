@@ -1,13 +1,13 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::config::collectibles_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::response::content::Json;
 
 pub async fn collectibles(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     trusted: Option<bool>,
@@ -24,9 +24,9 @@ pub async fn collectibles(
     )?;
 
     Ok(content::Json(
-        RequestCached::new(url)
+        RequestCached::new_from_context(url, &context)
             .request_timeout(collectibles_request_timeout())
-            .execute(context.client(), context.cache())
+            .execute()
             .await?,
     ))
 }

@@ -1,5 +1,5 @@
 use crate::routes::collectibles::handlers::collectibles;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
@@ -151,7 +151,7 @@ use rocket::response::content;
  */
 #[get("/v1/chains/<chain_id>/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>")]
 pub async fn get_collectibles(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     trusted: Option<bool>,

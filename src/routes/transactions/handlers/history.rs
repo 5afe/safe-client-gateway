@@ -5,17 +5,17 @@ use crate::common::models::backend::transactions::{CreationTransaction, Transact
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::handlers::offset_page_meta;
+use crate::routes::transactions::handlers::{build_absolute_uri, offset_page_meta};
 use crate::routes::transactions::models::summary::{
     ConflictType, TransactionListItem, TransactionSummary,
 };
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 
 pub async fn get_history_transactions(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &String,
     safe_address: &String,
     cursor: &Option<String>,
@@ -88,7 +88,7 @@ pub async fn get_history_transactions(
 }
 
 fn build_cursor(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     page_meta: &PageMetadata,
@@ -97,17 +97,20 @@ fn build_cursor(
     direction: i64,
 ) -> Option<String> {
     url.as_ref().map(|_| {
-        context.build_absolute_url(uri!(
-            crate::routes::transactions::routes::get_transactions_history(
-                chain_id,
-                safe_address,
-                Some(offset_page_meta(
-                    page_meta,
-                    direction * (page_meta.limit as i64)
-                )),
-                Some(timezone_offset.clone().unwrap_or("0".to_string()))
-            )
-        ))
+        build_absolute_uri(
+            context,
+            uri!(
+                crate::routes::transactions::routes::get_transactions_history(
+                    chain_id,
+                    safe_address,
+                    Some(offset_page_meta(
+                        page_meta,
+                        direction * (page_meta.limit as i64)
+                    )),
+                    Some(timezone_offset.clone().unwrap_or("0".to_string()))
+                )
+            ),
+        )
     })
 }
 
@@ -126,7 +129,7 @@ pub(super) fn adjust_page_meta(meta: &PageMetadata) -> PageMetadata {
 }
 
 async fn fetch_backend_paged_txs(
-    context: &Context<'_>,
+    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &str,
     cursor: &Option<String>,
@@ -141,9 +144,9 @@ async fn fetch_backend_paged_txs(
     log::debug!("request URL: {}", &url);
     log::debug!("cursor: {:#?}", &cursor);
     log::debug!("page_metadata: {:#?}", &page_metadata);
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     Ok(serde_json::from_str::<Page<Transaction>>(&body)?)
 }
@@ -226,15 +229,15 @@ pub(super) fn get_day_timestamp_millis(timestamp_in_millis: i64, timezone_offset
 }
 
 pub(super) async fn get_creation_transaction_summary(
-    context: &Context<'_>,
+    context: &RequestContext,
     info_provider: &(impl InfoProvider + Sync),
     safe: &String,
 ) -> ApiResult<TransactionSummary> {
     let url = core_uri!(info_provider, "/v1/safes/{}/creation/", safe)?;
     debug!("{}", &url);
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
 
     let creation_transaction_dto: CreationTransaction = serde_json::from_str(&body)?;

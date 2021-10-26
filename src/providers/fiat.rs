@@ -1,12 +1,13 @@
 use crate::cache::cache_operations::RequestCached;
-use crate::cache::redis::ServiceCache;
 use crate::cache::Cache;
 use crate::config::{base_exchange_api_uri, exchange_api_cache_duration, short_error_duration};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::HttpClient;
 use bigdecimal::BigDecimal;
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::sync::Arc;
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct Exchange {
@@ -14,15 +15,15 @@ pub struct Exchange {
     pub base: String,
 }
 
-pub struct FiatInfoProvider<'p, C: Cache> {
-    client: &'p reqwest::Client,
-    cache: &'p C,
+pub struct FiatInfoProvider {
+    client: Arc<dyn HttpClient>,
+    cache: Arc<dyn Cache>,
 }
 
-impl<'a> FiatInfoProvider<'a, ServiceCache<'a>> {
-    pub fn new(context: &'a Context) -> Self {
+impl FiatInfoProvider {
+    pub fn new(context: &RequestContext) -> Self {
         FiatInfoProvider {
-            client: context.client(),
+            client: context.http_client(),
             cache: context.cache(),
         }
     }
@@ -56,10 +57,10 @@ impl<'a> FiatInfoProvider<'a, ServiceCache<'a>> {
 
     async fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = base_exchange_api_uri();
-        let body = RequestCached::new(url)
+        let body = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(exchange_api_cache_duration())
             .error_cache_duration(short_error_duration())
-            .execute(self.client, self.cache)
+            .execute()
             .await?;
         Ok(serde_json::from_str::<Exchange>(&body)?)
     }

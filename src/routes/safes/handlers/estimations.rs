@@ -3,15 +3,14 @@ use crate::common::models::backend::transactions::{
     SafeTransactionEstimation as BackendSafeTransactionEstimation,
 };
 use crate::common::models::page::Page;
-use crate::config::default_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeTransactionEstimation, SafeTransactionEstimationRequest};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use std::time::Duration;
+use crate::utils::http_client::Request;
 
 pub async fn estimate_safe_tx_gas(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     safe_transaction_estimation_request: &SafeTransactionEstimationRequest,
@@ -43,34 +42,33 @@ pub async fn estimate_safe_tx_gas(
 }
 
 async fn fetch_estimation(
-    context: &Context<'_>,
+    context: &RequestContext,
     request_url: String,
     safe_transaction_estimation_request: &SafeTransactionEstimationRequest,
 ) -> ApiResult<String> {
-    let estimation_response = context
-        .client()
-        .post(request_url)
-        .json(safe_transaction_estimation_request)
-        .timeout(Duration::from_millis(default_request_timeout()))
-        .send()
-        .await?;
+    let client = context.http_client();
+    let request = {
+        let mut request = Request::new(request_url);
+        request.body(Some(serde_json::to_string(
+            safe_transaction_estimation_request,
+        )?));
+        request
+    };
+    let estimation_response = client.post(request).await?;
 
-    Ok(serde_json::from_str::<BackendSafeTransactionEstimation>(
-        &estimation_response.text().await?,
-    )?
-    .safe_tx_gas)
+    Ok(
+        serde_json::from_str::<BackendSafeTransactionEstimation>(&estimation_response.body)?
+            .safe_tx_gas,
+    )
 }
 
-async fn fetch_latest_nonce(context: &Context<'_>, request_url: String) -> ApiResult<u64> {
-    let latest_multisig_tx_response = context
-        .client()
-        .get(request_url)
-        .timeout(Duration::from_millis(default_request_timeout()))
-        .send()
-        .await?;
+async fn fetch_latest_nonce(context: &RequestContext, request_url: String) -> ApiResult<u64> {
+    let client = context.http_client();
+    let request = Request::new(request_url);
+    let latest_multisig_tx_response = client.get(request).await?;
 
     let nonce = serde_json::from_str::<Page<BackendMultisigTransaction>>(
-        &latest_multisig_tx_response.text().await?,
+        &latest_multisig_tx_response.body,
     )?
     .results
     .first()

@@ -1,12 +1,12 @@
 use crate::cache::cache_operations::CacheResponse;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 #[get("/health")]
-pub async fn health(context: Context<'_>) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(String::from("/health"))
+pub async fn health(context: RequestContext) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context)
         .resp_generator(|| async { Ok(String::new()) })
-        .execute(context.cache())
+        .execute()
         .await
 }

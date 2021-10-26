@@ -1,6 +1,6 @@
 use crate::routes::contracts::handlers::request_data_decoded;
 use crate::routes::contracts::models::DataDecoderRequest;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
@@ -56,7 +56,7 @@ use rocket::serde::json::Json;
     data = "<data_decoder_request>"
 )]
 pub async fn post_data_decoder<'e>(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     data_decoder_request: Result<Json<DataDecoderRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {

@@ -33,8 +33,27 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
     env:
       RUSTC_BOOTSTRAP: 1 # grcov requires a nightly build. See https://github.com/mozilla/grcov#usage
+      REDIS_URI: redis://localhost:6379
+      WEBHOOK_TOKEN: test_webhook_token
+      CONFIG_SERVICE_URI: https://config.service.url
+
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2

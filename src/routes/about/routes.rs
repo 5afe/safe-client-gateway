@@ -1,10 +1,10 @@
 use crate::cache::cache_operations::CacheResponse;
-use crate::cache::Cache;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::handlers;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::Request;
 use rocket::response::content;
 
 /**
@@ -25,13 +25,13 @@ use rocket::response::content;
  */
 #[get("/v1/chains/<chain_id>/about")]
 pub async fn get_chains_about(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .duration(about_cache_duration())
         .resp_generator(|| handlers::chains_about(&context, &chain_id))
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -80,29 +80,32 @@ pub async fn get_about() -> ApiResult<content::Json<String>> {
  */
 #[get("/v1/chains/<chain_id>/about/master-copies")]
 pub async fn get_master_copies(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .duration(about_cache_duration())
         .resp_generator(|| handlers::get_master_copies(&context, chain_id.as_str()))
-        .execute(context.cache())
+        .execute()
         .await
 }
 
 #[doc(hidden)]
 #[get("/v1/chains/<chain_id>/about/backbone")]
-pub async fn backbone(context: Context<'_>, chain_id: String) -> ApiResult<content::Json<String>> {
+pub async fn backbone(
+    context: RequestContext,
+    chain_id: String,
+) -> ApiResult<content::Json<String>> {
+    let client = context.http_client();
     let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
     let url = core_uri!(info_provider, "/v1/about/")?;
-    Ok(content::Json(
-        context.client().get(&url).send().await?.text().await?,
-    ))
+    let request = Request::new(url);
+    Ok(content::Json(client.get(request).await?.body))
 }
 
 #[doc(hidden)]
 #[get("/about/redis/<token>")]
-pub fn redis(context: Context<'_>, token: String) -> ApiResult<String> {
+pub fn redis(context: RequestContext, token: String) -> ApiResult<String> {
     if token != webhook_token() {
         bail!("Invalid token");
     }

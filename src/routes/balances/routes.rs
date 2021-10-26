@@ -6,7 +6,7 @@ use crate::config::{balances_cache_duration, feature_flag_balances_rate_implemen
 use crate::routes::balances::handlers;
 use crate::routes::balances::handlers::fiat_codes;
 use crate::routes::balances::handlers_v2;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
 /**
@@ -32,14 +32,14 @@ use crate::utils::errors::ApiResult;
  */
 #[get("/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>")]
 pub async fn get_balances(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     fiat: String,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .duration(balances_cache_duration())
         .resp_generator(|| {
             if feature_flag_balances_rate_implementation() {
@@ -64,7 +64,7 @@ pub async fn get_balances(
                 .right_future()
             }
         })
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -77,9 +77,9 @@ pub async fn get_balances(
  * The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
  */
 #[get("/v1/balances/supported-fiat-codes")]
-pub async fn get_supported_fiat(context: Context<'_>) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+pub async fn get_supported_fiat(context: RequestContext) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context)
         .resp_generator(|| fiat_codes(&context))
-        .execute(context.cache())
+        .execute()
         .await
 }

@@ -7,7 +7,7 @@ use crate::config::{
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeLastChanges, SafeState};
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use chrono::Utc;
 use rocket::futures::join;
@@ -15,11 +15,11 @@ use rocket::futures::join;
 // We use Utc::now().timestamp() as the fallback value so that we don't block clients from reloading
 // as returning always 0, and the clients invalidating on value changes, would prevent reloading
 pub async fn get_safe_info_ex(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &String,
     safe_address: &String,
 ) -> ApiResult<SafeState> {
-    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let safe_info = info_provider.safe_info(safe_address).await?;
     // We want to be able to return the rest of `SafeInfo` in case the `about/master-copies` endpoint is not available
     let supported_master_copies = info_provider.master_copies().await.unwrap_or(vec![]);
@@ -48,7 +48,7 @@ pub async fn get_safe_info_ex(
 }
 
 async fn get_last_collectible(
-    context: &Context<'_>,
+    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -60,9 +60,9 @@ async fn get_last_collectible(
         safe_address,
     )?;
 
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, &context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let transaction: Page<Transfer> = serde_json::from_str(&body)?;
 
@@ -80,7 +80,7 @@ async fn get_last_collectible(
 }
 
 async fn get_last_queued_tx(
-    context: &Context<'_>,
+    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -94,9 +94,9 @@ async fn get_last_queued_tx(
         safe_address,
     )?;
 
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, &context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let transaction: Page<MultisigTransaction> = serde_json::from_str(&body)?;
 
@@ -110,7 +110,7 @@ async fn get_last_queued_tx(
 }
 
 async fn get_last_history_tx(
-    context: &Context<'_>,
+    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -123,9 +123,9 @@ async fn get_last_history_tx(
         safe_address
     )?;
 
-    let body = RequestCached::new(url)
+    let body = RequestCached::new_from_context(url, &context)
         .request_timeout(transaction_request_timeout())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
     let transaction: Page<Transaction> = serde_json::from_str(&body)?;
 
@@ -147,17 +147,17 @@ async fn get_last_history_tx(
 }
 
 pub async fn get_owners_for_safe(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
     owner_address: &str,
 ) -> ApiResult<SafeList> {
-    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+    let info_provider = DefaultInfoProvider::new(&chain_id, context);
 
-    let core_uri = core_uri!(info_provider, "/v1/owners/{}/safes", owner_address)?;
-    let body = RequestCached::new(core_uri)
+    let url = core_uri!(info_provider, "/v1/owners/{}/safes", owner_address)?;
+    let body = RequestCached::new_from_context(url, context)
         .request_timeout(default_request_timeout())
         .cache_duration(owners_for_safes_cache_duration())
-        .execute(context.client(), context.cache())
+        .execute()
         .await?;
 
     Ok(serde_json::from_str(&body)?)

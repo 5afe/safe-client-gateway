@@ -3,7 +3,7 @@ use crate::config::owners_for_safes_cache_duration;
 use crate::routes::safes::handlers::estimations;
 use crate::routes::safes::handlers::safes::{get_owners_for_safe, get_safe_info_ex};
 use crate::routes::safes::models::SafeTransactionEstimationRequest;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
@@ -15,13 +15,13 @@ use rocket::serde::json::Json;
  */
 #[get("/v1/chains/<chain_id>/safes/<safe_address>")]
 pub async fn get_safe_info(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .resp_generator(|| get_safe_info_ex(&context, &chain_id, &safe_address))
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -33,14 +33,14 @@ pub async fn get_safe_info(
  */
 #[get("/v1/chains/<chain_id>/owners/<owner_address>/safes")]
 pub async fn get_owners(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     owner_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(context.uri())
+    CacheResponse::new(&context)
         .resp_generator(|| get_owners_for_safe(&context, &chain_id, &owner_address))
         .duration(owners_for_safes_cache_duration())
-        .execute(context.cache())
+        .execute()
         .await
 }
 
@@ -85,7 +85,7 @@ pub async fn get_owners(
     data = "<safe_transaction_estimation_request>"
 )]
 pub async fn post_safe_gas_estimation<'e>(
-    context: Context<'_>,
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     safe_transaction_estimation_request: Result<Json<SafeTransactionEstimationRequest>, Error<'e>>,

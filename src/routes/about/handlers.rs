@@ -4,10 +4,10 @@ use crate::config::{build_number, version};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::models::{About, ChainAbout};
 use crate::routes::safes::models::Implementation;
-use crate::utils::context::Context;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
-pub async fn chains_about(context: &Context<'_>, chain_id: &str) -> ApiResult<ChainAbout> {
+pub async fn chains_about(context: &RequestContext, chain_id: &str) -> ApiResult<ChainAbout> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let chain_info = info_provider.chain_info().await?;
     let about = about();
@@ -30,7 +30,7 @@ pub fn about() -> About {
 }
 
 pub async fn get_master_copies(
-    context: &Context<'_>,
+    context: &RequestContext,
     chain_id: &str,
 ) -> ApiResult<Vec<Implementation>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);

@@ -4,10 +4,6 @@ use std::str::FromStr;
 #[cfg(test)]
 mod tests;
 
-pub fn redis_uri() -> String {
-    env::var("REDIS_URI").expect("REDIS_URI missing in env")
-}
-
 pub fn default_redis_uri() -> String {
     env::var("REDIS_DEFAULT_URI").expect("REDIS_DEFAULT_URI missing in env")
 }

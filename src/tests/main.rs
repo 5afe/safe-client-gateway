@@ -1,7 +1,6 @@
 extern crate dotenv;
 
-use crate::cache::manager::{CacheManager, MockCacheManager, RedisCacheManager};
-use crate::cache::redis::create_service_cache;
+use crate::cache::manager::{CacheManager, RedisCacheManager};
 use crate::cache::MockCache;
 use crate::utils::http_client::{HttpClient, MockHttpClient};
 use dotenv::dotenv;

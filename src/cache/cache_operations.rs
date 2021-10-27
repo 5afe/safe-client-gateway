@@ -16,15 +16,9 @@ use serde::Serialize;
 use std::future::Future;
 use std::sync::Arc;
 
-pub enum Database {
-    Info = 1,
-    Default = 2,
-}
-
 pub struct Invalidate {
     pub(super) cache: Arc<dyn Cache>,
     pattern: InvalidationPattern,
-    database: Database,
 }
 
 #[derive(Deserialize, Debug)]
@@ -98,16 +92,7 @@ impl InvalidationScope {
 
 impl Invalidate {
     pub fn new(pattern: InvalidationPattern, cache: Arc<dyn Cache>) -> Self {
-        Invalidate {
-            cache,
-            pattern,
-            database: Database::Default,
-        }
-    }
-
-    fn database(&mut self, database: Database) -> &mut Self {
-        self.database = database;
-        self
+        Invalidate { cache, pattern }
     }
 
     pub fn execute(&self) {
@@ -119,7 +104,6 @@ pub struct CacheResponse<'a, R>
 where
     R: Serialize,
 {
-    database: Database,
     pub(super) cache: Arc<dyn Cache>,
     pub key: String,
     pub duration: usize,
@@ -135,15 +119,9 @@ where
         CacheResponse {
             key: context.request_id.to_string(),
             cache: context.default_cache(),
-            database: Database::Default,
             duration: request_cache_duration(),
             resp_generator: None,
         }
-    }
-
-    pub fn database(&mut self, database: Database) -> &mut Self {
-        self.database = database;
-        self
     }
 
     pub fn duration(&mut self, duration: usize) -> &mut Self {
@@ -170,7 +148,6 @@ where
 }
 
 pub struct RequestCached {
-    database: Database,
     pub(super) client: Arc<dyn HttpClient>,
     pub(super) cache: Arc<dyn Cache>,
     pub url: String,
@@ -183,7 +160,6 @@ pub struct RequestCached {
 impl RequestCached {
     pub fn new(url: String, client: &Arc<dyn HttpClient>, cache: &Arc<dyn Cache>) -> Self {
         RequestCached {
-            database: Database::Default,
             client: client.clone(),
             cache: cache.clone(),
             url,
@@ -196,7 +172,6 @@ impl RequestCached {
 
     pub fn new_from_context(url: String, context: &RequestContext) -> Self {
         RequestCached {
-            database: Database::Default,
             client: context.http_client(),
             cache: context.default_cache(),
             url,
@@ -205,11 +180,6 @@ impl RequestCached {
             error_cache_duration: request_error_cache_duration(),
             cache_all_errors: false,
         }
-    }
-
-    pub fn database(&mut self, database: Database) -> &mut Self {
-        self.database = database;
-        self
     }
 
     pub fn request_timeout(&mut self, request_timeout: u64) -> &mut Self {

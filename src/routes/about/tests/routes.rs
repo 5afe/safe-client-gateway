@@ -1,19 +1,16 @@
 extern crate dotenv;
 
-use crate::cache::manager::RedisCacheManager;
-use crate::cache::redis::create_service_cache;
-use crate::cache::{Cache, MockCache};
+use crate::cache::MockCache;
 use crate::config::{build_number, chain_info_request_timeout, version, webhook_token};
 use crate::routes::about::models::{About, ChainAbout};
 use crate::routes::safes::models::Implementation;
 use crate::tests::main::{setup_rocket, setup_rocket_with_mock_cache};
-use crate::utils::http_client::{HttpClient, MockHttpClient, Request, Response};
+use crate::utils::http_client::{MockHttpClient, Request, Response};
 use core::time::Duration;
 use mockall::predicate::eq;
 use rocket::http::{Header, Status};
 use rocket::local::asynchronous::Client;
-use rocket::{Build, Rocket, Route};
-use std::sync::Arc;
+use rocket::Route;
 
 fn routes_for_test() -> impl Into<Vec<Route>> {
     routes![

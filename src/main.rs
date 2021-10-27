@@ -32,8 +32,6 @@ mod utils;
 mod tests;
 
 use crate::cache::manager::{CacheManager, RedisCacheManager};
-use crate::cache::redis::create_service_cache;
-use crate::cache::Cache;
 use crate::routes::error_catchers;
 use crate::utils::http_client::HttpClient;
 use dotenv::dotenv;
@@ -54,8 +52,6 @@ fn rocket() -> _ {
         ))
         .build()
         .unwrap();
-
-    let cache = create_service_cache();
     let cache_manager = RedisCacheManager::new();
 
     rocket::build()

@@ -109,5 +109,5 @@ pub fn redis(context: RequestContext, token: String) -> ApiResult<String> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Ok(context.cache().info().unwrap_or(String::new()))
+    Ok(context.default_cache().info().unwrap_or(String::new()))
 }

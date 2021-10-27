@@ -134,7 +134,7 @@ where
     pub fn new(context: &RequestContext) -> Self {
         CacheResponse {
             key: context.request_id.to_string(),
-            cache: context.cache(),
+            cache: context.default_cache(),
             database: Database::Default,
             duration: request_cache_duration(),
             resp_generator: None,
@@ -198,7 +198,7 @@ impl RequestCached {
         RequestCached {
             database: Database::Default,
             client: context.http_client(),
-            cache: context.cache(),
+            cache: context.default_cache(),
             url,
             request_timeout: default_request_timeout(),
             cache_duration: request_cache_duration(),

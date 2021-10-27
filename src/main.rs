@@ -61,7 +61,6 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", active_routes())
         .register("/", error_catchers())
-        .manage(Arc::new(cache) as Arc<dyn Cache>)
         .manage(Arc::new(client) as Arc<dyn HttpClient>)
         .manage(Arc::new(cache_manager) as Arc<dyn CacheManager>)
         .attach(monitoring::performance::PerformanceMonitor())

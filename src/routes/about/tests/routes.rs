@@ -1,5 +1,6 @@
 extern crate dotenv;
 
+use crate::cache::manager::RedisCacheManager;
 use crate::cache::redis::create_service_cache;
 use crate::cache::{Cache, MockCache};
 use crate::config::{build_number, chain_info_request_timeout, version, webhook_token};
@@ -210,7 +211,7 @@ async fn get_redis() {
         mock_http_client.expect_get().times(0);
         mock_http_client
     };
-    let mock_cache = {
+    let mock_default_cache = {
         let mut mock_cache = MockCache::new();
         mock_cache
             .expect_info()
@@ -219,9 +220,12 @@ async fn get_redis() {
         mock_cache
     };
 
+    let mock_info_cache = MockCache::new();
+
     let client = Client::tracked(setup_rocket_with_mock_cache(
         mock_http_client,
-        mock_cache,
+        mock_default_cache,
+        mock_info_cache,
         routes_for_test(),
     ))
     .await

@@ -9,8 +9,7 @@ pub struct RequestContext {
     pub request_id: String,
     pub host: String,
     http_client: Arc<dyn HttpClient>,
-    cache: Arc<dyn Cache>,
-    pub cache_manager: Arc<dyn CacheManager>,
+    cache_manager: Arc<dyn CacheManager>,
 }
 
 impl RequestContext {
@@ -18,8 +17,12 @@ impl RequestContext {
         self.http_client.clone()
     }
 
-    pub fn cache(&self) -> Arc<dyn Cache> {
-        self.cache.clone()
+    pub fn default_cache(&self) -> Arc<dyn Cache> {
+        self.cache_manager.default_cache()
+    }
+
+    pub fn info_cache(&self) -> Arc<dyn Cache> {
+        self.cache_manager.info_cache()
     }
 }
 
@@ -36,7 +39,6 @@ impl RequestContext {
             request_id,
             host,
             http_client: Arc::new(mock_http_client),
-            cache: Arc::new(mock_cache),
             cache_manager: Arc::new(mock_cache_manager),
         }
     }
@@ -47,11 +49,6 @@ impl<'r> FromRequest<'r> for RequestContext {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let cache = request
-            .rocket()
-            .state::<Arc<dyn Cache>>()
-            .expect("ServiceCache unavailable. Is it added to rocket instance?")
-            .clone();
         let http_client = request
             .rocket()
             .state::<Arc<dyn HttpClient>>()
@@ -73,7 +70,6 @@ impl<'r> FromRequest<'r> for RequestContext {
         return request::Outcome::Success(RequestContext {
             request_id: uri,
             host,
-            cache,
             http_client,
             cache_manager,
         });

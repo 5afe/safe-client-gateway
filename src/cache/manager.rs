@@ -1,5 +1,5 @@
 use crate::cache::redis::{RedisPool, ServiceCache};
-use crate::cache::Cache;
+use crate::cache::{Cache, MockCache};
 use crate::config::{default_redis_uri, info_redis_pool_size, info_redis_uri, redis_uri};
 use mockall::automock;
 use r2d2::Pool;
@@ -28,8 +28,8 @@ pub trait CacheManager: Sync + Send {
 }
 
 pub struct RedisCacheManager {
-    info_cache: Arc<ServiceCache>,
-    default_cache: Arc<ServiceCache>,
+    info_cache: Arc<dyn Cache>,
+    default_cache: Arc<dyn Cache>,
 }
 
 impl RedisCacheManager {
@@ -37,6 +37,14 @@ impl RedisCacheManager {
         RedisCacheManager {
             info_cache: Arc::new(ServiceCache::new(create_info_pool())),
             default_cache: Arc::new(ServiceCache::new(create_default_pool())),
+        }
+    }
+
+    #[cfg(test)]
+    pub fn new_with_mocks(info_cache: MockCache, default_cache: MockCache) -> Self {
+        RedisCacheManager {
+            info_cache: Arc::new(info_cache) as Arc<dyn Cache>,
+            default_cache: Arc::new(default_cache) as Arc<dyn Cache>,
         }
     }
 }

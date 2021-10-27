@@ -29,7 +29,7 @@ pub async fn submit_confirmation(
     client.post(request).await?;
     Invalidate::new(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
-        context.cache(),
+        context.default_cache(),
     )
     .execute();
     Ok(())
@@ -58,7 +58,7 @@ pub async fn propose_transaction(
 
     Invalidate::new(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
-        context.cache(),
+        context.default_cache(),
     )
     .execute();
     Invalidate::new(
@@ -66,7 +66,7 @@ pub async fn propose_transaction(
             InvalidationScope::Both,
             String::from(&transaction_request.safe_tx_hash),
         ),
-        context.cache(),
+        context.default_cache(),
     )
     .execute();
     Ok(())

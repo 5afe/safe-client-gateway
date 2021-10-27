@@ -24,7 +24,7 @@ impl FiatInfoProvider {
     pub fn new(context: &RequestContext) -> Self {
         FiatInfoProvider {
             client: context.http_client(),
-            cache: context.default_cache(),
+            cache: context.info_cache(),
         }
     }
 

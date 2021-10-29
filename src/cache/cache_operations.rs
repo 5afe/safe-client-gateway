@@ -1,4 +1,5 @@
 use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+use crate::cache::manager::CacheManager;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::config::{
     base_config_service_uri, default_request_timeout, request_cache_duration,
@@ -97,6 +98,18 @@ impl Invalidate {
 
     pub fn execute(&self) {
         invalidate(self.cache.clone(), &self.pattern)
+    }
+
+    pub fn cache_for(
+        pattern: &InvalidationPattern,
+        cache_manager: Arc<dyn CacheManager>,
+    ) -> Arc<dyn Cache> {
+        match pattern {
+            InvalidationPattern::Chains => cache_manager.default_cache(), //Chains could be in a different database
+            InvalidationPattern::Tokens { .. } => cache_manager.info_cache(),
+            InvalidationPattern::Any(_, _) => cache_manager.default_cache(),
+            _ => cache_manager.default_cache(),
+        }
     }
 }
 

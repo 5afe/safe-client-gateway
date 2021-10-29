@@ -23,6 +23,7 @@ pub fn flush(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Invalidate::new(invalidation_pattern.0, context.default_cache()).execute();
+    let cache = Invalidate::cache_for(&invalidation_pattern.0, context.cache_manager());
+    Invalidate::new(invalidation_pattern.0, cache).execute();
     Ok(())
 }

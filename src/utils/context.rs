@@ -24,6 +24,10 @@ impl RequestContext {
     pub fn info_cache(&self) -> Arc<dyn Cache> {
         self.cache_manager.info_cache()
     }
+
+    pub fn cache_manager(&self) -> Arc<dyn CacheManager> {
+        self.cache_manager.clone()
+    }
 }
 
 #[rocket::async_trait]

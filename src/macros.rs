@@ -1,11 +1,11 @@
+use crate::common::models::backend::chains::ChainInfo;
 use crate::config::vpc_transaction_service_uri;
-use crate::models::backend::chains::ChainInfo;
 macro_rules! concat_parts {
     ($parts_head:expr) => {
         // `stringify!` will convert the expression *as it is* into a string.
         format!(
             "{}{}",
-            $crate::models::service::transactions::ID_SEPARATOR,
+            $crate::routes::transactions::models::ID_SEPARATOR,
             $parts_head
         )
     };
@@ -13,7 +13,7 @@ macro_rules! concat_parts {
         // `stringify!` will convert the expression *as it is* into a string.
         format!(
             "{}{}{}",
-            $crate::models::service::transactions::ID_SEPARATOR,
+            $crate::routes::transactions::models::ID_SEPARATOR,
             $parts_head,
             concat_parts!($($parts_tail),+)
         )

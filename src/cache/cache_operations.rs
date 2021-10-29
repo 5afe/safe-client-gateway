@@ -5,13 +5,16 @@ use crate::config::{
     request_error_cache_duration,
 };
 use crate::providers::info::generate_token_key;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::HttpClient;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
 use rocket::response::content;
 use serde::Deserialize;
 use serde::Serialize;
 use std::future::Future;
+use std::sync::Arc;
 
 pub enum Database {
     Info = 1,
@@ -19,6 +22,7 @@ pub enum Database {
 }
 
 pub struct Invalidate {
+    pub(super) cache: Arc<dyn Cache>,
     pattern: InvalidationPattern,
     database: Database,
 }
@@ -93,8 +97,9 @@ impl InvalidationScope {
 }
 
 impl Invalidate {
-    pub fn new(pattern: InvalidationPattern) -> Self {
+    pub fn new(pattern: InvalidationPattern, cache: Arc<dyn Cache>) -> Self {
         Invalidate {
+            cache,
             pattern,
             database: Database::Default,
         }
@@ -105,8 +110,8 @@ impl Invalidate {
         self
     }
 
-    pub fn execute(&self, cache: &impl Cache) {
-        invalidate(cache, &self.pattern)
+    pub fn execute(&self) {
+        invalidate(self.cache.clone(), &self.pattern)
     }
 }
 
@@ -115,6 +120,7 @@ where
     R: Serialize,
 {
     database: Database,
+    pub(super) cache: Arc<dyn Cache>,
     pub key: String,
     pub duration: usize,
     // "dyn" allows setting the type of the BoxFuture to different times in runtime
@@ -125,9 +131,10 @@ impl<'a, R> CacheResponse<'a, R>
 where
     R: Serialize,
 {
-    pub fn new(key: String) -> Self {
+    pub fn new(context: &RequestContext) -> Self {
         CacheResponse {
-            key,
+            key: context.request_id.to_string(),
+            cache: context.cache(),
             database: Database::Default,
             duration: request_cache_duration(),
             resp_generator: None,
@@ -157,13 +164,15 @@ where
         (self.resp_generator.as_ref().unwrap())().await
     }
 
-    pub async fn execute(&self, cache: &impl Cache) -> ApiResult<content::Json<String>> {
-        cache_response(cache, &self).await
+    pub async fn execute(&self) -> ApiResult<content::Json<String>> {
+        cache_response(self).await
     }
 }
 
 pub struct RequestCached {
     database: Database,
+    pub(super) client: Arc<dyn HttpClient>,
+    pub(super) cache: Arc<dyn Cache>,
     pub url: String,
     pub request_timeout: u64,
     pub cache_duration: usize,
@@ -172,9 +181,24 @@ pub struct RequestCached {
 }
 
 impl RequestCached {
-    pub fn new(url: String) -> Self {
+    pub fn new(url: String, client: &Arc<dyn HttpClient>, cache: &Arc<dyn Cache>) -> Self {
         RequestCached {
             database: Database::Default,
+            client: client.clone(),
+            cache: cache.clone(),
+            url,
+            request_timeout: default_request_timeout(),
+            cache_duration: request_cache_duration(),
+            error_cache_duration: request_error_cache_duration(),
+            cache_all_errors: false,
+        }
+    }
+
+    pub fn new_from_context(url: String, context: &RequestContext) -> Self {
+        RequestCached {
+            database: Database::Default,
+            client: context.http_client(),
+            cache: context.cache(),
             url,
             request_timeout: default_request_timeout(),
             cache_duration: request_cache_duration(),
@@ -208,8 +232,8 @@ impl RequestCached {
         self
     }
 
-    pub async fn execute(&self, client: &reqwest::Client, cache: &impl Cache) -> ApiResult<String> {
+    pub async fn execute(&self) -> ApiResult<String> {
         assert!(self.request_timeout > 0);
-        request_cached(cache, &client, self).await
+        request_cached(self).await
     }
 }

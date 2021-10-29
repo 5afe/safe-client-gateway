@@ -14,7 +14,7 @@ pub fn build_manifest_url(url: &str) -> ApiResult<String> {
         Err(api_error!("Invalid scheme"))
     } else if url_parts.host_str().is_none() {
         Err(api_error!("Invalid host"))
-    } else if url_parts.host_str().contains(&"localhost") {
+    } else if url_parts.host_str() == Some("localhost") {
         Err(api_error!("Localhost not accepted"))
     } else if IP_ADDRESS.captures(url_parts.host_str().unwrap()).is_some() {
         Err(api_error!("IP address not accepted"))

@@ -1,11 +1,11 @@
 use crate::config::log_all_error_responses;
-use reqwest::Response as ReqwestResponse;
+use crate::utils::http_client::Response as HttpClientResponse;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
 use rocket::serde::json::Error;
 use serde::{Deserialize, Serialize};
-use serde_json;
+use serde_json::{self, value::Value};
 use std::fmt;
 use std::io::Cursor;
 use std::result::Result;
@@ -25,6 +25,8 @@ pub struct ErrorDetails {
     pub message: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub arguments: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub debug: Option<Value>,
 }
 
 impl ApiError {
@@ -35,16 +37,14 @@ impl ApiError {
                 code: 42,
                 message: Some(raw_error.to_owned()),
                 arguments: None,
+                debug: None,
             },
         };
         Self::new(status_code, error_details)
     }
 
-    pub async fn from_http_response(response: ReqwestResponse, default_message: String) -> Self {
-        Self::new_from_message_with_code(
-            response.status().as_u16(),
-            response.text().await.unwrap_or(default_message),
-        )
+    pub async fn from_http_response(response: &HttpClientResponse) -> Self {
+        Self::new_from_message_with_code(response.status_code, response.body.to_string())
     }
 
     pub fn new_from_message(message: impl Into<String>) -> Self {
@@ -54,6 +54,19 @@ impl ApiError {
                 code: 1337,
                 message: Some(message.into()),
                 arguments: None,
+                debug: None,
+            },
+        )
+    }
+
+    pub fn new_from_message_with_debug(message: impl Into<String>, debug: Option<Value>) -> Self {
+        Self::new(
+            500,
+            ErrorDetails {
+                code: 1337,
+                message: Some(message.into()),
+                arguments: None,
+                debug,
             },
         )
     }
@@ -65,6 +78,7 @@ impl ApiError {
                 code: 1337,
                 message: Some(message),
                 arguments: None,
+                debug: None,
             },
         )
     }

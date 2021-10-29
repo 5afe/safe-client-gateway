@@ -154,7 +154,7 @@ pub fn redis_scan_count() -> usize {
 }
 
 pub fn default_redis_pool_size() -> u32 {
-    env_with_default("REDIS_DEFT_POOL_SIZE", 15)
+    env_with_default("REDIS_DEFAULT_POOL_SIZE", 15)
 }
 
 pub fn info_redis_pool_size() -> u32 {

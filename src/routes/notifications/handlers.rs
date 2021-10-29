@@ -56,21 +56,13 @@ pub async fn post_registration(
         let mut errors: Vec<Value> = vec![];
         for (chain_id, request) in requests.into_iter() {
             match request.await {
-                Ok(response) => {
-                    if !response.is_success() {
-                        error_chain_ids.push(chain_id);
-                        errors.push(json!({
-                            chain_id : RawValue::from_string(response.body)?
-                            }
-                        ))
-                    }
-                }
-                Err(reqwest_error) => {
+                Err(api_error) => {
                     error_chain_ids.push(chain_id);
                     errors.push(json!({
-                        chain_id : serde_json::to_value(reqwest_error.to_string())?
+                        chain_id :   RawValue::from_string(api_error.details.message.unwrap_or(String::from("Unknown notification registration issue")))?
                     }))
                 }
+                _ => {}
             }
         }
         (error_chain_ids, json!(errors))

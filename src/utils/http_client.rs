@@ -1,5 +1,5 @@
 use crate::config::default_request_timeout;
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiError, ApiResult};
 use core::time::Duration;
 use mockall::automock;
 use reqwest::header::CONTENT_TYPE;
@@ -47,6 +47,28 @@ impl Response {
     pub fn is_success(&self) -> bool {
         200 <= self.status_code && self.status_code < 300
     }
+
+    /// Maps a [reqwest::Response] into a [ApiResult<Response>]
+    /// If the response is a client error [400, 500[ or a server error [500, 600[ then
+    /// an [ApiError] is returned as a failure. [Response] is returned otherwise.
+    ///
+    /// # Arguments
+    ///
+    /// * `reqwest_response`: The [reqwest::Response] to be mapped
+    ///
+    /// returns: Result<Response, ApiError>
+    ///
+    async fn from(reqwest_response: reqwest::Response) -> ApiResult<Self> {
+        let status_code = reqwest_response.status().as_u16();
+        let body: String = reqwest_response.text().await?;
+        let response = Response { body, status_code };
+
+        if response.is_client_error() || response.is_server_error() {
+            Err(ApiError::from_http_response(&response).await)
+        } else {
+            Ok(response)
+        }
+    }
 }
 
 #[automock]
@@ -65,9 +87,7 @@ impl HttpClient for reqwest::Client {
             .timeout(request.timeout)
             .send()
             .await?;
-        let status_code = response.status().as_u16();
-        let body = response.text().await?;
-        Ok(Response { body, status_code })
+        Response::from(response).await
     }
 
     async fn post(&self, request: Request) -> ApiResult<Response> {
@@ -79,9 +99,7 @@ impl HttpClient for reqwest::Client {
             .timeout(request.timeout)
             .send()
             .await?;
-        let status_code = response.status().as_u16();
-        let body = response.text().await?;
-        Ok(Response { body, status_code })
+        Response::from(response).await
     }
 
     async fn delete(&self, request: Request) -> ApiResult<Response> {
@@ -93,8 +111,6 @@ impl HttpClient for reqwest::Client {
             .timeout(request.timeout)
             .send()
             .await?;
-        let status_code = response.status().as_u16();
-        let body = response.text().await?;
-        Ok(Response { body, status_code })
+        Response::from(response).await
     }
 }

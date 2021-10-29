@@ -1,20 +1,41 @@
 use crate::cache::Cache;
-use crate::config::redis_scan_count;
+use crate::config::{
+    default_redis_pool_size, default_redis_uri, info_redis_pool_size, info_redis_uri,
+    redis_scan_count,
+};
 use r2d2::{Pool, PooledConnection};
 use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
 
-pub(super) type RedisPool = Pool<redis::Client>;
+type RedisPool = Pool<redis::Client>;
 type RedisConnection = PooledConnection<redis::Client>;
+
+fn create_info_pool() -> RedisPool {
+    let client = redis::Client::open(info_redis_uri()).unwrap();
+    Pool::builder()
+        .max_size(info_redis_pool_size())
+        .build(client)
+        .expect("Info redis connection pool initialisation failure")
+}
+
+fn create_default_pool() -> RedisPool {
+    let client = redis::Client::open(default_redis_uri()).unwrap();
+    Pool::builder()
+        .max_size(default_redis_pool_size())
+        .build(client)
+        .expect("Default redis connection pool initialisation failure")
+}
 
 pub struct ServiceCache(RedisPool);
 
 impl ServiceCache {
-    pub fn new(pool: RedisPool) -> Self {
-        ServiceCache(pool)
+    pub(super) fn new_info_cache() -> Self {
+        ServiceCache(create_info_pool())
     }
-}
 
-impl ServiceCache {
+    pub(super) fn new_default_cache() -> Self {
+        ServiceCache(create_default_pool())
+    }
+
     fn conn(&self) -> RedisConnection {
         self.0.get().unwrap()
     }

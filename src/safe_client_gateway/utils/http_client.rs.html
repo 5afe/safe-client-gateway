@@ -98,8 +98,24 @@
 <span id="98"> 98</span>
 <span id="99"> 99</span>
 <span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::default_request_timeout</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors</span>::{<span class="ident">ApiError</span>, <span class="ident">ApiResult</span>};
 <span class="kw">use</span> <span class="ident">core::time::Duration</span>;
 <span class="kw">use</span> <span class="ident">mockall::automock</span>;
 <span class="kw">use</span> <span class="ident">reqwest::header::CONTENT_TYPE</span>;
@@ -147,6 +163,28 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_success</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="number">200</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&lt;</span> <span class="number">300</span>
     }
+
+    <span class="doccomment">/// Maps a [reqwest::Response] into a [ApiResult&lt;Response&gt;]</span>
+    <span class="doccomment">/// If the response is a client error [400, 500[ or a server error [500, 600[ then</span>
+    <span class="doccomment">/// an [ApiError] is returned as a failure. [Response] is returned otherwise.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `reqwest_response`: The [reqwest::Response] to be mapped</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// returns: Result&lt;Response, ApiError&gt;</span>
+    <span class="doccomment">///</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">reqwest_response</span>: <span class="ident">reqwest::Response</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">status_code</span> <span class="op">=</span> <span class="ident">reqwest_response</span>.<span class="ident">status</span>().<span class="ident">as_u16</span>();
+        <span class="kw">let</span> <span class="ident">body</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">reqwest_response</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="ident">Response</span> { <span class="ident">body</span>, <span class="ident">status_code</span> };
+
+        <span class="kw">if</span> <span class="ident">response</span>.<span class="ident">is_client_error</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">response</span>.<span class="ident">is_server_error</span>() {
+            <span class="prelude-val">Err</span>(<span class="ident">ApiError::from_http_response</span>(<span class="kw-2">&amp;</span><span class="ident">response</span>).<span class="kw">await</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">response</span>)
+        }
+    }
 }
 
 <span class="attribute">#[<span class="ident">automock</span>]</span>
@@ -165,9 +203,7 @@
             .<span class="ident">timeout</span>(<span class="ident">request</span>.<span class="ident">timeout</span>)
             .<span class="ident">send</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">status_code</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">status</span>().<span class="ident">as_u16</span>();
-        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">Response</span> { <span class="ident">body</span>, <span class="ident">status_code</span> })
+        <span class="ident">Response::from</span>(<span class="ident">response</span>).<span class="kw">await</span>
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="ident">Request</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
@@ -179,9 +215,7 @@
             .<span class="ident">timeout</span>(<span class="ident">request</span>.<span class="ident">timeout</span>)
             .<span class="ident">send</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">status_code</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">status</span>().<span class="ident">as_u16</span>();
-        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">Response</span> { <span class="ident">body</span>, <span class="ident">status_code</span> })
+        <span class="ident">Response::from</span>(<span class="ident">response</span>).<span class="kw">await</span>
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="ident">Request</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
@@ -193,9 +227,7 @@
             .<span class="ident">timeout</span>(<span class="ident">request</span>.<span class="ident">timeout</span>)
             .<span class="ident">send</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">status_code</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">status</span>().<span class="ident">as_u16</span>();
-        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">Response</span> { <span class="ident">body</span>, <span class="ident">status_code</span> })
+        <span class="ident">Response::from</span>(<span class="ident">response</span>).<span class="kw">await</span>
     }
 }
 </code></pre></div>

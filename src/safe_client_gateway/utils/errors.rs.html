@@ -156,8 +156,13 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::log_all_error_responses</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Response</span> <span class="kw">as</span> <span class="ident">HttpClientResponse</span>;
+<span class="kw">use</span> <span class="ident">reqwest::StatusCode</span>;
 <span class="kw">use</span> <span class="ident">rocket::http</span>::{<span class="ident">ContentType</span>, <span class="ident">Status</span>};
 <span class="kw">use</span> <span class="ident">rocket::request::Request</span>;
 <span class="kw">use</span> <span class="ident">rocket::response</span>::{<span class="self">self</span>, <span class="ident">Responder</span>, <span class="ident">Response</span>};
@@ -291,11 +296,14 @@
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">reqwest::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ApiError</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">reqwest::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_timeout</span>() {
-            <span class="ident"><span class="self">Self</span>::new_from_message_with_code</span>(<span class="number">504</span>, <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>))
+        <span class="comment">// We first check if err.is_timeout because in case of timeout the default error code is 500</span>
+        <span class="comment">// However we want to map it to a GATEWAY_TIMEOUT (504)</span>
+        <span class="kw">let</span> <span class="ident">status_code</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_timeout</span>() {
+            <span class="ident">StatusCode::GATEWAY_TIMEOUT</span>
         } <span class="kw">else</span> {
-            <span class="ident"><span class="self">Self</span>::new_from_message</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>))
-        }
+            <span class="ident">err</span>.<span class="ident">status</span>().<span class="ident">unwrap_or</span>(<span class="ident">StatusCode::INTERNAL_SERVER_ERROR</span>)
+        };
+        <span class="ident"><span class="self">Self</span>::new_from_message_with_code</span>(<span class="ident">status_code</span>.<span class="ident">as_u16</span>(), <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>))
     }
 }
 

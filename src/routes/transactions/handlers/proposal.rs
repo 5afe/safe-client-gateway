@@ -22,9 +22,7 @@ pub async fn submit_confirmation(
     let client = context.http_client();
     let request = {
         let mut request = Request::new(url);
-        request.body(Some(serde_json::from_value(json!({
-            "signature": signature
-        }))?));
+        request.body(Some(json!({ "signature": signature }).to_string()));
         request
     };
 

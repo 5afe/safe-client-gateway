@@ -59,7 +59,7 @@ pub async fn post_registration(
                 Err(api_error) => {
                     error_chain_ids.push(chain_id);
                     errors.push(json!({
-                        chain_id :   RawValue::from_string(api_error.details.message.unwrap_or(String::from("")))?
+                        chain_id :   RawValue::from_string(api_error.details.message.unwrap_or(String::from("Unknown notification registration issue")))?
                     }))
                 }
                 _ => {}

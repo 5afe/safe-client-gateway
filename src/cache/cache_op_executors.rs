@@ -51,6 +51,7 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                     let default_message: String = String::from("Unknown error");
                     let response_body: &String =
                         error.details.message.as_ref().unwrap_or(&default_message);
+                    // TODO extract http error range check (client error vs server error)
                     let is_client_error = error.status >= 400 && error.status < 500;
 
                     // If cache_all_errors is enabled we cache both client and server errors

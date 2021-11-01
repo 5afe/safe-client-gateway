@@ -126,7 +126,7 @@ async fn get_about() {
 #[rocket::async_test]
 async fn get_master_copies() {
     let chain_request = {
-        let mut chain_request = Request::new(config_uri!("/v1/chains/{}", 137));
+        let mut chain_request = Request::new(config_uri!("/v1/chains/{}/", 137));
         chain_request.timeout(Duration::from_millis(chain_info_request_timeout()));
         chain_request
     };
@@ -187,7 +187,7 @@ async fn get_master_copies() {
 #[rocket::async_test]
 async fn get_backbone() {
     let chain_request = {
-        let mut chain_request = Request::new(config_uri!("/v1/chains/{}", 137));
+        let mut chain_request = Request::new(config_uri!("/v1/chains/{}/", 137));
         chain_request.timeout(Duration::from_millis(chain_info_request_timeout()));
         chain_request
     };

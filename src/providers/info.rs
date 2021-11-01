@@ -287,7 +287,7 @@ impl DefaultInfoProvider<'_> {
     }
 
     async fn load_chain_info(&self) -> ApiResult<Option<ChainInfo>> {
-        let url = config_uri!("/v1/chains/{}", self.chain_id);
+        let url = config_uri!("/v1/chains/{}/", self.chain_id);
         let data = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(chain_info_cache_duration())
             .error_cache_duration(short_error_duration())

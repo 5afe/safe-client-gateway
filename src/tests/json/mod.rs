@@ -56,6 +56,7 @@ pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str =
     include_str!("safes/with_modules_and_high_nonce.json");
 pub const SAFE_WITH_GUARD_SAFE_V130: &str = include_str!("safes/with_guard_safe_v130.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
+pub const SAFE_TX_DETAILS_TESTS: &str = include_str!("safes/safe_tx_details_test.json");
 
 pub const ETHER_TRANSFER_INCOMING: &str = include_str!("transfers/ether_transfer_incoming.json");
 pub const ETHER_TRANSFER_OUTGOING: &str = include_str!("transfers/ether_transfer_outgoing.json");
@@ -121,6 +122,8 @@ pub const BALANCE_ETHER: &str = include_str!("balances/balance_ether.json");
 pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound_ether.json");
 
 pub const TX_DETAILS_WITH_ORIGIN: &str = include_str!("results/tx_details_with_origin.json");
+pub const BACKEND_TX_DETAILS_WITH_ORIGIN: &str =
+    include_str!("transactions/backend_multisig_tx_details.json");
 
 pub const CHAIN_INFO_RINKEBY: &str = include_str!("chains/rinkeby.json");
 pub const CHAIN_INFO_POLYGON: &str = include_str!("chains/polygon.json");

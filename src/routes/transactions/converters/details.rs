@@ -18,9 +18,11 @@ impl MultisigTransaction {
         rejections: Option<Vec<String>>,
         info_provider: &(impl InfoProvider + Sync),
     ) -> ApiResult<TransactionDetails> {
+        log::error!("TO_TRANSACTION_DETAILS CALL");
         let safe_info = info_provider
             .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
+        log::error!("SAFE RETRIEVED SUCCESSFULLY");
         let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
 
         Ok(TransactionDetails {

@@ -71,8 +71,6 @@
 <span id="71">71</span>
 <span id="72">72</span>
 <span id="73">73</span>
-<span id="74">74</span>
-<span id="75">75</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations</span>::{<span class="ident">Invalidate</span>, <span class="ident">InvalidationPattern</span>, <span class="ident">InvalidationScope</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::requests::MultisigTransactionRequest</span>;
@@ -97,9 +95,7 @@
     <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">http_client</span>();
     <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">url</span>);
-        <span class="ident">request</span>.<span class="ident">body</span>(<span class="prelude-val">Some</span>(<span class="ident">serde_json::from_value</span>(<span class="macro">json!</span>({
-            <span class="string">&quot;signature&quot;</span>: <span class="ident">signature</span>
-        }))<span class="question-mark">?</span>));
+        <span class="ident">request</span>.<span class="ident">body</span>(<span class="prelude-val">Some</span>(<span class="macro">json!</span>({ <span class="string">&quot;signature&quot;</span>: <span class="ident">signature</span> }).<span class="ident">to_string</span>()));
         <span class="ident">request</span>
     };
 

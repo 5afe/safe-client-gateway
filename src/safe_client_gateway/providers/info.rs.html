@@ -602,7 +602,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">load_chain_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChainInfo</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">config_uri!</span>(<span class="string">&quot;/v1/chains/{}&quot;</span>, <span class="self">self</span>.<span class="ident">chain_id</span>);
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">config_uri!</span>(<span class="string">&quot;/v1/chains/{}/&quot;</span>, <span class="self">self</span>.<span class="ident">chain_id</span>);
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">RequestCached::new</span>(<span class="ident">url</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">cache</span>)
             .<span class="ident">cache_duration</span>(<span class="ident">chain_info_cache_duration</span>())
             .<span class="ident">error_cache_duration</span>(<span class="ident">short_error_duration</span>())

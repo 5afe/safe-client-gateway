@@ -42,6 +42,7 @@ async fn core_uri_success_with_params_prod() {
         gas_price: vec![GasPrice::Fixed {
             wei_value: "1000000".to_string(),
         }],
+        disabled_wallets: vec![],
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -94,6 +95,7 @@ async fn core_uri_success_without_params_prod() {
         gas_price: vec![GasPrice::Fixed {
             wei_value: "1000000".to_string(),
         }],
+        disabled_wallets: vec![],
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -146,6 +148,7 @@ async fn core_uri_success_with_params_local() {
         gas_price: vec![GasPrice::Fixed {
             wei_value: "1000000".to_string(),
         }],
+        disabled_wallets: vec![],
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
@@ -198,6 +201,7 @@ async fn core_uri_success_without_params_local() {
         gas_price: vec![GasPrice::Fixed {
             wei_value: "1000000".to_string(),
         }],
+        disabled_wallets: vec![],
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider

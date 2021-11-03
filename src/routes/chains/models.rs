@@ -17,6 +17,7 @@ pub struct ChainInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ens_registry_address: Option<String>,
     pub gas_price: Vec<GasPrice>,
+    pub disabled_wallets: Vec<String>,
 }
 
 #[derive(Serialize, Debug, PartialEq, Clone)]

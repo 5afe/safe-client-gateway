@@ -18,6 +18,7 @@ pub struct ChainInfo {
     pub ens_registry_address: Option<String>,
     pub gas_price: Vec<GasPrice>,
     pub disabled_wallets: Vec<String>,
+    pub features: Vec<String>,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]

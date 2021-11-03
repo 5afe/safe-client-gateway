@@ -38,5 +38,6 @@
   "disabledWallets": [
     "metamask",
     "trezor"
-  ]
+  ],
+  "features": []
 }

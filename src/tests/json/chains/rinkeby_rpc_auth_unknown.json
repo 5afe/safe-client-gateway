@@ -35,5 +35,6 @@
     }
   ],
   "recommendedMasterCopyVersion": "1.1.1",
-  "disabledWallets": []
+  "disabledWallets": [],
+  "features": []
 }

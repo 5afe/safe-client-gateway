@@ -1,7 +1,11 @@
-use crate::cache::cache_operations::{InvalidationPattern, InvalidationScope};
-use crate::cache::{CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
+use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
+use crate::cache::manager::{CacheManager, RedisCacheManager};
+use crate::cache::{
+    Cache, MockCache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX,
+};
 use crate::config::base_config_service_uri;
 use crate::providers::info::TOKENS_KEY_BASE;
+use std::sync::Arc;
 
 #[test]
 fn invalidation_pattern_any_string() {
@@ -113,4 +117,46 @@ fn invalidation_scope_responses_to_string() {
         CACHE_RESP_PREFIX,
         InvalidationScope::Responses.invalidation_scope_string()
     )
+}
+
+#[test]
+fn invalidate_cache_for() {
+    let info_cache = Arc::new(MockCache::new()) as Arc<dyn Cache>;
+    let default_cache = Arc::new(MockCache::new()) as Arc<dyn Cache>;
+    let cache_manager = Arc::new(RedisCacheManager::new_with_mocks(
+        &info_cache,
+        &default_cache,
+    )) as Arc<dyn CacheManager>;
+    let invalidation_patterns = vec![
+        InvalidationPattern::Any(InvalidationScope::Both, String::from("")),
+        InvalidationPattern::Transactions(InvalidationScope::Both, String::from("")),
+        InvalidationPattern::Balances(InvalidationScope::Both, String::from("")),
+        InvalidationPattern::Collectibles(InvalidationScope::Both, String::from("")),
+        InvalidationPattern::Transfers(InvalidationScope::Both, String::from("")),
+        InvalidationPattern::Chains,
+        InvalidationPattern::Contracts,
+        InvalidationPattern::Tokens {
+            chain_id: String::from("4"),
+        },
+    ];
+
+    for invalidation_pattern in invalidation_patterns.iter() {
+        let cache = Invalidate::cache_for(invalidation_pattern, cache_manager.clone());
+        match invalidation_pattern {
+            InvalidationPattern::Chains
+            | InvalidationPattern::Contracts
+            | InvalidationPattern::Tokens { .. } => {
+                assert!(
+                    Arc::ptr_eq(&cache.clone(), &info_cache),
+                    "Failed pattern was {:#?}",
+                    &invalidation_pattern
+                )
+            }
+            _ => assert!(
+                Arc::ptr_eq(&cache.clone(), &default_cache),
+                "Failed pattern was {:#?}",
+                &invalidation_pattern
+            ),
+        }
+    }
 }

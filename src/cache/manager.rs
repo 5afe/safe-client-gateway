@@ -21,13 +21,10 @@ impl RedisCacheManager {
     }
 
     #[cfg(test)]
-    pub fn new_with_mocks(
-        info_cache: crate::cache::MockCache,
-        default_cache: crate::cache::MockCache,
-    ) -> Self {
+    pub fn new_with_mocks(info_cache: &Arc<dyn Cache>, default_cache: &Arc<dyn Cache>) -> Self {
         RedisCacheManager {
-            info_cache: Arc::new(info_cache) as Arc<dyn Cache>,
-            default_cache: Arc::new(default_cache) as Arc<dyn Cache>,
+            info_cache: info_cache.clone(),
+            default_cache: default_cache.clone(),
         }
     }
 }

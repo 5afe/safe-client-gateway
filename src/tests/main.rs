@@ -1,7 +1,7 @@
 extern crate dotenv;
 
 use crate::cache::manager::{CacheManager, RedisCacheManager};
-use crate::cache::MockCache;
+use crate::cache::{Cache, MockCache};
 use crate::utils::http_client::{HttpClient, MockHttpClient};
 use dotenv::dotenv;
 use rocket::{Build, Rocket, Route};
@@ -29,7 +29,10 @@ pub fn setup_rocket_with_mock_cache(
 ) -> Rocket<Build> {
     dotenv().ok();
 
-    let cache_manager = RedisCacheManager::new_with_mocks(mock_info_cache, mock_default_cache);
+    let info_cache = Arc::new(mock_info_cache) as Arc<dyn Cache>;
+    let default_cache = Arc::new(mock_default_cache) as Arc<dyn Cache>;
+
+    let cache_manager = RedisCacheManager::new_with_mocks(&info_cache, &default_cache);
     rocket::build()
         .mount("/", routes)
         .manage(Arc::new(mock_http_client) as Arc<dyn HttpClient>)

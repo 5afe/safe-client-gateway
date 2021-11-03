@@ -105,9 +105,10 @@ impl Invalidate {
         cache_manager: Arc<dyn CacheManager>,
     ) -> Arc<dyn Cache> {
         match pattern {
-            InvalidationPattern::Chains => cache_manager.default_cache(), //Chains could be in a different database
-            InvalidationPattern::Tokens { .. } => cache_manager.info_cache(),
-            InvalidationPattern::Any(_, _) => cache_manager.default_cache(),
+            //Chains could be in a different database
+            InvalidationPattern::Chains
+            | InvalidationPattern::Contracts
+            | InvalidationPattern::Tokens { .. } => cache_manager.info_cache(),
             _ => cache_manager.default_cache(),
         }
     }

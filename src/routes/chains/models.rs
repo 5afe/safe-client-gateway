@@ -74,4 +74,5 @@ pub enum RpcAuthentication {
 pub struct BlockExplorerUriTemplate {
     pub address: String,
     pub tx_hash: String,
+    pub api: String,
 }

@@ -27,6 +27,7 @@ async fn core_uri_success_with_params_prod() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "".to_string(),
             tx_hash: "".to_string(),
+            api: "".to_string(),
         },
         native_currency: NativeCurrency {
             name: "".to_string(),
@@ -80,6 +81,7 @@ async fn core_uri_success_without_params_prod() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "".to_string(),
             tx_hash: "".to_string(),
+            api: "".to_string(),
         },
         native_currency: NativeCurrency {
             name: "".to_string(),
@@ -133,6 +135,7 @@ async fn core_uri_success_with_params_local() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "".to_string(),
             tx_hash: "".to_string(),
+            api: "".to_string(),
         },
         native_currency: NativeCurrency {
             name: "".to_string(),
@@ -186,6 +189,7 @@ async fn core_uri_success_without_params_local() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "".to_string(),
             tx_hash: "".to_string(),
+            api: "".to_string(),
         },
         native_currency: NativeCurrency {
             name: "".to_string(),

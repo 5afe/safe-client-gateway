@@ -63,6 +63,7 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
+<span id="66">66</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains</span>::{
     <span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>, <span class="ident">GasPrice</span>, <span class="ident">RpcAuthentication</span>,
 };
@@ -125,6 +126,7 @@
                     <span class="ident">GasPrice::Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ServiceGasPrice::Unknown</span>,
                 })
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ServiceGasPrice</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+            <span class="ident">disabled_wallets</span>: <span class="ident">chain_info</span>.<span class="ident">disabled_wallets</span>,
         }
     }
 }

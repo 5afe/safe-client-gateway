@@ -133,6 +133,8 @@ pub const CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION: &str =
     include_str!("chains/rinkeby_rpc_no_auth.json");
 pub const CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION: &str =
     include_str!("chains/rinkeby_rpc_auth_unknown.json");
+pub const CHAIN_INFO_RINKEBY_DISABLED_WALLETS: &str =
+    include_str!("chains/rinkeby_disabled_wallets.json");
 
 pub const POLYGON_SAFE_APPS: &str = include_str!("safe_apps/polygon_safe_apps.json");
 

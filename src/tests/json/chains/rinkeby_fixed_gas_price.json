@@ -31,5 +31,6 @@
       "weiValue": "1000000000"
     }
   ],
-  "recommendedMasterCopyVersion": "1.1.1"
+  "recommendedMasterCopyVersion": "1.1.1",
+  "disabledWallets": []
 }

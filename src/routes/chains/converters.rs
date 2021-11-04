@@ -60,6 +60,7 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                     GasPrice::Unknown => ServiceGasPrice::Unknown,
                 })
                 .collect::<Vec<ServiceGasPrice>>(),
+            disabled_wallets: chain_info.disabled_wallets,
         }
     }
 }

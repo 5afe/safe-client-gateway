@@ -26,5 +26,6 @@
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
   "gasPrice": [],
-  "recommendedMasterCopyVersion": "1.1.1"
+  "recommendedMasterCopyVersion": "1.1.1",
+  "disabledWallets": []
 }

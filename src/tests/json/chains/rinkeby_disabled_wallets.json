@@ -21,8 +21,8 @@
     "logoUri": "https://test.token.image.url"
   },
   "theme": {
-    "textColor": "#fff",
-    "backgroundColor": "#000"
+    "textColor": "#ffffff",
+    "backgroundColor": "#000000"
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
   "gasPrice": [
@@ -31,12 +31,11 @@
       "uri": "https://gaspriceoracle.com/",
       "gasParameter": "average",
       "gweiFactor": "10"
-    },
-    {
-      "type": "fixed",
-      "weiValue": "1000000000"
     }
   ],
   "recommendedMasterCopyVersion": "1.1.1",
-  "disabledWallets": []
+  "disabledWallets": [
+    "metamask",
+    "trezor"
+  ]
 }

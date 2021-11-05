@@ -64,6 +64,7 @@
 <span id="64">64</span>
 <span id="65">65</span>
 <span id="66">66</span>
+<span id="67">67</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains</span>::{
     <span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>, <span class="ident">GasPrice</span>, <span class="ident">RpcAuthentication</span>,
 };
@@ -95,6 +96,7 @@
             <span class="ident">block_explorer_uri_template</span>: <span class="ident">ServiceBlockExplorerUriTemplate</span> {
                 <span class="ident">address</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">address</span>,
                 <span class="ident">tx_hash</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">tx_hash</span>,
+                <span class="ident">api</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">api</span>,
             },
             <span class="ident">native_currency</span>: <span class="ident">ServiceNativeCurrency</span> {
                 <span class="ident">name</span>: <span class="ident">chain_info</span>.<span class="ident">native_currency</span>.<span class="ident">name</span>,

@@ -14,7 +14,8 @@
   },
   "blockExplorerUriTemplate": {
     "address": "https://polygonscan.com/address/{{address}}",
-    "txHash": "https://polygonscan.com/tx/{{txHash}}"
+    "txHash": "https://polygonscan.com/tx/{{txHash}}",
+    "api": "https://blockexplorer.com/api"
   },
   "nativeCurrency": {
     "name": "Matic",

@@ -26,6 +26,7 @@ fn chain_info_json() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
@@ -71,6 +72,7 @@ fn chain_info_json_with_fixed_gas_price() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
@@ -115,6 +117,7 @@ fn chain_info_json_with_no_gas_price() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
@@ -157,6 +160,7 @@ fn chain_info_json_with_multiple_gas_price() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
@@ -209,6 +213,7 @@ fn chain_info_json_with_unknown_gas_price_type() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
@@ -251,6 +256,7 @@ fn chain_info_json_with_no_rpc_authentication() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
@@ -298,6 +304,7 @@ fn chain_info_json_with_unknown_rpc_authentication() {
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: NativeCurrency {
             name: "Ether".to_string(),
@@ -342,6 +349,7 @@ fn chain_info_json_to_service_chain_info() {
         block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
@@ -385,6 +393,7 @@ fn unknown_gas_price_type_to_service_chain_info() {
         block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
@@ -425,6 +434,7 @@ fn no_authentication_to_service_chain_info() {
         block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
@@ -470,6 +480,7 @@ fn unknown_authentication_to_service_chain_info() {
         block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),
@@ -515,6 +526,7 @@ fn disabled_wallets_to_service_chain_info() {
         block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
             address: "https://blockexplorer.com/{{address}}".to_string(),
             tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
         },
         native_currency: ServiceNativeCurrency {
             name: "Ether".to_string(),

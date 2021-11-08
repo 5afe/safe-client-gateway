@@ -62,6 +62,7 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                 })
                 .collect::<Vec<ServiceGasPrice>>(),
             disabled_wallets: chain_info.disabled_wallets,
+            features: chain_info.features,
         }
     }
 }

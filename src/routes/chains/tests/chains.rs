@@ -45,6 +45,7 @@ fn chain_info_json() {
             gwei_factor: "10".to_string(),
         }],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let actual = serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY);
@@ -89,6 +90,7 @@ fn chain_info_json_with_fixed_gas_price() {
             wei_value: "1000000000".to_string(),
         }],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let actual =
@@ -132,6 +134,7 @@ fn chain_info_json_with_no_gas_price() {
         ens_registry_address: Some("0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF".to_string()),
         gas_price: vec![],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let actual =
@@ -184,6 +187,7 @@ fn chain_info_json_with_multiple_gas_price() {
             },
         ],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let actual = serde_json::from_str::<ChainInfo>(
@@ -228,6 +232,7 @@ fn chain_info_json_with_unknown_gas_price_type() {
         ens_registry_address: Some("0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF".to_string()),
         gas_price: vec![GasPrice::Unknown],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let actual =
@@ -275,6 +280,7 @@ fn chain_info_json_with_no_rpc_authentication() {
             gwei_factor: "10".to_string(),
         }],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let actual = serde_json::from_str::<ChainInfo>(
@@ -323,6 +329,7 @@ fn chain_info_json_with_unknown_rpc_authentication() {
             gwei_factor: "10".to_string(),
         }],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let actual = serde_json::from_str::<ChainInfo>(
@@ -368,6 +375,7 @@ fn chain_info_json_to_service_chain_info() {
             gwei_factor: "10".to_string(),
         }],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let from_json =
@@ -408,6 +416,7 @@ fn unknown_gas_price_type_to_service_chain_info() {
         ens_registry_address: Some("0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF".to_string()),
         gas_price: vec![ServiceGasPrice::Unknown],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let from_json =
@@ -453,6 +462,7 @@ fn no_authentication_to_service_chain_info() {
             gwei_factor: "10".to_string(),
         }],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let from_json = serde_json::from_str::<ChainInfo>(
@@ -499,6 +509,7 @@ fn unknown_authentication_to_service_chain_info() {
             gwei_factor: "10".to_string(),
         }],
         disabled_wallets: vec![],
+        features: vec![],
     };
 
     let from_json = serde_json::from_str::<ChainInfo>(
@@ -545,10 +556,57 @@ fn disabled_wallets_to_service_chain_info() {
             gwei_factor: "10".to_string(),
         }],
         disabled_wallets: vec![String::from("metamask"), String::from("trezor")],
+        features: vec![],
     };
 
     let from_json =
         serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY_DISABLED_WALLETS)
+            .unwrap();
+    let actual: ServiceChainInfo = from_json.into();
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn features_to_service_chain_info() {
+    let expected = ServiceChainInfo {
+        transaction_service: "https://safe-transaction.rinkeby.staging.gnosisdev.com".to_string(),
+        chain_id: "4".to_string(),
+        chain_name: "Rinkeby".to_string(),
+        short_name: "rin".to_string(),
+        l2: false,
+        description: "Random description".to_string(),
+        rpc_uri: ServiceRpcUri {
+            authentication: ServiceRpcAuthentication::ApiKeyPath,
+            value: "https://someurl.com/rpc".to_string(),
+        },
+        block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
+            address: "https://blockexplorer.com/{{address}}".to_string(),
+            tx_hash: "https://blockexplorer.com/{{txHash}}".to_string(),
+            api: "https://blockexplorer.com/api".to_string(),
+        },
+        native_currency: ServiceNativeCurrency {
+            name: "Ether".to_string(),
+            symbol: "ETH".to_string(),
+            decimals: 18,
+            logo_uri: "https://test.token.image.url".to_string(),
+        },
+        theme: ServiceTheme {
+            text_color: "#ffffff".to_string(),
+            background_color: "#000000".to_string(),
+        },
+        ens_registry_address: Some("0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF".to_string()),
+        gas_price: vec![ServiceGasPrice::Oracle {
+            uri: "https://gaspriceoracle.com/".to_string(),
+            gas_parameter: "average".to_string(),
+            gwei_factor: "10".to_string(),
+        }],
+        disabled_wallets: vec![],
+        features: vec![String::from("Feature 1"), String::from("Feature 2")],
+    };
+
+    let from_json =
+        serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY_ENABLED_FEATURES)
             .unwrap();
     let actual: ServiceChainInfo = from_json.into();
 

@@ -72,7 +72,7 @@ async fn get_ethereum_transaction_details(
         })
         .ok_or(api_error!("No transfer found"))?;
     let details = transfer
-        .to_transaction_details(&mut info_provider, &safe.to_owned())
+        .to_transaction_details(&mut info_provider, &safe.to_owned(), tx_hash)
         .await?;
 
     Ok(details)

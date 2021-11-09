@@ -1,6 +1,7 @@
 use crate::common::models::backend::transactions::{
     CreationTransaction, EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
+use crate::common::models::backend::transfers::Transfer;
 use crate::utils::hex_hash;
 
 impl MultisigTransaction {
@@ -30,6 +31,17 @@ impl ModuleTransaction {
             super::super::models::ID_PREFIX_MODULE_TX,
             self.safe_transaction.safe,
             self.transaction_hash,
+            hex_hash(self)
+        )
+    }
+}
+
+impl Transfer {
+    pub fn generate_id(&self, safe_address: &str, tx_hash: &str) -> String {
+        create_id!(
+            super::super::models::ID_PREFIX_ETHEREUM_TX,
+            safe_address,
+            tx_hash,
             hex_hash(self)
         )
     }

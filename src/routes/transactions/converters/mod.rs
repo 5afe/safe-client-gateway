@@ -3,6 +3,7 @@ extern crate chrono;
 pub mod details;
 pub mod safe_app_info;
 pub mod summary;
+pub mod transaction_id;
 
 #[cfg(test)]
 mod tests;

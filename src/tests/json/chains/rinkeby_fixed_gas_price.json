@@ -10,7 +10,8 @@
   },
   "blockExplorerUriTemplate": {
     "address": "https://blockexplorer.com/{{address}}",
-    "txHash": "https://blockexplorer.com/{{txHash}}"
+    "txHash": "https://blockexplorer.com/{{txHash}}",
+    "api": "https://blockexplorer.com/api"
   },
   "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
   "vpcTransactionService": "http://rinkeby-safe-transaction-web.safe.svc.cluster.local",
@@ -31,5 +32,7 @@
       "weiValue": "1000000000"
     }
   ],
-  "recommendedMasterCopyVersion": "1.1.1"
+  "recommendedMasterCopyVersion": "1.1.1",
+  "disabledWallets": [],
+  "features": []
 }

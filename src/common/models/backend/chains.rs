@@ -17,6 +17,8 @@ pub struct ChainInfo {
     pub theme: Theme,
     pub ens_registry_address: Option<String>,
     pub gas_price: Vec<GasPrice>,
+    pub disabled_wallets: Vec<String>,
+    pub features: Vec<String>,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]
@@ -72,4 +74,5 @@ pub enum RpcAuthentication {
 pub struct BlockExplorerUriTemplate {
     pub address: String,
     pub tx_hash: String,
+    pub api: String,
 }

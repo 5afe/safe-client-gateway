@@ -74,6 +74,8 @@ pub const ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING: &str =
 pub const ERC_721_TRANSFER_WITH_TOKEN_INFO_OUTGOING: &str =
     include_str!("transfers/erc_721_transfer_with_token_info_outgoing.json");
 
+pub const CREATION_TX: &str = include_str!("transactions/creation_transaction.json");
+
 pub const BACKEND_HISTORY_TRANSACTION_LIST_PAGE: &str =
     include_str!("transactions/backend_history_transaction_list_page.json");
 pub const BACKEND_QUEUED_TRANSACTION_LIST_PAGE_NO_CONFLICTS: &str =
@@ -133,6 +135,10 @@ pub const CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION: &str =
     include_str!("chains/rinkeby_rpc_no_auth.json");
 pub const CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION: &str =
     include_str!("chains/rinkeby_rpc_auth_unknown.json");
+pub const CHAIN_INFO_RINKEBY_DISABLED_WALLETS: &str =
+    include_str!("chains/rinkeby_disabled_wallets.json");
+pub const CHAIN_INFO_RINKEBY_ENABLED_FEATURES: &str =
+    include_str!("chains/rinkeby_enabled_features.json");
 
 pub const POLYGON_SAFE_APPS: &str = include_str!("safe_apps/polygon_safe_apps.json");
 

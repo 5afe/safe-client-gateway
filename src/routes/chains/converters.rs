@@ -29,6 +29,7 @@ impl From<BackendChainInfo> for ServiceChainInfo {
             block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
                 address: chain_info.block_explorer_uri_template.address,
                 tx_hash: chain_info.block_explorer_uri_template.tx_hash,
+                api: chain_info.block_explorer_uri_template.api,
             },
             native_currency: ServiceNativeCurrency {
                 name: chain_info.native_currency.name,
@@ -60,6 +61,8 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                     GasPrice::Unknown => ServiceGasPrice::Unknown,
                 })
                 .collect::<Vec<ServiceGasPrice>>(),
+            disabled_wallets: chain_info.disabled_wallets,
+            features: chain_info.features,
         }
     }
 }

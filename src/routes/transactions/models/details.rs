@@ -221,6 +221,7 @@ use std::collections::HashMap;
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionDetails {
+    pub tx_id: String,
     pub executed_at: Option<i64>,
     pub tx_status: TransactionStatus,
     pub tx_info: TransactionInfo,

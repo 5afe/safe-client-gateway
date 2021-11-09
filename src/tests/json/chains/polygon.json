@@ -14,7 +14,8 @@
   },
   "blockExplorerUriTemplate": {
     "address": "https://polygonscan.com/address/{{address}}",
-    "txHash": "https://polygonscan.com/tx/{{txHash}}"
+    "txHash": "https://polygonscan.com/tx/{{txHash}}",
+    "api": "https://blockexplorer.com/api"
   },
   "nativeCurrency": {
     "name": "Matic",
@@ -37,5 +38,7 @@
     }
   ],
   "ensRegistryAddress": null,
-  "recommendedMasterCopyVersion": "1.3.0"
+  "recommendedMasterCopyVersion": "1.3.0",
+  "disabledWallets": [],
+  "features": []
 }

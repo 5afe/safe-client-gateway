@@ -1,8 +1,8 @@
 {
   "chainId": "4",
   "chainName": "Rinkeby",
+  "shortName" : "rin",
   "l2": false,
-  "shortName": "rin",
   "description": "Random description",
   "rpcUri": {
     "authentication": "API_KEY_PATH",
@@ -22,12 +22,19 @@
     "logoUri": "https://test.token.image.url"
   },
   "theme": {
-    "textColor": "#fff",
-    "backgroundColor": "#000"
+    "textColor": "#ffffff",
+    "backgroundColor": "#000000"
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
-  "gasPrice": [],
+  "gasPrice": [
+    {
+      "type": "oracle",
+      "uri": "https://gaspriceoracle.com/",
+      "gasParameter": "average",
+      "gweiFactor": "10"
+    }
+  ],
   "recommendedMasterCopyVersion": "1.1.1",
   "disabledWallets": [],
-  "features": []
+  "features": ["Feature 1", "Feature 2"]
 }

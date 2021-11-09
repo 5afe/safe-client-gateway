@@ -68,7 +68,7 @@ async fn post_confirmation_success() {
 
         mock_http_client
             .expect_get()
-            .times(2)
+            .times(1)
             .with(eq(safe_request))
             .returning(move |_| {
                 Ok(Response {
@@ -78,17 +78,17 @@ async fn post_confirmation_success() {
             });
 
         // GAS TOKEN INFO REQUEST
-        let mut gas_token_request = Request::new(String::from("a"));
-        mock_http_client
-            .expect_get()
-            .times(1)
-            .with(eq(gas_token_request))
-            .return_once(move |_| {
-                Ok(Response {
-                    body: "".to_string(),
-                    status_code: 200,
-                })
-            });
+        // let mut gas_token_request = Request::new(String::from(""));
+        // mock_http_client
+        //     .expect_get()
+        //     .times(1)
+        //     .with(eq(gas_token_request))
+        //     .return_once(move |_| {
+        //         Ok(Response {
+        //             body: "".to_string(),
+        //             status_code: 200,
+        //         })
+        //     });
 
         // TX DETAILS
         let mut details_request =
@@ -105,6 +105,31 @@ async fn post_confirmation_success() {
                     body: String::from(crate::tests::json::BACKEND_TX_DETAILS_WITH_ORIGIN),
                 })
             });
+
+        // Cancellation tx
+        let cancellation_tx_request = Request::new(String::from("https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/multisig-transactions/0x3c2a88f1b8b654bbef587612944a8be427f67b8bc9c0292c51fa5430f4b0b783/"));
+        mock_http_client
+            .expect_get()
+            .times(1)
+            .with(eq(cancellation_tx_request))
+            .return_once(move |_| {
+                Ok(Response {
+                    status_code: 200,
+                    body: String::from(crate::tests::json::BACKEND_TX_DETAILS_WITH_ORIGIN),
+                })
+            });
+
+        // CONTRACT REQUEST
+        let mut safe_request = Request::new(String::from("https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/contracts/0x8D29bE29923b68abfDD21e541b9374737B49cdAD/"));
+        safe_request.timeout(Duration::from_millis(safe_info_request_timeout()));
+
+        mock_http_client.expect_get().returning(move |_| {
+            Ok(Response {
+                body: String::from(crate::tests::json::SAFE_TX_DETAILS_TESTS),
+                status_code: 200,
+            })
+        });
+
         mock_http_client
     };
 
@@ -118,7 +143,7 @@ async fn post_confirmation_success() {
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
     let response = request.dispatch().await;
 
-    assert_eq!(response.status(), Status::Created);
+    assert_eq!(response.status(), Status::Ok);
     // assert_eq!(response.into_string().await.unwrap(), "");
 }
 

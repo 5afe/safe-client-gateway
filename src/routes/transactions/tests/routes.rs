@@ -78,7 +78,17 @@ async fn post_confirmation_success() {
             });
 
         // GAS TOKEN INFO REQUEST
-        let mut gas_token_request = Request::new(String::fr)
+        let mut gas_token_request = Request::new(String::from("a"));
+        mock_http_client
+            .expect_get()
+            .times(1)
+            .with(eq(gas_token_request))
+            .return_once(move |_| {
+                Ok(Response {
+                    body: "".to_string(),
+                    status_code: 200,
+                })
+            });
 
         // TX DETAILS
         let mut details_request =

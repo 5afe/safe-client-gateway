@@ -6,5 +6,6 @@ pub(super) mod map_status;
 pub(super) mod missing_signers;
 mod safe_app_info;
 mod summary;
+pub mod transaction_id;
 pub(super) mod transaction_types;
 pub(super) mod transfer_type_checks;

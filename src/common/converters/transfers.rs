@@ -37,8 +37,10 @@ impl TransferDto {
         &self,
         info_provider: &impl InfoProvider,
         safe: &str,
+        tx_hash: &str,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
+            tx_id: self.generate_id(safe, tx_hash),
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,
             tx_info: self.to_transfer(info_provider, safe).await,

@@ -1,5 +1,5 @@
 use crate::common::models::backend::transactions::{
-    EthereumTransaction, ModuleTransaction, MultisigTransaction,
+    CreationTransaction, EthereumTransaction, ModuleTransaction, MultisigTransaction,
 };
 use crate::common::models::backend::transfers::Transfer;
 use crate::utils::hex_hash;
@@ -58,6 +58,19 @@ fn transfer_transaction_id() {
         &eth_tx_hash, &transfer_hash
     );
     let actual = transfer.generate_id("0x1230B3d59858296A31053C1b8562Ecf89A2f888b", &eth_tx_hash);
+
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn creation_transaction_id() {
+    let creation_tx =
+        serde_json::from_str::<CreationTransaction>(crate::tests::json::CREATION_TX).unwrap();
+
+    let safe_address = "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67";
+
+    let expected = format!("creation_{}", safe_address);
+    let actual = creation_tx.generate_id(safe_address);
 
     assert_eq!(expected, actual);
 }

@@ -74,6 +74,8 @@ pub const ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING: &str =
 pub const ERC_721_TRANSFER_WITH_TOKEN_INFO_OUTGOING: &str =
     include_str!("transfers/erc_721_transfer_with_token_info_outgoing.json");
 
+pub const CREATION_TX: &str = include_str!("transactions/creation_transaction.json");
+
 pub const BACKEND_HISTORY_TRANSACTION_LIST_PAGE: &str =
     include_str!("transactions/backend_history_transaction_list_page.json");
 pub const BACKEND_QUEUED_TRANSACTION_LIST_PAGE_NO_CONFLICTS: &str =

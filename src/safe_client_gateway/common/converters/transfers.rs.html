@@ -183,6 +183,8 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::get_transfer_direction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::converters::get_address_ex_from_any_source</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transfers</span>::{
@@ -222,8 +224,10 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
         <span class="ident">safe</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">tx_hash</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">TransactionDetails</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">TransactionDetails</span> {
+            <span class="ident">tx_id</span>: <span class="self">self</span>.<span class="ident">generate_id</span>(<span class="ident">safe</span>, <span class="ident">tx_hash</span>),
             <span class="ident">executed_at</span>: <span class="self">self</span>.<span class="ident">get_execution_time</span>(),
             <span class="ident">tx_status</span>: <span class="ident">TransactionStatus::Success</span>,
             <span class="ident">tx_info</span>: <span class="self">self</span>.<span class="ident">to_transfer</span>(<span class="ident">info_provider</span>, <span class="ident">safe</span>).<span class="kw">await</span>,

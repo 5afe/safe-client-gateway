@@ -70,18 +70,19 @@ pub async fn post_confirmation<'e>(
     safe_tx_hash: String,
     tx_confirmation_request: Result<Json<ConfirmationRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {
-    proposal::submit_confirmation(
-        &context,
-        &chain_id,
-        &safe_tx_hash,
-        &tx_confirmation_request?.0.signed_safe_tx_hash,
-    )
-    .await?;
-
-    // DONE
-
     CacheResponse::new(&context)
-        .resp_generator(|| details::get_transactions_details(&context, &chain_id, &safe_tx_hash))
+        .resp_generator(|| {
+            proposal::submit_confirmation(
+                &context,
+                &chain_id,
+                &safe_tx_hash,
+                &tx_confirmation_request
+                    .as_ref()
+                    .unwrap()
+                    .0
+                    .signed_safe_tx_hash,
+            )
+        })
         .execute()
         .await
 }

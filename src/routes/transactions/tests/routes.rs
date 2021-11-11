@@ -19,9 +19,11 @@ use std::sync::Arc;
 fn setup_rocket(mock_http_client: MockHttpClient) -> Rocket<Build> {
     dotenv().ok();
 
+    let cache = create_service_cache();
+    cache.invalidate("*");
     rocket::build()
         .mount("/", routes![super::super::routes::post_confirmation])
-        .manage(Arc::new(create_service_cache()) as Arc<dyn Cache>)
+        .manage(Arc::new(cache) as Arc<dyn Cache>)
         .manage(Arc::new(mock_http_client) as Arc<dyn HttpClient>)
 }
 
@@ -34,7 +36,7 @@ async fn post_confirmation_success() {
         chain_request.timeout(Duration::from_millis(chain_info_request_timeout()));
         mock_http_client
             .expect_get()
-            .times(2) // TODO fix that we only call this once
+            .times(1)
             .with(eq(chain_request))
             .returning(move |_| {
                 Ok(Response {

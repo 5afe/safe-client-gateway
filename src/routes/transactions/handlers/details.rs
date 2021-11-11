@@ -19,16 +19,24 @@ pub(super) async fn get_multisig_transaction_details(
     chain_id: &str,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
-    let mut info_provider = DefaultInfoProvider::new(chain_id, context);
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    get_multisig_tx_details(&info_provider, chain_id, safe_tx_hash).await
+}
+
+pub async fn get_multisig_tx_details(
+    info_provider: &(impl InfoProvider + Sync),
+    chain_id: &str,
+    safe_tx_hash: &str,
+) -> ApiResult<TransactionDetails> {
     let url = core_uri!(info_provider, "/v1/multisig-transactions/{}/", safe_tx_hash)?;
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
     let multisig_tx: MultisigTransaction = serde_json::from_str(&body)?;
 
     let rejections = fetch_rejections(
-        context,
+        info_provider,
         chain_id,
         &multisig_tx.safe_transaction.safe,
         multisig_tx.nonce,
@@ -36,7 +44,7 @@ pub(super) async fn get_multisig_transaction_details(
     .await;
 
     let details = multisig_tx
-        .to_transaction_details(rejections, &mut info_provider)
+        .to_transaction_details(rejections, info_provider)
         .await?;
     Ok(details)
 }

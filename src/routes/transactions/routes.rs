@@ -78,6 +78,8 @@ pub async fn post_confirmation<'e>(
     )
     .await?;
 
+    // DONE
+
     CacheResponse::new(&context)
         .resp_generator(|| details::get_transactions_details(&context, &chain_id, &safe_tx_hash))
         .execute()

@@ -21,7 +21,7 @@ pub const ERC191_BYTE: &'static str = "19";
 pub const ERC191_VERSION: &'static str = "01";
 
 pub async fn fetch_rejections(
-    context: &RequestContext,
+    context: &RequestContext, // we should not use context here
     chain_id: &str,
     safe_address: &str,
     nonce: u64,

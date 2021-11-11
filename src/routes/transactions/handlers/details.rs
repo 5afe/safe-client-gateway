@@ -38,7 +38,6 @@ pub(super) async fn get_multisig_transaction_details(
     let details = multisig_tx
         .to_transaction_details(rejections, &mut info_provider)
         .await?;
-
     Ok(details)
 }
 

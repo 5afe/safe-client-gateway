@@ -5,7 +5,7 @@ use crate::config::{build_number, chain_info_request_timeout, version, webhook_t
 use crate::routes::about::models::{About, ChainAbout};
 use crate::routes::safes::models::Implementation;
 use crate::tests::main::{setup_rocket, setup_rocket_with_mock_cache};
-use crate::utils::http_client::{HttpClient, MockHttpClient, Request, Response};
+use crate::utils::http_client::{MockHttpClient, Request, Response};
 use core::time::Duration;
 use mockall::predicate::eq;
 use rocket::http::{Header, Status};

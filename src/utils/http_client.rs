@@ -65,7 +65,7 @@ impl Response {
         let response = Response { body, status_code };
 
         if response.is_client_error() || response.is_server_error() {
-            Err(ApiError::from_http_response(&response).await)
+            Err(ApiError::from_http_response(&response))
         } else {
             Ok(response)
         }

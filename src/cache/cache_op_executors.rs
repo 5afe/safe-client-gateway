@@ -43,7 +43,6 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                 request.timeout(Duration::from_millis(operation.request_timeout));
                 request
             };
-            log::error!("REQUESTING: {:#?}", &http_request);
             let response = client.get(http_request).await;
 
             match response {

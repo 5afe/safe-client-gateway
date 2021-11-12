@@ -20,7 +20,8 @@ fn setup_rocket(mock_http_client: MockHttpClient) -> Rocket<Build> {
     dotenv().ok();
 
     let cache = create_service_cache();
-    cache.invalidate("*");
+    cache.invalidate_pattern("*");
+
     rocket::build()
         .mount("/", routes![super::super::routes::post_confirmation])
         .manage(Arc::new(cache) as Arc<dyn Cache>)
@@ -135,6 +136,14 @@ async fn post_confirmation_success() {
                     body: String::new(),
                 })
             });
+
+        // Catch all calls not relevant to the test
+        mock_http_client.expect_get().returning(move |_| {
+            Ok(Response {
+                status_code: 404,
+                body: String::new(),
+            })
+        });
 
         mock_http_client
     };

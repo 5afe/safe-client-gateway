@@ -15,8 +15,8 @@ pub(super) fn invalidate(cache: Arc<dyn Cache>, pattern: &InvalidationPattern) {
 pub(super) async fn cache_response<S>(
     cache_response: &CacheResponse<'_, S>,
 ) -> ApiResult<content::Json<String>>
-    where
-        S: Serialize,
+where
+    S: Serialize,
 {
     let cache = cache_response.cache.clone();
     let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, cache_response.key);

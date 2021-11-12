@@ -16,6 +16,8 @@ use std::sync::Arc;
 
 fn setup_rocket(mock_http_client: MockHttpClient) -> Rocket<Build> {
     dotenv().ok();
+    let cache = create_service_cache();
+    cache.invalidate_pattern("*");
 
     rocket::build()
         .mount(

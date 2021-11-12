@@ -9,7 +9,11 @@ pub fn redis_uri() -> String {
 }
 
 pub fn base_config_service_uri() -> String {
-    format!("{}{}", env::var("CONFIG_SERVICE_URI").unwrap(), "/api")
+    format!(
+        "{}{}",
+        env::var("CONFIG_SERVICE_URI").expect("CONFIG_SERVICE_URI missing in env"),
+        "/api"
+    )
 }
 
 pub fn base_exchange_api_uri() -> String {

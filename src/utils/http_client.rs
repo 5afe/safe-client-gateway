@@ -1,3 +1,4 @@
+use crate::config;
 use crate::config::default_request_timeout;
 use crate::utils::errors::{ApiError, ApiResult};
 use core::time::Duration;
@@ -113,4 +114,19 @@ impl HttpClient for reqwest::Client {
             .await?;
         Response::from(response).await
     }
+}
+
+#[cfg(test)]
+pub fn setup_http_client() -> impl HttpClient {
+    MockHttpClient::new()
+}
+
+#[cfg(not(test))]
+pub fn setup_http_client() -> impl HttpClient {
+    reqwest::Client::builder()
+        .connect_timeout(Duration::from_millis(
+            config::internal_client_connect_timeout(),
+        ))
+        .build()
+        .unwrap()
 }

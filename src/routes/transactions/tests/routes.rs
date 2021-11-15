@@ -430,8 +430,12 @@ async fn tx_details_multisig_tx_success() {
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
     let response = request.dispatch().await;
 
-    let expected = remove_whitespace(MULTISIG_TX_DETAILS);
+    let actual_status = response.status();
 
-    assert_eq!(response.status(), Status::Ok);
-    assert_eq!(response.into_string().await.unwrap(), expected);
+    let expected = serde_json::from_str::<TransactionDetails>(MULTISIG_TX_DETAILS).unwrap();
+    let actual =
+        serde_json::from_str::<TransactionDetails>(&response.into_string().await.unwrap()).unwrap();
+
+    assert_eq!(actual_status, Status::Ok);
+    assert_eq!(actual, expected);
 }

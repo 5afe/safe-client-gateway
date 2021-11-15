@@ -5,9 +5,10 @@ use crate::config::{
     chain_info_request_timeout, contract_info_request_timeout, safe_info_request_timeout,
     token_info_request_timeout, transaction_request_timeout,
 };
+use crate::providers::address_info::ContractInfo;
 use crate::providers::info::TokenInfo;
 use crate::routes::transactions::models::details::TransactionDetails;
-use crate::routes::transactions::tests::POST_CONFIRMATION_RESULT;
+use crate::routes::transactions::tests::{MULTISIG_TX_DETAILS, POST_CONFIRMATION_RESULT};
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
@@ -85,7 +86,7 @@ async fn post_confirmation_success() {
                 })
             });
 
-        // token info
+        // Transfer TokenInfo
         let mut token_request = Request::new(String::from(
             "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=10000",
         ));
@@ -320,7 +321,7 @@ async fn tx_details_multisig_tx_success() {
                 })
             });
 
-        // // TX DETAILS
+        // TransactionDetails
         let mut details_request =
             Request::new(String::from("https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/multisig-transactions/0x2e4af4b451a493470f38625c5f78f710f02303eb32780896cb55357c00d48faa/"));
         details_request.timeout(Duration::from_millis(transaction_request_timeout()));
@@ -336,7 +337,7 @@ async fn tx_details_multisig_tx_success() {
                 })
             });
 
-        // safe info fetch for cancellations
+        // SafeInfo fetch for cancellations
         let mut safe_request = Request::new(String::from("https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/"));
         safe_request.timeout(Duration::from_millis(safe_info_request_timeout()));
 
@@ -365,20 +366,33 @@ async fn tx_details_multisig_tx_success() {
                 })
             });
 
-        // KNOWN ADDRESSES
-        let mut known_address_request = Request::new(String::from("https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/contracts/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46/"));
-        known_address_request.timeout(Duration::from_millis(contract_info_request_timeout()));
+        // Gas TokenInfo and Transfer token
+        let mut token_request = Request::new(String::from(
+            "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=10000",
+        ));
+        token_request.timeout(Duration::from_millis(token_info_request_timeout()));
+        let page_tokens: Page<TokenInfo> = Page {
+            next: None,
+            previous: None,
+            results: vec![
+                serde_json::from_str(crate::tests::json::TOKEN_BAT).expect("BAT token failure")
+            ],
+        };
+
         mock_http_client
             .expect_get()
             .times(1)
-            .with(eq(known_address_request))
-            .return_once(move |_| {
+            .with(eq(token_request))
+            .returning(move |_| {
                 Ok(Response {
-                    status_code: 404,
-                    body: String::new(),
+                    body: serde_json::to_string(&page_tokens).expect("Token page failure"),
+                    status_code: 200,
                 })
             });
 
+        // Known Addresses
+        // the current safe does not get requested as a knownAddress by design
+        // The Transfer target gets requested multiple times, but caching reduces it to once
         let mut known_address_request = Request::new(String::from("https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/contracts/0xF353eBBa77e5E71c210599236686D51cA1F88b84/"));
 
         known_address_request.timeout(Duration::from_millis(contract_info_request_timeout()));
@@ -388,18 +402,17 @@ async fn tx_details_multisig_tx_success() {
             .with(eq(known_address_request))
             .return_once(move |_| {
                 Ok(Response {
-                    status_code: 404,
-                    body: String::new(),
+                    status_code: 200,
+                    body: String::from(
+                        json! ({
+                            "address": "0xF353eBBa77e5E71c210599236686D51cA1F88b84",
+                            "name": "Transfer target",
+                            "displayName": "Transfer target",
+                        })
+                        .to_string(),
+                    ),
                 })
             });
-
-        // Catch all calls not relevant to the test
-        mock_http_client.expect_get().returning(move |_| {
-            Ok(Response {
-                status_code: 404,
-                body: String::new(),
-            })
-        });
 
         mock_http_client
     };
@@ -417,6 +430,8 @@ async fn tx_details_multisig_tx_success() {
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
     let response = request.dispatch().await;
 
+    let expected = remove_whitespace(MULTISIG_TX_DETAILS);
+
     assert_eq!(response.status(), Status::Ok);
-    // assert_eq!(response.into_string().await.unwrap(), "");
+    assert_eq!(response.into_string().await.unwrap(), expected);
 }

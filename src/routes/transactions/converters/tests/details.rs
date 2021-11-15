@@ -12,6 +12,7 @@ use crate::routes::transactions::models::{
     Custom, Erc721Transfer, TransactionInfo, TransactionStatus, Transfer, TransferDirection,
     TransferInfo,
 };
+use crate::utils::json::remove_whitespace;
 
 #[rocket::async_test]
 async fn multisig_custom_transaction_to_transaction_details() {
@@ -368,8 +369,7 @@ async fn multisig_transaction_with_origin() {
         .times(7) // 1 + 6 calls within data decoded multisig
         .returning(move |_| bail!("no address info"));
 
-    let mut expected = crate::tests::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
-    expected.retain(|c| !c.is_whitespace());
+    let expected = remove_whitespace(crate::tests::json::TX_DETAILS_WITH_ORIGIN);
 
     let actual =
         MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider)

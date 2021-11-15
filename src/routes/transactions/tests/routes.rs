@@ -1,12 +1,17 @@
 extern crate dotenv;
 
+use crate::common::models::page::Page;
 use crate::config::{
     chain_info_request_timeout, contract_info_request_timeout, safe_info_request_timeout,
-    transaction_request_timeout,
+    token_info_request_timeout, transaction_request_timeout,
 };
+use crate::providers::info::TokenInfo;
+use crate::routes::transactions::models::details::TransactionDetails;
+use crate::routes::transactions::tests::POST_CONFIRMATION_RESULT;
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
+use crate::utils::json::remove_whitespace;
 use core::time::Duration;
 use mockall::predicate::eq;
 use rocket::http::{ContentType, Header, Status};
@@ -80,6 +85,30 @@ async fn post_confirmation_success() {
                 })
             });
 
+        // token info
+        let mut token_request = Request::new(String::from(
+            "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=10000",
+        ));
+        token_request.timeout(Duration::from_millis(token_info_request_timeout()));
+        let page_tokens: Page<TokenInfo> = Page {
+            next: None,
+            previous: None,
+            results: vec![
+                serde_json::from_str(crate::tests::json::TOKEN_BAT).expect("BAT token failure")
+            ],
+        };
+
+        mock_http_client
+            .expect_get()
+            .times(1)
+            .with(eq(token_request))
+            .returning(move |_| {
+                Ok(Response {
+                    body: serde_json::to_string(&page_tokens).expect("Token page failure"),
+                    status_code: 200,
+                })
+            });
+
         // Catch all calls not relevant to the test
         mock_http_client.expect_get().returning(move |_| {
             Ok(Response {
@@ -104,8 +133,10 @@ async fn post_confirmation_success() {
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
     let response = request.dispatch().await;
 
+    let expected = remove_whitespace(POST_CONFIRMATION_RESULT);
+
     assert_eq!(response.status(), Status::Ok);
-    // assert_eq!(response.into_string().await.unwrap(), "");
+    assert_eq!(response.into_string().await.unwrap(), expected);
 }
 
 #[rocket::async_test]

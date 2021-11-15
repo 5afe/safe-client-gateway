@@ -397,6 +397,14 @@ async fn tx_details_multisig_tx_success() {
                 })
             });
 
+        // Catch all calls not relevant to the test
+        mock_http_client.expect_get().returning(move |_| {
+            Ok(Response {
+                status_code: 404,
+                body: String::new(),
+            })
+        });
+
         mock_http_client
     };
 

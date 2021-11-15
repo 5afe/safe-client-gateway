@@ -304,24 +304,6 @@ async fn tx_details_multisig_tx_success() {
                 })
             });
 
-        // CONFIRMATION REQUEST
-        let mut backend_request = Request::new(
-            "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/multisig-transactions/0x2e4af4b451a493470f38625c5f78f710f02303eb32780896cb55357c00d48faa/confirmations/"
-                .to_string(),
-        );
-        backend_request.body(Some(json!({"signature": "bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string()));
-
-        mock_http_client
-            .expect_post()
-            .times(1)
-            .with(eq(backend_request))
-            .return_once(move |_| {
-                Ok(Response {
-                    status_code: 201,
-                    body: String::new(),
-                })
-            });
-
         // TransactionDetails
         let mut details_request =
             Request::new(String::from("https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/multisig-transactions/0x2e4af4b451a493470f38625c5f78f710f02303eb32780896cb55357c00d48faa/"));
@@ -425,7 +407,7 @@ async fn tx_details_multisig_tx_success() {
     .await
     .expect("Valid rocket instance");
 
-    let request =  client.post("/v1/chains/4/transactions/0x2e4af4b451a493470f38625c5f78f710f02303eb32780896cb55357c00d48faa/confirmations")
+    let request =  client.get("/v1/chains/4/transactions/0x2e4af4b451a493470f38625c5f78f710f02303eb32780896cb55357c00d48faa/")
         .header(Header::new("Host", "test.gnosis.io"))
         .header(ContentType::JSON)
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());

@@ -48,7 +48,7 @@ pub enum TokenType {
 
 #[derive(Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
-pub stru:ct SafeInfo {
+pub struct SafeInfo {
     pub address: String,
     pub nonce: u64,
     pub threshold: u64,

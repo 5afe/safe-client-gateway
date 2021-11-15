@@ -16,9 +16,3 @@ where
     <Option<T> as serde::Deserialize>::deserialize(deserializer)
         .map(|result| result.unwrap_or_default())
 }
-
-pub fn remove_whitespace(input: &str) -> String {
-    let mut expected = input.replace('\n', "");
-    expected.retain(|c| !c.is_whitespace());
-    expected
-}

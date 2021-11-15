@@ -12,7 +12,6 @@ use crate::routes::transactions::tests::{MULTISIG_TX_DETAILS, POST_CONFIRMATION_
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
-use crate::utils::json::remove_whitespace;
 use core::time::Duration;
 use mockall::predicate::eq;
 use rocket::http::{ContentType, Header, Status};
@@ -134,10 +133,13 @@ async fn post_confirmation_success() {
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
     let response = request.dispatch().await;
 
-    let expected = remove_whitespace(POST_CONFIRMATION_RESULT);
+    let expected = serde_json::from_str::<TransactionDetails>(POST_CONFIRMATION_RESULT).unwrap();
+    let actual_status = response.status();
+    let actual =
+        serde_json::from_str::<TransactionDetails>(&response.into_string().await.unwrap()).unwrap();
 
-    assert_eq!(response.status(), Status::Ok);
-    assert_eq!(response.into_string().await.unwrap(), expected);
+    assert_eq!(actual_status, Status::Ok);
+    assert_eq!(actual, expected);
 }
 
 #[rocket::async_test]
@@ -430,9 +432,8 @@ async fn tx_details_multisig_tx_success() {
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
     let response = request.dispatch().await;
 
-    let actual_status = response.status();
-
     let expected = serde_json::from_str::<TransactionDetails>(MULTISIG_TX_DETAILS).unwrap();
+    let actual_status = response.status();
     let actual =
         serde_json::from_str::<TransactionDetails>(&response.into_string().await.unwrap()).unwrap();
 

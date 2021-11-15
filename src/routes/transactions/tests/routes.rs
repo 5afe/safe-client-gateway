@@ -5,7 +5,6 @@ use crate::config::{
     chain_info_request_timeout, contract_info_request_timeout, safe_info_request_timeout,
     token_info_request_timeout, transaction_request_timeout,
 };
-use crate::providers::address_info::ContractInfo;
 use crate::providers::info::TokenInfo;
 use crate::routes::transactions::models::details::TransactionDetails;
 use crate::routes::transactions::tests::{MULTISIG_TX_DETAILS, POST_CONFIRMATION_RESULT};
@@ -198,7 +197,7 @@ async fn post_confirmation_confirmation_error() {
         .header(Header::new("Host", "test.gnosis.io"))
         .header(ContentType::JSON)
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
-    let mut response = request.dispatch().await;
+    let response = request.dispatch().await;
     let status = response.status();
     let body = response.into_string().await.unwrap();
 
@@ -279,7 +278,7 @@ async fn post_confirmation_confirmation_success_tx_details_error() {
         .header(Header::new("Host", "test.gnosis.io"))
         .header(ContentType::JSON)
         .body(&json!({"signedSafeTxHash":"bd42f5c205b544cc6397c8c2e592ca4ade02b8681673cc8c555ff1777b002ee959c3cca243a77a2de1bbe1b61413342ac7d6416a31ec0ff31bb1029e921202ee1c"}).to_string());
-    let mut response = request.dispatch().await;
+    let response = request.dispatch().await;
     let status = response.status();
     let body = response.into_string().await.unwrap();
 

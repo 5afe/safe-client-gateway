@@ -21,23 +21,6 @@ impl RequestContext {
     }
 }
 
-#[cfg(test)]
-impl RequestContext {
-    pub fn mock(
-        request_id: String,
-        host: String,
-        mock_http_client: crate::utils::http_client::MockHttpClient,
-        mock_cache: crate::cache::MockCache,
-    ) -> Self {
-        RequestContext {
-            request_id,
-            host,
-            http_client: Arc::new(mock_http_client),
-            cache: Arc::new(mock_cache),
-        }
-    }
-}
-
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for RequestContext {
     type Error = ();

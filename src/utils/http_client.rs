@@ -1,4 +1,6 @@
 use crate::config::default_request_timeout;
+#[cfg(not(test))]
+use crate::config::internal_client_connect_timeout;
 use crate::utils::errors::{ApiError, ApiResult};
 use core::time::Duration;
 use mockall::automock;
@@ -64,7 +66,7 @@ impl Response {
         let response = Response { body, status_code };
 
         if response.is_client_error() || response.is_server_error() {
-            Err(ApiError::from_http_response(&response).await)
+            Err(ApiError::from_http_response(&response))
         } else {
             Ok(response)
         }
@@ -113,4 +115,17 @@ impl HttpClient for reqwest::Client {
             .await?;
         Response::from(response).await
     }
+}
+
+#[cfg(test)]
+pub fn setup_http_client() -> impl HttpClient {
+    MockHttpClient::new()
+}
+
+#[cfg(not(test))]
+pub fn setup_http_client() -> impl HttpClient {
+    reqwest::Client::builder()
+        .connect_timeout(Duration::from_millis(internal_client_connect_timeout()))
+        .build()
+        .unwrap()
 }

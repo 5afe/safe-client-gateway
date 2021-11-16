@@ -1,4 +1,3 @@
-#[cfg(test)]
 mod backend_url;
-#[cfg(test)]
 pub mod json;
+pub mod main;

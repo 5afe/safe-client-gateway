@@ -78,7 +78,7 @@ impl MultisigTransaction {
 impl EthereumTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
         safe_address: &str,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {

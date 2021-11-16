@@ -62,6 +62,7 @@ pub struct SafeInfo {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct SafeAppInfo {
     pub name: String,
     pub url: String,
@@ -100,6 +101,9 @@ pub trait InfoProvider {
     async fn address_ex_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
     async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx>;
     fn chain_id(&self) -> &str;
+
+    fn client(&self) -> Arc<dyn HttpClient>;
+    fn cache(&self) -> Arc<dyn Cache>;
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -189,6 +193,14 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             })
             .or_else(|_| async move { self.address_ex_from_contracts(&address).await })
             .await
+    }
+
+    fn client(&self) -> Arc<dyn HttpClient> {
+        self.client.clone()
+    }
+
+    fn cache(&self) -> Arc<dyn Cache> {
+        self.cache.clone()
     }
 }
 

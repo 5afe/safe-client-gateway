@@ -81,7 +81,7 @@ impl DataDecoded {
 impl DataDecoded {
     pub(crate) async fn build_address_info_index(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
     ) -> Option<HashMap<String, AddressEx>> {
         if !feature_flag_nested_decoding() {
             return None;

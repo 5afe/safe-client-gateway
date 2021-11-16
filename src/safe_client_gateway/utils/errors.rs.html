@@ -206,7 +206,7 @@
         <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">status_code</span>, <span class="ident">error_details</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">from_http_response</span>(<span class="ident">response</span>: <span class="kw-2">&amp;</span><span class="ident">HttpClientResponse</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_http_response</span>(<span class="ident">response</span>: <span class="kw-2">&amp;</span><span class="ident">HttpClientResponse</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::new_from_message_with_code</span>(<span class="ident">response</span>.<span class="ident">status_code</span>, <span class="ident">response</span>.<span class="ident">body</span>.<span class="ident">to_string</span>())
     }
 

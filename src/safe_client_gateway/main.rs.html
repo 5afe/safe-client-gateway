@@ -64,6 +64,10 @@
 <span id="64">64</span>
 <span id="65">65</span>
 <span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">deny</span>(<span class="ident">unused_must_use</span>)]</span>
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">dotenv</span>;
@@ -100,26 +104,20 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::redis::create_service_cache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::Cache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::error_catchers</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::HttpClient</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client</span>::{<span class="ident">setup_http_client</span>, <span class="ident">HttpClient</span>};
 <span class="kw">use</span> <span class="ident">dotenv::dotenv</span>;
+<span class="kw">use</span> <span class="ident">rocket</span>::{<span class="ident">Build</span>, <span class="ident">Rocket</span>};
 <span class="kw">use</span> <span class="ident">routes::active_routes</span>;
 <span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
-<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
 <span class="kw">use</span> <span class="ident">utils::cors::CORS</span>;
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">launch</span>]</span>
-<span class="kw">fn</span> <span class="ident">rocket</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">_</span> {
+<span class="kw">fn</span> <span class="ident">rocket</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Rocket</span><span class="op">&lt;</span><span class="ident">Build</span><span class="op">&gt;</span> {
     <span class="ident">dotenv</span>().<span class="ident">ok</span>();
-    <span class="ident">env_logger::init</span>();
+    <span class="ident">setup_logger</span>();
 
-    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">reqwest::Client::builder</span>()
-        .<span class="ident">connect_timeout</span>(<span class="ident">Duration::from_millis</span>(
-            <span class="ident">config::internal_client_connect_timeout</span>(),
-        ))
-        .<span class="ident">build</span>()
-        .<span class="ident">unwrap</span>();
-
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">setup_http_client</span>();
     <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">create_service_cache</span>();
 
     <span class="ident">rocket::build</span>()
@@ -129,6 +127,16 @@
         .<span class="ident">manage</span>(<span class="ident">Arc::new</span>(<span class="ident">client</span>) <span class="kw">as</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">HttpClient</span><span class="op">&gt;</span>)
         .<span class="ident">attach</span>(<span class="ident">monitoring::performance::PerformanceMonitor</span>())
         .<span class="ident">attach</span>(<span class="ident">CORS</span>())
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">fn</span> <span class="ident">setup_logger</span>() {
+    <span class="comment">//noop: no need to set the logger for tests</span>
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">test</span>))]</span>
+<span class="kw">fn</span> <span class="ident">setup_logger</span>() {
+    <span class="ident">env_logger::init</span>();
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="safe_client_gateway" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>

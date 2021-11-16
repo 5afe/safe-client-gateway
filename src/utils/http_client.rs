@@ -1,4 +1,6 @@
-use crate::config::{default_request_timeout, internal_client_connect_timeout};
+use crate::config::default_request_timeout;
+#[cfg(not(test))]
+use crate::config::internal_client_connect_timeout;
 use crate::utils::errors::{ApiError, ApiResult};
 use core::time::Duration;
 use mockall::automock;

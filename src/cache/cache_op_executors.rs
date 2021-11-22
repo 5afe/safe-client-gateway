@@ -44,7 +44,6 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                 request
             };
 
-            log::error!("{:#?}", &http_request);
             let response = client.get(http_request).await;
 
             match response {

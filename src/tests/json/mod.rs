@@ -93,6 +93,7 @@ pub const TOKEN_DAI: &str = include_str!("tokens/dai.json");
 pub const TOKEN_PV_MEMORIAL_TOKEN: &str = include_str!("tokens/pv_memorial_token.json");
 pub const TOKEN_BAT: &str = include_str!("tokens/bat.json");
 
+pub const DATA_DECODED_APPROVE: &str = include_str!("commons/data_decoded_approve.json");
 pub const DATA_DECODED_MULTI_SEND: &str = include_str!("commons/data_decoded_multi_send.json");
 pub const DATA_DECODED_ADD_OWNER_WITH_THRESHOLD: &str =
     include_str!("commons/data_decoded_add_owner_with_threshold.json");

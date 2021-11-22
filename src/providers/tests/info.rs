@@ -436,4 +436,40 @@ async fn default_info_provider_safe_app_info() {
 }
 
 #[rocket::async_test]
-async fn default_info_provider_safe_app_info_not_found() {}
+async fn default_info_provider_safe_app_info_not_found() {
+    let origin_url = "https://app.uniswap.org";
+
+    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    cache.invalidate_pattern("*");
+
+    let mut mock_http_client = MockHttpClient::new();
+    let mut safe_app_request = Request::new(format!("{}/manifest.json", &origin_url));
+    safe_app_request.timeout(Duration::from_millis(safe_app_info_request_timeout()));
+
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(safe_app_request))
+        .returning(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                status_code: 404,
+                body: String::from("Not found"),
+            }))
+        });
+
+    let context = RequestContext::new(
+        String::from(""),
+        config_uri!(""),
+        &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
+        &cache,
+    );
+    let expected = Err(ApiError::new_from_message_with_code(
+        404,
+        String::from("Not found"),
+    ));
+
+    let info_provider = DefaultInfoProvider::new("4", &context);
+    let actual = info_provider.safe_app_info(origin_url).await;
+
+    assert_eq!(expected, actual);
+}

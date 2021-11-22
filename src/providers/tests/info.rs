@@ -2,8 +2,11 @@ use crate::{
     cache::redis::create_service_cache,
     cache::Cache,
     common::models::{backend::chains::ChainInfo, page::Page},
-    config::{chain_info_request_timeout, safe_info_request_timeout, token_info_request_timeout},
-    providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo, TokenInfo},
+    config::{
+        chain_info_request_timeout, safe_app_info_request_timeout, safe_info_request_timeout,
+        token_info_request_timeout,
+    },
+    providers::info::{DefaultInfoProvider, InfoProvider, SafeAppInfo, SafeInfo, TokenInfo},
     utils::{
         context::RequestContext,
         errors::{ApiError, ErrorDetails},
@@ -373,7 +376,7 @@ async fn default_info_provider_token_info_address_0x0() {
     let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
 
-    let mut mock_http_client = MockHttpClient::new();
+    let mock_http_client = MockHttpClient::new();
 
     let context = RequestContext::new(
         String::from(""),
@@ -391,3 +394,46 @@ async fn default_info_provider_token_info_address_0x0() {
 
     assert_eq!(expected, actual);
 }
+
+#[rocket::async_test]
+async fn default_info_provider_safe_app_info() {
+    let origin_url = "https://app.uniswap.org";
+
+    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    cache.invalidate_pattern("*");
+
+    let mut mock_http_client = MockHttpClient::new();
+    let mut safe_app_request = Request::new(format!("{}/manifest.json", &origin_url));
+    safe_app_request.timeout(Duration::from_millis(safe_app_info_request_timeout()));
+
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(safe_app_request))
+        .returning(move |_| {
+            Ok(Response {
+                body: String::from(crate::tests::json::UNISWAP_SAFE_APP_MANIFEST),
+                status_code: 200,
+            })
+        });
+
+    let context = RequestContext::new(
+        String::from(""),
+        config_uri!(""),
+        &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
+        &cache,
+    );
+    let expected = Ok(SafeAppInfo {
+        name: String::from("Uniswap"),
+        url: String::from(origin_url),
+        logo_uri: format!("{}/{}", &origin_url, "./images/256x256_App_Icon_Pink.svg"),
+    });
+
+    let info_provider = DefaultInfoProvider::new("4", &context);
+    let actual = info_provider.safe_app_info(origin_url).await;
+
+    assert_eq!(expected, actual);
+}
+
+#[rocket::async_test]
+async fn default_info_provider_safe_app_info_not_found() {}

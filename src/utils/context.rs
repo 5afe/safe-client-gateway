@@ -21,12 +21,14 @@ impl RequestContext {
     }
 
     #[cfg(test)]
-    pub fn new(
+    pub fn setup_for_test(
         request_id: String,
         host: String,
         http_client: &Arc<dyn HttpClient>,
         cache: &Arc<dyn Cache>,
     ) -> Self {
+        cache.invalidate_pattern("*");
+
         RequestContext {
             request_id,
             host,

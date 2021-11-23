@@ -8,6 +8,10 @@
     "authentication": "SOME_RANDOM_AUTH",
     "value": "https://someurl.com/rpc"
   },
+  "safeAppsRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc/apps"
+  },
   "blockExplorerUriTemplate": {
     "address": "https://blockexplorer.com/{{address}}",
     "txHash": "https://blockexplorer.com/{{txHash}}",

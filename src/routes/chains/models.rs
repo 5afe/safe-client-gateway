@@ -11,6 +11,7 @@ pub struct ChainInfo {
     pub l2: bool,
     pub description: String,
     pub rpc_uri: RpcUri,
+    pub safe_apps_rpc_uri: RpcUri,
     pub block_explorer_uri_template: BlockExplorerUriTemplate,
     pub native_currency: NativeCurrency,
     pub theme: Theme,

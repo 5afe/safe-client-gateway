@@ -19,6 +19,21 @@ impl RequestContext {
     pub fn cache(&self) -> Arc<dyn Cache> {
         self.cache.clone()
     }
+
+    #[cfg(test)]
+    pub fn new(
+        request_id: String,
+        host: String,
+        http_client: &Arc<dyn HttpClient>,
+        cache: &Arc<dyn Cache>,
+    ) -> Self {
+        RequestContext {
+            request_id,
+            host,
+            http_client: http_client.clone(),
+            cache: cache.clone(),
+        }
+    }
 }
 
 #[rocket::async_trait]

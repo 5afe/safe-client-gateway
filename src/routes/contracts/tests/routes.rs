@@ -1,3 +1,4 @@
+use crate::common::models::data_decoded::DataDecoded;
 use crate::config::chain_info_request_timeout;
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
@@ -57,11 +58,13 @@ async fn data_decoded() {
 
     let response = request.dispatch().await;
 
-    assert_eq!(response.status(), Status::Ok);
-    assert_eq!(
-        response.into_string().await.unwrap(),
-        crate::tests::json::DATA_DECODED_APPROVE
-    );
+    let actual_status = response.status();
+    let actual =
+        serde_json::from_str::<DataDecoded>(&response.into_string().await.unwrap()).unwrap();
+    let expected =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_APPROVE).unwrap();
+    assert_eq!(actual_status, Status::Ok);
+    assert_eq!(actual, expected);
 }
 
 #[rocket::async_test]

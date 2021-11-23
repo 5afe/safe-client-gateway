@@ -93,6 +93,7 @@ pub const TOKEN_DAI: &str = include_str!("tokens/dai.json");
 pub const TOKEN_PV_MEMORIAL_TOKEN: &str = include_str!("tokens/pv_memorial_token.json");
 pub const TOKEN_BAT: &str = include_str!("tokens/bat.json");
 
+pub const DATA_DECODED_APPROVE: &str = include_str!("commons/data_decoded_approve.json");
 pub const DATA_DECODED_MULTI_SEND: &str = include_str!("commons/data_decoded_multi_send.json");
 pub const DATA_DECODED_ADD_OWNER_WITH_THRESHOLD: &str =
     include_str!("commons/data_decoded_add_owner_with_threshold.json");
@@ -143,5 +144,8 @@ pub const CHAIN_INFO_RINKEBY_ENABLED_FEATURES: &str =
     include_str!("chains/rinkeby_enabled_features.json");
 
 pub const POLYGON_SAFE_APPS: &str = include_str!("safe_apps/polygon_safe_apps.json");
+pub const UNISWAP_SAFE_APP_MANIFEST: &str = include_str!("safe_apps/uniswap_manifest.json");
 
 pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_master_copies.json");
+
+pub const COLLECTIBLES_PAGE: &str = include_str!("collectibles/collectibles_page.json");

@@ -6,6 +6,7 @@ pub async fn safe_app_info_from(
     info_provider: &(impl InfoProvider + Sync),
 ) -> Option<SafeAppInfo> {
     let origin_internal = serde_json::from_str::<OriginInternal>(origin).ok()?;
+    log::error!("{:#?}", &origin_internal);
     info_provider
         .safe_app_info(
             &origin_internal

@@ -48,6 +48,7 @@ pub enum TokenType {
 
 #[derive(Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(PartialEq))]
 pub struct SafeInfo {
     pub address: String,
     pub nonce: u64,
@@ -60,9 +61,9 @@ pub struct SafeInfo {
     pub version: Option<String>,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-#[cfg_attr(test, derive(serde::Deserialize))]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub struct SafeAppInfo {
     pub name: String,
     pub url: String,

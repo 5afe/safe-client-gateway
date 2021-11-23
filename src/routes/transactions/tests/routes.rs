@@ -288,6 +288,7 @@ async fn post_confirmation_confirmation_success_tx_details_error() {
 
 #[rocket::async_test]
 async fn tx_details_multisig_tx_success() {
+    std::env::set_var("FEATURE_FLAG_NESTED_DECODING", "true");
     let mock_http_client = {
         let mut mock_http_client = MockHttpClient::new();
 

@@ -1,1 +1,2 @@
+mod fiat;
 mod info;

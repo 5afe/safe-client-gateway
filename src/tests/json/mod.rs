@@ -149,3 +149,5 @@ pub const UNISWAP_SAFE_APP_MANIFEST: &str = include_str!("safe_apps/uniswap_mani
 pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_master_copies.json");
 
 pub const COLLECTIBLES_PAGE: &str = include_str!("collectibles/collectibles_page.json");
+
+pub const EXCHANGE_CURRENCY_RATES: &str = include_str!("exchange/currency_rates.json");

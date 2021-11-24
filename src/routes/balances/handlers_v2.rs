@@ -106,7 +106,7 @@ async fn get_token_prices(
         .await;
 }
 
-/// Gets the [TokenPrice] of the token with address [token_address] for the chain [chain_id]
+/// Gets the [TokenPrice] of the token with address `token_address` for the chain `chain_id`
 /// To retrieve the Native Currency fiat price of the chain (eg.: Ether), 0x0000000000000000000000000000000000000000 should be used
 ///
 /// # Arguments

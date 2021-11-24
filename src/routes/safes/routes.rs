@@ -11,7 +11,7 @@ use rocket::serde::json::Json;
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>` <br />
- * Returns [SafeState](crate::models::handlers::safes::SafeState)
+ * Returns [SafeState](crate::routes::safes::models::SafeState)
  */
 #[get("/v1/chains/<chain_id>/safes/<safe_address>")]
 pub async fn get_safe_info(
@@ -46,7 +46,7 @@ pub async fn get_owners(
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations` <br />
- * Returns [SafeTransactionEstimation](crate::models::handlers::utils::SafeTransactionEstimation)
+ * Returns [SafeTransactionEstimation](crate::routes::safes::models::SafeTransactionEstimation)
  *
  * # Safe Gas Estimation
  *

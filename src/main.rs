@@ -13,7 +13,6 @@ pub mod macros;
 
 #[doc(hidden)]
 mod cache;
-#[doc(hidden)]
 mod common;
 #[doc(hidden)]
 mod config;
@@ -64,6 +63,7 @@ fn setup_logger() {
     //noop: no need to set the logger for tests
 }
 
+#[doc(hidden)]
 #[cfg(not(test))]
 fn setup_logger() {
     env_logger::init();

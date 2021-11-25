@@ -462,3 +462,9 @@ async fn default_info_provider_safe_app_info_not_found() {
 
     assert_eq!(expected, actual);
 }
+
+#[rocket::async_test]
+async fn contract_info() {}
+
+#[rocket::async_test]
+async fn contract_info_not_found() {}

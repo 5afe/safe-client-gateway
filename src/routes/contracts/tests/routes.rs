@@ -130,3 +130,9 @@ async fn data_decoded_error() {
         serde_json::to_string(&error).unwrap()
     );
 }
+
+#[rocket::async_test]
+async fn get_contract() {}
+
+#[rocket::async_test]
+async fn get_contract_not_found() {}

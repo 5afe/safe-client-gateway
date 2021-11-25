@@ -1,4 +1,5 @@
 use crate::common::models::data_decoded::DataDecoded;
+use crate::providers::address_info::ContractInfo;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::contracts::models::DataDecoderRequest;
 use crate::utils::context::RequestContext;
@@ -24,4 +25,13 @@ pub async fn request_data_decoded(
 
     let response_body = client.post(request).await?.body;
     Ok(serde_json::from_str::<DataDecoded>(&response_body)?)
+}
+
+pub async fn get_contract(
+    context: &RequestContext,
+    chain_id: &str,
+    contract_address: &str,
+) -> ApiResult<ContractInfo> {
+    let info_provider = DefaultInfoProvider::new(chain_id, context);
+    info_provider.contract_info(contract_address).await
 }

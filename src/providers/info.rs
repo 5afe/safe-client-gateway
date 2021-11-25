@@ -99,10 +99,12 @@ pub trait InfoProvider {
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
+    async fn contract_info(&self, contract_address: &str) -> ApiResult<ContractInfo>;
+
     async fn address_ex_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
     async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx>;
-    fn chain_id(&self) -> &str;
 
+    fn chain_id(&self) -> &str;
     fn client(&self) -> Arc<dyn HttpClient>;
     fn cache(&self) -> Arc<dyn Cache>;
 }
@@ -163,6 +165,18 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             url: url.to_owned(),
             logo_uri: format!("{}/{}", url, manifest.icon_path),
         })
+    }
+
+    async fn contract_info(&self, contract_address: &str) -> ApiResult<ContractInfo> {
+        let url = core_uri!(self, "/v1/contracts/{}/", contract_address)?;
+        let contract_info_json = RequestCached::new(url, &self.client, &self.cache)
+            .cache_duration(address_info_cache_duration())
+            .error_cache_duration(long_error_duration())
+            .request_timeout(contract_info_request_timeout())
+            .execute()
+            .await?;
+
+        Ok(serde_json::from_str::<ContractInfo>(&contract_info_json)?)
     }
 
     async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx> {

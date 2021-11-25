@@ -8,13 +8,13 @@ use rocket::serde::json::Json;
 
 /**
  * `/v1/chains/<chain_id>/data-decoder` <br/>
- * Returns [DataDecoded](crate::models::commons::DataDecoded)
+ * Returns [DataDecoded](crate::common::models::data_decoded::DataDecoded)
  *
  * # Data Decoder
  *
  * This endpoint requires the client to send in the body of the request a hexadecimal `String` containing the `data` field of a transaction for decoding
  *
- * The result is of the type [DataDecoded](crate::models::commons::DataDecoded)
+ * The result is of the type [DataDecoded](crate::common::models::data_decoded::DataDecoded)
  *
  * ## Path
  *

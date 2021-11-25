@@ -3,8 +3,8 @@ use crate::{
     cache::Cache,
     common::models::{backend::chains::ChainInfo, page::Page},
     config::{
-        chain_info_request_timeout, safe_app_info_request_timeout, safe_info_request_timeout,
-        token_info_request_timeout,
+        chain_info_request_timeout, contract_info_request_timeout, safe_app_info_request_timeout,
+        safe_info_request_timeout, token_info_request_timeout,
     },
     providers::info::{DefaultInfoProvider, InfoProvider, SafeAppInfo, SafeInfo, TokenInfo},
     utils::{
@@ -467,4 +467,55 @@ async fn default_info_provider_safe_app_info_not_found() {
 async fn contract_info() {}
 
 #[rocket::async_test]
-async fn contract_info_not_found() {}
+async fn contract_info_not_found() {
+    let bip_contract_address = "0x00000000000045166C45aF0FC6E4Cf31D9E14B9A";
+    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+
+    let mut mock_http_client = MockHttpClient::new();
+
+    let mut chain_request = Request::new(config_uri!("/v1/chains/{}/", 4));
+    chain_request.timeout(Duration::from_millis(chain_info_request_timeout()));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(chain_request))
+        .returning(move |_| {
+            Ok(Response {
+                status_code: 200,
+                body: String::from(crate::tests::json::CHAIN_INFO_RINKEBY),
+            })
+        });
+
+    let mut contract_info_request = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/contracts/{}/",
+        &bip_contract_address
+    ));
+    contract_info_request.timeout(Duration::from_millis(contract_info_request_timeout()));
+
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(contract_info_request))
+        .returning(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                status_code: 404,
+                body: String::from("Not found"),
+            }))
+        });
+
+    let context = RequestContext::setup_for_test(
+        String::from(""),
+        config_uri!(""),
+        &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
+        &cache,
+    );
+    let expected = Err(ApiError::new_from_message_with_code(
+        404,
+        String::from("Not found"),
+    ));
+
+    let info_provider = DefaultInfoProvider::new("4", &context);
+    let actual = info_provider.contract_info(bip_contract_address).await;
+
+    assert_eq!(expected, actual);
+}

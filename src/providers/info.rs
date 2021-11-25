@@ -180,14 +180,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx> {
-        let url = core_uri!(self, "/v1/contracts/{}/", address)?;
-        let contract_info_json = RequestCached::new(url, &self.client, &self.cache)
-            .cache_duration(address_info_cache_duration())
-            .error_cache_duration(long_error_duration())
-            .request_timeout(contract_info_request_timeout())
-            .execute()
-            .await?;
-        let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
+        let contract_info = self.contract_info(address).await?;
         if contract_info.display_name.trim().is_empty() {
             bail!("No display name")
         } else {

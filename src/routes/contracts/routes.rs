@@ -66,6 +66,20 @@ pub async fn post_data_decoder<'e>(
     )?))
 }
 
+/**
+ * `/v1/chains/<chain_id>/contracts/<address>` <br/>
+ * Returns [ContractInfo](crate::providers::address_info::ContractInfo)
+ *
+ * # Contract Info
+ *
+ * This endpoint is chain dependant and returns the details of a Contract such as: name, logoUri, ABI, among others
+ *
+ * The result is of the type [ContractInfo](crate::providers::address_info::ContractInfo)
+ *
+ * ## Path
+ *
+ * - `GET /v1/chains/<chain_id>/contract/<contract_address>`
+**/
 #[get("/v1/chains/<chain_id>/contracts/<contract_address>")]
 pub async fn get_contract(
     context: RequestContext,

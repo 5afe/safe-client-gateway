@@ -19,7 +19,6 @@ mod config;
 
 #[doc(hidden)]
 mod monitoring;
-#[doc(hidden)]
 mod providers;
 
 /// Collection of all endpoints all endpoints

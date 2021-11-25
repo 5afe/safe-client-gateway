@@ -195,7 +195,7 @@ pub async fn get_transactions_queued(
 
 /**
  * `/v1/chains/<chain_id>/transactions/<safe_address>/propose` <br />
- * No return value
+ * returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
  *
  * # Transaction Proposal
  *

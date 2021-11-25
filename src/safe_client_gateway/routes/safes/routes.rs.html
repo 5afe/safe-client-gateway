@@ -113,7 +113,7 @@
 
 <span class="doccomment">/**
  * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;` &lt;br /&gt;
- * Returns [SafeState](crate::models::handlers::safes::SafeState)
+ * Returns [SafeState](crate::routes::safes::models::SafeState)
  */</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_safe_info</span>(
@@ -148,7 +148,7 @@
 
 <span class="doccomment">/**
  * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations` &lt;br /&gt;
- * Returns [SafeTransactionEstimation](crate::models::handlers::utils::SafeTransactionEstimation)
+ * Returns [SafeTransactionEstimation](crate::routes::safes::models::SafeTransactionEstimation)
  *
  * # Safe Gas Estimation
  *

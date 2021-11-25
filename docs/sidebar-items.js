@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["main",""],["setup_logger",""]],"mod":[["routes","Collection of all endpoints all endpoints"]]});
+initSidebarItems({"fn":[["main",""]],"mod":[["common",""],["routes","Collection of all endpoints all endpoints"]]});

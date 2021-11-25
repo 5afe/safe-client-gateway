@@ -249,11 +249,11 @@
 
 <span class="doccomment">/**
  * `/v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;` &lt;br /&gt;
- * Returns [TransactionDetails](crate::models::handlers::transactions::details::TransactionDetails)
+ * Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
  *
  * # Transaction Details
  *
- * The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object [crate::models::handlers::transactions::details::TransactionDetails]
+ * The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
  *
  * ## Path
  *
@@ -279,7 +279,7 @@
 
 <span class="doccomment">/**
  * `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations` &lt;br /&gt;
- * Returns [TransactionDetails](crate::models::handlers::transactions::details::TransactionDetails)
+ * Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
  *
  * # Transaction Confirmation
  *
@@ -291,7 +291,7 @@
  *
  * `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations`
  *
- * The expected [crate::models::handlers::transactions::requests::ConfirmationRequest] body for this request, as well as the returned [crate::models::handlers::transactions::details::TransactionDetails]
+ * The expected (ConfirmationRequest)[crate::routes::transactions::models::requests::ConfirmationRequest] body for this request, as well as the returned (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
  *
  * ## Query parameters
  *
@@ -327,7 +327,7 @@
 
 <span class="doccomment">/**
  * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;
- * Returns a [Page](crate::models::commons::Page) of [TransactionListItem](crate::models::handlers::transactions::summary::TransactionListItem)
+ * Returns a [Page](crate::common::models::page::Page) of [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
  *
  * # Transactions History
  *
@@ -345,7 +345,7 @@
  *
  * `TransactionListItem::Transaction` is returned with the same data layout as in the `/transactions/queued` endpoint.
  *
- * The structure of the `transaction` object corresponds to that of a [crate::models::handlers::transactions::summary::TransactionSummary]
+ * The structure of the `transaction` object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
  *
  * ## Path
  *
@@ -382,7 +382,7 @@
 
 <span class="doccomment">/**
  * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;
- * Returns a [Page](crate::models::commons::Page) of  [TransactionListItem](crate::models::handlers::transactions::summary::TransactionListItem)
+ * Returns a [Page](crate::common::models::page::Page) of  [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
  *
  * # Transactions Queued
  *
@@ -390,7 +390,7 @@
  *
  * Additionally to the `Next` marker, there is also `Queued`. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the `Next` section of the list, a `ConflictHeader` will be introduced for any group of transactions sharing the same `nonce`.
  *
- * The structure of the transaction object corresponds to that of a [crate::models::handlers::transactions::summary::TransactionSummary]
+ * The structure of the transaction object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
  *
  * A `TransactionListItem` can be either a `Label` (containing either `Next` or `Queued`), `ConflictHeader` (with the conflicting `nonce`) and a `Transaction`, for which there is a `TransactionSummary` and a `ConflictType` associated. The conflict type can have `HasNext` or `End` value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a `ConflictType::End`.
  *
@@ -398,7 +398,7 @@
  *
  * `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`
  *
- * The response is a list of [crate::models::handlers::transactions::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
+ * The response is a list of (TransactionListItem)[crate::routes::transactions::models::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
  *
  * ## Query parameters
  *
@@ -444,7 +444,7 @@
  *
  * `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose`
  *
- * The expected [crate::models::handlers::transactions::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
+ * The expected (MultisigTransactionRequest)[crate::routes::transactions::models::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
  *
  * ## Query parameters
  *

@@ -83,7 +83,6 @@
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">mod</span> <span class="ident">cache</span>;
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">mod</span> <span class="ident">common</span>;
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">mod</span> <span class="ident">config</span>;
@@ -134,6 +133,7 @@
     <span class="comment">//noop: no need to set the logger for tests</span>
 }
 
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">test</span>))]</span>
 <span class="kw">fn</span> <span class="ident">setup_logger</span>() {
     <span class="ident">env_logger::init</span>();

@@ -21,10 +21,10 @@ pub const ERC191_VERSION: &'static str = "01";
 
 pub async fn fetch_rejections(
     info_provider: &(impl InfoProvider + Sync),
-    chain_id: &str,
     safe_address: &str,
     nonce: u64,
 ) -> Option<Vec<String>> {
+    let chain_id = info_provider.chain_id();
     let version = info_provider
         .safe_info(safe_address)
         .await

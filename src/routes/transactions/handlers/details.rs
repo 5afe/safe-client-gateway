@@ -16,7 +16,6 @@ use log::debug;
 
 pub async fn get_multisig_transaction_details(
     info_provider: &(impl InfoProvider + Sync),
-    chain_id: &str,
     safe_tx_hash: &str,
 ) -> ApiResult<TransactionDetails> {
     let url = core_uri!(info_provider, "/v1/multisig-transactions/{}/", safe_tx_hash)?;
@@ -28,7 +27,6 @@ pub async fn get_multisig_transaction_details(
 
     let rejections = fetch_rejections(
         info_provider,
-        chain_id,
         &multisig_tx.safe_transaction.safe,
         multisig_tx.nonce,
     )
@@ -139,10 +137,10 @@ pub async fn get_transactions_details(
             .await
         }
         TransactionIdParts::Multisig { safe_tx_hash, .. } => {
-            get_multisig_transaction_details(&info_provider, chain_id, &safe_tx_hash).await
+            get_multisig_transaction_details(&info_provider, &safe_tx_hash).await
         }
         TransactionIdParts::TransactionHash(safe_tx_hash) => {
-            get_multisig_transaction_details(&info_provider, chain_id, &safe_tx_hash).await
+            get_multisig_transaction_details(&info_provider, &safe_tx_hash).await
         }
         _ => Err(client_error!(422, "Bad transaction id")),
     }

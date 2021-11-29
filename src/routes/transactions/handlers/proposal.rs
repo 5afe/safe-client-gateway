@@ -35,7 +35,7 @@ pub async fn submit_confirmation(
     )
     .execute();
 
-    get_multisig_transaction_details(&info_provider, chain_id, safe_tx_hash).await
+    get_multisig_transaction_details(&info_provider, safe_tx_hash).await
 }
 
 pub async fn propose_transaction(

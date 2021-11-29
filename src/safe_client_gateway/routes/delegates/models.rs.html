@@ -39,7 +39,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Delegate</span> {
-    <span class="ident">safe</span>: <span class="ident">String</span>,
+    <span class="ident">safe</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">delegate</span>: <span class="ident">String</span>,
     <span class="ident">delegator</span>: <span class="ident">String</span>,
     <span class="ident">label</span>: <span class="ident">String</span>,

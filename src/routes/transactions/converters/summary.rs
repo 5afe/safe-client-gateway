@@ -44,7 +44,7 @@ impl MultisigTransaction {
         let safe_info = info_provider
             .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
-        let tx_status = self.map_status(&safe_info);
+        let tx_status = self.map_status(&safe_info, 0); // TODO get rejections
         let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations {
             Some(self.missing_signers(&safe_info.owners))
         } else {

@@ -22,10 +22,11 @@ impl MultisigTransaction {
             .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
         let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
+        let rejection_count = rejections.as_ref().map_or(0, |rejections| rejections.len());
         Ok(TransactionDetails {
             tx_id: self.generate_id(),
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
-            tx_status: self.map_status(&safe_info),
+            tx_status: self.map_status(&safe_info, rejection_count),
             tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
                 to: AddressEx::address_only(&self.safe_transaction.to),

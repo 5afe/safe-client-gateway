@@ -230,7 +230,7 @@ impl MultisigTransaction {
         )
     }
 
-    fn map_status(&self, safe_info: &SafeInfo) -> TransactionStatus {
+    fn map_status(&self, safe_info: &SafeInfo, rejection_count: usize) -> TransactionStatus {
         if self.is_executed {
             if self.is_successful.unwrap_or(false) {
                 TransactionStatus::Success
@@ -241,6 +241,8 @@ impl MultisigTransaction {
             TransactionStatus::Cancelled
         } else if self.confirmation_count() < self.confirmation_required(safe_info.threshold) {
             TransactionStatus::AwaitingConfirmations
+        } else if rejection_count > 0 {
+            TransactionStatus::Rejected
         } else {
             TransactionStatus::AwaitingExecution
         }

@@ -41,6 +41,7 @@ pub enum TransactionStatus {
     Cancelled,
     Failed,
     Success,
+    Rejected,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

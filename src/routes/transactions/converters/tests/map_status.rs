@@ -9,7 +9,7 @@ fn map_status_to_success() {
             .unwrap();
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
-    let actual = tx.map_status(&safe_info);
+    let actual = tx.map_status(&safe_info, 0);
 
     assert_eq!(TransactionStatus::Success, actual);
 }
@@ -20,7 +20,7 @@ fn map_status_to_failed() {
         .unwrap();
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
-    let actual = tx.map_status(&safe_info);
+    let actual = tx.map_status(&safe_info, 0);
 
     assert_eq!(TransactionStatus::Failed, actual);
 }
@@ -34,7 +34,7 @@ fn map_status_to_cancelled() {
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES_AND_HIGH_NONCE)
             .unwrap();
-    let actual = tx.map_status(&safe_info);
+    let actual = tx.map_status(&safe_info, 0);
 
     assert_eq!(TransactionStatus::Cancelled, actual);
 }
@@ -47,9 +47,25 @@ fn map_status_awaiting_execution() {
     .unwrap();
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
-    let actual = tx.map_status(&safe_info);
+    let actual = tx.map_status(&safe_info, 0);
 
     assert_eq!(TransactionStatus::AwaitingExecution, actual);
+}
+
+#[test]
+fn map_status_rejected() {
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::tests::json::MULTISIG_TX_AWAITING_EXECUTION,
+    )
+    .unwrap();
+
+    let rejection_count = 1;
+
+    let safe_info =
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
+    let actual = tx.map_status(&safe_info, rejection_count);
+
+    assert_eq!(TransactionStatus::Rejected, actual);
 }
 
 #[test]
@@ -60,7 +76,7 @@ fn map_status_awaiting_confirmations_required_field_none() {
     .unwrap();
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_THRESHOLD_TWO).unwrap();
-    let actual = tx.map_status(&safe_info);
+    let actual = tx.map_status(&safe_info, 0);
 
     assert_eq!(TransactionStatus::AwaitingConfirmations, actual);
 }
@@ -73,7 +89,7 @@ fn map_status_awaiting_confirmations_required_field_some() {
     .unwrap();
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_THRESHOLD_TWO).unwrap();
-    let actual = tx.map_status(&safe_info);
+    let actual = tx.map_status(&safe_info, 0);
 
     assert_eq!(TransactionStatus::AwaitingConfirmations, actual);
 }

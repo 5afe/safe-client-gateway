@@ -9,7 +9,7 @@ use rocket::response::content;
 
 /**
  * `/v1/chains/<chain_id>/about` <br />
- * Returns [ChainAbout](crate::models::handlers::about::ChainAbout)
+ * Returns [ChainAbout](crate::routes::about::models::ChainAbout)
  *
  * # Chain's About
  *
@@ -37,7 +37,7 @@ pub async fn get_chains_about(
 
 /**
  * `/about` <br />
- * [About](crate::models::handlers::about::About)
+ * [About](crate::routes::about::models::About)
  *
  * # About
  *

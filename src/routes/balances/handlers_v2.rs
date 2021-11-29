@@ -1,18 +1,19 @@
+use bigdecimal::BigDecimal;
+use rocket::futures::{stream, StreamExt};
+
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::balances_v2::Balance as BalanceDto;
 use crate::common::models::backend::balances_v2::TokenPrice as BackendTokenPrice;
 use crate::common::models::backend::chains::NativeCurrency;
 use crate::config::{
-    balances_cache_duration, balances_request_timeout, concurrent_balance_token_requests,
-    token_price_cache_duration,
+    balances_core_request_cache_duration, balances_request_timeout,
+    concurrent_balance_token_requests, token_price_cache_duration,
 };
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::balances::models::{Balance, Balances, TokenPrice};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use bigdecimal::BigDecimal;
-use rocket::futures::{stream, StreamExt};
 
 pub async fn balances(
     context: &RequestContext,
@@ -26,14 +27,14 @@ pub async fn balances(
     let fiat_info_provider = FiatInfoProvider::new(context);
     let url = core_uri!(
         info_provider,
-        "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
+        "/v1/safes/{}/balances/?trusted={}&exclude_spam={}",
         safe_address,
         trusted,
         exclude_spam
     )?;
 
     let body = RequestCached::new_from_context(url, context)
-        .cache_duration(balances_cache_duration())
+        .cache_duration(balances_core_request_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()
         .await?;
@@ -106,7 +107,7 @@ async fn get_token_prices(
         .await;
 }
 
-/// Gets the [TokenPrice] of the token with address [token_address] for the chain [chain_id]
+/// Gets the [TokenPrice] of the token with address `token_address` for the chain `chain_id`
 /// To retrieve the Native Currency fiat price of the chain (eg.: Ether), 0x0000000000000000000000000000000000000000 should be used
 ///
 /// # Arguments

@@ -13,14 +13,12 @@ pub mod macros;
 
 #[doc(hidden)]
 mod cache;
-#[doc(hidden)]
 mod common;
 #[doc(hidden)]
 mod config;
 
 #[doc(hidden)]
 mod monitoring;
-#[doc(hidden)]
 mod providers;
 
 /// Collection of all endpoints all endpoints
@@ -64,6 +62,7 @@ fn setup_logger() {
     //noop: no need to set the logger for tests
 }
 
+#[doc(hidden)]
 #[cfg(not(test))]
 fn setup_logger() {
     env_logger::init();

@@ -5,7 +5,7 @@ use rocket::response::content;
 
 /**
  * `/v1/chains/<chain_id>/safe-apps` <br />
- * Returns [SafeApp](crate::models::handlers::safe_app::SafeApp)
+ * Returns [SafeApp](crate::routes::safe_apps::models::SafeApp)
  *
  * # Safe Apps
  *

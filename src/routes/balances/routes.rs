@@ -11,11 +11,11 @@ use crate::utils::errors::ApiResult;
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
- * Returns [Balances](crate::models::handlers::balances::Balances)
+ * Returns [Balances](crate::routes::balances::models::Balances)
  *
  * # Balances
  *
- * This endpoint returns the [crate::models::handlers::balances::Balances] with information (when available) of their converted balance into a designated fiat. The entries are sorted by their fiat balance value.
+ * This endpoint returns the [Balances](crate::routes::balances::models::Balances) with information (when available) of their converted balance into a designated fiat. The entries are sorted by their fiat balance value.
  *
  * The `fiat_code` can be selected from any of the values returned by the supported fiat endpoint.
  *

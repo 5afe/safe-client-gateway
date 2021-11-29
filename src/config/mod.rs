@@ -78,6 +78,10 @@ pub fn balances_cache_duration() -> usize {
     env_with_default("BALANCES_REQUEST_CACHE_DURATION", 60 * 1000)
 }
 
+pub fn balances_core_cache_duration() -> usize {
+    env_with_default("BALANCES_CORE_REQUEST_CACHE_DURATION", indefinite_timeout())
+}
+
 pub fn safe_app_manifest_cache_duration() -> usize {
     env_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }
@@ -91,7 +95,7 @@ pub fn safe_apps_cache_duration() -> usize {
 }
 
 pub fn token_price_cache_duration() -> usize {
-    env_with_default("TOKEN_PRICE_CACHE_DURATION", 1) // set to negligible value
+    env_with_default("TOKEN_PRICE_CACHE_DURATION", 10 * 1000)
 }
 
 // REQUEST TIMEOUTS

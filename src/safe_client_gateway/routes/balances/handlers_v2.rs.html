@@ -137,21 +137,23 @@
 <span id="137">137</span>
 <span id="138">138</span>
 <span id="139">139</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
+<span id="140">140</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">bigdecimal::BigDecimal</span>;
+<span class="kw">use</span> <span class="ident">rocket::futures</span>::{<span class="ident">stream</span>, <span class="ident">StreamExt</span>};
+
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::balances_v2::Balance</span> <span class="kw">as</span> <span class="ident">BalanceDto</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::balances_v2::TokenPrice</span> <span class="kw">as</span> <span class="ident">BackendTokenPrice</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains::NativeCurrency</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{
-    <span class="ident">balances_cache_duration</span>, <span class="ident">balances_request_timeout</span>, <span class="ident">concurrent_balance_token_requests</span>,
-    <span class="ident">token_price_cache_duration</span>,
+    <span class="ident">balances_core_request_cache_duration</span>, <span class="ident">balances_request_timeout</span>,
+    <span class="ident">concurrent_balance_token_requests</span>, <span class="ident">token_price_cache_duration</span>,
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::fiat::FiatInfoProvider</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::balances::models</span>::{<span class="ident">Balance</span>, <span class="ident">Balances</span>, <span class="ident">TokenPrice</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">bigdecimal::BigDecimal</span>;
-<span class="kw">use</span> <span class="ident">rocket::futures</span>::{<span class="ident">stream</span>, <span class="ident">StreamExt</span>};
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">balances</span>(
     <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
@@ -165,14 +167,14 @@
     <span class="kw">let</span> <span class="ident">fiat_info_provider</span> <span class="op">=</span> <span class="ident">FiatInfoProvider::new</span>(<span class="ident">context</span>);
     <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
         <span class="ident">info_provider</span>,
-        <span class="string">&quot;/v1/safes/{}/balances/usd/?trusted={}&amp;exclude_spam={}&quot;</span>,
+        <span class="string">&quot;/v1/safes/{}/balances/?trusted={}&amp;exclude_spam={}&quot;</span>,
         <span class="ident">safe_address</span>,
         <span class="ident">trusted</span>,
         <span class="ident">exclude_spam</span>
     )<span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="ident">context</span>)
-        .<span class="ident">cache_duration</span>(<span class="ident">balances_cache_duration</span>())
+        .<span class="ident">cache_duration</span>(<span class="ident">balances_core_request_cache_duration</span>())
         .<span class="ident">request_timeout</span>(<span class="ident">balances_request_timeout</span>())
         .<span class="ident">execute</span>()
         .<span class="kw">await</span><span class="question-mark">?</span>;

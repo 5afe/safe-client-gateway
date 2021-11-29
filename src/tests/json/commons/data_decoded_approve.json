@@ -1,0 +1,15 @@
+{
+    "method": "approve",
+    "parameters": [
+        {
+            "name": "spender",
+            "type": "address",
+            "value": "0xae9844F89D98c150F5e61bfC676D68b492155990"
+        },
+        {
+            "name": "value",
+            "type": "uint256",
+            "value": "500000000000000"
+        }
+    ]
+}

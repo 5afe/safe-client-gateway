@@ -218,8 +218,9 @@ use std::collections::HashMap;
 /// }
 /// ```
 /// </details>
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub struct TransactionDetails {
     pub tx_id: String,
     pub executed_at: Option<i64>,
@@ -232,15 +233,17 @@ pub struct TransactionDetails {
     pub safe_app_info: Option<SafeAppInfo>,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub enum DetailedExecutionInfo {
     Multisig(MultisigExecutionDetails),
     Module(ModuleExecutionDetails),
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub struct MultisigExecutionDetails {
     pub submitted_at: i64,
     pub nonce: u64,
@@ -261,22 +264,25 @@ pub struct MultisigExecutionDetails {
     pub gas_token_info: Option<TokenInfo>,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub struct MultisigConfirmation {
     pub signer: AddressEx,
     pub signature: Option<String>,
     pub submitted_at: i64,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub struct ModuleExecutionDetails {
     pub address: AddressEx,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub struct TransactionData {
     pub hex_data: Option<String>,
     pub data_decoded: Option<DataDecoded>,

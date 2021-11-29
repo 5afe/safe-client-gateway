@@ -44,7 +44,7 @@ impl ApiError {
         Self::new(status_code, error_details)
     }
 
-    pub async fn from_http_response(response: &HttpClientResponse) -> Self {
+    pub fn from_http_response(response: &HttpClientResponse) -> Self {
         Self::new_from_message_with_code(response.status_code, response.body.to_string())
     }
 

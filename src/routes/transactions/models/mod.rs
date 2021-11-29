@@ -34,6 +34,7 @@ pub(crate) enum TransactionIdParts {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub enum TransactionStatus {
     AwaitingConfirmations,
     AwaitingExecution,
@@ -44,6 +45,7 @@ pub enum TransactionStatus {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(tag = "type")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub enum TransactionInfo {
     Transfer(Transfer),
     SettingsChange(SettingsChange),
@@ -54,6 +56,7 @@ pub enum TransactionInfo {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct Transfer {
     pub sender: AddressEx,
     pub recipient: AddressEx,
@@ -63,6 +66,7 @@ pub struct Transfer {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub enum TransferDirection {
     Incoming,
     Outgoing,
@@ -71,6 +75,7 @@ pub enum TransferDirection {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub enum TransferInfo {
     Erc20(Erc20Transfer),
     Erc721(Erc721Transfer),
@@ -79,6 +84,7 @@ pub enum TransferInfo {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct Erc20Transfer {
     // No need to map to AddressEx as the information are present in this struct
     pub token_address: String,
@@ -91,6 +97,7 @@ pub struct Erc20Transfer {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct Erc721Transfer {
     // No need to map to AddressEx as the information are present in this struct
     pub token_address: String,
@@ -102,12 +109,14 @@ pub struct Erc721Transfer {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct NativeCoinTransfer {
     pub value: String,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct SettingsChange {
     pub data_decoded: DataDecoded,
     pub settings_info: Option<SettingsInfo>,
@@ -116,6 +125,7 @@ pub struct SettingsChange {
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[serde(tag = "type")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub enum SettingsInfo {
     #[serde(rename_all = "camelCase")]
     SetFallbackHandler { handler: AddressEx },
@@ -140,6 +150,7 @@ pub enum SettingsInfo {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct Custom {
     pub to: AddressEx,
     pub data_size: String,
@@ -152,6 +163,7 @@ pub struct Custom {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct Creation {
     pub creator: AddressEx,
     pub transaction_hash: String,

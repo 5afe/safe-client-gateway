@@ -368,15 +368,14 @@ async fn multisig_transaction_with_origin() {
         .times(7) // 1 + 6 calls within data decoded multisig
         .returning(move |_| bail!("no address info"));
 
-    let mut expected = crate::tests::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
-    expected.retain(|c| !c.is_whitespace());
+    let expected =
+        serde_json::from_str::<TransactionDetails>(crate::tests::json::TX_DETAILS_WITH_ORIGIN)
+            .unwrap();
 
     let actual =
         MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider)
             .await
             .unwrap();
 
-    let actual_json = serde_json::to_string(&actual).unwrap();
-
-    assert_eq!(expected, actual_json);
+    assert_eq!(expected, actual);
 }

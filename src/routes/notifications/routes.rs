@@ -13,7 +13,7 @@ use rocket::serde::json::Json;
  *
  * This endpoint provides a way for registering devices for push notifications.
  *
- * One can subscribe to as many safes in different chains as [SafeRegistration](crate::models::handlers::notifications::SafeRegistration) provided in the payload
+ * One can subscribe to as many safes in different chains as [SafeRegistration](crate::routes::notifications::models::SafeRegistration) provided in the payload
  *
  * ## Path
  *

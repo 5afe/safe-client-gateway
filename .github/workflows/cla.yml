@@ -22,3 +22,5 @@ jobs:
           path-to-cla-document: 'https://gnosis-safe.io/cla/'
           branch: 'cla-signatures'
           allowlist: jpalvarezl,fmrsabino,rmeissner,Uxio0,*bot # may need to update this expression if we add new bots
+          empty-commit-flag: false
+          blockchain-storage-flag: false

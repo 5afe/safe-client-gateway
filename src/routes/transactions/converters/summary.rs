@@ -13,6 +13,7 @@ use crate::routes::transactions::models::summary::{
 use crate::routes::transactions::models::{Creation, TransactionInfo, TransactionStatus};
 use crate::utils::errors::ApiResult;
 use crate::utils::hex_hash;
+use crate::utils::transactions::fetch_rejections;
 use rocket::futures::future::OptionFuture;
 
 impl Transaction {
@@ -44,7 +45,12 @@ impl MultisigTransaction {
         let safe_info = info_provider
             .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
-        let tx_status = self.map_status(&safe_info, 0); // TODO get rejections
+        let rejection_count =
+            fetch_rejections(info_provider, &self.safe_transaction.safe, self.nonce)
+                .await
+                .as_ref()
+                .map_or(0, |rejections| rejections.len());
+        let tx_status = self.map_status(&safe_info, rejection_count);
         let missing_signers = if tx_status == TransactionStatus::AwaitingConfirmations {
             Some(self.missing_signers(&safe_info.owners))
         } else {

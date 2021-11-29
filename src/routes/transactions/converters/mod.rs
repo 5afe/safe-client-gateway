@@ -239,10 +239,10 @@ impl MultisigTransaction {
             }
         } else if safe_info.nonce > self.nonce {
             TransactionStatus::Cancelled
-        } else if self.confirmation_count() < self.confirmation_required(safe_info.threshold) {
-            TransactionStatus::AwaitingConfirmations
         } else if rejection_count > 0 {
             TransactionStatus::Rejected
+        } else if self.confirmation_count() < self.confirmation_required(safe_info.threshold) {
+            TransactionStatus::AwaitingConfirmations
         } else {
             TransactionStatus::AwaitingExecution
         }

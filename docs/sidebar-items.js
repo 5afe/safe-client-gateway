@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["main",""]],"mod":[["common",""],["routes","Collection of all endpoints all endpoints"]]});
+initSidebarItems({"fn":[["main",""]],"mod":[["common",""],["providers",""],["routes","Collection of all endpoints all endpoints"]]});

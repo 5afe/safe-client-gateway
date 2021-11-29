@@ -151,3 +151,5 @@ pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_mast
 pub const COLLECTIBLES_PAGE: &str = include_str!("collectibles/collectibles_page.json");
 
 pub const EXCHANGE_CURRENCY_RATES: &str = include_str!("exchange/currency_rates.json");
+
+pub const CONTRACT_INFO_BID: &str = include_str!("contracts/contract_info_BID.json");

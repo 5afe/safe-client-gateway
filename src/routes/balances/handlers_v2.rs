@@ -6,7 +6,7 @@ use crate::common::models::backend::balances_v2::Balance as BalanceDto;
 use crate::common::models::backend::balances_v2::TokenPrice as BackendTokenPrice;
 use crate::common::models::backend::chains::NativeCurrency;
 use crate::config::{
-    balances_cache_duration, balances_core_cache_duration, balances_request_timeout,
+    balances_core_request_cache_duration, balances_request_timeout,
     concurrent_balance_token_requests, token_price_cache_duration,
 };
 use crate::providers::fiat::FiatInfoProvider;
@@ -34,7 +34,7 @@ pub async fn balances(
     )?;
 
     let body = RequestCached::new_from_context(url, context)
-        .cache_duration(balances_core_cache_duration())
+        .cache_duration(balances_core_request_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()
         .await?;

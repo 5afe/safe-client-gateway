@@ -78,7 +78,7 @@ pub fn balances_cache_duration() -> usize {
     env_with_default("BALANCES_REQUEST_CACHE_DURATION", 60 * 1000)
 }
 
-pub fn balances_core_cache_duration() -> usize {
+pub fn balances_core_request_cache_duration() -> usize {
     env_with_default("BALANCES_CORE_REQUEST_CACHE_DURATION", indefinite_timeout())
 }
 

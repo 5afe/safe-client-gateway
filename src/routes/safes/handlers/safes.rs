@@ -28,9 +28,9 @@ pub async fn get_safe_info_ex(
         .await;
 
     let (collectibles_tag, tx_queued_tag, tx_history_tag) = join!(
-        get_last_collectible(context, &info_provider, safe_address),
-        get_last_queued_tx(context, &info_provider, safe_address),
-        get_last_history_tx(context, &info_provider, safe_address)
+        get_last_collectible(&info_provider, safe_address),
+        get_last_queued_tx(&info_provider, safe_address),
+        get_last_history_tx(&info_provider, safe_address)
     );
 
     let safe_state = SafeState {
@@ -48,7 +48,6 @@ pub async fn get_safe_info_ex(
 }
 
 async fn get_last_collectible(
-    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -60,7 +59,7 @@ async fn get_last_collectible(
         safe_address,
     )?;
 
-    let body = RequestCached::new_from_context(url, &context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
@@ -80,7 +79,6 @@ async fn get_last_collectible(
 }
 
 async fn get_last_queued_tx(
-    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -94,7 +92,7 @@ async fn get_last_queued_tx(
         safe_address,
     )?;
 
-    let body = RequestCached::new_from_context(url, &context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
@@ -110,7 +108,6 @@ async fn get_last_queued_tx(
 }
 
 async fn get_last_history_tx(
-    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -123,7 +120,7 @@ async fn get_last_history_tx(
         safe_address
     )?;
 
-    let body = RequestCached::new_from_context(url, &context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;

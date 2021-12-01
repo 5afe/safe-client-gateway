@@ -3,7 +3,7 @@ use crate::config::{
 };
 use crate::routes::safes::models::SafeState;
 use crate::tests::main::setup_rocket;
-use crate::utils::errors::ApiError;
+use crate::utils::errors::{ApiError, ErrorDetails};
 // use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
 use core::time::Duration;
@@ -152,4 +152,63 @@ async fn get_safe_info() {
 }
 
 #[rocket::async_test]
-async fn get_safe_info_not_found() {}
+async fn get_safe_info_not_found() {
+    let safe_address = "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f";
+    let error = ErrorDetails {
+        code: 1337,
+        message: Some(String::new()),
+        arguments: None,
+        debug: None,
+    };
+
+    let mut chain_request = Request::new(config_uri!("/v1/chains/{}/", 4));
+    chain_request.timeout(Duration::from_millis(chain_info_request_timeout()));
+    let mut mock_http_client = MockHttpClient::new();
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(chain_request))
+        .return_once(move |_| {
+            Ok(Response {
+                status_code: 200,
+                body: String::from(crate::tests::json::CHAIN_INFO_RINKEBY),
+            })
+        });
+
+    let mut safe_request = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/",
+        &safe_address
+    ));
+    safe_request.timeout(Duration::from_millis(safe_info_request_timeout()));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(safe_request))
+        .return_once(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                status_code: 404,
+                body: String::new(),
+            }))
+        });
+    let expected = serde_json::to_string(&error).unwrap();
+
+    let client = Client::tracked(setup_rocket(
+        mock_http_client,
+        routes![super::super::routes::get_safe_info],
+    ))
+    .await
+    .expect("valid rocket instance");
+
+    let request = client
+        .get("/v1/chains/4/safes/0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f")
+        .header(Header::new("Host", "test.gnosis.io"))
+        .header(ContentType::JSON);
+
+    let response = request.dispatch().await;
+
+    let actual_status = response.status();
+    let actual_json_body = response.into_string().await.unwrap();
+
+    assert_eq!(actual_status, Status::NotFound);
+    assert_eq!(actual_json_body, expected);
+}

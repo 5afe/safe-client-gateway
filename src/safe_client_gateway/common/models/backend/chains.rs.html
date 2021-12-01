@@ -77,6 +77,7 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
+<span id="80">80</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
@@ -92,6 +93,7 @@
     <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">rpc_uri</span>: <span class="ident">RpcUri</span>,
     <span class="kw">pub</span> <span class="ident">safe_apps_rpc_uri</span>: <span class="ident">RpcUri</span>,
+    <span class="kw">pub</span> <span class="ident">public_rpc_uri</span>: <span class="ident">RpcUri</span>,
     <span class="kw">pub</span> <span class="ident">block_explorer_uri_template</span>: <span class="ident">BlockExplorerUriTemplate</span>,
     <span class="kw">pub</span> <span class="ident">native_currency</span>: <span class="ident">NativeCurrency</span>,
     <span class="kw">pub</span> <span class="ident">theme</span>: <span class="ident">Theme</span>,

@@ -28,6 +28,10 @@ async fn core_uri_success_with_params_prod() {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),
         },
+        public_rpc_uri: RpcUri {
+            authentication: RpcAuthentication::ApiKeyPath,
+            value: "".to_string(),
+        },
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "".to_string(),
             tx_hash: "".to_string(),
@@ -84,6 +88,10 @@ async fn core_uri_success_without_params_prod() {
             value: "".to_string(),
         },
         safe_apps_rpc_uri: RpcUri {
+            authentication: RpcAuthentication::ApiKeyPath,
+            value: "".to_string(),
+        },
+        public_rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),
         },
@@ -146,6 +154,10 @@ async fn core_uri_success_with_params_local() {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),
         },
+        public_rpc_uri: RpcUri {
+            authentication: RpcAuthentication::ApiKeyPath,
+            value: "".to_string(),
+        },
         block_explorer_uri_template: BlockExplorerUriTemplate {
             address: "".to_string(),
             tx_hash: "".to_string(),
@@ -202,6 +214,10 @@ async fn core_uri_success_without_params_local() {
             value: "".to_string(),
         },
         safe_apps_rpc_uri: RpcUri {
+            authentication: RpcAuthentication::ApiKeyPath,
+            value: "".to_string(),
+        },
+        public_rpc_uri: RpcUri {
             authentication: RpcAuthentication::ApiKeyPath,
             value: "".to_string(),
         },

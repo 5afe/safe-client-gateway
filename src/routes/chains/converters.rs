@@ -36,6 +36,16 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                 },
                 value: chain_info.safe_apps_rpc_uri.value,
             },
+            public_rpc_uri: ServiceRpcUri {
+                authentication: match chain_info.public_rpc_uri.authentication {
+                    RpcAuthentication::ApiKeyPath => ServiceRpcAuthentication::ApiKeyPath,
+                    RpcAuthentication::NoAuthentication => {
+                        ServiceRpcAuthentication::NoAuthentication
+                    }
+                    RpcAuthentication::Unknown => ServiceRpcAuthentication::Unknown,
+                },
+                value: chain_info.public_rpc_uri.value,
+            },
             block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
                 address: chain_info.block_explorer_uri_template.address,
                 tx_hash: chain_info.block_explorer_uri_template.tx_hash,

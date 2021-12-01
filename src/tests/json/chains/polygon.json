@@ -12,6 +12,10 @@
     "authentication": "API_KEY_PATH",
     "value": "https://polygon-mainnet.infura.io/v3/"
   },
+  "publicRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://polygon-mainnet.infura.io/v3/public"
+  },
   "blockExplorerUriTemplate": {
     "address": "https://polygonscan.com/address/{{address}}",
     "txHash": "https://polygonscan.com/tx/{{txHash}}",

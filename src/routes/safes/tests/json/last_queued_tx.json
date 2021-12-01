@@ -1,0 +1,46 @@
+{
+    "count": 41,
+    "next": "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67/multisig-transactions/?executed=false&limit=1&offset=1&ordering=-modified&trusted=true",
+    "previous": null,
+    "results": [
+        {
+            "safe": "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f",
+            "to": "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+            "value": "20000000000000000",
+            "data": null,
+            "operation": 0,
+            "gasToken": "0x0000000000000000000000000000000000000000",
+            "safeTxGas": 23392,
+            "baseGas": 0,
+            "gasPrice": "0",
+            "refundReceiver": "0x0000000000000000000000000000000000000000",
+            "nonce": 50,
+            "executionDate": null,
+            "submissionDate": "2021-03-26T10:46:32.834635Z",
+            "modified": "2021-03-26T10:46:32.834635Z",
+            "blockNumber": null,
+            "transactionHash": null,
+            "safeTxHash": "0x9b2e45363dd5a0c2077e233d52915f07d8b4635bffe83edcb6c95e17c1b129f4",
+            "executor": null,
+            "isExecuted": false,
+            "isSuccessful": null,
+            "ethGasPrice": null,
+            "gasUsed": null,
+            "fee": null,
+            "origin": "{\"url\":\"https://localhost:3000/\",\"name\":\"ETH Wrapper\"}",
+            "dataDecoded": null,
+            "confirmationsRequired": null,
+            "confirmations": [
+                {
+                    "owner": "0xBe8C10Dbf4c6148f9834C56C3331f8191f355552",
+                    "submissionDate": "2021-03-26T10:46:32.878135Z",
+                    "transactionHash": null,
+                    "signature": "0x778bff3b86a22d9fe5544fed8253c603f3749ff43a26124c1209328ceb5b691c237d98fa71cbe5ab2eb74a78dd98b5385e54da5464b06bcbaa580ee16b96320a1c",
+                    "signatureType": "EOA"
+                }
+            ],
+            "signatures": null
+        }
+    ],
+    "countUniqueNonce": 81
+}

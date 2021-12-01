@@ -1,5 +1,7 @@
-use crate::config::{chain_info_request_timeout, safe_info_request_timeout};
-use crate::routes::safes::models::{SafeInfoEx, SafeState};
+use crate::config::{
+    chain_info_request_timeout, safe_info_request_timeout, transaction_request_timeout,
+};
+use crate::routes::safes::models::SafeState;
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::ApiError;
 // use crate::utils::errors::{ApiError, ErrorDetails};
@@ -58,6 +60,67 @@ async fn get_safe_info() {
             })
         });
 
+    let mut request_last_collectible = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}\
+        /transfers/\
+        ?&erc721=true\
+        &limit=1",
+        safe_address
+    ));
+
+    request_last_collectible.timeout(Duration::from_millis(transaction_request_timeout()));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(request_last_collectible))
+        .returning(move |_| {
+            Ok(Response {
+                body: String::from(super::LAST_COLLECTIBLE_TRANSFER),
+                status_code: 200,
+            })
+        });
+
+    let mut request_last_queued_tx = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/\
+        multisig-transactions/?\
+        &ordering=-modified\
+        &executed=false\
+        &trusted=true\
+        &limit=1",
+        safe_address,
+    ));
+    request_last_queued_tx.timeout(Duration::from_millis(transaction_request_timeout()));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(request_last_queued_tx))
+        .returning(move |_| {
+            Ok(Response {
+                body: String::from(super::LAST_QUEUED_TX),
+                status_code: 200,
+            })
+        });
+
+    let mut request_last_history_tx = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/\
+        all-transactions/?\
+        &ordering=executionDate
+        &queued=false\
+        &executed=true",
+        safe_address
+    ));
+    request_last_history_tx.timeout(Duration::from_millis(transaction_request_timeout()));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(request_last_history_tx))
+        .returning(move |_| {
+            Ok(Response {
+                body: String::from(super::LAST_HISTORY_TX),
+                status_code: 200,
+            })
+        });
+
     mock_http_client.expect_get().returning(move |_| {
         Err(ApiError::from_http_response(&Response {
             body: String::new(),
@@ -71,7 +134,7 @@ async fn get_safe_info() {
     ))
     .await
     .expect("valid rocket instance");
-    let expected = serde_json::from_str::<SafeInfoEx>(super::SAFE_CONFIG).unwrap();
+    let expected = serde_json::from_str::<SafeState>(super::SAFE_STATE).unwrap();
 
     let request = client
         .get("/v1/chains/4/safes/0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f")
@@ -82,12 +145,10 @@ async fn get_safe_info() {
 
     let actual_status = response.status();
     let actual_json_body = response.into_string().await.unwrap();
-    println!("{:#?}", &actual_json_body);
     let actual = serde_json::from_str::<SafeState>(&actual_json_body).unwrap();
 
     assert_eq!(actual_status, Status::Ok);
-    assert_eq!(actual.safe_config, expected);
-    log::error!("{:#?}", actual);
+    assert_eq!(actual, expected);
 }
 
 #[rocket::async_test]

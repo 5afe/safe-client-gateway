@@ -12,6 +12,10 @@
     "authentication": "API_KEY_PATH",
     "value": "https://someurl.com/rpc/apps"
   },
+  "publicRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc/public"
+  },
   "blockExplorerUriTemplate": {
     "address": "https://blockexplorer.com/{{address}}",
     "txHash": "https://blockexplorer.com/{{txHash}}",

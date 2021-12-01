@@ -66,7 +66,6 @@ async fn fetch_estimation(
 async fn fetch_latest_nonce(client: Arc<dyn HttpClient>, request_url: String) -> ApiResult<u64> {
     let request = Request::new(request_url);
     let latest_multisig_tx_response = client.get(request).await?;
-
     let nonce = serde_json::from_str::<Page<BackendMultisigTransaction>>(
         &latest_multisig_tx_response.body,
     )?

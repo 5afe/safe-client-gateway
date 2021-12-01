@@ -2,9 +2,7 @@ use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::{MultisigTransaction, Transaction};
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::page::{Page, SafeList};
-use crate::config::{
-    default_request_timeout, owners_for_safes_cache_duration, transaction_request_timeout,
-};
+use crate::config::{owners_for_safes_cache_duration, transaction_request_timeout};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeLastChanges, SafeState};
 use crate::utils::context::RequestContext;
@@ -150,9 +148,8 @@ pub async fn get_owners_for_safe(
 ) -> ApiResult<SafeList> {
     let info_provider = DefaultInfoProvider::new(&chain_id, context);
 
-    let url = core_uri!(info_provider, "/v1/owners/{}/safes", owner_address)?;
+    let url = core_uri!(info_provider, "/v1/owners/{}/safes/", owner_address)?;
     let body = RequestCached::new_from_context(url, context)
-        .request_timeout(default_request_timeout())
         .cache_duration(owners_for_safes_cache_duration())
         .execute()
         .await?;

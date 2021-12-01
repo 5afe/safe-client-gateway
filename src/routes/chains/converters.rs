@@ -16,9 +16,9 @@ impl From<BackendChainInfo> for ServiceChainInfo {
             short_name: chain_info.short_name,
             l2: chain_info.l2,
             description: chain_info.description,
-            rpc_uri: ServiceRpcUri::from(chain_info.rpc_uri),
-            safe_apps_rpc_uri: ServiceRpcUri::from(chain_info.safe_apps_rpc_uri),
-            public_rpc_uri: ServiceRpcUri::from(chain_info.public_rpc_uri),
+            rpc_uri: chain_info.rpc_uri.into(),
+            safe_apps_rpc_uri: chain_info.safe_apps_rpc_uri.into(),
+            public_rpc_uri: chain_info.public_rpc_uri.into(),
             block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
                 address: chain_info.block_explorer_uri_template.address,
                 tx_hash: chain_info.block_explorer_uri_template.tx_hash,

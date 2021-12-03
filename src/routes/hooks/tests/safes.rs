@@ -384,7 +384,7 @@ async fn to_safe_info_ex_nullable_fields_are_all_null() {
 #[rocket::async_test]
 async fn to_safe_info_guard_and_fallback_handler_defined() {
     let safe_info =
-        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_GUARD_SAFE_V130).unwrap();
+        serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_GUARD_SAFE_V130_L2).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_address_ex_from_contracts()

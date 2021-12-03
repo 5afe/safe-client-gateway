@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::common::models::backend::transactions::{
     MultisigTransaction as BackendMultisigTransaction,
     SafeTransactionEstimation as BackendSafeTransactionEstimation,
@@ -7,7 +9,7 @@ use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeTransactionEstimation, SafeTransactionEstimationRequest};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use crate::utils::http_client::Request;
+use crate::utils::http_client::{HttpClient, Request};
 
 pub async fn estimate_safe_tx_gas(
     context: &RequestContext,
@@ -27,9 +29,9 @@ pub async fn estimate_safe_tx_gas(
         safe_address
     )?;
 
-    let latest_nonce = fetch_latest_nonce(&context, latest_multisig_tx_url).await?;
+    let latest_nonce = fetch_latest_nonce(context.http_client(), latest_multisig_tx_url).await?;
     let safe_tx_gas = fetch_estimation(
-        &context,
+        context.http_client(),
         estimation_url,
         safe_transaction_estimation_request,
     )
@@ -42,11 +44,10 @@ pub async fn estimate_safe_tx_gas(
 }
 
 async fn fetch_estimation(
-    context: &RequestContext,
+    client: Arc<dyn HttpClient>,
     request_url: String,
     safe_transaction_estimation_request: &SafeTransactionEstimationRequest,
 ) -> ApiResult<String> {
-    let client = context.http_client();
     let request = {
         let mut request = Request::new(request_url);
         request.body(Some(serde_json::to_string(
@@ -62,11 +63,9 @@ async fn fetch_estimation(
     )
 }
 
-async fn fetch_latest_nonce(context: &RequestContext, request_url: String) -> ApiResult<u64> {
-    let client = context.http_client();
+async fn fetch_latest_nonce(client: Arc<dyn HttpClient>, request_url: String) -> ApiResult<u64> {
     let request = Request::new(request_url);
     let latest_multisig_tx_response = client.get(request).await?;
-
     let nonce = serde_json::from_str::<Page<BackendMultisigTransaction>>(
         &latest_multisig_tx_response.body,
     )?

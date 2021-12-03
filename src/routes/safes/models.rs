@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Deserialize))]
 pub struct SafeInfoEx {
     pub address: AddressEx,
     pub chain_id: String,
@@ -20,6 +21,7 @@ pub struct SafeInfoEx {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Deserialize))]
 pub struct SafeLastChanges {
     pub collectibles_tag: String,
     pub tx_queued_tag: String,
@@ -28,6 +30,7 @@ pub struct SafeLastChanges {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Deserialize))]
 pub struct SafeState {
     #[serde(flatten)]
     pub safe_config: SafeInfoEx,
@@ -37,6 +40,7 @@ pub struct SafeState {
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[cfg_attr(test, derive(Deserialize))]
 pub enum ImplementationVersionState {
     UpToDate,
     Outdated,
@@ -61,6 +65,7 @@ pub struct SafeTransactionEstimationRequest {
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Deserialize, PartialEq))]
 pub struct SafeTransactionEstimation {
     pub latest_nonce: u64,
     pub safe_tx_gas: String,

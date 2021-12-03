@@ -2,9 +2,7 @@ use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::{MultisigTransaction, Transaction};
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::page::{Page, SafeList};
-use crate::config::{
-    default_request_timeout, owners_for_safes_cache_duration, transaction_request_timeout,
-};
+use crate::config::{owners_for_safes_cache_duration, transaction_request_timeout};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeLastChanges, SafeState};
 use crate::utils::context::RequestContext;
@@ -28,9 +26,9 @@ pub async fn get_safe_info_ex(
         .await;
 
     let (collectibles_tag, tx_queued_tag, tx_history_tag) = join!(
-        get_last_collectible(context, &info_provider, safe_address),
-        get_last_queued_tx(context, &info_provider, safe_address),
-        get_last_history_tx(context, &info_provider, safe_address)
+        get_last_collectible(&info_provider, safe_address),
+        get_last_queued_tx(&info_provider, safe_address),
+        get_last_history_tx(&info_provider, safe_address)
     );
 
     let safe_state = SafeState {
@@ -48,7 +46,6 @@ pub async fn get_safe_info_ex(
 }
 
 async fn get_last_collectible(
-    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -60,7 +57,7 @@ async fn get_last_collectible(
         safe_address,
     )?;
 
-    let body = RequestCached::new_from_context(url, &context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
@@ -80,7 +77,6 @@ async fn get_last_collectible(
 }
 
 async fn get_last_queued_tx(
-    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -94,7 +90,7 @@ async fn get_last_queued_tx(
         safe_address,
     )?;
 
-    let body = RequestCached::new_from_context(url, &context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
@@ -110,7 +106,6 @@ async fn get_last_queued_tx(
 }
 
 async fn get_last_history_tx(
-    context: &RequestContext,
     info_provider: &impl InfoProvider,
     safe_address: &String,
 ) -> ApiResult<i64> {
@@ -123,7 +118,7 @@ async fn get_last_history_tx(
         safe_address
     )?;
 
-    let body = RequestCached::new_from_context(url, &context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
@@ -153,9 +148,8 @@ pub async fn get_owners_for_safe(
 ) -> ApiResult<SafeList> {
     let info_provider = DefaultInfoProvider::new(&chain_id, context);
 
-    let url = core_uri!(info_provider, "/v1/owners/{}/safes", owner_address)?;
+    let url = core_uri!(info_provider, "/v1/owners/{}/safes/", owner_address)?;
     let body = RequestCached::new_from_context(url, context)
-        .request_timeout(default_request_timeout())
         .cache_duration(owners_for_safes_cache_duration())
         .execute()
         .await?;

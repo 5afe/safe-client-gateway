@@ -65,12 +65,18 @@
 <span id="65">65</span>
 <span id="66">66</span>
 <span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded::Operation</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Deserialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeInfoEx</span> {
     <span class="kw">pub</span> <span class="ident">address</span>: <span class="ident">AddressEx</span>,
     <span class="kw">pub</span> <span class="ident">chain_id</span>: <span class="ident">String</span>,
@@ -87,6 +93,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Deserialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeLastChanges</span> {
     <span class="kw">pub</span> <span class="ident">collectibles_tag</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">tx_queued_tag</span>: <span class="ident">String</span>,
@@ -95,6 +102,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Deserialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeState</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
     <span class="kw">pub</span> <span class="ident">safe_config</span>: <span class="ident">SafeInfoEx</span>,
@@ -104,6 +112,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Deserialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ImplementationVersionState</span> {
     <span class="ident">UpToDate</span>,
     <span class="ident">Outdated</span>,
@@ -128,6 +137,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeTransactionEstimation</span> {
     <span class="kw">pub</span> <span class="ident">latest_nonce</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">safe_tx_gas</span>: <span class="ident">String</span>,

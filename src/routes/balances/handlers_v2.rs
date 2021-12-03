@@ -1,3 +1,6 @@
+use std::cmp::Ordering;
+use std::str::FromStr;
+
 use bigdecimal::BigDecimal;
 use rocket::futures::{stream, StreamExt};
 
@@ -52,7 +55,7 @@ pub async fn balances(
     let token_prices: Vec<TokenPrice> =
         get_token_prices(context, &info_provider, &backend_balances).await;
 
-    let service_balances: Vec<Balance> = backend_balances
+    let mut service_balances: Vec<Balance> = backend_balances
         .iter()
         .map(|it| {
             let token_address: String = it
@@ -70,7 +73,14 @@ pub async fn balances(
             total_fiat += balance.fiat_balance.parse::<f64>().unwrap_or(0.0);
             balance
         })
-        .collect();
+        .collect::<Vec<Balance>>();
+
+    service_balances.sort_by(|b1, b2| {
+        BigDecimal::from_str(&b2.fiat_balance)
+            .unwrap()
+            .partial_cmp(&BigDecimal::from_str(&b1.fiat_balance).unwrap())
+            .unwrap_or(Ordering::Equal)
+    });
 
     Ok(Balances {
         fiat_total: total_fiat.to_string(),

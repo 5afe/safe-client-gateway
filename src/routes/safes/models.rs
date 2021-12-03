@@ -67,6 +67,7 @@ pub struct SafeTransactionEstimationRequest {
 #[serde(rename_all = "camelCase")]
 #[cfg_attr(test, derive(Deserialize, PartialEq))]
 pub struct SafeTransactionEstimation {
+    pub current_nonce: u64,
     pub latest_nonce: u64,
     pub safe_tx_gas: String,
 }

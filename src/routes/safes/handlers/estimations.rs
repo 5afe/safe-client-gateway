@@ -28,6 +28,7 @@ pub async fn estimate_safe_tx_gas(
         "/v1/safes/{}/multisig-transactions/?ordering=-nonce&trusted=true&limit=1",
         safe_address
     )?;
+    let current_nonce = info_provider.safe_info(safe_address).await?.nonce;
 
     let latest_nonce = fetch_latest_nonce(context.http_client(), latest_multisig_tx_url).await?;
     let safe_tx_gas = fetch_estimation(
@@ -38,6 +39,7 @@ pub async fn estimate_safe_tx_gas(
     .await?;
 
     Ok(SafeTransactionEstimation {
+        current_nonce,
         latest_nonce,
         safe_tx_gas,
     })

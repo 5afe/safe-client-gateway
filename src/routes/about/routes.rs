@@ -1,15 +1,19 @@
+use rocket::response::content;
+
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::{about_cache_duration, webhook_token};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::handlers;
+use crate::routes::about::models::About;
+use crate::routes::about::models::ChainAbout;
+use crate::routes::safes::models::Implementation;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
-use rocket::response::content;
 
 /**
  * `/v1/chains/<chain_id>/about` <br />
- * Returns [ChainAbout](crate::routes::about::models::ChainAbout)
+ * Returns [ChainAbout]
  *
  * # Chain's About
  *
@@ -37,7 +41,7 @@ pub async fn get_chains_about(
 
 /**
  * `/about` <br />
- * [About](crate::routes::about::models::About)
+ * Returns [About]
  *
  * # About
  *
@@ -52,13 +56,14 @@ pub async fn get_chains_about(
 pub async fn get_about() -> ApiResult<content::Json<String>> {
     Ok(content::Json(serde_json::to_string(&handlers::about())?))
 }
+
 /**
  * `/v1/chains/<chain_id>/about/master-copies` <br />
- * Returns a list of `MasterCopy`
+ * Returns a list of [`MasterCopy`](Implementation)
  *
  * # Master Copies
  *
- * This endpoint returns a list of `MasterCopy` objects just as documented in the core services
+ * This endpoint returns a list of [`MasterCopy`](Implementation) objects just as documented in the core services
  *
  * ## Path
  *

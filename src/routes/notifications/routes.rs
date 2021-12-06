@@ -1,19 +1,21 @@
-use crate::routes::notifications::handlers::{delete_registration, post_registration};
-use crate::routes::notifications::models::NotificationRegistrationRequest;
-use crate::utils::context::RequestContext;
-use crate::utils::errors::ApiResult;
 use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
+use crate::routes::notifications::handlers::{delete_registration, post_registration};
+use crate::routes::notifications::models::NotificationRegistrationRequest;
+use crate::routes::notifications::models::SafeRegistration;
+use crate::utils::context::RequestContext;
+use crate::utils::errors::ApiResult;
+
 /**
  * `/v1/register/notifications` <br />
- * Returns `()`
+ * Returns empty body
  *
  * # Register notifications
  *
  * This endpoint provides a way for registering devices for push notifications.
  *
- * One can subscribe to as many safes in different chains as [SafeRegistration](crate::routes::notifications::models::SafeRegistration) provided in the payload
+ * One can subscribe to as many safes in different chains as [SafeRegistration] provided in the payload
  *
  * ## Path
  *
@@ -37,7 +39,7 @@ pub async fn post_notification_registration<'e>(
 
 /**
  * `/v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>` <br />
- * Returns `()`
+ * Returns empty body
  *
  * # Unregister notifications
  *

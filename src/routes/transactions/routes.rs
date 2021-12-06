@@ -1,21 +1,34 @@
-use crate::cache::cache_operations::CacheResponse;
-use crate::routes::transactions::handlers::{details, history, proposal, queued};
-use crate::routes::transactions::models::requests::{
-    ConfirmationRequest, MultisigTransactionRequest,
-};
-use crate::utils::context::RequestContext;
-use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
+use crate::cache::cache_operations::CacheResponse;
+use crate::common::models::page::Page;
+use crate::routes::transactions::handlers::{details, history, proposal, queued};
+use crate::routes::transactions::models::details::TransactionDetails;
+use crate::routes::transactions::models::requests::{
+    ConfirmationRequest, MultisigTransactionRequest,
+};
+use crate::routes::transactions::models::summary::ConflictType;
+use crate::routes::transactions::models::summary::ConflictType::End;
+use crate::routes::transactions::models::summary::ConflictType::HasNext;
+use crate::routes::transactions::models::summary::Label::Next;
+use crate::routes::transactions::models::summary::Label::Queued;
+use crate::routes::transactions::models::summary::TransactionListItem;
+use crate::routes::transactions::models::summary::TransactionListItem::ConflictHeader;
+use crate::routes::transactions::models::summary::TransactionListItem::Label;
+use crate::routes::transactions::models::summary::TransactionListItem::Transaction;
+use crate::routes::transactions::models::summary::TransactionSummary;
+use crate::utils::context::RequestContext;
+use crate::utils::errors::ApiResult;
+
 /**
  * `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
- * Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
+ * Returns [TransactionDetails]
  *
  * # Transaction Details
  *
- * The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
+ * The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object [TransactionDetails]
  *
  * ## Path
  *
@@ -41,7 +54,7 @@ pub async fn get_transactions(
 
 /**
  * `/v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations` <br />
- * Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
+ * Returns [TransactionDetails]
  *
  * # Transaction Confirmation
  *
@@ -53,7 +66,7 @@ pub async fn get_transactions(
  *
  * `POST /v1/chains/<chain_id>/transactions/<safe_tx_hash>/confirmations`
  *
- * The expected (ConfirmationRequest)[crate::routes::transactions::models::requests::ConfirmationRequest] body for this request, as well as the returned (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
+ * The expected (ConfirmationRequest)[] body for this request, as well as the returned [TransactionDetails]
  *
  * ## Query parameters
  *
@@ -89,7 +102,7 @@ pub async fn post_confirmation<'e>(
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/history?<cursor>&<timezone_offset>&<trusted>` <br />
- * Returns a [Page](crate::common::models::page::Page) of [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
+ * Returns a [Page] of [TransactionListItem]
  *
  * # Transactions History
  *
@@ -97,7 +110,7 @@ pub async fn post_confirmation<'e>(
  * transactions will not be shown in this endpoint. Therefore, there is no concept of conflicting `nonces`
  * for this endpoint, as there could potentially be for queued transactions.
  *
- * This endpoint does not return any `TransactionListItem::Label` nor `TransactionListItem::ConflictHeader`
+ * This endpoint does not return any [TransactionListItem::Label] nor [TransactionListItem::ConflictHeader]
  * as of the writing of this iteration of this document.
  *
  * Transaction are aggregated by day and for each day there is a `TransactionListItem::DateLabel` added.
@@ -105,9 +118,9 @@ pub async fn post_confirmation<'e>(
  * The dates are returned in UTC, in a later iteration this will be offset by the `timezone_offset`
  * sent by the clients in the query parameter.
  *
- * `TransactionListItem::Transaction` is returned with the same data layout as in the `/transactions/queued` endpoint.
+ * [TransactionListItem::Transaction] is returned with the same data layout as in the `/transactions/queued` endpoint.
  *
- * The structure of the `transaction` object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
+ * The structure of the `transaction` object corresponds to that of a [TransactionSummary]
  *
  * ## Path
  *
@@ -144,23 +157,23 @@ pub async fn get_transactions_history(
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>` <br />
- * Returns a [Page](crate::common::models::page::Page) of  [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
+ * Returns a [Page] of [TransactionListItem]
  *
  * # Transactions Queued
  *
- * This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a `Next` marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren't any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.
+ * This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a [Next] marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren't any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.
  *
- * Additionally to the `Next` marker, there is also `Queued`. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the `Next` section of the list, a `ConflictHeader` will be introduced for any group of transactions sharing the same `nonce`.
+ * Additionally to the [Next] marker, there is also [Queued]. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the [Next] section of the list, a [ConflictHeader] will be introduced for any group of transactions sharing the same `nonce`.
  *
- * The structure of the transaction object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
+ * The structure of the transaction object corresponds to that of a [TransactionSummary]
  *
- * A `TransactionListItem` can be either a `Label` (containing either `Next` or `Queued`), `ConflictHeader` (with the conflicting `nonce`) and a `Transaction`, for which there is a `TransactionSummary` and a `ConflictType` associated. The conflict type can have `HasNext` or `End` value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a `ConflictType::End`.
+ * A [TransactionListItem] can be either a [Label] (containing either [Next] or [Queued]), [ConflictHeader] (with the conflicting `nonce`) and a [Transaction], for which there is a [TransactionSummary] and a [ConflictType] associated. The conflict type can have [HasNext] or [End] value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a [ConflictType::End].
  *
  * ## Path
  *
  * `GET /v1/chains/<chain_id>/safes/<safe_address>/transactions/queued?<cursor>&<timezone_offset>&<trusted>`
  *
- * The response is a list of (TransactionListItem)[crate::routes::transactions::models::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
+ * The response is a list of [TransactionListItem].
  *
  * ## Query parameters
  *
@@ -195,7 +208,7 @@ pub async fn get_transactions_queued(
 
 /**
  * `/v1/chains/<chain_id>/transactions/<safe_address>/propose` <br />
- * returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
+ * returns [TransactionDetails]
  *
  * # Transaction Proposal
  *
@@ -206,7 +219,7 @@ pub async fn get_transactions_queued(
  *
  * `POST /v1/chains/<chain_id>/transactions/<safe_address>/propose`
  *
- * The expected (MultisigTransactionRequest)[crate::routes::transactions::models::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
+ * See [MultisigTransactionRequest] for the expected body for this request
  *
  * ## Query parameters
  *

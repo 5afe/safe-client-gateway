@@ -1,17 +1,20 @@
-use crate::cache::cache_operations::CacheResponse;
-use crate::config::owners_for_safes_cache_duration;
-use crate::routes::safes::handlers::estimations;
-use crate::routes::safes::handlers::safes::{get_owners_for_safe, get_safe_info_ex};
-use crate::routes::safes::models::SafeTransactionEstimationRequest;
-use crate::utils::context::RequestContext;
-use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
+use crate::cache::cache_operations::CacheResponse;
+use crate::config::owners_for_safes_cache_duration;
+use crate::routes::safes::handlers::estimations;
+use crate::routes::safes::handlers::safes::{get_owners_for_safe, get_safe_info_ex};
+use crate::routes::safes::models::SafeState;
+use crate::routes::safes::models::SafeTransactionEstimation;
+use crate::routes::safes::models::SafeTransactionEstimationRequest;
+use crate::utils::context::RequestContext;
+use crate::utils::errors::ApiResult;
+
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>` <br />
- * Returns [SafeState](crate::routes::safes::models::SafeState)
+ * Returns [SafeState]
  */
 #[get("/v1/chains/<chain_id>/safes/<safe_address>")]
 pub async fn get_safe_info(
@@ -27,7 +30,7 @@ pub async fn get_safe_info(
 
 /**
  * `/v1/chains/<chain_id>/owners/<safe_address>/safes` <br/>
- * Returns [Vec] of [String]
+ * Returns [`Vec<String>`](Vec)
  *
  * Returns a list of Safes for which the address is an owner
  */
@@ -46,7 +49,7 @@ pub async fn get_owners(
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations` <br />
- * Returns [SafeTransactionEstimation](crate::routes::safes::models::SafeTransactionEstimation)
+ * Returns [SafeTransactionEstimation]
  *
  * # Safe Gas Estimation
  *

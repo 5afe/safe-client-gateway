@@ -1,11 +1,13 @@
+use rocket::response::content;
+
 use crate::routes::safe_apps::handlers::safe_apps;
+use crate::routes::safe_apps::models::SafeApp;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use rocket::response::content;
 
 /**
  * `/v1/chains/<chain_id>/safe-apps` <br />
- * Returns [SafeApp](crate::routes::safe_apps::models::SafeApp)
+ * Returns [SafeApp]
  *
  * # Safe Apps
  *

@@ -1,21 +1,24 @@
-use crate::cache::cache_operations::CacheResponse;
-use crate::routes::contracts::handlers;
-use crate::routes::contracts::models::DataDecoderRequest;
-use crate::utils::context::RequestContext;
-use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Error;
 use rocket::serde::json::Json;
 
+use crate::cache::cache_operations::CacheResponse;
+use crate::common::models::data_decoded::DataDecoded;
+use crate::providers::address_info::ContractInfo;
+use crate::routes::contracts::handlers;
+use crate::routes::contracts::models::DataDecoderRequest;
+use crate::utils::context::RequestContext;
+use crate::utils::errors::ApiResult;
+
 /**
  * `/v1/chains/<chain_id>/data-decoder` <br/>
- * Returns [DataDecoded](crate::common::models::data_decoded::DataDecoded)
+ * Returns [DataDecoded]
  *
  * # Data Decoder
  *
  * This endpoint requires the client to send in the body of the request a hexadecimal `String` containing the `data` field of a transaction for decoding
  *
- * The result is of the type [DataDecoded](crate::common::models::data_decoded::DataDecoded)
+ * The result is of the type [DataDecoded]
  *
  * ## Path
  *
@@ -68,18 +71,18 @@ pub async fn post_data_decoder<'e>(
 
 /**
  * `/v1/chains/<chain_id>/contracts/<address>` <br/>
- * Returns [ContractInfo](crate::providers::address_info::ContractInfo)
+ * Returns [ContractInfo]
  *
  * # Contract Info
  *
  * This endpoint is chain dependant and returns the details of a Contract such as: name, logoUri, ABI, among others
  *
- * The result is of the type [ContractInfo](crate::providers::address_info::ContractInfo)
+ * The result is of the type [ContractInfo]
  *
  * ## Path
  *
  * - `GET /v1/chains/<chain_id>/contract/<contract_address>`
-**/
+ **/
 #[get("/v1/chains/<chain_id>/contracts/<contract_address>")]
 pub async fn get_contract(
     context: RequestContext,

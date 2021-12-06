@@ -6,16 +6,17 @@ use crate::config::{balances_cache_duration, feature_flag_balances_rate_implemen
 use crate::routes::balances::handlers;
 use crate::routes::balances::handlers::fiat_codes;
 use crate::routes::balances::handlers_v2;
+use crate::routes::balances::models::Balances;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
 /**
  * `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
- * Returns [Balances](crate::routes::balances::models::Balances)
+ * Returns [Balances]
  *
  * # Balances
  *
- * This endpoint returns the [Balances](crate::routes::balances::models::Balances) with information (when available) of their converted balance into a designated fiat. The entries are sorted by their fiat balance value.
+ * This endpoint returns the [Balances] with information (when available) of their converted balance into a designated fiat. The entries are sorted by their fiat balance value.
  *
  * The `fiat_code` can be selected from any of the values returned by the supported fiat endpoint.
  *
@@ -70,7 +71,7 @@ pub async fn get_balances(
 
 /**
  * `/v1/balances/supported-fiat-codes` <br/>
- * Returns [Vec] of [String]
+ * Returns [`Vec<String>`](Vec)
  *
  * Supported fiat codes for balances
  * `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `<fiat>` segment of the balance endpoint.

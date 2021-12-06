@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Delegate {
-    safe: String,
+    safe: Option<String>,
     delegate: String,
     delegator: String,
     label: String,

@@ -22,8 +22,8 @@ impl MultisigTransaction {
             .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
         let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
-
         Ok(TransactionDetails {
+            tx_id: self.generate_id(),
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
             tx_info: self.transaction_info(info_provider).await,
@@ -126,6 +126,7 @@ impl ModuleTransaction {
             .address_ex_from_contracts_or_default(&self.module)
             .await;
         Ok(TransactionDetails {
+            tx_id: self.generate_id(),
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),
             tx_info: self.transaction_info(info_provider).await,

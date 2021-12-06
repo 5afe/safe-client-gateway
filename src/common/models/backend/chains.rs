@@ -12,11 +12,15 @@ pub struct ChainInfo {
     pub l2: bool,
     pub description: String,
     pub rpc_uri: RpcUri,
+    pub safe_apps_rpc_uri: RpcUri,
+    pub public_rpc_uri: RpcUri,
     pub block_explorer_uri_template: BlockExplorerUriTemplate,
     pub native_currency: NativeCurrency,
     pub theme: Theme,
     pub ens_registry_address: Option<String>,
     pub gas_price: Vec<GasPrice>,
+    pub disabled_wallets: Vec<String>,
+    pub features: Vec<String>,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]
@@ -72,4 +76,5 @@ pub enum RpcAuthentication {
 pub struct BlockExplorerUriTemplate {
     pub address: String,
     pub tx_hash: String,
+    pub api: String,
 }

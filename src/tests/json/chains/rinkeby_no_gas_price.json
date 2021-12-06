@@ -8,9 +8,18 @@
     "authentication": "API_KEY_PATH",
     "value": "https://someurl.com/rpc"
   },
+  "safeAppsRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc/apps"
+  },
+  "publicRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc/public"
+  },
   "blockExplorerUriTemplate": {
     "address": "https://blockexplorer.com/{{address}}",
-    "txHash": "https://blockexplorer.com/{{txHash}}"
+    "txHash": "https://blockexplorer.com/{{txHash}}",
+    "api": "https://blockexplorer.com/api"
   },
   "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
   "vpcTransactionService": "http://rinkeby-safe-transaction-web.safe.svc.cluster.local",
@@ -26,5 +35,7 @@
   },
   "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
   "gasPrice": [],
-  "recommendedMasterCopyVersion": "1.1.1"
+  "recommendedMasterCopyVersion": "1.1.1",
+  "disabledWallets": [],
+  "features": []
 }

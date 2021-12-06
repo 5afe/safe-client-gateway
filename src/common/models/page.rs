@@ -15,6 +15,7 @@ pub struct PageMetadata {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[cfg_attr(test, derive(PartialEq))]
 pub struct SafeList {
     safes: Vec<String>,
 }

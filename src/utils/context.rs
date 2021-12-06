@@ -19,21 +19,21 @@ impl RequestContext {
     pub fn cache(&self) -> Arc<dyn Cache> {
         self.cache.clone()
     }
-}
 
-#[cfg(test)]
-impl RequestContext {
-    pub fn mock(
+    #[cfg(test)]
+    pub fn setup_for_test(
         request_id: String,
         host: String,
-        mock_http_client: crate::utils::http_client::MockHttpClient,
-        mock_cache: crate::cache::MockCache,
+        http_client: &Arc<dyn HttpClient>,
+        cache: &Arc<dyn Cache>,
     ) -> Self {
+        cache.invalidate_pattern("*");
+
         RequestContext {
             request_id,
             host,
-            http_client: Arc::new(mock_http_client),
-            cache: Arc::new(mock_cache),
+            http_client: http_client.clone(),
+            cache: cache.clone(),
         }
     }
 }

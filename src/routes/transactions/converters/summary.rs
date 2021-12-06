@@ -51,11 +51,7 @@ impl MultisigTransaction {
             None
         };
         Ok(vec![TransactionSummary {
-            id: create_id!(
-                super::super::models::ID_PREFIX_MULTISIG_TX,
-                &self.safe_transaction.safe,
-                self.safe_tx_hash
-            ),
+            id: self.generate_id(),
             timestamp: self
                 .execution_date
                 .unwrap_or(self.submission_date)
@@ -82,7 +78,7 @@ impl MultisigTransaction {
 impl EthereumTransaction {
     pub(super) async fn to_transaction_summary(
         &self,
-        info_provider: &impl InfoProvider,
+        info_provider: &(impl InfoProvider + Sync),
         safe_address: &str,
     ) -> Vec<TransactionSummary> {
         match &self.transfers {
@@ -91,12 +87,7 @@ impl EthereumTransaction {
 
                 for transfer in transfers {
                     let transaction_summary = TransactionSummary {
-                        id: create_id!(
-                            super::super::models::ID_PREFIX_ETHEREUM_TX,
-                            safe_address,
-                            self.tx_hash,
-                            hex_hash(transfer)
-                        ),
+                        id: self.generate_id(safe_address, &hex_hash(transfer)),
                         timestamp: self.execution_date.timestamp_millis(),
                         tx_status: TransactionStatus::Success,
                         execution_info: None,
@@ -122,12 +113,7 @@ impl ModuleTransaction {
             .address_ex_from_contracts_or_default(&self.module)
             .await;
         vec![TransactionSummary {
-            id: create_id!(
-                super::super::models::ID_PREFIX_MODULE_TX,
-                self.safe_transaction.safe,
-                self.transaction_hash,
-                hex_hash(self)
-            ),
+            id: self.generate_id(),
             timestamp: self.execution_date.timestamp_millis(),
             tx_status: self.map_status(),
             execution_info: Some(ExecutionInfo::Module(ModuleExecutionInfo {
@@ -142,11 +128,11 @@ impl ModuleTransaction {
 impl CreationTransaction {
     pub async fn to_transaction_summary(
         &self,
-        safe_address: &String,
+        safe_address: &str,
         info_provider: &(impl InfoProvider + Sync),
     ) -> TransactionSummary {
         TransactionSummary {
-            id: create_id!(super::super::models::ID_PREFIX_CREATION_TX, safe_address),
+            id: self.generate_id(safe_address),
             timestamp: self.created.timestamp_millis(),
             tx_status: TransactionStatus::Success,
             tx_info: TransactionInfo::Creation(Creation {

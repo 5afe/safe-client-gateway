@@ -1,18 +1,22 @@
+use std::cmp::Ordering;
+use std::str::FromStr;
+
+use bigdecimal::BigDecimal;
+use rocket::futures::{stream, StreamExt};
+
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::balances_v2::Balance as BalanceDto;
 use crate::common::models::backend::balances_v2::TokenPrice as BackendTokenPrice;
 use crate::common::models::backend::chains::NativeCurrency;
 use crate::config::{
-    balances_cache_duration, balances_request_timeout, concurrent_balance_token_requests,
-    token_price_cache_duration,
+    balances_core_request_cache_duration, balances_request_timeout,
+    concurrent_balance_token_requests, token_price_cache_duration,
 };
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::balances::models::{Balance, Balances, TokenPrice};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use bigdecimal::BigDecimal;
-use rocket::futures::{stream, StreamExt};
 
 pub async fn balances(
     context: &RequestContext,
@@ -26,14 +30,14 @@ pub async fn balances(
     let fiat_info_provider = FiatInfoProvider::new(context);
     let url = core_uri!(
         info_provider,
-        "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
+        "/v1/safes/{}/balances/?trusted={}&exclude_spam={}",
         safe_address,
         trusted,
         exclude_spam
     )?;
 
     let body = RequestCached::new_from_context(url, context)
-        .cache_duration(balances_cache_duration())
+        .cache_duration(balances_core_request_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()
         .await?;
@@ -51,7 +55,7 @@ pub async fn balances(
     let token_prices: Vec<TokenPrice> =
         get_token_prices(context, &info_provider, &backend_balances).await;
 
-    let service_balances: Vec<Balance> = backend_balances
+    let mut service_balances: Vec<Balance> = backend_balances
         .iter()
         .map(|it| {
             let token_address: String = it
@@ -69,7 +73,14 @@ pub async fn balances(
             total_fiat += balance.fiat_balance.parse::<f64>().unwrap_or(0.0);
             balance
         })
-        .collect();
+        .collect::<Vec<Balance>>();
+
+    service_balances.sort_by(|b1, b2| {
+        BigDecimal::from_str(&b2.fiat_balance)
+            .unwrap()
+            .partial_cmp(&BigDecimal::from_str(&b1.fiat_balance).unwrap())
+            .unwrap_or(Ordering::Equal)
+    });
 
     Ok(Balances {
         fiat_total: total_fiat.to_string(),
@@ -106,7 +117,7 @@ async fn get_token_prices(
         .await;
 }
 
-/// Gets the [TokenPrice] of the token with address [token_address] for the chain [chain_id]
+/// Gets the [TokenPrice] of the token with address `token_address` for the chain `chain_id`
 /// To retrieve the Native Currency fiat price of the chain (eg.: Ether), 0x0000000000000000000000000000000000000000 should be used
 ///
 /// # Arguments

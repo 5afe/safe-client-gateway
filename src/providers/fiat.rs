@@ -62,6 +62,7 @@ impl FiatInfoProvider {
             .error_cache_duration(short_error_duration())
             .execute()
             .await?;
-        Ok(serde_json::from_str::<Exchange>(&body)?)
+        serde_json::from_str::<Exchange>(&body)
+            .map_err(|_| api_error!("Unknown 'Exchange' json structure"))
     }
 }

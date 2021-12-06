@@ -1,5 +1,6 @@
 use crate::config::log_all_error_responses;
 use crate::utils::http_client::Response as HttpClientResponse;
+use reqwest::StatusCode;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
@@ -43,7 +44,7 @@ impl ApiError {
         Self::new(status_code, error_details)
     }
 
-    pub async fn from_http_response(response: &HttpClientResponse) -> Self {
+    pub fn from_http_response(response: &HttpClientResponse) -> Self {
         Self::new_from_message_with_code(response.status_code, response.body.to_string())
     }
 
@@ -133,11 +134,14 @@ impl<'r> Responder<'r, 'static> for ApiError {
 
 impl From<reqwest::Error> for ApiError {
     fn from(err: reqwest::Error) -> Self {
-        if err.is_timeout() {
-            Self::new_from_message_with_code(504, format!("{:?}", err))
+        // We first check if err.is_timeout because in case of timeout the default error code is 500
+        // However we want to map it to a GATEWAY_TIMEOUT (504)
+        let status_code = if err.is_timeout() {
+            StatusCode::GATEWAY_TIMEOUT
         } else {
-            Self::new_from_message(format!("{:?}", err))
-        }
+            err.status().unwrap_or(StatusCode::INTERNAL_SERVER_ERROR)
+        };
+        Self::new_from_message_with_code(status_code.as_u16(), format!("{:?}", err))
     }
 }
 

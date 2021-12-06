@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::{CacheResponse, InvalidationPattern, RequestCached};
 use crate::cache::inner_cache::CachedWithCode;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_RESP_PREFIX};
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
 use rocket::response::content;
 use serde::Serialize;
@@ -43,49 +43,38 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                 request.timeout(Duration::from_millis(operation.request_timeout));
                 request
             };
-
             let response = client.get(http_request).await;
 
             match response {
                 Err(error) => {
-                    if operation.cache_all_errors {
+                    let default_message: String = String::from("Unknown error");
+                    let response_body: &String =
+                        error.details.message.as_ref().unwrap_or(&default_message);
+                    // TODO extract http error range check (client error vs server error)
+                    let is_client_error = error.status >= 400 && error.status < 500;
+
+                    // If cache_all_errors is enabled we cache both client and server errors
+                    // else we just cache client errors
+                    if is_client_error || operation.cache_all_errors {
                         cache.create(
                             &cache_key,
-                            &CachedWithCode::join(500, &format!("{:?}", &error)),
+                            &CachedWithCode::join(error.status, &response_body),
                             operation.error_cache_duration,
                         );
                     }
-                    return Err(error);
+
+                    Err(error)
                 }
                 Ok(response) => {
                     let status_code = response.status_code;
-                    let is_server_error = response.is_server_error();
-                    let is_client_error = response.is_client_error();
                     let response_body = response.body;
 
-                    // Early return and no caching if the error is a 500 or greater
-                    if !operation.cache_all_errors && is_server_error {
-                        return Err(ApiError::from_backend_error(
-                            status_code,
-                            &format!("Got server error for {}", response_body),
-                        ));
-                    }
-
-                    if is_client_error || is_server_error {
-                        cache.create(
-                            &cache_key,
-                            &CachedWithCode::join(status_code, &response_body),
-                            operation.error_cache_duration,
-                        );
-                        Err(ApiError::from_backend_error(status_code, &response_body))
-                    } else {
-                        cache.create(
-                            &cache_key,
-                            &CachedWithCode::join(status_code, &response_body),
-                            operation.cache_duration,
-                        );
-                        Ok(response_body.to_string())
-                    }
+                    cache.create(
+                        &cache_key,
+                        &CachedWithCode::join(status_code, &response_body),
+                        operation.cache_duration,
+                    );
+                    Ok(response_body.to_string())
                 }
             }
         }

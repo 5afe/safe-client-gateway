@@ -54,7 +54,7 @@ pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
 pub const SAFE_WITH_THRESHOLD_TWO: &str = include_str!("safes/with_threshold_two.json");
 pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str =
     include_str!("safes/with_modules_and_high_nonce.json");
-pub const SAFE_WITH_GUARD_SAFE_V130: &str = include_str!("safes/with_guard_safe_v130.json");
+pub const SAFE_WITH_GUARD_SAFE_V130_L2: &str = include_str!("safes/with_guard_safe_v130_l2.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
 pub const ETHER_TRANSFER_INCOMING: &str = include_str!("transfers/ether_transfer_incoming.json");
@@ -74,6 +74,10 @@ pub const ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING: &str =
 pub const ERC_721_TRANSFER_WITH_TOKEN_INFO_OUTGOING: &str =
     include_str!("transfers/erc_721_transfer_with_token_info_outgoing.json");
 
+pub const CREATION_TX: &str = include_str!("transactions/creation_transaction.json");
+
+pub const BACKEND_MULTISIG_TRANSFER_TX: &str =
+    include_str!("transactions/backend_multisig_transfer_tx.json");
 pub const BACKEND_HISTORY_TRANSACTION_LIST_PAGE: &str =
     include_str!("transactions/backend_history_transaction_list_page.json");
 pub const BACKEND_QUEUED_TRANSACTION_LIST_PAGE_NO_CONFLICTS: &str =
@@ -89,6 +93,7 @@ pub const TOKEN_DAI: &str = include_str!("tokens/dai.json");
 pub const TOKEN_PV_MEMORIAL_TOKEN: &str = include_str!("tokens/pv_memorial_token.json");
 pub const TOKEN_BAT: &str = include_str!("tokens/bat.json");
 
+pub const DATA_DECODED_APPROVE: &str = include_str!("commons/data_decoded_approve.json");
 pub const DATA_DECODED_MULTI_SEND: &str = include_str!("commons/data_decoded_multi_send.json");
 pub const DATA_DECODED_ADD_OWNER_WITH_THRESHOLD: &str =
     include_str!("commons/data_decoded_add_owner_with_threshold.json");
@@ -135,7 +140,20 @@ pub const CHAIN_INFO_RINKEBY_RPC_NO_AUTHENTICATION: &str =
     include_str!("chains/rinkeby_rpc_no_auth.json");
 pub const CHAIN_INFO_RINKEBY_RPC_UNKNOWN_AUTHENTICATION: &str =
     include_str!("chains/rinkeby_rpc_auth_unknown.json");
+pub const CHAIN_INFO_RINKEBY_DISABLED_WALLETS: &str =
+    include_str!("chains/rinkeby_disabled_wallets.json");
+pub const CHAIN_INFO_RINKEBY_ENABLED_FEATURES: &str =
+    include_str!("chains/rinkeby_enabled_features.json");
 
 pub const POLYGON_SAFE_APPS: &str = include_str!("safe_apps/polygon_safe_apps.json");
+pub const UNISWAP_SAFE_APP_MANIFEST: &str = include_str!("safe_apps/uniswap_manifest.json");
 
 pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_master_copies.json");
+
+pub const COLLECTIBLES_PAGE: &str = include_str!("collectibles/collectibles_page.json");
+
+pub const EXCHANGE_CURRENCY_RATES: &str = include_str!("exchange/currency_rates.json");
+
+pub const CONTRACT_INFO_BID: &str = include_str!("contracts/contract_info_BID.json");
+
+pub const EMPTY_PAGE: &str = include_str!("commons/empty_page.json");

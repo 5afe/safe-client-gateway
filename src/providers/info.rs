@@ -48,6 +48,7 @@ pub enum TokenType {
 
 #[derive(Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(PartialEq))]
 pub struct SafeInfo {
     pub address: String,
     pub nonce: u64,
@@ -60,8 +61,9 @@ pub struct SafeInfo {
     pub version: Option<String>,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
 pub struct SafeAppInfo {
     pub name: String,
     pub url: String,
@@ -97,9 +99,14 @@ pub trait InfoProvider {
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
+    async fn contract_info(&self, contract_address: &str) -> ApiResult<ContractInfo>;
+
     async fn address_ex_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
     async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx>;
+
     fn chain_id(&self) -> &str;
+    fn client(&self) -> Arc<dyn HttpClient>;
+    fn cache(&self) -> Arc<dyn Cache>;
 }
 
 pub struct DefaultInfoProvider<'p> {
@@ -160,15 +167,20 @@ impl InfoProvider for DefaultInfoProvider<'_> {
         })
     }
 
-    async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx> {
-        let url = core_uri!(self, "/v1/contracts/{}/", address)?;
+    async fn contract_info(&self, contract_address: &str) -> ApiResult<ContractInfo> {
+        let url = core_uri!(self, "/v1/contracts/{}/", contract_address)?;
         let contract_info_json = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(address_info_cache_duration())
             .error_cache_duration(long_error_duration())
             .request_timeout(contract_info_request_timeout())
             .execute()
             .await?;
-        let contract_info = serde_json::from_str::<ContractInfo>(&contract_info_json)?;
+
+        Ok(serde_json::from_str::<ContractInfo>(&contract_info_json)?)
+    }
+
+    async fn address_ex_from_contracts(&self, address: &str) -> ApiResult<AddressEx> {
+        let contract_info = self.contract_info(address).await?;
         if contract_info.display_name.trim().is_empty() {
             bail!("No display name")
         } else {
@@ -189,6 +201,14 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             })
             .or_else(|_| async move { self.address_ex_from_contracts(&address).await })
             .await
+    }
+
+    fn client(&self) -> Arc<dyn HttpClient> {
+        self.client.clone()
+    }
+
+    fn cache(&self) -> Arc<dyn Cache> {
+        self.cache.clone()
     }
 }
 
@@ -287,7 +307,7 @@ impl DefaultInfoProvider<'_> {
     }
 
     async fn load_chain_info(&self) -> ApiResult<Option<ChainInfo>> {
-        let url = config_uri!("/v1/chains/{}", self.chain_id);
+        let url = config_uri!("/v1/chains/{}/", self.chain_id);
         let data = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(chain_info_cache_duration())
             .error_cache_duration(short_error_duration())

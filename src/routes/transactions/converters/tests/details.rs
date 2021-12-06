@@ -38,6 +38,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
         .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
+        tx_id: multisig_tx.generate_id(),
         executed_at: multisig_tx.execution_date.map(|it| it.timestamp_millis()),
         tx_status: TransactionStatus::Success,
         tx_hash: Some("0x0ebb2c317f55c96469e0ed2014f5833dc02a70b42f0ac52f4630938900caa698".to_string()),
@@ -141,6 +142,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
+        tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Success,
         tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
@@ -196,6 +198,7 @@ async fn module_transaction_to_transaction_details_success() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
+        tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Success,
         tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
@@ -247,6 +250,7 @@ async fn module_transaction_to_transaction_details_failed() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX_FAILED).unwrap();
 
     let expected = TransactionDetails {
+        tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Failed,
         tx_hash: Some("0x705167e310ef0acb80a5f73eb4f8e66cfb32a896ac9380f3eb43e68ef8603a9f".to_string()),
@@ -288,6 +292,7 @@ async fn ethereum_tx_transfer_to_transaction_details() {
     .unwrap();
 
     let expected = TransactionDetails {
+        tx_id: transfer.generate_id("0xBc79855178842FDBA0c353494895DEEf509E26bB", "0x317db9d079e46fef2f758e37bd20efb14d5c83e2510307079207bc6f04cdee48"),
         executed_at: Some(transfer.get_execution_time().unwrap()),
         tx_status: TransactionStatus::Success,
         tx_hash: Some(
@@ -322,6 +327,7 @@ async fn ethereum_tx_transfer_to_transaction_details() {
         &transfer,
         &mut mock_info_provider,
         "0xBc79855178842FDBA0c353494895DEEf509E26bB",
+        "0x317db9d079e46fef2f758e37bd20efb14d5c83e2510307079207bc6f04cdee48",
     )
     .await;
 
@@ -362,15 +368,14 @@ async fn multisig_transaction_with_origin() {
         .times(7) // 1 + 6 calls within data decoded multisig
         .returning(move |_| bail!("no address info"));
 
-    let mut expected = crate::tests::json::TX_DETAILS_WITH_ORIGIN.replace('\n', "");
-    expected.retain(|c| !c.is_whitespace());
+    let expected =
+        serde_json::from_str::<TransactionDetails>(crate::tests::json::TX_DETAILS_WITH_ORIGIN)
+            .unwrap();
 
     let actual =
         MultisigTransaction::to_transaction_details(&multisig_tx, None, &mut mock_info_provider)
             .await
             .unwrap();
 
-    let actual_json = serde_json::to_string(&actual).unwrap();
-
-    assert_eq!(expected, actual_json);
+    assert_eq!(expected, actual);
 }

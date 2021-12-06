@@ -177,6 +177,10 @@ async fn transfer_dto_to_transaction_details() {
         .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
+        tx_id: ether_transfer_dto.generate_id(
+            safe_address,
+            "0x41b610e8cce50bbe3aa06d6953ecc5f92a838aedc024a265c0afca7ec4f33bdf",
+        ),
         executed_at: Some(1597733631000),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
@@ -196,7 +200,11 @@ async fn transfer_dto_to_transaction_details() {
     };
 
     let actual = ether_transfer_dto
-        .to_transaction_details(&mut mock_info_provider, safe_address)
+        .to_transaction_details(
+            &mut mock_info_provider,
+            safe_address,
+            "0x41b610e8cce50bbe3aa06d6953ecc5f92a838aedc024a265c0afca7ec4f33bdf",
+        )
         .await
         .unwrap();
 

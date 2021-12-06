@@ -1,8 +1,10 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::routes::transactions::handlers::details::get_multisig_transaction_details;
+use crate::routes::transactions::models::details::TransactionDetails;
 use crate::routes::transactions::models::requests::MultisigTransactionRequest;
 use crate::utils::context::RequestContext;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
 use serde_json::json;
 
@@ -11,7 +13,7 @@ pub async fn submit_confirmation(
     chain_id: &str,
     safe_tx_hash: &str,
     signature: &str,
-) -> ApiResult<()> {
+) -> ApiResult<TransactionDetails> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
@@ -22,23 +24,18 @@ pub async fn submit_confirmation(
     let client = context.http_client();
     let request = {
         let mut request = Request::new(url);
-        request.body(Some(serde_json::from_value(json!({
-            "signature": signature
-        }))?));
+        request.body(Some(json!({ "signature": signature }).to_string()));
         request
     };
 
-    let response = client.post(request).await?;
-    if response.is_success() {
-        Invalidate::new(
-            InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
-            context.cache(),
-        )
-        .execute();
-        Ok(())
-    } else {
-        Err(ApiError::from_http_response(&response).await)
-    }
+    client.post(request).await?;
+    Invalidate::new(
+        InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
+        context.cache(),
+    )
+    .execute();
+
+    get_multisig_transaction_details(&info_provider, chain_id, safe_tx_hash).await
 }
 
 pub async fn propose_transaction(
@@ -60,24 +57,20 @@ pub async fn propose_transaction(
         request.body(Some(serde_json::to_string(&transaction_request)?));
         request
     };
-    let response = client.post(request).await?;
+    client.post(request).await?;
 
-    if response.is_success() {
-        Invalidate::new(
-            InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
-            context.cache(),
-        )
-        .execute();
-        Invalidate::new(
-            InvalidationPattern::Any(
-                InvalidationScope::Both,
-                String::from(&transaction_request.safe_tx_hash),
-            ),
-            context.cache(),
-        )
-        .execute();
-        Ok(())
-    } else {
-        Err(ApiError::from_http_response(&response).await)
-    }
+    Invalidate::new(
+        InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
+        context.cache(),
+    )
+    .execute();
+    Invalidate::new(
+        InvalidationPattern::Any(
+            InvalidationScope::Both,
+            String::from(&transaction_request.safe_tx_hash),
+        ),
+        context.cache(),
+    )
+    .execute();
+    Ok(())
 }

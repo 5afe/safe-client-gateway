@@ -5,7 +5,7 @@ use crate::routes::delegates::models::{
     Delegate, DelegateCreate, DelegateDelete, SafeDelegateDelete,
 };
 use crate::utils::context::RequestContext;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
 
 pub async fn get_delegates(
@@ -48,16 +48,8 @@ pub async fn post_delegate(
         request
     };
 
-    let response = context.http_client().post(request).await?;
-
-    return if response.is_success() {
-        Ok(())
-    } else {
-        Err(ApiError::new_from_message_with_code(
-            response.status_code,
-            String::from("Unexpected delegate creation error"),
-        ))
-    };
+    context.http_client().post(request).await?;
+    Ok(())
 }
 
 pub async fn delete_delegate(
@@ -75,16 +67,8 @@ pub async fn delete_delegate(
         request
     };
 
-    let response = context.http_client().delete(request).await?;
-
-    return if response.is_success() {
-        Ok(())
-    } else {
-        Err(ApiError::new_from_message_with_code(
-            response.status_code,
-            String::from("Unexpected delegate deletion error"),
-        ))
-    };
+    context.http_client().delete(request).await?;
+    Ok(())
 }
 
 pub async fn delete_safe_delegate(
@@ -108,14 +92,6 @@ pub async fn delete_safe_delegate(
         request
     };
 
-    let response = context.http_client().delete(request).await?;
-
-    return if response.is_success() {
-        Ok(())
-    } else {
-        Err(ApiError::new_from_message_with_code(
-            response.status_code,
-            String::from("Unexpected delegate deletion error"),
-        ))
-    };
+    context.http_client().delete(request).await?;
+    Ok(())
 }

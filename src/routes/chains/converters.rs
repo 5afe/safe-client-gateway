@@ -1,5 +1,5 @@
 use crate::common::models::backend::chains::{
-    ChainInfo as BackendChainInfo, GasPrice, RpcAuthentication,
+    ChainInfo as BackendChainInfo, GasPrice, RpcAuthentication, RpcUri as BackendRpcUri,
 };
 use crate::routes::chains::models::{
     BlockExplorerUriTemplate as ServiceBlockExplorerUriTemplate, ChainInfo as ServiceChainInfo,
@@ -16,19 +16,13 @@ impl From<BackendChainInfo> for ServiceChainInfo {
             short_name: chain_info.short_name,
             l2: chain_info.l2,
             description: chain_info.description,
-            rpc_uri: ServiceRpcUri {
-                authentication: match chain_info.rpc_uri.authentication {
-                    RpcAuthentication::ApiKeyPath => ServiceRpcAuthentication::ApiKeyPath,
-                    RpcAuthentication::NoAuthentication => {
-                        ServiceRpcAuthentication::NoAuthentication
-                    }
-                    RpcAuthentication::Unknown => ServiceRpcAuthentication::Unknown,
-                },
-                value: chain_info.rpc_uri.value,
-            },
+            rpc_uri: chain_info.rpc_uri.into(),
+            safe_apps_rpc_uri: chain_info.safe_apps_rpc_uri.into(),
+            public_rpc_uri: chain_info.public_rpc_uri.into(),
             block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
                 address: chain_info.block_explorer_uri_template.address,
                 tx_hash: chain_info.block_explorer_uri_template.tx_hash,
+                api: chain_info.block_explorer_uri_template.api,
             },
             native_currency: ServiceNativeCurrency {
                 name: chain_info.native_currency.name,
@@ -60,6 +54,21 @@ impl From<BackendChainInfo> for ServiceChainInfo {
                     GasPrice::Unknown => ServiceGasPrice::Unknown,
                 })
                 .collect::<Vec<ServiceGasPrice>>(),
+            disabled_wallets: chain_info.disabled_wallets,
+            features: chain_info.features,
+        }
+    }
+}
+
+impl From<BackendRpcUri> for ServiceRpcUri {
+    fn from(rpc_uri: BackendRpcUri) -> Self {
+        ServiceRpcUri {
+            authentication: match rpc_uri.authentication {
+                RpcAuthentication::ApiKeyPath => ServiceRpcAuthentication::ApiKeyPath,
+                RpcAuthentication::NoAuthentication => ServiceRpcAuthentication::NoAuthentication,
+                RpcAuthentication::Unknown => ServiceRpcAuthentication::Unknown,
+            },
+            value: rpc_uri.value,
         }
     }
 }

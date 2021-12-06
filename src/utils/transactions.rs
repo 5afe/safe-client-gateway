@@ -1,9 +1,8 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::config::transaction_request_timeout;
+use crate::providers::info::InfoProvider;
 use crate::providers::info::SAFE_V_1_3_0;
-use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use ethabi::ethereum_types::H256;
 use ethabi::{Address, Uint};
@@ -21,12 +20,11 @@ pub const ERC191_BYTE: &'static str = "19";
 pub const ERC191_VERSION: &'static str = "01";
 
 pub async fn fetch_rejections(
-    context: &RequestContext,
+    info_provider: &(impl InfoProvider + Sync),
     chain_id: &str,
     safe_address: &str,
     nonce: u64,
 ) -> Option<Vec<String>> {
-    let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let version = info_provider
         .safe_info(safe_address)
         .await
@@ -45,7 +43,7 @@ pub async fn fetch_rejections(
 
     let safe_tx_hash = to_hex_string!(hash(safe_address, nonce, domain_hash).to_vec());
 
-    let multisig_tx = fetch_cancellation_tx(context, chain_id, safe_tx_hash).await;
+    let multisig_tx = fetch_cancellation_tx(info_provider, safe_tx_hash).await;
     multisig_tx
         .as_ref()
         .map(|cancel_tx| {
@@ -132,13 +130,11 @@ pub(super) fn use_legacy_domain_separator(version: Option<Version>) -> bool {
 
 // We silently fail if the cancellation transaction is not found
 async fn fetch_cancellation_tx(
-    context: &RequestContext,
-    chain_id: &str,
+    info_provider: &(impl InfoProvider + Sync),
     safe_tx_hash: String,
 ) -> Option<MultisigTransaction> {
-    let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(info_provider, "/v1/multisig-transactions/{}/", safe_tx_hash).ok()?;
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new(url, &info_provider.client(), &info_provider.cache())
         .request_timeout(transaction_request_timeout())
         .execute()
         .await

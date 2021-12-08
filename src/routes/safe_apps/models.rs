@@ -2,6 +2,7 @@ use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct SafeApp {
     pub id: u64,
     pub url: String,
@@ -14,6 +15,7 @@ pub struct SafeApp {
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct SafeAppProvider {
     pub url: String,
     pub name: String,

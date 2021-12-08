@@ -238,6 +238,17 @@ async fn post_notification_success() {
 #[rocket::async_test]
 async fn post_notification_error() {
     let safe_address = "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f";
+    let expected_error = ErrorDetails {
+        code: 1337,
+        message: Some("Push notification registration failed for chain IDs: 4, 137".to_string()),
+        arguments: None,
+        debug: serde_json::from_str(
+            "[{\"4\":{\"code\":500,\"message\":null}}\
+        ,{\"137\":{\"safes\":{\"0\":[\"Address 0x0 is not valid\"]},\
+        \"timestamp\":[\"Provided timestamp is not in a range within 5 minutes\"]}}]",
+        )
+        .ok(),
+    };
 
     let request = NotificationRegistrationRequest {
         device_data: DeviceData {
@@ -252,7 +263,7 @@ async fn post_notification_error() {
         safe_registrations: vec![
             SafeRegistration {
                 chain_id: "4".to_string(),
-                safes: vec![safe_address.to_string()],
+                safes: vec!["0x0".to_string()],
                 signatures: vec!["signature".to_string()],
             },
             SafeRegistration {
@@ -263,8 +274,10 @@ async fn post_notification_error() {
         ],
     };
 
-    let backend_request =
-        build_backend_request(&request.device_data, &request.safe_registrations[0]); // chain_id is ignored by this method
+    let rinkeby_backend_request =
+        build_backend_request(&request.device_data, &request.safe_registrations[0]);
+    let polygon_backend_request =
+        build_backend_request(&request.device_data, &request.safe_registrations[1]);
 
     let mut mock_http_client = MockHttpClient::new();
 
@@ -299,7 +312,9 @@ async fn post_notification_error() {
     let mut post_request_rinkeby = Request::new(String::from(
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/notifications/devices/",
     ));
-    post_request_rinkeby.body(Some(serde_json::to_string(&backend_request).unwrap()));
+    post_request_rinkeby.body(Some(
+        serde_json::to_string(&rinkeby_backend_request).unwrap(),
+    ));
     mock_http_client
         .expect_post()
         .times(1)
@@ -320,16 +335,26 @@ async fn post_notification_error() {
     let mut post_request_polygon = Request::new(String::from(
         "https://safe-transaction-polygon.staging.gnosisdev.com/api/v1/notifications/devices/",
     ));
-    post_request_polygon.body(Some(serde_json::to_string(&backend_request).unwrap()));
+    post_request_polygon.body(Some(
+        serde_json::to_string(&polygon_backend_request).unwrap(),
+    ));
     mock_http_client
         .expect_post()
         .times(1)
         .with(eq(post_request_polygon))
         .return_once(move |_| {
-            Err(ApiError::from_http_response(&Response {
-                status_code: 404,
-                body: String::from("Not found"),
-            }))
+            Err(ApiError::new_from_message_with_code(
+                400,
+                "{\"safes\": {\
+                            \"0\": [\
+                                \"Address 0x0 is not valid\"\
+                            ]\
+                        },\
+                        \"timestamp\": [\
+                            \"Provided timestamp is not in a range within 5 minutes\"\
+                        ]}"
+                .to_string(),
+            ))
         });
 
     let client = Client::tracked(setup_rocket(
@@ -348,6 +373,8 @@ async fn post_notification_error() {
     let response = request.dispatch().await;
     let actual_status = response.status();
     let error_body = response.into_string().await.unwrap();
+    let actual = serde_json::from_str::<ErrorDetails>(&error_body).unwrap();
 
     assert_eq!(Status::InternalServerError, actual_status);
+    assert_eq!(expected_error, actual);
 }

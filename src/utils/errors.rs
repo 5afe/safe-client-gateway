@@ -15,6 +15,7 @@ use thiserror::Error;
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 
 #[derive(Error, Debug, PartialEq)]
+#[cfg_attr(test, derive(Serialize, Deserialize))]
 pub struct ApiError {
     pub status: u16,
     pub details: ErrorDetails,

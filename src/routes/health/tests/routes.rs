@@ -5,7 +5,7 @@ use rocket::local::asynchronous::Client;
 
 #[rocket::async_test]
 async fn health() {
-    let mut mock_http_client = MockHttpClient::new();
+    let mock_http_client = MockHttpClient::new();
 
     let client = Client::tracked(setup_rocket(
         mock_http_client,

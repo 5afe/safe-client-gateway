@@ -1,4 +1,3 @@
-// use crate::common::models::backend::notifications::NotificationRegistrationRequest as BackendRegistrationRequest;
 use crate::config::chain_info_request_timeout;
 use crate::routes::notifications::handlers::build_backend_request;
 use crate::routes::notifications::models::{
@@ -233,7 +232,7 @@ async fn post_notification_success() {
     let response = request.dispatch().await;
     let actual_status = response.status();
 
-    // assert_eq!(Status::Ok, actual_status);
+    assert_eq!(Status::Ok, actual_status);
 }
 
 #[rocket::async_test]

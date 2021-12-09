@@ -28,7 +28,10 @@ impl MultisigTransaction {
             tx_status: self.map_status(&safe_info),
             tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
-                to: AddressEx::address_only(&self.safe_transaction.to),
+                to: info_provider
+                    .address_ex_from_any_source(&self.safe_transaction.to)
+                    .await
+                    .unwrap_or(AddressEx::address_only(&self.safe_transaction.to)),
                 value: self.safe_transaction.value.to_owned(),
                 hex_data: self.safe_transaction.data.to_owned(),
                 data_decoded: self.safe_transaction.data_decoded.clone(),
@@ -131,7 +134,10 @@ impl ModuleTransaction {
             tx_status: self.map_status(),
             tx_info: self.transaction_info(info_provider).await,
             tx_data: Some(TransactionData {
-                to: AddressEx::address_only(&safe_transaction.to),
+                to: info_provider
+                    .address_ex_from_any_source(&self.safe_transaction.to)
+                    .await
+                    .unwrap_or(AddressEx::address_only(&self.safe_transaction.to)),
                 value: safe_transaction.value.to_owned(),
                 hex_data: safe_transaction.data.to_owned(),
                 data_decoded: safe_transaction.data_decoded.clone(),

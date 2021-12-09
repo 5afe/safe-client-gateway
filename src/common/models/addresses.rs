@@ -1,3 +1,4 @@
+use crate::providers::info::InfoProvider;
 use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -25,5 +26,12 @@ impl AddressEx {
             name: None,
             logo_uri: None,
         }
+    }
+
+    pub async fn any_source(address: &str, info_provider: &(impl InfoProvider + Sync)) -> Self {
+        info_provider
+            .address_ex_from_any_source(address)
+            .await
+            .unwrap_or(AddressEx::address_only(address))
     }
 }

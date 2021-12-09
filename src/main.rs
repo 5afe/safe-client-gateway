@@ -1,4 +1,5 @@
 #![deny(unused_must_use)]
+#![deny(rustdoc::broken_intra_doc_links)]
 
 extern crate dotenv;
 extern crate log;
@@ -19,7 +20,6 @@ mod config;
 
 #[doc(hidden)]
 mod monitoring;
-#[doc(hidden)]
 mod providers;
 
 /// Collection of all endpoints all endpoints

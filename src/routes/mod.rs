@@ -48,6 +48,7 @@ pub fn active_routes() -> Vec<Route> {
         chains::routes::get_chains,
         collectibles::routes::get_collectibles,
         contracts::routes::post_data_decoder,
+        contracts::routes::get_contract,
         delegates::routes::delete_delegate,
         delegates::routes::delete_safe_delegate,
         delegates::routes::get_delegates,

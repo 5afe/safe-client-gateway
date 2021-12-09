@@ -54,7 +54,7 @@ pub const SAFE_WITH_MODULES: &str = include_str!("safes/with_modules.json");
 pub const SAFE_WITH_THRESHOLD_TWO: &str = include_str!("safes/with_threshold_two.json");
 pub const SAFE_WITH_MODULES_AND_HIGH_NONCE: &str =
     include_str!("safes/with_modules_and_high_nonce.json");
-pub const SAFE_WITH_GUARD_SAFE_V130: &str = include_str!("safes/with_guard_safe_v130.json");
+pub const SAFE_WITH_GUARD_SAFE_V130_L2: &str = include_str!("safes/with_guard_safe_v130_l2.json");
 pub const _SAFE_WITH_MODULE_TXS: &str = include_str!("safes/with_module_transactions.json");
 
 pub const ETHER_TRANSFER_INCOMING: &str = include_str!("transfers/ether_transfer_incoming.json");
@@ -151,3 +151,7 @@ pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_mast
 pub const COLLECTIBLES_PAGE: &str = include_str!("collectibles/collectibles_page.json");
 
 pub const EXCHANGE_CURRENCY_RATES: &str = include_str!("exchange/currency_rates.json");
+
+pub const CONTRACT_INFO_BID: &str = include_str!("contracts/contract_info_BID.json");
+
+pub const EMPTY_PAGE: &str = include_str!("commons/empty_page.json");

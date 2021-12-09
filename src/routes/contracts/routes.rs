@@ -1,4 +1,5 @@
-use crate::routes::contracts::handlers::request_data_decoded;
+use crate::cache::cache_operations::CacheResponse;
+use crate::routes::contracts::handlers;
 use crate::routes::contracts::models::DataDecoderRequest;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
@@ -61,6 +62,32 @@ pub async fn post_data_decoder<'e>(
     data_decoder_request: Result<Json<DataDecoderRequest>, Error<'e>>,
 ) -> ApiResult<content::Json<String>> {
     Ok(content::Json(serde_json::to_string(
-        &request_data_decoded(&context, &chain_id, &data_decoder_request?.0).await?,
+        &handlers::request_data_decoded(&context, &chain_id, &data_decoder_request?.0).await?,
     )?))
+}
+
+/**
+ * `/v1/chains/<chain_id>/contracts/<address>` <br/>
+ * Returns [ContractInfo](crate::providers::address_info::ContractInfo)
+ *
+ * # Contract Info
+ *
+ * This endpoint is chain dependant and returns the details of a Contract such as: name, logoUri, ABI, among others
+ *
+ * The result is of the type [ContractInfo](crate::providers::address_info::ContractInfo)
+ *
+ * ## Path
+ *
+ * - `GET /v1/chains/<chain_id>/contract/<contract_address>`
+**/
+#[get("/v1/chains/<chain_id>/contracts/<contract_address>")]
+pub async fn get_contract(
+    context: RequestContext,
+    chain_id: String,
+    contract_address: String,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context)
+        .resp_generator(|| handlers::get_contract(&context, &chain_id, &contract_address))
+        .execute()
+        .await
 }

@@ -160,6 +160,7 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
+<span id="163">163</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::log_all_error_responses</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Response</span> <span class="kw">as</span> <span class="ident">HttpClientResponse</span>;
 <span class="kw">use</span> <span class="ident">reqwest::StatusCode</span>;
@@ -177,6 +178,7 @@
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span> <span class="op">=</span> <span class="ident">ApiError</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Error</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ApiError</span> {
     <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">u16</span>,
     <span class="kw">pub</span> <span class="ident">details</span>: <span class="ident">ErrorDetails</span>,

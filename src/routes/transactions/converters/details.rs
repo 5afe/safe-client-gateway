@@ -2,6 +2,7 @@ extern crate chrono;
 
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
+use crate::common::models::data_decoded::Operation;
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::routes::transactions::converters::safe_app_info::safe_app_info_from;
@@ -22,6 +23,12 @@ impl MultisigTransaction {
             .safe_info(&self.safe_transaction.safe.to_string())
             .await?;
         let gas_token = info_provider.address_to_token_info(&self.gas_token).await;
+        let is_trusted_delegate_call = is_trusted_delegate_call(
+            &self.safe_transaction.operation,
+            &self.safe_transaction.to,
+            info_provider,
+        )
+        .await;
         Ok(TransactionDetails {
             tx_id: self.generate_id(),
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
@@ -43,6 +50,7 @@ impl MultisigTransaction {
                 )
                 .await
                 .flatten(),
+                trusted_delegate_call_target: is_trusted_delegate_call,
             }),
             tx_hash: self.transaction_hash.as_ref().map(|hash| hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
@@ -125,6 +133,12 @@ impl ModuleTransaction {
         let module_info = info_provider
             .address_ex_from_contracts_or_default(&self.module)
             .await;
+        let is_trusted_delegate_call = is_trusted_delegate_call(
+            &self.safe_transaction.operation,
+            &self.safe_transaction.to,
+            info_provider,
+        )
+        .await;
         Ok(TransactionDetails {
             tx_id: self.generate_id(),
             executed_at: Some(self.execution_date.timestamp_millis()),
@@ -143,6 +157,7 @@ impl ModuleTransaction {
                 ))
                 .await
                 .flatten(),
+                trusted_delegate_call_target: is_trusted_delegate_call,
             }),
             tx_hash: Some(self.transaction_hash.to_owned()),
             detailed_execution_info: Some(DetailedExecutionInfo::Module(ModuleExecutionDetails {
@@ -150,5 +165,22 @@ impl ModuleTransaction {
             })),
             safe_app_info: None,
         })
+    }
+}
+
+pub async fn is_trusted_delegate_call(
+    operation: &Operation,
+    to: &str,
+    info_provider: &(impl InfoProvider + Sync),
+) -> Option<bool> {
+    if operation == &Operation::DELEGATE {
+        info_provider
+            .contract_info(to)
+            .await
+            .map(|contract_info| contract_info.trusted_for_delegate_call)
+            .ok()
+            .flatten()
+    } else {
+        None
     }
 }

@@ -22,7 +22,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   call-workflow-k8s-deploy:
-    uses: DistributedCollective/safe-config-service/.github/workflows/deploy-k8s.yml@rsk
+    uses: DistributedCollective/safe-client-gateway/.github/workflows/deploy-k8s.yml@rsk
     needs: [call-workflow-init, call-workflow-docker-build]
     if: github.event_name != 'pull_request'
     with:
@@ -36,4 +36,3 @@ jobs:
       WEBHOOK_TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
       EXCHANGE_API_KEY: ${{ secrets.EXCHANGE_API_KEY }}
       ROCKET_SECRET_KEY: ${{ secrets.ROCKET_SECRET_KEY }}
-

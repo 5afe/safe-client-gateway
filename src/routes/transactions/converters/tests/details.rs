@@ -375,15 +375,16 @@ async fn multisig_transaction_with_origin() {
         });
     mock_info_provider
         .expect_contract_info()
+        .with(eq("0x8D29bE29923b68abfDD21e541b9374737B49cdAD"))
         .times(1)
         .return_once(move |_| {
             Ok(ContractInfo {
-                name: "name".to_string(),
-                address: "address".to_string(),
-                display_name: "display name".to_string(),
+                name: "multiSend".to_string(),
+                address: "0x8D29bE29923b68abfDD21e541b9374737B49cdAD".to_string(),
+                display_name: "Gnosis Safe: Multi Send 1.1.1".to_string(),
                 logo_uri: None,
                 contract_abi: None,
-                trusted_for_delegate_call: Some(false),
+                trusted_for_delegate_call: Some(true),
             })
         });
     mock_info_provider

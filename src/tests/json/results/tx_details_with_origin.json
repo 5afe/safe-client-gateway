@@ -88,7 +88,7 @@
     },
     "value": "0",
     "operation": 1,
-    "trustedDelegateCallTarget": false
+    "trustedDelegateCallTarget": true
   },
   "detailedExecutionInfo": {
     "type": "MULTISIG",

@@ -1,0 +1,27 @@
+{
+  "app_name": "safe-client-gateway",
+  "aws_region": "us-east-2",
+  "k8s_cluster_name": "k8-mainnet",
+  "registry": "docker.io",
+  "image_name": "sovryn/safe-client-gateway",
+  "prod_branch": "rsk",
+  "dev_branch": "development",
+  "APP_ENV_VARS": {
+    "EXCHANGE_API_BASE_URI": "http://api.exchangeratesapi.io/latest",
+    "CHAIN_INFO_REQUEST_TIMEOUT": "15000",
+    "REDIS_URI": "redis://redis-prod.id1ugm.ng.0001.use2.cache.amazonaws.com:6379",
+    "SAFE_APP_INFO_REQUEST_TIMEOUT": "10000",
+    "INTERNAL_CLIENT_CONNECT_TIMEOUT": "10000",
+    "CONCURRENT_BALANCE_TOKEN_REQUESTS": "5",
+    "VPC_TRANSACTION_SERVICE_URI": "true",
+    "LOG_ALL_ERROR_RESPONSES": "false",
+    "RUST_LOG": "safe_client_gateway=error,safe_client_gateway::monitoring=info",
+    "ROCKET_ADDRESS": "0.0.0.0",
+    "ROCKET_PORT": "8000",
+    "ROCKET_LOG_LEVEL": "normal",
+    "SCHEME": "http",
+    "FEATURE_FLAG_NESTED_DECODING": "true",
+    "FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION": "false",
+    "CONFIG_SERVICE_URI": "https://safe-config.sovryn.app"
+  }
+}

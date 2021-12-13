@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app: safe-client-gateway
+  labels:
+    app: safe-client-gateway
+  name: safe-client-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: safe-client-gateway
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        app: safe-client-gateway
+      labels:
+        app: safe-client-gateway
+    spec:
+      containers:
+        - image: sovryn/safe-client-gateway
+          envFrom:
+          - secretRef:
+              name: safe-client-gateway
+          name: web
+          resources: {}
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: safe-client-gateway
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:500674654096:certificate/4d342e91-c855-47ea-9c40-dea361b19d4f
+spec:
+  selector:
+    app: safe-client-gateway
+  ports:
+    - port: 443
+      targetPort: 8000
+  type: LoadBalancer
+---

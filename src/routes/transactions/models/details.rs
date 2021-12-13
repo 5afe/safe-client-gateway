@@ -290,6 +290,8 @@ pub struct TransactionData {
     pub value: Option<String>,
     pub operation: Operation,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub trusted_delegate_call_target: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     // Mapping with info for the addresses in data_decoded
     pub address_info_index: Option<HashMap<String, AddressEx>>,
 }

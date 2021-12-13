@@ -87,7 +87,8 @@
       "value": "0x8D29bE29923b68abfDD21e541b9374737B49cdAD"
     },
     "value": "0",
-    "operation": 1
+    "operation": 1,
+    "trustedDelegateCallTarget": false
   },
   "detailedExecutionInfo": {
     "type": "MULTISIG",

@@ -59,7 +59,7 @@ pub async fn delete_delegate(
     delegate_delete: DelegateDelete,
 ) -> ApiResult<()> {
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);
-    let url = core_uri!(info_provider, "/v1/delegates/{}", delegate_address)?;
+    let url = core_uri!(info_provider, "/v1/delegates/{}/", delegate_address)?;
 
     let request = {
         let mut request = Request::new(url);
@@ -81,7 +81,7 @@ pub async fn delete_safe_delegate(
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);
     let url = core_uri!(
         info_provider,
-        "/v1/safes/{}/delegates/{}",
+        "/v1/safes/{}/delegates/{}/",
         safe_address,
         delegate_address
     )?;

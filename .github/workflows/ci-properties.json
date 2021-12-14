@@ -9,7 +9,6 @@
   "APP_ENV_VARS": {
     "EXCHANGE_API_BASE_URI": "http://api.exchangeratesapi.io/latest",
     "CHAIN_INFO_REQUEST_TIMEOUT": "15000",
-    "REDIS_URI": "redis://redis-prod.id1ugm.ng.0001.use2.cache.amazonaws.com:6379",
     "SAFE_APP_INFO_REQUEST_TIMEOUT": "10000",
     "INTERNAL_CLIENT_CONNECT_TIMEOUT": "10000",
     "CONCURRENT_BALANCE_TOKEN_REQUESTS": "5",

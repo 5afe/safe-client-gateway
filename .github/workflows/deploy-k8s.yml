@@ -26,6 +26,8 @@ on:
         required: true
       ROCKET_SECRET_KEY:
         required: true
+      REDIS_PASSWORD:
+        required: true
 
 jobs:
   deploy:

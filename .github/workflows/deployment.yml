@@ -36,3 +36,4 @@ jobs:
       WEBHOOK_TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
       EXCHANGE_API_KEY: ${{ secrets.EXCHANGE_API_KEY }}
       ROCKET_SECRET_KEY: ${{ secrets.ROCKET_SECRET_KEY }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}

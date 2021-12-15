@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::{CacheResponse, InvalidationPattern, RequestCached};
 use crate::cache::inner_cache::CachedWithCode;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_RESP_PREFIX};
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
 use crate::utils::http_client::Request;
 use rocket::response::content;
 use serde::Serialize;
@@ -63,7 +63,16 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                         );
                     }
 
-                    Err(error)
+                    if let Some(error_details) =
+                        serde_json::from_str::<ErrorDetails>(response_body).ok()
+                    {
+                        Err(ApiError::new(error.status, error_details))
+                    } else {
+                        Err(ApiError::new_from_message_with_code(
+                            error.status,
+                            String::from(response_body),
+                        ))
+                    }
                 }
                 Ok(response) => {
                     let status_code = response.status_code;

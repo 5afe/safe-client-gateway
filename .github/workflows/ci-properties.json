@@ -22,6 +22,7 @@
     "SCHEME": "http",
     "FEATURE_FLAG_NESTED_DECODING": "true",
     "FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION": "false",
-    "CONFIG_SERVICE_URI": "https://safe-config.sovryn.app"
+    "CONFIG_SERVICE_URI": "https://safe-config.sovryn.app",
+    "REDIS_URI": "redis://redis-prod.id1ugm.ng.0001.use2.cache.amazonaws.com:6379"
   }
 }

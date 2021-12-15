@@ -54,7 +54,8 @@ async fn error_from_backend_deserialization() {
 
 #[rocket::async_test]
 async fn error_from_backend_deserialization_unknown_json_struct() {
-    // we've changed the json type to string for the sake of creating a synthetic API breaking change
+    // we've changed the json type of "code" to string,
+    // for the sake of creating a synthetic API breaking change
     let request_uri = "some.url";
     let error_json = json!({
         "code": "1",

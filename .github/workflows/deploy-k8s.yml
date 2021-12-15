@@ -69,7 +69,7 @@ jobs:
         run: |
             cat .github/workflows/ci-properties.json
             for i in `cat .github/workflows/ci-properties.json | jq -r .APP_ENV_VARS | jq -r 'keys[]'`; do params="${params} --from-literal=$i=$(cat .github/workflows/ci-properties.json | jq -r .APP_ENV_VARS.$i)"; done # add envs from ci-properties.json file
-            params="${params} --from-literal=WEBHOOK_TOKEN=${{ secrets.WEBHOOK_TOKEN }} --from-literal=EXCHANGE_API_KEY=${{ secrets.EXCHANGE_API_KEY }} --from-literal=ROCKET_SECRET_KEY=${{ secrets.ROCKET_SECRET_KEY }} --from-literal=REDIS_URI=redis://:${{ secrets.REDIS_PASSWORD }}@master.redis-k8s-prod.id1ugm.use2.cache.amazonaws.com:6379"
+            params="${params} --from-literal=WEBHOOK_TOKEN=${{ secrets.WEBHOOK_TOKEN }} --from-literal=EXCHANGE_API_KEY=${{ secrets.EXCHANGE_API_KEY }} --from-literal=ROCKET_SECRET_KEY=${{ secrets.ROCKET_SECRET_KEY }} --from-literal=REDIS_URI=redis://redis-prod.id1ugm.ng.0001.use2.cache.amazonaws.com:6379"
             echo "::set-output name=k8sparams::$params"
             echo "::add-mask::$params"
 

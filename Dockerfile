@@ -39,8 +39,9 @@ RUN useradd $APP_USER
 RUN set -ex; \ 
   apt-get update; \
   apt-get install -y --no-install-recommends \
-  ca-certificates libssl-dev \
+  ca-certificates libssl-dev stunnel \
   && rm -rf /var/lib/apt/lists/*
 
+COPY redis-cli.conf /etc/stunnel/redis-cli.conf 
 COPY --from=builder --chown=rust:rust /app/target/release/safe-client-gateway ./
 CMD ["./safe-client-gateway"]

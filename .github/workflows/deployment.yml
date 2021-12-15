@@ -18,11 +18,12 @@ jobs:
       IMAGE_NAME: ${{ needs.call-workflow-init.outputs.image_name }}
       event_name: ${{ github.event_name }}
       registry: ${{ needs.call-workflow-init.outputs.registry }}
+      dockerfile_path:  ${{ needs.call-workflow-init.outputs.dockerfile_path }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   call-workflow-k8s-deploy:
-    uses: DistributedCollective/safe-client-gateway/.github/workflows/deploy-k8s.yml@rsk
+    uses: DistributedCollective/.github/.github/workflows/deploy-k8s.yml@master
     needs: [call-workflow-init, call-workflow-docker-build]
     if: github.event_name != 'pull_request'
     with:
@@ -33,7 +34,4 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      WEBHOOK_TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
-      EXCHANGE_API_KEY: ${{ secrets.EXCHANGE_API_KEY }}
-      ROCKET_SECRET_KEY: ${{ secrets.ROCKET_SECRET_KEY }}
-      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+

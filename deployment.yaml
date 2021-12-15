@@ -25,6 +25,8 @@ spec:
           envFrom:
           - secretRef:
               name: safe-client-gateway
+          - secretRef:
+              name: safe-client-gateway-secret
           name: web
           resources: {}
       restartPolicy: Always

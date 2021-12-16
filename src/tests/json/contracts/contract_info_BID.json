@@ -312,5 +312,6 @@
         ],
         "description": "BID",
         "relevance": 100
-    }
+    },
+    "trustedForDelegateCall": false
 }

@@ -248,7 +248,7 @@
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">status_code</span>: <span class="ident">u16</span>, <span class="ident">message</span>: <span class="ident">ErrorDetails</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">status_code</span>: <span class="ident">u16</span>, <span class="ident">message</span>: <span class="ident">ErrorDetails</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">status</span>: <span class="ident">status_code</span>,
             <span class="ident">details</span>: <span class="ident">message</span>,

@@ -411,9 +411,9 @@ async fn post_safe_gas_estimation() {
             })
         });
 
-    let mut safe_request = Request::new(format!(
-        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/",
-        &safe_address
+        let mut safe_request = Request::new(format!(
+            "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/",
+            &safe_address
     ));
     safe_request.timeout(Duration::from_millis(safe_info_request_timeout()));
     mock_http_client
@@ -611,7 +611,7 @@ async fn post_safe_gas_estimation_delayed_indexing() {
         .with(eq(request_last_known_tx))
         .returning(move |_| {
             Ok(Response {
-                body: String::from(super::LAST_QUEUED_TX),
+                body: String::from(super::LAST_HISTORY_TX),
                 status_code: 200,
             })
         });

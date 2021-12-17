@@ -10,6 +10,7 @@ use crate::routes::safes::models::{SafeTransactionEstimation, SafeTransactionEst
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::{HttpClient, Request};
+use std::cmp::max;
 
 pub async fn estimate_safe_tx_gas(
     context: &RequestContext,
@@ -30,7 +31,9 @@ pub async fn estimate_safe_tx_gas(
     )?;
     let current_nonce = info_provider.safe_info(safe_address).await?.nonce;
 
-    let latest_nonce = fetch_latest_nonce(context.http_client(), latest_multisig_tx_url).await?;
+    let last_known_nonce =
+        fetch_latest_nonce(context.http_client(), latest_multisig_tx_url).await?;
+    let latest_nonce = max(current_nonce, last_known_nonce);
     let safe_tx_gas = fetch_estimation(
         context.http_client(),
         estimation_url,

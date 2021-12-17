@@ -553,7 +553,124 @@ async fn post_safe_gas_estimation_no_queued_tx() {
 
     let expected = serde_json::from_value(json!( {
         "currentNonce": 7,
-        "latestNonce": 0,
+        "latestNonce": 7,
+        "safeTxGas": "63417"
+    }))
+    .unwrap();
+
+    let request = client
+        .post("/v1/chains/4/safes/0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67/multisig-transactions/estimations")
+        .body(&json!({
+            "to": "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02",
+            "value": "0",
+            "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
+            "operation": 0
+            }).to_string())
+        .header(Header::new("Host", "test.gnosis.io"))
+        .header(ContentType::JSON);
+
+    let response = request.dispatch().await;
+
+    let actual_status = response.status();
+    let actual_json = response.into_string().await.unwrap();
+    let actual = serde_json::from_str::<SafeTransactionEstimation>(&actual_json).unwrap();
+
+    assert_eq!(actual_status, Status::Ok);
+    assert_eq!(actual, expected);
+}
+
+#[rocket::async_test]
+async fn post_safe_gas_estimation_delayed_indexing() {
+    let safe_address = "0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67";
+
+    let mut chain_request = Request::new(config_uri!("/v1/chains/{}/", 4));
+    chain_request.timeout(Duration::from_millis(chain_info_request_timeout()));
+    let mut mock_http_client = MockHttpClient::new();
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(chain_request))
+        .return_once(move |_| {
+            Ok(Response {
+                status_code: 200,
+                body: String::from(crate::tests::json::CHAIN_INFO_RINKEBY),
+            })
+        });
+
+    let request_last_known_tx = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/\
+        multisig-transactions/\
+        ?ordering=-nonce\
+        &trusted=true\
+        &limit=1",
+        safe_address,
+    ));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(request_last_known_tx))
+        .returning(move |_| {
+            Ok(Response {
+                body: String::from(super::LAST_QUEUED_TX),
+                status_code: 200,
+            })
+        });
+
+    let mut estimation_request = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/\
+        multisig-transactions/\
+        estimations/",
+        &safe_address
+    ));
+    estimation_request.body(Some(serde_json::to_string(
+        &SafeTransactionEstimationRequest{
+            to: String::from("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
+            value: String::from("0"),
+            data: String::from("0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000"),
+            operation: Operation::CALL
+            }).unwrap())
+        );
+
+    mock_http_client
+        .expect_post()
+        .times(1)
+        .with(eq(estimation_request))
+        .return_once(move |_| {
+            Ok(Response {
+                status_code: 200,
+                body: json!({
+                    "safeTxGas" : "63417"
+                })
+                .to_string(),
+            })
+        });
+
+    let mut safe_request = Request::new(format!(
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/",
+        &safe_address
+    ));
+    safe_request.timeout(Duration::from_millis(safe_info_request_timeout()));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(safe_request))
+        .returning(move |_| {
+            Ok(Response {
+                body: String::from(crate::tests::json::SAFE_WITH_GUARD_SAFE_V130_L2),
+                status_code: 200,
+            })
+        });
+
+    let client = Client::tracked(setup_rocket(
+        mock_http_client,
+        routes![super::super::routes::post_safe_gas_estimation],
+    ))
+    .await
+    .expect("valid rocket instance");
+
+    let expected = serde_json::from_value(json!( {
+        "currentNonce": 7,
+        "latestNonce": 7,
         "safeTxGas": "63417"
     }))
     .unwrap();

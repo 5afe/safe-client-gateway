@@ -31,7 +31,7 @@ pub async fn estimate_safe_tx_gas(
     )?;
     let current_nonce = info_provider.safe_info(safe_address).await?.nonce;
 
-    let last_known_nonce = 
+    let last_known_nonce =
         fetch_latest_nonce(context.http_client(), latest_multisig_tx_url).await?;
     let latest_nonce = max(current_nonce, last_known_nonce);
     let safe_tx_gas = fetch_estimation(

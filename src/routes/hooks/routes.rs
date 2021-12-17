@@ -14,6 +14,20 @@ pub fn update(context: RequestContext, token: String, update: Json<Payload>) -> 
     invalidate_caches(context.cache(), &update)
 }
 
+#[post(
+    "/v1/chains/<chain_id>/hook/update/<token>",
+    format = "json",
+    data = "<payload>"
+)]
+pub fn post_hook_update(
+    context: RequestContext,
+    chain_id: String,
+    token: String,
+    payload: Json<Payload>,
+) -> ApiResult<()> {
+    update(context, token, payload)
+}
+
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]
 pub fn flush(
     context: RequestContext,

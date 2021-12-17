@@ -98,6 +98,7 @@
 <span id="98"> 98</span>
 <span id="99"> 99</span>
 <span id="100">100</span>
+<span id="101">101</span>
 </pre><pre class="rust"><code><span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rocket</span>;
 
 <span class="kw">use</span> <span class="ident">rocket::response::Redirect</span>;
@@ -165,6 +166,7 @@
         <span class="ident">transactions::routes::post_transaction</span>,
         <span class="ident">transactions::routes::post_confirmation</span>,
         <span class="ident">hooks::routes::update</span>,
+        <span class="ident">hooks::routes::post_hook_update</span>,
         <span class="ident">hooks::routes::flush</span>,
         <span class="ident">health::routes::health</span>
     ]

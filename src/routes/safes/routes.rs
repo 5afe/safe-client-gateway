@@ -45,6 +45,7 @@ pub async fn get_owners(
 }
 
 /**
+ * DEPRECATED
  * `/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations` <br />
  * Returns [SafeTransactionEstimation](crate::routes::safes::models::SafeTransactionEstimation)
  *
@@ -132,6 +133,7 @@ pub async fn post_safe_gas_estimation<'e>(
  *
  * ```json
  * {
+ *   "currentNonce": 7,
  *   "recommendedNonce": 76,
  *   "safeTxGas": "63417"
  * }

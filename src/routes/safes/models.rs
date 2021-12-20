@@ -71,3 +71,12 @@ pub struct SafeTransactionEstimation {
     pub latest_nonce: u64,
     pub safe_tx_gas: String,
 }
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Deserialize, PartialEq))]
+pub struct SafeTransactionEstimationV2 {
+    pub current_nonce: u64,
+    pub recommended_nonce: u64,
+    pub safe_tx_gas: String,
+}

@@ -104,7 +104,7 @@ pub async fn post_safe_gas_estimation<'e>(
 
 /**
  * `/v2/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations` <br />
- * Returns [SafeTransactionEstimation](crate::routes::safes::models::SafeTransactionEstimation)
+ * Returns [SafeTransactionEstimationV2](crate::routes::safes::models::SafeTransactionEstimationV2)
  *
  * # Safe Transaction Estimations
  *
@@ -134,7 +134,7 @@ pub async fn post_safe_gas_estimation<'e>(
  * ```json
  * {
  *   "currentNonce": 7,
- *   "recommendedNonce": 76,
+ *   "recommendedNonce": 77,
  *   "safeTxGas": "63417"
  * }
  * ```

@@ -71,6 +71,15 @@
 <span id="71">71</span>
 <span id="72">72</span>
 <span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded::Operation</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -142,6 +151,15 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeTransactionEstimation</span> {
     <span class="kw">pub</span> <span class="ident">current_nonce</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">latest_nonce</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">safe_tx_gas</span>: <span class="ident">String</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>))]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeTransactionEstimationV2</span> {
+    <span class="kw">pub</span> <span class="ident">current_nonce</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">recommended_nonce</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">safe_tx_gas</span>: <span class="ident">String</span>,
 }
 </code></pre></div>

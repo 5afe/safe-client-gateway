@@ -553,7 +553,7 @@ async fn post_safe_gas_estimation_no_queued_tx() {
 
     let expected = serde_json::from_value(json!( {
         "currentNonce": 7,
-        "latestNonce": 7,
+        "latestNonce": 0,
         "safeTxGas": "63417"
     }))
     .unwrap();
@@ -670,7 +670,7 @@ async fn post_safe_gas_estimation_delayed_indexing() {
 
     let expected = serde_json::from_value(json!( {
         "currentNonce": 7,
-        "latestNonce": 7,
+        "latestNonce": 6,
         "safeTxGas": "63417"
     }))
     .unwrap();

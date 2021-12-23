@@ -42,13 +42,15 @@ The contents of the file should be the following (see `.env.sample` for an examp
 
 ## Tests
 
-1. In order to run the tests of the project you need to have an instance of Redis running (as some of them test the integration with Redis).
+In order to run the test suite of the project:
+
+1. Have an instance of Redis running (as some of them test the integration with Redis).
 
 ```bash
 redis-server
 ```
 
-2. Before running the tests, make sure that `REDIS_URI` is set and points to the current Redis instance (assuming Redis is runnning on the default port `6379`):
+2. Make sure that `REDIS_URI` is set and points to the current Redis instance (assuming Redis is runnning on the default port `6379`):
 
 ```bash
 export REDIS_URI=redis://localhost:6379

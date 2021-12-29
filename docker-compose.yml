@@ -22,4 +22,4 @@ services:
     depends_on:
       - redis
     ports:
-      - "8000:3666"
+      - "${DOCKER_WEB_PORT}:3666"

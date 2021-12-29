@@ -40,6 +40,11 @@ Place a `.env` file in the root of the project containing URL pointing to the en
 
 The contents of the file should be the following (see `.env.sample` for an example)
 
+## Docker up
+```
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
 ## Tests
 
 To run all tests use the `cargo test` command. If you want to run a specific subset of tests, then add additionally any info regarding the path of the tests and `cargo` will match it.

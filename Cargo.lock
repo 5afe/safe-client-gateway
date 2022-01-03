@@ -425,11 +425,10 @@ dependencies = [
 
 [[package]]
 name = "ethabi"
-version = "15.0.0"
+version = "16.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f76ef192b63e8a44b3d08832acebbb984c3fba154b5c26f70037c860202a0d4b"
+checksum = "a4c98847055d934070b90e806e12d3936b787d0a115068981c1d8dfd5dfef5a5"
 dependencies = [
- "anyhow",
  "ethereum-types 0.12.0",
  "hex",
  "serde",
@@ -1826,7 +1825,7 @@ dependencies = [
  "dotenv",
  "dotenv_codegen",
  "env_logger",
- "ethabi 15.0.0",
+ "ethabi 16.0.0",
  "ethcontract-common",
  "itertools",
  "lazy_static",

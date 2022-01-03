@@ -21,13 +21,13 @@ pub struct SafeList {
 }
 
 impl<T> Page<T> {
-    pub fn map_inner<U>(self) -> Page<U>
+    pub fn map_inner<U>(self, link_mapper: impl Fn(Option<String>) -> Option<String>) -> Page<U>
     where
         U: From<T>,
     {
         Page {
-            next: self.next,
-            previous: self.previous,
+            next: link_mapper(self.next),
+            previous: link_mapper(self.previous),
             results: self.results.into_iter().map(|it| U::from(it)).collect(),
         }
     }

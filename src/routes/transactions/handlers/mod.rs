@@ -1,6 +1,4 @@
 use crate::common::models::page::PageMetadata;
-use crate::utils::context::RequestContext;
-use rocket::http::uri::Origin;
 use std::cmp::max;
 
 pub mod details;

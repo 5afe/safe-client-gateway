@@ -1,6 +1,6 @@
 [package]
 name = "safe-client-gateway"
-version = "3.10.1"
+version = "3.13.3"
 authors = ["jpalvarezl <jose.alvarez@gnosis.io>", "rmeissner <richard@gnosis.io>", "fmrsabino <frederico@gnosis.io>"]
 edition = "2018"
 
@@ -14,11 +14,11 @@ dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 env_logger = "0.9.0"
 ethcontract-common = "0.15.1"
-ethabi = "15.0.0"
+ethabi = "16.0.0"
 itertools = "0.10.1"
 lazy_static = "1.4.0"
 log = "0.4"
-mockall = "0.10.2"
+mockall = "0.11.0"
 proc-macro2 = "1.0.28"
 rand = "0.8.4"
 r2d2 = "0.8.9"
@@ -32,4 +32,4 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0", features = ["raw_value"] }
 serde_repr = "0.1"
 thiserror = "1.0.20"
-tokio = "1.14.0"
+tokio = "1.15.0"

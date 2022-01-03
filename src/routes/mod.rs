@@ -58,6 +58,7 @@ pub fn active_routes() -> Vec<Route> {
         safes::routes::get_safe_info,
         safes::routes::get_owners,
         safes::routes::post_safe_gas_estimation,
+        safes::routes::post_safe_gas_estimation_v2,
         safe_apps::routes::get_safe_apps,
         transactions::routes::get_transactions,
         transactions::routes::get_transactions_history,
@@ -65,6 +66,7 @@ pub fn active_routes() -> Vec<Route> {
         transactions::routes::post_transaction,
         transactions::routes::post_confirmation,
         hooks::routes::update,
+        hooks::routes::post_hook_update,
         hooks::routes::flush,
         health::routes::health
     ]

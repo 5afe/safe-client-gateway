@@ -39,6 +39,7 @@ use serde::{Deserialize, Serialize};
 /// </details>
 #[derive(Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Serialize))]
 pub struct NotificationRegistrationRequest {
     #[serde(flatten)]
     pub device_data: DeviceData,

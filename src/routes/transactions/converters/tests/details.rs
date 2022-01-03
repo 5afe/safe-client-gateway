@@ -1,9 +1,13 @@
+use mockall::predicate::eq;
+
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::common::models::backend::transfers::Transfer as TransferDto;
 use crate::common::models::data_decoded::ParamValue::SingleValue;
 use crate::common::models::data_decoded::{DataDecoded, Operation, Parameter};
+use crate::providers::address_info::ContractInfo;
 use crate::providers::info::*;
+use crate::routes::transactions::converters::details::is_trusted_delegate_call;
 use crate::routes::transactions::models::details::{
     DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
     TransactionData, TransactionDetails,
@@ -12,6 +16,8 @@ use crate::routes::transactions::models::{
     Custom, Erc721Transfer, TransactionInfo, TransactionStatus, Transfer, TransferDirection,
     TransferInfo,
 };
+use crate::utils::errors::ApiError;
+use crate::utils::http_client::Response;
 
 #[rocket::async_test]
 async fn multisig_custom_transaction_to_transaction_details() {
@@ -34,7 +40,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
         .returning(move |_| bail!("Token Address 0x0"));
     mock_info_provider
         .expect_address_ex_from_any_source()
-        .times(2) // to_info and data_decoded "spender" address parameter
+        .times(3) // to_info, tx_data and data_decoded "spender" address parameter
         .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
@@ -72,7 +78,8 @@ async fn multisig_custom_transaction_to_transaction_details() {
             to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
-            address_info_index: None
+            address_info_index: None,
+            trusted_delegate_call_target: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
             MultisigExecutionDetails {
@@ -135,7 +142,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
         });
     mock_info_provider
         .expect_address_ex_from_any_source()
-        .times(1)
+        .times(2)
         .returning(move |_| bail!("No address info"));
 
     let module_transaction =
@@ -160,7 +167,8 @@ async fn module_transaction_to_transaction_details_module_info_success() {
             to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
-            address_info_index: None
+            address_info_index: None,
+            trusted_delegate_call_target: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -191,7 +199,7 @@ async fn module_transaction_to_transaction_details_success() {
         .returning(move |_| bail!("No address info"));
     mock_info_provider
         .expect_address_ex_from_any_source()
-        .times(1)
+        .times(2)
         .returning(move |_| bail!("No address info"));
 
     let module_transaction =
@@ -216,7 +224,8 @@ async fn module_transaction_to_transaction_details_success() {
             to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
-            address_info_index: None
+            address_info_index: None,
+            trusted_delegate_call_target: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -243,7 +252,7 @@ async fn module_transaction_to_transaction_details_failed() {
         .returning(move |_| bail!("No address info"));
     mock_info_provider
         .expect_address_ex_from_any_source()
-        .times(1)
+        .times(2)
         .returning(move |_| bail!("No address info"));
 
     let module_transaction =
@@ -268,7 +277,8 @@ async fn module_transaction_to_transaction_details_failed() {
             to: AddressEx::address_only("0xaAEb2035FF394fdB2C879190f95e7676f1A9444B"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
-            address_info_index: None
+            address_info_index: None,
+            trusted_delegate_call_target: None
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -364,8 +374,22 @@ async fn multisig_transaction_with_origin() {
             })
         });
     mock_info_provider
+        .expect_contract_info()
+        .with(eq("0x8D29bE29923b68abfDD21e541b9374737B49cdAD"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(ContractInfo {
+                name: "multiSend".to_string(),
+                address: "0x8D29bE29923b68abfDD21e541b9374737B49cdAD".to_string(),
+                display_name: "Gnosis Safe: Multi Send 1.1.1".to_string(),
+                logo_uri: None,
+                contract_abi: None,
+                trusted_for_delegate_call: true,
+            })
+        });
+    mock_info_provider
         .expect_address_ex_from_any_source()
-        .times(7) // 1 + 6 calls within data decoded multisig
+        .times(8) // 2 (to) + 6 calls within data decoded multisig
         .returning(move |_| bail!("no address info"));
 
     let expected =
@@ -378,4 +402,71 @@ async fn multisig_transaction_with_origin() {
             .unwrap();
 
     assert_eq!(expected, actual);
+}
+
+#[rocket::async_test]
+async fn is_trusted_delegate_with_call() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider.expect_contract_info().times(0);
+
+    let actual = is_trusted_delegate_call(
+        &Operation::CALL,
+        "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &mock_info_provider,
+    )
+    .await;
+
+    assert_eq!(actual, None);
+}
+
+#[rocket::async_test]
+async fn is_trusted_delegate_with_delegate() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_contract_info()
+        .with(eq("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(ContractInfo {
+                name: "name".to_string(),
+                address: "address".to_string(),
+                display_name: "display name".to_string(),
+                logo_uri: None,
+                contract_abi: None,
+                trusted_for_delegate_call: false,
+            })
+        });
+
+    let actual = is_trusted_delegate_call(
+        &Operation::DELEGATE,
+        "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &mock_info_provider,
+    )
+    .await;
+
+    assert_eq!(actual, Some(false));
+}
+
+#[rocket::async_test]
+async fn is_trusted_delegate_with_contract_request_failure() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_contract_info()
+        .with(eq("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"))
+        .times(1)
+        .return_once(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                body: String::new(),
+                status_code: 404,
+            }))
+        });
+
+    let actual = is_trusted_delegate_call(
+        &Operation::DELEGATE,
+        "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &mock_info_provider,
+    )
+    .await;
+
+    assert_eq!(actual, None);
 }

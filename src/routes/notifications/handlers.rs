@@ -81,7 +81,7 @@ pub async fn post_registration(
     }
 }
 
-fn build_backend_request(
+pub fn build_backend_request(
     device_data: &DeviceData,
     safe_registration: &SafeRegistration,
 ) -> BackendRegistrationRequest {

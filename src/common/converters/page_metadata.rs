@@ -7,10 +7,7 @@ impl PageMetadata {
     }
 
     pub fn from_cursor(encoded_cursor: &str) -> Self {
-        let mut output = Self {
-            offset: 0,
-            limit: 20,
-        };
+        let mut output = Self::default();
 
         let chunked: Vec<Vec<&str>> = encoded_cursor
             .split("&")
@@ -27,5 +24,13 @@ impl PageMetadata {
         });
 
         output
+    }
+}
+impl Default for PageMetadata {
+    fn default() -> Self {
+        Self {
+            offset: 0,
+            limit: 20,
+        }
     }
 }

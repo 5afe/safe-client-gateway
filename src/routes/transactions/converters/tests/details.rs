@@ -384,7 +384,7 @@ async fn multisig_transaction_with_origin() {
                 display_name: "Gnosis Safe: Multi Send 1.1.1".to_string(),
                 logo_uri: None,
                 contract_abi: None,
-                trusted_for_delegate_call: Some(true),
+                trusted_for_delegate_call: true,
             })
         });
     mock_info_provider
@@ -433,7 +433,7 @@ async fn is_trusted_delegate_with_delegate() {
                 display_name: "display name".to_string(),
                 logo_uri: None,
                 contract_abi: None,
-                trusted_for_delegate_call: Some(false),
+                trusted_for_delegate_call: false,
             })
         });
 

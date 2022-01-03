@@ -179,7 +179,6 @@ pub async fn is_trusted_delegate_call(
             .await
             .map(|contract_info| contract_info.trusted_for_delegate_call)
             .ok()
-            .flatten()
     } else {
         None
     }

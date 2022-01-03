@@ -13,5 +13,5 @@ pub struct ContractInfo {
     pub display_name: String,
     pub logo_uri: Option<String>,
     pub contract_abi: Option<Value>,
-    pub trusted_for_delegate_call: Option<bool>,
+    pub trusted_for_delegate_call: bool,
 }

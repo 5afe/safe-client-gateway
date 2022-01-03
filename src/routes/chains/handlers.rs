@@ -1,6 +1,6 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::chains::ChainInfo as BackendChainInfo;
-use crate::common::models::page::{Page, PageMetadata};
+use crate::common::models::page::Page;
 use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::chains::models::ChainInfo as ServiceChainInfo;
@@ -36,5 +36,9 @@ pub async fn get_single_chain(
 }
 
 fn map_link(original_link: Option<String>) -> Option<String> {
-    original_link
+    let a = original_link.as_ref().map(|link| {
+        log::error!("URLS CONFIG: {}", link);
+        String::from(link)
+    });
+    a.to_owned()
 }

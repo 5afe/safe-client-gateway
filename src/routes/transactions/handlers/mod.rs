@@ -18,7 +18,3 @@ pub(super) fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
     }
     .to_url_string()
 }
-
-pub(super) fn build_absolute_uri(context: &RequestContext, origin: Origin) -> String {
-    format!("{}{}", context.host, origin)
-}

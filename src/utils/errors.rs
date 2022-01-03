@@ -85,7 +85,7 @@ impl ApiError {
         )
     }
 
-    fn new(status_code: u16, message: ErrorDetails) -> Self {
+    pub fn new(status_code: u16, message: ErrorDetails) -> Self {
         Self {
             status: status_code,
             details: message,

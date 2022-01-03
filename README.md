@@ -42,18 +42,24 @@ The contents of the file should be the following (see `.env.sample` for an examp
 
 ## Tests
 
-To run all tests use the `cargo test` command. If you want to run a specific subset of tests, then add additionally any info regarding the path of the tests and `cargo` will match it.
+In order to run the test suite of the project:
 
-Example: `cargo test converters` will run every tests under the `converters` module. Matching occurs also at a test name level, so by writing the full name of a test, that single test can be run.
+1. Have an instance of Redis running (as some of them test the integration with Redis).
 
-As you can see in the `./github/workflows/rust.yml` there are certain basic requirements to run tests:
-
-1. You need a running `redis-server`
-2. You need to define the following environment variables:
 ```bash
-REDIS_URI: redis://localhost:6379
-WEBHOOK_TOKEN: test_webhook_token 
-CONFIG_SERVICE_URI: https://config.service.url
-VPC_TRANSACTION_SERVICE_URI: 'false' # uses transactionServiceUrl from ChainInfo instead, production default is true
+redis-server
 ```
-3. Run the tests with `$ cargo test -- --test-threads 1` (Running every test in a single thread is a work around to rust defaults behaviour of running tests in parallel. Concurrent updates to the environment variables and cache in the tests will make them behave nondeterministically )
+
+2. Make sure that `REDIS_URI` is set and points to the current Redis instance (assuming Redis is runnning on the default port `6379`):
+
+```bash
+export REDIS_URI=redis://localhost:6379
+```
+
+3. Run the tests
+
+```bash
+cargo test -- --test-threads 1
+```
+
+By default, `cargo test` will execute the tests in the test suite in parallel. Because some of the tests update some shared local state (eg.: environment variables) the tests should be executed on a single thread – thus `--test-threads 1`.

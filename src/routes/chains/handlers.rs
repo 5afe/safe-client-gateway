@@ -44,7 +44,8 @@ pub async fn get_single_chain(
 
 fn map_link(context: &RequestContext, original_link: Option<String>) -> Option<String> {
     let a = original_link.as_ref().map(|link| {
-        let cursor = link.split("?").collect::<Vec<&str>>()[1];
+        let cursor =
+            PageMetadata::from_cursor(link.split("?").collect::<Vec<&str>>()[1]).to_url_string();
         let uri = build_absolute_uri(
             context,
             uri!(crate::routes::chains::routes::get_chains(Some(cursor))),

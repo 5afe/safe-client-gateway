@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::CacheResponse;
+use crate::config::tx_queued_cache_duration;
 use crate::routes::transactions::handlers::{details, history, proposal, queued};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
@@ -189,6 +190,7 @@ pub async fn get_transactions_queued(
                 &trusted,
             )
         })
+        .duration(tx_queued_cache_duration())
         .execute()
         .await
 }

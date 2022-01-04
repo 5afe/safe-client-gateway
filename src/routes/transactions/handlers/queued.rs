@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::common::models::page::{Page, PageMetadata};
-use crate::config::{transaction_request_timeout, tx_queued_cache_duration};
+use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::handlers::{build_absolute_uri, offset_page_meta};
 use crate::routes::transactions::models::summary::{ConflictType, Label, TransactionListItem};
@@ -42,7 +42,6 @@ pub async fn get_queued_transactions(
 
     let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
-        .cache_duration(tx_queued_cache_duration())
         .execute()
         .await?;
     let mut backend_transactions: Page<MultisigTransaction> = serde_json::from_str(&body)?;

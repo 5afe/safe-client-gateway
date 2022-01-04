@@ -1,5 +1,10 @@
-use crate::common::models::backend::safe_apps::SafeApp as BackendSafeApp;
-use crate::routes::safe_apps::models::{SafeApp, SafeAppProvider};
+use crate::common::models::backend::safe_apps::{
+    SafeApp as BackendSafeApp, SafeAppAccessPolicies as BackendSafeAppAccessPolicies,
+    SafeAppDomainAllowlistPolicy as BackendSafeAppDomainAllowlistPolicy,
+    SafeAppNoRestrictionsPolicy as BackendSafeAppNoRestrictionsPolicy,
+    SafeAppProvider as BackendSafeAppProvider,
+};
+use crate::routes::safe_apps::models::{SafeApp, SafeAppAccessPolicies, SafeAppProvider};
 
 impl From<BackendSafeApp> for SafeApp {
     fn from(safe_app: BackendSafeApp) -> Self {
@@ -18,6 +23,11 @@ impl From<BackendSafeApp> for SafeApp {
                 url: provider.url.to_string(),
                 name: provider.name.to_string(),
             }),
+            access_policy: match safe_app.access_policy {
+                BackendSafeAppAccessPolicies::NoRestrictions(safe_app.access_policy) => {}
+                BackendSafeAppAccessPolicies::DomainAllowList(safe_app.access_policy) => {}
+                _ => SafeAppAccessPolicies::Unknown,
+            },
         }
     }
 }

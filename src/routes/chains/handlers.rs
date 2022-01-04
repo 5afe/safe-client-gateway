@@ -43,7 +43,7 @@ pub async fn get_single_chain(
 }
 
 fn map_link(context: &RequestContext, original_link: Option<String>) -> Option<String> {
-    let a = original_link.as_ref().map(|link| {
+    original_link.as_ref().map(|link| {
         let cursor =
             PageMetadata::from_cursor(link.split("?").collect::<Vec<&str>>().get(1).unwrap_or(&""))
                 .to_url_string();
@@ -52,6 +52,5 @@ fn map_link(context: &RequestContext, original_link: Option<String>) -> Option<S
             uri!(crate::routes::chains::routes::get_chains(Some(cursor))),
         );
         String::from(uri)
-    });
-    a
+    })
 }

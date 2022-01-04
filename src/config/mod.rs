@@ -102,6 +102,10 @@ pub fn token_price_cache_duration() -> usize {
     env_with_default("TOKEN_PRICE_CACHE_DURATION", 10 * 1000)
 }
 
+pub fn tx_queued_cache_duration() -> usize {
+    env_with_default("TX_QUEUED_CACHE_DURATION", request_cache_duration())
+}
+
 // REQUEST TIMEOUTS
 pub fn internal_client_connect_timeout() -> u64 {
     env_with_default("INTERNAL_CLIENT_CONNECT_TIMEOUT", 1000)

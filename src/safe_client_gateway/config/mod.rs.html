@@ -198,6 +198,10 @@
 <span id="198">198</span>
 <span id="199">199</span>
 <span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
@@ -300,6 +304,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_price_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
     <span class="ident">env_with_default</span>(<span class="string">&quot;TOKEN_PRICE_CACHE_DURATION&quot;</span>, <span class="number">10</span> <span class="op">*</span> <span class="number">1000</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tx_queued_cache_duration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="ident">env_with_default</span>(<span class="string">&quot;TX_QUEUED_CACHE_DURATION&quot;</span>, <span class="ident">request_cache_duration</span>())
 }
 
 <span class="comment">// REQUEST TIMEOUTS</span>

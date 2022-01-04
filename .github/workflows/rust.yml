@@ -54,6 +54,7 @@ jobs:
       WEBHOOK_TOKEN: test_webhook_token
       CONFIG_SERVICE_URI: https://config.service.url
       VPC_TRANSACTION_SERVICE_URI: 'false'
+      SCHEME: http
 
     steps:
       - name: Checkout branch

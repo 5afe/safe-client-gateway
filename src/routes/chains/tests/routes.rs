@@ -1,4 +1,5 @@
 use crate::{
+    common::models::backend::chains::ChainInfo as BackendChainInfo,
     common::models::page::Page,
     config::chain_info_request_timeout,
     routes::chains::models::ChainInfo,
@@ -48,6 +49,46 @@ async fn paginated_chain_infos() {
     let actual_status = response.status();
     let actual_json_body = response.into_string().await.unwrap();
     let actual = serde_json::from_str::<Page<ChainInfo>>(&actual_json_body).unwrap();
+
+    assert_eq!(actual_status, Status::Ok);
+    assert_eq!(actual, expected);
+}
+
+#[rocket::async_test]
+async fn single_chain_info() {
+    let mock_http_client = {
+        let mut mock_http_client = MockHttpClient::new();
+        mock_http_client
+            .expect_get()
+            .times(1)
+            .return_once(move |_| {
+                Ok(Response {
+                    status_code: 200,
+                    body: String::from(crate::tests::json::CHAIN_INFO_RINKEBY),
+                })
+            });
+        mock_http_client
+    };
+
+    let client = Client::tracked(setup_rocket(
+        mock_http_client,
+        routes![super::super::routes::get_chain],
+    ))
+    .await
+    .expect("valid rocket instance");
+    let response = {
+        let mut response = client.get("/v1/chains/4");
+        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.dispatch().await
+    };
+    let expected: ChainInfo =
+        serde_json::from_str::<BackendChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY)
+            .unwrap()
+            .into();
+
+    let actual_status = response.status();
+    let actual_json_body = response.into_string().await.unwrap();
+    let actual = serde_json::from_str::<ChainInfo>(&actual_json_body).unwrap();
 
     assert_eq!(actual_status, Status::Ok);
     assert_eq!(actual, expected);

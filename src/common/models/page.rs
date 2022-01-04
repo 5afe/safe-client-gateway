@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(PartialEq))]
 pub struct Page<T> {
     pub next: Option<String>,
     pub previous: Option<String>,

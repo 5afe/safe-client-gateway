@@ -103,7 +103,7 @@ pub fn token_price_cache_duration() -> usize {
 }
 
 pub fn tx_queued_cache_duration() -> usize {
-    env_with_default("TX_QUEUED_CACHE_DURATION", indefinite_timeout())
+    env_with_default("TX_QUEUED_CACHE_DURATION", request_cache_duration())
 }
 
 // REQUEST TIMEOUTS

@@ -10,7 +10,7 @@ pub struct SafeApp {
     pub description: String,
     pub chain_ids: Vec<u64>,
     pub provider: Option<SafeAppProvider>,
-    pub access_policy: SafeAppAccessPolicies,
+    pub access_control: SafeAppAccessControlPolicies,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]
@@ -20,23 +20,9 @@ pub struct SafeAppProvider {
     pub name: String,
 }
 
-// pub enum SafeAppAccessPolicies {
-//     NoRestrictions,
-//     DomainAllowList,
-// }
-
-// impl fmt::Display for SafeAppAccessPolicies {
-//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//         match *self {
-//             SafeAppAccessPolicies::NoRestrictions => write!(f, "NO_RESTRICTIONS"),
-//             SafeAppAccessPolicies::DomainAllowList => write!(f, "DOMAIN_ALLOWLIST"),
-//         }
-//     }
-// }
-
 #[derive(Deserialize, Debug, PartialEq, Clone)]
 #[serde(tag = "type")]
-pub enum SafeAppAccessPolicies {
+pub enum SafeAppAccessControlPolicies {
     #[serde(rename(deserialize = "NO_RESTRICTIONS"))]
     NoRestrictions(SafeAppNoRestrictionsPolicy),
     #[serde(rename(deserialize = "DOMAIN_ALLOWLIST"))]

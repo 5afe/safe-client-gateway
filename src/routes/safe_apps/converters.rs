@@ -1,10 +1,10 @@
 use crate::common::models::backend::safe_apps::{
-    SafeApp as BackendSafeApp, SafeAppAccessPolicies as BackendSafeAppAccessPolicies,
-    SafeAppDomainAllowlistPolicy as BackendSafeAppDomainAllowlistPolicy,
-    SafeAppNoRestrictionsPolicy as BackendSafeAppNoRestrictionsPolicy,
-    SafeAppProvider as BackendSafeAppProvider,
+    SafeApp as BackendSafeApp, SafeAppAccessControlPolicies as BackendSafeAppAccessControlPolicies,
 };
-use crate::routes::safe_apps::models::{SafeApp, SafeAppAccessPolicies, SafeAppProvider};
+use crate::routes::safe_apps::models::{
+    SafeApp, SafeAppAccessControlPolicies, SafeAppDomainAllowlistPolicy,
+    SafeAppNoRestrictionsPolicy, SafeAppProvider,
+};
 
 impl From<BackendSafeApp> for SafeApp {
     fn from(safe_app: BackendSafeApp) -> Self {
@@ -23,10 +23,16 @@ impl From<BackendSafeApp> for SafeApp {
                 url: provider.url.to_string(),
                 name: provider.name.to_string(),
             }),
-            access_policy: match safe_app.access_policy {
-                BackendSafeAppAccessPolicies::NoRestrictions(safe_app.access_policy) => {}
-                BackendSafeAppAccessPolicies::DomainAllowList(safe_app.access_policy) => {}
-                _ => SafeAppAccessPolicies::Unknown,
+            access_control: match safe_app.access_control {
+                BackendSafeAppAccessControlPolicies::NoRestrictions(_) => {
+                    SafeAppAccessControlPolicies::NoRestrictions(SafeAppNoRestrictionsPolicy {})
+                }
+                BackendSafeAppAccessControlPolicies::DomainAllowList(policy) => {
+                    SafeAppAccessControlPolicies::DomainAllowList(SafeAppDomainAllowlistPolicy {
+                        value: policy.value,
+                    })
+                }
+                _ => SafeAppAccessControlPolicies::Unknown,
             },
         }
     }

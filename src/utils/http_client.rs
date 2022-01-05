@@ -4,7 +4,7 @@ use crate::config::internal_client_connect_timeout;
 use crate::utils::errors::{ApiError, ApiResult};
 use core::time::Duration;
 use mockall::automock;
-use reqwest::{header::CONTENT_TYPE, RequestBuilder};
+use reqwest::header::{HeaderMap, HeaderName, HeaderValue, CONTENT_TYPE};
 use std::collections::HashMap;
 
 #[derive(PartialEq, Debug)]
@@ -96,7 +96,7 @@ impl HttpClient for reqwest::Client {
         let response = self
             .get(&request.url)
             .timeout(request.timeout)
-            // .headers(request.headers)
+            .headers(map_headers(&request.headers))
             .send()
             .await?;
         Response::from(response).await
@@ -108,6 +108,7 @@ impl HttpClient for reqwest::Client {
             .post(&request.url)
             .header(CONTENT_TYPE, "application/json")
             .body(body)
+            .headers(map_headers(&request.headers))
             .timeout(request.timeout)
             .send()
             .await?;
@@ -120,11 +121,24 @@ impl HttpClient for reqwest::Client {
             .delete(&request.url)
             .header(CONTENT_TYPE, "application/json")
             .body(body)
+            .headers(map_headers(&request.headers))
             .timeout(request.timeout)
             .send()
             .await?;
         Response::from(response).await
     }
+}
+
+fn map_headers(headers_input: &HashMap<String, String>) -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    for (name, value) in headers_input {
+        headers.insert(
+            HeaderName::from_bytes(name.as_bytes())
+                .expect(&format!("Header name '{}' is not supported", &name)),
+            HeaderValue::from_str(value).expect(&format!("Invalid header value for '{}'", &name)),
+        );
+    }
+    headers
 }
 
 #[cfg(test)]

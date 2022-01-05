@@ -4,13 +4,15 @@ use crate::config::internal_client_connect_timeout;
 use crate::utils::errors::{ApiError, ApiResult};
 use core::time::Duration;
 use mockall::automock;
-use reqwest::header::CONTENT_TYPE;
+use reqwest::{header::CONTENT_TYPE, RequestBuilder};
+use std::collections::HashMap;
 
 #[derive(PartialEq, Debug)]
 pub struct Request {
     url: String,
     body: Option<String>,
     timeout: Duration,
+    headers: HashMap<String, String>,
 }
 
 impl Request {
@@ -19,6 +21,7 @@ impl Request {
             url,
             body: None,
             timeout: Duration::from_millis(default_request_timeout()),
+            headers: HashMap::new(),
         }
     }
 
@@ -29,6 +32,12 @@ impl Request {
 
     pub fn body(&mut self, body: Option<String>) -> &mut Self {
         self.body = body;
+        self
+    }
+
+    pub fn add_header(&mut self, header: (&str, &str)) -> &mut Self {
+        self.headers
+            .insert(String::from(header.0), String::from(header.1));
         self
     }
 }
@@ -87,6 +96,7 @@ impl HttpClient for reqwest::Client {
         let response = self
             .get(&request.url)
             .timeout(request.timeout)
+            // .headers(request.headers)
             .send()
             .await?;
         Response::from(response).await

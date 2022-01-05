@@ -11,16 +11,17 @@ pub async fn safe_apps(
     client_url: &Option<String>,
 ) -> ApiResult<Vec<SafeApp>> {
     let url = config_uri!(
-        "/v1/safe-apps/?chainId={}&client_url={}",
+        "/v1/safe-apps/?chainId={}&clientUrl={}",
         chain_id,
         client_url.clone().unwrap_or("".to_string())
     );
-
+    print!("{}", url);
+    print!("{}", "pump".to_string());
     let data = RequestCached::new_from_context(url, &context)
         .cache_duration(safe_apps_cache_duration())
         .execute()
         .await?;
-
+    print!("{}", data);
     Ok(serde_json::from_str::<Vec<BackendSafeApp>>(&data)?
         .into_iter()
         .map(|backend_safe_app| backend_safe_app.into())

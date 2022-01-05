@@ -28,6 +28,12 @@ pub fn webhook_token() -> String {
     env::var("WEBHOOK_TOKEN").expect("WEBHOOK_TOKEN missing in env")
 }
 
+pub fn core_services_auth_token() -> String {
+    let token =
+        env::var("CORE_SERVICE_AUTH_TOKEN").expect("CORE_SERVICE_AUTH_TOKEN missing in env");
+    format!("Token {}", token)
+}
+
 pub fn scheme() -> String {
     env_with_default("SCHEME", "https".into())
 }

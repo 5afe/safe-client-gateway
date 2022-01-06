@@ -39,4 +39,4 @@ pub struct SafeAppDomainAllowlistPolicy {
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct SafeAppNoRestrictionsPolicy {}
+pub struct SafeAppNoRestrictionsPolicy;

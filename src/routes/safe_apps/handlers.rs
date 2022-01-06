@@ -13,7 +13,7 @@ pub async fn safe_apps(
     let url = config_uri!(
         "/v1/safe-apps/?chainId={}&clientUrl={}",
         chain_id,
-        client_url.clone().unwrap_or("".to_string())
+        client_url.as_deref().unwrap_or("")
     );
     let data = RequestCached::new_from_context(url, &context)
         .cache_duration(safe_apps_cache_duration())

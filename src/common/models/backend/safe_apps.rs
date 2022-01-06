@@ -22,11 +22,10 @@ pub struct SafeAppProvider {
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]
 #[serde(tag = "type")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SafeAppAccessControlPolicies {
-    #[serde(rename(deserialize = "NO_RESTRICTIONS"))]
-    NoRestrictions(SafeAppNoRestrictionsPolicy),
-    #[serde(rename(deserialize = "DOMAIN_ALLOWLIST"))]
-    DomainAllowList(SafeAppDomainAllowlistPolicy),
+    NoRestrictions,
+    DomainAllowlist(SafeAppDomainAllowlistPolicy),
     #[serde(other)]
     Unknown,
 }
@@ -36,7 +35,3 @@ pub enum SafeAppAccessControlPolicies {
 pub struct SafeAppDomainAllowlistPolicy {
     pub value: Vec<String>,
 }
-
-#[derive(Deserialize, Debug, PartialEq, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct SafeAppNoRestrictionsPolicy;

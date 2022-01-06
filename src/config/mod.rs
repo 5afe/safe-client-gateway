@@ -29,8 +29,10 @@ pub fn webhook_token() -> String {
 }
 
 pub fn transaction_service_auth_token() -> String {
-    let token = env::var("TRANSACTION_SERVICE_AUTH_TOKEN")
-        .expect("TRANSACTION_SERVICE_AUTH_TOKEN missing in env");
+    let token = env::var("TRANSACTION_SERVICE_AUTH_TOKEN").unwrap_or_else(|_| {
+        log::warn!("TRANSACTION_SERVICE_AUTH_TOKEN missing in env");
+        String::new()
+    });
     format!("Token {}", token)
 }
 

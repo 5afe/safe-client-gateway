@@ -12,12 +12,14 @@ use super::RESPONSE_SAFE_APPS;
 #[rocket::async_test]
 async fn safe_apps() {
     let chain_id = "137";
+    let client_url = "https://gnosis-safe.io";
 
     let mut mock_http_client = MockHttpClient::new();
 
     let safe_apps_request = Request::new(config_uri!(
-        "/v1/safe-apps/?chainId={}&clientUrl=",
-        chain_id
+        "/v1/safe-apps/?chainId={}&clientUrl={}",
+        chain_id,
+        client_url
     ));
 
     mock_http_client
@@ -38,7 +40,7 @@ async fn safe_apps() {
     .await
     .expect("valid rocket instance");
     let response = {
-        let mut response = client.get("/v1/chains/137/safe-apps");
+        let mut response = client.get("/v1/chains/137/safe-apps?client_url=https://gnosis-safe.io");
         response.add_header(Header::new("Host", "test.gnosis.io"));
         response.dispatch().await
     };

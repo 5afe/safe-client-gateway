@@ -25,7 +25,7 @@ impl From<BackendSafeApp> for SafeApp {
             }),
             access_control: match safe_app.access_control {
                 BackendSafeAppAccessControlPolicies::NoRestrictions(_) => {
-                    SafeAppAccessControlPolicies::NoRestrictions(SafeAppNoRestrictionsPolicy {})
+                    SafeAppAccessControlPolicies::NoRestrictions(SafeAppNoRestrictionsPolicy)
                 }
                 BackendSafeAppAccessControlPolicies::DomainAllowList(policy) => {
                     SafeAppAccessControlPolicies::DomainAllowList(SafeAppDomainAllowlistPolicy {

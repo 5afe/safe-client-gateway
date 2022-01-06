@@ -15,7 +15,11 @@ async fn safe_apps() {
 
     let mut mock_http_client = MockHttpClient::new();
 
-    let safe_apps_request = Request::new(config_uri!("/v1/safe-apps/?chainId={}", chain_id));
+    let safe_apps_request = Request::new(config_uri!(
+        "/v1/safe-apps/?chainId={}&clientUrl=",
+        chain_id
+    ));
+
     mock_http_client
         .expect_get()
         .times(1)
@@ -60,7 +64,10 @@ async fn safe_apps_not_found() {
 
     let mut mock_http_client = MockHttpClient::new();
 
-    let safe_apps_request = Request::new(config_uri!("/v1/safe-apps/?chainId={}", chain_id));
+    let safe_apps_request = Request::new(config_uri!(
+        "/v1/safe-apps/?chainId={}&clientUrl=",
+        chain_id
+    ));
     mock_http_client
         .expect_get()
         .times(1)

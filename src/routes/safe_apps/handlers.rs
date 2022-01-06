@@ -15,13 +15,12 @@ pub async fn safe_apps(
         chain_id,
         client_url.clone().unwrap_or("".to_string())
     );
-    print!("{}", url);
-    print!("{}", "pump".to_string());
+    println!("{}", url);
     let data = RequestCached::new_from_context(url, &context)
         .cache_duration(safe_apps_cache_duration())
         .execute()
         .await?;
-    print!("{}", data);
+
     Ok(serde_json::from_str::<Vec<BackendSafeApp>>(&data)?
         .into_iter()
         .map(|backend_safe_app| backend_safe_app.into())

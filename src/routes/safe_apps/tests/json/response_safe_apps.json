@@ -5,47 +5,7 @@
     "name": "Curve",
     "iconUrl": "https://curve.fi/logo-square.svg",
     "description": "Decentralized exchange liquidity pool designed for extremely efficient stablecoin trading and low-risk income for liquidity providers",
-    "chainIds": [1, 137],
-    "provider": null,
-    "accessControl": {
-      "type": "NO_RESTRICTIONS"
-    }
-  },
-  {
-    "id": 1,
-    "url": "https://app.aave.com",
-    "name": "Aave v2",
-    "iconUrl": "https://app.aave.com/aave.svg",
-    "description": "Non-custodial liquidity protocol to earn interest on deposits and borrow",
-    "chainIds": [1, 137],
-    "provider": null,
-    "accessControl": {
-      "type": "NO_RESTRICTIONS"
-    }
-  },
-  {
-    "id": 11,
-    "url": "https://app.1inch.io",
-    "name": "1inch.exchange",
-    "iconUrl": "https://app.1inch.io/assets/images/1inch.svg",
-    "description": "The most efficient defi aggregator",
-    "chainIds": [1, 56, 137],
-    "provider": {
-      "url": "https://1inch.exchange",
-      "name": "1inch corporation"
-    },
-    "accessControl": {
-      "type": "DOMAIN_ALLOWLIST",
-      "value": ["https://gnosis-safe.io", "https://dev.gnosis-safe.io"]
-    }
-  },
-  {
-    "id": 17,
-    "url": "https://cloudflare-ipfs.com/ipfs/QmSpfd5UwhUBZxKouqSsY3bFynyDy6sToVLigLwSWRms9s",
-    "name": "Gnosis Auction Starter",
-    "iconUrl": "https://cloudflare-ipfs.com/ipfs/QmSpfd5UwhUBZxKouqSsY3bFynyDy6sToVLigLwSWRms9s/logo.svg",
-    "description": "Safe app to start new auctions on Gnosis Auction",
-    "chainIds": [1, 4, 100, 137],
+    "chainIds": ["1", "137"],
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
@@ -57,25 +17,37 @@
     "name": "Transaction Builder",
     "iconUrl": "https://safe-apps.dev.gnosisdev.com/tx-builder/tx-builder.png",
     "description": "A Safe app to compose custom transactions",
-    "chainIds": [1, 4, 10, 56, 43114, 100, 137, 246, 42161, 73799],
+    "chainIds": [
+      "1",
+      "4",
+      "10",
+      "56",
+      "100",
+      "137",
+      "246",
+      "42161",
+      "43114",
+      "73799"
+    ],
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     }
   },
   {
-    "id": 16,
-    "url": "https://cloudflare-ipfs.com/ipfs/QmeXrUW8fQE45GufCvseBtFmJjwrEzxjzNgEL1SSy8hx5Z",
-    "name": "Sablier",
-    "iconUrl": "https://cloudflare-ipfs.com/ipfs/QmeXrUW8fQE45GufCvseBtFmJjwrEzxjzNgEL1SSy8hx5Z/logo.svg",
-    "description": "Safe App for interacting with the Sablier protocol",
-    "chainIds": [1, 4, 56, 137],
+    "id": 11,
+    "url": "https://app.1inch.io",
+    "name": "1inch.exchange",
+    "iconUrl": "https://app.1inch.io/assets/images/1inch.svg",
+    "description": "The most efficient defi aggregator",
+    "chainIds": ["1", "56", "137"],
     "provider": {
-      "url": "https://sablier.finance",
-      "name": "Sablier"
+      "url": "https://1inch.exchange",
+      "name": "1inch corporation"
     },
     "accessControl": {
-      "type": "NO_RESTRICTIONS"
+      "type": "DOMAIN_ALLOWLIST",
+      "value": ["https://gnosis-safe.io", "https://dev.gnosis-safe.io"]
     }
   },
   {
@@ -84,43 +56,7 @@
     "name": "ParaSwap",
     "iconUrl": "https://paraswap.io/paraswap.svg",
     "description": "ParaSwap allows dApps and traders to get the best DEX liquidity by aggregating multiple markets and offering the best rates",
-    "chainIds": [1, 56, 137],
-    "provider": null,
-    "accessControl": {
-      "type": "NO_RESTRICTIONS"
-    }
-  },
-  {
-    "id": 37,
-    "url": "https://gnosis-zodiac-app.netlify.app/",
-    "name": "Zodiac",
-    "iconUrl": "https://gnosis-zodiac-app.netlify.app/zodiac-app-logo.png",
-    "description": "The expansion pack for DAOs",
-    "chainIds": [1, 4, 100, 137],
-    "provider": null,
-    "accessControl": {
-      "type": "NO_RESTRICTIONS"
-    }
-  },
-  {
-    "id": 38,
-    "url": "https://apy.plasma.finance/",
-    "name": "0xPlasma Finance",
-    "iconUrl": "https://apy.plasma.finance/logo.svg",
-    "description": "Cross-chain DeFi & DEX aggregator, farming, asset management, fiat on-ramp",
-    "chainIds": [1, 56, 137],
-    "provider": null,
-    "accessControl": {
-      "type": "NO_RESTRICTIONS"
-    }
-  },
-  {
-    "id": 33,
-    "url": "https://cloudflare-ipfs.com/ipfs/QmdFyTuzHnzj6Z1pRRLqjWXEbH56TBNKo3M1an21zKWCXt",
-    "name": "CSV Airdrop",
-    "iconUrl": "https://cloudflare-ipfs.com/ipfs/QmdFyTuzHnzj6Z1pRRLqjWXEbH56TBNKo3M1an21zKWCXt/logo.svg",
-    "description": "Upload your CSV transfer file to send arbitrarily many tokens of various amounts to a list of recipients.",
-    "chainIds": [1, 4, 56, 100, 137],
+    "chainIds": ["1", "56", "137"],
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
@@ -132,7 +68,18 @@
     "name": "WalletConnect",
     "iconUrl": "https://safe-apps.dev.gnosisdev.com/wallet-connect/wallet-connect.svg",
     "description": "Connect your Safe to any dApp that supports WalletConnect",
-    "chainIds": [1, 4, 10, 56, 100, 137, 246, 73799, 42161, 43114],
+    "chainIds": [
+      "1",
+      "4",
+      "10",
+      "56",
+      "100",
+      "137",
+      "246",
+      "73799",
+      "42161",
+      "43114"
+    ],
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"

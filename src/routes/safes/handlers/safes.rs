@@ -3,7 +3,7 @@ use crate::common::models::backend::transactions::{MultisigTransaction, Transact
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::page::{Page, SafeList};
 use crate::config::{
-    core_services_auth_token, owners_for_safes_cache_duration, transaction_request_timeout,
+    owners_for_safes_cache_duration, transaction_request_timeout, transaction_service_auth_token,
 };
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::safes::models::{SafeLastChanges, SafeState};
@@ -153,7 +153,7 @@ pub async fn get_owners_for_safe(
     let url = core_uri!(info_provider, "/v1/owners/{}/safes/", owner_address)?;
     let body = RequestCached::new_from_context(url, context)
         .cache_duration(owners_for_safes_cache_duration())
-        .add_header(("Authorization", &core_services_auth_token()))
+        .add_header(("Authorization", &transaction_service_auth_token()))
         .execute()
         .await?;
 

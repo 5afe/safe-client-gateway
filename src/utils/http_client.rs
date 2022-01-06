@@ -21,7 +21,7 @@ impl Request {
             url,
             body: None,
             timeout: Duration::from_millis(default_request_timeout()),
-            headers: HashMap::new(),
+            headers: HashMap::default(),
         }
     }
 

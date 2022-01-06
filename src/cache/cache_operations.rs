@@ -169,7 +169,7 @@ impl RequestCached {
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_duration(),
             cache_all_errors: false,
-            headers: HashMap::new(),
+            headers: HashMap::default(),
         }
     }
 

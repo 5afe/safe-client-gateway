@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["SafeApp",""],["SafeAppProvider",""]]});
+initSidebarItems({"enum":[["SafeAppAccessControlPolicies",""]],"struct":[["SafeApp",""],["SafeAppDomainAllowlistPolicy",""],["SafeAppProvider",""]]});

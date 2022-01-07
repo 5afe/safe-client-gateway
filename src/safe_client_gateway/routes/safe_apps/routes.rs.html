@@ -63,6 +63,18 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::safe_apps::handlers::safe_apps</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
@@ -79,6 +91,10 @@
  * ## Path
  *
  * - `/v1/chains/&lt;chain_id&gt;/safe-apps
+ *
+ * ## Query parameters
+ *
+ * - `client_url`: The URL of the client application. Optional.
  *
  * ## Examples
  * [
@@ -97,7 +113,10 @@
  *             &quot;246&quot;,
  *             &quot;73799&quot;
  *         ],
- *         &quot;provider&quot;: null
+ *         &quot;provider&quot;: null,
+ *         &quot;accessControl&quot;: {
+ *            &quot;type&quot;: &quot;NO_RESTRICTIONS&quot;
+ *          }
  *     },
  *     {
  *         &quot;id&quot;: 25,
@@ -115,17 +134,22 @@
  *             &quot;73799&quot;,
  *             &quot;42161&quot;
  *         ],
- *         &quot;provider&quot;: null
+ *         &quot;provider&quot;: null,
+ *         &quot;accessControl&quot;: {
+ *            &quot;type&quot;: &quot;DOMAIN_ALLOWLIST&quot;,
+ *           &quot;value&quot;: [&quot;https://gnosis-safe.io&quot;]
+ *          }
  *     }
  * ]
  */</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safe-apps&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safe-apps?&lt;client_url&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_safe_apps</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="ident">String</span>,
+    <span class="ident">client_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">content::Json</span>(<span class="ident">serde_json::to_string</span>(
-        <span class="kw-2">&amp;</span><span class="ident">safe_apps</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>).<span class="kw">await</span><span class="question-mark">?</span>,
+        <span class="kw-2">&amp;</span><span class="ident">safe_apps</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">client_url</span>).<span class="kw">await</span><span class="question-mark">?</span>,
     )<span class="question-mark">?</span>))
 }
 </code></pre></div>

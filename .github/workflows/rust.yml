@@ -55,6 +55,7 @@ jobs:
       CONFIG_SERVICE_URI: https://config.service.url
       VPC_TRANSACTION_SERVICE_URI: 'false'
       SCHEME: http
+      TRANSACTION_SERVICE_AUTH_TOKEN: some_other_random_token
 
     steps:
       - name: Checkout branch

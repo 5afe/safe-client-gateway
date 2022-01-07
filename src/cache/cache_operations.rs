@@ -13,6 +13,7 @@ use rocket::futures::FutureExt;
 use rocket::response::content;
 use serde::Deserialize;
 use serde::Serialize;
+use std::collections::HashMap;
 use std::future::Future;
 use std::sync::Arc;
 
@@ -155,6 +156,7 @@ pub struct RequestCached {
     pub cache_duration: usize,
     pub error_cache_duration: usize,
     pub cache_all_errors: bool,
+    pub headers: HashMap<String, String>,
 }
 
 impl RequestCached {
@@ -167,6 +169,7 @@ impl RequestCached {
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_duration(),
             cache_all_errors: false,
+            headers: HashMap::default(),
         }
     }
 
@@ -179,6 +182,7 @@ impl RequestCached {
             cache_duration: request_cache_duration(),
             error_cache_duration: request_error_cache_duration(),
             cache_all_errors: false,
+            headers: HashMap::new(),
         }
     }
 
@@ -199,6 +203,12 @@ impl RequestCached {
 
     pub fn cache_all_errors(&mut self) -> &mut Self {
         self.cache_all_errors = true;
+        self
+    }
+
+    pub fn add_header(&mut self, header: (&str, &str)) -> &mut Self {
+        self.headers
+            .insert(String::from(header.0), String::from(header.1));
         self
     }
 

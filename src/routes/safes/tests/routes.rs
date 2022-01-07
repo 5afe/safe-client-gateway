@@ -250,10 +250,11 @@ async fn get_owners() {
             })
         });
 
-    let safe_request = Request::new(format!(
+    let mut safe_request = Request::new(format!(
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
+    safe_request.add_header(("Authorization", "Token some_other_random_token"));
     mock_http_client
         .expect_get()
         .times(1)
@@ -310,10 +311,11 @@ async fn get_owners_not_found() {
             })
         });
 
-    let safe_request = Request::new(format!(
+    let mut safe_request = Request::new(format!(
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
+    safe_request.add_header(("Authorization", "Token some_other_random_token"));
     mock_http_client
         .expect_get()
         .times(1)

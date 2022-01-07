@@ -41,6 +41,9 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
             let http_request = {
                 let mut request = Request::new(String::from(&operation.url));
                 request.timeout(Duration::from_millis(operation.request_timeout));
+                for (header, value) in &operation.headers {
+                    request.add_header((header, value));
+                }
                 request
             };
             let response = client.get(http_request).await;

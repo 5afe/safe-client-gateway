@@ -15,6 +15,10 @@ use rocket::response::content;
  *
  * - `/v1/chains/<chain_id>/safe-apps
  *
+ * ## Query parameters
+ *
+ * - `client_url`: The URL of the client application. Optional.
+ *
  * ## Examples
  * [
  *     {
@@ -32,7 +36,10 @@ use rocket::response::content;
  *             "246",
  *             "73799"
  *         ],
- *         "provider": null
+ *         "provider": null,
+ *         "accessControl": {
+ *            "type": "NO_RESTRICTIONS"
+ *          }
  *     },
  *     {
  *         "id": 25,
@@ -50,16 +57,21 @@ use rocket::response::content;
  *             "73799",
  *             "42161"
  *         ],
- *         "provider": null
+ *         "provider": null,
+ *         "accessControl": {
+ *            "type": "DOMAIN_ALLOWLIST",
+ *           "value": ["https://gnosis-safe.io"]
+ *          }
  *     }
  * ]
  */
-#[get("/v1/chains/<chain_id>/safe-apps")]
+#[get("/v1/chains/<chain_id>/safe-apps?<client_url>")]
 pub async fn get_safe_apps(
     context: RequestContext,
     chain_id: String,
+    client_url: Option<String>,
 ) -> ApiResult<content::Json<String>> {
     Ok(content::Json(serde_json::to_string(
-        &safe_apps(&context, &chain_id).await?,
+        &safe_apps(&context, &chain_id, &client_url).await?,
     )?))
 }

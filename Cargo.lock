@@ -1817,7 +1817,7 @@ checksum = "71d301d4193d031abdd79ff7e3dd721168a9572ef3fe51a1517aba235bd8f86e"
 
 [[package]]
 name = "safe-client-gateway"
-version = "3.13.4"
+version = "3.15.0"
 dependencies = [
  "bigdecimal",
  "chrono",

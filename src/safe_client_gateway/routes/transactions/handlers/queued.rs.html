@@ -272,15 +272,17 @@
 <span id="271">271</span>
 <span id="272">272</span>
 <span id="273">273</span>
+<span id="274">274</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions::MultisigTransaction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page</span>::{<span class="ident">Page</span>, <span class="ident">PageMetadata</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::transaction_request_timeout</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::handlers</span>::{<span class="ident">build_absolute_uri</span>, <span class="ident">offset_page_meta</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::handlers::offset_page_meta</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::summary</span>::{<span class="ident">ConflictType</span>, <span class="ident">Label</span>, <span class="ident">TransactionListItem</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::urls::build_absolute_uri</span>;
 <span class="kw">use</span> <span class="ident">itertools::Itertools</span>;
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 

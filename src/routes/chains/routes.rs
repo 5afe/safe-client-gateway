@@ -43,14 +43,14 @@ pub async fn get_chain(
  * - `/v1/chains/` Returns the `ChainInfo` for our services supported networks
  *
  */
-#[get("/v1/chains?<limit>")]
+#[get("/v1/chains?<cursor>")]
 pub async fn get_chains(
     context: RequestContext,
-    limit: Option<String>,
+    cursor: Option<String>,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(&context)
         .duration(chain_info_response_cache_duration())
-        .resp_generator(|| get_chains_paginated(&context, &limit))
+        .resp_generator(|| get_chains_paginated(&context, &cursor))
         .execute()
         .await
 }

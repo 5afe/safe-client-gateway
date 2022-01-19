@@ -28,6 +28,14 @@ pub fn webhook_token() -> String {
     env::var("WEBHOOK_TOKEN").expect("WEBHOOK_TOKEN missing in env")
 }
 
+pub fn transaction_service_auth_token() -> String {
+    let token = env::var("TRANSACTION_SERVICE_AUTH_TOKEN").unwrap_or_else(|_| {
+        log::warn!("TRANSACTION_SERVICE_AUTH_TOKEN missing in env");
+        String::new()
+    });
+    format!("Token {}", token)
+}
+
 pub fn scheme() -> String {
     env_with_default("SCHEME", "https".into())
 }
@@ -100,6 +108,10 @@ pub fn safe_apps_cache_duration() -> usize {
 
 pub fn token_price_cache_duration() -> usize {
     env_with_default("TOKEN_PRICE_CACHE_DURATION", 10 * 1000)
+}
+
+pub fn tx_queued_cache_duration() -> usize {
+    env_with_default("TX_QUEUED_CACHE_DURATION", request_cache_duration())
 }
 
 // REQUEST TIMEOUTS

@@ -3,10 +3,11 @@ use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::handlers::{build_absolute_uri, offset_page_meta};
+use crate::routes::transactions::handlers::offset_page_meta;
 use crate::routes::transactions::models::summary::{ConflictType, Label, TransactionListItem};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use crate::utils::urls::build_absolute_uri;
 use itertools::Itertools;
 use std::collections::HashMap;
 

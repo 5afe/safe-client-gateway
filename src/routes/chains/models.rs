@@ -2,6 +2,7 @@ use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct ChainInfo {
     pub transaction_service: String,
     // do we need to expose this?
@@ -25,6 +26,7 @@ pub struct ChainInfo {
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct NativeCurrency {
     pub name: String,
     pub symbol: String,
@@ -34,6 +36,7 @@ pub struct NativeCurrency {
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct Theme {
     pub text_color: String,
     pub background_color: String,
@@ -42,6 +45,7 @@ pub struct Theme {
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(tag = "type")]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub enum GasPrice {
     #[serde(rename_all = "camelCase")]
     Oracle {
@@ -58,6 +62,7 @@ pub enum GasPrice {
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct RpcUri {
     pub authentication: RpcAuthentication,
     pub value: String,
@@ -65,6 +70,7 @@ pub struct RpcUri {
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub enum RpcAuthentication {
     ApiKeyPath,
     NoAuthentication,
@@ -74,6 +80,7 @@ pub enum RpcAuthentication {
 
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct BlockExplorerUriTemplate {
     pub address: String,
     pub tx_hash: String,

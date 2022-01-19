@@ -1,6 +1,4 @@
 use crate::common::models::page::PageMetadata;
-use crate::utils::context::RequestContext;
-use rocket::http::uri::Origin;
 use std::cmp::max;
 
 pub mod details;
@@ -17,8 +15,4 @@ pub(super) fn offset_page_meta(meta: &PageMetadata, offset: i64) -> String {
         limit: meta.limit,
     }
     .to_url_string()
-}
-
-pub(super) fn build_absolute_uri(context: &RequestContext, origin: Origin) -> String {
-    format!("{}{}", context.host, origin)
 }

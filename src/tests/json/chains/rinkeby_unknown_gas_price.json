@@ -1,0 +1,46 @@
+{
+  "chainId": "4",
+  "chainName": "Rinkeby",
+  "shortName": "rin",
+  "l2": false,
+  "description": "Random description",
+  "rpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc"
+  },
+  "safeAppsRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc/apps"
+  },
+  "publicRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://someurl.com/rpc/public"
+  },
+  "blockExplorerUriTemplate": {
+    "address": "https://blockexplorer.com/{{address}}",
+    "txHash": "https://blockexplorer.com/{{txHash}}",
+    "api": "https://blockexplorer.com/api"
+  },
+  "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
+  "vpcTransactionService": "http://rinkeby-safe-transaction-web.safe.svc.cluster.local",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18,
+    "logoUri": "https://test.token.image.url"
+  },
+  "theme": {
+    "textColor": "#ffffff",
+    "backgroundColor": "#000000"
+  },
+  "ensRegistryAddress": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+  "gasPrice": [
+    {
+      "type": "very fancy oracle",
+      "fancyValue": "fancy"
+    }
+  ],
+  "recommendedMasterCopyVersion": "1.1.1",
+  "disabledWallets": [],
+  "features": []
+}

@@ -1,11 +1,12 @@
 use crate::config::log_all_error_responses;
-use reqwest::Response as ReqwestResponse;
+use crate::utils::http_client::Response as HttpClientResponse;
+use reqwest::StatusCode;
 use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
 use rocket::serde::json::Error;
 use serde::{Deserialize, Serialize};
-use serde_json;
+use serde_json::{self, value::Value};
 use std::fmt;
 use std::io::Cursor;
 use std::result::Result;
@@ -14,6 +15,7 @@ use thiserror::Error;
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 
 #[derive(Error, Debug, PartialEq)]
+#[cfg_attr(test, derive(Serialize, Deserialize))]
 pub struct ApiError {
     pub status: u16,
     pub details: ErrorDetails,
@@ -25,6 +27,8 @@ pub struct ErrorDetails {
     pub message: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub arguments: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub debug: Option<Value>,
 }
 
 impl ApiError {
@@ -35,16 +39,14 @@ impl ApiError {
                 code: 42,
                 message: Some(raw_error.to_owned()),
                 arguments: None,
+                debug: None,
             },
         };
         Self::new(status_code, error_details)
     }
 
-    pub async fn from_http_response(response: ReqwestResponse, default_message: String) -> Self {
-        Self::new_from_message_with_code(
-            response.status().as_u16(),
-            response.text().await.unwrap_or(default_message),
-        )
+    pub fn from_http_response(response: &HttpClientResponse) -> Self {
+        Self::new_from_message_with_code(response.status_code, response.body.to_string())
     }
 
     pub fn new_from_message(message: impl Into<String>) -> Self {
@@ -54,6 +56,19 @@ impl ApiError {
                 code: 1337,
                 message: Some(message.into()),
                 arguments: None,
+                debug: None,
+            },
+        )
+    }
+
+    pub fn new_from_message_with_debug(message: impl Into<String>, debug: Option<Value>) -> Self {
+        Self::new(
+            500,
+            ErrorDetails {
+                code: 1337,
+                message: Some(message.into()),
+                arguments: None,
+                debug,
             },
         )
     }
@@ -65,11 +80,12 @@ impl ApiError {
                 code: 1337,
                 message: Some(message),
                 arguments: None,
+                debug: None,
             },
         )
     }
 
-    fn new(status_code: u16, message: ErrorDetails) -> Self {
+    pub fn new(status_code: u16, message: ErrorDetails) -> Self {
         Self {
             status: status_code,
             details: message,
@@ -119,11 +135,14 @@ impl<'r> Responder<'r, 'static> for ApiError {
 
 impl From<reqwest::Error> for ApiError {
     fn from(err: reqwest::Error) -> Self {
-        if err.is_timeout() {
-            Self::new_from_message_with_code(504, format!("{:?}", err))
+        // We first check if err.is_timeout because in case of timeout the default error code is 500
+        // However we want to map it to a GATEWAY_TIMEOUT (504)
+        let status_code = if err.is_timeout() {
+            StatusCode::GATEWAY_TIMEOUT
         } else {
-            Self::new_from_message(format!("{:?}", err))
-        }
+            err.status().unwrap_or(StatusCode::INTERNAL_SERVER_ERROR)
+        };
+        Self::new_from_message_with_code(status_code.as_u16(), format!("{:?}", err))
     }
 }
 

@@ -2,7 +2,7 @@ extern crate chrono;
 
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
-use crate::common::models::data_decoded::Operation;
+use crate::common::models::data_decoded::{DataDecoded, Operation};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{InfoProvider, SafeInfo, TokenInfo};
 use crate::routes::transactions::converters::safe_app_info::safe_app_info_from;
@@ -26,6 +26,7 @@ impl MultisigTransaction {
         let is_trusted_delegate_call = is_trusted_delegate_call(
             &self.safe_transaction.operation,
             &self.safe_transaction.to,
+            &self.safe_transaction.data_decoded,
             info_provider,
         )
         .await;
@@ -136,6 +137,7 @@ impl ModuleTransaction {
         let is_trusted_delegate_call = is_trusted_delegate_call(
             &self.safe_transaction.operation,
             &self.safe_transaction.to,
+            &safe_transaction.data_decoded,
             info_provider,
         )
         .await;
@@ -171,13 +173,18 @@ impl ModuleTransaction {
 pub async fn is_trusted_delegate_call(
     operation: &Operation,
     to: &str,
+    data_decoded: &Option<DataDecoded>,
     info_provider: &(impl InfoProvider + Sync),
 ) -> Option<bool> {
     if operation == &Operation::DELEGATE {
+        let has_nested_delegate = data_decoded
+            .as_ref()
+            .map_or(false, |data_decoded| data_decoded.has_nested_delegated());
+
         info_provider
             .contract_info(to)
             .await
-            .map(|contract_info| contract_info.trusted_for_delegate_call)
+            .map(|contract_info| contract_info.trusted_for_delegate_call && !has_nested_delegate)
             .ok()
     } else {
         None

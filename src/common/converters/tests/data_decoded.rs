@@ -881,3 +881,21 @@ async fn address_info_index_no_results_returns_none() {
 
     assert_eq!(expected, actual);
 }
+
+#[test]
+fn nested_delegate_in_multi_send_with_nested_delegate() {
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DOCTORED_DATA_DECODED_MULTI_SEND_NESTED_DELEGATE,
+    )
+    .unwrap();
+
+    assert_eq!(data_decoded.has_nested_delegated(), true);
+}
+
+#[test]
+fn nested_delegate_in_multi_send_without_nested_delegate() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
+
+    assert_eq!(data_decoded.has_nested_delegated(), false);
+}

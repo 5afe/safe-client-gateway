@@ -119,6 +119,8 @@ pub const DATA_DECODED_MULTI_SEND_SINGLE_INNER_TRANSACTION: &str =
     include_str!("commons/data_decoded_multi_send_single_inner_transaction.json");
 pub const DOCTORED_DATA_DECODED_NESTED_MULTI_SENDS: &str =
     include_str!("commons/DOCTORED_data_decoded_nested_multi_sends.json");
+pub const DOCTORED_DATA_DECODED_MULTI_SEND_NESTED_DELEGATE: &str =
+    include_str!("commons/DOCTORED_data_decoded_multi_send_nested_delegate.json");
 
 pub const BALANCE_ETHER: &str = include_str!("balances/balance_ether.json");
 pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound_ether.json");

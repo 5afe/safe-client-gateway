@@ -1,5 +1,7 @@
 use crate::common::models::addresses::AddressEx;
-use crate::common::models::data_decoded::{DataDecoded, ParamValue, Parameter, ValueDecodedType};
+use crate::common::models::data_decoded::{
+    DataDecoded, InternalTransaction, Operation, ParamValue, Parameter, ValueDecodedType,
+};
 use crate::config::feature_flag_nested_decoding;
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::InfoProvider;
@@ -9,6 +11,7 @@ use crate::utils::{
     MULTI_SEND, MULTI_SEND_TRANSACTIONS_PARAM, REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
 };
 use std::collections::HashMap;
+use std::ops::Not;
 
 impl DataDecoded {
     pub(crate) async fn to_settings_info(
@@ -118,6 +121,27 @@ impl DataDecoded {
             None
         } else {
             Some(index)
+        }
+    }
+
+    pub fn has_nested_delegated(&self) -> bool {
+        if self.method == MULTI_SEND {
+            if let Some(value_decoded_type) =
+                &self.get_parameter_value_decoded(MULTI_SEND_TRANSACTIONS_PARAM)
+            {
+                match value_decoded_type {
+                    ValueDecodedType::InternalTransaction(transactions) => transactions
+                        .into_iter()
+                        .filter(|transaction| transaction.operation == Operation::DELEGATE)
+                        .collect::<Vec<&InternalTransaction>>()
+                        .is_empty()
+                        .not(),
+                }
+            } else {
+                false
+            }
+        } else {
+            false
         }
     }
 }

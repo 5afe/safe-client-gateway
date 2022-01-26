@@ -181,6 +181,8 @@ pub async fn is_trusted_delegate_call(
             .contract_info(to)
             .await
             .map(|contract_info| {
+                // In the case of a known `multiSend` method call, we can still have internal transactions with DELEGATE calls
+                // which is why we only check when `trusted_for_delegate_call = true`
                 contract_info.trusted_for_delegate_call
                     && !data_decoded
                         .as_ref()

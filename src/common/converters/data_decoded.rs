@@ -137,12 +137,12 @@ impl DataDecoded {
                                 .is_empty(),
                         }
                     } else {
-                        false
+                        true // the "if" branch checks that there are NO entries with DELEGATE, therefore default true
                     }
                 })
-                .filter(|&it| it) // filter `true` meaning, parameters with a nested DELEGATE tx
+                .filter(|&it| it) // filter "true" meaning, we remove those entries with "no" DELEGATE
                 .collect::<Vec<bool>>()
-                .is_empty() // This vector is empty only if an inner tx contains a DELEGATE call
+                .is_empty()
         } else {
             false
         }

@@ -4,6 +4,7 @@ use crate::providers::info::*;
 use crate::routes::transactions::models::{SettingsChange, SettingsInfo};
 use mockall::predicate::eq;
 use mockall::Sequence;
+use serde_json::json;
 use std::collections::HashMap;
 
 #[rocket::async_test]
@@ -896,6 +897,14 @@ fn nested_delegate_in_multi_send_with_nested_delegate() {
 fn nested_delegate_in_multi_send_without_nested_delegate() {
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
+
+    assert_eq!(data_decoded.has_nested_delegated(), false);
+}
+
+#[test]
+fn no_param_data_decoded_has_nested_delegate() {
+    let data_decoded =
+        serde_json::from_value::<DataDecoded>(json!({"method":"parameterlessMethod"})).unwrap();
 
     assert_eq!(data_decoded.has_nested_delegated(), false);
 }

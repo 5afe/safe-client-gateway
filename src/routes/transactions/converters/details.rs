@@ -177,14 +177,15 @@ pub async fn is_trusted_delegate_call(
     info_provider: &(impl InfoProvider + Sync),
 ) -> Option<bool> {
     if operation == &Operation::DELEGATE {
-        let has_nested_delegate = data_decoded
-            .as_ref()
-            .map_or(false, |data_decoded| data_decoded.has_nested_delegated());
-
         info_provider
             .contract_info(to)
             .await
-            .map(|contract_info| contract_info.trusted_for_delegate_call && !has_nested_delegate)
+            .map(|contract_info| {
+                contract_info.trusted_for_delegate_call
+                    && !data_decoded
+                        .as_ref()
+                        .map_or(false, |data_decoded| data_decoded.has_nested_delegated())
+            })
             .ok()
     } else {
         None

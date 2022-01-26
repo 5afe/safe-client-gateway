@@ -1,0 +1,39 @@
+{
+    "chainId": "1285",
+    "chainName": "MOON_MOONRIVER",
+    "shortName": "mriver",
+    "description": "",
+    "l2": true,
+    "rpcUri": {
+      "authentication": "NO_AUTHENTICATION",
+      "value": "https://rpc.moonriver.moonbeam.network"
+    },
+    "safeAppsRpcUri": {
+      "authentication": "NO_AUTHENTICATION",
+      "value": "https://rpc.moonriver.moonbeam.network"
+    },
+    "blockExplorerUriTemplate": {
+      "address": "https://blockscout.moonriver.moonbeam.network/",
+      "txHash": "https://blockscout.moonriver.moonbeam.network/"
+    },
+    "nativeCurrency": {
+      "name": "MOVR",
+      "symbol": "MOVR",
+      "decimals": 18,
+      "logoUri": "https://moonriver-static-assets.s3.amazonaws.com/chains/1285/currency_logo.png"
+    },
+    "transactionService": "https://transaction.moonriver.multisig.moonbeam.network",
+    "vpcTransactionService": "https://transaction.moonriver.multisig.moonbeam.network",
+    "theme": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#F2A007"
+    },
+    "gasPrice": [
+      {
+        "type": "fixed",
+        "weiValue": "1000000000"
+      }
+    ],
+    "ensRegistryAddress": null,
+    "recommendedMasterCopyVersion": "1.3.0"
+}

@@ -63,6 +63,21 @@ fn build_usize_test_cases() -> Vec<USizeEnvValue> {
             env_key: String::from("OWNERS_FOR_SAFES_CACHE_DURATION"),
             generator: Box::new(super::owners_for_safes_cache_duration),
         },
+        USizeEnvValue {
+            expected_default: 60 * 60 * 1000,
+            env_key: String::from("BALANCES_CORE_REQUEST_CACHE_DURATION"),
+            generator: Box::new(super::balances_core_request_cache_duration),
+        },
+        USizeEnvValue {
+            expected_default: 10 * 1000,
+            env_key: String::from("TOKEN_PRICE_CACHE_DURATION"),
+            generator: Box::new(super::token_price_cache_duration),
+        },
+        USizeEnvValue {
+            expected_default: super::request_cache_duration(),
+            env_key: String::from("TX_QUEUED_CACHE_DURATION"),
+            generator: Box::new(super::tx_queued_cache_duration),
+        },
     ]
 }
 
@@ -142,6 +157,7 @@ impl TestCase for USizeEnvValue {
         let mock_env_var_value = 1;
         std::env::set_var(&self.env_key, &mock_env_var_value.to_string());
         let actual_env = (&self.generator)();
+        std::env::remove_var(&self.env_key);
         assert_eq!(
             mock_env_var_value, actual_env,
             "Test env var for env key: {}",
@@ -171,6 +187,7 @@ impl TestCase for U64EnvValue {
         let mock_env_var_value = 1;
         std::env::set_var(&self.env_key, &mock_env_var_value.to_string());
         let actual_env = (&self.generator)();
+        std::env::remove_var(&self.env_key);
         assert_eq!(
             mock_env_var_value, actual_env,
             "Test env var for env key: {}",

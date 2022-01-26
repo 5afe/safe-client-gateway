@@ -1,0 +1,26 @@
+{
+    "count": 7,
+    "next": "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/0xd6f5Bef6bb4acD235CF85c0ce196316d10785d67/transfers/?erc721=true&limit=1&offset=1",
+    "previous": null,
+    "results": [
+        {
+            "type": "ERC721_TRANSFER",
+            "executionDate": "2021-04-01T07:21:56Z",
+            "blockNumber": 8335209,
+            "transactionHash": "0x7ed2757062518b71b0735560f56fdd117ed08e377d893c7842834b2538d637ef",
+            "to": "0x95b5324C8D770F49a828968e03FAB334d6c3d9FC",
+            "value": null,
+            "tokenId": "3",
+            "tokenAddress": "0xD753e03c05533F85bA9695C139771b1E9698a53C",
+            "tokenInfo": {
+                "type": "ERC721",
+                "address": "0xD753e03c05533F85bA9695C139771b1E9698a53C",
+                "name": "Main",
+                "symbol": "TEST",
+                "decimals": null,
+                "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png"
+            },
+            "from": "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f"
+        }
+    ]
+}

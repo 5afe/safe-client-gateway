@@ -16,7 +16,6 @@ This project is a gateway between the Safe clients ([Android](https://github.com
 This project requires `rustup` and `redis`
 
 ```bash
-rustup default nightly # (Rocket currently requires a nightly version)
 git clone https://github.com/gnosis/safe-client-gateway.git
 cd safe-client-gateway
 cp .env.sample .env
@@ -41,18 +40,31 @@ Place a `.env` file in the root of the project containing URL pointing to the en
 
 The contents of the file should be the following (see `.env.sample` for an example)
 
+## Docker up
+```
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
 ## Tests
 
-To run all tests use the `cargo test` command. If you want to run a specific subset of tests, then add additionally any info regarding the path of the tests and `cargo` will match it.
+In order to run the test suite of the project:
 
-Example: `cargo test converters` will run every tests under the `converters` module. Matching occurs also at a test name level, so by writing the full name of a test, that single test can be run.
+1. Have an instance of Redis running (as some of them test the integration with Redis).
 
-Additionally, for cache testing, we have included a script that fills up the cache as it would happen in production. You can find the script in `./scripts/load_tester/start.py`. To run the script, use the following commands: 
-
-```shell
-python3 -m venv venv
-source venv/bin/activate && pip install -r scripts/cache_warmer/requirements.txt
-python scripts/cache_warmer/start.py
-# once you are done testing
-deactivate
+```bash
+redis-server
 ```
+
+2. Make sure that `REDIS_URI` is set and points to the current Redis instance (assuming Redis is runnning on the default port `6379`):
+
+```bash
+export REDIS_URI=redis://localhost:6379
+```
+
+3. Run the tests
+
+```bash
+cargo test -- --test-threads 1
+```
+
+By default, `cargo test` will execute the tests in the test suite in parallel. Because some of the tests update some shared local state (eg.: environment variables) the tests should be executed on a single thread – thus `--test-threads 1`.

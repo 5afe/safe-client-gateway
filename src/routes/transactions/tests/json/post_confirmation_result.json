@@ -1,0 +1,100 @@
+{
+  "txId": "multisig_0x1230B3d59858296A31053C1b8562Ecf89A2f888b_0x2e4af4b451a493470f38625c5f78f710f02303eb32780896cb55357c00d48faa",
+  "executedAt": 1607608259000,
+  "txStatus": "SUCCESS",
+  "txInfo": {
+    "type": "Transfer",
+    "sender": {
+      "value": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b"
+    },
+    "recipient": {
+      "value": "0xF353eBBa77e5E71c210599236686D51cA1F88b84"
+    },
+    "direction": "OUTGOING",
+    "transferInfo": {
+      "type": "ERC20",
+      "tokenAddress": "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46",
+      "tokenName": "BigAmount",
+      "tokenSymbol": "BA-T",
+      "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png",
+      "decimals": 1,
+      "value": "20"
+    }
+  },
+  "txData": {
+    "hexData": "0xa9059cbb000000000000000000000000f353ebba77e5e71c210599236686d51ca1f88b840000000000000000000000000000000000000000000000000000000000000014",
+    "dataDecoded": {
+      "method": "transfer",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "address",
+          "value": "0xF353eBBa77e5E71c210599236686D51cA1F88b84"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "value": "20"
+        }
+      ]
+    },
+    "to": {
+      "value": "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46",
+      "name": "BigAmount",
+      "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png"
+    },
+    "value": "0",
+    "operation": 0
+  },
+  "detailedExecutionInfo": {
+    "type": "MULTISIG",
+    "submittedAt": 1607608259000,
+    "nonce": 393,
+    "safeTxGas": "26746",
+    "baseGas": "0",
+    "gasPrice": "0",
+    "gasToken": "0x0000000000000000000000000000000000000000",
+    "refundReceiver": {
+      "value": "0x0000000000000000000000000000000000000000"
+    },
+    "safeTxHash": "0x2e4af4b451a493470f38625c5f78f710f02303eb32780896cb55357c00d48faa",
+    "executor": {
+      "value": "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"
+    },
+    "signers": [
+      {
+        "value": "0xBEA2F9227230976d2813a2f8b922c22bE1DE1B23"
+      },
+      {
+        "value": "0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"
+      },
+      {
+        "value": "0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"
+      },
+      {
+        "value": "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"
+      },
+      {
+        "value": "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"
+      }
+    ],
+    "confirmationsRequired": 2,
+    "confirmations": [
+      {
+        "signer": {
+          "value": "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"
+        },
+        "signature": "0x1f6d2f092022fcbe6b10f0514255eb4205bb2302ac8789311b1aa2f0a134a7026458c827b42ccb577ffa7a5bc43582b4a23183ab811271ddc9d78446784fa3701b",
+        "submittedAt": 1607608259000
+      },
+      {
+        "signer": {
+          "value": "0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"
+        },
+        "signature": "0x000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001",
+        "submittedAt": 1607608259000
+      }
+    ]
+  },
+  "txHash": "0xd145bafe9766613d431a898a7ad95b69481152b4e9f846bd5fdc334ec8d78266"
+}

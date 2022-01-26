@@ -2,6 +2,9 @@ use crate::utils::errors::ApiResult;
 use lazy_static::lazy_static;
 use regex::Regex;
 use reqwest::Url;
+use rocket::http::uri::Origin;
+
+use super::context::RequestContext;
 
 lazy_static! {
     static ref IP_ADDRESS: Regex = Regex::new(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").unwrap();
@@ -14,7 +17,7 @@ pub fn build_manifest_url(url: &str) -> ApiResult<String> {
         Err(api_error!("Invalid scheme"))
     } else if url_parts.host_str().is_none() {
         Err(api_error!("Invalid host"))
-    } else if url_parts.host_str().contains(&"localhost") {
+    } else if url_parts.host_str() == Some("localhost") {
         Err(api_error!("Localhost not accepted"))
     } else if IP_ADDRESS.captures(url_parts.host_str().unwrap()).is_some() {
         Err(api_error!("IP address not accepted"))
@@ -27,4 +30,8 @@ pub fn build_manifest_url(url: &str) -> ApiResult<String> {
         url_parts.set_query(None);
         Ok(url_parts.to_string())
     }
+}
+
+pub fn build_absolute_uri(context: &RequestContext, origin: Origin) -> String {
+    format!("{}{}", context.host, origin)
 }

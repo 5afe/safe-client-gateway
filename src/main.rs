@@ -1,13 +1,12 @@
-#![feature(async_closure, proc_macro_hygiene, decl_macro, option_result_contains)]
 #![deny(unused_must_use)]
+#![deny(rustdoc::broken_intra_doc_links)]
 
+extern crate dotenv;
 extern crate log;
 extern crate semver;
 
 #[macro_use]
 extern crate rocket;
-
-extern crate dotenv;
 
 #[doc(hidden)]
 #[macro_use]
@@ -15,57 +14,57 @@ pub mod macros;
 
 #[doc(hidden)]
 mod cache;
+mod common;
 #[doc(hidden)]
 mod config;
 
-/// Models exposed by this service
-///
-/// *Important:* Names, Enums and Polymorphism
-///
-/// Every field in the structs that you will see in this documentation is **camelCased** on serialisation.
-///
-/// Enums are **SCREAMING_SNAKE_CASED** on serialization and the variant is always put into a `type` json field for polymorphic cases.
-mod models;
 #[doc(hidden)]
 mod monitoring;
-#[doc(hidden)]
 mod providers;
 
 /// Collection of all endpoints all endpoints
 mod routes;
 #[doc(hidden)]
-mod services;
-#[doc(hidden)]
 mod utils;
 
 #[cfg(test)]
-mod json;
+mod tests;
 
+use crate::cache::redis::create_service_cache;
+use crate::cache::Cache;
 use crate::routes::error_catchers;
-use cache::redis::create_pool;
+use crate::utils::http_client::{setup_http_client, HttpClient};
 use dotenv::dotenv;
+use rocket::{Build, Rocket};
 use routes::active_routes;
-use std::time::Duration;
+use std::sync::Arc;
 use utils::cors::CORS;
 
 #[doc(hidden)]
 #[launch]
-fn rocket() -> _ {
+fn rocket() -> Rocket<Build> {
     dotenv().ok();
-    env_logger::init();
+    setup_logger();
 
-    let client = reqwest::Client::builder()
-        .connect_timeout(Duration::from_millis(
-            config::internal_client_connect_timeout(),
-        ))
-        .build()
-        .unwrap();
+    let client = setup_http_client();
+    let cache = create_service_cache();
 
     rocket::build()
         .mount("/", active_routes())
         .register("/", error_catchers())
-        .manage(create_pool())
-        .manage(client)
+        .manage(Arc::new(cache) as Arc<dyn Cache>)
+        .manage(Arc::new(client) as Arc<dyn HttpClient>)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())
+}
+
+#[cfg(test)]
+fn setup_logger() {
+    //noop: no need to set the logger for tests
+}
+
+#[doc(hidden)]
+#[cfg(not(test))]
+fn setup_logger() {
+    env_logger::init();
 }

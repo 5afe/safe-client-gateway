@@ -9,7 +9,11 @@ pub fn redis_uri() -> String {
 }
 
 pub fn base_config_service_uri() -> String {
-    format!("{}{}", env::var("CONFIG_SERVICE_URI").unwrap(), "/api")
+    format!(
+        "{}{}",
+        env::var("CONFIG_SERVICE_URI").expect("CONFIG_SERVICE_URI missing in env"),
+        "/api"
+    )
 }
 
 pub fn base_exchange_api_uri() -> String {
@@ -22,6 +26,14 @@ pub fn base_exchange_api_uri() -> String {
 
 pub fn webhook_token() -> String {
     env::var("WEBHOOK_TOKEN").expect("WEBHOOK_TOKEN missing in env")
+}
+
+pub fn transaction_service_auth_token() -> String {
+    let token = env::var("TRANSACTION_SERVICE_AUTH_TOKEN").unwrap_or_else(|_| {
+        log::warn!("TRANSACTION_SERVICE_AUTH_TOKEN missing in env");
+        String::new()
+    });
+    format!("Token {}", token)
 }
 
 pub fn scheme() -> String {
@@ -78,6 +90,10 @@ pub fn balances_cache_duration() -> usize {
     env_with_default("BALANCES_REQUEST_CACHE_DURATION", 60 * 1000)
 }
 
+pub fn balances_core_request_cache_duration() -> usize {
+    env_with_default("BALANCES_CORE_REQUEST_CACHE_DURATION", indefinite_timeout())
+}
+
 pub fn safe_app_manifest_cache_duration() -> usize {
     env_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }
@@ -88,6 +104,14 @@ pub fn owners_for_safes_cache_duration() -> usize {
 
 pub fn safe_apps_cache_duration() -> usize {
     env_with_default("SAFE_APPS_CACHE_DURATION", indefinite_timeout())
+}
+
+pub fn token_price_cache_duration() -> usize {
+    env_with_default("TOKEN_PRICE_CACHE_DURATION", 10 * 1000)
+}
+
+pub fn tx_queued_cache_duration() -> usize {
+    env_with_default("TX_QUEUED_CACHE_DURATION", request_cache_duration())
 }
 
 // REQUEST TIMEOUTS
@@ -149,8 +173,16 @@ pub fn feature_flag_nested_decoding() -> bool {
     env_with_default("FEATURE_FLAG_NESTED_DECODING", true)
 }
 
+pub fn feature_flag_balances_rate_implementation() -> bool {
+    env_with_default("FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION", false)
+}
+
 pub fn vpc_transaction_service_uri() -> bool {
     env_with_default("VPC_TRANSACTION_SERVICE_URI", true)
+}
+
+pub fn concurrent_balance_token_requests() -> usize {
+    env_with_default("CONCURRENT_BALANCE_TOKEN_REQUESTS", 5)
 }
 
 pub fn log_threshold() -> f32 {

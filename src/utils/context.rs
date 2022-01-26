@@ -1,58 +1,71 @@
-use rocket::http::uri::Origin;
-use rocket::request::{self, FromRequest, Request};
-
-use crate::cache::redis::ServiceCache;
+use crate::cache::Cache;
 use crate::config::scheme;
+use crate::utils::http_client::HttpClient;
+use rocket::request::{self, FromRequest, Request};
+use std::sync::Arc;
 
-pub struct Context<'r> {
-    uri: String,
-    host: Option<String>,
-    cache: ServiceCache<'r>,
-    client: &'r reqwest::Client,
+pub struct RequestContext {
+    pub request_id: String,
+    pub host: String,
+    http_client: Arc<dyn HttpClient>,
+    cache: Arc<dyn Cache>,
 }
 
-impl<'r> Context<'r> {
-    pub fn client(&self) -> &'r reqwest::Client {
-        self.client
+impl RequestContext {
+    pub fn http_client(&self) -> Arc<dyn HttpClient> {
+        self.http_client.clone()
     }
 
-    pub fn cache(&self) -> &ServiceCache<'r> {
-        &self.cache
+    pub fn cache(&self) -> Arc<dyn Cache> {
+        self.cache.clone()
     }
 
-    pub fn uri(&self) -> String {
-        self.uri.clone()
-    }
+    #[cfg(test)]
+    pub fn setup_for_test(
+        request_id: String,
+        host: String,
+        http_client: &Arc<dyn HttpClient>,
+        cache: &Arc<dyn Cache>,
+    ) -> Self {
+        cache.invalidate_pattern("*");
 
-    pub fn build_absolute_url(&self, origin: Origin) -> String {
-        format!("{}{}", self.host().unwrap(), origin)
-    }
-
-    fn host(&self) -> Option<String> {
-        self.host
-            .as_ref()
-            .map(|host| format!("{}://{}", scheme(), host))
+        RequestContext {
+            request_id,
+            host,
+            http_client: http_client.clone(),
+            cache: cache.clone(),
+        }
     }
 }
 
 #[rocket::async_trait]
-impl<'r> FromRequest<'r> for Context<'r> {
+impl<'r> FromRequest<'r> for RequestContext {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let cache = request.guard().await.unwrap();
-        let client = request.rocket().state::<reqwest::Client>().unwrap();
-        // TODO: I couldn't get the request to be part of the context ... not sure if we want that for the future
+        let cache = request
+            .rocket()
+            .state::<Arc<dyn Cache>>()
+            .expect("ServiceCache unavailable. Is it added to rocket instance?")
+            .clone();
+        let http_client = request
+            .rocket()
+            .state::<Arc<dyn HttpClient>>()
+            .expect("HttpClient unavailable. Is it added to rocket instance?")
+            .clone();
         let host = request
             .headers()
             .get_one("Host")
-            .map(|host| host.to_string());
+            .expect("Request Host must be available");
+
         let uri = request.uri().to_string();
-        return request::Outcome::Success(Context {
+        let host = format!("{}://{}", scheme(), host.to_string());
+
+        return request::Outcome::Success(RequestContext {
+            request_id: uri,
             host,
-            uri,
             cache,
-            client,
+            http_client,
         });
     }
 }

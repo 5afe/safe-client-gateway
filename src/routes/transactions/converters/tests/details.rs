@@ -406,12 +406,15 @@ async fn multisig_transaction_with_origin() {
 
 #[rocket::async_test]
 async fn is_trusted_delegate_with_call() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
     let actual = is_trusted_delegate_call(
         &Operation::CALL,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &Some(data_decoded),
         &mock_info_provider,
     )
     .await;
@@ -421,6 +424,8 @@ async fn is_trusted_delegate_with_call() {
 
 #[rocket::async_test]
 async fn is_trusted_delegate_with_delegate() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -440,6 +445,7 @@ async fn is_trusted_delegate_with_delegate() {
     let actual = is_trusted_delegate_call(
         &Operation::DELEGATE,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &Some(data_decoded),
         &mock_info_provider,
     )
     .await;
@@ -449,6 +455,8 @@ async fn is_trusted_delegate_with_delegate() {
 
 #[rocket::async_test]
 async fn is_trusted_delegate_with_contract_request_failure() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -464,9 +472,43 @@ async fn is_trusted_delegate_with_contract_request_failure() {
     let actual = is_trusted_delegate_call(
         &Operation::DELEGATE,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &Some(data_decoded),
         &mock_info_provider,
     )
     .await;
 
     assert_eq!(actual, None);
+}
+
+#[rocket::async_test]
+async fn is_trusted_delegate_with_call_but_nested_delegate() {
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DOCTORED_DATA_DECODED_MULTI_SEND_NESTED_DELEGATE,
+    )
+    .unwrap();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_contract_info()
+        .with(eq("0x8D29bE29923b68abfDD21e541b9374737B49cdAD"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(ContractInfo {
+                name: "multiSend".to_string(),
+                address: "0x8D29bE29923b68abfDD21e541b9374737B49cdAD".to_string(),
+                display_name: "Gnosis Safe: Multi Send 1.1.1".to_string(),
+                logo_uri: None,
+                contract_abi: None,
+                trusted_for_delegate_call: true,
+            })
+        });
+
+    let actual = is_trusted_delegate_call(
+        &Operation::DELEGATE,
+        "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+        &Some(data_decoded),
+        &mock_info_provider,
+    )
+    .await;
+
+    assert_eq!(actual, Some(false));
 }

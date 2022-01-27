@@ -19,7 +19,7 @@ use crate::routes::transactions::models::{
     Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, TransactionInfo,
     TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
-use crate::utils::TRANSFER_METHOD;
+use crate::utils::{SAFE_TRANSFER_FROM_METHOD, TRANSFER_FROM_METHOD, TRANSFER_METHOD};
 use rocket::futures::future::OptionFuture;
 
 impl SafeTransaction {
@@ -320,20 +320,26 @@ fn data_size(data: &Option<String>) -> usize {
 fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_single_value("from") {
-            Some(e) => Some(e),
-            None => it.get_parameter_single_value("_from"),
+        .map(|data_decoded| match data_decoded.method.as_str() {
+            TRANSFER_METHOD => None,
+            TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(0),
+            SAFE_TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(0),
+            _ => None,
         })
+        .flatten()
         .unwrap_or(String::from(fallback))
 }
 
 fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_single_value("to") {
-            Some(e) => Some(e),
-            None => it.get_parameter_single_value("_to"),
+        .map(|data_decoded| match data_decoded.method.as_str() {
+            TRANSFER_METHOD => data_decoded.get_parameter_single_value_at(0),
+            TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(1),
+            SAFE_TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(1),
+            _ => None,
         })
+        .flatten()
         .unwrap_or(String::from(fallback))
 }
 

@@ -101,7 +101,10 @@ impl SafeTransaction {
         info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
-        let recipient = get_to_param(&self.data_decoded, "0x0");
+        let recipient = get_to_param(
+            &self.data_decoded,
+            "0x0000000000000000000000000000000000000000",
+        );
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
             sender: get_address_ex_from_any_source(&self.safe, &sender, info_provider).await,
@@ -128,7 +131,10 @@ impl SafeTransaction {
         info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
-        let recipient = get_to_param(&self.data_decoded, "0x0");
+        let recipient = get_to_param(
+            &self.data_decoded,
+            "0x0000000000000000000000000000000000000000",
+        );
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
             sender: get_address_ex_from_any_source(&self.safe, &sender, info_provider).await,

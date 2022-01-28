@@ -19,7 +19,7 @@ use crate::routes::transactions::models::{
     Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, TransactionInfo,
     TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
-use crate::utils::TRANSFER_METHOD;
+use crate::utils::{SAFE_TRANSFER_FROM_METHOD, TRANSFER_FROM_METHOD, TRANSFER_METHOD};
 use rocket::futures::future::OptionFuture;
 
 impl SafeTransaction {
@@ -101,7 +101,10 @@ impl SafeTransaction {
         info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
-        let recipient = get_to_param(&self.data_decoded, "0x0");
+        let recipient = get_to_param(
+            &self.data_decoded,
+            "0x0000000000000000000000000000000000000000",
+        );
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
             sender: get_address_ex_from_any_source(&self.safe, &sender, info_provider).await,
@@ -113,11 +116,7 @@ impl SafeTransaction {
                 token_name: Some(token.name.to_owned()),
                 token_symbol: Some(token.symbol.to_owned()),
                 decimals: Some(token.decimals),
-                value: self
-                    .data_decoded
-                    .as_ref()
-                    .and_then(|it| it.get_parameter_single_value("value"))
-                    .unwrap_or(String::from("0")),
+                value: get_value_param(&self.data_decoded, "0"),
             }),
         }
     }
@@ -128,7 +127,10 @@ impl SafeTransaction {
         info_provider: &impl InfoProvider,
     ) -> Transfer {
         let sender = get_from_param(&self.data_decoded, &self.safe);
-        let recipient = get_to_param(&self.data_decoded, "0x0");
+        let recipient = get_to_param(
+            &self.data_decoded,
+            "0x0000000000000000000000000000000000000000",
+        );
         let direction = get_transfer_direction(&self.safe, &sender, &recipient);
         Transfer {
             sender: get_address_ex_from_any_source(&self.safe, &sender, info_provider).await,
@@ -139,14 +141,7 @@ impl SafeTransaction {
                 logo_uri: token.logo_uri.to_owned(),
                 token_name: Some(token.name.to_owned()),
                 token_symbol: Some(token.symbol.to_owned()),
-                token_id: self
-                    .data_decoded
-                    .as_ref()
-                    .and_then(|it| match it.get_parameter_single_value("tokenId") {
-                        Some(e) => Some(e),
-                        None => it.get_parameter_single_value("value"),
-                    })
-                    .unwrap_or(String::from("0")),
+                token_id: get_value_param(&self.data_decoded, "0"),
             }),
         }
     }
@@ -314,9 +309,11 @@ fn data_size(data: &Option<String>) -> usize {
 fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_single_value("from") {
-            Some(e) => Some(e),
-            None => it.get_parameter_single_value("_from"),
+        .and_then(|data_decoded| match data_decoded.method.as_str() {
+            TRANSFER_METHOD => None,
+            TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(0),
+            SAFE_TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(0),
+            _ => None,
         })
         .unwrap_or(String::from(fallback))
 }
@@ -324,9 +321,23 @@ fn get_from_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String 
 fn get_to_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
     data_decoded
         .as_ref()
-        .and_then(|it| match it.get_parameter_single_value("to") {
-            Some(e) => Some(e),
-            None => it.get_parameter_single_value("_to"),
+        .and_then(|data_decoded| match data_decoded.method.as_str() {
+            TRANSFER_METHOD => data_decoded.get_parameter_single_value_at(0),
+            TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(1),
+            SAFE_TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(1),
+            _ => None,
+        })
+        .unwrap_or(String::from(fallback))
+}
+
+fn get_value_param(data_decoded: &Option<DataDecoded>, fallback: &str) -> String {
+    data_decoded
+        .as_ref()
+        .and_then(|data_decoded| match data_decoded.method.as_str() {
+            TRANSFER_METHOD => data_decoded.get_parameter_single_value_at(1),
+            TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(2),
+            SAFE_TRANSFER_FROM_METHOD => data_decoded.get_parameter_single_value_at(2),
+            _ => None,
         })
         .unwrap_or(String::from(fallback))
 }

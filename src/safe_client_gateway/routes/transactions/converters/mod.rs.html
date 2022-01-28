@@ -341,6 +341,17 @@
 <span id="340">340</span>
 <span id="341">341</span>
 <span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
 </pre><pre class="rust"><code><span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">chrono</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">details</span>;
@@ -362,7 +373,7 @@
     <span class="ident">Custom</span>, <span class="ident">Erc20Transfer</span>, <span class="ident">Erc721Transfer</span>, <span class="ident">NativeCoinTransfer</span>, <span class="ident">SettingsChange</span>, <span class="ident">TransactionInfo</span>,
     <span class="ident">TransactionStatus</span>, <span class="ident">Transfer</span>, <span class="ident">TransferDirection</span>, <span class="ident">TransferInfo</span>,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::TRANSFER_METHOD</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="ident">SAFE_TRANSFER_FROM_METHOD</span>, <span class="ident">TRANSFER_FROM_METHOD</span>, <span class="ident">TRANSFER_METHOD</span>};
 <span class="kw">use</span> <span class="ident">rocket::futures::future::OptionFuture</span>;
 
 <span class="kw">impl</span> <span class="ident">SafeTransaction</span> {
@@ -444,7 +455,10 @@
         <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
     ) -&gt; <span class="ident">Transfer</span> {
         <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">get_from_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>);
-        <span class="kw">let</span> <span class="ident">recipient</span> <span class="op">=</span> <span class="ident">get_to_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="string">&quot;0x0&quot;</span>);
+        <span class="kw">let</span> <span class="ident">recipient</span> <span class="op">=</span> <span class="ident">get_to_param</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>,
+            <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>,
+        );
         <span class="kw">let</span> <span class="ident">direction</span> <span class="op">=</span> <span class="ident">get_transfer_direction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="kw-2">&amp;</span><span class="ident">recipient</span>);
         <span class="ident">Transfer</span> {
             <span class="ident">sender</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
@@ -456,11 +470,7 @@
                 <span class="ident">token_name</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">token_symbol</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">symbol</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">decimals</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">decimals</span>),
-                <span class="ident">value</span>: <span class="self">self</span>
-                    .<span class="ident">data_decoded</span>
-                    .<span class="ident">as_ref</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">get_parameter_single_value</span>(<span class="string">&quot;value&quot;</span>))
-                    .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="string">&quot;0&quot;</span>)),
+                <span class="ident">value</span>: <span class="ident">get_value_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="string">&quot;0&quot;</span>),
             }),
         }
     }
@@ -471,7 +481,10 @@
         <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
     ) -&gt; <span class="ident">Transfer</span> {
         <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">get_from_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>);
-        <span class="kw">let</span> <span class="ident">recipient</span> <span class="op">=</span> <span class="ident">get_to_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="string">&quot;0x0&quot;</span>);
+        <span class="kw">let</span> <span class="ident">recipient</span> <span class="op">=</span> <span class="ident">get_to_param</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>,
+            <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>,
+        );
         <span class="kw">let</span> <span class="ident">direction</span> <span class="op">=</span> <span class="ident">get_transfer_direction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="kw-2">&amp;</span><span class="ident">recipient</span>);
         <span class="ident">Transfer</span> {
             <span class="ident">sender</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
@@ -482,14 +495,7 @@
                 <span class="ident">logo_uri</span>: <span class="ident">token</span>.<span class="ident">logo_uri</span>.<span class="ident">to_owned</span>(),
                 <span class="ident">token_name</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">token_symbol</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">symbol</span>.<span class="ident">to_owned</span>()),
-                <span class="ident">token_id</span>: <span class="self">self</span>
-                    .<span class="ident">data_decoded</span>
-                    .<span class="ident">as_ref</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">it</span>.<span class="ident">get_parameter_single_value</span>(<span class="string">&quot;tokenId&quot;</span>) {
-                        <span class="prelude-val">Some</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">e</span>),
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">it</span>.<span class="ident">get_parameter_single_value</span>(<span class="string">&quot;value&quot;</span>),
-                    })
-                    .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="string">&quot;0&quot;</span>)),
+                <span class="ident">token_id</span>: <span class="ident">get_value_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="string">&quot;0&quot;</span>),
             }),
         }
     }
@@ -657,9 +663,11 @@
 <span class="kw">fn</span> <span class="ident">get_from_param</span>(<span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>, <span class="ident">fallback</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
     <span class="ident">data_decoded</span>
         .<span class="ident">as_ref</span>()
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">it</span>.<span class="ident">get_parameter_single_value</span>(<span class="string">&quot;from&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">e</span>),
-            <span class="prelude-val">None</span> =&gt; <span class="ident">it</span>.<span class="ident">get_parameter_single_value</span>(<span class="string">&quot;_from&quot;</span>),
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">data_decoded</span>.<span class="ident">method</span>.<span class="ident">as_str</span>() {
+            <span class="ident">TRANSFER_METHOD</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="ident">TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>),
+            <span class="ident">SAFE_TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
         })
         .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="ident">fallback</span>))
 }
@@ -667,9 +675,23 @@
 <span class="kw">fn</span> <span class="ident">get_to_param</span>(<span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>, <span class="ident">fallback</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
     <span class="ident">data_decoded</span>
         .<span class="ident">as_ref</span>()
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">it</span>.<span class="ident">get_parameter_single_value</span>(<span class="string">&quot;to&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">e</span>),
-            <span class="prelude-val">None</span> =&gt; <span class="ident">it</span>.<span class="ident">get_parameter_single_value</span>(<span class="string">&quot;_to&quot;</span>),
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">data_decoded</span>.<span class="ident">method</span>.<span class="ident">as_str</span>() {
+            <span class="ident">TRANSFER_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>),
+            <span class="ident">TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">1</span>),
+            <span class="ident">SAFE_TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">1</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+        })
+        .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="ident">fallback</span>))
+}
+
+<span class="kw">fn</span> <span class="ident">get_value_param</span>(<span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>, <span class="ident">fallback</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
+    <span class="ident">data_decoded</span>
+        .<span class="ident">as_ref</span>()
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">data_decoded</span>.<span class="ident">method</span>.<span class="ident">as_str</span>() {
+            <span class="ident">TRANSFER_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">1</span>),
+            <span class="ident">TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">2</span>),
+            <span class="ident">SAFE_TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">2</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
         })
         .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="ident">fallback</span>))
 }

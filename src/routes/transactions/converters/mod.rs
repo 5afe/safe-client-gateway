@@ -117,11 +117,6 @@ impl SafeTransaction {
                 token_symbol: Some(token.symbol.to_owned()),
                 decimals: Some(token.decimals),
                 value: get_value_param(&self.data_decoded, "0"),
-                // self
-                //     .data_decoded
-                //     .as_ref()
-                //     .and_then(|it| it.get_parameter_single_value("value"))
-                //     .unwrap_or(String::from("0")),
             }),
         }
     }
@@ -147,14 +142,6 @@ impl SafeTransaction {
                 token_name: Some(token.name.to_owned()),
                 token_symbol: Some(token.symbol.to_owned()),
                 token_id: get_value_param(&self.data_decoded, "0"),
-                // self
-                //     .data_decoded
-                //     .as_ref()
-                //     .and_then(|it| match it.get_parameter_single_value("tokenId") {
-                //         Some(e) => Some(e),
-                //         None => it.get_parameter_single_value("value"),
-                //     })
-                //     .unwrap_or(String::from("0")),
             }),
         }
     }

@@ -191,6 +191,9 @@
 <span id="190">190</span>
 <span id="191">191</span>
 <span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
 </pre><pre class="rust"><code><span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">chrono</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
@@ -370,14 +373,17 @@
     <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
 ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">operation</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">Operation::DELEGATE</span> {
-        <span class="kw">let</span> <span class="ident">has_nested_delegate</span> <span class="op">=</span> <span class="ident">data_decoded</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="ident">data_decoded</span>.<span class="ident">has_nested_delegated</span>());
-
         <span class="ident">info_provider</span>
             .<span class="ident">contract_info</span>(<span class="ident">to</span>)
             .<span class="kw">await</span>
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">contract_info</span><span class="op">|</span> <span class="ident">contract_info</span>.<span class="ident">trusted_for_delegate_call</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">has_nested_delegate</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">contract_info</span><span class="op">|</span> {
+                <span class="comment">// In the case of a known `multiSend` method call, we can still have internal transactions with DELEGATE calls</span>
+                <span class="comment">// which is why we only check when `trusted_for_delegate_call = true`</span>
+                <span class="ident">contract_info</span>.<span class="ident">trusted_for_delegate_call</span>
+                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">data_decoded</span>
+                        .<span class="ident">as_ref</span>()
+                        .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="ident">data_decoded</span>.<span class="ident">has_nested_delegated</span>())
+            })
             .<span class="ident">ok</span>()
     } <span class="kw">else</span> {
         <span class="prelude-val">None</span>

@@ -11,7 +11,6 @@ use crate::utils::{
     MULTI_SEND, MULTI_SEND_TRANSACTIONS_PARAM, REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
 };
 use std::collections::HashMap;
-use std::ops::Not;
 
 impl DataDecoded {
     pub(crate) async fn to_settings_info(
@@ -125,21 +124,25 @@ impl DataDecoded {
     }
 
     pub fn has_nested_delegated(&self) -> bool {
-        if self.method == MULTI_SEND {
-            if let Some(value_decoded_type) =
-                &self.get_parameter_value_decoded(MULTI_SEND_TRANSACTIONS_PARAM)
-            {
-                match value_decoded_type {
-                    ValueDecodedType::InternalTransaction(transactions) => transactions
-                        .into_iter()
-                        .filter(|transaction| transaction.operation == Operation::DELEGATE)
-                        .collect::<Vec<&InternalTransaction>>()
-                        .is_empty()
-                        .not(),
-                }
-            } else {
-                false
-            }
+        if let Some(parameters) = &self.parameters {
+            parameters
+                .iter()
+                .map(|parameter| {
+                    if let Some(value) = &parameter.value_decoded {
+                        match value {
+                            ValueDecodedType::InternalTransaction(transactions) => transactions
+                                .iter()
+                                .filter(|transaction| transaction.operation == Operation::DELEGATE)
+                                .collect::<Vec<&InternalTransaction>>()
+                                .is_empty(),
+                        }
+                    } else {
+                        true // the "if" branch checks that there are NO entries with DELEGATE, therefore default true
+                    }
+                })
+                .filter(|&it| it) // filter "true" meaning, we remove those entries with "no" DELEGATE
+                .collect::<Vec<bool>>()
+                .is_empty()
         } else {
             false
         }

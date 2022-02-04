@@ -375,6 +375,6 @@ async fn post_notification_error() {
     let error_body = response.into_string().await.unwrap();
     let actual = serde_json::from_str::<ErrorDetails>(&error_body).unwrap();
 
-    assert_eq!(Status::InternalServerError, actual_status);
+    assert_eq!(Status::BadRequest, actual_status);
     assert_eq!(expected_error, actual);
 }

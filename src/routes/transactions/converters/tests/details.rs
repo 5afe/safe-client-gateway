@@ -26,6 +26,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
             .unwrap();
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
+    let safe_address = safe_info.address.to_owned();
     let timestamp_confirmation0: i64 = 1592837914055;
     let timestamp_confirmation1: i64 = 1592838142231;
 
@@ -44,6 +45,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
         .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
+        safe_address: safe_address,
         tx_id: multisig_tx.generate_id(),
         executed_at: multisig_tx.execution_date.map(|it| it.timestamp_millis()),
         tx_status: TransactionStatus::Success,
@@ -149,6 +151,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
+        safe_address: module_transaction.safe_transaction.safe.to_owned(),
         tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Success,
@@ -206,6 +209,7 @@ async fn module_transaction_to_transaction_details_success() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
+        safe_address: module_transaction.safe_transaction.safe.to_owned(),
         tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Success,
@@ -259,6 +263,7 @@ async fn module_transaction_to_transaction_details_failed() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX_FAILED).unwrap();
 
     let expected = TransactionDetails {
+        safe_address: module_transaction.safe_transaction.safe.to_owned(),
         tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Failed,
@@ -302,6 +307,7 @@ async fn ethereum_tx_transfer_to_transaction_details() {
     .unwrap();
 
     let expected = TransactionDetails {
+        safe_address: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
         tx_id: transfer.generate_id("0xBc79855178842FDBA0c353494895DEEf509E26bB", "0x317db9d079e46fef2f758e37bd20efb14d5c83e2510307079207bc6f04cdee48"),
         executed_at: Some(transfer.get_execution_time().unwrap()),
         tx_status: TransactionStatus::Success,

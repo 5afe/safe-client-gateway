@@ -40,6 +40,7 @@ impl TransferDto {
         tx_hash: &str,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
+            safe_address: safe.to_owned(),
             tx_id: self.generate_id(safe, tx_hash),
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,

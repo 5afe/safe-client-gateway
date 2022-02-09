@@ -31,6 +31,7 @@ impl MultisigTransaction {
         )
         .await;
         Ok(TransactionDetails {
+            safe_address: self.safe_transaction.safe.to_owned(),
             tx_id: self.generate_id(),
             executed_at: self.execution_date.map(|data| data.timestamp_millis()),
             tx_status: self.map_status(&safe_info),
@@ -142,6 +143,7 @@ impl ModuleTransaction {
         )
         .await;
         Ok(TransactionDetails {
+            safe_address: self.safe_transaction.safe.to_owned(),
             tx_id: self.generate_id(),
             executed_at: Some(self.execution_date.timestamp_millis()),
             tx_status: self.map_status(),

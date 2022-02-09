@@ -296,6 +296,7 @@
 <span id="295">295</span>
 <span id="296">296</span>
 <span id="297">297</span>
+<span id="298">298</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded</span>::{<span class="ident">DataDecoded</span>, <span class="ident">Operation</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">SafeAppInfo</span>, <span class="ident">TokenInfo</span>};
@@ -520,6 +521,7 @@
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>, <span class="ident">PartialEq</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransactionDetails</span> {
+    <span class="kw">pub</span> <span class="ident">safe_address</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">tx_id</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">executed_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">tx_status</span>: <span class="ident">TransactionStatus</span>,

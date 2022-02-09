@@ -194,6 +194,8 @@
 <span id="193">193</span>
 <span id="194">194</span>
 <span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
 </pre><pre class="rust"><code><span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">chrono</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
@@ -227,6 +229,7 @@
         )
         .<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">TransactionDetails</span> {
+            <span class="ident">safe_address</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">safe</span>.<span class="ident">to_owned</span>(),
             <span class="ident">tx_id</span>: <span class="self">self</span>.<span class="ident">generate_id</span>(),
             <span class="ident">executed_at</span>: <span class="self">self</span>.<span class="ident">execution_date</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">timestamp_millis</span>()),
             <span class="ident">tx_status</span>: <span class="self">self</span>.<span class="ident">map_status</span>(<span class="kw-2">&amp;</span><span class="ident">safe_info</span>),
@@ -338,6 +341,7 @@
         )
         .<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">TransactionDetails</span> {
+            <span class="ident">safe_address</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">safe</span>.<span class="ident">to_owned</span>(),
             <span class="ident">tx_id</span>: <span class="self">self</span>.<span class="ident">generate_id</span>(),
             <span class="ident">executed_at</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp_millis</span>()),
             <span class="ident">tx_status</span>: <span class="self">self</span>.<span class="ident">map_status</span>(),

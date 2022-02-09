@@ -192,6 +192,7 @@
 <span id="191">191</span>
 <span id="192">192</span>
 <span id="193">193</span>
+<span id="194">194</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::get_transfer_direction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::converters::get_address_ex_from_any_source</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transfers</span>::{
@@ -234,6 +235,7 @@
         <span class="ident">tx_hash</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     ) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">TransactionDetails</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">TransactionDetails</span> {
+            <span class="ident">safe_address</span>: <span class="ident">safe</span>.<span class="ident">to_owned</span>(),
             <span class="ident">tx_id</span>: <span class="self">self</span>.<span class="ident">generate_id</span>(<span class="ident">safe</span>, <span class="ident">tx_hash</span>),
             <span class="ident">executed_at</span>: <span class="self">self</span>.<span class="ident">get_execution_time</span>(),
             <span class="ident">tx_status</span>: <span class="ident">TransactionStatus::Success</span>,

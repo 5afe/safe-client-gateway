@@ -29,7 +29,8 @@ impl MultisigTransaction {
             &self.safe_transaction.data_decoded,
             info_provider,
         )
-        .await;
+        .await?;
+
         Ok(TransactionDetails {
             safe_address: self.safe_transaction.safe.to_owned(),
             tx_id: self.generate_id(),
@@ -141,7 +142,8 @@ impl ModuleTransaction {
             &safe_transaction.data_decoded,
             info_provider,
         )
-        .await;
+        .await?;
+
         Ok(TransactionDetails {
             safe_address: self.safe_transaction.safe.to_owned(),
             tx_id: self.generate_id(),
@@ -177,21 +179,18 @@ pub async fn is_trusted_delegate_call(
     to: &str,
     data_decoded: &Option<DataDecoded>,
     info_provider: &(impl InfoProvider + Sync),
-) -> Option<bool> {
+) -> ApiResult<Option<bool>> {
     if operation == &Operation::DELEGATE {
-        info_provider
-            .contract_info(to)
-            .await
-            .map(|contract_info| {
-                // In the case of a known `multiSend` method call, we can still have internal transactions with DELEGATE calls
-                // which is why we only check when `trusted_for_delegate_call = true`
-                contract_info.trusted_for_delegate_call
-                    && !data_decoded
-                        .as_ref()
-                        .map_or(false, |data_decoded| data_decoded.has_nested_delegated())
-            })
-            .ok()
+        let contract_info = info_provider.contract_info(to).await?;
+
+        let has_nested_delegate_calls = !data_decoded
+            .as_ref()
+            .map_or(false, |data_decoded| data_decoded.has_nested_delegated());
+
+        let is_trusted_delegate_call =
+            contract_info.trusted_for_delegate_call && has_nested_delegate_calls;
+        return Ok(Some(is_trusted_delegate_call));
     } else {
-        None
+        Ok(None)
     }
 }

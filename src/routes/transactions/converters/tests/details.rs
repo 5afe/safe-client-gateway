@@ -16,7 +16,7 @@ use crate::routes::transactions::models::{
     Custom, Erc721Transfer, TransactionInfo, TransactionStatus, Transfer, TransferDirection,
     TransferInfo,
 };
-use crate::utils::errors::ApiError;
+use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::Response;
 
 #[rocket::async_test]
@@ -74,14 +74,14 @@ async fn multisig_custom_transaction_to_transaction_details() {
                         param_type: "uint256".to_string(),
                         value: SingleValue(String::from("500000000000000")),
                         value_decoded: None,
-                    }
+                    },
                 ]),
             }),
             to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
             MultisigExecutionDetails {
@@ -99,7 +99,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
                     AddressEx::address_only("0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"),
                     AddressEx::address_only("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"),
                     AddressEx::address_only("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"),
-                    AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0")
+                    AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
                 ],
                 confirmations_required: 2,
                 confirmations: vec![
@@ -171,7 +171,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -229,7 +229,7 @@ async fn module_transaction_to_transaction_details_success() {
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -283,7 +283,7 @@ async fn module_transaction_to_transaction_details_failed() {
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -423,7 +423,8 @@ async fn is_trusted_delegate_with_call() {
         &Some(data_decoded),
         &mock_info_provider,
     )
-    .await;
+    .await
+    .unwrap();
 
     assert_eq!(actual, None);
 }
@@ -454,7 +455,8 @@ async fn is_trusted_delegate_with_delegate() {
         &Some(data_decoded),
         &mock_info_provider,
     )
-    .await;
+    .await
+    .unwrap();
 
     assert_eq!(actual, Some(false));
 }
@@ -483,7 +485,18 @@ async fn is_trusted_delegate_with_contract_request_failure() {
     )
     .await;
 
-    assert_eq!(actual, None);
+    assert_eq!(
+        actual.unwrap_err(),
+        ApiError {
+            status: 404,
+            details: ErrorDetails {
+                code: 1337,
+                message: Some("".to_string()),
+                debug: None,
+                arguments: None
+            }
+        }
+    );
 }
 
 #[rocket::async_test]
@@ -514,7 +527,8 @@ async fn is_trusted_delegate_with_call_but_nested_delegate() {
         &Some(data_decoded),
         &mock_info_provider,
     )
-    .await;
+    .await
+    .unwrap();
 
     assert_eq!(actual, Some(false));
 }

@@ -177,6 +177,7 @@ async fn transfer_dto_to_transaction_details() {
         .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
+        safe_address: safe_address.to_owned(),
         tx_id: ether_transfer_dto.generate_id(
             safe_address,
             "0x41b610e8cce50bbe3aa06d6953ecc5f92a838aedc024a265c0afca7ec4f33bdf",

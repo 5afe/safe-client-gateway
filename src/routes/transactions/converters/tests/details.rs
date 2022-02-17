@@ -16,7 +16,7 @@ use crate::routes::transactions::models::{
     Custom, Erc721Transfer, TransactionInfo, TransactionStatus, Transfer, TransferDirection,
     TransferInfo,
 };
-use crate::utils::errors::ApiError;
+use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::Response;
 
 #[rocket::async_test]
@@ -26,6 +26,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
             .unwrap();
     let safe_info =
         serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES).unwrap();
+    let safe_address = safe_info.address.to_owned();
     let timestamp_confirmation0: i64 = 1592837914055;
     let timestamp_confirmation1: i64 = 1592838142231;
 
@@ -44,6 +45,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
         .returning(move |_| bail!("No address info"));
 
     let expected = TransactionDetails {
+        safe_address: safe_address,
         tx_id: multisig_tx.generate_id(),
         executed_at: multisig_tx.execution_date.map(|it| it.timestamp_millis()),
         tx_status: TransactionStatus::Success,
@@ -72,14 +74,14 @@ async fn multisig_custom_transaction_to_transaction_details() {
                         param_type: "uint256".to_string(),
                         value: SingleValue(String::from("500000000000000")),
                         value_decoded: None,
-                    }
+                    },
                 ]),
             }),
             to: AddressEx::address_only("0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02"),
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Multisig(
             MultisigExecutionDetails {
@@ -97,7 +99,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
                     AddressEx::address_only("0x37e9F140A9Df5DCBc783C6c220660a4E15CBFe72"),
                     AddressEx::address_only("0xA3DAa0d9Ae02dAA17a664c232aDa1B739eF5ae8D"),
                     AddressEx::address_only("0xF2CeA96575d6b10f51d9aF3b10e3e4E5738aa6bd"),
-                    AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0")
+                    AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
                 ],
                 confirmations_required: 2,
                 confirmations: vec![
@@ -149,6 +151,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
+        safe_address: module_transaction.safe_transaction.safe.to_owned(),
         tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Success,
@@ -168,7 +171,7 @@ async fn module_transaction_to_transaction_details_module_info_success() {
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -206,6 +209,7 @@ async fn module_transaction_to_transaction_details_success() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX).unwrap();
 
     let expected = TransactionDetails {
+        safe_address: module_transaction.safe_transaction.safe.to_owned(),
         tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Success,
@@ -225,7 +229,7 @@ async fn module_transaction_to_transaction_details_success() {
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -259,6 +263,7 @@ async fn module_transaction_to_transaction_details_failed() {
         serde_json::from_str::<ModuleTransaction>(crate::tests::json::MODULE_TX_FAILED).unwrap();
 
     let expected = TransactionDetails {
+        safe_address: module_transaction.safe_transaction.safe.to_owned(),
         tx_id: module_transaction.generate_id(),
         executed_at: Some(module_transaction.execution_date.timestamp_millis()),
         tx_status: TransactionStatus::Failed,
@@ -278,7 +283,7 @@ async fn module_transaction_to_transaction_details_failed() {
             value: Some(String::from("0")),
             operation: Operation::CALL,
             address_info_index: None,
-            trusted_delegate_call_target: None
+            trusted_delegate_call_target: None,
         }),
         detailed_execution_info: Some(DetailedExecutionInfo::Module(
             ModuleExecutionDetails {
@@ -302,6 +307,7 @@ async fn ethereum_tx_transfer_to_transaction_details() {
     .unwrap();
 
     let expected = TransactionDetails {
+        safe_address: "0xBc79855178842FDBA0c353494895DEEf509E26bB".to_string(),
         tx_id: transfer.generate_id("0xBc79855178842FDBA0c353494895DEEf509E26bB", "0x317db9d079e46fef2f758e37bd20efb14d5c83e2510307079207bc6f04cdee48"),
         executed_at: Some(transfer.get_execution_time().unwrap()),
         tx_status: TransactionStatus::Success,
@@ -406,21 +412,27 @@ async fn multisig_transaction_with_origin() {
 
 #[rocket::async_test]
 async fn is_trusted_delegate_with_call() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_contract_info().times(0);
 
     let actual = is_trusted_delegate_call(
         &Operation::CALL,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &Some(data_decoded),
         &mock_info_provider,
     )
-    .await;
+    .await
+    .unwrap();
 
     assert_eq!(actual, None);
 }
 
 #[rocket::async_test]
 async fn is_trusted_delegate_with_delegate() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -440,15 +452,19 @@ async fn is_trusted_delegate_with_delegate() {
     let actual = is_trusted_delegate_call(
         &Operation::DELEGATE,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &Some(data_decoded),
         &mock_info_provider,
     )
-    .await;
+    .await
+    .unwrap();
 
     assert_eq!(actual, Some(false));
 }
 
 #[rocket::async_test]
 async fn is_trusted_delegate_with_contract_request_failure() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider
         .expect_contract_info()
@@ -464,9 +480,55 @@ async fn is_trusted_delegate_with_contract_request_failure() {
     let actual = is_trusted_delegate_call(
         &Operation::DELEGATE,
         "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &Some(data_decoded),
         &mock_info_provider,
     )
     .await;
 
-    assert_eq!(actual, None);
+    assert_eq!(
+        actual.unwrap_err(),
+        ApiError {
+            status: 404,
+            details: ErrorDetails {
+                code: 1337,
+                message: Some("".to_string()),
+                debug: None,
+                arguments: None
+            }
+        }
+    );
+}
+
+#[rocket::async_test]
+async fn is_trusted_delegate_with_call_but_nested_delegate() {
+    let data_decoded = serde_json::from_str::<DataDecoded>(
+        crate::tests::json::DOCTORED_DATA_DECODED_MULTI_SEND_NESTED_DELEGATE,
+    )
+    .unwrap();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_contract_info()
+        .with(eq("0x8D29bE29923b68abfDD21e541b9374737B49cdAD"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(ContractInfo {
+                name: "multiSend".to_string(),
+                address: "0x8D29bE29923b68abfDD21e541b9374737B49cdAD".to_string(),
+                display_name: "Gnosis Safe: Multi Send 1.1.1".to_string(),
+                logo_uri: None,
+                contract_abi: None,
+                trusted_for_delegate_call: true,
+            })
+        });
+
+    let actual = is_trusted_delegate_call(
+        &Operation::DELEGATE,
+        "0x8D29bE29923b68abfDD21e541b9374737B49cdAD",
+        &Some(data_decoded),
+        &mock_info_provider,
+    )
+    .await
+    .unwrap();
+
+    assert_eq!(actual, Some(false));
 }

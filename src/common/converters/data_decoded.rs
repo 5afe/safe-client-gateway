@@ -1,5 +1,7 @@
 use crate::common::models::addresses::AddressEx;
-use crate::common::models::data_decoded::{DataDecoded, ParamValue, Parameter, ValueDecodedType};
+use crate::common::models::data_decoded::{
+    DataDecoded, InternalTransaction, Operation, ParamValue, Parameter, ValueDecodedType,
+};
 use crate::config::feature_flag_nested_decoding;
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::InfoProvider;
@@ -118,6 +120,31 @@ impl DataDecoded {
             None
         } else {
             Some(index)
+        }
+    }
+
+    pub fn has_nested_delegated(&self) -> bool {
+        if let Some(parameters) = &self.parameters {
+            parameters
+                .iter()
+                .map(|parameter| {
+                    if let Some(value) = &parameter.value_decoded {
+                        match value {
+                            ValueDecodedType::InternalTransaction(transactions) => transactions
+                                .iter()
+                                .filter(|transaction| transaction.operation == Operation::DELEGATE)
+                                .collect::<Vec<&InternalTransaction>>()
+                                .is_empty(),
+                        }
+                    } else {
+                        true // the "if" branch checks that there are NO entries with DELEGATE, therefore default true
+                    }
+                })
+                .filter(|&it| it) // filter "true" meaning, we remove those entries with "no" DELEGATE
+                .collect::<Vec<bool>>()
+                .is_empty()
+        } else {
+            false
         }
     }
 }

@@ -3,7 +3,7 @@ use crate::config::{redis_scan_count, redis_uri};
 use bb8_redis::{
     bb8::Pool,
     bb8::{self, PooledConnection},
-    redis::{self, cmd, AsyncCommands, AsyncIter, FromRedisValue, Pipeline, ToRedisArgs},
+    redis::{cmd, AsyncCommands, AsyncIter, FromRedisValue, Pipeline, ToRedisArgs},
     RedisConnectionManager,
 };
 
@@ -91,7 +91,7 @@ async fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue
     pattern: P,
     count: C,
 ) -> AsyncIter<'r, RV> {
-    let mut cmd = redis::cmd("SCAN");
+    let mut cmd = cmd("SCAN");
     cmd.cursor_arg(0)
         .arg("MATCH")
         .arg(pattern)

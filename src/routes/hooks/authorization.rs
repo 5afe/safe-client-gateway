@@ -27,7 +27,7 @@ impl<'r> FromRequest<'r> for AuthorizationToken {
             1 if keys[0] != webhook_token() => Outcome::Success(AuthorizationToken {
                 value: keys[0].to_string(),
             }),
-            1 => Outcome::Failure((Status::BadRequest, AuthorizationError::Invalid)),
+            1 => Outcome::Failure((Status::Unauthorized, AuthorizationError::Invalid)),
             _ => Outcome::Failure((Status::BadRequest, AuthorizationError::BadCount)),
         }
     }

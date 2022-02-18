@@ -2,9 +2,9 @@ use super::*;
 use crate::providers::info::SafeAppInfo;
 use serde::Serialize;
 
-///TransactionSummary - object returned for [TransactionListItem::Transaction]
+/// TransactionSummary - object returned for [TransactionListItem::Transaction]
 ///
-///<details>
+/// <details>
 /// <summary>Sample 1: History of executed transactions with date labels per day</summary>
 ///
 /// ```json

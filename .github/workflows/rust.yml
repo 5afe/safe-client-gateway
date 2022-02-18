@@ -12,16 +12,12 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
-
-      - name: Set variables
-        run: |
-          echo "TOOLCHAIN=$(rustup show active-toolchain | cut -d " " -f1)" >> $GITHUB_ENV
-
+        
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ env.TOOLCHAIN }}
+          toolchain: nightly
           override: true
           components: rustfmt
 
@@ -29,7 +25,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --all -- --check
+          args: --all --check
 
   tests:
     runs-on: ubuntu-latest
@@ -61,6 +57,7 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
 
+      # This can be removed once https://github.com/actions-rs/toolchain/pull/209 is merged and released
       - name: Set variables
         run: |
           echo "TOOLCHAIN=$(rustup show active-toolchain | cut -d " " -f1)" >> $GITHUB_ENV
@@ -71,7 +68,6 @@ jobs:
           profile: minimal
           toolchain: ${{ env.TOOLCHAIN }}
           override: true
-          components: rustfmt
 
       - name: Cargo cache
         uses: Swatinem/rust-cache@v1

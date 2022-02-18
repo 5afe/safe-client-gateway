@@ -191,6 +191,7 @@ impl MultisigTransaction {
             .transaction_info(info_provider, self.is_cancellation())
             .await
     }
+
     fn confirmation_count(&self) -> u64 {
         match &self.confirmations {
             Some(confirmations) => confirmations.len() as u64,

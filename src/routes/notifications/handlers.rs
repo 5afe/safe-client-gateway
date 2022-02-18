@@ -1,7 +1,6 @@
 use itertools::Itertools;
-use serde_json::json;
-use serde_json::value::RawValue;
-use serde_json::{self, value::Value};
+use serde_json::value::{RawValue, Value};
+use serde_json::{self, json};
 
 use crate::common::models::backend::notifications::NotificationRegistrationRequest as BackendRegistrationRequest;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};

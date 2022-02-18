@@ -60,7 +60,7 @@ fn rocket() -> Rocket<Build> {
 
 #[cfg(test)]
 fn setup_logger() {
-    //noop: no need to set the logger for tests
+    // noop: no need to set the logger for tests
 }
 
 #[doc(hidden)]

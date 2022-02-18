@@ -1,8 +1,7 @@
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::config::transaction_request_timeout;
-use crate::providers::info::InfoProvider;
-use crate::providers::info::SAFE_V_1_3_0;
+use crate::providers::info::{InfoProvider, SAFE_V_1_3_0};
 use crate::utils::errors::ApiResult;
 use ethabi::ethereum_types::H256;
 use ethabi::{Address, Uint};
@@ -105,16 +104,16 @@ pub(super) fn cancellation_parts_hash(safe_address: &Address, nonce: u64) -> [u8
 
     let encoded_parts = &ethabi::encode(&[
         ethabi::Token::Uint(Uint::from(safe_type_hash.0)),
-        ethabi::Token::Address(Address::from(safe_address.0)), //to
-        ethabi::Token::Uint(Uint::zero()),                     //value
-        ethabi::Token::Uint(Uint::from(keccak256(vec![]))),    //data
-        ethabi::Token::Uint(Uint::zero()),                     //operation
-        ethabi::Token::Uint(Uint::zero()),                     //safe_tx_gas
-        ethabi::Token::Uint(Uint::zero()),                     //base_gas
-        ethabi::Token::Uint(Uint::zero()),                     //gas_price
-        ethabi::Token::Address(Address::zero()),               //gas_token
-        ethabi::Token::Address(Address::zero()),               //refund_receiver
-        ethabi::Token::Uint(Uint::from(nonce)),                //base_gas
+        ethabi::Token::Address(Address::from(safe_address.0)), // to
+        ethabi::Token::Uint(Uint::zero()),                     // value
+        ethabi::Token::Uint(Uint::from(keccak256(vec![]))),    // data
+        ethabi::Token::Uint(Uint::zero()),                     // operation
+        ethabi::Token::Uint(Uint::zero()),                     // safe_tx_gas
+        ethabi::Token::Uint(Uint::zero()),                     // base_gas
+        ethabi::Token::Uint(Uint::zero()),                     // gas_price
+        ethabi::Token::Address(Address::zero()),               // gas_token
+        ethabi::Token::Address(Address::zero()),               // refund_receiver
+        ethabi::Token::Uint(Uint::from(nonce)),                // base_gas
     ]);
 
     keccak256(encoded_parts)

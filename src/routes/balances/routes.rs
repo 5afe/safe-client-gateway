@@ -3,33 +3,30 @@ use rocket::response::content;
 
 use crate::cache::cache_operations::CacheResponse;
 use crate::config::{balances_cache_duration, feature_flag_balances_rate_implementation};
-use crate::routes::balances::handlers;
 use crate::routes::balances::handlers::fiat_codes;
-use crate::routes::balances::handlers_v2;
+use crate::routes::balances::{handlers, handlers_v2};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
-/**
- * `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
- * Returns [Balances](crate::routes::balances::models::Balances)
- *
- * # Balances
- *
- * This endpoint returns the [Balances](crate::routes::balances::models::Balances) with information (when available) of their converted balance into a designated fiat. The entries are sorted by their fiat balance value.
- *
- * The `fiat_code` can be selected from any of the values returned by the supported fiat endpoint.
- *
- * The total balance in the designated fiat is also part of the response.
- *
- * ## Path
- *
- * - `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>` returns the balance for every supported ERC20 token for a `<safe_address>`, as well as the aggregated fiat total in the fiat currency requested with `<fiat>` . Sorted by fiat balance.
- *
- * ## Query parameters
- *
- * - `<trusted>` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`
- * - `<exclude_spam>`: A token is defined as spam by our core handlers process when adding them. Default value is `true`
- */
+/// `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
+/// Returns [Balances](crate::routes::balances::models::Balances)
+///
+/// # Balances
+///
+/// This endpoint returns the [Balances](crate::routes::balances::models::Balances) with information (when available) of their converted balance into a designated fiat. The entries are sorted by their fiat balance value.
+///
+/// The `fiat_code` can be selected from any of the values returned by the supported fiat endpoint.
+///
+/// The total balance in the designated fiat is also part of the response.
+///
+/// ## Path
+///
+/// - `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>` returns the balance for every supported ERC20 token for a `<safe_address>`, as well as the aggregated fiat total in the fiat currency requested with `<fiat>` . Sorted by fiat balance.
+///
+/// ## Query parameters
+///
+/// - `<trusted>` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`
+/// - `<exclude_spam>`: A token is defined as spam by our core handlers process when adding them. Default value is `true`
 #[get("/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>")]
 pub async fn get_balances(
     context: RequestContext,
@@ -68,14 +65,12 @@ pub async fn get_balances(
         .await
 }
 
-/**
- * `/v1/balances/supported-fiat-codes` <br/>
- * Returns [Vec] of [String]
- *
- * Supported fiat codes for balances
- * `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `<fiat>` segment of the balance endpoint.
- * The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
- */
+/// `/v1/balances/supported-fiat-codes` <br/>
+/// Returns [Vec] of [String]
+///
+/// Supported fiat codes for balances
+/// `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `<fiat>` segment of the balance endpoint.
+/// The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
 #[get("/v1/balances/supported-fiat-codes")]
 pub async fn get_supported_fiat(context: RequestContext) -> ApiResult<content::Json<String>> {
     CacheResponse::new(&context)

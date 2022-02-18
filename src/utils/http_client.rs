@@ -52,9 +52,11 @@ impl Response {
     pub fn is_server_error(&self) -> bool {
         500 <= self.status_code && self.status_code < 600
     }
+
     pub fn is_client_error(&self) -> bool {
         400 <= self.status_code && self.status_code < 500
     }
+
     pub fn is_success(&self) -> bool {
         200 <= self.status_code && self.status_code < 300
     }
@@ -68,7 +70,6 @@ impl Response {
     /// * `reqwest_response`: The [reqwest::Response] to be mapped
     ///
     /// returns: Result<Response, ApiError>
-    ///
     async fn from(reqwest_response: reqwest::Response) -> ApiResult<Self> {
         let status_code = reqwest_response.status().as_u16();
         let body: String = reqwest_response.text().await?;

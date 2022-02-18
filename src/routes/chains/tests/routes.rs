@@ -1,11 +1,9 @@
-use crate::{
-    common::models::backend::chains::ChainInfo as BackendChainInfo,
-    common::models::page::Page,
-    config::chain_info_request_timeout,
-    routes::chains::models::ChainInfo,
-    tests::main::setup_rocket,
-    utils::http_client::{MockHttpClient, Request, Response},
-};
+use crate::common::models::backend::chains::ChainInfo as BackendChainInfo;
+use crate::common::models::page::Page;
+use crate::config::chain_info_request_timeout;
+use crate::routes::chains::models::ChainInfo;
+use crate::tests::main::setup_rocket;
+use crate::utils::http_client::{MockHttpClient, Request, Response};
 use mockall::predicate::eq;
 use rocket::http::{ContentType, Header, Status};
 use rocket::local::asynchronous::Client;

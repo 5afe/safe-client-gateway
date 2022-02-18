@@ -5,8 +5,9 @@ use bigdecimal::BigDecimal;
 use rocket::futures::{stream, StreamExt};
 
 use crate::cache::cache_operations::RequestCached;
-use crate::common::models::backend::balances_v2::Balance as BalanceDto;
-use crate::common::models::backend::balances_v2::TokenPrice as BackendTokenPrice;
+use crate::common::models::backend::balances_v2::{
+    Balance as BalanceDto, TokenPrice as BackendTokenPrice,
+};
 use crate::common::models::backend::chains::NativeCurrency;
 use crate::config::{
     balances_core_request_cache_duration, balances_request_timeout,
@@ -127,7 +128,6 @@ async fn get_token_prices(
 /// * `token_address`: The token address (0x0000000000000000000000000000000000000000 for native currency)
 ///
 /// returns: Result<TokenPrice, ApiError>
-///
 async fn get_token_usd_rate(
     context: &RequestContext,
     token_address: String,

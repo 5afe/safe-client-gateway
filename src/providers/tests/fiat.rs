@@ -1,13 +1,9 @@
-use crate::{
-    cache::redis::create_service_cache,
-    cache::Cache,
-    providers::fiat::{Exchange, FiatInfoProvider},
-    utils::{
-        context::RequestContext,
-        errors::ApiError,
-        http_client::{HttpClient, MockHttpClient, Request, Response},
-    },
-};
+use crate::cache::redis::create_service_cache;
+use crate::cache::Cache;
+use crate::providers::fiat::{Exchange, FiatInfoProvider};
+use crate::utils::context::RequestContext;
+use crate::utils::errors::ApiError;
+use crate::utils::http_client::{HttpClient, MockHttpClient, Request, Response};
 use bigdecimal::BigDecimal;
 use mockall::predicate::eq;
 use serde_json::json;

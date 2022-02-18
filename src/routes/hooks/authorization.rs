@@ -12,7 +12,6 @@ pub struct AuthorizationToken {
 pub enum AuthorizationError {
     Missing,
     Invalid,
-    BadCount,
 }
 
 #[rocket::async_trait]
@@ -20,15 +19,17 @@ impl<'r> FromRequest<'r> for AuthorizationToken {
     type Error = AuthorizationError;
 
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
-        let keys: Vec<&str> = request.headers().get("Authorization").collect();
-
-        match keys.len() {
-            0 => Outcome::Failure((Status::BadRequest, AuthorizationError::Missing)),
-            1 if keys[0] != webhook_token() => Outcome::Success(AuthorizationToken {
-                value: keys[0].to_string(),
-            }),
-            1 => Outcome::Failure((Status::Unauthorized, AuthorizationError::Invalid)),
-            _ => Outcome::Failure((Status::BadRequest, AuthorizationError::BadCount)),
+        match request.headers().get_one("Authorization") {
+            // Require the header to be present
+            None => Outcome::Failure((Status::BadRequest, AuthorizationError::Missing)),
+            Some(key) if key == format!("Basic {}", webhook_token()) => {
+                Outcome::Success(AuthorizationToken {
+                    value: key.to_string(),
+                })
+            }
+            // If the Authorization header didn't match with "Basic <token>" we consider it to be
+            // an invalid token
+            Some(_) => Outcome::Failure((Status::Unauthorized, AuthorizationError::Invalid)),
         }
     }
 }

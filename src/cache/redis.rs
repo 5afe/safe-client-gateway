@@ -3,7 +3,7 @@ use crate::config::{redis_scan_count, redis_uri};
 use bb8_redis::{
     bb8::Pool,
     bb8::{self, PooledConnection},
-    redis::{self, cmd, AsyncCommands, FromRedisValue, Iter, Pipeline, ToRedisArgs},
+    redis::{self, cmd, AsyncCommands, AsyncIter, FromRedisValue, Pipeline, ToRedisArgs},
     RedisConnectionManager,
 };
 
@@ -63,10 +63,9 @@ impl Cache for ServiceCache {
     }
 
     async fn invalidate_pattern(&self, pattern: &str) {
-        pipeline_delete(
-            &mut self.conn().await,
-            scan_match_count(&mut self.conn().await, pattern, redis_scan_count()),
-        );
+        let mut connection = &self.conn().await;
+        let mut keys = scan_match_count(&mut connection, pattern, redis_scan_count()).await;
+        pipeline_delete(&mut connection, &mut keys).await;
     }
 
     async fn invalidate(&self, id: &str) {
@@ -79,24 +78,24 @@ impl Cache for ServiceCache {
     }
 }
 
-fn pipeline_delete(con: &mut RedisConnection, keys: Iter<String>) {
+async fn pipeline_delete(con: &mut RedisConnection<'_>, keys: &mut AsyncIter<'_, String>) {
     let pipeline = &mut Pipeline::new();
-    for key in keys {
+    while let Some(key) = keys.next_item().await {
         pipeline.del(key);
     }
-    pipeline.query_async(&mut *con);
+    pipeline.query_async(&mut *con).await;
 }
 
-fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
-    con: &'r mut RedisConnection,
+async fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
+    con: &'r mut RedisConnection<'r>,
     pattern: P,
     count: C,
-) -> redis::Iter<'r, RV> {
+) -> AsyncIter<'r, RV> {
     let mut cmd = redis::cmd("SCAN");
     cmd.cursor_arg(0)
         .arg("MATCH")
         .arg(pattern)
         .arg("COUNT")
         .arg(count);
-    cmd.iter(&mut *con).unwrap()
+    cmd.iter_async(&mut *con).await.unwrap()
 }

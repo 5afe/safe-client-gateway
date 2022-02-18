@@ -63,7 +63,7 @@ impl Cache for ServiceCache {
     }
 
     async fn invalidate_pattern(&self, pattern: &str) {
-        let mut connection = &self.conn().await;
+        let mut connection = self.conn().await;
         let mut keys = scan_match_count(&mut connection, pattern, redis_scan_count()).await;
         pipeline_delete(&mut connection, &mut keys).await;
     }

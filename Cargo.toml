@@ -7,6 +7,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+bb8 = "0.7.1"
+bb8-redis = "0.10.1"
 bigdecimal = { version = "0.3.0", features = ["serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 derivative = "2.2.0"
@@ -26,7 +28,7 @@ regex = "1.5.4"
 reqwest = { version = "0.11.3", features = ["json"] }
 rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
 rocket_codegen = { version = "0.5.0-rc.1" }
-redis = { version = "0.21", features = ["r2d2"] }
+redis = { version = "0.21", features = ["tokio-comp"] }
 semver = "1.0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0", features = ["raw_value"] }

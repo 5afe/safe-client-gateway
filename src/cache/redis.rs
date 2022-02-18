@@ -1,70 +1,81 @@
 use crate::cache::Cache;
 use crate::config::{redis_scan_count, redis_uri};
-use r2d2::{Pool, PooledConnection};
-use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
+use bb8::PooledConnection;
+use bb8_redis::{
+    bb8,
+    bb8::Pool,
+    redis::{self, pipe, AsyncCommands, FromRedisValue, Iter, ToRedisArgs},
+    RedisConnectionManager,
+};
 
-type RedisPool = Pool<redis::Client>;
-type RedisConnection = PooledConnection<redis::Client>;
+type RedisPool = Pool<RedisConnectionManager>;
+type RedisConnection<'a> = PooledConnection<'a, RedisConnectionManager>;
+
+async fn create_pool() -> RedisPool {
+    let manager = RedisConnectionManager::new(redis_uri())
+        .expect("Establishing connection with redis instance failed");
+    bb8::Pool::builder()
+        .max_size(15)
+        .build(manager)
+        .await
+        .expect("Redis connection pool initialization failed")
+}
 
 pub struct ServiceCache(RedisPool);
 
-pub fn create_service_cache() -> ServiceCache {
-    ServiceCache(create_pool())
-}
-
-fn create_pool() -> RedisPool {
-    let client = redis::Client::open(redis_uri()).unwrap();
-    Pool::builder().max_size(15).build(client).unwrap()
+pub async fn create_service_cache() -> ServiceCache {
+    ServiceCache(create_pool().await)
 }
 
 impl ServiceCache {
-    fn conn(&self) -> RedisConnection {
-        self.0.get().unwrap()
+    async fn conn(&self) -> RedisConnection<'_> {
+        self.0.get().await.unwrap()
     }
 }
 
+#[rocket::async_trait]
 impl Cache for ServiceCache {
-    fn fetch(&self, id: &str) -> Option<String> {
-        match self.conn().get(id) {
+    async fn fetch(&self, id: &str) -> Option<String> {
+        match self.conn().await.get(id) {
             Ok(value) => Some(value),
             _ => None,
         }
     }
 
-    fn create(&self, id: &str, dest: &str, timeout: usize) {
-        let _: () = self.conn().pset_ex(id, dest, timeout).unwrap();
+    async fn create(&self, id: &str, dest: &str, timeout: usize) {
+        let _: () = self.conn().await.pset_ex(id, dest, timeout).unwrap();
     }
 
-    fn insert_in_hash(&self, hash: &str, id: &str, dest: &str) {
+    async fn insert_in_hash(&self, hash: &str, id: &str, dest: &str) {
         let _: () = self.conn().hset(hash, id, dest).unwrap();
     }
 
-    fn get_from_hash(&self, hash: &str, id: &str) -> Option<String> {
-        self.conn().hget(hash, id).ok()
+    async fn get_from_hash(&self, hash: &str, id: &str) -> Option<String> {
+        self.conn().await.hget(hash, id).ok()
     }
 
-    fn has_key(&self, id: &str) -> bool {
-        let result: Option<usize> = self.conn().exists(id).ok();
+    async fn has_key(&self, id: &str) -> bool {
+        let result: Option<usize> = self.conn().await.exists(id).ok();
         result.map(|it| it != 0).unwrap_or(false)
     }
 
-    fn expire_entity(&self, id: &str, timeout: usize) {
-        let _: () = self.conn().pexpire(id, timeout).unwrap();
+    async fn expire_entity(&self, id: &str, timeout: usize) {
+        let _: () = self.conn().await.pexpire(id, timeout).unwrap();
     }
 
-    fn invalidate_pattern(&self, pattern: &str) {
+    async fn invalidate_pattern(&self, pattern: &str) {
         pipeline_delete(
-            &mut self.conn(),
-            scan_match_count(&mut self.conn(), pattern, redis_scan_count()),
+            &mut self.conn().await,
+            scan_match_count(&mut self.conn().await, pattern, redis_scan_count()),
         );
     }
 
-    fn invalidate(&self, id: &str) {
-        let _: () = self.conn().del(id).unwrap();
+    async fn invalidate(&self, id: &str) {
+        let _: () = self.conn().await.del(id).unwrap();
     }
 
-    fn info(&self) -> Option<String> {
-        info(&mut self.conn())
+    async fn info(&self) -> Option<String> {
+        info(&mut self.conn().await)
     }
 }
 

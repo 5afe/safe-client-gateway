@@ -279,18 +279,27 @@ impl DefaultInfoProvider<'_> {
 
     async fn check_token_cache(&self) -> ApiResult<()> {
         let token_key = generate_token_key(&self.chain_id);
-        if self.cache.has_key(&token_key) {
+        if self.cache.has_key(&token_key).await {
             return Ok(());
         }
-        self.cache.insert_in_hash(&token_key, "state", "populating");
+        self.cache
+            .insert_in_hash(&token_key, "state", "populating")
+            .await;
         let result = self.populate_token_cache().await;
         if result.is_ok() {
             self.cache
-                .expire_entity(&token_key, token_info_cache_duration());
-            self.cache.insert_in_hash(&token_key, "state", "populated");
+                .expire_entity(&token_key, token_info_cache_duration())
+                .await;
+            self.cache
+                .insert_in_hash(&token_key, "state", "populated")
+                .await;
         } else {
-            self.cache.expire_entity(&token_key, short_error_duration());
-            self.cache.insert_in_hash(&token_key, "state", "errored");
+            self.cache
+                .expire_entity(&token_key, short_error_duration())
+                .await;
+            self.cache
+                .insert_in_hash(&token_key, "state", "errored")
+                .await;
         }
         result
     }
@@ -300,6 +309,7 @@ impl DefaultInfoProvider<'_> {
         match self
             .cache
             .get_from_hash(&generate_token_key(&self.chain_id), &token)
+            .await
         {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),

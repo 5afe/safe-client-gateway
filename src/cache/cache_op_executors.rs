@@ -20,7 +20,7 @@ where
 {
     let cache = cache_response.cache.clone();
     let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, cache_response.key);
-    let cached = cache.fetch(&cache_key);
+    let cached = cache.fetch(&cache_key).await;
     match cached {
         Some(value) => Ok(content::Json(value)),
         None => {
@@ -35,7 +35,7 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
     let cache = operation.cache.clone();
     let client = operation.client.clone();
     let cache_key = format!("{}_{}", CACHE_REQS_PREFIX, &operation.url);
-    match cache.fetch(&cache_key) {
+    match cache.fetch(&cache_key).await {
         Some(cached) => CachedWithCode::split(&cached).to_result(),
         None => {
             let http_request = {

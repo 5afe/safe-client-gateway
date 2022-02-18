@@ -7,7 +7,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bb8 = "0.7.1"
 bb8-redis = "0.10.1"
 bigdecimal = { version = "0.3.0", features = ["serde"] }
 chrono = { version = "0.4", features = ["serde"] }

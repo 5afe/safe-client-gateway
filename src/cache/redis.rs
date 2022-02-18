@@ -31,11 +31,6 @@ impl ServiceCache {
     async fn conn(&self) -> RedisConnection<'_> {
         self.0.get().await.unwrap()
     }
-
-    async fn foo(&self) -> Option<String> {
-        let mut conn = self.conn().await;
-        cmd("PING").query_async(&mut *conn).await.ok()
-    }
 }
 
 #[rocket::async_trait]
@@ -80,7 +75,8 @@ impl Cache for ServiceCache {
     }
 
     async fn info(&self) -> Option<String> {
-        info(&mut self.conn().await).await
+        let mut conn = self.conn().await;
+        cmd("INFO").query_async(&mut *conn).await.ok()
     }
 }
 
@@ -104,8 +100,4 @@ fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
         .arg("COUNT")
         .arg(count);
     cmd.iter(con).unwrap()
-}
-
-async fn info(con: &mut RedisConnection<'_>) -> Option<String> {
-    cmd("INFO").query_async(con).await.ok()
 }

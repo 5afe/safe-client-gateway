@@ -23,47 +23,48 @@ impl ServiceCache {
     }
 }
 
+#[rocket::async_trait]
 impl Cache for ServiceCache {
-    fn fetch(&self, id: &str) -> Option<String> {
+    async fn fetch(&self, id: &str) -> Option<String> {
         match self.conn().get(id) {
             Ok(value) => Some(value),
             _ => None,
         }
     }
 
-    fn create(&self, id: &str, dest: &str, timeout: usize) {
+    async fn create(&self, id: &str, dest: &str, timeout: usize) {
         let _: () = self.conn().pset_ex(id, dest, timeout).unwrap();
     }
 
-    fn insert_in_hash(&self, hash: &str, id: &str, dest: &str) {
+    async fn insert_in_hash(&self, hash: &str, id: &str, dest: &str) {
         let _: () = self.conn().hset(hash, id, dest).unwrap();
     }
 
-    fn get_from_hash(&self, hash: &str, id: &str) -> Option<String> {
+    async fn get_from_hash(&self, hash: &str, id: &str) -> Option<String> {
         self.conn().hget(hash, id).ok()
     }
 
-    fn has_key(&self, id: &str) -> bool {
+    async fn has_key(&self, id: &str) -> bool {
         let result: Option<usize> = self.conn().exists(id).ok();
         result.map(|it| it != 0).unwrap_or(false)
     }
 
-    fn expire_entity(&self, id: &str, timeout: usize) {
+    async fn expire_entity(&self, id: &str, timeout: usize) {
         let _: () = self.conn().pexpire(id, timeout).unwrap();
     }
 
-    fn invalidate_pattern(&self, pattern: &str) {
+    async fn invalidate_pattern(&self, pattern: &str) {
         pipeline_delete(
             &mut self.conn(),
             scan_match_count(&mut self.conn(), pattern, redis_scan_count()),
         );
     }
 
-    fn invalidate(&self, id: &str) {
+    async fn invalidate(&self, id: &str) {
         let _: () = self.conn().del(id).unwrap();
     }
 
-    fn info(&self) -> Option<String> {
+    async fn info(&self) -> Option<String> {
         info(&mut self.conn())
     }
 }

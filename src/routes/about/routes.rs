@@ -105,9 +105,9 @@ pub async fn backbone(
 
 #[doc(hidden)]
 #[get("/about/redis/<token>")]
-pub fn redis(context: RequestContext, token: String) -> ApiResult<String> {
+pub async fn redis(context: RequestContext, token: String) -> ApiResult<String> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Ok(context.cache().info().unwrap_or(String::new()))
+    Ok(context.cache().info().await.unwrap_or(String::new()))
 }

@@ -7,11 +7,15 @@ use crate::utils::errors::ApiResult;
 use rocket::serde::json::Json;
 
 #[post("/v1/hook/update/<token>", format = "json", data = "<update>")]
-pub fn update(context: RequestContext, token: String, update: Json<Payload>) -> ApiResult<()> {
+pub async fn update(
+    context: RequestContext,
+    token: String,
+    update: Json<Payload>,
+) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    invalidate_caches(context.cache(), &update)
+    invalidate_caches(context.cache(), &update).await
 }
 
 #[post(
@@ -19,17 +23,17 @@ pub fn update(context: RequestContext, token: String, update: Json<Payload>) -> 
     format = "json",
     data = "<payload>"
 )]
-pub fn post_hook_update(
+pub async fn post_hook_update(
     context: RequestContext,
     chain_id: String,
     token: String,
     payload: Json<Payload>,
 ) -> ApiResult<()> {
-    update(context, token, payload)
+    update(context, token, payload).await
 }
 
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]
-pub fn flush(
+pub async fn flush(
     context: RequestContext,
     token: String,
     invalidation_pattern: Json<InvalidationPattern>,
@@ -37,6 +41,8 @@ pub fn flush(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Invalidate::new(invalidation_pattern.0, context.cache()).execute();
+    Invalidate::new(invalidation_pattern.0, context.cache())
+        .execute()
+        .await;
     Ok(())
 }

@@ -1,7 +1,7 @@
 use crate::cache::Cache;
 use crate::config::{redis_scan_count, redis_uri};
 use r2d2::{Pool, PooledConnection};
-use redis::{self, pipe, Commands, FromRedisValue, Iter, ToRedisArgs};
+use redis::{self, pipe, AsyncCommands, FromRedisValue, Iter, ToRedisArgs};
 
 type RedisPool = Pool<redis::Client>;
 type RedisConnection = PooledConnection<redis::Client>;

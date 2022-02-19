@@ -15,6 +15,7 @@ dotenv_codegen = "0.15.0"
 env_logger = "0.9.0"
 ethcontract-common = "0.15.1"
 ethabi = "16.0.0"
+futures-util = "0.3.21"
 itertools = "0.10.1"
 lazy_static = "1.4.0"
 log = "0.4"
@@ -26,7 +27,7 @@ regex = "1.5.4"
 reqwest = { version = "0.11.3", features = ["json"] }
 rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
 rocket_codegen = { version = "0.5.0-rc.1" }
-redis = { version = "0.21", features = ["r2d2"] }
+redis = { version = "0.21", features = ["tokio-comp"] }
 semver = "1.0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0", features = ["raw_value"] }

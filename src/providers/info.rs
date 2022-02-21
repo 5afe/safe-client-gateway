@@ -272,7 +272,8 @@ impl DefaultInfoProvider<'_> {
         let token_key = generate_token_key(self.chain_id);
         for token in data.results.iter() {
             self.cache
-                .insert_in_hash(&token_key, &token.address, &serde_json::to_string(&token)?);
+                .insert_in_hash(&token_key, &token.address, &serde_json::to_string(&token)?)
+                .await;
         }
         Ok(())
     }

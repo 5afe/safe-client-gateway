@@ -95,8 +95,8 @@ impl Invalidate {
         Invalidate { cache, pattern }
     }
 
-    pub fn execute(&self) {
-        invalidate(self.cache.clone(), &self.pattern)
+    pub async fn execute(&self) {
+        invalidate(self.cache.clone(), &self.pattern).await
     }
 }
 

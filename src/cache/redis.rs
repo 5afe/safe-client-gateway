@@ -63,9 +63,9 @@ impl Cache for ServiceCache {
     }
 
     async fn invalidate_pattern(&self, pattern: &str) {
-        let mut connection = self.conn().await;
-        let mut keys = scan_match_count(&mut connection, pattern, redis_scan_count()).await;
-        pipeline_delete(&mut connection, &mut keys).await;
+        // let mut connection = self.conn().await;
+        // let mut keys = scan_match_count(&mut connection, pattern, redis_scan_count()).await;
+        // pipeline_delete(&mut connection, &mut keys).await;
     }
 
     async fn invalidate(&self, id: &str) {
@@ -79,23 +79,23 @@ impl Cache for ServiceCache {
 }
 
 async fn pipeline_delete(con: &mut RedisConnection<'_>, keys: &mut AsyncIter<'_, String>) {
-    let pipeline = &mut Pipeline::new();
-    while let Some(key) = keys.next_item().await {
-        pipeline.del(key);
-    }
-    pipeline.query_async(&mut *con).await;
+    // let pipeline = &mut Pipeline::new();
+    // while let Some(key) = keys.next_item().await {
+    //     pipeline.del(key);
+    // }
+    // pipeline.query_async(&mut *con).await;
 }
 
-async fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
-    con: &'r mut RedisConnection<'r>,
-    pattern: P,
-    count: C,
-) -> AsyncIter<'r, RV> {
-    let mut cmd = cmd("SCAN");
-    cmd.cursor_arg(0)
-        .arg("MATCH")
-        .arg(pattern)
-        .arg("COUNT")
-        .arg(count);
-    cmd.iter_async(&mut *con).await.unwrap()
-}
+// async fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
+//     con: &'r mut RedisConnection<'r>,
+//     pattern: P,
+//     count: C,
+// ) -> AsyncIter<'r, RV> {
+//     let mut cmd = cmd("SCAN");
+//     cmd.cursor_arg(0)
+//         .arg("MATCH")
+//         .arg(pattern)
+//         .arg("COUNT")
+//         .arg(count);
+//     cmd.iter_async(&mut *con).await.unwrap()
+// }

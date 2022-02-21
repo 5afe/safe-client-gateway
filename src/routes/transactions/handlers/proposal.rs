@@ -33,7 +33,8 @@ pub async fn submit_confirmation(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
         context.cache(),
     )
-    .execute();
+    .execute()
+    .await;
 
     get_multisig_transaction_details(&info_provider, chain_id, safe_tx_hash).await
 }
@@ -63,7 +64,8 @@ pub async fn propose_transaction(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
         context.cache(),
     )
-    .execute();
+    .execute()
+    .await;
     Invalidate::new(
         InvalidationPattern::Any(
             InvalidationScope::Both,
@@ -71,6 +73,7 @@ pub async fn propose_transaction(
         ),
         context.cache(),
     )
-    .execute();
+    .execute()
+    .await;
     Ok(())
 }

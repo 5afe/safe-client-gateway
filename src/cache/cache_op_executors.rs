@@ -8,8 +8,10 @@ use serde::Serialize;
 use std::sync::Arc;
 use std::time::Duration;
 
-pub(super) fn invalidate(cache: Arc<dyn Cache>, pattern: &InvalidationPattern) {
-    cache.invalidate_pattern(pattern.to_pattern_string().as_str());
+pub(super) async fn invalidate(cache: Arc<dyn Cache>, pattern: &InvalidationPattern) {
+    cache
+        .invalidate_pattern(pattern.to_pattern_string().as_str())
+        .await;
 }
 
 pub(super) async fn cache_response<S>(
@@ -25,7 +27,9 @@ where
         Some(value) => Ok(content::Json(value)),
         None => {
             let resp_string = serde_json::to_string(&cache_response.generate().await?)?;
-            cache.create(&cache_key, &resp_string, cache_response.duration);
+            cache
+                .create(&cache_key, &resp_string, cache_response.duration)
+                .await;
             Ok(content::Json(resp_string))
         }
     }
@@ -59,11 +63,13 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                     // If cache_all_errors is enabled we cache both client and server errors
                     // else we just cache client errors
                     if is_client_error || operation.cache_all_errors {
-                        cache.create(
-                            &cache_key,
-                            &CachedWithCode::join(error.status, &response_body),
-                            operation.error_cache_duration,
-                        );
+                        cache
+                            .create(
+                                &cache_key,
+                                &CachedWithCode::join(error.status, &response_body),
+                                operation.error_cache_duration,
+                            )
+                            .await;
                     }
 
                     if let Some(error_details) =
@@ -81,11 +87,13 @@ pub(super) async fn request_cached(operation: &RequestCached) -> ApiResult<Strin
                     let status_code = response.status_code;
                     let response_body = response.body;
 
-                    cache.create(
-                        &cache_key,
-                        &CachedWithCode::join(status_code, &response_body),
-                        operation.cache_duration,
-                    );
+                    cache
+                        .create(
+                            &cache_key,
+                            &CachedWithCode::join(status_code, &response_body),
+                            operation.cache_duration,
+                        )
+                        .await;
                     Ok(response_body.to_string())
                 }
             }

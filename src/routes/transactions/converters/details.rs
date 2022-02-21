@@ -181,7 +181,16 @@ pub async fn is_trusted_delegate_call(
     info_provider: &(impl InfoProvider + Sync),
 ) -> ApiResult<Option<bool>> {
     if operation == &Operation::DELEGATE {
-        let contract_info = info_provider.contract_info(to).await?;
+        let contract_info = info_provider.contract_info(to).await;
+        let contract_info = match contract_info {
+            Ok(contract_info) => contract_info,
+            Err(api_error) => {
+                return match api_error.status {
+                    404 => Ok(None),
+                    _ => Err(api_error),
+                };
+            }
+        };
 
         let has_nested_delegate_calls = !data_decoded
             .as_ref()

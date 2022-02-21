@@ -1,6 +1,6 @@
 use crate::cache::Cache;
 use crate::config::{redis_scan_count, redis_uri};
-use r2d2::{Pool, PooledConnection};
+use r2d2::{ManageConnection, Pool, PooledConnection};
 use redis::{self, pipe, AsyncCommands, FromRedisValue, Iter, ToRedisArgs};
 
 type RedisPool = Pool<redis::Client>;
@@ -13,13 +13,16 @@ pub fn create_service_cache() -> ServiceCache {
 }
 
 fn create_pool() -> RedisPool {
-    let client = redis::Client::open(redis_uri()).unwrap();
-    Pool::builder().max_size(15).build(client).unwrap()
+    let client = redis::Client::open(redis_uri()).expect("Starting redis::Client failure");
+    Pool::builder()
+        .max_size(15)
+        .build(client)
+        .expect("Redis connection pool build failure")
 }
 
 impl ServiceCache {
     fn conn(&self) -> RedisConnection {
-        self.0.get().unwrap()
+        self.0.get().expect("Getting redis connection failed")
     }
 }
 
@@ -69,7 +72,7 @@ impl Cache for ServiceCache {
     }
 }
 
-fn pipeline_delete(con: &mut redis::Connection, keys: Iter<String>) {
+fn pipeline_delete(con: &mut RedisConnection, keys: Iter<String>) {
     let pipeline = &mut pipe();
     for key in keys {
         pipeline.del(key);
@@ -78,7 +81,7 @@ fn pipeline_delete(con: &mut redis::Connection, keys: Iter<String>) {
 }
 
 fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
-    con: &'r mut redis::Connection,
+    con: &'r mut RedisConnection,
     pattern: P,
     count: C,
 ) -> redis::Iter<'r, RV> {
@@ -91,6 +94,6 @@ fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
     cmd.iter(con).unwrap()
 }
 
-fn info(con: &mut redis::Connection) -> Option<String> {
+fn info(con: &mut RedisConnection) -> Option<String> {
     redis::cmd("INFO").query(con).ok()
 }

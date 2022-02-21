@@ -1,7 +1,7 @@
 Make sure these boxes are checked! 📦✅
 
-- [ ] You have the latest version of `rustfmt` installed
+- [ ] You have a nightly compatible version of `rustfmt` installed
 ```bash
-$ rustup component add rustfmt
+rustup component add rustfmt --toolchain nightly
 ```
-- [ ] You ran `cargo fmt` on the code base before submitting
+- [ ] You ran `cargo +nightly fmt` on the code base before submitting

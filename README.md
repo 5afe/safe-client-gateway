@@ -25,7 +25,7 @@ cargo run
 ```
 
 After doing any change code must be formatted using [Rustfmt](https://github.com/rust-lang/rustfmt)
-- `cargo fmt --all`
+- `cargo +nightly fmt --all`
 Auto formatting can also [be configured in the most common code editors](https://github.com/rust-lang/rustfmt#running-rustfmt-from-your-editor)
 
 ## Configuration

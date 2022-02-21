@@ -3,10 +3,9 @@ use crate::config::{redis_scan_count, redis_uri};
 use bb8_redis::{
     bb8::Pool,
     bb8::{self, PooledConnection},
-    redis::{cmd, AsyncCommands, AsyncIter, Pipeline, ToRedisArgs},
+    redis::{cmd, AsyncCommands, AsyncIter, Cmd, Pipeline, ToRedisArgs},
     RedisConnectionManager,
 };
-use redis::Cmd;
 
 type RedisPool = Pool<RedisConnectionManager>;
 type RedisConnection<'a> = PooledConnection<'a, RedisConnectionManager>;

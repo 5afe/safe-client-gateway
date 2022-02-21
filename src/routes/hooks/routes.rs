@@ -30,11 +30,7 @@ pub fn post_hook_update(
     update(context, token, payload)
 }
 
-#[post(
-    "/v2/chains/<chain_id>/hook/update",
-    format = "json",
-    data = "<payload>"
-)]
+#[post("/v2/chains/<chain_id>/hooks", format = "json", data = "<payload>")]
 pub fn post_hook_update_v2(
     context: RequestContext,
     chain_id: String,

@@ -50,10 +50,11 @@ In order to run the test suite of the project:
 redis-server
 ```
 
-2. Make sure that `REDIS_URI` is set and points to the current Redis instance (assuming Redis is runnning on the default port `6379`):
+2. Make sure that the required environment variables are set (the following example assumes that Redis is runnning on the default port `6379`):
 
 ```bash
 export REDIS_URI=redis://localhost:6379
+export TRANSACTION_SERVICE_AUTH_TOKEN=some_other_random_token
 ```
 
 3. Run the tests

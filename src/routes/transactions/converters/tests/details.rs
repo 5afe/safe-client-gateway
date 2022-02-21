@@ -462,7 +462,7 @@ async fn is_trusted_delegate_with_delegate() {
 }
 
 #[rocket::async_test]
-async fn is_trusted_delegate_with_contract_request_failure() {
+async fn is_trusted_delegate_with_contract_request_404() {
     let data_decoded =
         serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
     let mut mock_info_provider = MockInfoProvider::new();
@@ -485,10 +485,37 @@ async fn is_trusted_delegate_with_contract_request_failure() {
     )
     .await;
 
+    assert_eq!(actual.unwrap(), None);
+}
+
+#[rocket::async_test]
+async fn is_trusted_delegate_with_contract_request_failure() {
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_contract_info()
+        .with(eq("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"))
+        .times(1)
+        .return_once(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                body: String::new(),
+                status_code: 500,
+            }))
+        });
+
+    let actual = is_trusted_delegate_call(
+        &Operation::DELEGATE,
+        "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+        &Some(data_decoded),
+        &mock_info_provider,
+    )
+    .await;
+
     assert_eq!(
         actual.unwrap_err(),
         ApiError {
-            status: 404,
+            status: 500,
             details: ErrorDetails {
                 code: 1337,
                 message: Some("".to_string()),

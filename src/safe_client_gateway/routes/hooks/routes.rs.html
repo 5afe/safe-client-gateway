@@ -57,6 +57,16 @@
 <span id="56">56</span>
 <span id="57">57</span>
 <span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations</span>::{<span class="ident">Invalidate</span>, <span class="ident">InvalidationPattern</span>};
@@ -112,6 +122,16 @@
     <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
         <span class="macro">bail!</span>(<span class="string">&quot;Invalid token&quot;</span>);
     }
+    <span class="ident">Invalidate::new</span>(<span class="ident">invalidation_pattern</span>.<span class="number">0</span>, <span class="ident">context</span>.<span class="ident">cache</span>()).<span class="ident">execute</span>();
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="attribute">#[<span class="ident">post</span>(<span class="string">&quot;/v2/flush&quot;</span>, <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>, <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;invalidation_pattern&gt;&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">post_flush_events</span>(
+    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
+    <span class="ident">_token</span>: <span class="ident">AuthorizationToken</span>,
+    <span class="ident">invalidation_pattern</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">InvalidationPattern</span><span class="op">&gt;</span>,
+) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="ident">Invalidate::new</span>(<span class="ident">invalidation_pattern</span>.<span class="number">0</span>, <span class="ident">context</span>.<span class="ident">cache</span>()).<span class="ident">execute</span>();
     <span class="prelude-val">Ok</span>(())
 }

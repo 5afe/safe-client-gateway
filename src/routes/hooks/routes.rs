@@ -2,8 +2,8 @@ use rocket::serde::json::Json;
 
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern};
 use crate::common::models::backend::hooks::Payload;
+use crate::common::routes::authorization::AuthorizationToken;
 use crate::config::webhook_token;
-use crate::routes::hooks::authorization::AuthorizationToken;
 use crate::routes::hooks::handlers::invalidate_caches;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;

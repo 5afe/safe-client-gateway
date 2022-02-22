@@ -1,3 +1,11 @@
+use core::time::Duration;
+use std::env;
+
+use mockall::predicate::eq;
+use rocket::http::{ContentType, Header, Status};
+use rocket::local::asynchronous::Client;
+use serde_json::json;
+
 use crate::common::models::data_decoded::Operation;
 use crate::common::models::page::SafeList;
 use crate::config::{
@@ -10,11 +18,6 @@ use crate::routes::safes::models::{
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
-use core::time::Duration;
-use mockall::predicate::eq;
-use rocket::http::{ContentType, Header, Status};
-use rocket::local::asynchronous::Client;
-use serde_json::json;
 
 #[rocket::async_test]
 async fn get_safe_info() {
@@ -254,7 +257,9 @@ async fn get_owners() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
-    safe_request.add_header(("Authorization", "Token some_other_random_token"));
+    let auth_token = "some_other_random_token";
+    env::set_var("TRANSACTION_SERVICE_AUTH_TOKEN", &auth_token);
+    safe_request.add_header(("Authorization", &format!("Token {}", &auth_token)));
     mock_http_client
         .expect_get()
         .times(1)
@@ -315,7 +320,9 @@ async fn get_owners_not_found() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
-    safe_request.add_header(("Authorization", "Token some_other_random_token"));
+    let auth_token = "some_other_random_token";
+    env::set_var("TRANSACTION_SERVICE_AUTH_TOKEN", &auth_token);
+    safe_request.add_header(("Authorization", &format!("Token {}", &auth_token)));
     mock_http_client
         .expect_get()
         .times(1)

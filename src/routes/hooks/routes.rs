@@ -56,3 +56,13 @@ pub fn flush(
     Invalidate::new(invalidation_pattern.0, context.cache()).execute();
     Ok(())
 }
+
+#[post("/v2/flush", format = "json", data = "<invalidation_pattern>")]
+pub fn post_flush_events(
+    context: RequestContext,
+    _token: AuthorizationToken,
+    invalidation_pattern: Json<InvalidationPattern>,
+) -> ApiResult<()> {
+    Invalidate::new(invalidation_pattern.0, context.cache()).execute();
+    Ok(())
+}

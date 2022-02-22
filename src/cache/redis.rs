@@ -1,7 +1,9 @@
 use crate::cache::Cache;
 use crate::config::{redis_scan_count, redis_uri};
-use r2d2::{ManageConnection, Pool, PooledConnection};
-use redis::{self, pipe, AsyncCommands, FromRedisValue, Iter, ToRedisArgs};
+use r2d2::{Pool, PooledConnection};
+use redis::{
+    self, pipe, AsyncCommands, Cmd, Commands, FromRedisValue, Iter, Pipeline, ToRedisArgs,
+};
 
 type RedisPool = Pool<redis::Client>;
 type RedisConnection = PooledConnection<redis::Client>;
@@ -57,10 +59,11 @@ impl Cache for ServiceCache {
     }
 
     async fn invalidate_pattern(&self, pattern: &str) {
-        pipeline_delete(
-            &mut self.conn(),
-            scan_match_count(&mut self.conn(), pattern, redis_scan_count()),
-        );
+        let con = &mut self.conn();
+        let keys_cmd = scan_match_count(pattern, redis_scan_count());
+        let keys = keys_cmd.iter(con).unwrap();
+        let delete_cmds = pipeline_delete(keys);
+        delete_cmds.execute(con);
     }
 
     async fn invalidate(&self, id: &str) {
@@ -68,32 +71,28 @@ impl Cache for ServiceCache {
     }
 
     async fn info(&self) -> Option<String> {
-        info(&mut self.conn())
+        let con = &mut self.conn();
+        redis::cmd("INFO").query(con).ok()
     }
 }
 
-fn pipeline_delete(con: &mut RedisConnection, keys: Iter<String>) {
-    let pipeline = &mut pipe();
+fn pipeline_delete(keys: Iter<String>) -> Pipeline {
+    let mut pipeline = pipe();
     for key in keys {
         pipeline.del(key);
     }
-    pipeline.execute(con);
+    pipeline
 }
 
-fn scan_match_count<'r, P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
-    con: &'r mut RedisConnection,
+fn scan_match_count<P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
     pattern: P,
     count: C,
-) -> redis::Iter<'r, RV> {
+) -> Cmd {
     let mut cmd = redis::cmd("SCAN");
     cmd.cursor_arg(0)
         .arg("MATCH")
         .arg(pattern)
         .arg("COUNT")
         .arg(count);
-    cmd.iter(con).unwrap()
-}
-
-fn info(con: &mut RedisConnection) -> Option<String> {
-    redis::cmd("INFO").query(con).ok()
+    cmd
 }

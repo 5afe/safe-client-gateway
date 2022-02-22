@@ -42,12 +42,12 @@ use utils::cors::CORS;
 
 #[doc(hidden)]
 #[launch]
-fn rocket() -> Rocket<Build> {
+async fn rocket() -> Rocket<Build> {
     dotenv().ok();
     setup_logger();
 
     let client = setup_http_client();
-    let cache = create_service_cache();
+    let cache = create_service_cache().await;
 
     rocket::build()
         .mount("/", active_routes())

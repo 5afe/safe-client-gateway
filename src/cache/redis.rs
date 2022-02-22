@@ -1,30 +1,34 @@
 use crate::cache::Cache;
 use crate::config::{redis_scan_count, redis_uri};
 use r2d2::{Pool, PooledConnection};
-use redis::{
-    self, pipe, AsyncCommands, Cmd, Commands, FromRedisValue, Iter, Pipeline, ToRedisArgs,
-};
+use redis::aio::ConnectionManager;
+use redis::{self, pipe, AsyncCommands, Cmd, Iter, Pipeline, ToRedisArgs};
 
-type RedisPool = Pool<redis::Client>;
-type RedisConnection = PooledConnection<redis::Client>;
+type RedisPool = Pool<ConnectionManager>;
+type RedisConnection = PooledConnection<ConnectionManager>;
 
 pub struct ServiceCache(RedisPool);
 
-pub fn create_service_cache() -> ServiceCache {
-    ServiceCache(create_pool())
+pub async fn create_service_cache() -> ServiceCache {
+    ServiceCache(create_pool().await)
 }
 
-fn create_pool() -> RedisPool {
-    let client = redis::Client::open(redis_uri()).expect("Starting redis::Client failure");
-    Pool::builder()
+async fn create_pool() -> RedisPool {
+    let client = ConnectionManager::new(
+        redis::Client::open(redis_uri()).expect("Starting redis::Client failure"),
+    )
+    .await
+    .expect("Failed to establish connection to redis-server");
+    let pool = Pool::builder()
         .max_size(15)
         .build(client)
-        .expect("Redis connection pool build failure")
+        .expect("Redis connection pool build failure");
+    return pool;
 }
 
 impl ServiceCache {
     fn conn(&self) -> RedisConnection {
-        self.0.get().expect("Getting redis connection failed")
+        self.0.get().expect("Fetching connection")
     }
 }
 

@@ -59,11 +59,11 @@ impl Cache for ServiceCache {
     }
 
     async fn invalidate_pattern(&self, pattern: &str) {
-        let con = &mut self.conn();
+        let mut con = self.conn();
         let keys_cmd = scan_match_count(pattern, redis_scan_count());
-        let keys = keys_cmd.iter(con).unwrap();
+        let keys = keys_cmd.iter(&mut *con).unwrap();
         let delete_cmds = pipeline_delete(keys);
-        delete_cmds.execute(con);
+        delete_cmds.execute(&mut *con);
     }
 
     async fn invalidate(&self, id: &str) {
@@ -71,8 +71,8 @@ impl Cache for ServiceCache {
     }
 
     async fn info(&self) -> Option<String> {
-        let con = &mut self.conn();
-        redis::cmd("INFO").query(con).ok()
+        let mut con = self.conn();
+        redis::cmd("INFO").query(&mut *con).ok()
     }
 }
 
@@ -84,10 +84,7 @@ fn pipeline_delete(keys: Iter<String>) -> Pipeline {
     pipeline
 }
 
-fn scan_match_count<P: ToRedisArgs, C: ToRedisArgs, RV: FromRedisValue>(
-    pattern: P,
-    count: C,
-) -> Cmd {
+fn scan_match_count<P: ToRedisArgs, C: ToRedisArgs>(pattern: P, count: C) -> Cmd {
     let mut cmd = redis::cmd("SCAN");
     cmd.cursor_arg(0)
         .arg("MATCH")

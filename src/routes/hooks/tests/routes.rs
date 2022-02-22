@@ -70,3 +70,65 @@ async fn post_hooks_events_valid_token() {
 
     assert_eq!(response.status(), Status::Ok);
 }
+
+#[rocket::async_test]
+async fn post_flush_events_no_token_set() {
+    let mock_http_client = MockHttpClient::new();
+    let client = Client::tracked(setup_rocket(
+        mock_http_client,
+        routes![super::super::routes::post_flush_events],
+    ))
+    .await
+    .expect("valid rocket instance");
+
+    let request = client
+        .post("/v1/flush/events")
+        .header(ContentType::JSON)
+        .header(Header::new("Host", "test.gnosis.io"));
+    let response = request.dispatch().await;
+
+    assert_eq!(response.status(), Status::BadRequest);
+}
+
+#[rocket::async_test]
+async fn post_flush_events_invalid_token() {
+    env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
+    let mock_http_client = MockHttpClient::new();
+    let client = Client::tracked(setup_rocket(
+        mock_http_client,
+        routes![super::super::routes::post_flush_events],
+    ))
+    .await
+    .expect("valid rocket instance");
+
+    let request = client
+        .post("/v1/flush/events")
+        .header(ContentType::JSON)
+        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Authorization", "Basic some_token"));
+    let response = request.dispatch().await;
+
+    assert_eq!(response.status(), Status::Unauthorized);
+}
+
+#[rocket::async_test]
+async fn post_flush_events_valid_token() {
+    env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
+    let mock_http_client = MockHttpClient::new();
+    let client = Client::tracked(setup_rocket(
+        mock_http_client,
+        routes![super::super::routes::post_flush_events],
+    ))
+    .await
+    .expect("valid rocket instance");
+
+    let request = client
+        .post("/v1/flush/events")
+        .body(&json!({"invalidate": "Chains"}).to_string())
+        .header(ContentType::JSON)
+        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Authorization", "Basic test_webhook_token"));
+    let response = request.dispatch().await;
+
+    assert_eq!(response.status(), Status::Ok);
+}

@@ -36,7 +36,7 @@ pub fn setup_rocket_with_mock_cache(
         .manage(Arc::new(mock_cache) as Arc<dyn Cache>)
 }
 
-#[test]
-pub fn main_produces_valid_rocket_instance() {
-    crate::rocket();
+#[rocket::async_test]
+pub async fn main_produces_valid_rocket_instance() {
+    crate::rocket().await;
 }

@@ -26,7 +26,7 @@ async fn error_from_backend_deserialization() {
             status_code: 422,
         }))
     });
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),
@@ -72,7 +72,7 @@ async fn error_from_backend_deserialization_unknown_json_struct() {
             status_code: 422,
         }))
     });
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),

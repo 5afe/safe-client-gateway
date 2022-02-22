@@ -8,12 +8,12 @@ use rocket::{Build, Rocket, Route};
 use std::sync::Arc;
 
 #[cfg(test)]
-pub fn setup_rocket(
+pub async fn setup_rocket(
     mock_http_client: MockHttpClient,
     routes: impl Into<Vec<Route>>,
 ) -> Rocket<Build> {
     dotenv().ok();
-    let cache = create_service_cache();
+    let cache = create_service_cache().await;
     cache.invalidate_pattern("*"); // Clearing cache for test
 
     rocket::build()

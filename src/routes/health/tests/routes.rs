@@ -7,10 +7,9 @@ use rocket::local::asynchronous::Client;
 async fn health() {
     let mock_http_client = MockHttpClient::new();
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::health],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::health]).await,
+    )
     .await
     .expect("valid rocket instance");
 

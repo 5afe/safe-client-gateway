@@ -21,7 +21,7 @@ fn setup_exchange_env() {
 #[rocket::async_test]
 async fn available_currency_codes() {
     setup_exchange_env();
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
 
     let mut mock_http_client = MockHttpClient::new();
@@ -64,7 +64,7 @@ async fn available_currency_codes() {
 #[rocket::async_test]
 async fn available_currency_codes_api_error() {
     setup_exchange_env();
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
     let api_error_json =
         json!({"success":false,"error":{"code":105,"type":"base_currency_access_restricted"}});
@@ -105,7 +105,7 @@ async fn available_currency_codes_api_error() {
 #[rocket::async_test]
 async fn exchange_usd_to() {
     setup_exchange_env();
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
 
     let mut mock_http_client = MockHttpClient::new();
@@ -141,7 +141,7 @@ async fn exchange_usd_to() {
 #[rocket::async_test]
 async fn exchange_usd_to_usd() {
     setup_exchange_env();
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
 
     let mut mock_http_client = MockHttpClient::new();
@@ -163,7 +163,7 @@ async fn exchange_usd_to_usd() {
 #[rocket::async_test]
 async fn exchange_usd_to_unknown_code() {
     setup_exchange_env();
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
 
     let mut mock_http_client = MockHttpClient::new();
@@ -202,7 +202,7 @@ async fn exchange_usd_to_unknown_code() {
 #[rocket::async_test]
 async fn exchange_usd_to_api_failure() {
     setup_exchange_env();
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
     let api_error_json =
         json!({"success":false,"error":{"code":105,"type":"base_currency_access_restricted"}});

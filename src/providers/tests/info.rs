@@ -20,7 +20,7 @@ async fn default_info_provider_chain_info() {
     let expected =
         serde_json::from_str::<ChainInfo>(crate::tests::json::CHAIN_INFO_RINKEBY).unwrap();
     let request_uri = config_uri!("/v1/chains/{}/", 4);
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut chain_request = Request::new(request_uri.clone());
@@ -52,7 +52,7 @@ async fn default_info_provider_chain_info() {
 #[rocket::async_test]
 async fn default_info_provider_chain_info_not_found() {
     let request_uri = config_uri!("/v1/chains/{}/", 4);
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
     cache.invalidate_pattern("*");
 
     let mut mock_http_client = MockHttpClient::new();
@@ -94,7 +94,7 @@ async fn default_info_provider_chain_info_not_found() {
 async fn default_info_provider_safe_info() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let request_uri = config_uri!("/v1/chains/{}/", 4);
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut chain_request = Request::new(request_uri.clone());
@@ -145,7 +145,7 @@ async fn default_info_provider_safe_info() {
 async fn default_info_provider_safe_info_not_found() {
     let safe_address = "0x1230B3d59858296A31053C1b8562Ecf89A2f888b";
     let request_uri = config_uri!("/v1/chains/{}/", 4);
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut chain_request = Request::new(request_uri.clone());
@@ -203,7 +203,7 @@ async fn default_info_provider_safe_info_not_found() {
 async fn default_info_provider_token_info() {
     let token_address = "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46";
     let request_uri = config_uri!("/v1/chains/{}/", 4);
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut chain_request = Request::new(request_uri.clone());
@@ -259,7 +259,7 @@ async fn default_info_provider_token_info() {
 async fn default_info_provider_token_info_request_failure() {
     let token_address = "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46";
     let request_uri = config_uri!("/v1/chains/{}/", 4);
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut chain_request = Request::new(request_uri.clone());
@@ -311,7 +311,7 @@ async fn default_info_provider_token_info_request_failure() {
 async fn default_info_provider_token_info_not_found_in_cache() {
     let token_address = "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De41";
     let request_uri = config_uri!("/v1/chains/{}/", 4);
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut chain_request = Request::new(request_uri.clone());
@@ -366,7 +366,7 @@ async fn default_info_provider_token_info_not_found_in_cache() {
 #[rocket::async_test]
 async fn default_info_provider_token_info_address_0x0() {
     let token_address = "0x0000000000000000000000000000000000000000";
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mock_http_client = MockHttpClient::new();
 
@@ -390,7 +390,7 @@ async fn default_info_provider_token_info_address_0x0() {
 #[rocket::async_test]
 async fn default_info_provider_safe_app_info() {
     let origin_url = "https://app.uniswap.org";
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut safe_app_request = Request::new(format!("{}/manifest.json", &origin_url));
@@ -428,7 +428,7 @@ async fn default_info_provider_safe_app_info() {
 #[rocket::async_test]
 async fn default_info_provider_safe_app_info_not_found() {
     let origin_url = "https://app.uniswap.org";
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut safe_app_request = Request::new(format!("{}/manifest.json", &origin_url));
@@ -465,7 +465,7 @@ async fn default_info_provider_safe_app_info_not_found() {
 #[rocket::async_test]
 async fn contract_info() {
     let bip_contract_address = "0x00000000000045166C45aF0FC6E4Cf31D9E14B9A";
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
 
@@ -520,7 +520,7 @@ async fn contract_info() {
 #[rocket::async_test]
 async fn contract_info_not_found() {
     let bip_contract_address = "0x00000000000045166C45aF0FC6E4Cf31D9E14B9A";
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let mut mock_http_client = MockHttpClient::new();
 

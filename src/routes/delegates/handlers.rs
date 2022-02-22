@@ -1,6 +1,5 @@
 use crate::common::models::page::Page;
-use crate::providers::info::DefaultInfoProvider;
-use crate::providers::info::InfoProvider;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::delegates::models::{
     Delegate, DelegateCreate, DelegateDelete, SafeDelegateDelete,
 };

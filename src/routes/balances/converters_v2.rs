@@ -2,7 +2,8 @@ use crate::common::models::backend::balances_v2::Balance as BalanceDto;
 use crate::common::models::backend::chains::NativeCurrency;
 use crate::providers::info::{TokenInfo, TokenType};
 use crate::routes::balances::models::Balance;
-use bigdecimal::{num_bigint::BigInt, BigDecimal, ToPrimitive, Zero};
+use bigdecimal::num_bigint::BigInt;
+use bigdecimal::{BigDecimal, ToPrimitive, Zero};
 use std::str::FromStr;
 
 impl BalanceDto {

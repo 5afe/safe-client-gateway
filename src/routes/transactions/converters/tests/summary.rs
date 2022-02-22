@@ -378,7 +378,7 @@ async fn creation_transaction_to_summary_no_address_info_available() {
     assert_eq!(expected, actual);
 }
 
-//TODO test with addresses returned
+// TODO test with addresses returned
 #[rocket::async_test]
 async fn creation_transaction_to_summary_address_info_available() {
     let mut mock_info_provider = MockInfoProvider::new();

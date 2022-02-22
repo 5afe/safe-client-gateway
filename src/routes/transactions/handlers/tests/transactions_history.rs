@@ -11,8 +11,9 @@ use crate::routes::transactions::models::summary::{
 };
 use crate::routes::transactions::models::TransactionStatus::Success;
 use crate::routes::transactions::models::TransferDirection::{Incoming, Outgoing};
-use crate::routes::transactions::models::{Custom, TransactionInfo, Transfer};
-use crate::routes::transactions::models::{Erc20Transfer, TransferInfo};
+use crate::routes::transactions::models::{
+    Custom, Erc20Transfer, TransactionInfo, Transfer, TransferInfo,
+};
 use crate::tests::json::BACKEND_HISTORY_TRANSACTION_LIST_PAGE;
 
 #[test]

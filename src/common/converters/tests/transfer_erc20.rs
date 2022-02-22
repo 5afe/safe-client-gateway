@@ -3,8 +3,9 @@ use crate::common::models::backend::transfers::{
     Erc20Transfer as Erc20TransferDto, Transfer as TransferDto,
 };
 use crate::providers::info::*;
-use crate::routes::transactions::models::TransferInfo;
-use crate::routes::transactions::models::{Erc20Transfer, Transfer, TransferDirection};
+use crate::routes::transactions::models::{
+    Erc20Transfer, Transfer, TransferDirection, TransferInfo,
+};
 
 #[rocket::async_test]
 async fn erc20_transfer_dto_to_incoming_transfer_transaction() {

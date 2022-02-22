@@ -2,8 +2,7 @@ extern crate rocket;
 
 use rocket::response::Redirect;
 use rocket::serde::json::{json, Value};
-use rocket::Catcher;
-use rocket::Route;
+use rocket::{Catcher, Route};
 
 /// # About endpoint
 pub mod about;

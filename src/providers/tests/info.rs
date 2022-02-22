@@ -1,23 +1,19 @@
-use crate::{
-    cache::redis::create_service_cache,
-    cache::Cache,
-    common::models::{backend::chains::ChainInfo, page::Page},
-    config::{
-        chain_info_request_timeout, contract_info_request_timeout, safe_app_info_request_timeout,
-        safe_info_request_timeout, token_info_request_timeout,
-    },
-    providers::{
-        address_info::ContractInfo,
-        info::{DefaultInfoProvider, InfoProvider, SafeAppInfo, SafeInfo, TokenInfo},
-    },
-    utils::{
-        context::RequestContext,
-        errors::{ApiError, ErrorDetails},
-        http_client::{HttpClient, MockHttpClient, Request, Response},
-    },
+use crate::cache::redis::create_service_cache;
+use crate::cache::Cache;
+use crate::common::models::backend::chains::ChainInfo;
+use crate::common::models::page::Page;
+use crate::config::{
+    chain_info_request_timeout, contract_info_request_timeout, safe_app_info_request_timeout,
+    safe_info_request_timeout, token_info_request_timeout,
 };
+use crate::providers::address_info::ContractInfo;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider, SafeAppInfo, SafeInfo, TokenInfo};
+use crate::utils::context::RequestContext;
+use crate::utils::errors::{ApiError, ErrorDetails};
+use crate::utils::http_client::{HttpClient, MockHttpClient, Request, Response};
 use mockall::predicate::eq;
-use std::{sync::Arc, time::Duration};
+use std::sync::Arc;
+use std::time::Duration;
 
 #[rocket::async_test]
 async fn default_info_provider_chain_info() {

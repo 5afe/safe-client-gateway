@@ -1,1 +1,11 @@
-ignore = ["src/json"]
+# Enable unstable features on the unstable channel.
+unstable_features = true
+
+# Reorder impl items. type and const are put first, then macros and methods.
+reorder_impl_items = true
+
+# Convert /* */ comments to // comments where possible
+normalize_comments = true
+
+# Merge imports from the same module into a single use statement. Conversely, imports from different modules are split into separate statements.
+imports_granularity = "Module"

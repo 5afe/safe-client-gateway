@@ -6,10 +6,9 @@ use crate::common::models::backend::transfers::{
 };
 use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use crate::routes::transactions::models::details::TransactionDetails;
-use crate::routes::transactions::models::Transfer as ServiceTransfer;
 use crate::routes::transactions::models::{
     Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, TransactionStatus,
-    TransferInfo,
+    Transfer as ServiceTransfer, TransferInfo,
 };
 use crate::utils::errors::ApiResult;
 

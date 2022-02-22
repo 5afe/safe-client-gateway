@@ -151,17 +151,6 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::owners_for_safes_cache_duration</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::safes::handlers::estimations</span>;
@@ -170,13 +159,10 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-<span class="kw">use</span> <span class="ident">rocket::serde::json::Error</span>;
-<span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
+<span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">Error</span>, <span class="ident">Json</span>};
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;` &lt;br /&gt;
- * Returns [SafeState](crate::routes::safes::models::SafeState)
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;` &lt;br /&gt;</span>
+<span class="doccomment">/// Returns [SafeState](crate::routes::safes::models::SafeState)</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_safe_info</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -189,12 +175,10 @@
         .<span class="kw">await</span>
 }
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/owners/&lt;safe_address&gt;/safes` &lt;br/&gt;
- * Returns [Vec] of [String]
- *
- * Returns a list of Safes for which the address is an owner
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/owners/&lt;safe_address&gt;/safes` &lt;br/&gt;</span>
+<span class="doccomment">/// Returns [Vec] of [String]</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Returns a list of Safes for which the address is an owner</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/owners/&lt;owner_address&gt;/safes&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_owners</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -208,42 +192,39 @@
         .<span class="kw">await</span>
 }
 
-<span class="doccomment">/**
- * DEPRECATED
- * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations` &lt;br /&gt;
- * Returns [SafeTransactionEstimation](crate::routes::safes::models::SafeTransactionEstimation)
- *
- * # Safe Gas Estimation
- *
- * This endpoint provides a `safeTxGas` according to the transaction passed as part of the request body
- *
- * ## Path
- *
- * - `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations
- *
- * ## Examples
- *
- * Example request body:
- *
- * ```json
- * {
- *   &quot;to&quot;: &quot;0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02&quot;,
- *   &quot;value&quot;: &quot;0&quot;,
- *   &quot;data&quot;: &quot;0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000&quot;,
- *   &quot;operation&quot;: 0
- * }
- * ```
- *
- * This results (at the time of writing this documentation) in:
- *
- * ```json
- * {
- *   &quot;latestNonce&quot;: 76,
- *   &quot;safeTxGas&quot;: &quot;63417&quot;
- * }
- * ```
- *
- */</span>
+<span class="doccomment">/// DEPRECATED</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations` &lt;br /&gt;</span>
+<span class="doccomment">/// Returns [SafeTransactionEstimation](crate::routes::safes::models::SafeTransactionEstimation)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Safe Gas Estimation</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint provides a `safeTxGas` according to the transaction passed as part of the request body</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Example request body:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```json</span>
+<span class="doccomment">/// {</span>
+<span class="doccomment">///   &quot;to&quot;: &quot;0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02&quot;,</span>
+<span class="doccomment">///   &quot;value&quot;: &quot;0&quot;,</span>
+<span class="doccomment">///   &quot;data&quot;: &quot;0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000&quot;,</span>
+<span class="doccomment">///   &quot;operation&quot;: 0</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This results (at the time of writing this documentation) in:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```json</span>
+<span class="doccomment">/// {</span>
+<span class="doccomment">///   &quot;latestNonce&quot;: 76,</span>
+<span class="doccomment">///   &quot;safeTxGas&quot;: &quot;63417&quot;</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">post</span>(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations&quot;</span>,
     <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,
@@ -266,44 +247,41 @@
     )<span class="question-mark">?</span>))
 }
 
-<span class="doccomment">/**
- * `/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations` &lt;br /&gt;
- * Returns [SafeTransactionEstimationV2](crate::routes::safes::models::SafeTransactionEstimationV2)
- *
- * # Safe Transaction Estimations
- *
- * This endpoint provides a `safeTxGas` according to the transaction passed as part of the request body,
- * the `currentNonce` indicating what the nonce of the Safe currently is,
- * and a `recommendedNonce` that should be used for the new transaction.
- *
- * ## Path
- *
- * - `/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations
- *
- * ## Examples
- *
- * Example request body:
- *
- * ```json
- * {
- *   &quot;to&quot;: &quot;0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02&quot;,
- *   &quot;value&quot;: &quot;0&quot;,
- *   &quot;data&quot;: &quot;0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000&quot;,
- *   &quot;operation&quot;: 0
- * }
- * ```
- *
- * This results (at the time of writing this documentation) in:
- *
- * ```json
- * {
- *   &quot;currentNonce&quot;: 7,
- *   &quot;recommendedNonce&quot;: 77,
- *   &quot;safeTxGas&quot;: &quot;63417&quot;
- * }
- * ```
- *
- */</span>
+<span class="doccomment">/// `/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations` &lt;br /&gt;</span>
+<span class="doccomment">/// Returns [SafeTransactionEstimationV2](crate::routes::safes::models::SafeTransactionEstimationV2)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Safe Transaction Estimations</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint provides a `safeTxGas` according to the transaction passed as part of the request body,</span>
+<span class="doccomment">/// the `currentNonce` indicating what the nonce of the Safe currently is,</span>
+<span class="doccomment">/// and a `recommendedNonce` that should be used for the new transaction.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Example request body:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```json</span>
+<span class="doccomment">/// {</span>
+<span class="doccomment">///   &quot;to&quot;: &quot;0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02&quot;,</span>
+<span class="doccomment">///   &quot;value&quot;: &quot;0&quot;,</span>
+<span class="doccomment">///   &quot;data&quot;: &quot;0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000&quot;,</span>
+<span class="doccomment">///   &quot;operation&quot;: 0</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This results (at the time of writing this documentation) in:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```json</span>
+<span class="doccomment">/// {</span>
+<span class="doccomment">///   &quot;currentNonce&quot;: 7,</span>
+<span class="doccomment">///   &quot;recommendedNonce&quot;: 77,</span>
+<span class="doccomment">///   &quot;safeTxGas&quot;: &quot;63417&quot;</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">post</span>(
     <span class="string">&quot;/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations&quot;</span>,
     <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,

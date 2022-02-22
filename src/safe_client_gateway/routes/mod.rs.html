@@ -100,13 +100,11 @@
 <span id="99"> 99</span>
 <span id="100">100</span>
 <span id="101">101</span>
-<span id="102">102</span>
 </pre><pre class="rust"><code><span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rocket</span>;
 
 <span class="kw">use</span> <span class="ident">rocket::response::Redirect</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">json</span>, <span class="ident">Value</span>};
-<span class="kw">use</span> <span class="ident">rocket::Catcher</span>;
-<span class="kw">use</span> <span class="ident">rocket::Route</span>;
+<span class="kw">use</span> <span class="ident">rocket</span>::{<span class="ident">Catcher</span>, <span class="ident">Route</span>};
 
 <span class="doccomment">/// # About endpoint</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">about</span>;

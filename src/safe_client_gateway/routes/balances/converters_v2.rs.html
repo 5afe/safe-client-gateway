@@ -67,11 +67,13 @@
 <span id="66">66</span>
 <span id="67">67</span>
 <span id="68">68</span>
+<span id="69">69</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::balances_v2::Balance</span> <span class="kw">as</span> <span class="ident">BalanceDto</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains::NativeCurrency</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">TokenInfo</span>, <span class="ident">TokenType</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::balances::models::Balance</span>;
-<span class="kw">use</span> <span class="ident">bigdecimal</span>::{<span class="ident">num_bigint::BigInt</span>, <span class="ident">BigDecimal</span>, <span class="ident">ToPrimitive</span>, <span class="ident">Zero</span>};
+<span class="kw">use</span> <span class="ident">bigdecimal::num_bigint::BigInt</span>;
+<span class="kw">use</span> <span class="ident">bigdecimal</span>::{<span class="ident">BigDecimal</span>, <span class="ident">ToPrimitive</span>, <span class="ident">Zero</span>};
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
 <span class="kw">impl</span> <span class="ident">BalanceDto</span> {

@@ -49,12 +49,6 @@
 <span id="48">48</span>
 <span id="49">49</span>
 <span id="50">50</span>
-<span id="51">51</span>
-<span id="52">52</span>
-<span id="53">53</span>
-<span id="54">54</span>
-<span id="55">55</span>
-<span id="56">56</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::chain_info_response_cache_duration</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::chains::handlers</span>::{<span class="ident">get_chains_paginated</span>, <span class="ident">get_single_chain</span>};
@@ -62,19 +56,16 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/` &lt;br/&gt;
- * Returns [ChainInfo](crate::routes::chains::models::ChainInfo)
- *
- * # Chains
- *
- * This endpoint returns the [ChainInfo](crate::routes::chains::models::ChainInfo) for a given `chainId`
- *
- * ## Path
- *
- * - `/v1/chains/&lt;chain_id&gt;/`returns the `ChainInfo` for `&lt;chain_id&gt;`
- *
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/` &lt;br/&gt;</span>
+<span class="doccomment">/// Returns [ChainInfo](crate::routes::chains::models::ChainInfo)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Chains</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint returns the [ChainInfo](crate::routes::chains::models::ChainInfo) for a given `chainId`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `/v1/chains/&lt;chain_id&gt;/`returns the `ChainInfo` for `&lt;chain_id&gt;`</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_chain</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -87,19 +78,16 @@
         .<span class="kw">await</span>
 }
 
-<span class="doccomment">/**
- * `/v1/chains/` &lt;br/&gt;
- * Returns a [Page](crate::common::models::page::Page) of [ChainInfo](crate::routes::chains::models::ChainInfo)
- *
- * # Chains
- *
- * Returns a paginated list of all the supported [ChainInfo](crate::routes::chains::models::ChainInfo)
- *
- * ## Path
- *
- * - `/v1/chains/` Returns the `ChainInfo` for our services supported networks
- *
- */</span>
+<span class="doccomment">/// `/v1/chains/` &lt;br/&gt;</span>
+<span class="doccomment">/// Returns a [Page](crate::common::models::page::Page) of [ChainInfo](crate::routes::chains::models::ChainInfo)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Chains</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Returns a paginated list of all the supported [ChainInfo](crate::routes::chains::models::ChainInfo)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `/v1/chains/` Returns the `ChainInfo` for our services supported networks</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains?&lt;cursor&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_chains</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,

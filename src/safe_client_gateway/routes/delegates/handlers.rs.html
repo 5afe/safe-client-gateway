@@ -95,10 +95,8 @@
 <span id="94">94</span>
 <span id="95">95</span>
 <span id="96">96</span>
-<span id="97">97</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page::Page</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info::DefaultInfoProvider</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info::InfoProvider</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::delegates::models</span>::{
     <span class="ident">Delegate</span>, <span class="ident">DelegateCreate</span>, <span class="ident">DelegateDelete</span>, <span class="ident">SafeDelegateDelete</span>,
 };

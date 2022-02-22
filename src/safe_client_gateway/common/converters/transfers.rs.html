@@ -192,7 +192,6 @@
 <span id="191">191</span>
 <span id="192">192</span>
 <span id="193">193</span>
-<span id="194">194</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::get_transfer_direction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::converters::get_address_ex_from_any_source</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transfers</span>::{
@@ -201,10 +200,9 @@
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">InfoProvider</span>, <span class="ident">TokenInfo</span>, <span class="ident">TokenType</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::details::TransactionDetails</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::Transfer</span> <span class="kw">as</span> <span class="ident">ServiceTransfer</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models</span>::{
     <span class="ident">Erc20Transfer</span>, <span class="ident">Erc721Transfer</span>, <span class="ident">NativeCoinTransfer</span>, <span class="ident">TransactionInfo</span>, <span class="ident">TransactionStatus</span>,
-    <span class="ident">TransferInfo</span>,
+    <span class="ident">Transfer</span> <span class="kw">as</span> <span class="ident">ServiceTransfer</span>, <span class="ident">TransferInfo</span>,
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 

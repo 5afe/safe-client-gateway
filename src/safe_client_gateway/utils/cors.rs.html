@@ -52,7 +52,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">on_response</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">response</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span>) {
-        <span class="comment">//https://github.com/lawliet89/rocket_cors/blob/master/examples/fairing.rs</span>
+        <span class="comment">// https://github.com/lawliet89/rocket_cors/blob/master/examples/fairing.rs</span>
         <span class="kw">if</span> <span class="ident">request</span>.<span class="ident">method</span>() <span class="op">==</span> <span class="ident">Method::Options</span> <span class="op">|</span><span class="op">|</span> <span class="ident">response</span>.<span class="ident">content_type</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">ContentType::JSON</span>)
         {
             <span class="ident">response</span>.<span class="ident">set_header</span>(<span class="ident">Header::new</span>(<span class="string">&quot;Access-Control-Allow-Origin&quot;</span>, <span class="string">&quot;*&quot;</span>));

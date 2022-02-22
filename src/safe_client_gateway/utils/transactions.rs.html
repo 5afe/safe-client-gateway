@@ -143,12 +143,10 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
-<span id="145">145</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions::MultisigTransaction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::transaction_request_timeout</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info::InfoProvider</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info::SAFE_V_1_3_0</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">InfoProvider</span>, <span class="ident">SAFE_V_1_3_0</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">ethabi::ethereum_types::H256</span>;
 <span class="kw">use</span> <span class="ident">ethabi</span>::{<span class="ident">Address</span>, <span class="ident">Uint</span>};
@@ -251,16 +249,16 @@
 
     <span class="kw">let</span> <span class="ident">encoded_parts</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ethabi::encode</span>(<span class="kw-2">&amp;</span>[
         <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::from</span>(<span class="ident">safe_type_hash</span>.<span class="number">0</span>)),
-        <span class="ident">ethabi::Token::Address</span>(<span class="ident">Address::from</span>(<span class="ident">safe_address</span>.<span class="number">0</span>)), <span class="comment">//to</span>
-        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">//value</span>
-        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::from</span>(<span class="ident">keccak256</span>(<span class="macro">vec!</span>[]))),    <span class="comment">//data</span>
-        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">//operation</span>
-        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">//safe_tx_gas</span>
-        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">//base_gas</span>
-        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">//gas_price</span>
-        <span class="ident">ethabi::Token::Address</span>(<span class="ident">Address::zero</span>()),               <span class="comment">//gas_token</span>
-        <span class="ident">ethabi::Token::Address</span>(<span class="ident">Address::zero</span>()),               <span class="comment">//refund_receiver</span>
-        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::from</span>(<span class="ident">nonce</span>)),                <span class="comment">//base_gas</span>
+        <span class="ident">ethabi::Token::Address</span>(<span class="ident">Address::from</span>(<span class="ident">safe_address</span>.<span class="number">0</span>)), <span class="comment">// to</span>
+        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">// value</span>
+        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::from</span>(<span class="ident">keccak256</span>(<span class="macro">vec!</span>[]))),    <span class="comment">// data</span>
+        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">// operation</span>
+        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">// safe_tx_gas</span>
+        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">// base_gas</span>
+        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::zero</span>()),                     <span class="comment">// gas_price</span>
+        <span class="ident">ethabi::Token::Address</span>(<span class="ident">Address::zero</span>()),               <span class="comment">// gas_token</span>
+        <span class="ident">ethabi::Token::Address</span>(<span class="ident">Address::zero</span>()),               <span class="comment">// refund_receiver</span>
+        <span class="ident">ethabi::Token::Uint</span>(<span class="ident">Uint::from</span>(<span class="ident">nonce</span>)),                <span class="comment">// base_gas</span>
     ]);
 
     <span class="ident">keccak256</span>(<span class="ident">encoded_parts</span>)

@@ -154,6 +154,7 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
+<span id="156">156</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::default_request_timeout</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">test</span>))]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::internal_client_connect_timeout</span>;
@@ -208,9 +209,11 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_server_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="number">500</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&lt;</span> <span class="number">600</span>
     }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_client_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="number">400</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&lt;</span> <span class="number">500</span>
     }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_success</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="number">200</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">status_code</span> <span class="op">&lt;</span> <span class="number">300</span>
     }
@@ -224,7 +227,6 @@
     <span class="doccomment">/// * `reqwest_response`: The [reqwest::Response] to be mapped</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// returns: Result&lt;Response, ApiError&gt;</span>
-    <span class="doccomment">///</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">reqwest_response</span>: <span class="ident">reqwest::Response</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">status_code</span> <span class="op">=</span> <span class="ident">reqwest_response</span>.<span class="ident">status</span>().<span class="ident">as_u16</span>();
         <span class="kw">let</span> <span class="ident">body</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">reqwest_response</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;

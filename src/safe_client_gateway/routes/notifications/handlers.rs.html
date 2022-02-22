@@ -112,11 +112,9 @@
 <span id="111">111</span>
 <span id="112">112</span>
 <span id="113">113</span>
-<span id="114">114</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">itertools::Itertools</span>;
-<span class="kw">use</span> <span class="ident">serde_json::json</span>;
-<span class="kw">use</span> <span class="ident">serde_json::value::RawValue</span>;
-<span class="kw">use</span> <span class="ident">serde_json</span>::{<span class="self">self</span>, <span class="ident">value::Value</span>};
+<span class="kw">use</span> <span class="ident">serde_json::value</span>::{<span class="ident">RawValue</span>, <span class="ident">Value</span>};
+<span class="kw">use</span> <span class="ident">serde_json</span>::{<span class="self">self</span>, <span class="ident">json</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::notifications::NotificationRegistrationRequest</span> <span class="kw">as</span> <span class="ident">BackendRegistrationRequest</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};

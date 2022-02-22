@@ -217,7 +217,6 @@
 <span id="216">216</span>
 <span id="217">217</span>
 <span id="218">218</span>
-<span id="219">219</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_op_executors</span>::{<span class="ident">cache_response</span>, <span class="ident">invalidate</span>, <span class="ident">request_cached</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache</span>::{<span class="ident">Cache</span>, <span class="ident">CACHE_REQS_PREFIX</span>, <span class="ident">CACHE_REQS_RESP_PREFIX</span>, <span class="ident">CACHE_RESP_PREFIX</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{
@@ -231,8 +230,7 @@
 <span class="kw">use</span> <span class="ident">rocket::futures::future::BoxFuture</span>;
 <span class="kw">use</span> <span class="ident">rocket::futures::FutureExt</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 <span class="kw">use</span> <span class="ident">std::future::Future</span>;
 <span class="kw">use</span> <span class="ident">std::sync::Arc</span>;

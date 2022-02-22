@@ -228,17 +228,6 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::tx_queued_cache_duration</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::handlers</span>::{<span class="ident">details</span>, <span class="ident">history</span>, <span class="ident">proposal</span>, <span class="ident">queued</span>};
@@ -248,27 +237,24 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-<span class="kw">use</span> <span class="ident">rocket::serde::json::Error</span>;
-<span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
+<span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">Error</span>, <span class="ident">Json</span>};
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;` &lt;br /&gt;
- * Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
- *
- * # Transaction Details
- *
- * The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
- *
- * ## Path
- *
- * `GET /v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;`
- *
- * `&lt;transaction_id&gt;` can be either an `id` returned by the transaction summary list endpoint or a `safe_tx_hash` from the Safe Transaction API.
- *
- * ## Query paramets
- *
- * There aren&#39;t any query parameters that can be passed to this endpoint.
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;` &lt;br /&gt;</span>
+<span class="doccomment">/// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Transaction Details</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `GET /v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `&lt;transaction_id&gt;` can be either an `id` returned by the transaction summary list endpoint or a `safe_tx_hash` from the Safe Transaction API.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Query paramets</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// There aren&#39;t any query parameters that can be passed to this endpoint.</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;details_id&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -281,26 +267,24 @@
         .<span class="kw">await</span>
 }
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations` &lt;br /&gt;
- * Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
- *
- * # Transaction Confirmation
- *
- * This endpoint provides a way for submitting confirmations for clients making use of the `safe_tx_hash` as part of the path, and the very same `safe_tx_hash` signed by an owner corresponding to the safe from which the transaction is being sent.
- *
- * If the confirmation is submitted successfully to the core services, then the local cache for that specific transaction is invalidated and the updated transaction details with the confirmation are returned in the request.
- *
- * ## Path
- *
- * `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations`
- *
- * The expected (ConfirmationRequest)[crate::routes::transactions::models::requests::ConfirmationRequest] body for this request, as well as the returned (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
- *
- * ## Query parameters
- *
- * No query parameters available for this endpoint.
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations` &lt;br /&gt;</span>
+<span class="doccomment">/// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Transaction Confirmation</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint provides a way for submitting confirmations for clients making use of the `safe_tx_hash` as part of the path, and the very same `safe_tx_hash` signed by an owner corresponding to the safe from which the transaction is being sent.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If the confirmation is submitted successfully to the core services, then the local cache for that specific transaction is invalidated and the updated transaction details with the confirmation are returned in the request.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The expected (ConfirmationRequest)[crate::routes::transactions::models::requests::ConfirmationRequest] body for this request, as well as the returned (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Query parameters</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// No query parameters available for this endpoint.</span>
 <span class="attribute">#[<span class="ident">post</span>(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations&quot;</span>,
     <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,
@@ -329,39 +313,37 @@
         .<span class="kw">await</span>
 }
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;
- * Returns a [Page](crate::common::models::page::Page) of [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
- *
- * # Transactions History
- *
- * This endpoint returns all the transactions that have been executed for a given safe. Cancelled
- * transactions will not be shown in this endpoint. Therefore, there is no concept of conflicting `nonces`
- * for this endpoint, as there could potentially be for queued transactions.
- *
- * This endpoint does not return any `TransactionListItem::Label` nor `TransactionListItem::ConflictHeader`
- * as of the writing of this iteration of this document.
- *
- * Transaction are aggregated by day and for each day there is a `TransactionListItem::DateLabel` added.
- * The timestamp returned corresponds to the **date** only, **time** fields should be therefore ignored.
- * The dates are returned in UTC, in a later iteration this will be offset by the `timezone_offset`
- * sent by the clients in the query parameter.
- *
- * `TransactionListItem::Transaction` is returned with the same data layout as in the `/transactions/queued` endpoint.
- *
- * The structure of the `transaction` object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
- *
- * ## Path
- *
- * `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`
- *
- * ## Query parameters
- *
- * - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.
- * - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.
- * - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.
- * - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;</span>
+<span class="doccomment">/// Returns a [Page](crate::common::models::page::Page) of [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Transactions History</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint returns all the transactions that have been executed for a given safe. Cancelled</span>
+<span class="doccomment">/// transactions will not be shown in this endpoint. Therefore, there is no concept of conflicting `nonces`</span>
+<span class="doccomment">/// for this endpoint, as there could potentially be for queued transactions.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint does not return any `TransactionListItem::Label` nor `TransactionListItem::ConflictHeader`</span>
+<span class="doccomment">/// as of the writing of this iteration of this document.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Transaction are aggregated by day and for each day there is a `TransactionListItem::DateLabel` added.</span>
+<span class="doccomment">/// The timestamp returned corresponds to the **date** only, **time** fields should be therefore ignored.</span>
+<span class="doccomment">/// The dates are returned in UTC, in a later iteration this will be offset by the `timezone_offset`</span>
+<span class="doccomment">/// sent by the clients in the query parameter.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `TransactionListItem::Transaction` is returned with the same data layout as in the `/transactions/queued` endpoint.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The structure of the `transaction` object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Query parameters</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.</span>
+<span class="doccomment">/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.</span>
+<span class="doccomment">/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.</span>
+<span class="doccomment">/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions_history</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -384,33 +366,31 @@
         .<span class="kw">await</span>
 }
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;
- * Returns a [Page](crate::common::models::page::Page) of  [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
- *
- * # Transactions Queued
- *
- * This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a `Next` marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren&#39;t any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.
- *
- * Additionally to the `Next` marker, there is also `Queued`. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the `Next` section of the list, a `ConflictHeader` will be introduced for any group of transactions sharing the same `nonce`.
- *
- * The structure of the transaction object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
- *
- * A `TransactionListItem` can be either a `Label` (containing either `Next` or `Queued`), `ConflictHeader` (with the conflicting `nonce`) and a `Transaction`, for which there is a `TransactionSummary` and a `ConflictType` associated. The conflict type can have `HasNext` or `End` value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a `ConflictType::End`.
- *
- * ## Path
- *
- * `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`
- *
- * The response is a list of (TransactionListItem)[crate::routes::transactions::models::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
- *
- * ## Query parameters
- *
- * - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.
- * - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.
- * - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.
- * - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;</span>
+<span class="doccomment">/// Returns a [Page](crate::common::models::page::Page) of  [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Transactions Queued</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a `Next` marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren&#39;t any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Additionally to the `Next` marker, there is also `Queued`. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the `Next` section of the list, a `ConflictHeader` will be introduced for any group of transactions sharing the same `nonce`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The structure of the transaction object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A `TransactionListItem` can be either a `Label` (containing either `Next` or `Queued`), `ConflictHeader` (with the conflicting `nonce`) and a `Transaction`, for which there is a `TransactionSummary` and a `ConflictType` associated. The conflict type can have `HasNext` or `End` value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a `ConflictType::End`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The response is a list of (TransactionListItem)[crate::routes::transactions::models::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Query parameters</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.</span>
+<span class="doccomment">/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.</span>
+<span class="doccomment">/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.</span>
+<span class="doccomment">/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions_queued</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -436,25 +416,23 @@
         .<span class="kw">await</span>
 }
 
-<span class="doccomment">/**
- * `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose` &lt;br /&gt;
- * returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
- *
- * # Transaction Proposal
- *
- * This endpoint provides a way for submitting transactions of any kind in the format expected by the core services.
- * See the example `json` to see how to submit a cancellation transaction (you would need to supply a `nonce`, `signature` and `contractTransactionHash` appropriate to the transaction you are submitting)
- *
- * ## Path
- *
- * `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose`
- *
- * The expected (MultisigTransactionRequest)[crate::routes::transactions::models::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
- *
- * ## Query parameters
- *
- * No query parameters available for this endpoint.
- */</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose` &lt;br /&gt;</span>
+<span class="doccomment">/// returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Transaction Proposal</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This endpoint provides a way for submitting transactions of any kind in the format expected by the core services.</span>
+<span class="doccomment">/// See the example `json` to see how to submit a cancellation transaction (you would need to supply a `nonce`, `signature` and `contractTransactionHash` appropriate to the transaction you are submitting)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Path</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The expected (MultisigTransactionRequest)[crate::routes::transactions::models::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Query parameters</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// No query parameters available for this endpoint.</span>
 <span class="attribute">#[<span class="ident">post</span>(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose&quot;</span>,
     <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,

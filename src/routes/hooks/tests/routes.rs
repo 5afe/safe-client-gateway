@@ -82,7 +82,7 @@ async fn post_flush_events_no_token_set() {
     .expect("valid rocket instance");
 
     let request = client
-        .post("/v1/flush/events")
+        .post("/v2/flush")
         .header(ContentType::JSON)
         .header(Header::new("Host", "test.gnosis.io"));
     let response = request.dispatch().await;
@@ -102,7 +102,7 @@ async fn post_flush_events_invalid_token() {
     .expect("valid rocket instance");
 
     let request = client
-        .post("/v1/flush/events")
+        .post("/v2/flush")
         .header(ContentType::JSON)
         .header(Header::new("Host", "test.gnosis.io"))
         .header(Header::new("Authorization", "Basic some_token"));
@@ -123,7 +123,7 @@ async fn post_flush_events_valid_token() {
     .expect("valid rocket instance");
 
     let request = client
-        .post("/v1/flush/events")
+        .post("/v2/flush")
         .body(&json!({"invalidate": "Chains"}).to_string())
         .header(ContentType::JSON)
         .header(Header::new("Host", "test.gnosis.io"))

@@ -57,7 +57,7 @@ pub fn flush(
     Ok(())
 }
 
-#[post("/v1/flush/events", format = "json", data = "<invalidation_pattern>")]
+#[post("/v2/flush", format = "json", data = "<invalidation_pattern>")]
 pub fn post_flush_events(
     context: RequestContext,
     _token: AuthorizationToken,

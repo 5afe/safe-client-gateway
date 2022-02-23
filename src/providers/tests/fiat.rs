@@ -1,14 +1,16 @@
+use std::str::FromStr;
+use std::sync::Arc;
+
+use bigdecimal::BigDecimal;
+use mockall::predicate::eq;
+use serde_json::json;
+
 use crate::cache::redis::create_service_cache;
 use crate::cache::Cache;
 use crate::providers::fiat::{Exchange, FiatInfoProvider};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiError;
 use crate::utils::http_client::{HttpClient, MockHttpClient, Request, Response};
-use bigdecimal::BigDecimal;
-use mockall::predicate::eq;
-use serde_json::json;
-use std::str::FromStr;
-use std::sync::Arc;
 
 const EXCHANGE_API_BASE_URI: &'static str = "https://test.exchange-rate.api";
 const EXCHANGE_API_KEY: &'static str = "some_random_key";

@@ -6,13 +6,13 @@ use rocket::{Build, Rocket, Route};
 use std::sync::Arc;
 
 #[cfg(test)]
-pub fn setup_rocket(
+pub async fn setup_rocket(
     mock_http_client: MockHttpClient,
     routes: impl Into<Vec<Route>>,
 ) -> Rocket<Build> {
     dotenv().ok();
-    let cache = create_service_cache();
-    cache.invalidate_pattern("*"); // Clearing cache for test
+    let cache = create_service_cache().await;
+    cache.invalidate_pattern("*").await; // Clearing cache for test
 
     rocket::build()
         .mount("/", routes)
@@ -34,7 +34,7 @@ pub fn setup_rocket_with_mock_cache(
         .manage(Arc::new(mock_cache) as Arc<dyn Cache>)
 }
 
-#[test]
-pub fn main_produces_valid_rocket_instance() {
-    crate::rocket();
+#[rocket::async_test]
+pub async fn main_produces_valid_rocket_instance() {
+    crate::rocket().await;
 }

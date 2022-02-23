@@ -117,10 +117,13 @@ async fn post_confirmation_success() {
         mock_http_client
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_confirmation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_confirmation],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 
@@ -184,10 +187,13 @@ async fn post_confirmation_confirmation_error() {
             });
         mock_http_client
     };
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_confirmation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_confirmation],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 
@@ -265,10 +271,13 @@ async fn post_confirmation_confirmation_success_tx_details_error() {
 
         mock_http_client
     };
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_confirmation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_confirmation],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 
@@ -393,10 +402,13 @@ async fn tx_details_multisig_tx_success() {
         mock_http_client
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_transactions],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_transactions],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 

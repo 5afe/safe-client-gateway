@@ -9,11 +9,15 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
 #[post("/v1/hook/update/<token>", format = "json", data = "<update>")]
-pub fn update(context: RequestContext, token: String, update: Json<Payload>) -> ApiResult<()> {
+pub async fn update(
+    context: RequestContext,
+    token: String,
+    update: Json<Payload>,
+) -> ApiResult<()> {
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    invalidate_caches(context.cache(), &update)
+    invalidate_caches(context.cache(), &update).await
 }
 
 #[post(
@@ -21,13 +25,13 @@ pub fn update(context: RequestContext, token: String, update: Json<Payload>) -> 
     format = "json",
     data = "<payload>"
 )]
-pub fn post_hook_update(
+pub async fn post_hook_update(
     context: RequestContext,
     chain_id: String,
     token: String,
     payload: Json<Payload>,
 ) -> ApiResult<()> {
-    update(context, token, payload)
+    update(context, token, payload).await
 }
 
 #[post(
@@ -35,17 +39,17 @@ pub fn post_hook_update(
     format = "json",
     data = "<payload>"
 )]
-pub fn post_hooks_events(
+pub async fn post_hooks_events(
     context: RequestContext,
     chain_id: String,
     _token: AuthorizationToken,
     payload: Json<Payload>,
 ) -> ApiResult<()> {
-    invalidate_caches(context.cache(), &payload)
+    invalidate_caches(context.cache(), &payload).await
 }
 
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]
-pub fn flush(
+pub async fn flush(
     context: RequestContext,
     token: String,
     invalidation_pattern: Json<InvalidationPattern>,
@@ -53,16 +57,20 @@ pub fn flush(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Invalidate::new(invalidation_pattern.0, context.cache()).execute();
+    Invalidate::new(invalidation_pattern.0, context.cache())
+        .execute()
+        .await;
     Ok(())
 }
 
 #[post("/v2/flush", format = "json", data = "<invalidation_pattern>")]
-pub fn post_flush_events(
+pub async fn post_flush_events(
     context: RequestContext,
     _token: AuthorizationToken,
     invalidation_pattern: Json<InvalidationPattern>,
 ) -> ApiResult<()> {
-    Invalidate::new(invalidation_pattern.0, context.cache()).execute();
+    Invalidate::new(invalidation_pattern.0, context.cache())
+        .execute()
+        .await;
     Ok(())
 }

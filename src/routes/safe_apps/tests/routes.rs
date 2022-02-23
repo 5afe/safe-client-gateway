@@ -33,10 +33,13 @@ async fn safe_apps() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_safe_apps],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_safe_apps],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -81,10 +84,13 @@ async fn safe_apps_not_found() {
             }))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_safe_apps],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_safe_apps],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {

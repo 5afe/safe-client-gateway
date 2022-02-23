@@ -10,10 +10,13 @@ use crate::utils::http_client::MockHttpClient;
 #[rocket::async_test]
 async fn post_hooks_events_no_token_set() {
     let mock_http_client = MockHttpClient::new();
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_hooks_events],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_hooks_events],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -31,10 +34,13 @@ async fn post_hooks_events_no_token_set() {
 async fn post_hooks_events_invalid_token() {
     env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
     let mock_http_client = MockHttpClient::new();
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_hooks_events],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_hooks_events],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -53,10 +59,13 @@ async fn post_hooks_events_invalid_token() {
 async fn post_hooks_events_valid_token() {
     env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
     let mock_http_client = MockHttpClient::new();
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_hooks_events],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_hooks_events],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -74,10 +83,13 @@ async fn post_hooks_events_valid_token() {
 #[rocket::async_test]
 async fn post_flush_events_no_token_set() {
     let mock_http_client = MockHttpClient::new();
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_flush_events],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_flush_events],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -94,10 +106,13 @@ async fn post_flush_events_no_token_set() {
 async fn post_flush_events_invalid_token() {
     env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
     let mock_http_client = MockHttpClient::new();
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_flush_events],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_flush_events],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -115,10 +130,13 @@ async fn post_flush_events_invalid_token() {
 async fn post_flush_events_valid_token() {
     env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
     let mock_http_client = MockHttpClient::new();
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_flush_events],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_flush_events],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 

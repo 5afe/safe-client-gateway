@@ -2,6 +2,7 @@ use crate::cache::cache_operations::{Invalidate, InvalidationPattern, Invalidati
 use crate::cache::Cache;
 use crate::common::models::backend::hooks::{Payload, PayloadDetails};
 use crate::utils::errors::ApiResult;
+use rocket::futures::future::OptionFuture;
 use std::sync::Arc;
 
 pub async fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiResult<()> {
@@ -11,7 +12,8 @@ pub async fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiR
     )
     .execute()
     .await;
-    payload.details.as_ref().map(|d| async move {
+
+    OptionFuture::from(payload.details.as_ref().map(|d| async move {
         match d {
             PayloadDetails::NewConfirmation(data) => {
                 Invalidate::new(
@@ -22,7 +24,7 @@ pub async fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiR
                     cache.clone(),
                 )
                 .execute()
-                .await;
+                .await
             }
             PayloadDetails::ExecutedMultisigTransaction(data) => {
                 Invalidate::new(
@@ -33,7 +35,7 @@ pub async fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiR
                     cache.clone(),
                 )
                 .execute()
-                .await;
+                .await
             }
             PayloadDetails::PendingMultisigTransaction(data) => {
                 Invalidate::new(
@@ -44,10 +46,11 @@ pub async fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiR
                     cache.clone(),
                 )
                 .execute()
-                .await;
+                .await
             }
-            _ => {}
+            _ => (),
         }
-    });
+    }))
+    .await;
     Ok(())
 }

@@ -1,5 +1,3 @@
-extern crate reqwest;
-
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::common::models::page::{Page, PageMetadata};

@@ -1,5 +1,3 @@
-extern crate dotenv;
-
 use crate::cache::{Cache, MockCache};
 use crate::create_service_cache;
 use crate::utils::http_client::{HttpClient, MockHttpClient};

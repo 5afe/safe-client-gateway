@@ -1,6 +1,6 @@
-use super::super::chrono::Utc;
 use crate::common::models::backend::transactions::{MultisigTransaction, SafeTransaction};
 use crate::common::models::data_decoded::Operation;
+use chrono::Utc;
 
 #[test]
 fn is_cancellation_result_true() {

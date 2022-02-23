@@ -1,5 +1,3 @@
-extern crate dotenv;
-
 use core::time::Duration;
 use std::env;
 

@@ -1,5 +1,3 @@
-extern crate chrono;
-
 pub mod details;
 pub mod safe_app_info;
 pub mod summary;

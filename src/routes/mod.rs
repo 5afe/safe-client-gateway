@@ -1,5 +1,3 @@
-extern crate rocket;
-
 use rocket::response::Redirect;
 use rocket::serde::json::{json, Value};
 use rocket::{Catcher, Route};

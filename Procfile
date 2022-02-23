@@ -1,1 +1,0 @@
-web: ROCKET_PORT=$PORT target/release/safe-client-gateway

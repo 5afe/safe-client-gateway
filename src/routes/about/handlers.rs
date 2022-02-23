@@ -1,5 +1,3 @@
-extern crate reqwest;
-
 use crate::config::{build_number, version};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::models::{About, ChainAbout};

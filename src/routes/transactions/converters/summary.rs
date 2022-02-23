@@ -1,5 +1,3 @@
-extern crate chrono;
-
 use crate::common::models::backend::transactions::{
     CreationTransaction, EthereumTransaction, ModuleTransaction, MultisigTransaction, Transaction,
 };

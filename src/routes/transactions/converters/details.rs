@@ -1,5 +1,3 @@
-extern crate chrono;
-
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::common::models::data_decoded::{DataDecoded, Operation};

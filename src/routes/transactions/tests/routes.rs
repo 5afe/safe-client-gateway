@@ -1,5 +1,3 @@
-extern crate dotenv;
-
 use crate::common::models::page::Page;
 use crate::config::{
     chain_info_request_timeout, contract_info_request_timeout, safe_info_request_timeout,

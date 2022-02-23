@@ -1,11 +1,8 @@
 use crate::cache::Cache;
 use crate::config::{redis_scan_count, redis_uri};
-use bb8_redis::{
-    bb8::Pool,
-    bb8::{self, PooledConnection},
-    redis::{cmd, AsyncCommands, AsyncIter, Cmd, Pipeline, ToRedisArgs},
-    RedisConnectionManager,
-};
+use bb8_redis::bb8::{self, Pool, PooledConnection};
+use bb8_redis::redis::{cmd, AsyncCommands, AsyncIter, Cmd, Pipeline, ToRedisArgs};
+use bb8_redis::RedisConnectionManager;
 
 type RedisPool = Pool<RedisConnectionManager>;
 type RedisConnection<'a> = PooledConnection<'a, RedisConnectionManager>;

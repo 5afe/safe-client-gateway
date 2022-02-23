@@ -314,8 +314,8 @@
         <span class="ident">Invalidate</span> { <span class="ident">cache</span>, <span class="ident">pattern</span> }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="ident">invalidate</span>(<span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pattern</span>)
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="ident">invalidate</span>(<span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pattern</span>).<span class="kw">await</span>
     }
 }
 

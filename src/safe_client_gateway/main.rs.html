@@ -113,12 +113,12 @@
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="attribute">#[<span class="ident">launch</span>]</span>
-<span class="kw">fn</span> <span class="ident">rocket</span>() -&gt; <span class="ident">Rocket</span><span class="op">&lt;</span><span class="ident">Build</span><span class="op">&gt;</span> {
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">rocket</span>() -&gt; <span class="ident">Rocket</span><span class="op">&lt;</span><span class="ident">Build</span><span class="op">&gt;</span> {
     <span class="ident">dotenv</span>().<span class="ident">ok</span>();
     <span class="ident">setup_logger</span>();
 
     <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">setup_http_client</span>();
-    <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">create_service_cache</span>();
+    <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">create_service_cache</span>().<span class="kw">await</span>;
 
     <span class="ident">rocket::build</span>()
         .<span class="ident">mount</span>(<span class="string">&quot;/&quot;</span>, <span class="ident">active_routes</span>())

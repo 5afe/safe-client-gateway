@@ -104,15 +104,16 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
-<span id="106">106</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">about_cache_duration</span>, <span class="ident">webhook_token</span>};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::content</span>;
+
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::routes::authorization::AuthorizationToken</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::about_cache_duration</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::about::handlers</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Request</span>;
-<span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 
 <span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about` &lt;br /&gt;</span>
 <span class="doccomment">/// Returns [ChainAbout](crate::routes::about::models::ChainAbout)</span>
@@ -204,11 +205,8 @@
 }
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/about/redis/&lt;token&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>, <span class="ident">token</span>: <span class="ident">String</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">token</span> <span class="op">!</span><span class="op">=</span> <span class="ident">webhook_token</span>() {
-        <span class="macro">bail!</span>(<span class="string">&quot;Invalid token&quot;</span>);
-    }
+<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/about/redis&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>, <span class="ident">_token</span>: <span class="ident">AuthorizationToken</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">info</span>().<span class="ident">unwrap_or</span>(<span class="ident">String::new</span>()))
 }
 </code></pre></div>

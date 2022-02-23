@@ -71,8 +71,8 @@
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations</span>::{<span class="ident">Invalidate</span>, <span class="ident">InvalidationPattern</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::hooks::Payload</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::routes::authorization::AuthorizationToken</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::webhook_token</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::hooks::authorization::AuthorizationToken</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::hooks::handlers::invalidate_caches</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;

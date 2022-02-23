@@ -1,11 +1,13 @@
+use rocket::response::content;
+
 use crate::cache::cache_operations::CacheResponse;
-use crate::config::{about_cache_duration, webhook_token};
+use crate::common::routes::authorization::AuthorizationToken;
+use crate::config::about_cache_duration;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::about::handlers;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
-use rocket::response::content;
 
 /// `/v1/chains/<chain_id>/about` <br />
 /// Returns [ChainAbout](crate::routes::about::models::ChainAbout)
@@ -97,10 +99,7 @@ pub async fn backbone(
 }
 
 #[doc(hidden)]
-#[get("/about/redis/<token>")]
-pub fn redis(context: RequestContext, token: String) -> ApiResult<String> {
-    if token != webhook_token() {
-        bail!("Invalid token");
-    }
+#[get("/about/redis")]
+pub fn redis(context: RequestContext, _token: AuthorizationToken) -> ApiResult<String> {
     Ok(context.cache().info().unwrap_or(String::new()))
 }

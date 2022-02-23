@@ -39,13 +39,13 @@ pub async fn post_hook_update(
     format = "json",
     data = "<payload>"
 )]
-pub fn post_hooks_events(
+pub async fn post_hooks_events(
     context: RequestContext,
     chain_id: String,
     _token: AuthorizationToken,
     payload: Json<Payload>,
 ) -> ApiResult<()> {
-    invalidate_caches(context.cache(), &payload)
+    invalidate_caches(context.cache(), &payload).await
 }
 
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]
@@ -64,11 +64,13 @@ pub async fn flush(
 }
 
 #[post("/v2/flush", format = "json", data = "<invalidation_pattern>")]
-pub fn post_flush_events(
+pub async fn post_flush_events(
     context: RequestContext,
     _token: AuthorizationToken,
     invalidation_pattern: Json<InvalidationPattern>,
 ) -> ApiResult<()> {
-    Invalidate::new(invalidation_pattern.0, context.cache()).execute();
+    Invalidate::new(invalidation_pattern.0, context.cache())
+        .execute()
+        .await;
     Ok(())
 }

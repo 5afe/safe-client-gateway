@@ -1,3 +1,11 @@
+use core::time::Duration;
+use std::env;
+
+use mockall::predicate::eq;
+use rocket::http::{ContentType, Header, Status};
+use rocket::local::asynchronous::Client;
+use serde_json::json;
+
 use crate::common::models::data_decoded::Operation;
 use crate::common::models::page::SafeList;
 use crate::config::{
@@ -10,11 +18,6 @@ use crate::routes::safes::models::{
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
-use core::time::Duration;
-use mockall::predicate::eq;
-use rocket::http::{ContentType, Header, Status};
-use rocket::local::asynchronous::Client;
-use serde_json::json;
 
 #[rocket::async_test]
 async fn get_safe_info() {
@@ -132,10 +135,13 @@ async fn get_safe_info() {
         }))
     });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_safe_info],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_safe_info],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let expected = serde_json::from_str::<SafeState>(super::SAFE_STATE).unwrap();
@@ -196,10 +202,13 @@ async fn get_safe_info_not_found() {
         });
     let expected = serde_json::to_string(&error).unwrap();
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_safe_info],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_safe_info],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -254,7 +263,9 @@ async fn get_owners() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
-    safe_request.add_header(("Authorization", "Token some_other_random_token"));
+    let auth_token = "some_other_random_token";
+    env::set_var("TRANSACTION_SERVICE_AUTH_TOKEN", &auth_token);
+    safe_request.add_header(("Authorization", &format!("Token {}", &auth_token)));
     mock_http_client
         .expect_get()
         .times(1)
@@ -266,10 +277,9 @@ async fn get_owners() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_owners],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_owners]).await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -315,7 +325,9 @@ async fn get_owners_not_found() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
-    safe_request.add_header(("Authorization", "Token some_other_random_token"));
+    let auth_token = "some_other_random_token";
+    env::set_var("TRANSACTION_SERVICE_AUTH_TOKEN", &auth_token);
+    safe_request.add_header(("Authorization", &format!("Token {}", &auth_token)));
     mock_http_client
         .expect_get()
         .times(1)
@@ -328,10 +340,9 @@ async fn get_owners_not_found() {
         });
     let expected = serde_json::to_string(&error).unwrap();
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_owners],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_owners]).await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -430,10 +441,13 @@ async fn post_safe_gas_estimation() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -547,10 +561,13 @@ async fn post_safe_gas_estimation_no_queued_tx() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -664,10 +681,13 @@ async fn post_safe_gas_estimation_delayed_indexing() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -780,10 +800,13 @@ async fn post_safe_gas_estimation_estimation_error() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -863,10 +886,13 @@ async fn post_safe_gas_estimation_nonce_error() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -920,10 +946,13 @@ async fn post_safe_gas_estimation_safe_error() {
             }))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -1024,10 +1053,13 @@ async fn post_safe_gas_estimation_v2() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation_v2],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation_v2],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -1141,10 +1173,13 @@ async fn post_safe_gas_estimation_v2_no_queued_tx() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation_v2],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation_v2],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -1258,10 +1293,13 @@ async fn post_safe_gas_estimation_v2_delayed_indexing() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation_v2],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation_v2],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -1374,10 +1412,13 @@ async fn post_safe_gas_estimation_v2_estimation_error() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation_v2],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation_v2],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -1457,10 +1498,13 @@ async fn post_safe_gas_estimation_v2_nonce_error() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation_v2],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation_v2],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -1514,10 +1558,13 @@ async fn post_safe_gas_estimation_v2_safe_error() {
             }))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_safe_gas_estimation_v2],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_safe_gas_estimation_v2],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 

@@ -100,6 +100,6 @@ pub async fn backbone(
 
 #[doc(hidden)]
 #[get("/about/redis")]
-pub fn redis(context: RequestContext, _token: AuthorizationToken) -> ApiResult<String> {
-    Ok(context.cache().info().unwrap_or(String::new()))
+pub async fn redis(context: RequestContext, _token: AuthorizationToken) -> ApiResult<String> {
+    Ok(context.cache().info().await.unwrap_or(String::new()))
 }

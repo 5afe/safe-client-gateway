@@ -28,10 +28,9 @@ async fn paginated_chain_infos() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_chains],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_chains]).await,
+    )
     .await
     .expect("valid rocket instance");
     let expected =
@@ -68,10 +67,9 @@ async fn single_chain_info() {
         mock_http_client
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_chain],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_chain]).await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {

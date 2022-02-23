@@ -47,10 +47,13 @@ async fn delete_notification_success() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::delete_notification_registration],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::delete_notification_registration],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -104,10 +107,13 @@ async fn delete_notification_error() {
             }))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::delete_notification_registration],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::delete_notification_registration],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -216,10 +222,13 @@ async fn post_notification_success() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_notification_registration],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_notification_registration],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -357,10 +366,13 @@ async fn post_notification_client_error() {
             ))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_notification_registration],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_notification_registration],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -460,10 +472,13 @@ async fn post_notification_server_and_client_errors() {
         });
 
     // Test execution
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_notification_registration],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_notification_registration],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let request = client

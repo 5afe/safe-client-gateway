@@ -54,7 +54,6 @@ redis-server
 
 ```bash
 export REDIS_URI=redis://localhost:6379
-export TRANSACTION_SERVICE_AUTH_TOKEN=some_other_random_token
 ```
 
 3. Run the tests

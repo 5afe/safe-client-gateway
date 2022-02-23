@@ -39,10 +39,13 @@ async fn get_chains_about() {
         },
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_chains_about],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_chains_about],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -71,10 +74,9 @@ async fn get_about() {
         build_number: build_number(),
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_about],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_about]).await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -135,10 +137,13 @@ async fn get_master_copies() {
         },
     ];
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_master_copies],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_master_copies],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -189,10 +194,9 @@ async fn get_backbone() {
     };
     let expected = "{\"json\":\"json\"}";
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::backbone],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::backbone]).await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {

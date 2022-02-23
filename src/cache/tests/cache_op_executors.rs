@@ -26,14 +26,15 @@ async fn error_from_backend_deserialization() {
             status_code: 422,
         }))
     });
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),
         "host".to_string(),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Err(ApiError::new(
         422,
         serde_json::from_value::<ErrorDetails>(json!({
@@ -72,14 +73,15 @@ async fn error_from_backend_deserialization_unknown_json_struct() {
             status_code: 422,
         }))
     });
-    let cache = Arc::new(create_service_cache()) as Arc<dyn Cache>;
+    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),
         "host".to_string(),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Err(ApiError::new_from_message_with_code(
         422,
         json!({

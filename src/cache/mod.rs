@@ -12,8 +12,8 @@ const CACHE_REQS_PREFIX: &'static str = "c_reqs";
 const CACHE_RESP_PREFIX: &'static str = "c_resp";
 const CACHE_REQS_RESP_PREFIX: &'static str = "c_re";
 
-#[rocket::async_trait]
 #[automock]
+#[rocket::async_trait]
 pub trait Cache: Send + Sync {
     async fn fetch(&self, id: &str) -> Option<String>;
     async fn create(&self, id: &str, dest: &str, timeout: usize);

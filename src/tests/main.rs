@@ -14,7 +14,7 @@ pub async fn setup_rocket(
 ) -> Rocket<Build> {
     dotenv().ok();
     let cache = create_service_cache().await;
-    cache.invalidate_pattern("*"); // Clearing cache for test
+    cache.invalidate_pattern("*").await; // Clearing cache for test
 
     rocket::build()
         .mount("/", routes)

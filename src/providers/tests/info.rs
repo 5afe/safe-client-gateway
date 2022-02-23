@@ -40,7 +40,8 @@ async fn default_info_provider_chain_info() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
 
     let info_provider = DefaultInfoProvider::new("4", &context);
 
@@ -53,7 +54,7 @@ async fn default_info_provider_chain_info() {
 async fn default_info_provider_chain_info_not_found() {
     let request_uri = config_uri!("/v1/chains/{}/", 4);
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    cache.invalidate_pattern("*");
+    cache.invalidate_pattern("*").await;
 
     let mut mock_http_client = MockHttpClient::new();
     let mut chain_request = Request::new(request_uri.clone());
@@ -73,7 +74,8 @@ async fn default_info_provider_chain_info_not_found() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = ApiError {
         status: 404,
         details: ErrorDetails {
@@ -131,7 +133,8 @@ async fn default_info_provider_safe_info() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = serde_json::from_str::<SafeInfo>(crate::tests::json::SAFE_WITH_MODULES)
         .expect("SafeInfo deserialization issue");
     let info_provider = DefaultInfoProvider::new("4", &context);
@@ -182,7 +185,8 @@ async fn default_info_provider_safe_info_not_found() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = ApiError {
         status: 404,
         details: ErrorDetails {
@@ -246,7 +250,8 @@ async fn default_info_provider_token_info() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Ok(serde_json::from_str::<TokenInfo>(crate::tests::json::TOKEN_BAT).unwrap());
 
     let info_provider = DefaultInfoProvider::new("4", &context);
@@ -295,7 +300,8 @@ async fn default_info_provider_token_info_request_failure() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Err(ApiError::new_from_message_with_code(
         404,
         String::from("Not found"),
@@ -354,7 +360,8 @@ async fn default_info_provider_token_info_not_found_in_cache() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Err(ApiError::new_from_message("Could not generate value"));
 
     let info_provider = DefaultInfoProvider::new("4", &context);
@@ -375,7 +382,8 @@ async fn default_info_provider_token_info_address_0x0() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Err(ApiError::new_from_message_with_code(
         500,
         String::from("Token Address is 0x0"),
@@ -412,7 +420,8 @@ async fn default_info_provider_safe_app_info() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Ok(SafeAppInfo {
         name: String::from("Uniswap"),
         url: String::from(origin_url),
@@ -450,7 +459,8 @@ async fn default_info_provider_safe_app_info_not_found() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Err(ApiError::new_from_message_with_code(
         404,
         String::from("Not found"),
@@ -504,7 +514,8 @@ async fn contract_info() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected =
         serde_json::from_str::<ContractInfo>(crate::tests::json::CONTRACT_INFO_BID).unwrap();
 
@@ -559,7 +570,8 @@ async fn contract_info_not_found() {
         config_uri!(""),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let expected = Err(ApiError::new_from_message_with_code(
         404,
         String::from("Not found"),

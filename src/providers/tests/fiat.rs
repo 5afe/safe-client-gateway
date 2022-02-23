@@ -22,7 +22,7 @@ fn setup_exchange_env() {
 async fn available_currency_codes() {
     setup_exchange_env();
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    cache.invalidate_pattern("*");
+    cache.invalidate_pattern("*").await;
 
     let mut mock_http_client = MockHttpClient::new();
     let request = Request::new(format!(
@@ -45,7 +45,8 @@ async fn available_currency_codes() {
         String::from("host"),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let fiat_provider = FiatInfoProvider::new(&context);
 
     let mut expected =
@@ -65,7 +66,7 @@ async fn available_currency_codes() {
 async fn available_currency_codes_api_error() {
     setup_exchange_env();
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    cache.invalidate_pattern("*");
+    cache.invalidate_pattern("*").await;
     let api_error_json =
         json!({"success":false,"error":{"code":105,"type":"base_currency_access_restricted"}});
 
@@ -90,7 +91,8 @@ async fn available_currency_codes_api_error() {
         String::from("host"),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let fiat_provider = FiatInfoProvider::new(&context);
 
     let actual = fiat_provider.available_currency_codes().await;
@@ -106,7 +108,7 @@ async fn available_currency_codes_api_error() {
 async fn exchange_usd_to() {
     setup_exchange_env();
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    cache.invalidate_pattern("*");
+    cache.invalidate_pattern("*").await;
 
     let mut mock_http_client = MockHttpClient::new();
     let request = Request::new(format!(
@@ -129,7 +131,8 @@ async fn exchange_usd_to() {
         String::from("host"),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let fiat_provider = FiatInfoProvider::new(&context);
     let expected = Ok(1 / BigDecimal::from_str("1.125036").unwrap());
 
@@ -142,7 +145,7 @@ async fn exchange_usd_to() {
 async fn exchange_usd_to_usd() {
     setup_exchange_env();
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    cache.invalidate_pattern("*");
+    cache.invalidate_pattern("*").await;
 
     let mut mock_http_client = MockHttpClient::new();
     mock_http_client.expect_get().times(0);
@@ -151,7 +154,8 @@ async fn exchange_usd_to_usd() {
         String::from("host"),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let fiat_provider = FiatInfoProvider::new(&context);
     let expected = Ok(BigDecimal::from(1));
 
@@ -164,7 +168,7 @@ async fn exchange_usd_to_usd() {
 async fn exchange_usd_to_unknown_code() {
     setup_exchange_env();
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    cache.invalidate_pattern("*");
+    cache.invalidate_pattern("*").await;
 
     let mut mock_http_client = MockHttpClient::new();
     let request = Request::new(format!(
@@ -187,7 +191,8 @@ async fn exchange_usd_to_unknown_code() {
         String::from("host"),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let fiat_provider = FiatInfoProvider::new(&context);
     let expected = Err(ApiError::new_from_message_with_code(
         422,
@@ -203,7 +208,7 @@ async fn exchange_usd_to_unknown_code() {
 async fn exchange_usd_to_api_failure() {
     setup_exchange_env();
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    cache.invalidate_pattern("*");
+    cache.invalidate_pattern("*").await;
     let api_error_json =
         json!({"success":false,"error":{"code":105,"type":"base_currency_access_restricted"}});
 
@@ -228,7 +233,8 @@ async fn exchange_usd_to_api_failure() {
         String::from("host"),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
-    );
+    )
+    .await;
     let fiat_provider = FiatInfoProvider::new(&context);
 
     let actual = fiat_provider.exchange_usd_to("EUR").await;

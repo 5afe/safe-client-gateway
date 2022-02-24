@@ -1,25 +1,27 @@
 version: '3.5'
 
-volumes:
-  nginx-shared:
-
 services:
-  redis:
-    image: redis:6-alpine
-    ports:
-      - "6379:6379"
-
-  web:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+  nginx:
+    image: nginx:1.21-alpine
     env_file:
       - .env
-    environment:
-      - REDIS_URI=redis://redis:6379
-      - ROCKET_PORT=3666
-      - ROCKET_ADDRESS=0.0.0.0
+    ports:
+      - "${NGINX_HOST_PORT}:80"
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates
+    depends_on:
+      - web
+
+  web:
+    build: .
+    env_file:
+      - .env
     depends_on:
       - redis
+
+  redis:
+    image: redis:6-alpine
+    env_file:
+      - .env
     ports:
-      - "8000:3666"
+      - "${REDIS_PORT}:${REDIS_PORT}"

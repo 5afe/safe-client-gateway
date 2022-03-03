@@ -87,7 +87,6 @@ impl DataDecoded {
                     SettingsInfo::DeleteGuard
                 };
                 Some(settings_info)
-                // gas_token == "0x0000000000000000000000000000000000000000"
             }
             _ => None,
         }

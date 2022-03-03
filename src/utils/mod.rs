@@ -32,6 +32,7 @@ pub const CHANGE_THRESHOLD: &'static str = "changeThreshold";
 pub const CHANGE_MASTER_COPY: &'static str = "changeMasterCopy";
 pub const ENABLE_MODULE: &'static str = "enableModule";
 pub const DISABLE_MODULE: &'static str = "disableModule";
+pub const SET_GUARD: &'static str = "setGuard";
 
 pub const MULTI_SEND: &'static str = "multiSend";
 pub const MULTI_SEND_TRANSACTIONS_PARAM: &'static str = "transactions";
@@ -45,6 +46,7 @@ pub const SETTINGS_CHANGE_METHODS: &[&str] = &[
     CHANGE_MASTER_COPY,
     ENABLE_MODULE,
     DISABLE_MODULE,
+    SET_GUARD,
 ];
 
 impl DataDecoded {

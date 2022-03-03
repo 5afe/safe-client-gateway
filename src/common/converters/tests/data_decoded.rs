@@ -375,6 +375,79 @@ async fn data_decoded_unknown_to_settings_info() {
     assert_eq!(expected.settings_info, actual);
 }
 
+#[rocket::async_test]
+async fn data_decoded_set_guard_address_known() {
+    let guard = AddressEx {
+        value: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+        name: Some("Cool guard contract".to_string()),
+        logo_uri: Some("logo.url".to_string()),
+    };
+    let mut mock_info_provider = MockInfoProvider::new();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SET_GUARD).unwrap();
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .with(eq("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(AddressEx {
+                value: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+                name: Some("Cool guard contract".to_string()),
+                logo_uri: Some("logo.url".to_string()),
+            })
+        });
+
+    let expected = SettingsChange {
+        data_decoded: data_decoded.clone(),
+        settings_info: Some(SettingsInfo::SetGuard { guard }),
+    };
+
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
+
+    assert_eq!(expected.settings_info, actual);
+}
+
+#[rocket::async_test]
+async fn data_decoded_set_guard_address_unknown() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .with(eq("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"))
+        .times(1)
+        .return_once(move |_| bail!("Some http error"));
+
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SET_GUARD).unwrap();
+
+    let expected = SettingsChange {
+        data_decoded: data_decoded.clone(),
+        settings_info: Some(SettingsInfo::SetGuard {
+            guard: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
+        }),
+    };
+
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
+
+    assert_eq!(expected.settings_info, actual);
+}
+
+#[rocket::async_test]
+async fn data_decoded_delete_guard() {
+    let mut mock_info_provider = MockInfoProvider::new();
+
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_DELETE_GUARD).unwrap();
+
+    let expected = SettingsChange {
+        data_decoded: data_decoded.clone(),
+        settings_info: Some(SettingsInfo::DeleteGuard),
+    };
+
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
+
+    assert_eq!(expected.settings_info, actual);
+}
+
 #[test]
 fn data_decoded_with_nested_safe_transaction() {
     let data_decoded = serde_json::from_str::<DataDecoded>(

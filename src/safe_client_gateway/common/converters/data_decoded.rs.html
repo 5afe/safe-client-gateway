@@ -188,6 +188,19 @@
 <span id="187">187</span>
 <span id="188">188</span>
 <span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded</span>::{
     <span class="ident">DataDecoded</span>, <span class="ident">InternalTransaction</span>, <span class="ident">Operation</span>, <span class="ident">ParamValue</span>, <span class="ident">Parameter</span>, <span class="ident">ValueDecodedType</span>,
@@ -198,7 +211,8 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::SettingsInfo</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{
     <span class="ident">ADD_OWNER_WITH_THRESHOLD</span>, <span class="ident">CHANGE_MASTER_COPY</span>, <span class="ident">CHANGE_THRESHOLD</span>, <span class="ident">DISABLE_MODULE</span>, <span class="ident">ENABLE_MODULE</span>,
-    <span class="ident">MULTI_SEND</span>, <span class="ident">MULTI_SEND_TRANSACTIONS_PARAM</span>, <span class="ident">REMOVE_OWNER</span>, <span class="ident">SET_FALLBACK_HANDLER</span>, <span class="ident">SWAP_OWNER</span>,
+    <span class="ident">MULTI_SEND</span>, <span class="ident">MULTI_SEND_TRANSACTIONS_PARAM</span>, <span class="ident">REMOVE_OWNER</span>, <span class="ident">SET_FALLBACK_HANDLER</span>, <span class="ident">SET_GUARD</span>,
+    <span class="ident">SWAP_OWNER</span>,
 };
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 
@@ -265,6 +279,18 @@
             <span class="ident">CHANGE_THRESHOLD</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">SettingsInfo::ChangeThreshold</span> {
                 <span class="ident">threshold</span>: <span class="self">self</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>)<span class="question-mark">?</span>.<span class="ident">parse</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>,
             }),
+            <span class="ident">SET_GUARD</span> =&gt; {
+                <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">settings_info</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">guard</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span> {
+                    <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">info_provider</span>
+                        .<span class="ident">address_ex_from_contracts_or_default</span>(<span class="kw-2">&amp;</span><span class="ident">guard</span>)
+                        .<span class="kw">await</span>;
+                    <span class="ident">SettingsInfo::SetGuard</span> { <span class="ident">guard</span> }
+                } <span class="kw">else</span> {
+                    <span class="ident">SettingsInfo::DeleteGuard</span>
+                };
+                <span class="prelude-val">Some</span>(<span class="ident">settings_info</span>)
+            }
             <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
         }
     }

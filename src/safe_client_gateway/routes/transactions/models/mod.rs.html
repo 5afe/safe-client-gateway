@@ -171,6 +171,10 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded::DataDecoded</span>;
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
@@ -319,6 +323,10 @@
     <span class="ident">EnableModule</span> { <span class="ident">module</span>: <span class="ident">AddressEx</span> },
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="ident">DisableModule</span> { <span class="ident">module</span>: <span class="ident">AddressEx</span> },
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+    <span class="ident">SetGuard</span> { <span class="ident">guard</span>: <span class="ident">AddressEx</span> },
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
+    <span class="ident">DeleteGuard</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>

@@ -128,6 +128,8 @@
 <span id="127">127</span>
 <span id="128">128</span>
 <span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded::ValueDecodedType::InternalTransaction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded</span>::{<span class="ident">DataDecoded</span>, <span class="ident">ParamValue</span>, <span class="ident">ValueDecodedType</span>};
 <span class="kw">use</span> <span class="ident">std::collections::hash_map::DefaultHasher</span>;
@@ -162,6 +164,7 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CHANGE_MASTER_COPY</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;changeMasterCopy&quot;</span>;
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ENABLE_MODULE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;enableModule&quot;</span>;
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISABLE_MODULE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;disableModule&quot;</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SET_GUARD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;setGuard&quot;</span>;
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MULTI_SEND</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;multiSend&quot;</span>;
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MULTI_SEND_TRANSACTIONS_PARAM</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;transactions&quot;</span>;
@@ -175,6 +178,7 @@
     <span class="ident">CHANGE_MASTER_COPY</span>,
     <span class="ident">ENABLE_MODULE</span>,
     <span class="ident">DISABLE_MODULE</span>,
+    <span class="ident">SET_GUARD</span>,
 ];
 
 <span class="kw">impl</span> <span class="ident">DataDecoded</span> {

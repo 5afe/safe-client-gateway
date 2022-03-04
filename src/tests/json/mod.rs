@@ -123,6 +123,8 @@ pub const DOCTORED_DATA_DECODED_NESTED_MULTI_SENDS: &str =
     include_str!("commons/DOCTORED_data_decoded_nested_multi_sends.json");
 pub const DOCTORED_DATA_DECODED_MULTI_SEND_NESTED_DELEGATE: &str =
     include_str!("commons/DOCTORED_data_decoded_multi_send_nested_delegate.json");
+pub const DATA_DECODED_SET_GUARD: &str = include_str!("commons/data_decoded_set_guard.json");
+pub const DATA_DECODED_DELETE_GUARD: &str = include_str!("commons/data_decoded_delete_guard.json");
 
 pub const BALANCE_ETHER: &str = include_str!("balances/balance_ether.json");
 pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound_ether.json");

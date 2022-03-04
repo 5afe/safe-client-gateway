@@ -1,0 +1,10 @@
+{
+  "method": "setGuard",
+  "parameters": [
+    {
+      "name": "guard",
+      "type": "address",
+      "value": "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"
+    }
+  ]
+}

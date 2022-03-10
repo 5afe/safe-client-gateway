@@ -187,17 +187,10 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
     steps:
     - uses: actions/checkout@v2
-    - name: Deploy Mainnet
+    - name: Deploy staging
       if: github.ref == 'refs/heads/main'
       run: bash scripts/autodeploy.sh
       env:
         AUTODEPLOY_URL: ${{ secrets.AUTODEPLOY_URL }}
         AUTODEPLOY_TOKEN: ${{ secrets.AUTODEPLOY_TOKEN }}
         TARGET_BRANCH: "staging"
-    - name: Deploy Develop
-      if: github.ref == 'refs/heads/develop'
-      run: bash scripts/autodeploy.sh
-      env:
-        AUTODEPLOY_URL: ${{ secrets.AUTODEPLOY_URL }}
-        AUTODEPLOY_TOKEN: ${{ secrets.AUTODEPLOY_TOKEN }}
-        TARGET_BRANCH: "develop"

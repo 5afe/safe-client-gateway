@@ -8,7 +8,8 @@ use crate::providers::info::InfoProvider;
 use crate::routes::transactions::models::SettingsInfo;
 use crate::utils::{
     ADD_OWNER_WITH_THRESHOLD, CHANGE_MASTER_COPY, CHANGE_THRESHOLD, DISABLE_MODULE, ENABLE_MODULE,
-    MULTI_SEND, MULTI_SEND_TRANSACTIONS_PARAM, REMOVE_OWNER, SET_FALLBACK_HANDLER, SWAP_OWNER,
+    MULTI_SEND, MULTI_SEND_TRANSACTIONS_PARAM, REMOVE_OWNER, SET_FALLBACK_HANDLER, SET_GUARD,
+    SWAP_OWNER,
 };
 use std::collections::HashMap;
 
@@ -75,6 +76,18 @@ impl DataDecoded {
             CHANGE_THRESHOLD => Some(SettingsInfo::ChangeThreshold {
                 threshold: self.get_parameter_single_value_at(0)?.parse().ok()?,
             }),
+            SET_GUARD => {
+                let guard = self.get_parameter_single_value_at(0)?;
+                let settings_info = if guard != "0x0000000000000000000000000000000000000000" {
+                    let guard = info_provider
+                        .address_ex_from_contracts_or_default(&guard)
+                        .await;
+                    SettingsInfo::SetGuard { guard }
+                } else {
+                    SettingsInfo::DeleteGuard
+                };
+                Some(settings_info)
+            }
             _ => None,
         }
     }

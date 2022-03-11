@@ -1813,7 +1813,7 @@ checksum = "71d301d4193d031abdd79ff7e3dd721168a9572ef3fe51a1517aba235bd8f86e"
 
 [[package]]
 name = "safe-client-gateway"
-version = "3.17.1"
+version = "3.19.0"
 dependencies = [
  "bb8-redis",
  "bigdecimal",

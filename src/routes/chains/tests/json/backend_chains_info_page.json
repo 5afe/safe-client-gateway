@@ -1,7 +1,7 @@
 {
     "count": 3,
-    "next": "https://safe-config.staging.gnosisdev.com/api/v1/chains/?limit=1&offset=2",
-    "previous": "https://safe-config.staging.gnosisdev.com/api/v1/chains/?limit=1",
+    "next": "https://safe-config.gnosis.io/api/v1/chains/?limit=1&offset=2",
+    "previous": "https://safe-config.gnosis.io/api/v1/chains/?limit=1",
     "results": [
         {
             "chainId": "137",

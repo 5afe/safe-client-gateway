@@ -146,6 +146,10 @@ pub enum SettingsInfo {
     EnableModule { module: AddressEx },
     #[serde(rename_all = "camelCase")]
     DisableModule { module: AddressEx },
+    #[serde(rename_all = "camelCase")]
+    SetGuard { guard: AddressEx },
+    #[serde(rename_all = "camelCase")]
+    DeleteGuard,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

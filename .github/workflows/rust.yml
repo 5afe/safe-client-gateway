@@ -193,4 +193,4 @@ jobs:
       env:
         AUTODEPLOY_URL: ${{ secrets.AUTODEPLOY_URL }}
         AUTODEPLOY_TOKEN: ${{ secrets.AUTODEPLOY_TOKEN }}
-        TARGET_BRANCH: "staging"
+        TARGET_ENV: "staging"

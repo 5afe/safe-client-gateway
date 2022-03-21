@@ -78,6 +78,11 @@ fn build_usize_test_cases() -> Vec<USizeEnvValue> {
             env_key: String::from("TX_QUEUED_CACHE_DURATION"),
             generator: Box::new(super::tx_queued_cache_duration),
         },
+        USizeEnvValue {
+            expected_default: super::token_cache_size_count(),
+            env_key: String::from("TOKEN_CACHE_SIZE_COUNT"),
+            generator: Box::new(super::token_cache_size_count),
+        },
     ]
 }
 

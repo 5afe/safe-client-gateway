@@ -224,7 +224,7 @@ async fn default_info_provider_token_info() {
         });
 
     let mut token_request = Request::new(String::from(
-        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=10000",
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=20000",
     ));
     token_request.timeout(Duration::from_millis(token_info_request_timeout()));
     let page_tokens: Page<TokenInfo> = Page {
@@ -281,7 +281,7 @@ async fn default_info_provider_token_info_request_failure() {
         });
 
     let mut token_request = Request::new(String::from(
-        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=10000",
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=20000",
     ));
     token_request.timeout(Duration::from_millis(token_info_request_timeout()));
 
@@ -334,7 +334,7 @@ async fn default_info_provider_token_info_not_found_in_cache() {
         });
 
     let mut token_request = Request::new(String::from(
-        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=10000",
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=20000",
     ));
     token_request.timeout(Duration::from_millis(token_info_request_timeout()));
     let page_tokens: Page<TokenInfo> = Page {

@@ -161,6 +161,10 @@ pub fn redis_scan_count() -> usize {
     env_with_default("REDIS_SCAN_COUNT", 300)
 }
 
+pub fn token_cache_size_count() -> usize {
+    env_with_default("TOKEN_CACHE_SIZE_COUNT", 20000)
+}
+
 pub fn feature_flag_nested_decoding() -> bool {
     env_with_default("FEATURE_FLAG_NESTED_DECODING", true)
 }

@@ -208,10 +208,6 @@
 <span id="206">206</span>
 <span id="207">207</span>
 <span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
@@ -240,14 +236,6 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">webhook_token</span>() -&gt; <span class="ident">String</span> {
     <span class="ident">env::var</span>(<span class="string">&quot;WEBHOOK_TOKEN&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;WEBHOOK_TOKEN missing in env&quot;</span>)
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transaction_service_auth_token</span>() -&gt; <span class="ident">String</span> {
-    <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;TRANSACTION_SERVICE_AUTH_TOKEN&quot;</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-        <span class="macro">log::warn!</span>(<span class="string">&quot;TRANSACTION_SERVICE_AUTH_TOKEN missing in env&quot;</span>);
-        <span class="ident">String::new</span>()
-    });
-    <span class="macro">format!</span>(<span class="string">&quot;Token {}&quot;</span>, <span class="ident">token</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scheme</span>() -&gt; <span class="ident">String</span> {
@@ -381,6 +369,10 @@
 <span class="comment">// OTHERS</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis_scan_count</span>() -&gt; <span class="ident">usize</span> {
     <span class="ident">env_with_default</span>(<span class="string">&quot;REDIS_SCAN_COUNT&quot;</span>, <span class="number">300</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token_cache_size_count</span>() -&gt; <span class="ident">usize</span> {
+    <span class="ident">env_with_default</span>(<span class="string">&quot;TOKEN_CACHE_SIZE_COUNT&quot;</span>, <span class="number">20000</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">feature_flag_nested_decoding</span>() -&gt; <span class="ident">bool</span> {

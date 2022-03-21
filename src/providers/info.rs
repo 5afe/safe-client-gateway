@@ -9,7 +9,7 @@ use crate::config::{
     contract_info_request_timeout, default_request_timeout, long_error_duration,
     request_cache_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
     safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
-    token_info_cache_duration, token_info_request_timeout,
+    token_cache_size_count, token_info_cache_duration, token_info_request_timeout,
 };
 use crate::providers::address_info::ContractInfo;
 use crate::utils::context::RequestContext;
@@ -260,7 +260,8 @@ impl DefaultInfoProvider<'_> {
     }
 
     async fn populate_token_cache(&self) -> ApiResult<()> {
-        let url = core_uri!(self, "/v1/tokens/?limit=10000")?;
+        let token_cache_size_count = token_cache_size_count();
+        let url = core_uri!(self, "/v1/tokens/?limit={}", token_cache_size_count)?;
         let request = {
             let mut request = Request::new(url);
             request.timeout(Duration::from_millis(token_info_request_timeout()));

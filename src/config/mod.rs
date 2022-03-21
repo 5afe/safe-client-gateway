@@ -28,14 +28,6 @@ pub fn webhook_token() -> String {
     env::var("WEBHOOK_TOKEN").expect("WEBHOOK_TOKEN missing in env")
 }
 
-pub fn transaction_service_auth_token() -> String {
-    let token = env::var("TRANSACTION_SERVICE_AUTH_TOKEN").unwrap_or_else(|_| {
-        log::warn!("TRANSACTION_SERVICE_AUTH_TOKEN missing in env");
-        String::new()
-    });
-    format!("Token {}", token)
-}
-
 pub fn scheme() -> String {
     env_with_default("SCHEME", "https".into())
 }
@@ -167,6 +159,10 @@ pub fn log_all_error_responses() -> bool {
 // OTHERS
 pub fn redis_scan_count() -> usize {
     env_with_default("REDIS_SCAN_COUNT", 300)
+}
+
+pub fn token_cache_size_count() -> usize {
+    env_with_default("TOKEN_CACHE_SIZE_COUNT", 20000)
 }
 
 pub fn feature_flag_nested_decoding() -> bool {

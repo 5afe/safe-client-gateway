@@ -263,9 +263,6 @@ async fn get_owners() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
-    let auth_token = "some_other_random_token";
-    env::set_var("TRANSACTION_SERVICE_AUTH_TOKEN", &auth_token);
-    safe_request.add_header(("Authorization", &format!("Token {}", &auth_token)));
     mock_http_client
         .expect_get()
         .times(1)
@@ -325,9 +322,6 @@ async fn get_owners_not_found() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
-    let auth_token = "some_other_random_token";
-    env::set_var("TRANSACTION_SERVICE_AUTH_TOKEN", &auth_token);
-    safe_request.add_header(("Authorization", &format!("Token {}", &auth_token)));
     mock_http_client
         .expect_get()
         .times(1)

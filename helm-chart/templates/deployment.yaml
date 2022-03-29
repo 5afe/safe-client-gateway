@@ -57,7 +57,7 @@ spec:
             - name: LOG_ALL_ERROR_RESPONSES
               value: "true"
             - name: CONFIG_SERVICE_URI
-              value: http://safe-config-service-safe-config-service-helm
+              value: {{ required "Require .Values.safeClientGateway.configServiceUri" .Values.safeClientGateway.configServiceUri }}
             - name: ROCKET_SECRET_KEY
               value: {{ required "Require .Values.safeClientGateway.rocketSecretKey" .Values.safeClientGateway.rocketSecretKey }}
             - name: EXCHANGE_API_KEY

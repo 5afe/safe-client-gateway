@@ -42,9 +42,7 @@ service:
 
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
+  annotations: {}
   hosts:
     - host: client-gateway.celo-safe.io
       paths:
@@ -83,6 +81,7 @@ tolerations: []
 affinity: {}
 
 safeClientGateway:
+  configServiceUri: ""
   webhookToken: ""
   rocketSecretKey: ""
   exchangeApiKey: ""

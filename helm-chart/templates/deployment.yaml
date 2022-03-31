@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "safe-client-gateway-helm.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "safe-client-gateway-helm.selectorLabels" . | nindent 6 }}

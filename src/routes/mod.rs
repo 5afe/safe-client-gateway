@@ -60,6 +60,7 @@ pub fn active_routes() -> Vec<Route> {
         transactions::routes::get_transactions,
         transactions::routes::get_transactions_history,
         transactions::routes::get_transactions_queued,
+        transactions::routes::get_incoming_transfers,
         transactions::routes::post_transaction,
         transactions::routes::post_confirmation,
         hooks::routes::update,

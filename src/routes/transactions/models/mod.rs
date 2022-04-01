@@ -3,6 +3,7 @@ use crate::common::models::data_decoded::DataDecoded;
 use serde::Serialize;
 
 pub mod details;
+pub mod filters;
 pub mod requests;
 pub mod summary;
 

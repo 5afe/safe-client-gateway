@@ -2,6 +2,7 @@ use crate::cache::cache_operations::CacheResponse;
 use crate::cache::manager::ChainCache;
 use crate::config::tx_queued_cache_duration;
 use crate::routes::transactions::handlers::{details, history, proposal, queued};
+use crate::routes::transactions::models::filters::{ModuleFilters, MultisigFilters};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
 };
@@ -10,7 +11,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
 
-use super::handlers::transfers;
+use super::handlers::{module, multisig, transfers};
 use super::models::filters::TransferFilters;
 
 /// `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
@@ -233,7 +234,6 @@ pub async fn post_transaction<'e>(
     return tx_details;
 }
 
-//https://rocket.rs/v0.5-rc/guide/requests/#trailing-parameter
 #[get("/v1/chains/<chain_id>/safes/<safe_address>/incoming-transfers?<cursor>&<filters..>")]
 pub async fn get_incoming_transfers(
     context: RequestContext,
@@ -245,6 +245,46 @@ pub async fn get_incoming_transfers(
     CacheResponse::new(&context)
         .resp_generator(|| {
             transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
+        })
+        .duration(tx_queued_cache_duration())
+        .execute()
+        .await
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/module-transactions?<cursor>&<filters..>")]
+pub async fn get_module_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: ModuleFilters,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context)
+        .resp_generator(|| {
+            module::get_module_transactions(&context, &chain_id, &safe_address, &cursor, &filters)
+        })
+        .duration(tx_queued_cache_duration())
+        .execute()
+        .await
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions?<cursor>&<filters..>")]
+pub async fn get_multisig_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: MultisigFilters,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context)
+        .resp_generator(|| {
+            multisig::get_multisig_transactions(
+                &context,
+                &chain_id,
+                &safe_address,
+                &cursor,
+                &filters,
+            )
         })
         .duration(tx_queued_cache_duration())
         .execute()

@@ -1,15 +1,15 @@
 use crate::{
     common::models::page::Page,
-    routes::transactions::models::{filters::TransferFilters, summary::TransactionListItem},
+    routes::transactions::models::{filters::ModuleFilters, summary::TransactionListItem},
     utils::{context::RequestContext, errors::ApiResult},
 };
 
-pub async fn get_incoming_transfers(
+pub async fn get_module_transactions(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     cursor: &Option<String>,
-    filters: &TransferFilters,
+    filters: &ModuleFilters,
 ) -> ApiResult<Page<TransactionListItem>> {
     return Ok(Page {
         next: None,

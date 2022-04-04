@@ -5,6 +5,7 @@ pub mod details;
 pub mod history;
 pub mod proposal;
 pub mod queued;
+pub mod transfers;
 
 #[cfg(test)]
 mod tests;

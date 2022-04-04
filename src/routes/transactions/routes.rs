@@ -10,6 +10,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
 
+use super::handlers::transfers;
 use super::models::filters::TransferFilters;
 
 /// `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
@@ -233,12 +234,19 @@ pub async fn post_transaction<'e>(
 }
 
 //https://rocket.rs/v0.5-rc/guide/requests/#trailing-parameter
-#[get("/v1/chains/<chain_id>/incoming-transfers/<safe_address>?<cursor>&<filters..>")]
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/incoming-transfers?<cursor>&<filters..>")]
 pub async fn get_incoming_transfers(
+    context: RequestContext,
     chain_id: String,
     safe_address: String,
     cursor: Option<String>,
     filters: TransferFilters,
-) -> ApiResult<Json<String>> {
-    Ok(Json(format!("{:#?}", filters)))
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context)
+        .resp_generator(|| {
+            transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
+        })
+        .duration(tx_queued_cache_duration())
+        .execute()
+        .await
 }

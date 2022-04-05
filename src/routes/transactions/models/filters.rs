@@ -54,12 +54,10 @@ impl QueryParam for TransferFilters {
     }
 }
 
-impl<'a, 'b, 'c, 'd> FromUriParam<Query, (&'a str, &'b str, &'c str, &'d str)> for TransferFilters {
+impl FromUriParam<Query, (&str, &str, &str, &str)> for TransferFilters {
     type Target = TransferFilters;
 
-    fn from_uri_param(
-        (date, to, value, token_address): (&'a str, &'b str, &'c str, &'d str),
-    ) -> Self::Target {
+    fn from_uri_param((date, to, value, token_address): (&str, &str, &str, &str)) -> Self::Target {
         TransferFilters {
             date: Some(date.to_string()),
             to: Some(to.to_string()),

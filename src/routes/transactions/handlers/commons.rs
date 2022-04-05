@@ -12,24 +12,17 @@ use crate::{
 pub async fn get_backend_page<D>(
     context: &RequestContext,
     url: &str,
-    cursor: &Option<String>,
+    page_meta: &PageMetadata,
     filters: &impl QueryParam,
 ) -> ApiResult<Page<D>>
 where
     D: DeserializeOwned,
 {
     let other_filters = filters.as_query_param();
-    let page_metadata = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
 
-    let url = format!(
-        "{}?{}&{}",
-        url,
-        page_metadata.to_url_string(),
-        other_filters
-    );
+    let url = format!("{}?{}&{}", url, page_meta.to_url_string(), other_filters);
     log::debug!("request URL: {}", &url);
-    log::debug!("cursor: {:#?}", &cursor);
-    log::debug!("page_metadata: {:#?}", &page_metadata);
+    log::debug!("page_metadata: {:#?}", &page_meta);
     let body = RequestCached::new_from_context(url, context)
         .request_timeout(transaction_request_timeout())
         .execute()

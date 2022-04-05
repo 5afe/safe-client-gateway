@@ -32,7 +32,9 @@ pub async fn get_incoming_transfers(
         safe_address
     )?;
 
-    let backend_txs = get_backend_page(&context, &url, cursor, filters).await?;
+    let page_meta = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
+
+    let backend_txs = get_backend_page(&context, &url, &page_meta, filters).await?;
     let service_txs = backend_txs_to_summary_txs(
         &mut backend_txs.results.into_iter(),
         &info_provider,
@@ -41,8 +43,24 @@ pub async fn get_incoming_transfers(
     .await?;
 
     return Ok(Page {
-        next: None,
-        previous: None,
+        next: build_cursor(
+            context,
+            chain_id,
+            safe_address,
+            &page_meta,
+            backend_txs.next,
+            filters,
+            1,
+        ),
+        previous: build_cursor(
+            context,
+            chain_id,
+            safe_address,
+            &page_meta,
+            backend_txs.previous,
+            filters,
+            -1,
+        ),
         results: service_txs,
     });
 }
@@ -75,7 +93,7 @@ pub fn build_cursor(
     chain_id: &str,
     safe_address: &str,
     page_meta: &PageMetadata,
-    backend_page_url: Option<&String>,
+    backend_page_url: Option<String>,
     filters: &TransferFilters,
     direction: i64,
 ) -> Option<String> {
@@ -90,10 +108,10 @@ pub fn build_cursor(
                     direction * (page_meta.limit as i64)
                 )),
                 filters = (
-                    filters.to.unwrap_or_default(),
-                    filters.date.unwrap_or_default(),
-                    filters.token_address.unwrap_or_default(),
-                    filters.value.unwrap_or_default()
+                    filters.date.as_deref().unwrap_or(""),
+                    filters.to.as_deref().unwrap_or(""),
+                    filters.value.as_deref().unwrap_or(""),
+                    filters.token_address.as_deref().unwrap_or("")
                 )
             )),
         )

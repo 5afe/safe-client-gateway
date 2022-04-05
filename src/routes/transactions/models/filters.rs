@@ -1,4 +1,7 @@
+use std::fmt;
+
 use rocket::form::FromForm;
+use rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
 
 #[derive(FromForm, Debug)]
 pub struct TransferFilters {
@@ -48,5 +51,29 @@ impl QueryParam for TransferFilters {
         }
 
         return query_params;
+    }
+}
+
+impl<'a, 'b, 'c, 'd> FromUriParam<Query, (&'a str, &'b str, &'c str, &'d str)> for TransferFilters {
+    type Target = TransferFilters;
+
+    fn from_uri_param(
+        (date, to, value, token_address): (&'a str, &'b str, &'c str, &'d str),
+    ) -> Self::Target {
+        TransferFilters {
+            date: Some(date.to_string()),
+            to: Some(to.to_string()),
+            value: Some(value.to_string()),
+            token_address: Some(token_address.to_string()),
+        }
+    }
+}
+
+impl UriDisplay<Query> for TransferFilters {
+    fn fmt(&self, f: &mut Formatter<Query>) -> fmt::Result {
+        f.write_named_value("to", &self.to)?;
+        f.write_named_value("date", &self.date)?;
+        f.write_named_value("token_address", &self.token_address)?;
+        f.write_named_value("value", &self.value)
     }
 }

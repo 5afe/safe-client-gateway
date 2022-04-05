@@ -108,7 +108,12 @@ impl Transfer {
         safe_address: &str,
     ) -> TransactionSummary {
         TransactionSummary {
-            id: self.generate_id(safe_address, &hex_hash(&self)),
+            id: self.generate_id(
+                safe_address,
+                &self
+                    .get_transaction_hash()
+                    .expect("No tx hash for ethereum transaction is not possible"),
+            ), //TODO is this correct?
             timestamp: execution_date,
             tx_status: TransactionStatus::Success,
             execution_info: None,

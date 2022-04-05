@@ -6,12 +6,17 @@ use crate::{
     },
     config::transaction_request_timeout,
     providers::info::{DefaultInfoProvider, InfoProvider},
-    routes::transactions::models::{
-        filters::{QueryParam, TransferFilters},
-        summary::{ConflictType, TransactionListItem},
+    routes::transactions::{
+        handlers::offset_page_meta,
+        models::{
+            filters::{QueryParam, TransferFilters},
+            summary::{ConflictType, TransactionListItem},
+        },
     },
-    utils::{context::RequestContext, errors::ApiResult},
+    utils::{context::RequestContext, errors::ApiResult, urls::build_absolute_uri},
 };
+
+use super::commons::get_backend_page;
 
 pub async fn get_incoming_transfers(
     context: &RequestContext,
@@ -21,11 +26,13 @@ pub async fn get_incoming_transfers(
     filters: &TransferFilters,
 ) -> ApiResult<Page<TransactionListItem>> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
-    let incoming_page_metadata =
-        PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/incoming-transfers/",
+        safe_address
+    )?;
 
-    let backend_txs =
-        fetch_backend_paged_txs(&context, &info_provider, safe_address, cursor, filters).await?;
+    let backend_txs = get_backend_page(&context, &url, cursor, filters).await?;
     let service_txs = backend_txs_to_summary_txs(
         &mut backend_txs.results.into_iter(),
         &info_provider,
@@ -38,32 +45,6 @@ pub async fn get_incoming_transfers(
         previous: None,
         results: service_txs,
     });
-}
-
-async fn fetch_backend_paged_txs(
-    context: &RequestContext,
-    info_provider: &(impl InfoProvider + Sync),
-    safe_address: &str,
-    cursor: &Option<String>,
-    filters: &impl QueryParam,
-) -> ApiResult<Page<Transfer>> {
-    let other_filters = filters.as_query_param();
-    let page_metadata = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
-    let url = core_uri!(
-        info_provider,
-        "/v1/safes/{}/incoming-transfers/?{}&{}",
-        safe_address,
-        page_metadata.to_url_string(),
-        other_filters
-    )?;
-    log::debug!("request URL: {}", &url);
-    log::debug!("cursor: {:#?}", &cursor);
-    log::debug!("page_metadata: {:#?}", &page_metadata);
-    let body = RequestCached::new_from_context(url, context)
-        .request_timeout(transaction_request_timeout())
-        .execute()
-        .await?;
-    Ok(serde_json::from_str::<Page<Transfer>>(&body)?)
 }
 
 pub(super) async fn backend_txs_to_summary_txs(
@@ -87,4 +68,34 @@ pub(super) async fn backend_txs_to_summary_txs(
     }
 
     Ok(results)
+}
+
+pub fn build_cursor(
+    context: &RequestContext,
+    chain_id: &str,
+    safe_address: &str,
+    page_meta: &PageMetadata,
+    backend_page_url: Option<&String>,
+    filters: &TransferFilters,
+    direction: i64,
+) -> Option<String> {
+    backend_page_url.as_ref().map(|_| {
+        build_absolute_uri(
+            context,
+            uri!(crate::routes::transactions::routes::get_incoming_transfers(
+                chain_id = chain_id,
+                safe_address = safe_address,
+                cursor = Some(offset_page_meta(
+                    page_meta,
+                    direction * (page_meta.limit as i64)
+                )),
+                filters = (
+                    filters.to.unwrap_or_default(),
+                    filters.date.unwrap_or_default(),
+                    filters.token_address.unwrap_or_default(),
+                    filters.value.unwrap_or_default()
+                )
+            )),
+        )
+    })
 }

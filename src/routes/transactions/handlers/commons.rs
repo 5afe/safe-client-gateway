@@ -1,13 +1,11 @@
-use rocket::serde::DeserializeOwned;
-use serde::de::DeserializeSeed;
-
 use crate::{
     cache::cache_operations::RequestCached,
     common::models::page::{Page, PageMetadata},
     config::transaction_request_timeout,
     routes::transactions::models::filters::QueryParam,
-    utils::{context::RequestContext, errors::ApiResult, urls::build_absolute_uri},
+    utils::{context::RequestContext, errors::ApiResult},
 };
+use rocket::serde::DeserializeOwned;
 
 pub async fn get_backend_page<D>(
     context: &RequestContext,

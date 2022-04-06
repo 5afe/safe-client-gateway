@@ -1,15 +1,13 @@
 use crate::{
-    cache::cache_operations::RequestCached,
     common::models::{
-        backend::{transactions::Transaction, transfers::Transfer},
+        backend::transfers::Transfer,
         page::{Page, PageMetadata},
     },
-    config::transaction_request_timeout,
     providers::info::{DefaultInfoProvider, InfoProvider},
     routes::transactions::{
         handlers::offset_page_meta,
         models::{
-            filters::{QueryParam, TransferFilters},
+            filters::TransferFilters,
             summary::{ConflictType, TransactionListItem},
         },
     },
@@ -108,10 +106,10 @@ pub fn build_cursor(
                     direction * (page_meta.limit as i64)
                 )),
                 filters = (
-                    filters.date.as_deref().unwrap_or(""),
-                    filters.to.as_deref().unwrap_or(""),
-                    filters.value.as_deref().unwrap_or(""),
-                    filters.token_address.as_deref().unwrap_or("")
+                    filters.date.to_owned(),
+                    filters.to.to_owned(),
+                    filters.value.to_owned(),
+                    filters.token_address.to_owned()
                 )
             )),
         )

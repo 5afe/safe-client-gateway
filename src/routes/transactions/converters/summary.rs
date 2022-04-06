@@ -10,7 +10,6 @@ use crate::routes::transactions::models::summary::{
 };
 use crate::routes::transactions::models::{Creation, TransactionInfo, TransactionStatus};
 use crate::utils::errors::ApiResult;
-use crate::utils::hex_hash;
 use rocket::futures::future::OptionFuture;
 
 impl Transaction {

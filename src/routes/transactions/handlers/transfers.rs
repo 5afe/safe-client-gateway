@@ -3,6 +3,7 @@ use crate::{
         backend::transfers::Transfer,
         page::{Page, PageMetadata},
     },
+    config::transaction_request_timeout,
     providers::info::{DefaultInfoProvider, InfoProvider},
     routes::transactions::{
         handlers::offset_page_meta,
@@ -32,7 +33,14 @@ pub async fn get_incoming_transfers(
 
     let page_meta = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
 
-    let backend_txs = get_backend_page(&context, &url, &page_meta, filters).await?;
+    let backend_txs = get_backend_page(
+        &context,
+        &url,
+        transaction_request_timeout(),
+        &page_meta,
+        filters,
+    )
+    .await?;
     let service_txs = backend_txs_to_summary_txs(
         &mut backend_txs.results.into_iter(),
         &info_provider,

@@ -1,7 +1,6 @@
 use crate::{
     cache::cache_operations::RequestCached,
     common::models::page::{Page, PageMetadata},
-    config::transaction_request_timeout,
     routes::transactions::models::filters::QueryParam,
     utils::{context::RequestContext, errors::ApiResult},
 };
@@ -10,6 +9,7 @@ use rocket::serde::DeserializeOwned;
 pub async fn get_backend_page<D>(
     context: &RequestContext,
     url: &str,
+    request_timeout: u64,
     page_meta: &PageMetadata,
     filters: &impl QueryParam,
 ) -> ApiResult<Page<D>>
@@ -22,7 +22,7 @@ where
     log::debug!("request URL: {}", &url);
     log::debug!("page_metadata: {:#?}", &page_meta);
     let body = RequestCached::new_from_context(url, context)
-        .request_timeout(transaction_request_timeout())
+        .request_timeout(request_timeout)
         .execute()
         .await?;
     let object = serde_json::from_str::<Page<D>>(&body)?;

@@ -78,23 +78,21 @@
 <span id="76">76</span>
 <span id="77">77</span>
 <span id="78">78</span>
-<span id="79">79</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations</span>::{<span class="ident">Invalidate</span>, <span class="ident">InvalidationPattern</span>, <span class="ident">InvalidationScope</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::handlers::details::get_multisig_transaction_details</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::details::TransactionDetails</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::requests::MultisigTransactionRequest</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Request</span>;
 <span class="kw">use</span> <span class="ident">serde_json::json</span>;
 
+<span class="comment">// The transaction details are returned at the route level. The same as for transaction submission</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">submit_confirmation</span>(
     <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">safe_tx_hash</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">signature</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">TransactionDetails</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>, <span class="ident">context</span>);
     <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
         <span class="ident">info_provider</span>,
@@ -117,7 +115,7 @@
     .<span class="ident">execute</span>()
     .<span class="kw">await</span>;
 
-    <span class="ident">get_multisig_transaction_details</span>(<span class="kw-2">&amp;</span><span class="ident">info_provider</span>, <span class="ident">chain_id</span>, <span class="ident">safe_tx_hash</span>).<span class="kw">await</span>
+    <span class="prelude-val">Ok</span>(())
 }
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">propose_transaction</span>(

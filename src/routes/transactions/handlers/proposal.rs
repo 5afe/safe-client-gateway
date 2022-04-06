@@ -6,6 +6,7 @@ use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
 use serde_json::json;
 
+// The transaction details are returned at the route level. The same as for transaction submission
 pub async fn submit_confirmation(
     context: &RequestContext,
     chain_id: &str,

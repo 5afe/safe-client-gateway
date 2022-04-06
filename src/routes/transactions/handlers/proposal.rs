@@ -1,7 +1,5 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::handlers::details::get_multisig_transaction_details;
-use crate::routes::transactions::models::details::TransactionDetails;
 use crate::routes::transactions::models::requests::MultisigTransactionRequest;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
@@ -13,7 +11,7 @@ pub async fn submit_confirmation(
     chain_id: &str,
     safe_tx_hash: &str,
     signature: &str,
-) -> ApiResult<TransactionDetails> {
+) -> ApiResult<()> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
@@ -36,7 +34,7 @@ pub async fn submit_confirmation(
     .execute()
     .await;
 
-    get_multisig_transaction_details(&info_provider, chain_id, safe_tx_hash).await
+    Ok(())
 }
 
 pub async fn propose_transaction(

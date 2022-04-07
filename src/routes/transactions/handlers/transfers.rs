@@ -69,7 +69,7 @@ pub async fn get_incoming_transfers(
     });
 }
 
-pub(super) async fn backend_txs_to_summary_txs(
+async fn backend_txs_to_summary_txs(
     transfers: &mut impl Iterator<Item = Transfer>,
     info_provider: &(impl InfoProvider + Sync),
     safe_address: &str,
@@ -92,7 +92,7 @@ pub(super) async fn backend_txs_to_summary_txs(
     Ok(results)
 }
 
-pub fn build_cursor(
+fn build_cursor(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,

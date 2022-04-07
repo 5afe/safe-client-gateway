@@ -123,7 +123,7 @@ impl Transfer {
 }
 
 impl ModuleTransaction {
-    pub(super) async fn to_transaction_summary(
+    pub async fn to_transaction_summary(
         &self,
         info_provider: &(impl InfoProvider + Sync),
     ) -> Vec<TransactionSummary> {

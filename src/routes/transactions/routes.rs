@@ -1,8 +1,10 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::cache::manager::ChainCache;
 use crate::config::tx_queued_cache_duration;
+use crate::routes::transactions::filters::module::ModuleFilters;
+use crate::routes::transactions::filters::multisig::MultisigFilters;
+use crate::routes::transactions::filters::transfer::TransferFilters;
 use crate::routes::transactions::handlers::{details, history, proposal, queued};
-use crate::routes::transactions::models::filters::{ModuleFilters, MultisigFilters};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
 };
@@ -12,7 +14,6 @@ use rocket::response::content;
 use rocket::serde::json::{Error, Json};
 
 use super::handlers::{module, multisig, transfers};
-use super::models::filters::TransferFilters;
 
 /// `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
 /// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)

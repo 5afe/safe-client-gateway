@@ -6,11 +6,9 @@ use crate::{
     config::transaction_request_timeout,
     providers::info::{DefaultInfoProvider, InfoProvider},
     routes::transactions::{
+        filters::transfer::TransferFilters,
         handlers::offset_page_meta,
-        models::{
-            filters::TransferFilters,
-            summary::{ConflictType, TransactionListItem},
-        },
+        models::summary::{ConflictType, TransactionListItem},
     },
     utils::{context::RequestContext, errors::ApiResult, urls::build_absolute_uri},
 };

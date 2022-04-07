@@ -1,17 +1,13 @@
-use std::fmt;
-
+use super::QueryParam;
 use rocket::form::FromForm;
 use rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
+use std::fmt;
 
 #[derive(FromForm, Debug)]
 pub struct ModuleFilters {
     pub date: Option<String>,
     pub to: Option<String>,
     pub module: Option<String>,
-}
-
-pub trait QueryParam {
-    fn as_query_param(&self) -> String;
 }
 
 impl QueryParam for ModuleFilters {

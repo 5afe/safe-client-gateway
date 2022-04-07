@@ -1,6 +1,6 @@
 use crate::{
     common::models::page::Page,
-    routes::transactions::models::{filters::ModuleFilters, summary::TransactionListItem},
+    routes::transactions::{filters::module::ModuleFilters, models::summary::TransactionListItem},
     utils::{context::RequestContext, errors::ApiResult},
 };
 

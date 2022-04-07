@@ -1,6 +1,8 @@
 use crate::{
     common::models::page::Page,
-    routes::transactions::models::{filters::MultisigFilters, summary::TransactionListItem},
+    routes::transactions::{
+        filters::multisig::MultisigFilters, models::summary::TransactionListItem,
+    },
     utils::{context::RequestContext, errors::ApiResult},
 };
 

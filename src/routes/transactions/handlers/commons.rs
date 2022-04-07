@@ -1,7 +1,7 @@
 use crate::{
     cache::cache_operations::RequestCached,
     common::models::page::{Page, PageMetadata},
-    routes::transactions::models::filters::QueryParam,
+    routes::transactions::filters::QueryParam,
     utils::{context::RequestContext, errors::ApiResult},
 };
 use rocket::serde::DeserializeOwned;

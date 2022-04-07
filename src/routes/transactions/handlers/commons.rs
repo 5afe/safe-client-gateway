@@ -11,7 +11,7 @@ pub async fn get_backend_page<D>(
     url: &str,
     request_timeout: u64,
     page_meta: &PageMetadata,
-    filters: &impl QueryParam,
+    filters: &(impl QueryParam + std::fmt::Debug),
 ) -> ApiResult<Page<D>>
 where
     D: DeserializeOwned,
@@ -21,6 +21,7 @@ where
     let url = format!("{}?{}&{}", url, page_meta.to_url_string(), other_filters);
     log::debug!("request URL: {}", &url);
     log::debug!("page_metadata: {:#?}", &page_meta);
+    log::debug!("filters: {:#?}", &filters);
     let body = RequestCached::new_from_context(url, context)
         .request_timeout(request_timeout)
         .execute()

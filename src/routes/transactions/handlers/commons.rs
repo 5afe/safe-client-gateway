@@ -1,9 +1,8 @@
-use crate::{
-    cache::cache_operations::RequestCached,
-    common::models::page::{Page, PageMetadata},
-    routes::transactions::filters::QueryParam,
-    utils::{context::RequestContext, errors::ApiResult},
-};
+use crate::cache::cache_operations::RequestCached;
+use crate::common::models::page::{Page, PageMetadata};
+use crate::routes::transactions::filters::QueryParam;
+use crate::utils::context::RequestContext;
+use crate::utils::errors::ApiResult;
 use rocket::serde::DeserializeOwned;
 
 pub async fn get_backend_page<D>(

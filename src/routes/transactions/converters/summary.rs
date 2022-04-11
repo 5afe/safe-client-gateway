@@ -112,7 +112,7 @@ impl Transfer {
                 &self
                     .get_transaction_hash()
                     .expect("No tx hash for ethereum transaction is not possible"),
-            ), //TODO is this correct?
+            ), // TODO is this correct?
             timestamp: execution_date,
             tx_status: TransactionStatus::Success,
             execution_info: None,

@@ -1,18 +1,14 @@
 use super::commons::get_backend_page;
-use crate::{
-    common::models::{
-        backend::transactions::ModuleTransaction,
-        page::{Page, PageMetadata},
-    },
-    config::transaction_request_timeout,
-    providers::info::{DefaultInfoProvider, InfoProvider},
-    routes::transactions::{
-        filters::module::ModuleFilters,
-        handlers::offset_page_meta,
-        models::summary::{ConflictType, TransactionListItem},
-    },
-    utils::{context::RequestContext, errors::ApiResult, urls::build_absolute_uri},
-};
+use crate::common::models::backend::transactions::ModuleTransaction;
+use crate::common::models::page::{Page, PageMetadata};
+use crate::config::transaction_request_timeout;
+use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::routes::transactions::filters::module::ModuleFilters;
+use crate::routes::transactions::handlers::offset_page_meta;
+use crate::routes::transactions::models::summary::{ConflictType, TransactionListItem};
+use crate::utils::context::RequestContext;
+use crate::utils::errors::ApiResult;
+use crate::utils::urls::build_absolute_uri;
 
 pub async fn get_module_transactions(
     context: &RequestContext,

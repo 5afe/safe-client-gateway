@@ -247,7 +247,6 @@ pub async fn get_incoming_transfers(
         .resp_generator(|| {
             transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
         })
-        .duration(tx_queued_cache_duration())
         .execute()
         .await
 }
@@ -264,7 +263,6 @@ pub async fn get_module_transactions(
         .resp_generator(|| {
             module::get_module_transactions(&context, &chain_id, &safe_address, &cursor, &filters)
         })
-        .duration(tx_queued_cache_duration())
         .execute()
         .await
 }
@@ -287,7 +285,6 @@ pub async fn get_multisig_transactions(
                 &filters,
             )
         })
-        .duration(tx_queued_cache_duration())
         .execute()
         .await
 }

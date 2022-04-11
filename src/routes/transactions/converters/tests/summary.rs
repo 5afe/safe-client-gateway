@@ -260,7 +260,7 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
         TransferDto::Ether(EtherTransferDto {
             execution_date: timestamp,
             block_number: 0,
-            transaction_hash: "".to_string(),
+            transaction_hash: "0x4321".to_string(),
             to: "".to_string(),
             value: String::from("1"),
             from: "".to_string(),
@@ -268,7 +268,7 @@ async fn ethereum_tx_to_summary_transaction_with_transfers() {
         TransferDto::Ether(EtherTransferDto {
             execution_date: timestamp,
             block_number: 0,
-            transaction_hash: "".to_string(),
+            transaction_hash: "0x4321".to_string(),
             to: "".to_string(),
             value: String::from("1"),
             from: "".to_string(),

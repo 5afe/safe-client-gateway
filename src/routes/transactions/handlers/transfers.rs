@@ -108,7 +108,8 @@ fn build_cursor(
                 safe_address = safe_address,
                 cursor = cursor,
                 filters = (
-                    filters.date.to_owned(),
+                    filters.execution_date_gte.to_owned(),
+                    filters.execution_date_lte.to_owned(),
                     filters.to.to_owned(),
                     filters.value.to_owned(),
                     filters.token_address.to_owned()

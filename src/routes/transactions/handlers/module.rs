@@ -106,11 +106,7 @@ fn build_cursor(
                     chain_id = chain_id,
                     safe_address = safe_address,
                     cursor = cursor,
-                    filters = (
-                        filters.date.to_owned(),
-                        filters.to.to_owned(),
-                        filters.module.to_owned()
-                    )
+                    filters = (filters.to.to_owned(), filters.module.to_owned())
                 )
             ),
         )

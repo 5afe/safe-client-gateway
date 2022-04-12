@@ -48,26 +48,22 @@ pub fn transfer_filters() {
 #[test]
 pub fn module_filters() {
     let filter_all_defined = ModuleFilters {
-        date: Some(String::from("1234")),
         to: Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b")),
         module: Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b")),
     };
 
     let filter_none = ModuleFilters {
-        date: None,
         to: None,
         module: None,
     };
 
     let filter_only_to = ModuleFilters {
-        date: None,
         to: Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b")),
         module: None,
     };
     assert_eq!(
         filter_all_defined.as_query_param(),
-        "date=1234&\
-    to=0x1230B3d59858296A31053C1b8562Ecf89A2f888b&\
+        "to=0x1230B3d59858296A31053C1b8562Ecf89A2f888b&\
     module=0x1230B3d59858296A31053C1b8562Ecf89A2f888b&"
     );
     assert_eq!(filter_none.as_query_param(), "");

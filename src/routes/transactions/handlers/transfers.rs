@@ -25,7 +25,7 @@ pub async fn get_incoming_transfers(
         safe_address
     )?;
 
-    let page_meta = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
+    let page_meta = cursor.as_ref().map(|it| PageMetadata::from_cursor(it));
 
     let backend_txs = get_backend_page(
         &context,
@@ -47,7 +47,7 @@ pub async fn get_incoming_transfers(
             context,
             chain_id,
             safe_address,
-            &page_meta,
+            page_meta.as_ref(),
             backend_txs.next,
             filters,
             1,
@@ -56,7 +56,7 @@ pub async fn get_incoming_transfers(
             context,
             chain_id,
             safe_address,
-            &page_meta,
+            page_meta.as_ref(),
             backend_txs.previous,
             filters,
             -1,
@@ -92,21 +92,21 @@ fn build_cursor(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
-    page_meta: &PageMetadata,
+    page_meta: Option<&PageMetadata>,
     backend_page_url: Option<String>,
     filters: &TransferFilters,
     direction: i64,
 ) -> Option<String> {
     backend_page_url.as_ref().map(|_| {
+        let cursor = page_meta
+            .map(|page_meta| offset_page_meta(page_meta, direction * (page_meta.limit as i64)));
+
         build_absolute_uri(
             context,
             uri!(crate::routes::transactions::routes::get_incoming_transfers(
                 chain_id = chain_id,
                 safe_address = safe_address,
-                cursor = Some(offset_page_meta(
-                    page_meta,
-                    direction * (page_meta.limit as i64)
-                )),
+                cursor = cursor,
                 filters = (
                     filters.date.to_owned(),
                     filters.to.to_owned(),

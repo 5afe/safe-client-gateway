@@ -5,7 +5,8 @@ use std::fmt;
 
 #[derive(FromForm, Debug)]
 pub struct MultisigFilters {
-    pub date: Option<String>,
+    pub execution_date_gte: Option<String>,
+    pub execution_date_lte: Option<String>,
     pub to: Option<String>,
     pub value: Option<String>,
     pub nonce: Option<String>,
@@ -15,8 +16,12 @@ impl QueryParam for MultisigFilters {
     fn as_query_param(&self) -> String {
         let mut query_params = String::new();
 
-        if let Some(date) = &self.date {
-            query_params.push_str(&format!("date={}&", date))
+        if let Some(execution_date_gte) = &self.execution_date_gte {
+            query_params.push_str(&format!("execution_date__gte={}&", execution_date_gte))
+        }
+
+        if let Some(execution_date_lte) = &self.execution_date_lte {
+            query_params.push_str(&format!("execution_date__lte={}&", execution_date_lte))
         }
 
         if let Some(to) = &self.to {
@@ -43,13 +48,15 @@ impl
             Option<String>,
             Option<String>,
             Option<String>,
+            Option<String>,
         ),
     > for MultisigFilters
 {
     type Target = MultisigFilters;
 
     fn from_uri_param(
-        (date, to, value, nonce): (
+        (execution_date_gte, execution_date_lte, to, value, nonce): (
+            Option<String>,
             Option<String>,
             Option<String>,
             Option<String>,
@@ -57,7 +64,8 @@ impl
         ),
     ) -> Self::Target {
         MultisigFilters {
-            date,
+            execution_date_gte,
+            execution_date_lte,
             to,
             value,
             nonce,
@@ -67,8 +75,9 @@ impl
 
 impl UriDisplay<Query> for MultisigFilters {
     fn fmt(&self, f: &mut Formatter<Query>) -> fmt::Result {
+        f.write_named_value("execution_date__gte", &self.execution_date_gte)?;
+        f.write_named_value("execution_date__lte", &self.execution_date_lte)?;
         f.write_named_value("to", &self.to)?;
-        f.write_named_value("date", &self.date)?;
         f.write_named_value("value", &self.value)?;
         f.write_named_value("nonce", &self.nonce)
     }

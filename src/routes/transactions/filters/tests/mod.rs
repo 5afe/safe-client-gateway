@@ -76,21 +76,24 @@ pub fn module_filters() {
 #[test]
 pub fn multisig_filters() {
     let filter_all_defined = MultisigFilters {
-        date: Some(String::from("1234")),
+        execution_date_gte: Some(String::from("1234")),
+        execution_date_lte: Some(String::from("4321")),
         to: Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b")),
         value: Some(String::from("100")),
         nonce: Some(String::from("50")),
     };
 
     let filter_none = MultisigFilters {
-        date: None,
+        execution_date_gte: None,
+        execution_date_lte: None,
         to: None,
         value: None,
         nonce: None,
     };
 
     let filter_only_to = MultisigFilters {
-        date: None,
+        execution_date_gte: None,
+        execution_date_lte: None,
         to: Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b")),
         value: None,
         nonce: None,
@@ -98,7 +101,8 @@ pub fn multisig_filters() {
 
     assert_eq!(
         filter_all_defined.as_query_param(),
-        "date=1234&\
+        "execution_date__gte=1234&\
+        execution_date__lte=4321&\
     to=0x1230B3d59858296A31053C1b8562Ecf89A2f888b&\
     value=100&\
     nonce=50&"

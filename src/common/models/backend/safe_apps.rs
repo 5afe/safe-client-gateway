@@ -11,6 +11,9 @@ pub struct SafeApp {
     pub chain_ids: Vec<u64>,
     pub provider: Option<SafeAppProvider>,
     pub access_control: SafeAppAccessControlPolicies,
+    // We set this value as a default since this feature might not be enabled yet. See SAFE_APPS_TAGS_FEATURE_ENABLED
+    #[serde(default)]
+    pub tags: Vec<String>,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]

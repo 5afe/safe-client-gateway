@@ -37,6 +37,9 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
@@ -50,6 +53,9 @@
     <span class="kw">pub</span> <span class="ident">chain_ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">provider</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeAppProvider</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">access_control</span>: <span class="ident">SafeAppAccessControlPolicies</span>,
+    <span class="comment">// We set this value as a default since this feature might not be enabled yet. See SAFE_APPS_TAGS_FEATURE_ENABLED</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">tags</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>

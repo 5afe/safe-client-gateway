@@ -1,14 +1,15 @@
+use itertools::Itertools;
+use serde_json::value::{RawValue, Value};
+use serde_json::{self, json};
+
 use crate::common::models::backend::notifications::NotificationRegistrationRequest as BackendRegistrationRequest;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::notifications::models::{
     DeviceData, NotificationRegistrationRequest, SafeRegistration,
 };
 use crate::utils::context::RequestContext;
-use crate::utils::errors::{ApiError, ApiResult};
+use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
 use crate::utils::http_client::Request;
-use serde_json::json;
-use serde_json::value::RawValue;
-use serde_json::{self, value::Value};
 
 pub async fn delete_registration(
     context: &RequestContext,
@@ -28,6 +29,12 @@ pub async fn delete_registration(
     context.http_client().delete(request).await?;
 
     Ok(())
+}
+
+struct NotificationRegistrationError {
+    status_code: u16,
+    chain_id: String,
+    error: Value,
 }
 
 pub async fn post_registration(
@@ -51,33 +58,46 @@ pub async fn post_registration(
         requests.push((&safe_registration.chain_id, client.post(request)));
     }
 
-    let (error_chain_ids, error_body) = {
-        let mut error_chain_ids: Vec<&str> = vec![];
-        let mut errors: Vec<Value> = vec![];
-        for (chain_id, request) in requests.into_iter() {
-            match request.await {
-                Err(api_error) => {
-                    error_chain_ids.push(chain_id);
-                    errors.push(json!({
-                        chain_id :   RawValue::from_string(api_error.details.message.unwrap_or(String::from("Unknown notification registration issue")))?
-                    }))
-                }
-                _ => {}
+    let mut errors: Vec<NotificationRegistrationError> = vec![];
+    for (chain_id, request) in requests.into_iter() {
+        match request.await {
+            Err(api_error) => {
+                errors.push(
+                    NotificationRegistrationError {
+                    status_code: api_error.status,
+                    chain_id: String::from(chain_id),
+                    error: json!(
+                            {chain_id :   RawValue::from_string(api_error.details.message.unwrap_or(String::from("Unknown notification registration issue")))?}),
+                });
             }
+            _ => {}
         }
-        (error_chain_ids, json!(errors))
-    };
+    }
 
-    if error_chain_ids.is_empty() {
+    if errors.is_empty() {
         Ok(())
     } else {
-        Err(ApiError::new_from_message_with_debug(
-            format!(
-                "Push notification registration failed for chain IDs: {}",
-                error_chain_ids.join(", ")
-            ),
-            Some(error_body),
-        ))
+        let has_server_error = errors
+            .iter()
+            .any(|error| (500..600).contains(&error.status_code));
+        let error_chain_ids = errors.iter().map(|error| &error.chain_id).join(", ");
+        let json_error = errors.iter().map(|error| &error.error).collect::<Vec<_>>();
+
+        let error = ApiError {
+            // This is decoupled from the error collection so it is assuming that any value in [errors]
+            // is between 400 and 600. If server errors are found we return 500. Else we return 400
+            status: if has_server_error { 500 } else { 400 },
+            details: ErrorDetails {
+                code: 1337,
+                message: Some(format!(
+                    "Push notification registration failed for chain IDs: {}",
+                    error_chain_ids
+                )),
+                arguments: None,
+                debug: Some(json!(json_error)),
+            },
+        };
+        Err(error)
     }
 }
 

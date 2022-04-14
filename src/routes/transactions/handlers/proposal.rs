@@ -1,19 +1,18 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::handlers::details::get_multisig_transaction_details;
-use crate::routes::transactions::models::details::TransactionDetails;
 use crate::routes::transactions::models::requests::MultisigTransactionRequest;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
 use serde_json::json;
 
+// The transaction details are returned at the route level. The same as for transaction submission
 pub async fn submit_confirmation(
     context: &RequestContext,
     chain_id: &str,
     safe_tx_hash: &str,
     signature: &str,
-) -> ApiResult<TransactionDetails> {
+) -> ApiResult<()> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
         info_provider,
@@ -33,9 +32,10 @@ pub async fn submit_confirmation(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
         context.cache(),
     )
-    .execute();
+    .execute()
+    .await;
 
-    get_multisig_transaction_details(&info_provider, chain_id, safe_tx_hash).await
+    Ok(())
 }
 
 pub async fn propose_transaction(
@@ -63,7 +63,8 @@ pub async fn propose_transaction(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
         context.cache(),
     )
-    .execute();
+    .execute()
+    .await;
     Invalidate::new(
         InvalidationPattern::Any(
             InvalidationScope::Both,
@@ -71,6 +72,7 @@ pub async fn propose_transaction(
         ),
         context.cache(),
     )
-    .execute();
+    .execute()
+    .await;
     Ok(())
 }

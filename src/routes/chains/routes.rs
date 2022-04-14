@@ -5,19 +5,16 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
-/**
- * `/v1/chains/<chain_id>/` <br/>
- * Returns [ChainInfo](crate::routes::chains::models::ChainInfo)
- *
- * # Chains
- *
- * This endpoint returns the [ChainInfo](crate::routes::chains::models::ChainInfo) for a given `chainId`
- *
- * ## Path
- *
- * - `/v1/chains/<chain_id>/`returns the `ChainInfo` for `<chain_id>`
- *
- */
+/// `/v1/chains/<chain_id>/` <br/>
+/// Returns [ChainInfo](crate::routes::chains::models::ChainInfo)
+///
+/// # Chains
+///
+/// This endpoint returns the [ChainInfo](crate::routes::chains::models::ChainInfo) for a given `chainId`
+///
+/// ## Path
+///
+/// - `/v1/chains/<chain_id>/`returns the `ChainInfo` for `<chain_id>`
 #[get("/v1/chains/<chain_id>")]
 pub async fn get_chain(
     context: RequestContext,
@@ -30,19 +27,16 @@ pub async fn get_chain(
         .await
 }
 
-/**
- * `/v1/chains/` <br/>
- * Returns a [Page](crate::common::models::page::Page) of [ChainInfo](crate::routes::chains::models::ChainInfo)
- *
- * # Chains
- *
- * Returns a paginated list of all the supported [ChainInfo](crate::routes::chains::models::ChainInfo)
- *
- * ## Path
- *
- * - `/v1/chains/` Returns the `ChainInfo` for our services supported networks
- *
- */
+/// `/v1/chains/` <br/>
+/// Returns a [Page](crate::common::models::page::Page) of [ChainInfo](crate::routes::chains::models::ChainInfo)
+///
+/// # Chains
+///
+/// Returns a paginated list of all the supported [ChainInfo](crate::routes::chains::models::ChainInfo)
+///
+/// ## Path
+///
+/// - `/v1/chains/` Returns the `ChainInfo` for our services supported networks
 #[get("/v1/chains?<cursor>")]
 pub async fn get_chains(
     context: RequestContext,

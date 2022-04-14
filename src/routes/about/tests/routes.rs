@@ -1,15 +1,16 @@
-extern crate dotenv;
+use core::time::Duration;
+use std::env;
+
+use mockall::predicate::eq;
+use rocket::http::{Header, Status};
+use rocket::local::asynchronous::Client;
 
 use crate::cache::MockCache;
-use crate::config::{build_number, chain_info_request_timeout, version, webhook_token};
+use crate::config::{build_number, chain_info_request_timeout, version};
 use crate::routes::about::models::{About, ChainAbout};
 use crate::routes::safes::models::Implementation;
 use crate::tests::main::{setup_rocket, setup_rocket_with_mock_cache};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
-use core::time::Duration;
-use mockall::predicate::eq;
-use rocket::http::{Header, Status};
-use rocket::local::asynchronous::Client;
 
 #[rocket::async_test]
 async fn get_chains_about() {
@@ -36,10 +37,13 @@ async fn get_chains_about() {
         },
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_chains_about],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_chains_about],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -68,10 +72,9 @@ async fn get_about() {
         build_number: build_number(),
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_about],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_about]).await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -132,10 +135,13 @@ async fn get_master_copies() {
         },
     ];
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_master_copies],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_master_copies],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -186,10 +192,9 @@ async fn get_backbone() {
     };
     let expected = "{\"json\":\"json\"}";
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::backbone],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::backbone]).await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -204,6 +209,7 @@ async fn get_backbone() {
 
 #[rocket::async_test]
 async fn get_redis() {
+    env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
     let mock_http_client = {
         let mut mock_http_client = MockHttpClient::new();
         mock_http_client.expect_get().times(0);
@@ -226,8 +232,9 @@ async fn get_redis() {
     .await
     .expect("valid rocket instance");
     let response = {
-        let mut response = client.get(format!("/about/redis/{}", webhook_token()));
+        let mut response = client.get("/about/redis");
         response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Authorization", "Basic test_webhook_token"));
         response.dispatch().await
     };
 

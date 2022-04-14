@@ -46,10 +46,13 @@ async fn data_decoded() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_data_decoder],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_data_decoder],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let request  = client.post("/v1/chains/4/data-decoder")
@@ -112,10 +115,13 @@ async fn data_decoded_error() {
             }))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_data_decoder],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_data_decoder],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let request  = client.post("/v1/chains/4/data-decoder")
@@ -167,10 +173,13 @@ async fn get_contract() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_contract],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_contract],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 
@@ -232,10 +241,13 @@ async fn get_contract_not_found() {
             }))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_contract],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_contract],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
 

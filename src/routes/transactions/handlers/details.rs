@@ -1,5 +1,3 @@
-extern crate reqwest;
-
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 use crate::common::models::backend::transfers::Transfer;

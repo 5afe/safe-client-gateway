@@ -25,7 +25,7 @@ cargo run
 ```
 
 After doing any change code must be formatted using [Rustfmt](https://github.com/rust-lang/rustfmt)
-- `cargo fmt --all`
+- `cargo +nightly fmt --all`
 Auto formatting can also [be configured in the most common code editors](https://github.com/rust-lang/rustfmt#running-rustfmt-from-your-editor)
 
 ## Configuration
@@ -55,7 +55,7 @@ In order to run the test suite of the project:
 redis-server
 ```
 
-2. Make sure that `REDIS_URI` is set and points to the current Redis instance (assuming Redis is runnning on the default port `6379`):
+2. Make sure that the required environment variables are set (the following example assumes that Redis is runnning on the default port `6379`):
 
 ```bash
 export REDIS_URI=redis://localhost:6379

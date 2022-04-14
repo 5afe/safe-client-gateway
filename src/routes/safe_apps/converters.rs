@@ -33,6 +33,7 @@ impl From<BackendSafeApp> for SafeApp {
                 }
                 _ => SafeAppAccessControlPolicies::Unknown,
             },
+            tags: safe_app.tags,
         }
     }
 }

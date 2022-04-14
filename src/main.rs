@@ -1,10 +1,6 @@
 #![deny(unused_must_use)]
 #![deny(rustdoc::broken_intra_doc_links)]
 
-extern crate dotenv;
-extern crate log;
-extern crate semver;
-
 #[macro_use]
 extern crate rocket;
 
@@ -42,12 +38,12 @@ use utils::cors::CORS;
 
 #[doc(hidden)]
 #[launch]
-fn rocket() -> Rocket<Build> {
+async fn rocket() -> Rocket<Build> {
     dotenv().ok();
     setup_logger();
 
     let client = setup_http_client();
-    let cache = create_service_cache();
+    let cache = create_service_cache().await;
 
     rocket::build()
         .mount("/", active_routes())
@@ -60,7 +56,7 @@ fn rocket() -> Rocket<Build> {
 
 #[cfg(test)]
 fn setup_logger() {
-    //noop: no need to set the logger for tests
+    // noop: no need to set the logger for tests
 }
 
 #[doc(hidden)]

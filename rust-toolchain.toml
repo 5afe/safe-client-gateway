@@ -1,2 +1,3 @@
 [toolchain]
-channel = "1.58.0"
+# match with version in DockerFile
+channel = "1.59.0"

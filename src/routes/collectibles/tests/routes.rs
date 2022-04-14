@@ -38,10 +38,13 @@ async fn collectibles() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_collectibles],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_collectibles],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {
@@ -96,10 +99,13 @@ async fn collectibles_not_found() {
             }))
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_collectibles],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_collectibles],
+        )
+        .await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {

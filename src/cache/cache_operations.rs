@@ -11,8 +11,7 @@ use crate::utils::http_client::HttpClient;
 use rocket::futures::future::BoxFuture;
 use rocket::futures::FutureExt;
 use rocket::response::content;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::future::Future;
 use std::sync::Arc;
@@ -96,8 +95,8 @@ impl Invalidate {
         Invalidate { cache, pattern }
     }
 
-    pub fn execute(&self) {
-        invalidate(self.cache.clone(), &self.pattern)
+    pub async fn execute(&self) {
+        invalidate(self.cache.clone(), &self.pattern).await
     }
 }
 

@@ -4,6 +4,7 @@ use crate::providers::info::*;
 use crate::routes::transactions::models::{SettingsChange, SettingsInfo};
 use mockall::predicate::eq;
 use mockall::Sequence;
+use serde_json::json;
 use std::collections::HashMap;
 
 #[rocket::async_test]
@@ -367,6 +368,79 @@ async fn data_decoded_unknown_to_settings_info() {
     let expected = SettingsChange {
         data_decoded: data_decoded.clone(),
         settings_info: None,
+    };
+
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
+
+    assert_eq!(expected.settings_info, actual);
+}
+
+#[rocket::async_test]
+async fn data_decoded_set_guard_address_known() {
+    let guard = AddressEx {
+        value: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+        name: Some("Cool guard contract".to_string()),
+        logo_uri: Some("logo.url".to_string()),
+    };
+    let mut mock_info_provider = MockInfoProvider::new();
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SET_GUARD).unwrap();
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .with(eq("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"))
+        .times(1)
+        .return_once(move |_| {
+            Ok(AddressEx {
+                value: "0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD".to_string(),
+                name: Some("Cool guard contract".to_string()),
+                logo_uri: Some("logo.url".to_string()),
+            })
+        });
+
+    let expected = SettingsChange {
+        data_decoded: data_decoded.clone(),
+        settings_info: Some(SettingsInfo::SetGuard { guard }),
+    };
+
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
+
+    assert_eq!(expected.settings_info, actual);
+}
+
+#[rocket::async_test]
+async fn data_decoded_set_guard_address_unknown() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_address_ex_from_contracts()
+        .with(eq("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"))
+        .times(1)
+        .return_once(move |_| bail!("Some http error"));
+
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_SET_GUARD).unwrap();
+
+    let expected = SettingsChange {
+        data_decoded: data_decoded.clone(),
+        settings_info: Some(SettingsInfo::SetGuard {
+            guard: AddressEx::address_only("0xf2565317F3Ae8Ae9EA98E9Fe1e7FADC77F823cbD"),
+        }),
+    };
+
+    let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
+
+    assert_eq!(expected.settings_info, actual);
+}
+
+#[rocket::async_test]
+async fn data_decoded_delete_guard() {
+    let mut mock_info_provider = MockInfoProvider::new();
+
+    let data_decoded =
+        serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_DELETE_GUARD).unwrap();
+
+    let expected = SettingsChange {
+        data_decoded: data_decoded.clone(),
+        settings_info: Some(SettingsInfo::DeleteGuard),
     };
 
     let actual = DataDecoded::to_settings_info(&data_decoded, &mut mock_info_provider).await;
@@ -898,4 +972,38 @@ fn nested_delegate_in_multi_send_without_nested_delegate() {
         serde_json::from_str::<DataDecoded>(crate::tests::json::DATA_DECODED_MULTI_SEND).unwrap();
 
     assert_eq!(data_decoded.has_nested_delegated(), false);
+}
+
+#[test]
+fn no_param_data_decoded_has_nested_delegate() {
+    let data_decoded =
+        serde_json::from_value::<DataDecoded>(json!({"method":"parameterlessMethod"})).unwrap();
+
+    assert_eq!(data_decoded.has_nested_delegated(), false);
+}
+
+#[test]
+fn not_multi_send_with_delegate_call() {
+    let data_decoded =
+        serde_json::from_value::<DataDecoded>(json!({
+                "method": "notMultiSend",
+                "parameters": [
+                  {
+                    "name": "notTransactions",
+                    "type": "bytes",
+                    "value": "0x00d9ba894e0097f8cc2bbc9d24d308b98e36dc6d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c6800000d9ba894e0097f8cc2bbc9d24d308b98e36dc6d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c6800000d9ba894e0097f8cc2bbc9d24d308b98e36dc6d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044a9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000",
+                    "valueDecoded": [
+                      {
+                        "operation": 1,
+                        "to": "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02",
+                        "value": "0",
+                        "data": "0xa9059cbb000000000000000000000000938bae50a210b80ea233112800cd5bc2e764430000000000000000000000000000000000000000000000000000038d7ea4c68000",
+                        "dataDecoded": null
+                      }
+                    ]
+                  }
+                ]
+    })).unwrap();
+
+    assert_eq!(data_decoded.has_nested_delegated(), true);
 }

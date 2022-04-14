@@ -6,10 +6,9 @@ use crate::common::models::backend::transfers::{
 };
 use crate::providers::info::{InfoProvider, TokenInfo, TokenType};
 use crate::routes::transactions::models::details::TransactionDetails;
-use crate::routes::transactions::models::Transfer as ServiceTransfer;
 use crate::routes::transactions::models::{
     Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, TransactionStatus,
-    TransferInfo,
+    Transfer as ServiceTransfer, TransferInfo,
 };
 use crate::utils::errors::ApiResult;
 
@@ -40,6 +39,7 @@ impl TransferDto {
         tx_hash: &str,
     ) -> ApiResult<TransactionDetails> {
         Ok(TransactionDetails {
+            safe_address: safe.to_owned(),
             tx_id: self.generate_id(safe, tx_hash),
             executed_at: self.get_execution_time(),
             tx_status: TransactionStatus::Success,

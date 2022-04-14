@@ -67,6 +67,8 @@ pub const ERC_20_TRANSFER_WITH_TOKEN_INFO_INCOMING: &str =
     include_str!("transfers/erc_20_transfer_with_token_info_incoming.json");
 pub const ERC_20_TRANSFER_WITH_TOKEN_INFO_OUTGOING: &str =
     include_str!("transfers/erc_20_transfer_with_token_info_outgoing.json");
+pub const ERC_20_TRANSFER_UNEXPECTED_PARAM_NAMES: &str =
+    include_str!("transfers/erc_20_transfer_unexpected_param_names.json");
 pub const ERC_721_TRANSFER_WITHOUT_TOKEN_INFO: &str =
     include_str!("transfers/erc_721_transfer_without_token_info.json");
 pub const ERC_721_TRANSFER_WITH_TOKEN_INFO_INCOMING: &str =
@@ -121,6 +123,8 @@ pub const DOCTORED_DATA_DECODED_NESTED_MULTI_SENDS: &str =
     include_str!("commons/DOCTORED_data_decoded_nested_multi_sends.json");
 pub const DOCTORED_DATA_DECODED_MULTI_SEND_NESTED_DELEGATE: &str =
     include_str!("commons/DOCTORED_data_decoded_multi_send_nested_delegate.json");
+pub const DATA_DECODED_SET_GUARD: &str = include_str!("commons/data_decoded_set_guard.json");
+pub const DATA_DECODED_DELETE_GUARD: &str = include_str!("commons/data_decoded_delete_guard.json");
 
 pub const BALANCE_ETHER: &str = include_str!("balances/balance_ether.json");
 pub const BALANCE_COMPOUND_ETHER: &str = include_str!("balances/balance_compound_ether.json");
@@ -148,6 +152,8 @@ pub const CHAIN_INFO_RINKEBY_ENABLED_FEATURES: &str =
     include_str!("chains/rinkeby_enabled_features.json");
 
 pub const POLYGON_SAFE_APPS: &str = include_str!("safe_apps/polygon_safe_apps.json");
+pub const POLYGON_SAFE_APPS_WITH_TAGS: &str =
+    include_str!("safe_apps/polygon_safe_apps_with_tags.json");
 pub const UNISWAP_SAFE_APP_MANIFEST: &str = include_str!("safe_apps/uniswap_manifest.json");
 
 pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_master_copies.json");

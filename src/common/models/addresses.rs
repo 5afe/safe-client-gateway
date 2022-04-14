@@ -20,6 +20,7 @@ impl AddressEx {
             logo_uri: None,
         }
     }
+
     pub fn address_only(address: &str) -> Self {
         AddressEx {
             value: address.to_owned(),

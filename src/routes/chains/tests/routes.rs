@@ -1,11 +1,9 @@
-use crate::{
-    common::models::backend::chains::ChainInfo as BackendChainInfo,
-    common::models::page::Page,
-    config::chain_info_request_timeout,
-    routes::chains::models::ChainInfo,
-    tests::main::setup_rocket,
-    utils::http_client::{MockHttpClient, Request, Response},
-};
+use crate::common::models::backend::chains::ChainInfo as BackendChainInfo;
+use crate::common::models::page::Page;
+use crate::config::chain_info_request_timeout;
+use crate::routes::chains::models::ChainInfo;
+use crate::tests::main::setup_rocket;
+use crate::utils::http_client::{MockHttpClient, Request, Response};
 use mockall::predicate::eq;
 use rocket::http::{ContentType, Header, Status};
 use rocket::local::asynchronous::Client;
@@ -30,10 +28,9 @@ async fn paginated_chain_infos() {
             })
         });
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_chains],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_chains]).await,
+    )
     .await
     .expect("valid rocket instance");
     let expected =
@@ -70,10 +67,9 @@ async fn single_chain_info() {
         mock_http_client
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_chain],
-    ))
+    let client = Client::tracked(
+        setup_rocket(mock_http_client, routes![super::super::routes::get_chain]).await,
+    )
     .await
     .expect("valid rocket instance");
     let response = {

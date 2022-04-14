@@ -1,9 +1,6 @@
-extern crate rocket;
-
 use rocket::response::Redirect;
 use rocket::serde::json::{json, Value};
-use rocket::Catcher;
-use rocket::Route;
+use rocket::{Catcher, Route};
 
 /// # About endpoint
 pub mod about;
@@ -67,6 +64,8 @@ pub fn active_routes() -> Vec<Route> {
         transactions::routes::post_confirmation,
         hooks::routes::update,
         hooks::routes::post_hook_update,
+        hooks::routes::post_hooks_events,
+        hooks::routes::post_flush_events,
         hooks::routes::flush,
         health::routes::health
     ]

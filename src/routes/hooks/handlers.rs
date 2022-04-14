@@ -2,37 +2,55 @@ use crate::cache::cache_operations::{Invalidate, InvalidationPattern, Invalidati
 use crate::cache::Cache;
 use crate::common::models::backend::hooks::{Payload, PayloadDetails};
 use crate::utils::errors::ApiResult;
+use rocket::futures::future::OptionFuture;
 use std::sync::Arc;
 
-pub fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiResult<()> {
+pub async fn invalidate_caches(cache: Arc<dyn Cache>, payload: &Payload) -> ApiResult<()> {
     Invalidate::new(
         InvalidationPattern::Any(InvalidationScope::Both, payload.address.to_owned()),
         cache.clone(),
     )
-    .execute();
-    payload.details.as_ref().map(|d| match d {
-        PayloadDetails::NewConfirmation(data) => {
-            Invalidate::new(
-                InvalidationPattern::Any(InvalidationScope::Both, String::from(&data.safe_tx_hash)),
-                cache.clone(),
-            )
-            .execute();
+    .execute()
+    .await;
+
+    OptionFuture::from(payload.details.as_ref().map(|d| async move {
+        match d {
+            PayloadDetails::NewConfirmation(data) => {
+                Invalidate::new(
+                    InvalidationPattern::Any(
+                        InvalidationScope::Both,
+                        String::from(&data.safe_tx_hash),
+                    ),
+                    cache.clone(),
+                )
+                .execute()
+                .await
+            }
+            PayloadDetails::ExecutedMultisigTransaction(data) => {
+                Invalidate::new(
+                    InvalidationPattern::Any(
+                        InvalidationScope::Both,
+                        String::from(&data.safe_tx_hash),
+                    ),
+                    cache.clone(),
+                )
+                .execute()
+                .await
+            }
+            PayloadDetails::PendingMultisigTransaction(data) => {
+                Invalidate::new(
+                    InvalidationPattern::Any(
+                        InvalidationScope::Both,
+                        String::from(&data.safe_tx_hash),
+                    ),
+                    cache.clone(),
+                )
+                .execute()
+                .await
+            }
+            _ => (),
         }
-        PayloadDetails::ExecutedMultisigTransaction(data) => {
-            Invalidate::new(
-                InvalidationPattern::Any(InvalidationScope::Both, String::from(&data.safe_tx_hash)),
-                cache.clone(),
-            )
-            .execute();
-        }
-        PayloadDetails::PendingMultisigTransaction(data) => {
-            Invalidate::new(
-                InvalidationPattern::Any(InvalidationScope::Both, String::from(&data.safe_tx_hash)),
-                cache.clone(),
-            )
-            .execute();
-        }
-        _ => {}
-    });
+    }))
+    .await;
     Ok(())
 }

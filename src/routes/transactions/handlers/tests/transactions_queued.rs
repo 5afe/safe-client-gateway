@@ -714,7 +714,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
     )
     .await;
 
-    //The first item expected is just a a transaction because we are not in the first page of data
+    // The first item expected is just a a transaction because we are not in the first page of data
     let expected: Vec<TransactionListItem> = vec![
         TransactionListItem::Transaction {
             transaction: TransactionSummary {

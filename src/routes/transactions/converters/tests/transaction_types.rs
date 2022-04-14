@@ -614,6 +614,46 @@ async fn transaction_data_decoded_is_erc20_receiver_ok_token_fetch_error() {
 }
 
 #[rocket::async_test]
+async fn transaction_data_decoded_is_erc20_unexpected_parameter_names() {
+    let mut mock_info_provider = MockInfoProvider::new();
+    mock_info_provider
+        .expect_token_info()
+        .times(1)
+        .return_once(move |_| {
+            Ok(TokenInfo {
+                token_type: TokenType::Erc20,
+                address: "0xc778417E063141139Fce010982780140Aa0cD5Ab".to_string(),
+                decimals: 18,
+                symbol: "WETH".to_string(),
+                name: "Wrapped Ether".to_string(),
+                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xc778417E063141139Fce010982780140Aa0cD5Ab.png".to_string()),
+            })
+        });
+
+    let tx = serde_json::from_str::<MultisigTransaction>(
+        crate::tests::json::ERC_20_TRANSFER_UNEXPECTED_PARAM_NAMES,
+    )
+    .unwrap();
+    let expected = TransactionInfo::Transfer(Transfer {
+        sender: AddressEx::address_only("0x1C8b9B78e3085866521FE206fa4c1a67F49f153A"),
+        recipient: AddressEx::address_only("0x1C8b9B78e3085866521FE206fa4c1a67F49f153A"),
+        direction: TransferDirection::Outgoing,
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0xc778417E063141139Fce010982780140Aa0cD5Ab".to_string(),
+            token_name: Some("Wrapped Ether".to_string()),
+            token_symbol: Some("WETH".to_string()),
+            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xc778417E063141139Fce010982780140Aa0cD5Ab.png".to_string()),
+            decimals: Some(18),
+            value: "10000000000000000".to_string(),
+        }),
+    });
+
+    let actual = tx.transaction_info(&mut mock_info_provider).await;
+
+    assert_eq!(expected, actual);
+}
+
+#[rocket::async_test]
 async fn cancellation_transaction() {
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);

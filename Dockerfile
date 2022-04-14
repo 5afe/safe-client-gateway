@@ -1,5 +1,6 @@
 # Build Image
-FROM rust:1.56.0-slim-buster as builder
+# match with version in rust-toolchain.toml file
+FROM rust:1.59.0-slim-buster as builder
 
 RUN set -ex; \ 
   apt-get update; \

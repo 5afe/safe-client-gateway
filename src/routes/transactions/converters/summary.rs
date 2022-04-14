@@ -1,8 +1,5 @@
-extern crate chrono;
-
-use crate::common::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::common::models::backend::transactions::{
-    EthereumTransaction, ModuleTransaction, MultisigTransaction,
+    CreationTransaction, EthereumTransaction, ModuleTransaction, MultisigTransaction, Transaction,
 };
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::InfoProvider;

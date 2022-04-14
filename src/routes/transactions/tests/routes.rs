@@ -1,5 +1,3 @@
-extern crate dotenv;
-
 use crate::common::models::page::Page;
 use crate::config::{
     chain_info_request_timeout, contract_info_request_timeout, safe_info_request_timeout,
@@ -86,7 +84,7 @@ async fn post_confirmation_success() {
 
         // Transfer TokenInfo
         let mut token_request = Request::new(String::from(
-            "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=10000",
+            "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/tokens/?limit=20000",
         ));
         token_request.timeout(Duration::from_millis(token_info_request_timeout()));
         let page_tokens: Page<TokenInfo> = Page {
@@ -119,10 +117,13 @@ async fn post_confirmation_success() {
         mock_http_client
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_confirmation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_confirmation],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 
@@ -186,10 +187,13 @@ async fn post_confirmation_confirmation_error() {
             });
         mock_http_client
     };
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_confirmation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_confirmation],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 
@@ -267,10 +271,13 @@ async fn post_confirmation_confirmation_success_tx_details_error() {
 
         mock_http_client
     };
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::post_confirmation],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::post_confirmation],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 
@@ -395,10 +402,13 @@ async fn tx_details_multisig_tx_success() {
         mock_http_client
     };
 
-    let client = Client::tracked(setup_rocket(
-        mock_http_client,
-        routes![super::super::routes::get_transactions],
-    ))
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_transactions],
+        )
+        .await,
+    )
     .await
     .expect("Valid rocket instance");
 

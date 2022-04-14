@@ -9,7 +9,7 @@ use crate::config::{
     contract_info_request_timeout, default_request_timeout, long_error_duration,
     request_cache_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
     safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
-    token_info_cache_duration, token_info_request_timeout,
+    token_cache_size_count, token_info_cache_duration, token_info_request_timeout,
 };
 use crate::providers::address_info::ContractInfo;
 use crate::utils::context::RequestContext;
@@ -260,7 +260,8 @@ impl DefaultInfoProvider<'_> {
     }
 
     async fn populate_token_cache(&self) -> ApiResult<()> {
-        let url = core_uri!(self, "/v1/tokens/?limit=10000")?;
+        let token_cache_size_count = token_cache_size_count();
+        let url = core_uri!(self, "/v1/tokens/?limit={}", token_cache_size_count)?;
         let request = {
             let mut request = Request::new(url);
             request.timeout(Duration::from_millis(token_info_request_timeout()));
@@ -272,25 +273,35 @@ impl DefaultInfoProvider<'_> {
         let token_key = generate_token_key(self.chain_id);
         for token in data.results.iter() {
             self.cache
-                .insert_in_hash(&token_key, &token.address, &serde_json::to_string(&token)?);
+                .insert_in_hash(&token_key, &token.address, &serde_json::to_string(&token)?)
+                .await;
         }
         Ok(())
     }
 
     async fn check_token_cache(&self) -> ApiResult<()> {
         let token_key = generate_token_key(&self.chain_id);
-        if self.cache.has_key(&token_key) {
+        if self.cache.has_key(&token_key).await {
             return Ok(());
         }
-        self.cache.insert_in_hash(&token_key, "state", "populating");
+        self.cache
+            .insert_in_hash(&token_key, "state", "populating")
+            .await;
         let result = self.populate_token_cache().await;
         if result.is_ok() {
             self.cache
-                .expire_entity(&token_key, token_info_cache_duration());
-            self.cache.insert_in_hash(&token_key, "state", "populated");
+                .expire_entity(&token_key, token_info_cache_duration())
+                .await;
+            self.cache
+                .insert_in_hash(&token_key, "state", "populated")
+                .await;
         } else {
-            self.cache.expire_entity(&token_key, short_error_duration());
-            self.cache.insert_in_hash(&token_key, "state", "errored");
+            self.cache
+                .expire_entity(&token_key, short_error_duration())
+                .await;
+            self.cache
+                .insert_in_hash(&token_key, "state", "errored")
+                .await;
         }
         result
     }
@@ -300,6 +311,7 @@ impl DefaultInfoProvider<'_> {
         match self
             .cache
             .get_from_hash(&generate_token_key(&self.chain_id), &token)
+            .await
         {
             Some(cached) => Ok(Some(serde_json::from_str::<TokenInfo>(&cached)?)),
             None => Ok(None),

@@ -8,8 +8,8 @@ use mockall::predicate::*;
 use mockall::Sequence;
 use std::sync::Arc;
 
-#[test]
-fn invalidate_with_empty_payload() {
+#[rocket::async_test]
+async fn invalidate_with_empty_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         details: None,
@@ -27,11 +27,13 @@ fn invalidate_with_empty_payload() {
         .return_const(())
         .with(eq("c_re*0x1230B3d59858296A31053C1b8562Ecf89A2f888b*"));
 
-    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload)
+        .await
+        .unwrap();
 }
 
-#[test]
-fn invalidate_new_confirmation_payload() {
+#[rocket::async_test]
+async fn invalidate_new_confirmation_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         details: Some(PayloadDetails::NewConfirmation(NewConfirmation {
@@ -62,11 +64,13 @@ fn invalidate_new_confirmation_payload() {
         ))
         .in_sequence(&mut sequence);
 
-    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload)
+        .await
+        .unwrap();
 }
 
-#[test]
-fn invalidate_executed_multisig_transaction_payload() {
+#[rocket::async_test]
+async fn invalidate_executed_multisig_transaction_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         details: Some(PayloadDetails::ExecutedMultisigTransaction(
@@ -100,11 +104,13 @@ fn invalidate_executed_multisig_transaction_payload() {
         ))
         .in_sequence(&mut sequence);
 
-    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload)
+        .await
+        .unwrap();
 }
 
-#[test]
-fn invalidate_pending_multisig_transaction_payload() {
+#[rocket::async_test]
+async fn invalidate_pending_multisig_transaction_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
         details: Some(PayloadDetails::PendingMultisigTransaction(
@@ -135,5 +141,7 @@ fn invalidate_pending_multisig_transaction_payload() {
         ))
         .in_sequence(&mut sequence);
 
-    invalidate_caches(Arc::new(mock_cache), &payload).unwrap();
+    invalidate_caches(Arc::new(mock_cache), &payload)
+        .await
+        .unwrap();
 }

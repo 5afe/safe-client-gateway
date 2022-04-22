@@ -253,7 +253,6 @@ impl DefaultInfoProvider<'_> {
 
     async fn load_safe_info(&self, safe: String) -> ApiResult<Option<SafeInfo>> {
         let url = core_uri!(self, "/v1/safes/{}/", safe)?;
-        log::error!("SAFE INFO REQ URL: {:#?}", &url);
         let data = RequestCached::new(url, &self.client, &self.cache)
             .cache_duration(safe_info_cache_duration())
             .error_cache_duration(short_error_duration())

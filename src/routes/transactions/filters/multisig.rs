@@ -1,7 +1,8 @@
-use super::QueryParam;
+use std::collections::HashMap;
+use std::fmt;
+
 use rocket::form::FromForm;
 use rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
-use std::fmt;
 
 #[derive(FromForm, Debug)]
 pub struct MultisigFilters {
@@ -12,31 +13,30 @@ pub struct MultisigFilters {
     pub nonce: Option<String>,
 }
 
-impl QueryParam for MultisigFilters {
-    fn as_query_param(&self) -> String {
-        let mut query_params = String::new();
+impl From<MultisigFilters> for HashMap<String, String> {
+    fn from(multisig_filters: MultisigFilters) -> Self {
+        let mut map: HashMap<String, String> = HashMap::new();
 
-        if let Some(execution_date_gte) = &self.execution_date_gte {
-            query_params.push_str(&format!("execution_date__gte={}&", execution_date_gte))
+        if let Some(execution_date_gte) = multisig_filters.execution_date_gte {
+            map.push("execution_date__gte".to_string(), execution_date_gte);
         }
 
-        if let Some(execution_date_lte) = &self.execution_date_lte {
-            query_params.push_str(&format!("execution_date__lte={}&", execution_date_lte))
+        if let Some(execution_date_lte) = multisig_filters.execution_date_lte {
+            map.push("execution_date__lte".to_string(), execution_date_lte);
         }
 
-        if let Some(to) = &self.to {
-            query_params.push_str(&format!("to={}&", to))
+        if let Some(to) = multisig_filters.to {
+            map.push("to".to_string(), to);
         }
 
-        if let Some(value) = &self.value {
-            query_params.push_str(&format!("value={}&", value))
+        if let Some(value) = multisig_filters.value {
+            map.push("value".to_string(), value);
         }
 
-        if let Some(nonce) = &self.nonce {
-            query_params.push_str(&format!("nonce={}&", nonce))
+        if let Some(nonce) = multisig_filters.nonce {
+            map.push("nonce".to_string(), nonce);
         }
-
-        return query_params;
+        return map;
     }
 }
 

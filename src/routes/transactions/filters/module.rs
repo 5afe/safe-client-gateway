@@ -1,7 +1,8 @@
-use super::QueryParam;
+use std::collections::HashMap;
+use std::fmt;
+
 use rocket::form::FromForm;
 use rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
-use std::fmt;
 
 #[derive(FromForm, Debug)]
 pub struct ModuleFilters {
@@ -9,19 +10,19 @@ pub struct ModuleFilters {
     pub module: Option<String>,
 }
 
-impl QueryParam for ModuleFilters {
-    fn as_query_param(&self) -> String {
-        let mut query_params = String::new();
+impl From<ModuleFilters> for HashMap<String, String> {
+    fn from(module_filters: ModuleFilters) -> Self {
+        let mut map: HashMap<String, String> = HashMap::new();
 
-        if let Some(to) = &self.to {
-            query_params.push_str(&format!("to={}&", to))
+        if let Some(to) = module_filters.to {
+            map.push("to".to_string(), to);
         }
 
-        if let Some(module) = &self.module {
-            query_params.push_str(&format!("module={}&", module))
+        if let Some(offset) = module_filters.offset {
+            map.push("offset".to_string(), offset);
         }
 
-        return query_params;
+        return map;
     }
 }
 

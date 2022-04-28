@@ -1,3 +1,6 @@
+use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
+use itertools::Itertools;
+
 use crate::cache::cache_operations::RequestCached;
 use crate::common::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::common::models::page::{Page, PageMetadata};
@@ -10,8 +13,6 @@ use crate::routes::transactions::models::summary::{
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::urls::build_absolute_uri;
-use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
-use itertools::Itertools;
 
 pub async fn get_history_transactions(
     context: &RequestContext,
@@ -33,9 +34,14 @@ pub async fn get_history_transactions(
     let page_metadata = adjust_page_meta(&incoming_page_metadata);
     let extended_page_cursor = Some(page_metadata.to_url_string());
 
-    let backend_paged_txs =
-        fetch_backend_paged_txs(context, &info_provider, safe_address, &extended_page_cursor)
-            .await?;
+    let backend_paged_txs = fetch_backend_paged_txs(
+        context,
+        &info_provider,
+        safe_address,
+        &extended_page_cursor,
+        chain_id,
+    )
+    .await?;
     let mut backend_txs_iter = backend_paged_txs.results.into_iter();
     let prev_page_timestamp = if page_metadata.offset != 0 {
         peek_timestamp_and_remove_item(
@@ -54,7 +60,7 @@ pub async fn get_history_transactions(
         backend_txs_to_summary_txs(&mut backend_txs_iter, &info_provider, safe_address).await?;
     if backend_paged_txs.next.is_none() {
         if let Ok(creation_tx) =
-            get_creation_transaction_summary(context, &info_provider, safe_address).await
+            get_creation_transaction_summary(context, &info_provider, safe_address, chain_id).await
         {
             service_txs.push(creation_tx);
         }
@@ -132,6 +138,7 @@ async fn fetch_backend_paged_txs(
     info_provider: &impl InfoProvider,
     safe_address: &str,
     cursor: &Option<String>,
+    chain_id: &str,
 ) -> ApiResult<Page<Transaction>> {
     let page_metadata = PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
     let url = core_uri!(
@@ -143,7 +150,7 @@ async fn fetch_backend_paged_txs(
     log::debug!("request URL: {}", &url);
     log::debug!("cursor: {:#?}", &cursor);
     log::debug!("page_metadata: {:#?}", &page_metadata);
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, chain_id)
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
@@ -231,10 +238,11 @@ pub(super) async fn get_creation_transaction_summary(
     context: &RequestContext,
     info_provider: &(impl InfoProvider + Sync),
     safe: &String,
+    chain_id: &str,
 ) -> ApiResult<TransactionSummary> {
     let url = core_uri!(info_provider, "/v1/safes/{}/creation/", safe)?;
     debug!("{}", &url);
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, chain_id)
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;

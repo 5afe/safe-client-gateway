@@ -80,7 +80,7 @@ pub async fn get_contract(
     chain_id: String,
     contract_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, &chain_id)
         .resp_generator(|| handlers::get_contract(&context, &chain_id, &contract_address))
         .execute()
         .await

@@ -15,7 +15,7 @@ pub async fn safe_apps(
         chain_id,
         client_url.as_deref().unwrap_or("")
     );
-    let data = RequestCached::new_from_context(url, &context)
+    let data = RequestCached::new_from_context(url, &context, chain_id)
         .cache_duration(safe_apps_cache_duration())
         .execute()
         .await?;

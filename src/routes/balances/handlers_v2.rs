@@ -16,7 +16,7 @@ use crate::config::{
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::balances::models::{Balance, Balances, TokenPrice};
-use crate::utils::context::RequestContext;
+use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
 use crate::utils::errors::ApiResult;
 
 pub async fn balances(
@@ -28,7 +28,7 @@ pub async fn balances(
     exclude_spam: bool,
 ) -> ApiResult<Balances> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
-    let fiat_info_provider = FiatInfoProvider::new(context);
+    let fiat_info_provider = FiatInfoProvider::new(context, chain_id);
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/balances/?trusted={}&exclude_spam={}",
@@ -37,7 +37,7 @@ pub async fn balances(
         exclude_spam
     )?;
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, chain_id)
         .cache_duration(balances_core_request_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()
@@ -135,7 +135,7 @@ async fn get_token_usd_rate(
 ) -> ApiResult<TokenPrice> {
     let url = core_uri!(info_provider, "/v1/tokens/{}/prices/usd/", token_address)?;
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, UNSPECIFIED_CHAIN)
         .cache_duration(token_price_cache_duration())
         .execute()
         .await?;

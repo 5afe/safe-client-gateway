@@ -1,14 +1,20 @@
+use std::sync::Arc;
+
+use rocket::request::{self, FromRequest, Request};
+
 use crate::cache::Cache;
 use crate::config::scheme;
 use crate::utils::http_client::HttpClient;
-use rocket::request::{self, FromRequest, Request};
-use std::sync::Arc;
+use crate::ServiceCache;
+
+pub(crate) const UNSPECIFIED_CHAIN: &'static str = "UNSPECIFIED";
 
 pub struct RequestContext {
     pub request_id: String,
     pub host: String,
     http_client: Arc<dyn HttpClient>,
     cache: Arc<dyn Cache>,
+    mainnet_cache: Arc<ServiceCache>,
 }
 
 impl RequestContext {
@@ -16,8 +22,11 @@ impl RequestContext {
         self.http_client.clone()
     }
 
-    pub fn cache(&self) -> Arc<dyn Cache> {
-        self.cache.clone()
+    pub fn cache(&self, chain_id: &str) -> Arc<dyn Cache> {
+        match chain_id {
+            "0" => self.mainnet_cache.clone(),
+            _ => self.cache.clone(),
+        }
     }
 
     #[cfg(test)]
@@ -26,6 +35,7 @@ impl RequestContext {
         host: String,
         http_client: &Arc<dyn HttpClient>,
         cache: &Arc<dyn Cache>,
+        chain_cache: &Arc<ServiceCache>,
     ) -> Self {
         cache.invalidate_pattern("*").await;
 
@@ -34,6 +44,7 @@ impl RequestContext {
             host,
             http_client: http_client.clone(),
             cache: cache.clone(),
+            mainnet_cache: chain_cache.clone(),
         }
     }
 }
@@ -47,6 +58,11 @@ impl<'r> FromRequest<'r> for RequestContext {
             .rocket()
             .state::<Arc<dyn Cache>>()
             .expect("ServiceCache unavailable. Is it added to rocket instance?")
+            .clone();
+        let mainnet_cache = request
+            .rocket()
+            .state::<Arc<ServiceCache>>()
+            .expect("Mainnet ServiceCache unavailable. Is it added to rocket instance?")
             .clone();
         let http_client = request
             .rocket()
@@ -66,6 +82,7 @@ impl<'r> FromRequest<'r> for RequestContext {
             host,
             cache,
             http_client,
+            mainnet_cache,
         });
     }
 }

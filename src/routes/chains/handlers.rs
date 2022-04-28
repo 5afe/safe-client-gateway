@@ -4,7 +4,7 @@ use crate::common::models::page::{Page, PageMetadata};
 use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::chains::models::ChainInfo as ServiceChainInfo;
-use crate::utils::context::RequestContext;
+use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
 use crate::utils::errors::ApiResult;
 use crate::utils::urls::build_absolute_uri;
 
@@ -23,7 +23,7 @@ pub async fn get_chains_paginated(
             .to_url_string()
     );
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, UNSPECIFIED_CHAIN)
         .request_timeout(chain_info_request_timeout())
         .cache_duration(chain_info_cache_duration())
         .execute()

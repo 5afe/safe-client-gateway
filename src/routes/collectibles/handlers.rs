@@ -24,7 +24,7 @@ pub async fn collectibles(
     )?;
 
     Ok(content::Json(
-        RequestCached::new_from_context(url, &context)
+        RequestCached::new_from_context(url, &context, chain_id)
             .request_timeout(collectibles_request_timeout())
             .execute()
             .await?,

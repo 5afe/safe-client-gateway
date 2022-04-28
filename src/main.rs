@@ -4,6 +4,19 @@
 #[macro_use]
 extern crate rocket;
 
+use std::sync::Arc;
+
+use dotenv::dotenv;
+use rocket::{Build, Rocket};
+
+use routes::active_routes;
+use utils::cors::CORS;
+
+use crate::cache::redis::{create_service_cache, create_service_cache_mainnet, ServiceCache};
+use crate::cache::Cache;
+use crate::routes::error_catchers;
+use crate::utils::http_client::{setup_http_client, HttpClient};
+
 #[doc(hidden)]
 #[macro_use]
 pub mod macros;
@@ -26,16 +39,6 @@ mod utils;
 #[cfg(test)]
 mod tests;
 
-use crate::cache::redis::create_service_cache;
-use crate::cache::Cache;
-use crate::routes::error_catchers;
-use crate::utils::http_client::{setup_http_client, HttpClient};
-use dotenv::dotenv;
-use rocket::{Build, Rocket};
-use routes::active_routes;
-use std::sync::Arc;
-use utils::cors::CORS;
-
 #[doc(hidden)]
 #[launch]
 async fn rocket() -> Rocket<Build> {
@@ -44,11 +47,13 @@ async fn rocket() -> Rocket<Build> {
 
     let client = setup_http_client();
     let cache = create_service_cache().await;
+    let mainnet_cache = create_service_cache_mainnet().await;
 
     rocket::build()
         .mount("/", active_routes())
         .register("/", error_catchers())
         .manage(Arc::new(cache) as Arc<dyn Cache>)
+        .manage(Arc::new(mainnet_cache) as Arc<ServiceCache>) // This is incredibly hacky and should be removed as soon as a different redis instance is not required
         .manage(Arc::new(client) as Arc<dyn HttpClient>)
         .attach(monitoring::performance::PerformanceMonitor())
         .attach(CORS())

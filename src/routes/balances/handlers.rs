@@ -5,7 +5,7 @@ use crate::config::{balances_cache_duration, balances_request_timeout};
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::balances::models::{Balance, Balances};
-use crate::utils::context::RequestContext;
+use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
 use crate::utils::errors::ApiResult;
 use bigdecimal::{BigDecimal, ToPrimitive};
 use std::cmp::Ordering;
@@ -19,7 +19,7 @@ pub async fn balances(
     exclude_spam: bool,
 ) -> ApiResult<Balances> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
-    let fiat_info_provider = FiatInfoProvider::new(&context);
+    let fiat_info_provider = FiatInfoProvider::new(&context, &chain_id);
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/balances/usd/?trusted={}&exclude_spam={}",
@@ -28,7 +28,7 @@ pub async fn balances(
         exclude_spam
     )?;
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, &chain_id)
         .cache_duration(balances_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()
@@ -69,7 +69,7 @@ pub async fn balances(
 }
 
 pub async fn fiat_codes(context: &RequestContext) -> ApiResult<Vec<String>> {
-    let info_provider = FiatInfoProvider::new(&context);
+    let info_provider = FiatInfoProvider::new(&context, UNSPECIFIED_CHAIN);
     let mut fiat_codes = info_provider.available_currency_codes().await?;
 
     let usd_index = fiat_codes.iter().position(|it| it.eq("USD")).unwrap();

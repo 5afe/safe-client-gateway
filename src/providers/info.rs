@@ -1,3 +1,17 @@
+use std::collections::HashMap;
+use std::future::Future;
+use std::sync::Arc;
+use std::time::Duration;
+
+use lazy_static::lazy_static;
+use mockall::automock;
+use rocket::futures::TryFutureExt;
+use rocket::tokio::sync::Mutex;
+use semver::Version;
+use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
+use serde_json;
+
 use crate::cache::cache_operations::RequestCached;
 use crate::cache::Cache;
 use crate::common::models::addresses::AddressEx;
@@ -17,18 +31,7 @@ use crate::utils::errors::ApiResult;
 use crate::utils::http_client::{HttpClient, Request};
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
-use lazy_static::lazy_static;
-use mockall::automock;
-use rocket::futures::TryFutureExt;
-use rocket::tokio::sync::Mutex;
-use semver::Version;
-use serde::de::DeserializeOwned;
-use serde::{Deserialize, Serialize};
-use serde_json;
-use std::collections::HashMap;
-use std::future::Future;
-use std::sync::Arc;
-use std::time::Duration;
+use crate::ServiceCache;
 
 pub const TOKENS_KEY_BASE: &'static str = "dip_ti";
 lazy_static! {
@@ -113,6 +116,7 @@ pub struct DefaultInfoProvider<'p> {
     pub chain_id: &'p str,
     client: Arc<dyn HttpClient>,
     cache: Arc<dyn Cache>,
+    mainnet_cache: Arc<dyn Cache>,
     // Mutex is an async Mutex, meaning that the lock is non-blocking
     safe_cache: Mutex<HashMap<String, Option<SafeInfo>>>,
     token_cache: Mutex<HashMap<String, Option<TokenInfo>>>,
@@ -208,7 +212,10 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     fn cache(&self) -> Arc<dyn Cache> {
-        self.cache.clone()
+        match self.chain_id {
+            "0" => self.mainnet_cache.clone(),
+            _ => self.cache.clone(),
+        }
     }
 }
 
@@ -217,7 +224,8 @@ impl<'a> DefaultInfoProvider<'a> {
         DefaultInfoProvider {
             chain_id,
             client: context.http_client(),
-            cache: context.cache(),
+            cache: context.cache(chain_id),
+            mainnet_cache: context.cache(chain_id),
             safe_cache: Default::default(),
             token_cache: Default::default(),
             chain_cache: Default::default(),

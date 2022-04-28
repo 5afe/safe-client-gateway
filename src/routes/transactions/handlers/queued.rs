@@ -41,7 +41,7 @@ pub async fn get_queued_transactions(
         display_trusted_only
     )?;
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, chain_id)
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;

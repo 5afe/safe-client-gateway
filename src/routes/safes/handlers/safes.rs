@@ -149,7 +149,7 @@ pub async fn get_owners_for_safe(
     let info_provider = DefaultInfoProvider::new(&chain_id, context);
 
     let url = core_uri!(info_provider, "/v1/owners/{}/safes/", owner_address)?;
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, chain_id)
         .cache_duration(owners_for_safes_cache_duration())
         .execute()
         .await?;

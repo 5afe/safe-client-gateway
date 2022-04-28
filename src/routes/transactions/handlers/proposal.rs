@@ -1,7 +1,7 @@
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern, InvalidationScope};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::models::requests::MultisigTransactionRequest;
-use crate::utils::context::RequestContext;
+use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
 use serde_json::json;
@@ -30,7 +30,7 @@ pub async fn submit_confirmation(
     client.post(request).await?;
     Invalidate::new(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_tx_hash)),
-        context.cache(),
+        context.cache(&chain_id),
     )
     .execute()
     .await;
@@ -61,7 +61,7 @@ pub async fn propose_transaction(
 
     Invalidate::new(
         InvalidationPattern::Any(InvalidationScope::Both, String::from(safe_address)),
-        context.cache(),
+        context.cache(UNSPECIFIED_CHAIN),
     )
     .execute()
     .await;
@@ -70,7 +70,7 @@ pub async fn propose_transaction(
             InvalidationScope::Both,
             String::from(&transaction_request.safe_tx_hash),
         ),
-        context.cache(),
+        context.cache(&chain_id),
     )
     .execute()
     .await;

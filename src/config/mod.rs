@@ -8,6 +8,10 @@ pub fn redis_uri() -> String {
     env::var("REDIS_URI").expect("REDIS_URI missing in env")
 }
 
+pub fn redis_uri_mainnet() -> String {
+    env::var("REDIS_URI_MAINNET").expect("REDIS_URI_MAINNET missing in env")
+}
+
 pub fn base_config_service_uri() -> String {
     format!(
         "{}{}",

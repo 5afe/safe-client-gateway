@@ -5,7 +5,7 @@ use crate::common::models::backend::hooks::Payload;
 use crate::common::routes::authorization::AuthorizationToken;
 use crate::config::webhook_token;
 use crate::routes::hooks::handlers::invalidate_caches;
-use crate::utils::context::RequestContext;
+use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
 use crate::utils::errors::ApiResult;
 
 #[post("/v1/hook/update/<token>", format = "json", data = "<update>")]
@@ -17,7 +17,7 @@ pub async fn update(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    invalidate_caches(context.cache(), &update).await
+    invalidate_caches(context.cache(UNSPECIFIED_CHAIN), &update).await
 }
 
 #[post(
@@ -45,7 +45,7 @@ pub async fn post_hooks_events(
     _token: AuthorizationToken,
     payload: Json<Payload>,
 ) -> ApiResult<()> {
-    invalidate_caches(context.cache(), &payload).await
+    invalidate_caches(context.cache(UNSPECIFIED_CHAIN), &payload).await
 }
 
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]
@@ -57,7 +57,7 @@ pub async fn flush(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Invalidate::new(invalidation_pattern.0, context.cache())
+    Invalidate::new(invalidation_pattern.0, context.cache(UNSPECIFIED_CHAIN))
         .execute()
         .await;
     Ok(())
@@ -69,7 +69,7 @@ pub async fn post_flush_events(
     _token: AuthorizationToken,
     invalidation_pattern: Json<InvalidationPattern>,
 ) -> ApiResult<()> {
-    Invalidate::new(invalidation_pattern.0, context.cache())
+    Invalidate::new(invalidation_pattern.0, context.cache(UNSPECIFIED_CHAIN))
         .execute()
         .await;
     Ok(())

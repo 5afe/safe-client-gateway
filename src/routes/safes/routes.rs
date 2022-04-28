@@ -16,7 +16,7 @@ pub async fn get_safe_info(
     chain_id: String,
     safe_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, &chain_id)
         .resp_generator(|| get_safe_info_ex(&context, &chain_id, &safe_address))
         .execute()
         .await
@@ -32,7 +32,7 @@ pub async fn get_owners(
     chain_id: String,
     owner_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, &chain_id)
         .resp_generator(|| get_owners_for_safe(&context, &chain_id, &owner_address))
         .duration(owners_for_safes_cache_duration())
         .execute()

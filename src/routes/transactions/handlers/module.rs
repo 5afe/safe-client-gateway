@@ -3,7 +3,6 @@ use crate::common::models::backend::transactions::ModuleTransaction;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::filters::module::ModuleFilters;
 use crate::routes::transactions::handlers::offset_page_meta;
 use crate::routes::transactions::models::summary::{ConflictType, TransactionListItem};
 use crate::utils::context::RequestContext;
@@ -14,7 +13,7 @@ pub async fn get_module_transactions(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
-    cursor: &Option<String>,
+    cursor: Option<String>,
     filters: &ModuleFilters,
 ) -> ApiResult<Page<TransactionListItem>> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);

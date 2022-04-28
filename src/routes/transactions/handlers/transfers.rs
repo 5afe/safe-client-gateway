@@ -1,11 +1,9 @@
 use std::collections::HashMap;
-use std::default::default;
 
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
-use crate::routes::transactions::filters::transfer::TransferFilters;
 use crate::routes::transactions::handlers::offset_page_meta;
 use crate::routes::transactions::models::summary::{
     ConflictType, TransactionListItem, TransactionSummary,
@@ -21,8 +19,8 @@ pub async fn get_incoming_transfers(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
-    cursor: &Option<String>,
-    filters: &HashMap<String, String>,
+    cursor: Option<String>,
+    filters: HashMap<String, String>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
@@ -32,7 +30,6 @@ pub async fn get_incoming_transfers(
     )?;
 
     let page_metadata_params: HashMap<String, String> = cursor
-        .as_ref()
         .map(|c| PageMetadata::from_cursor(&c).into())
         .unwrap_or(HashMap::new());
 
@@ -57,7 +54,7 @@ pub async fn get_incoming_transfers(
             safe_address,
             page_meta.as_ref(),
             backend_txs.next,
-            filters,
+            &filters,
             1,
         ),
         previous: build_cursor(
@@ -66,7 +63,7 @@ pub async fn get_incoming_transfers(
             safe_address,
             page_meta.as_ref(),
             backend_txs.previous,
-            filters,
+            &filters,
             -1,
         ),
         results: service_txs,
@@ -102,7 +99,7 @@ fn build_cursor(
     safe_address: &str,
     page_meta: Option<&PageMetadata>,
     backend_page_url: Option<String>,
-    filters: &TransferFilters,
+    filters: &HashMap<String, String>,
     direction: i64,
 ) -> Option<String> {
     backend_page_url.as_ref().map(|_| {
@@ -115,13 +112,7 @@ fn build_cursor(
                 chain_id = chain_id,
                 safe_address = safe_address,
                 cursor = cursor,
-                filters = (
-                    filters.execution_date_gte.to_owned(),
-                    filters.execution_date_lte.to_owned(),
-                    filters.to.to_owned(),
-                    filters.value.to_owned(),
-                    filters.token_address.to_owned()
-                )
+                filters = filters.to_owned(),
             )),
         )
     })

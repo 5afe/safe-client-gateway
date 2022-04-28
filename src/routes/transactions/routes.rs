@@ -1,9 +1,6 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::cache::manager::ChainCache;
 use crate::config::tx_queued_cache_duration;
-use crate::routes::transactions::filters::module::ModuleFilters;
-use crate::routes::transactions::filters::multisig::MultisigFilters;
-use crate::routes::transactions::filters::transfer::TransferFilters;
 use crate::routes::transactions::handlers::{details, history, proposal, queued};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
@@ -12,6 +9,7 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
+use std::collections::HashMap;
 
 use super::handlers::{module, multisig, transfers};
 
@@ -241,11 +239,11 @@ pub async fn get_incoming_transfers(
     chain_id: String,
     safe_address: String,
     cursor: Option<String>,
-    filters: TransferFilters,
+    filters: HashMap<String, String>,
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(&context)
         .resp_generator(|| {
-            transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
+            transfers::get_incoming_transfers(&context, &chain_id, &safe_address, cursor, &filters)
         })
         .execute()
         .await
@@ -261,7 +259,7 @@ pub async fn get_module_transactions(
 ) -> ApiResult<content::Json<String>> {
     CacheResponse::new(&context)
         .resp_generator(|| {
-            module::get_module_transactions(&context, &chain_id, &safe_address, &cursor, &filters)
+            module::get_module_transactions(&context, &chain_id, &safe_address, cursor, &filters)
         })
         .execute()
         .await

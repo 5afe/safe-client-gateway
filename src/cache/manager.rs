@@ -29,8 +29,8 @@ pub struct DefaultRedisCacheManager {
 
 pub async fn create_cache_manager() -> DefaultRedisCacheManager {
     DefaultRedisCacheManager {
-        mainnet_cache: Arc::new(new_service_cache().await),
-        default_cache: Arc::new(new_service_cache_mainnet().await),
+        mainnet_cache: Arc::new(new_service_cache_mainnet().await),
+        default_cache: Arc::new(new_service_cache().await),
     }
 }
 

@@ -14,7 +14,7 @@ pub struct RequestContext {
     pub host: String,
     http_client: Arc<dyn HttpClient>,
     cache: Arc<dyn Cache>,
-    mainnet_cache: Arc<ServiceCache>,
+    mainnet_cache: Arc<dyn Cache>,
 }
 
 impl RequestContext {

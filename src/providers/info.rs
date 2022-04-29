@@ -31,7 +31,6 @@ use crate::utils::errors::ApiResult;
 use crate::utils::http_client::{HttpClient, Request};
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
-use crate::ServiceCache;
 
 pub const TOKENS_KEY_BASE: &'static str = "dip_ti";
 lazy_static! {
@@ -116,7 +115,6 @@ pub struct DefaultInfoProvider<'p> {
     pub chain_id: &'p str,
     client: Arc<dyn HttpClient>,
     cache: Arc<dyn Cache>,
-    mainnet_cache: Arc<dyn Cache>,
     // Mutex is an async Mutex, meaning that the lock is non-blocking
     safe_cache: Mutex<HashMap<String, Option<SafeInfo>>>,
     token_cache: Mutex<HashMap<String, Option<TokenInfo>>>,
@@ -212,10 +210,7 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     fn cache(&self) -> Arc<dyn Cache> {
-        match self.chain_id {
-            "0" => self.mainnet_cache.clone(),
-            _ => self.cache.clone(),
-        }
+        self.cache.clone()
     }
 }
 
@@ -225,7 +220,6 @@ impl<'a> DefaultInfoProvider<'a> {
             chain_id,
             client: context.http_client(),
             cache: context.cache(chain_id),
-            mainnet_cache: context.cache(chain_id),
             safe_cache: Default::default(),
             token_cache: Default::default(),
             chain_cache: Default::default(),

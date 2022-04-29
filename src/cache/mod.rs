@@ -1,12 +1,13 @@
+use mockall::automock;
+
 mod cache_op_executors;
 pub mod cache_operations;
 mod inner_cache;
+pub mod manager;
 pub mod redis;
 
 #[cfg(test)]
 mod tests;
-
-use mockall::automock;
 
 const CACHE_REQS_PREFIX: &'static str = "c_reqs";
 const CACHE_RESP_PREFIX: &'static str = "c_resp";

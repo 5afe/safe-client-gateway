@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::transactions::MultisigTransaction;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
@@ -41,7 +42,7 @@ pub async fn get_queued_transactions(
         display_trusted_only
     )?;
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id.as_str()))
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;

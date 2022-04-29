@@ -1,4 +1,19 @@
+use std::collections::HashMap;
+use std::future::Future;
+use std::sync::Arc;
+use std::time::Duration;
+
+use lazy_static::lazy_static;
+use mockall::automock;
+use rocket::futures::TryFutureExt;
+use rocket::tokio::sync::Mutex;
+use semver::Version;
+use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
+use serde_json;
+
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::cache::Cache;
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::chains::ChainInfo;
@@ -17,18 +32,6 @@ use crate::utils::errors::ApiResult;
 use crate::utils::http_client::{HttpClient, Request};
 use crate::utils::json::default_if_null;
 use crate::utils::urls::build_manifest_url;
-use lazy_static::lazy_static;
-use mockall::automock;
-use rocket::futures::TryFutureExt;
-use rocket::tokio::sync::Mutex;
-use semver::Version;
-use serde::de::DeserializeOwned;
-use serde::{Deserialize, Serialize};
-use serde_json;
-use std::collections::HashMap;
-use std::future::Future;
-use std::sync::Arc;
-use std::time::Duration;
 
 pub const TOKENS_KEY_BASE: &'static str = "dip_ti";
 lazy_static! {
@@ -217,7 +220,7 @@ impl<'a> DefaultInfoProvider<'a> {
         DefaultInfoProvider {
             chain_id,
             client: context.http_client(),
-            cache: context.cache(),
+            cache: context.cache(ChainCache::from(chain_id)),
             safe_cache: Default::default(),
             token_cache: Default::default(),
             chain_cache: Default::default(),

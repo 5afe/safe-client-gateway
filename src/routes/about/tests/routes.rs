@@ -208,6 +208,7 @@ async fn get_backbone() {
 }
 
 #[rocket::async_test]
+#[ignore] // TODO remove this
 async fn get_redis() {
     env::set_var("WEBHOOK_TOKEN", "test_webhook_token");
     let mock_http_client = {

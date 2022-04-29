@@ -1,13 +1,16 @@
+use std::collections::HashMap;
+use std::sync::Arc;
+
+use bigdecimal::BigDecimal;
+use serde::Deserialize;
+
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::cache::Cache;
 use crate::config::{base_exchange_api_uri, exchange_api_cache_duration, short_error_duration};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::HttpClient;
-use bigdecimal::BigDecimal;
-use serde::Deserialize;
-use std::collections::HashMap;
-use std::sync::Arc;
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct Exchange {
@@ -24,7 +27,7 @@ impl FiatInfoProvider {
     pub fn new(context: &RequestContext) -> Self {
         FiatInfoProvider {
             client: context.http_client(),
-            cache: context.cache(),
+            cache: context.cache(ChainCache::Other),
         }
     }
 

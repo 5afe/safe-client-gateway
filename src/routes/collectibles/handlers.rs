@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::config::collectibles_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::RequestContext;
@@ -24,7 +25,7 @@ pub async fn collectibles(
     )?;
 
     Ok(content::Json(
-        RequestCached::new_from_context(url, &context)
+        RequestCached::new_from_context(url, &context, ChainCache::from(chain_id))
             .request_timeout(collectibles_request_timeout())
             .execute()
             .await?,

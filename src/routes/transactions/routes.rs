@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::CacheResponse;
+use crate::cache::manager::ChainCache;
 use crate::config::tx_queued_cache_duration;
 use crate::routes::transactions::handlers::{details, history, proposal, queued};
 use crate::routes::transactions::models::requests::{
@@ -31,7 +32,7 @@ pub async fn get_transactions(
     chain_id: String,
     details_id: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| details::get_transactions_details(&context, &chain_id, &details_id))
         .execute()
         .await
@@ -76,7 +77,7 @@ pub async fn post_confirmation<'e>(
     )
     .await?;
 
-    let tx_details = CacheResponse::new(&context)
+    let tx_details = CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| details::get_transactions_details(&context, &chain_id, &safe_tx_hash))
         .execute()
         .await;
@@ -123,7 +124,7 @@ pub async fn get_transactions_history(
     cursor: Option<String>,
     timezone_offset: Option<String>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             history::get_history_transactions(
                 &context,
@@ -171,7 +172,7 @@ pub async fn get_transactions_queued(
     timezone_offset: Option<String>,
     trusted: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             queued::get_queued_transactions(
                 &context,
@@ -219,7 +220,7 @@ pub async fn post_transaction<'e>(
 
     proposal::propose_transaction(&context, &chain_id, &safe_address, &request).await?;
 
-    let tx_details = CacheResponse::new(&context)
+    let tx_details = CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             details::get_transactions_details(&context, &chain_id, &request.safe_tx_hash)
         })

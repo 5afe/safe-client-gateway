@@ -1,14 +1,18 @@
+use std::sync::Arc;
+
+use rocket::request::{self, FromRequest, Request};
+
+use crate::cache::manager::ChainCache;
 use crate::cache::Cache;
 use crate::config::scheme;
 use crate::utils::http_client::HttpClient;
-use rocket::request::{self, FromRequest, Request};
-use std::sync::Arc;
+use crate::RedisCacheManager;
 
 pub struct RequestContext {
     pub request_id: String,
     pub host: String,
     http_client: Arc<dyn HttpClient>,
-    cache: Arc<dyn Cache>,
+    cache_manager: Arc<dyn RedisCacheManager>,
 }
 
 impl RequestContext {
@@ -16,8 +20,8 @@ impl RequestContext {
         self.http_client.clone()
     }
 
-    pub fn cache(&self) -> Arc<dyn Cache> {
-        self.cache.clone()
+    pub fn cache(&self, chain_cache: ChainCache) -> Arc<dyn Cache> {
+        self.cache_manager.cache_for_chain(chain_cache)
     }
 
     #[cfg(test)]
@@ -25,15 +29,22 @@ impl RequestContext {
         request_id: String,
         host: String,
         http_client: &Arc<dyn HttpClient>,
-        cache: &Arc<dyn Cache>,
+        cache_manager: &Arc<dyn RedisCacheManager>,
     ) -> Self {
-        cache.invalidate_pattern("*").await;
+        cache_manager
+            .cache_for_chain(ChainCache::Mainnet)
+            .invalidate_pattern("*")
+            .await;
+        cache_manager
+            .cache_for_chain(ChainCache::Other)
+            .invalidate_pattern("*")
+            .await;
 
         RequestContext {
             request_id,
             host,
             http_client: http_client.clone(),
-            cache: cache.clone(),
+            cache_manager: cache_manager.clone(),
         }
     }
 }
@@ -43,10 +54,10 @@ impl<'r> FromRequest<'r> for RequestContext {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let cache = request
+        let cache_manager = request
             .rocket()
-            .state::<Arc<dyn Cache>>()
-            .expect("ServiceCache unavailable. Is it added to rocket instance?")
+            .state::<Arc<dyn RedisCacheManager>>()
+            .expect("RedisCacheManager unavailable. Is it added to rocket instance?")
             .clone();
         let http_client = request
             .rocket()
@@ -64,7 +75,7 @@ impl<'r> FromRequest<'r> for RequestContext {
         return request::Outcome::Success(RequestContext {
             request_id: uri,
             host,
-            cache,
+            cache_manager,
             http_client,
         });
     }

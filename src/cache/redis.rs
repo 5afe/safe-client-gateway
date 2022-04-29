@@ -1,14 +1,20 @@
-use crate::cache::Cache;
-use crate::config::{redis_scan_count, redis_uri};
 use bb8_redis::bb8::{self, Pool, PooledConnection};
 use bb8_redis::redis::{cmd, AsyncCommands, AsyncIter, Cmd, Pipeline, ToRedisArgs};
 use bb8_redis::RedisConnectionManager;
 
+use crate::cache::Cache;
+use crate::config::{redis_scan_count, redis_uri, redis_uri_mainnet};
+
 type RedisPool = Pool<RedisConnectionManager>;
 type RedisConnection<'a> = PooledConnection<'a, RedisConnectionManager>;
 
-async fn create_pool() -> RedisPool {
-    let manager = RedisConnectionManager::new(redis_uri())
+async fn create_pool(for_mainnet: bool) -> RedisPool {
+    let target = if for_mainnet {
+        redis_uri_mainnet()
+    } else {
+        redis_uri()
+    };
+    let manager = RedisConnectionManager::new(target)
         .expect("Establishing connection with redis instance failed");
     bb8::Pool::builder()
         .max_size(15) // default is 10
@@ -19,8 +25,12 @@ async fn create_pool() -> RedisPool {
 
 pub struct ServiceCache(RedisPool);
 
-pub async fn create_service_cache() -> ServiceCache {
-    ServiceCache(create_pool().await)
+pub async fn new_service_cache() -> impl Cache {
+    ServiceCache(create_pool(false).await)
+}
+
+pub async fn new_service_cache_mainnet() -> impl Cache {
+    ServiceCache(create_pool(true).await)
 }
 
 impl ServiceCache {

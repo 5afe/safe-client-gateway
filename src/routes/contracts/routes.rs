@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::CacheResponse;
+use crate::cache::manager::ChainCache;
 use crate::routes::contracts::handlers;
 use crate::routes::contracts::models::DataDecoderRequest;
 use crate::utils::context::RequestContext;
@@ -80,7 +81,7 @@ pub async fn get_contract(
     chain_id: String,
     contract_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| handlers::get_contract(&context, &chain_id, &contract_address))
         .execute()
         .await

@@ -4,6 +4,8 @@ use serde::Deserialize;
 #[serde(tag = "type")]
 pub struct Payload {
     pub address: String,
+    #[serde(rename(deserialize = "chainId"))]
+    pub chain_id: String,
     #[serde(flatten)]
     pub details: Option<PayloadDetails>,
 }

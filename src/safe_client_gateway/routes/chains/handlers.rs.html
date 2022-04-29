@@ -59,7 +59,9 @@
 <span id="54">54</span>
 <span id="55">55</span>
 <span id="56">56</span>
+<span id="57">57</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains::ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page</span>::{<span class="ident">Page</span>, <span class="ident">PageMetadata</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">chain_info_cache_duration</span>, <span class="ident">chain_info_request_timeout</span>};
@@ -84,7 +86,7 @@
             .<span class="ident">to_url_string</span>()
     );
 
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="ident">context</span>)
+    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="ident">context</span>, <span class="ident">ChainCache::Other</span>)
         .<span class="ident">request_timeout</span>(<span class="ident">chain_info_request_timeout</span>())
         .<span class="ident">cache_duration</span>(<span class="ident">chain_info_cache_duration</span>())
         .<span class="ident">execute</span>()

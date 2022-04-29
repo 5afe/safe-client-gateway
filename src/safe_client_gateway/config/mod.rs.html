@@ -215,6 +215,10 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
@@ -223,6 +227,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis_uri</span>() -&gt; <span class="ident">String</span> {
     <span class="ident">env::var</span>(<span class="string">&quot;REDIS_URI&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;REDIS_URI missing in env&quot;</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redis_uri_mainnet</span>() -&gt; <span class="ident">String</span> {
+    <span class="ident">env::var</span>(<span class="string">&quot;REDIS_URI_MAINNET&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;REDIS_URI_MAINNET missing in env&quot;</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base_config_service_uri</span>() -&gt; <span class="ident">String</span> {

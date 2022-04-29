@@ -277,7 +277,9 @@
 <span id="272">272</span>
 <span id="273">273</span>
 <span id="274">274</span>
+<span id="275">275</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions::MultisigTransaction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page</span>::{<span class="ident">Page</span>, <span class="ident">PageMetadata</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::transaction_request_timeout</span>;
@@ -320,7 +322,7 @@
         <span class="ident">display_trusted_only</span>
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="ident">context</span>)
+    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
         .<span class="ident">request_timeout</span>(<span class="ident">transaction_request_timeout</span>())
         .<span class="ident">execute</span>()
         .<span class="kw">await</span><span class="question-mark">?</span>;

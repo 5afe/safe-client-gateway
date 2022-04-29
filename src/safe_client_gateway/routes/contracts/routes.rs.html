@@ -90,7 +90,9 @@
 <span id="85">85</span>
 <span id="86">86</span>
 <span id="87">87</span>
+<span id="88">88</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::contracts::handlers</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::contracts::models::DataDecoderRequest</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
@@ -172,7 +174,7 @@
     <span class="ident">chain_id</span>: <span class="ident">String</span>,
     <span class="ident">contract_address</span>: <span class="ident">String</span>,
 ) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>)
+    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">handlers::get_contract</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">contract_address</span>))
         .<span class="ident">execute</span>()
         .<span class="kw">await</span>

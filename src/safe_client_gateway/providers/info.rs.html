@@ -350,7 +350,25 @@
 <span id="345">345</span>
 <span id="346">346</span>
 <span id="347">347</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
+<span class="kw">use</span> <span class="ident">std::future::Future</span>;
+<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
+
+<span class="kw">use</span> <span class="ident">lazy_static::lazy_static</span>;
+<span class="kw">use</span> <span class="ident">mockall::automock</span>;
+<span class="kw">use</span> <span class="ident">rocket::futures::TryFutureExt</span>;
+<span class="kw">use</span> <span class="ident">rocket::tokio::sync::Mutex</span>;
+<span class="kw">use</span> <span class="ident">semver::Version</span>;
+<span class="kw">use</span> <span class="ident">serde::de::DeserializeOwned</span>;
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">serde_json</span>;
+
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::Cache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains::ChainInfo</span>;
@@ -369,18 +387,6 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client</span>::{<span class="ident">HttpClient</span>, <span class="ident">Request</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::json::default_if_null</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::urls::build_manifest_url</span>;
-<span class="kw">use</span> <span class="ident">lazy_static::lazy_static</span>;
-<span class="kw">use</span> <span class="ident">mockall::automock</span>;
-<span class="kw">use</span> <span class="ident">rocket::futures::TryFutureExt</span>;
-<span class="kw">use</span> <span class="ident">rocket::tokio::sync::Mutex</span>;
-<span class="kw">use</span> <span class="ident">semver::Version</span>;
-<span class="kw">use</span> <span class="ident">serde::de::DeserializeOwned</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">serde_json</span>;
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::future::Future</span>;
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
-<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TOKENS_KEY_BASE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;dip_ti&quot;</span>;
 <span class="macro">lazy_static!</span> {
@@ -569,7 +575,7 @@
         <span class="ident">DefaultInfoProvider</span> {
             <span class="ident">chain_id</span>,
             <span class="ident">client</span>: <span class="ident">context</span>.<span class="ident">http_client</span>(),
-            <span class="ident">cache</span>: <span class="ident">context</span>.<span class="ident">cache</span>(),
+            <span class="ident">cache</span>: <span class="ident">context</span>.<span class="ident">cache</span>(<span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>)),
             <span class="ident">safe_cache</span>: <span class="ident">Default::default</span>(),
             <span class="ident">token_cache</span>: <span class="ident">Default::default</span>(),
             <span class="ident">chain_cache</span>: <span class="ident">Default::default</span>(),

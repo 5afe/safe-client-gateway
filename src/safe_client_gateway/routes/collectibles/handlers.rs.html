@@ -35,7 +35,9 @@
 <span id="30">30</span>
 <span id="31">31</span>
 <span id="32">32</span>
+<span id="33">33</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::collectibles_request_timeout</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
@@ -61,7 +63,7 @@
     )<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(<span class="ident">content::Json</span>(
-        <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>)
+        <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>))
             .<span class="ident">request_timeout</span>(<span class="ident">collectibles_request_timeout</span>())
             .<span class="ident">execute</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>,

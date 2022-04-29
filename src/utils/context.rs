@@ -24,7 +24,7 @@ impl RequestContext {
 
     pub fn cache(&self, chain_id: &str) -> Arc<dyn Cache> {
         match chain_id {
-            "0" => self.mainnet_cache.clone(),
+            "1" => self.mainnet_cache.clone(),
             _ => self.cache.clone(),
         }
     }
@@ -35,7 +35,7 @@ impl RequestContext {
         host: String,
         http_client: &Arc<dyn HttpClient>,
         cache: &Arc<dyn Cache>,
-        chain_cache: &Arc<ServiceCache>,
+        chain_cache: &Arc<dyn Cache>,
     ) -> Self {
         cache.invalidate_pattern("*").await;
 

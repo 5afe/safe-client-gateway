@@ -12,6 +12,7 @@ use std::sync::Arc;
 async fn invalidate_with_empty_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        chain_id: "1".to_string(),
         details: None,
     };
 
@@ -36,6 +37,7 @@ async fn invalidate_with_empty_payload() {
 async fn invalidate_new_confirmation_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        chain_id: "1".to_string(),
         details: Some(PayloadDetails::NewConfirmation(NewConfirmation {
             owner: "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0".to_string(),
             safe_tx_hash: "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621"
@@ -73,6 +75,7 @@ async fn invalidate_new_confirmation_payload() {
 async fn invalidate_executed_multisig_transaction_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        chain_id: "1".to_string(),
         details: Some(PayloadDetails::ExecutedMultisigTransaction(
             ExecutedMultisigTransaction {
                 safe_tx_hash: "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621"
@@ -113,6 +116,7 @@ async fn invalidate_executed_multisig_transaction_payload() {
 async fn invalidate_pending_multisig_transaction_payload() {
     let payload = Payload {
         address: "0x1230B3d59858296A31053C1b8562Ecf89A2f888b".to_string(),
+        chain_id: "1".to_string(),
         details: Some(PayloadDetails::PendingMultisigTransaction(
             PendingMultisigTransaction {
                 safe_tx_hash: "0x65df8a1e5a40703d9c67d5df6f9b552d3830faf0507c3d7350ba3764d3a68621"

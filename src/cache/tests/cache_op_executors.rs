@@ -3,7 +3,8 @@ use std::sync::Arc;
 use crate::cache::cache_operations::RequestCached;
 use crate::cache::redis::create_service_cache;
 use crate::cache::Cache;
-use crate::utils::context::RequestContext;
+use crate::create_service_cache_mainnet;
+use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{HttpClient, MockHttpClient, Response};
 use serde_json::json;
@@ -27,12 +28,14 @@ async fn error_from_backend_deserialization() {
         }))
     });
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
+    let mainnet_cache = Arc::new(create_service_cache_mainnet().await) as Arc<dyn Cache>;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),
         "host".to_string(),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
+        &mainnet_cache,
     )
     .await;
     let expected = Err(ApiError::new(
@@ -47,7 +50,8 @@ async fn error_from_backend_deserialization() {
         .unwrap(),
     ));
 
-    let request = RequestCached::new_from_context(String::from(request_uri), &context);
+    let request =
+        RequestCached::new_from_context(String::from(request_uri), &context, UNSPECIFIED_CHAIN);
     let actual = request.execute().await;
 
     assert_eq!(expected, actual);
@@ -74,12 +78,14 @@ async fn error_from_backend_deserialization_unknown_json_struct() {
         }))
     });
     let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
+    let mainnet_cache = Arc::new(create_service_cache_mainnet().await) as Arc<dyn Cache>;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),
         "host".to_string(),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
         &cache,
+        &mainnet_cache,
     )
     .await;
     let expected = Err(ApiError::new_from_message_with_code(
@@ -93,7 +99,8 @@ async fn error_from_backend_deserialization_unknown_json_struct() {
         })
         .to_string(),
     ));
-    let request = RequestCached::new_from_context(String::from(request_uri), &context);
+    let request =
+        RequestCached::new_from_context(String::from(request_uri), &context, UNSPECIFIED_CHAIN);
     let actual = request.execute().await;
 
     assert_eq!(expected, actual);

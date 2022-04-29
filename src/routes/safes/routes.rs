@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::CacheResponse;
+use crate::cache::manager::ChainCache;
 use crate::config::owners_for_safes_cache_duration;
 use crate::routes::safes::handlers::estimations;
 use crate::routes::safes::handlers::safes::{get_owners_for_safe, get_safe_info_ex};
@@ -16,7 +17,7 @@ pub async fn get_safe_info(
     chain_id: String,
     safe_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context, &chain_id)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| get_safe_info_ex(&context, &chain_id, &safe_address))
         .execute()
         .await
@@ -32,7 +33,7 @@ pub async fn get_owners(
     chain_id: String,
     owner_address: String,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context, &chain_id)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| get_owners_for_safe(&context, &chain_id, &owner_address))
         .duration(owners_for_safes_cache_duration())
         .execute()

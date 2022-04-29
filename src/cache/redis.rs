@@ -1,8 +1,9 @@
-use crate::cache::Cache;
-use crate::config::{redis_scan_count, redis_uri, redis_uri_mainnet};
 use bb8_redis::bb8::{self, Pool, PooledConnection};
 use bb8_redis::redis::{cmd, AsyncCommands, AsyncIter, Cmd, Pipeline, ToRedisArgs};
 use bb8_redis::RedisConnectionManager;
+
+use crate::cache::Cache;
+use crate::config::{redis_scan_count, redis_uri, redis_uri_mainnet};
 
 type RedisPool = Pool<RedisConnectionManager>;
 type RedisConnection<'a> = PooledConnection<'a, RedisConnectionManager>;
@@ -24,11 +25,11 @@ async fn create_pool(for_mainnet: bool) -> RedisPool {
 
 pub struct ServiceCache(RedisPool);
 
-pub async fn create_service_cache() -> ServiceCache {
+pub async fn new_service_cache() -> impl Cache {
     ServiceCache(create_pool(false).await)
 }
 
-pub async fn create_service_cache_mainnet() -> ServiceCache {
+pub async fn new_service_cache_mainnet() -> impl Cache {
     ServiceCache(create_pool(true).await)
 }
 

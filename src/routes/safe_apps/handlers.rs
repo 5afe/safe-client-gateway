@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::safe_apps::SafeApp as BackendSafeApp;
 use crate::config::safe_apps_cache_duration;
 use crate::routes::safe_apps::models::SafeApp;
@@ -15,7 +16,7 @@ pub async fn safe_apps(
         chain_id,
         client_url.as_deref().unwrap_or("")
     );
-    let data = RequestCached::new_from_context(url, &context, chain_id)
+    let data = RequestCached::new_from_context(url, &context, ChainCache::from(chain_id.as_str()))
         .cache_duration(safe_apps_cache_duration())
         .execute()
         .await?;

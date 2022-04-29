@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::cache::Cache;
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::backend::chains::ChainInfo;
@@ -219,7 +220,7 @@ impl<'a> DefaultInfoProvider<'a> {
         DefaultInfoProvider {
             chain_id,
             client: context.http_client(),
-            cache: context.cache(chain_id),
+            cache: context.cache(ChainCache::from(chain_id)),
             safe_cache: Default::default(),
             token_cache: Default::default(),
             chain_cache: Default::default(),

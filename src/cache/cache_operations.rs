@@ -8,6 +8,7 @@ use rocket::response::content;
 use serde::{Deserialize, Serialize};
 
 use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+use crate::cache::manager::ChainCache;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::config::{
     base_config_service_uri, default_request_timeout, request_cache_duration,
@@ -117,10 +118,10 @@ impl<'a, R> CacheResponse<'a, R>
 where
     R: Serialize,
 {
-    pub fn new(context: &RequestContext, chain_id: &str) -> Self {
+    pub fn new(context: &RequestContext, chain_cache: ChainCache) -> Self {
         CacheResponse {
             key: context.request_id.to_string(),
-            cache: context.cache(chain_id),
+            cache: context.cache(chain_cache),
             duration: request_cache_duration(),
             resp_generator: None,
         }
@@ -174,10 +175,14 @@ impl RequestCached {
         }
     }
 
-    pub fn new_from_context(url: String, context: &RequestContext, chain_id: &str) -> Self {
+    pub fn new_from_context(
+        url: String,
+        context: &RequestContext,
+        chain_cache: ChainCache,
+    ) -> Self {
         RequestCached {
             client: context.http_client(),
-            cache: context.cache(chain_id),
+            cache: context.cache(chain_cache),
             url,
             request_timeout: default_request_timeout(),
             cache_duration: request_cache_duration(),

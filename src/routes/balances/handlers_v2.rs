@@ -5,6 +5,7 @@ use bigdecimal::BigDecimal;
 use rocket::futures::{stream, StreamExt};
 
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::balances_v2::{
     Balance as BalanceDto, TokenPrice as BackendTokenPrice,
 };
@@ -16,7 +17,7 @@ use crate::config::{
 use crate::providers::fiat::FiatInfoProvider;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::balances::models::{Balance, Balances, TokenPrice};
-use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
 pub async fn balances(
@@ -37,7 +38,7 @@ pub async fn balances(
         exclude_spam
     )?;
 
-    let body = RequestCached::new_from_context(url, context, chain_id)
+    let body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id))
         .cache_duration(balances_core_request_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()
@@ -135,10 +136,11 @@ async fn get_token_usd_rate(
 ) -> ApiResult<TokenPrice> {
     let url = core_uri!(info_provider, "/v1/tokens/{}/prices/usd/", token_address)?;
 
-    let body = RequestCached::new_from_context(url, context, UNSPECIFIED_CHAIN)
-        .cache_duration(token_price_cache_duration())
-        .execute()
-        .await?;
+    let body =
+        RequestCached::new_from_context(url, context, ChainCache::from(info_provider.chain_id()))
+            .cache_duration(token_price_cache_duration())
+            .execute()
+            .await?;
     let response: BackendTokenPrice = serde_json::from_str(&body)?;
 
     return Ok(TokenPrice {

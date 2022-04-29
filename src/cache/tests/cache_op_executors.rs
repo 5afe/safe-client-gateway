@@ -1,12 +1,11 @@
 use std::sync::Arc;
 
 use crate::cache::cache_operations::RequestCached;
-use crate::cache::redis::create_service_cache;
-use crate::cache::Cache;
-use crate::create_service_cache_mainnet;
-use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
+use crate::cache::manager::ChainCache;
+use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{HttpClient, MockHttpClient, Response};
+use crate::{create_cache_manager, RedisCacheManager};
 use serde_json::json;
 
 #[rocket::async_test]
@@ -27,15 +26,13 @@ async fn error_from_backend_deserialization() {
             status_code: 422,
         }))
     });
-    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    let mainnet_cache = Arc::new(create_service_cache_mainnet().await) as Arc<dyn Cache>;
+    let cache_manager = create_cache_manager().await;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),
         "host".to_string(),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
-        &cache,
-        &mainnet_cache,
+        &(Arc::new(cache_manager) as Arc<dyn RedisCacheManager>),
     )
     .await;
     let expected = Err(ApiError::new(
@@ -51,7 +48,7 @@ async fn error_from_backend_deserialization() {
     ));
 
     let request =
-        RequestCached::new_from_context(String::from(request_uri), &context, UNSPECIFIED_CHAIN);
+        RequestCached::new_from_context(String::from(request_uri), &context, ChainCache::Other);
     let actual = request.execute().await;
 
     assert_eq!(expected, actual);
@@ -77,15 +74,13 @@ async fn error_from_backend_deserialization_unknown_json_struct() {
             status_code: 422,
         }))
     });
-    let cache = Arc::new(create_service_cache().await) as Arc<dyn Cache>;
-    let mainnet_cache = Arc::new(create_service_cache_mainnet().await) as Arc<dyn Cache>;
+    let cache_manager = create_cache_manager().await;
 
     let context = RequestContext::setup_for_test(
         String::from(request_uri),
         "host".to_string(),
         &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
-        &cache,
-        &mainnet_cache,
+        &(Arc::new(cache_manager) as Arc<dyn RedisCacheManager>),
     )
     .await;
     let expected = Err(ApiError::new_from_message_with_code(
@@ -100,7 +95,7 @@ async fn error_from_backend_deserialization_unknown_json_struct() {
         .to_string(),
     ));
     let request =
-        RequestCached::new_from_context(String::from(request_uri), &context, UNSPECIFIED_CHAIN);
+        RequestCached::new_from_context(String::from(request_uri), &context, ChainCache::Other);
     let actual = request.execute().await;
 
     assert_eq!(expected, actual);

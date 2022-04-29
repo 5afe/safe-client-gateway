@@ -2,10 +2,11 @@ use rocket::futures::FutureExt;
 use rocket::response::content;
 
 use crate::cache::cache_operations::CacheResponse;
+use crate::cache::manager::ChainCache;
 use crate::config::{balances_cache_duration, feature_flag_balances_rate_implementation};
 use crate::routes::balances::handlers::fiat_codes;
 use crate::routes::balances::{handlers, handlers_v2};
-use crate::utils::context::{RequestContext, UNSPECIFIED_CHAIN};
+use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 
 /// `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
@@ -36,7 +37,7 @@ pub async fn get_balances(
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context, &chain_id)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .duration(balances_cache_duration())
         .resp_generator(|| {
             if feature_flag_balances_rate_implementation() {
@@ -73,7 +74,7 @@ pub async fn get_balances(
 /// The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
 #[get("/v1/balances/supported-fiat-codes")]
 pub async fn get_supported_fiat(context: RequestContext) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context, UNSPECIFIED_CHAIN)
+    CacheResponse::new(&context, ChainCache::Other)
         .resp_generator(|| fiat_codes(&context))
         .execute()
         .await

@@ -2,6 +2,7 @@ use chrono::{DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Utc};
 use itertools::Itertools;
 
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::transactions::{CreationTransaction, Transaction};
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
@@ -150,7 +151,7 @@ async fn fetch_backend_paged_txs(
     log::debug!("request URL: {}", &url);
     log::debug!("cursor: {:#?}", &cursor);
     log::debug!("page_metadata: {:#?}", &page_metadata);
-    let body = RequestCached::new_from_context(url, context, chain_id)
+    let body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id))
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;
@@ -242,7 +243,7 @@ pub(super) async fn get_creation_transaction_summary(
 ) -> ApiResult<TransactionSummary> {
     let url = core_uri!(info_provider, "/v1/safes/{}/creation/", safe)?;
     debug!("{}", &url);
-    let body = RequestCached::new_from_context(url, context, chain_id)
+    let body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id))
         .request_timeout(transaction_request_timeout())
         .execute()
         .await?;

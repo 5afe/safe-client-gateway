@@ -28,7 +28,7 @@ pub async fn balances(
     exclude_spam: bool,
 ) -> ApiResult<Balances> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
-    let fiat_info_provider = FiatInfoProvider::new(context, chain_id);
+    let fiat_info_provider = FiatInfoProvider::new(context);
     let url = core_uri!(
         info_provider,
         "/v1/safes/{}/balances/?trusted={}&exclude_spam={}",

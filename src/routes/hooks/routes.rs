@@ -18,7 +18,11 @@ pub async fn update(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    invalidate_caches(context.cache(ChainCache::Other), &update).await
+    invalidate_caches(
+        context.cache(ChainCache::from(update.chain_id.as_str())),
+        &update,
+    )
+    .await
 }
 
 #[post(
@@ -46,7 +50,7 @@ pub async fn post_hooks_events(
     _token: AuthorizationToken,
     payload: Json<Payload>,
 ) -> ApiResult<()> {
-    invalidate_caches(context.cache(ChainCache::Other), &payload).await
+    invalidate_caches(context.cache(ChainCache::from(chain_id.as_str())), &payload).await
 }
 
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]

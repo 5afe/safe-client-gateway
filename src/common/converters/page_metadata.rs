@@ -29,14 +29,12 @@ impl PageMetadata {
     }
 }
 
-impl From<PageMetadata> for HashMap<String, String> {
-    fn from(page_metadata: PageMetadata) -> Self {
-        [
+impl From<&PageMetadata> for HashMap<String, String> {
+    fn from(page_metadata: &PageMetadata) -> Self {
+        HashMap::from([
             ("limit".to_string(), page_metadata.limit.to_string()),
             ("offset".to_string(), page_metadata.offset.to_string()),
-        ]
-        .iter()
-        .collect()
+        ])
     }
 }
 

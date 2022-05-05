@@ -19,8 +19,8 @@ pub async fn get_incoming_transfers(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
-    cursor: &Option<String>,
-    filters: &HashMap<String, String>,
+    cursor: Option<String>,
+    filters: HashMap<String, String>,
 ) -> ApiResult<Page<TransactionListItem>> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
@@ -29,28 +29,16 @@ pub async fn get_incoming_transfers(
         safe_address
     )?;
 
-    let page_meta: Option<PageMetadata> = cursor
-        .as_ref()
-        .and_then(|c| Some(PageMetadata::from_cursor(c)));
-
-    let page_metadata_params: HashMap<String, String> = match &page_meta {
-        Some(page_meta) => page_meta.into(),
-        None => HashMap::new(),
-    };
+    let page_metadata_params: HashMap<String, String> = cursor
+        .map(|c| PageMetadata::from_cursor(&c).into())
+        .unwrap_or(HashMap::new());
 
     // Merge filter query with cursor query
-    let mut query_params: HashMap<String, String> = HashMap::new();
-    query_params.extend(page_metadata_params);
-    query_params.extend(filters.iter().map(|(k, v)| (k.clone(), v.clone())));
+    let query_params: HashMap<String, String> =
+        page_metadata_params.into_iter().chain(filters).collect();
 
-    let backend_txs = get_backend_page(
-        &context,
-        &chain_id,
-        &url,
-        transaction_request_timeout(),
-        &query_params,
-    )
-    .await?;
+    let backend_txs =
+        get_backend_page(&context, &url, transaction_request_timeout(), &query_params).await?;
 
     let service_txs = backend_txs_to_summary_txs(
         &mut backend_txs.results.into_iter(),

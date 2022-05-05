@@ -241,9 +241,9 @@ pub async fn get_incoming_transfers(
     cursor: Option<String>,
     filters: HashMap<String, String>,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+    CacheResponse::new(&context)
         .resp_generator(|| {
-            transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
+            transfers::get_incoming_transfers(&context, &chain_id, &safe_address, cursor, &filters)
         })
         .execute()
         .await
@@ -255,11 +255,11 @@ pub async fn get_module_transactions(
     chain_id: String,
     safe_address: String,
     cursor: Option<String>,
-    filters: HashMap<String, String>,
+    filters: ModuleFilters,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+    CacheResponse::new(&context)
         .resp_generator(|| {
-            module::get_module_transactions(&context, &chain_id, &safe_address, &cursor, &filters)
+            module::get_module_transactions(&context, &chain_id, &safe_address, cursor, &filters)
         })
         .execute()
         .await
@@ -271,9 +271,9 @@ pub async fn get_multisig_transactions(
     chain_id: String,
     safe_address: String,
     cursor: Option<String>,
-    filters: HashMap<String, String>,
+    filters: MultisigFilters,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+    CacheResponse::new(&context)
         .resp_generator(|| {
             multisig::get_multisig_transactions(
                 &context,

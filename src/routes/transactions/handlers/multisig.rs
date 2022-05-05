@@ -8,14 +8,13 @@ use crate::routes::transactions::models::summary::{ConflictType, TransactionList
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::urls::build_absolute_uri;
-use std::collections::HashMap;
 
 pub async fn get_multisig_transactions(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
     cursor: &Option<String>,
-    filters: &HashMap<String, String>,
+    filters: &MultisigFilters,
 ) -> ApiResult<Page<TransactionListItem>> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
@@ -23,30 +22,16 @@ pub async fn get_multisig_transactions(
         "/v1/safes/{}/multisig-transactions/",
         safe_address
     )?;
-
-    let page_meta: Option<PageMetadata> = cursor
-        .as_ref()
-        .and_then(|c| Some(PageMetadata::from_cursor(c)));
-
-    let page_metadata_params: HashMap<String, String> = match &page_meta {
-        Some(page_meta) => page_meta.into(),
-        None => HashMap::new(),
-    };
-
-    // Merge filter query with cursor query
-    let mut query_params: HashMap<String, String> = HashMap::new();
-    query_params.extend(page_metadata_params);
-    query_params.extend(filters.iter().map(|(k, v)| (k.clone(), v.clone())));
+    let page_meta = cursor.as_ref().map(|it| PageMetadata::from_cursor(it));
 
     let backend_txs = get_backend_page(
         &context,
-        &chain_id,
         &url,
         transaction_request_timeout(),
-        &query_params,
+        &page_meta,
+        filters,
     )
     .await?;
-
     let service_txs = backend_txs_to_summary_txs(
         &mut backend_txs.results.into_iter(),
         &info_provider,
@@ -105,7 +90,7 @@ fn build_cursor(
     safe_address: &str,
     page_meta: Option<&PageMetadata>,
     backend_page_url: Option<String>,
-    filters: &HashMap<String, String>,
+    filters: &MultisigFilters,
     direction: i64,
 ) -> Option<String> {
     backend_page_url.as_ref().map(|_| {

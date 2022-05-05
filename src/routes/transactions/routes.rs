@@ -243,7 +243,7 @@ pub async fn get_incoming_transfers(
     cursor: Option<String>,
     filters: TransferFilters,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
         })
@@ -259,7 +259,7 @@ pub async fn get_module_transactions(
     cursor: Option<String>,
     filters: ModuleFilters,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             module::get_module_transactions(&context, &chain_id, &safe_address, &cursor, &filters)
         })
@@ -275,7 +275,7 @@ pub async fn get_multisig_transactions(
     cursor: Option<String>,
     filters: MultisigFilters,
 ) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             multisig::get_multisig_transactions(
                 &context,

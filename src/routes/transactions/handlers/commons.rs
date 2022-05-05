@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::routes::transactions::filters::QueryParam;
 use crate::utils::context::RequestContext;
@@ -7,6 +8,7 @@ use rocket::serde::DeserializeOwned;
 
 pub async fn get_backend_page<D>(
     context: &RequestContext,
+    chain_id: &str,
     url: &str,
     request_timeout: u64,
     page_meta: &Option<PageMetadata>,
@@ -28,7 +30,7 @@ where
     log::debug!("request URL: {}", &full_url);
     log::debug!("page_metadata: {:#?}", &page_meta);
     log::debug!("filters: {:#?}", &filters);
-    let body = RequestCached::new_from_context(full_url, context)
+    let body = RequestCached::new_from_context(full_url, context, ChainCache::from(chain_id))
         .request_timeout(request_timeout)
         .execute()
         .await?;

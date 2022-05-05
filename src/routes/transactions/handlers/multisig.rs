@@ -27,6 +27,7 @@ pub async fn get_multisig_transactions(
 
     let backend_txs = get_backend_page(
         &context,
+        chain_id,
         &url,
         transaction_request_timeout(),
         &page_meta,

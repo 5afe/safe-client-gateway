@@ -1,9 +1,7 @@
-use std::collections::HashMap;
-use std::fmt;
-use std::iter::Map;
-
+use super::QueryParam;
 use rocket::form::FromForm;
 use rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
+use std::fmt;
 
 #[derive(FromForm, Debug)]
 pub struct TransferFilters {
@@ -14,33 +12,31 @@ pub struct TransferFilters {
     pub token_address: Option<String>,
 }
 
-/// Maps [TransferFilters] into [HashMap]
-/// This [HashMap] should be used to build the query parameters for the Safe Transaction Service
-impl From<&TransferFilters> for HashMap<String, String> {
-    fn from(transfer_filters: TransferFilters) -> Self {
-        let mut map: HashMap<String, String> = HashMap::new();
+impl QueryParam for TransferFilters {
+    fn as_query_param(&self) -> String {
+        let mut query_params = String::new();
 
-        if let Some(execution_date_gte) = transfer_filters.execution_date_gte {
-            map.push("execution_date__gte".to_string(), execution_date_gte)
+        if let Some(execution_date_gte) = &self.execution_date_gte {
+            query_params.push_str(&format!("execution_date__gte={}&", execution_date_gte))
         }
 
-        if let Some(execution_date_lte) = transfer_filters.execution_date_lte {
-            map.push("execution_date__lte".to_string(), execution_date_lte)
+        if let Some(execution_date_lte) = &self.execution_date_lte {
+            query_params.push_str(&format!("execution_date__lte={}&", execution_date_lte))
         }
 
-        if let Some(to) = transfer_filters.to {
-            map.push("to".to_string(), to);
+        if let Some(to) = &self.to {
+            query_params.push_str(&format!("to={}&", to))
         }
 
-        if let Some(value) = transfer_filters.value {
-            map.push("value".to_string(), value);
+        if let Some(value) = &self.value {
+            query_params.push_str(&format!("value={}&", value))
         }
 
-        if let Some(token_address) = transfer_filters.token_address {
-            map.push("token_address".to_string(), token_address);
+        if let Some(token_address) = &self.token_address {
+            query_params.push_str(&format!("token_address={}&", token_address))
         }
 
-        return map;
+        return query_params;
     }
 }
 

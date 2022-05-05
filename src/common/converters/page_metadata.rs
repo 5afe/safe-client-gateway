@@ -1,7 +1,5 @@
-use std::collections::HashMap;
-use std::ops::Deref;
-
 use crate::common::models::page::PageMetadata;
+use std::ops::Deref;
 
 impl PageMetadata {
     pub fn to_url_string(&self) -> String {
@@ -28,18 +26,6 @@ impl PageMetadata {
         output
     }
 }
-
-impl From<PageMetadata> for HashMap<String, String> {
-    fn from(page_metadata: PageMetadata) -> Self {
-        [
-            ("limit".to_string(), page_metadata.limit.to_string()),
-            ("offset".to_string(), page_metadata.offset.to_string()),
-        ]
-        .iter()
-        .collect()
-    }
-}
-
 impl Default for PageMetadata {
     fn default() -> Self {
         Self {

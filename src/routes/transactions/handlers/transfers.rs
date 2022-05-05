@@ -1,16 +1,10 @@
-use std::collections::HashMap;
-use std::default::default;
-
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::transaction_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::transactions::filters::transfer::TransferFilters;
 use crate::routes::transactions::handlers::offset_page_meta;
-use crate::routes::transactions::models::summary::{
-    ConflictType, TransactionListItem, TransactionSummary,
-};
-use crate::routes::transactions::models::TransactionStatus;
+use crate::routes::transactions::models::summary::{ConflictType, TransactionListItem};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::urls::build_absolute_uri;
@@ -22,7 +16,7 @@ pub async fn get_incoming_transfers(
     chain_id: &str,
     safe_address: &str,
     cursor: &Option<String>,
-    filters: &HashMap<String, String>,
+    filters: &TransferFilters,
 ) -> ApiResult<Page<TransactionListItem>> {
     let info_provider = DefaultInfoProvider::new(chain_id, context);
     let url = core_uri!(
@@ -31,18 +25,16 @@ pub async fn get_incoming_transfers(
         safe_address
     )?;
 
-    let page_metadata_params: HashMap<String, String> = cursor
-        .as_ref()
-        .map(|c| PageMetadata::from_cursor(&c).into())
-        .unwrap_or(HashMap::new());
+    let page_meta = cursor.as_ref().map(|it| PageMetadata::from_cursor(it));
 
-    // Merge filter query with cursor query
-    let query_params: HashMap<String, String> =
-        page_metadata_params.into_iter().chain(filters).collect();
-
-    let backend_txs =
-        get_backend_page(&context, &url, transaction_request_timeout(), &query_params).await?;
-
+    let backend_txs = get_backend_page(
+        &context,
+        &url,
+        transaction_request_timeout(),
+        &page_meta,
+        filters,
+    )
+    .await?;
     let service_txs = backend_txs_to_summary_txs(
         &mut backend_txs.results.into_iter(),
         &info_provider,

@@ -5,7 +5,9 @@ use std::fmt;
 
 #[derive(FromForm, Debug)]
 pub struct MultisigFilters {
+    #[field(name = "execution_date__gte")]
     pub execution_date_gte: Option<String>,
+    #[field(name = "execution_date_lte")]
     pub execution_date_lte: Option<String>,
     pub to: Option<String>,
     pub value: Option<String>,

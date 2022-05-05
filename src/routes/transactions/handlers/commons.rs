@@ -27,9 +27,6 @@ where
         full_url.push_str("&");
         full_url.push_str(&page_meta.to_url_string());
     });
-    log::debug!("request URL: {}", &full_url);
-    log::debug!("page_metadata: {:#?}", &page_meta);
-    log::debug!("filters: {:#?}", &filters);
     let body = RequestCached::new_from_context(full_url, context, ChainCache::from(chain_id))
         .request_timeout(request_timeout)
         .execute()

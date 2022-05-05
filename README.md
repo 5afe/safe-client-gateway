@@ -54,6 +54,7 @@ redis-server
 
 ```bash
 export REDIS_URI=redis://localhost:6379
+export REDIS_URI_MAINNET=redis://localhost:6379
 ```
 
 3. Run the tests

@@ -10,6 +10,7 @@ use crate::routes::transactions::models::summary::{
 };
 use crate::routes::transactions::models::{Creation, TransactionInfo, TransactionStatus};
 use crate::utils::errors::ApiResult;
+use crate::utils::hex_hash;
 use rocket::futures::future::OptionFuture;
 
 impl Transaction {
@@ -83,13 +84,15 @@ impl EthereumTransaction {
                 let mut results = Vec::with_capacity(transfers.len());
 
                 for transfer in transfers {
-                    let transaction_summary = transfer
-                        .to_transaction_summary(
-                            info_provider,
-                            self.execution_date.timestamp_millis(),
-                            safe_address,
-                        )
-                        .await;
+                    let transaction_summary = TransactionSummary {
+                        id: self.generate_id(safe_address, &hex_hash(transfer)),
+                        timestamp: self.execution_date.timestamp_millis(),
+                        tx_status: TransactionStatus::Success,
+                        execution_info: None,
+                        safe_app_info: None,
+                        tx_info: transfer.to_transfer(info_provider, safe_address).await,
+                    };
+
                     results.push(transaction_summary);
                 }
                 results
@@ -107,12 +110,7 @@ impl Transfer {
         safe_address: &str,
     ) -> TransactionSummary {
         TransactionSummary {
-            id: self.generate_id(
-                safe_address,
-                &self
-                    .get_transaction_hash()
-                    .expect("No tx hash for ethereum transaction is not possible"),
-            ), // TODO is this correct?
+            id: self.generate_id(safe_address, &hex_hash(&self)),
             timestamp: execution_date,
             tx_status: TransactionStatus::Success,
             execution_info: None,

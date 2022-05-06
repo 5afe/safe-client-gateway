@@ -21,13 +21,21 @@
 <span id="16">16</span>
 <span id="17">17</span>
 <span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page::PageMetadata</span>;
 <span class="kw">use</span> <span class="ident">std::cmp::max</span>;
 
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">commons</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">details</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">history</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">module</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">multisig</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">proposal</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">queued</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transfers</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span>;

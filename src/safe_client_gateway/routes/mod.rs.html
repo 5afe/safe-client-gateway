@@ -104,6 +104,9 @@
 <span id="99"> 99</span>
 <span id="100">100</span>
 <span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::Redirect</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">json</span>, <span class="ident">Value</span>};
 <span class="kw">use</span> <span class="ident">rocket</span>::{<span class="ident">Catcher</span>, <span class="ident">Route</span>};
@@ -166,6 +169,9 @@
         <span class="ident">transactions::routes::get_transactions</span>,
         <span class="ident">transactions::routes::get_transactions_history</span>,
         <span class="ident">transactions::routes::get_transactions_queued</span>,
+        <span class="ident">transactions::routes::get_incoming_transfers</span>,
+        <span class="ident">transactions::routes::get_module_transactions</span>,
+        <span class="ident">transactions::routes::get_multisig_transactions</span>,
         <span class="ident">transactions::routes::post_transaction</span>,
         <span class="ident">transactions::routes::post_confirmation</span>,
         <span class="ident">hooks::routes::update</span>,

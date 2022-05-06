@@ -1,10 +1,14 @@
 use crate::common::models::page::PageMetadata;
 use std::cmp::max;
 
+pub mod commons;
 pub mod details;
 pub mod history;
+pub mod module;
+pub mod multisig;
 pub mod proposal;
 pub mod queued;
+pub mod transfers;
 
 #[cfg(test)]
 mod tests;

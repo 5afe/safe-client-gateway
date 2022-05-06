@@ -1,6 +1,9 @@
 use crate::cache::cache_operations::CacheResponse;
 use crate::cache::manager::ChainCache;
 use crate::config::tx_queued_cache_duration;
+use crate::routes::transactions::filters::module::ModuleFilters;
+use crate::routes::transactions::filters::multisig::MultisigFilters;
+use crate::routes::transactions::filters::transfer::TransferFilters;
 use crate::routes::transactions::handlers::{details, history, proposal, queued};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
@@ -9,6 +12,8 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
+
+use super::handlers::{module, multisig, transfers};
 
 /// `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
 /// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
@@ -228,4 +233,58 @@ pub async fn post_transaction<'e>(
         .await;
 
     return tx_details;
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/incoming-transfers?<cursor>&<filters..>")]
+pub async fn get_incoming_transfers(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: TransferFilters,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
+        })
+        .execute()
+        .await
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/module-transactions?<cursor>&<filters..>")]
+pub async fn get_module_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: ModuleFilters,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            module::get_module_transactions(&context, &chain_id, &safe_address, &cursor, &filters)
+        })
+        .execute()
+        .await
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions?<cursor>&<filters..>")]
+pub async fn get_multisig_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: MultisigFilters,
+) -> ApiResult<content::Json<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            multisig::get_multisig_transactions(
+                &context,
+                &chain_id,
+                &safe_address,
+                &cursor,
+                &filters,
+            )
+        })
+        .execute()
+        .await
 }

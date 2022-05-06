@@ -1,6 +1,7 @@
 use crate::common::models::backend::transactions::{
     CreationTransaction, EthereumTransaction, ModuleTransaction, MultisigTransaction, Transaction,
 };
+use crate::common::models::backend::transfers::Transfer;
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::InfoProvider;
 use crate::routes::transactions::converters::safe_app_info::safe_app_info_from;
@@ -101,8 +102,26 @@ impl EthereumTransaction {
     }
 }
 
+impl Transfer {
+    pub async fn to_transaction_summary(
+        &self,
+        info_provider: &(impl InfoProvider + Sync),
+        execution_date: i64,
+        safe_address: &str,
+    ) -> TransactionSummary {
+        TransactionSummary {
+            id: self.generate_id(safe_address, &hex_hash(&self)),
+            timestamp: execution_date,
+            tx_status: TransactionStatus::Success,
+            execution_info: None,
+            safe_app_info: None,
+            tx_info: self.to_transfer(info_provider, safe_address).await,
+        }
+    }
+}
+
 impl ModuleTransaction {
-    pub(super) async fn to_transaction_summary(
+    pub async fn to_transaction_summary(
         &self,
         info_provider: &(impl InfoProvider + Sync),
     ) -> Vec<TransactionSummary> {

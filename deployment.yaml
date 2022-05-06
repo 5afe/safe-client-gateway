@@ -2,12 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    app: safe-client-gateway
+    deployment.kubernetes.io/revision: '1'
   labels:
     app: safe-client-gateway
   name: safe-client-gateway
 spec:
+  progressDeadlineSeconds: 600
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: safe-client-gateway
@@ -15,8 +17,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        app: safe-client-gateway
       labels:
         app: safe-client-gateway
     spec:

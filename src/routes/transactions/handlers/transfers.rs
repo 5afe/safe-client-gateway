@@ -76,7 +76,7 @@ async fn backend_txs_to_summary_txs(
         let tx_summary = transfer
             .to_transaction_summary(
                 info_provider,
-                transfer.get_execution_time().unwrap_or(0), // TODO does this make sense?
+                transfer.get_execution_time().unwrap(),
                 safe_address,
             )
             .await;

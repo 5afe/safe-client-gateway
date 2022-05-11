@@ -32,7 +32,7 @@ pub async fn get_incoming_transfers_no_filters() {
         });
 
     let mut transfer_request = Request::new(format!(
-        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/incoming-transfers/",
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/incoming-transfers/?",
         &safe_address
     ));
     transfer_request.timeout(Duration::from_millis(transaction_request_timeout()));

@@ -18,15 +18,17 @@ where
     D: DeserializeOwned,
 {
     let mut full_url = String::from(url);
+    full_url.push_str("?");
+    page_meta.as_ref().map(|page_meta| {
+        full_url.push_str("&");
+        full_url.push_str(&page_meta.to_url_string());
+    });
+
     let filters = filters.as_query_param();
     if !filters.is_empty() {
         full_url.push_str("&");
         full_url.push_str(&filters);
     }
-    page_meta.as_ref().map(|page_meta| {
-        full_url.push_str("&");
-        full_url.push_str(&page_meta.to_url_string());
-    });
     let body = RequestCached::new_from_context(full_url, context, ChainCache::from(chain_id))
         .request_timeout(request_timeout)
         .execute()

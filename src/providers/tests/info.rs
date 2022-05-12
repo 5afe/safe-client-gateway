@@ -478,6 +478,18 @@ async fn default_info_provider_safe_app_info() {
             })
         });
 
+    let config_service_request = Request::new(config_uri!("/v1/safe-apps/?url={}", &origin_url));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(config_service_request))
+        .returning(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                body: "".to_string(),
+                status_code: 0,
+            }))
+        });
+
     let context = RequestContext::setup_for_test(
         String::from(""),
         config_uri!(""),
@@ -522,6 +534,18 @@ async fn default_info_provider_safe_app_info_not_found() {
             Err(ApiError::from_http_response(&Response {
                 status_code: 404,
                 body: String::from("Not found"),
+            }))
+        });
+
+    let config_service_request = Request::new(config_uri!("/v1/safe-apps/?url={}", &origin_url));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(config_service_request))
+        .returning(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                body: "".to_string(),
+                status_code: 0,
             }))
         });
 

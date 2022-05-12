@@ -46,5 +46,5 @@ pub fn setup_rocket_with_mock_cache(
 
 #[rocket::async_test]
 pub async fn main_produces_valid_rocket_instance() {
-    crate::rocket().await;
+    let _ = crate::rocket().await;
 }

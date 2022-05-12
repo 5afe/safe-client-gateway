@@ -1,5 +1,4 @@
 use crate::cache::manager::ChainCache;
-use crate::cache::Cache;
 use crate::common::models::backend::chains::ChainInfo;
 use crate::common::models::page::Page;
 use crate::config::{

@@ -36,7 +36,7 @@ pub async fn get_balances(
     fiat: String,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .duration(balances_cache_duration())
         .resp_generator(|| {
@@ -73,7 +73,7 @@ pub async fn get_balances(
 /// `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `<fiat>` segment of the balance endpoint.
 /// The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
 #[get("/v1/balances/supported-fiat-codes")]
-pub async fn get_supported_fiat(context: RequestContext) -> ApiResult<content::Json<String>> {
+pub async fn get_supported_fiat(context: RequestContext) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::Other)
         .resp_generator(|| fiat_codes(&context))
         .execute()

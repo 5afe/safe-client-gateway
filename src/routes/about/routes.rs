@@ -28,7 +28,7 @@ use crate::utils::http_client::Request;
 pub async fn get_chains_about(
     context: RequestContext,
     chain_id: String,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .duration(about_cache_duration())
         .resp_generator(|| handlers::chains_about(&context, &chain_id))
@@ -47,8 +47,8 @@ pub async fn get_chains_about(
 ///
 /// `/about`
 #[get("/about")]
-pub async fn get_about() -> ApiResult<content::Json<String>> {
-    Ok(content::Json(serde_json::to_string(&handlers::about())?))
+pub async fn get_about() -> ApiResult<content::RawJson<String>> {
+    Ok(content::RawJson(serde_json::to_string(&handlers::about())?))
 }
 /// `/v1/chains/<chain_id>/about/master-copies` <br />
 /// Returns a list of `MasterCopy`
@@ -78,7 +78,7 @@ pub async fn get_about() -> ApiResult<content::Json<String>> {
 pub async fn get_master_copies(
     context: RequestContext,
     chain_id: String,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .duration(about_cache_duration())
         .resp_generator(|| handlers::get_master_copies(&context, chain_id.as_str()))
@@ -91,12 +91,12 @@ pub async fn get_master_copies(
 pub async fn backbone(
     context: RequestContext,
     chain_id: String,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     let client = context.http_client();
     let info_provider = DefaultInfoProvider::new(chain_id.as_str(), &context);
     let url = core_uri!(info_provider, "/v1/about/")?;
     let request = Request::new(url);
-    Ok(content::Json(client.get(request).await?.body))
+    Ok(content::RawJson(client.get(request).await?.body))
 }
 
 #[doc(hidden)]

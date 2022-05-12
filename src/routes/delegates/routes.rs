@@ -16,11 +16,11 @@ pub async fn get_delegates<'e>(
     delegate: Option<String>,
     delegator: Option<String>,
     label: Option<String>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     let json = serde_json::to_string(
         &handlers::get_delegates(&context, chain_id, safe, delegate, delegator, label).await?,
     )?;
-    Ok(content::Json(json))
+    Ok(content::RawJson(json))
 }
 
 #[post(

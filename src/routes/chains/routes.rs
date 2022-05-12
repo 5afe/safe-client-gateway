@@ -20,7 +20,7 @@ use rocket::response::content;
 pub async fn get_chain(
     context: RequestContext,
     chain_id: String,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .duration(chain_info_response_cache_duration())
         .resp_generator(|| get_single_chain(&context, &chain_id))
@@ -42,7 +42,7 @@ pub async fn get_chain(
 pub async fn get_chains(
     context: RequestContext,
     cursor: Option<String>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::Other)
         .duration(chain_info_response_cache_duration())
         .resp_generator(|| get_chains_paginated(&context, &cursor))

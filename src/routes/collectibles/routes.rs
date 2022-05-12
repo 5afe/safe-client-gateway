@@ -154,7 +154,7 @@ pub async fn get_collectibles(
     safe_address: String,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     collectibles(
         &context,
         chain_id.as_str(),

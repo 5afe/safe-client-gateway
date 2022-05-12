@@ -16,7 +16,7 @@ pub(super) async fn invalidate(cache: Arc<dyn Cache>, pattern: &InvalidationPatt
 
 pub(super) async fn cache_response<S>(
     cache_response: &CacheResponse<'_, S>,
-) -> ApiResult<content::Json<String>>
+) -> ApiResult<content::RawJson<String>>
 where
     S: Serialize,
 {
@@ -24,13 +24,13 @@ where
     let cache_key = format!("{}_{}", CACHE_RESP_PREFIX, cache_response.key);
     let cached = cache.fetch(&cache_key).await;
     match cached {
-        Some(value) => Ok(content::Json(value)),
+        Some(value) => Ok(content::RawJson(value)),
         None => {
             let resp_string = serde_json::to_string(&cache_response.generate().await?)?;
             cache
                 .create(&cache_key, &resp_string, cache_response.duration)
                 .await;
-            Ok(content::Json(resp_string))
+            Ok(content::RawJson(resp_string))
         }
     }
 }

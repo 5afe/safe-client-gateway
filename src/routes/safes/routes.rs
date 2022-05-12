@@ -16,7 +16,7 @@ pub async fn get_safe_info(
     context: RequestContext,
     chain_id: String,
     safe_address: String,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| get_safe_info_ex(&context, &chain_id, &safe_address))
         .execute()
@@ -32,7 +32,7 @@ pub async fn get_owners(
     context: RequestContext,
     chain_id: String,
     owner_address: String,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| get_owners_for_safe(&context, &chain_id, &owner_address))
         .duration(owners_for_safes_cache_duration())
@@ -83,8 +83,8 @@ pub async fn post_safe_gas_estimation<'e>(
     chain_id: String,
     safe_address: String,
     safe_transaction_estimation_request: Result<Json<SafeTransactionEstimationRequest>, Error<'e>>,
-) -> ApiResult<content::Json<String>> {
-    Ok(content::Json(serde_json::to_string(
+) -> ApiResult<content::RawJson<String>> {
+    Ok(content::RawJson(serde_json::to_string(
         &estimations::estimate_safe_tx_gas(
             &context,
             &chain_id,
@@ -140,8 +140,8 @@ pub async fn post_safe_gas_estimation_v2<'e>(
     chain_id: String,
     safe_address: String,
     safe_transaction_estimation_request: Result<Json<SafeTransactionEstimationRequest>, Error<'e>>,
-) -> ApiResult<content::Json<String>> {
-    Ok(content::Json(serde_json::to_string(
+) -> ApiResult<content::RawJson<String>> {
+    Ok(content::RawJson(serde_json::to_string(
         &estimations::estimate_safe_tx_gas_v2(
             &context,
             &chain_id,

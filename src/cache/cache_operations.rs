@@ -145,7 +145,7 @@ where
         (self.resp_generator.as_ref().unwrap())().await
     }
 
-    pub async fn execute(&self) -> ApiResult<content::Json<String>> {
+    pub async fn execute(&self) -> ApiResult<content::RawJson<String>> {
         cache_response(self).await
     }
 }

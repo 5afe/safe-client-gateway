@@ -95,11 +95,11 @@
     <span class="ident">delegate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">delegator</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">label</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">json</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(
         <span class="kw-2">&amp;</span><span class="ident">handlers::get_delegates</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">chain_id</span>, <span class="ident">safe</span>, <span class="ident">delegate</span>, <span class="ident">delegator</span>, <span class="ident">label</span>).<span class="kw">await</span><span class="question-mark">?</span>,
     )<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">content::Json</span>(<span class="ident">json</span>))
+    <span class="prelude-val">Ok</span>(<span class="ident">content::RawJson</span>(<span class="ident">json</span>))
 }
 
 <span class="attribute">#[<span class="ident">post</span>(

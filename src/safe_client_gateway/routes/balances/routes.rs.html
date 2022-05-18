@@ -122,7 +122,7 @@
     <span class="ident">fiat</span>: <span class="ident">String</span>,
     <span class="ident">trusted</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="ident">exclude_spam</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
         .<span class="ident">duration</span>(<span class="ident">balances_cache_duration</span>())
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
@@ -159,7 +159,7 @@
 <span class="doccomment">/// `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `&lt;fiat&gt;` segment of the balance endpoint.</span>
 <span class="doccomment">/// The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/balances/supported-fiat-codes&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_supported_fiat</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_supported_fiat</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::Other</span>)
         .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">fiat_codes</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>))
         .<span class="ident">execute</span>()

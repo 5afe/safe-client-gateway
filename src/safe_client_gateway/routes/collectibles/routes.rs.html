@@ -325,7 +325,7 @@
     <span class="ident">safe_address</span>: <span class="ident">String</span>,
     <span class="ident">trusted</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="ident">exclude_spam</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">collectibles</span>(
         <span class="kw-2">&amp;</span><span class="ident">context</span>,
         <span class="ident">chain_id</span>.<span class="ident">as_str</span>(),

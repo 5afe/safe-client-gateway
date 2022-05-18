@@ -375,7 +375,7 @@
         (<span class="self">self</span>.<span class="ident">resp_generator</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>())().<span class="kw">await</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::Json</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">cache_response</span>(<span class="self">self</span>).<span class="kw">await</span>
     }
 }

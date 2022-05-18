@@ -109,8 +109,14 @@ impl Transfer {
         execution_date: i64,
         safe_address: &str,
     ) -> TransactionSummary {
+        let tx_hash = match self {
+            Transfer::Erc721(t) => &t.transaction_hash,
+            Transfer::Erc20(t) => &t.transaction_hash,
+            Transfer::Ether(t) => &t.transaction_hash,
+            Transfer::Unknown => panic!("Cannot map transfer"),
+        };
         TransactionSummary {
-            id: self.generate_id(safe_address, &hex_hash(&self)),
+            id: self.generate_id(safe_address, tx_hash),
             timestamp: execution_date,
             tx_status: TransactionStatus::Success,
             execution_info: None,

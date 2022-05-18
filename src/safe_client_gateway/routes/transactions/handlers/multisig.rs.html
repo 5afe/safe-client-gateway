@@ -123,6 +123,7 @@
 <span id="118">118</span>
 <span id="119">119</span>
 <span id="120">120</span>
+<span id="121">121</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::commons::get_backend_page</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions::MultisigTransaction</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page</span>::{<span class="ident">Page</span>, <span class="ident">PageMetadata</span>};
@@ -236,7 +237,8 @@
                         <span class="ident">filters</span>.<span class="ident">execution_date_lte</span>.<span class="ident">to_owned</span>(),
                         <span class="ident">filters</span>.<span class="ident">to</span>.<span class="ident">to_owned</span>(),
                         <span class="ident">filters</span>.<span class="ident">value</span>.<span class="ident">to_owned</span>(),
-                        <span class="ident">filters</span>.<span class="ident">nonce</span>.<span class="ident">to_owned</span>()
+                        <span class="ident">filters</span>.<span class="ident">nonce</span>.<span class="ident">to_owned</span>(),
+                        <span class="ident">filters</span>.<span class="ident">executed</span>.<span class="ident">to_owned</span>(),
                     )
                 )
             ),

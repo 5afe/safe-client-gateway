@@ -1,5 +1,4 @@
 use core::time::Duration;
-use std::env;
 
 use mockall::predicate::eq;
 use rocket::http::{ContentType, Header, Status};
@@ -259,7 +258,7 @@ async fn get_owners() {
             })
         });
 
-    let mut safe_request = Request::new(format!(
+    let safe_request = Request::new(format!(
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));
@@ -318,7 +317,7 @@ async fn get_owners_not_found() {
             })
         });
 
-    let mut safe_request = Request::new(format!(
+    let safe_request = Request::new(format!(
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/owners/{}/safes/",
         &safe_address
     ));

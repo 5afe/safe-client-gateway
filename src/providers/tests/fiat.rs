@@ -6,7 +6,6 @@ use mockall::predicate::eq;
 use serde_json::json;
 
 use crate::cache::manager::ChainCache;
-use crate::cache::Cache;
 use crate::providers::fiat::{Exchange, FiatInfoProvider};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiError;

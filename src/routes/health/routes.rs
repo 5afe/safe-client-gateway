@@ -5,7 +5,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 
 #[get("/health")]
-pub async fn health(context: RequestContext) -> ApiResult<content::Json<String>> {
+pub async fn health(context: RequestContext) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::Other)
         .resp_generator(|| async { Ok(String::new()) })
         .execute()

@@ -81,6 +81,7 @@ pub fn multisig_filters() {
         to: Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b")),
         value: Some(String::from("100")),
         nonce: Some(String::from("50")),
+        executed: Some(String::from("true")),
     };
 
     let filter_none = MultisigFilters {
@@ -89,6 +90,7 @@ pub fn multisig_filters() {
         to: None,
         value: None,
         nonce: None,
+        executed: None,
     };
 
     let filter_only_to = MultisigFilters {
@@ -97,6 +99,7 @@ pub fn multisig_filters() {
         to: Some(String::from("0x1230B3d59858296A31053C1b8562Ecf89A2f888b")),
         value: None,
         nonce: None,
+        executed: None,
     };
 
     assert_eq!(
@@ -105,7 +108,8 @@ pub fn multisig_filters() {
         execution_date__lte=4321&\
     to=0x1230B3d59858296A31053C1b8562Ecf89A2f888b&\
     value=100&\
-    nonce=50&"
+    nonce=50&\
+    executed=true&"
     );
     assert_eq!(filter_none.as_query_param(), "");
     assert_eq!(

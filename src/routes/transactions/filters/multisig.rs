@@ -12,6 +12,7 @@ pub struct MultisigFilters {
     pub to: Option<String>,
     pub value: Option<String>,
     pub nonce: Option<String>,
+    pub executed: Option<String>,
 }
 
 impl QueryParam for MultisigFilters {
@@ -38,6 +39,10 @@ impl QueryParam for MultisigFilters {
             query_params.push_str(&format!("nonce={}&", nonce))
         }
 
+        if let Some(executed) = &self.executed {
+            query_params.push_str(&format!("executed={}&", executed))
+        }
+
         return query_params;
     }
 }
@@ -51,13 +56,15 @@ impl
             Option<String>,
             Option<String>,
             Option<String>,
+            Option<String>,
         ),
     > for MultisigFilters
 {
     type Target = MultisigFilters;
 
     fn from_uri_param(
-        (execution_date_gte, execution_date_lte, to, value, nonce): (
+        (execution_date_gte, execution_date_lte, to, value, nonce, executed): (
+            Option<String>,
             Option<String>,
             Option<String>,
             Option<String>,
@@ -71,6 +78,7 @@ impl
             to,
             value,
             nonce,
+            executed,
         }
     }
 }
@@ -81,6 +89,7 @@ impl UriDisplay<Query> for MultisigFilters {
         f.write_named_value("execution_date__lte", &self.execution_date_lte)?;
         f.write_named_value("to", &self.to)?;
         f.write_named_value("value", &self.value)?;
-        f.write_named_value("nonce", &self.nonce)
+        f.write_named_value("nonce", &self.nonce)?;
+        f.write_named_value("executed", &self.executed)
     }
 }

@@ -111,7 +111,8 @@ fn build_cursor(
                         filters.execution_date_lte.to_owned(),
                         filters.to.to_owned(),
                         filters.value.to_owned(),
-                        filters.nonce.to_owned()
+                        filters.nonce.to_owned(),
+                        filters.executed.to_owned(),
                     )
                 )
             ),

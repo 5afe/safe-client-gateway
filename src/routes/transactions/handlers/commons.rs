@@ -11,7 +11,7 @@ pub async fn get_backend_page<D>(
     chain_id: &str,
     url: &str,
     request_timeout: u64,
-    page_meta: &Option<PageMetadata>,
+    page_meta: &PageMetadata,
     filters: &(impl QueryParam + std::fmt::Debug),
 ) -> ApiResult<Page<D>>
 where
@@ -19,10 +19,7 @@ where
 {
     let mut full_url = String::from(url);
     full_url.push_str("?");
-    page_meta.as_ref().map(|page_meta| {
-        full_url.push_str("&");
-        full_url.push_str(&page_meta.to_url_string());
-    });
+    full_url.push_str(&page_meta.to_url_string());
 
     let filters = filters.as_query_param();
     if !filters.is_empty() {

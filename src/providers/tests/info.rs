@@ -478,6 +478,18 @@ async fn default_info_provider_safe_app_info() {
             })
         });
 
+    let config_service_request = Request::new(config_uri!("/v1/safe-apps/?url={}", &origin_url));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(config_service_request))
+        .returning(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                body: "".to_string(),
+                status_code: 0,
+            }))
+        });
+
     let context = RequestContext::setup_for_test(
         String::from(""),
         config_uri!(""),
@@ -492,6 +504,60 @@ async fn default_info_provider_safe_app_info() {
     });
 
     let info_provider = DefaultInfoProvider::new("4", &context);
+    let actual = info_provider.safe_app_info(origin_url).await;
+
+    assert_eq!(expected, actual);
+}
+
+#[rocket::async_test]
+async fn default_info_provider_safe_app_info_from_safe_config() {
+    let origin_url = "https://test.app";
+    let cache_manager = create_cache_manager().await;
+    cache_manager
+        .cache_for_chain(ChainCache::Mainnet)
+        .invalidate_pattern("*")
+        .await;
+    cache_manager
+        .cache_for_chain(ChainCache::Other)
+        .invalidate_pattern("*")
+        .await;
+
+    let mut mock_http_client = MockHttpClient::new();
+    let mut safe_app_request = Request::new(format!("{}/manifest.json", &origin_url));
+    safe_app_request.timeout(Duration::from_millis(safe_app_info_request_timeout()));
+
+    mock_http_client
+        .expect_get()
+        .never()
+        .with(eq(safe_app_request));
+
+    let config_service_request = Request::new(config_uri!("/v1/safe-apps/?url={}", &origin_url));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(config_service_request))
+        .returning(move |_| {
+            Ok(Response {
+                body: String::from(crate::tests::json::POLYGON_SAFE_APP_URL_QUERY),
+                status_code: 200,
+            })
+        });
+
+    let context = RequestContext::setup_for_test(
+        String::from(""),
+        config_uri!(""),
+        &(Arc::new(mock_http_client) as Arc<dyn HttpClient>),
+        &(Arc::new(cache_manager) as Arc<dyn RedisCacheManager>),
+    )
+    .await;
+
+    let expected = Ok(SafeAppInfo {
+        name: String::from("Test App"),
+        url: String::from("https://test.app"),
+        logo_uri: format!("{}/{}", "https://test.app", "logo.svg"),
+    });
+
+    let info_provider = DefaultInfoProvider::new("137", &context);
     let actual = info_provider.safe_app_info(origin_url).await;
 
     assert_eq!(expected, actual);
@@ -522,6 +588,18 @@ async fn default_info_provider_safe_app_info_not_found() {
             Err(ApiError::from_http_response(&Response {
                 status_code: 404,
                 body: String::from("Not found"),
+            }))
+        });
+
+    let config_service_request = Request::new(config_uri!("/v1/safe-apps/?url={}", &origin_url));
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(config_service_request))
+        .returning(move |_| {
+            Err(ApiError::from_http_response(&Response {
+                body: "".to_string(),
+                status_code: 0,
             }))
         });
 

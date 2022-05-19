@@ -24,7 +24,8 @@ pub async fn get_module_transactions(
         safe_address
     )?;
 
-    let page_meta = cursor.as_ref().map(|it| PageMetadata::from_cursor(it));
+    let page_meta: PageMetadata =
+        PageMetadata::from_cursor(cursor.as_ref().unwrap_or(&"".to_string()));
 
     let backend_txs = get_backend_page(
         &context,
@@ -47,7 +48,7 @@ pub async fn get_module_transactions(
             context,
             chain_id,
             safe_address,
-            page_meta.as_ref(),
+            &page_meta,
             backend_txs.next,
             filters,
             1,
@@ -56,7 +57,7 @@ pub async fn get_module_transactions(
             context,
             chain_id,
             safe_address,
-            page_meta.as_ref(),
+            &page_meta,
             backend_txs.previous,
             filters,
             -1,
@@ -91,14 +92,13 @@ fn build_cursor(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
-    page_meta: Option<&PageMetadata>,
+    page_meta: &PageMetadata,
     backend_page_url: Option<String>,
     filters: &ModuleFilters,
     direction: i64,
 ) -> Option<String> {
     backend_page_url.as_ref().map(|_| {
-        let cursor = page_meta
-            .map(|page_meta| offset_page_meta(page_meta, direction * (page_meta.limit as i64)));
+        let cursor = offset_page_meta(page_meta, direction * (page_meta.limit as i64));
 
         build_absolute_uri(
             context,
@@ -106,7 +106,7 @@ fn build_cursor(
                 crate::routes::transactions::routes::get_module_transactions(
                     chain_id = chain_id,
                     safe_address = safe_address,
-                    cursor = cursor,
+                    cursor = Some(cursor),
                     filters = (filters.to.to_owned(), filters.module.to_owned())
                 )
             ),

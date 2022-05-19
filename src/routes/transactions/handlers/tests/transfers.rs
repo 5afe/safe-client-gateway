@@ -32,7 +32,7 @@ pub async fn get_incoming_transfers_no_filters() {
         });
 
     let mut transfer_request = Request::new(format!(
-        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/incoming-transfers/?",
+        "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/incoming-transfers/?limit=20&offset=0",
         &safe_address
     ));
     transfer_request.timeout(Duration::from_millis(transaction_request_timeout()));
@@ -74,7 +74,6 @@ pub async fn get_incoming_transfers_no_filters() {
 
     let actual_status = response.status();
     let value = &response.into_string().await.unwrap();
-    println!("{}", &value);
     let actual = serde_json::from_str::<Page<TransactionListItem>>(&value).unwrap();
 
     assert_eq!(actual_status, Status::Ok);

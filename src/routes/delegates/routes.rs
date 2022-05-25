@@ -5,9 +5,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Json;
 
-#[get(
-    "/v1/chains/<chain_id>/delegates?<safe>&<delegate>&<delegator>&<label>"
-)]
+#[get("/v1/chains/<chain_id>/delegates?<safe>&<delegate>&<delegator>&<label>")]
 pub async fn get_delegates<'e>(
     context: RequestContext,
     chain_id: String,

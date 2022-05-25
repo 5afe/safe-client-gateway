@@ -74,9 +74,6 @@
 <span id="69">69</span>
 <span id="70">70</span>
 <span id="71">71</span>
-<span id="72">72</span>
-<span id="73">73</span>
-<span id="74">74</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::delegates::handlers</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::delegates::models</span>::{<span class="ident">DelegateCreate</span>, <span class="ident">DelegateDelete</span>, <span class="ident">SafeDelegateDelete</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
@@ -84,10 +81,7 @@
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
 
-<span class="attribute">#[<span class="ident">get</span>(
-    <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/delegates?&lt;safe&gt;&amp;&lt;delegate&gt;&amp;&lt;delegator&gt;&amp;&lt;label&gt;&quot;</span>,
-    <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>
-)]</span>
+<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/delegates?&lt;safe&gt;&amp;&lt;delegate&gt;&amp;&lt;delegator&gt;&amp;&lt;label&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_delegates</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
     <span class="ident">chain_id</span>: <span class="ident">String</span>,

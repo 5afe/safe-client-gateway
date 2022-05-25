@@ -100,5 +100,5 @@ fn panic() -> Value {
 #[doc(hidden)]
 #[get("/")]
 pub fn root() -> Redirect {
-    Redirect::temporary("https://gnosis.github.io/safe-client-gateway/")
+    Redirect::temporary("https://safe.global/safe-client-gateway/")
 }

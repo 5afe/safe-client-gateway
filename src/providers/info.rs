@@ -23,16 +23,15 @@ use crate::common::models::page::Page;
 use crate::config::{
     address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,
     contract_info_request_timeout, default_request_timeout, long_error_duration,
-    request_cache_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
-    safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
-    token_cache_size_count, token_info_cache_duration, token_info_request_timeout,
+    request_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
+    short_error_duration, token_cache_size_count, token_info_cache_duration,
+    token_info_request_timeout,
 };
 use crate::providers::address_info::ContractInfo;
 use crate::utils::context::RequestContext;
-use crate::utils::errors::ApiResult;
+use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
 use crate::utils::http_client::{HttpClient, Request};
 use crate::utils::json::default_if_null;
-use crate::utils::urls::build_manifest_url;
 
 pub const TOKENS_KEY_BASE: &'static str = "dip_ti";
 lazy_static! {
@@ -164,11 +163,25 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo> {
-        // First try to get the Safe App data from the config service
-        match safe_app_info_from_safe_config_service(url, &self.client, &self.cache).await {
-            Ok(safe_app_info) => Ok(safe_app_info),
-            // As a fallback, we get it from the manifest
-            Err(_) => safe_app_info_from_manifest(url, &self.client, &self.cache).await,
+        let config_service_url = config_uri!("/v1/safe-apps/?url={}", url);
+
+        let result = RequestCached::new(config_service_url, &self.client, &self.cache)
+            .execute()
+            .await?;
+
+        let config_safe_apps: Vec<SafeApp> = serde_json::from_str::<Vec<SafeApp>>(&result)?;
+
+        match config_safe_apps.first() {
+            None => Err(ApiError {
+                status: 404,
+                details: ErrorDetails {
+                    code: 404,
+                    message: Some("No Safe Apps match the url".to_string()),
+                    arguments: None,
+                    debug: None,
+                },
+            }),
+            Some(first) => Ok(SafeAppInfo::from(first)),
         }
     }
 
@@ -345,50 +358,6 @@ impl DefaultInfoProvider<'_> {
             .await?;
         Ok(serde_json::from_str(&body)?)
     }
-}
-
-async fn safe_app_info_from_safe_config_service(
-    url: &str,
-    client: &Arc<dyn HttpClient>,
-    cache: &Arc<dyn Cache>,
-) -> ApiResult<SafeAppInfo> {
-    let config_service_url = config_uri!("/v1/safe-apps/?url={}", url);
-
-    let result = RequestCached::new(config_service_url, client, cache)
-        .execute()
-        .await?;
-
-    let config_safe_apps: Vec<SafeApp> = serde_json::from_str::<Vec<SafeApp>>(&result)?;
-
-    match config_safe_apps.first() {
-        None => {
-            bail!("No Safe Apps match the url")
-        }
-        Some(first) => Ok(SafeAppInfo::from(first)),
-    }
-}
-
-async fn safe_app_info_from_manifest(
-    url: &str,
-    client: &Arc<dyn HttpClient>,
-    cache: &Arc<dyn Cache>,
-) -> ApiResult<SafeAppInfo> {
-    let manifest_url = build_manifest_url(url)?;
-
-    let manifest_json = RequestCached::new(manifest_url, client, cache)
-        .cache_duration(safe_app_manifest_cache_duration())
-        .error_cache_duration(long_error_duration())
-        .cache_all_errors()
-        .request_timeout(safe_app_info_request_timeout())
-        .execute()
-        .await?;
-    let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
-
-    Ok(SafeAppInfo {
-        name: manifest.name.to_owned(),
-        url: url.to_owned(),
-        logo_uri: format!("{}/{}", url, manifest.icon_path),
-    })
 }
 
 pub fn generate_token_key(chain_id: &str) -> String {

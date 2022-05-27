@@ -215,10 +215,6 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
@@ -309,10 +305,6 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">balances_core_request_cache_duration</span>() -&gt; <span class="ident">usize</span> {
     <span class="ident">env_with_default</span>(<span class="string">&quot;BALANCES_CORE_REQUEST_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">safe_app_manifest_cache_duration</span>() -&gt; <span class="ident">usize</span> {
-    <span class="ident">env_with_default</span>(<span class="string">&quot;SAFE_APP_MANIFEST_CACHE_DURATION&quot;</span>, <span class="ident">indefinite_timeout</span>())
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">owners_for_safes_cache_duration</span>() -&gt; <span class="ident">usize</span> {

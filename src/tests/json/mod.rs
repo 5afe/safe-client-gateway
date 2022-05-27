@@ -154,7 +154,6 @@ pub const POLYGON_SAFE_APP_URL_QUERY: &str =
     include_str!("safe_apps/polygon_safe_app_url_query.json");
 pub const POLYGON_SAFE_APPS_WITH_TAGS: &str =
     include_str!("safe_apps/polygon_safe_apps_with_tags.json");
-pub const UNISWAP_SAFE_APP_MANIFEST: &str = include_str!("safe_apps/uniswap_manifest.json");
 
 pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_master_copies.json");
 

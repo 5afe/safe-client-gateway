@@ -83,14 +83,6 @@ impl From<&SafeApp> for SafeAppInfo {
     }
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
-struct Manifest {
-    pub(super) name: String,
-    pub(super) description: String,
-    #[serde(rename(deserialize = "iconPath"))]
-    pub(super) icon_path: String,
-}
-
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenInfo {

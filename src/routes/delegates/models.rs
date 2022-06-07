@@ -13,11 +13,11 @@ pub struct Delegate {
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DelegateCreate {
-    safe: Option<String>,
-    delegate: String,
-    delegator: String,
-    signature: String,
-    label: String,
+    pub safe: Option<String>,
+    pub delegate: String,
+    pub delegator: String,
+    pub signature: String,
+    pub label: String,
 }
 
 #[derive(Serialize, Deserialize)]

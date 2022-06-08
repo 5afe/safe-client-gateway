@@ -23,15 +23,15 @@ pub struct DelegateCreate {
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DelegateDelete {
-    delegate: String,
-    delegator: String,
-    signature: String,
+    pub delegate: String,
+    pub delegator: String,
+    pub signature: String,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SafeDelegateDelete {
-    safe: String,
-    delegate: String,
-    signature: String,
+    pub safe: String,
+    pub delegate: String,
+    pub signature: String,
 }

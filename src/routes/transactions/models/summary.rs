@@ -124,7 +124,7 @@ use serde::Serialize;
 /// </details>
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-#[cfg_attr(test, derive(PartialEq))]
+#[cfg_attr(test, derive(PartialEq, serde::Deserialize))]
 pub struct TransactionSummary {
     pub id: String,
     pub timestamp: i64,
@@ -138,7 +138,7 @@ pub struct TransactionSummary {
 
 #[derive(Serialize, Debug)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
-#[cfg_attr(test, derive(PartialEq))]
+#[cfg_attr(test, derive(PartialEq, serde::Deserialize))]
 pub enum ExecutionInfo {
     Multisig(MultisigExecutionInfo),
     Module(ModuleExecutionInfo),
@@ -146,7 +146,7 @@ pub enum ExecutionInfo {
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-#[cfg_attr(test, derive(PartialEq))]
+#[cfg_attr(test, derive(PartialEq, serde::Deserialize))]
 pub struct MultisigExecutionInfo {
     pub nonce: u64,
     pub confirmations_required: u64,
@@ -157,7 +157,7 @@ pub struct MultisigExecutionInfo {
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-#[cfg_attr(test, derive(PartialEq))]
+#[cfg_attr(test, derive(PartialEq, serde::Deserialize))]
 pub struct ModuleExecutionInfo {
     pub address: AddressEx,
 }
@@ -165,7 +165,7 @@ pub struct ModuleExecutionInfo {
 #[derive(Serialize, Debug)]
 #[serde(tag = "type")]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-#[cfg_attr(test, derive(PartialEq))]
+#[cfg_attr(test, derive(PartialEq, serde::Deserialize))]
 pub enum TransactionListItem {
     #[serde(rename_all = "camelCase")]
     Transaction {
@@ -184,13 +184,13 @@ pub enum TransactionListItem {
 }
 
 #[derive(Serialize, Debug)]
-#[cfg_attr(test, derive(PartialEq))]
+#[cfg_attr(test, derive(PartialEq, serde::Deserialize))]
 pub enum Label {
     Next,
     Queued,
 }
 
-#[derive(Serialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Debug, PartialEq, Clone, serde::Deserialize)]
 pub enum ConflictType {
     None,
     HasNext,

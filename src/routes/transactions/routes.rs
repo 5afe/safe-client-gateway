@@ -1,5 +1,9 @@
 use crate::cache::cache_operations::CacheResponse;
+use crate::cache::manager::ChainCache;
 use crate::config::tx_queued_cache_duration;
+use crate::routes::transactions::filters::module::ModuleFilters;
+use crate::routes::transactions::filters::multisig::MultisigFilters;
+use crate::routes::transactions::filters::transfer::TransferFilters;
 use crate::routes::transactions::handlers::{details, history, proposal, queued};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
@@ -8,6 +12,8 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
+
+use super::handlers::{module, multisig, transfers};
 
 /// `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
 /// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
@@ -30,8 +36,8 @@ pub async fn get_transactions(
     context: RequestContext,
     chain_id: String,
     details_id: String,
-) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| details::get_transactions_details(&context, &chain_id, &details_id))
         .execute()
         .await
@@ -65,7 +71,7 @@ pub async fn post_confirmation<'e>(
     chain_id: String,
     safe_tx_hash: String,
     tx_confirmation_request: Result<Json<ConfirmationRequest>, Error<'e>>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     let request: ConfirmationRequest = tx_confirmation_request?.0;
 
     proposal::submit_confirmation(
@@ -76,7 +82,7 @@ pub async fn post_confirmation<'e>(
     )
     .await?;
 
-    let tx_details = CacheResponse::new(&context)
+    let tx_details = CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| details::get_transactions_details(&context, &chain_id, &safe_tx_hash))
         .execute()
         .await;
@@ -122,8 +128,8 @@ pub async fn get_transactions_history(
     safe_address: String,
     cursor: Option<String>,
     timezone_offset: Option<String>,
-) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             history::get_history_transactions(
                 &context,
@@ -170,8 +176,8 @@ pub async fn get_transactions_queued(
     cursor: Option<String>,
     timezone_offset: Option<String>,
     trusted: Option<bool>,
-) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             queued::get_queued_transactions(
                 &context,
@@ -214,12 +220,12 @@ pub async fn post_transaction<'e>(
     chain_id: String,
     safe_address: String,
     multisig_transaction_request: Result<Json<MultisigTransactionRequest>, Error<'e>>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     let request: MultisigTransactionRequest = multisig_transaction_request?.0;
 
     proposal::propose_transaction(&context, &chain_id, &safe_address, &request).await?;
 
-    let tx_details = CacheResponse::new(&context)
+    let tx_details = CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| {
             details::get_transactions_details(&context, &chain_id, &request.safe_tx_hash)
         })
@@ -227,4 +233,58 @@ pub async fn post_transaction<'e>(
         .await;
 
     return tx_details;
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/incoming-transfers?<cursor>&<filters..>")]
+pub async fn get_incoming_transfers(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: TransferFilters,
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            transfers::get_incoming_transfers(&context, &chain_id, &safe_address, &cursor, &filters)
+        })
+        .execute()
+        .await
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/module-transactions?<cursor>&<filters..>")]
+pub async fn get_module_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: ModuleFilters,
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            module::get_module_transactions(&context, &chain_id, &safe_address, &cursor, &filters)
+        })
+        .execute()
+        .await
+}
+
+#[get("/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions?<cursor>&<filters..>")]
+pub async fn get_multisig_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    filters: MultisigFilters,
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            multisig::get_multisig_transactions(
+                &context,
+                &chain_id,
+                &safe_address,
+                &cursor,
+                &filters,
+            )
+        })
+        .execute()
+        .await
 }

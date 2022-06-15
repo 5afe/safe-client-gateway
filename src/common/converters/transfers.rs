@@ -60,7 +60,7 @@ impl TransferDto {
         }
     }
 
-    pub(super) fn get_transaction_hash(&self) -> Option<String> {
+    pub(crate) fn get_transaction_hash(&self) -> Option<String> {
         match self {
             TransferDto::Erc721(transfer) => Some(transfer.transaction_hash.to_owned()),
             TransferDto::Erc20(transfer) => Some(transfer.transaction_hash.to_owned()),

@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::balances::Balance as BalanceDto;
 use crate::common::models::backend::chains::NativeCurrency;
 use crate::config::{balances_cache_duration, balances_request_timeout};
@@ -28,7 +29,7 @@ pub async fn balances(
         exclude_spam
     )?;
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id))
         .cache_duration(balances_cache_duration())
         .request_timeout(balances_request_timeout())
         .execute()

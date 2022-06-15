@@ -60,6 +60,9 @@ pub fn active_routes() -> Vec<Route> {
         transactions::routes::get_transactions,
         transactions::routes::get_transactions_history,
         transactions::routes::get_transactions_queued,
+        transactions::routes::get_incoming_transfers,
+        transactions::routes::get_module_transactions,
+        transactions::routes::get_multisig_transactions,
         transactions::routes::post_transaction,
         transactions::routes::post_confirmation,
         hooks::routes::update,
@@ -97,5 +100,5 @@ fn panic() -> Value {
 #[doc(hidden)]
 #[get("/")]
 pub fn root() -> Redirect {
-    Redirect::temporary("https://gnosis.github.io/safe-client-gateway/")
+    Redirect::temporary("https://safe.global/safe-client-gateway/")
 }

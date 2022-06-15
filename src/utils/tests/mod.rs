@@ -4,4 +4,3 @@ mod json;
 mod macros;
 mod method_names;
 mod transactions;
-mod urls;

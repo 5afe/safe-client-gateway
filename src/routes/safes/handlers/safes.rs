@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::transactions::{MultisigTransaction, Transaction};
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::page::{Page, SafeList};
@@ -149,7 +150,7 @@ pub async fn get_owners_for_safe(
     let info_provider = DefaultInfoProvider::new(&chain_id, context);
 
     let url = core_uri!(info_provider, "/v1/owners/{}/safes/", owner_address)?;
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id))
         .cache_duration(owners_for_safes_cache_duration())
         .execute()
         .await?;

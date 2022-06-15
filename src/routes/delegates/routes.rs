@@ -5,10 +5,7 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Json;
 
-#[get(
-    "/v1/chains/<chain_id>/delegates?<safe>&<delegate>&<delegator>&<label>",
-    format = "application/json"
-)]
+#[get("/v1/chains/<chain_id>/delegates?<safe>&<delegate>&<delegator>&<label>")]
 pub async fn get_delegates<'e>(
     context: RequestContext,
     chain_id: String,
@@ -16,11 +13,11 @@ pub async fn get_delegates<'e>(
     delegate: Option<String>,
     delegator: Option<String>,
     label: Option<String>,
-) -> ApiResult<content::Json<String>> {
+) -> ApiResult<content::RawJson<String>> {
     let json = serde_json::to_string(
         &handlers::get_delegates(&context, chain_id, safe, delegate, delegator, label).await?,
     )?;
-    Ok(content::Json(json))
+    Ok(content::RawJson(json))
 }
 
 #[post(

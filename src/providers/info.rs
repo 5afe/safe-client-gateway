@@ -1,22 +1,8 @@
-use crate::cache::cache_operations::RequestCached;
-use crate::cache::Cache;
-use crate::common::models::addresses::AddressEx;
-use crate::common::models::backend::chains::ChainInfo;
-use crate::common::models::backend::safes::MasterCopy;
-use crate::common::models::page::Page;
-use crate::config::{
-    address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,
-    contract_info_request_timeout, default_request_timeout, long_error_duration,
-    request_cache_duration, safe_app_info_request_timeout, safe_app_manifest_cache_duration,
-    safe_info_cache_duration, safe_info_request_timeout, short_error_duration,
-    token_cache_size_count, token_info_cache_duration, token_info_request_timeout,
-};
-use crate::providers::address_info::ContractInfo;
-use crate::utils::context::RequestContext;
-use crate::utils::errors::ApiResult;
-use crate::utils::http_client::{HttpClient, Request};
-use crate::utils::json::default_if_null;
-use crate::utils::urls::build_manifest_url;
+use std::collections::HashMap;
+use std::future::Future;
+use std::sync::Arc;
+use std::time::Duration;
+
 use lazy_static::lazy_static;
 use mockall::automock;
 use rocket::futures::TryFutureExt;
@@ -25,10 +11,27 @@ use semver::Version;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use std::collections::HashMap;
-use std::future::Future;
-use std::sync::Arc;
-use std::time::Duration;
+
+use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
+use crate::cache::Cache;
+use crate::common::models::addresses::AddressEx;
+use crate::common::models::backend::chains::ChainInfo;
+use crate::common::models::backend::safe_apps::SafeApp;
+use crate::common::models::backend::safes::MasterCopy;
+use crate::common::models::page::Page;
+use crate::config::{
+    address_info_cache_duration, chain_info_cache_duration, chain_info_request_timeout,
+    contract_info_request_timeout, default_request_timeout, long_error_duration,
+    request_cache_duration, safe_info_cache_duration, safe_info_request_timeout,
+    short_error_duration, token_cache_size_count, token_info_cache_duration,
+    token_info_request_timeout,
+};
+use crate::providers::address_info::ContractInfo;
+use crate::utils::context::RequestContext;
+use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
+use crate::utils::http_client::{HttpClient, Request};
+use crate::utils::json::default_if_null;
 
 pub const TOKENS_KEY_BASE: &'static str = "dip_ti";
 lazy_static! {
@@ -70,12 +73,14 @@ pub struct SafeAppInfo {
     pub logo_uri: String,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
-struct Manifest {
-    pub(super) name: String,
-    pub(super) description: String,
-    #[serde(rename(deserialize = "iconPath"))]
-    pub(super) icon_path: String,
+impl From<&SafeApp> for SafeAppInfo {
+    fn from(safe_app: &SafeApp) -> Self {
+        SafeAppInfo {
+            name: safe_app.name.clone(),
+            url: safe_app.url.clone(),
+            logo_uri: safe_app.icon_url.clone(),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
@@ -150,21 +155,26 @@ impl InfoProvider for DefaultInfoProvider<'_> {
     }
 
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo> {
-        let manifest_url = build_manifest_url(url)?;
+        let config_service_url = config_uri!("/v1/safe-apps/?url={}", url);
 
-        let manifest_json = RequestCached::new(manifest_url, &self.client, &self.cache)
-            .cache_duration(safe_app_manifest_cache_duration())
-            .error_cache_duration(long_error_duration())
-            .cache_all_errors()
-            .request_timeout(safe_app_info_request_timeout())
+        let result = RequestCached::new(config_service_url, &self.client, &self.cache)
             .execute()
             .await?;
-        let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
-        Ok(SafeAppInfo {
-            name: manifest.name.to_owned(),
-            url: url.to_owned(),
-            logo_uri: format!("{}/{}", url, manifest.icon_path),
-        })
+
+        let config_safe_apps: Vec<SafeApp> = serde_json::from_str::<Vec<SafeApp>>(&result)?;
+
+        match config_safe_apps.first() {
+            None => Err(ApiError {
+                status: 404,
+                details: ErrorDetails {
+                    code: 404,
+                    message: Some("No Safe Apps match the url".to_string()),
+                    arguments: None,
+                    debug: None,
+                },
+            }),
+            Some(first) => Ok(SafeAppInfo::from(first)),
+        }
     }
 
     async fn contract_info(&self, contract_address: &str) -> ApiResult<ContractInfo> {
@@ -217,7 +227,7 @@ impl<'a> DefaultInfoProvider<'a> {
         DefaultInfoProvider {
             chain_id,
             client: context.http_client(),
-            cache: context.cache(),
+            cache: context.cache(ChainCache::from(chain_id)),
             safe_cache: Default::default(),
             token_cache: Default::default(),
             chain_cache: Default::default(),

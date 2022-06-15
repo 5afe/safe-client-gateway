@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::chains::ChainInfo as BackendChainInfo;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::config::{chain_info_cache_duration, chain_info_request_timeout};
@@ -23,7 +24,7 @@ pub async fn get_chains_paginated(
             .to_url_string()
     );
 
-    let body = RequestCached::new_from_context(url, context)
+    let body = RequestCached::new_from_context(url, context, ChainCache::Other)
         .request_timeout(chain_info_request_timeout())
         .cache_duration(chain_info_cache_duration())
         .execute()

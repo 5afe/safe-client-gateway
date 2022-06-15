@@ -1,10 +1,10 @@
 use crate::cache::cache_operations::RequestCached;
+use crate::cache::manager::ChainCache;
 use crate::config::collectibles_request_timeout;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use rocket::response::content;
-use rocket::response::content::Json;
+use rocket::response::content::RawJson;
 
 pub async fn collectibles(
     context: &RequestContext,
@@ -12,7 +12,7 @@ pub async fn collectibles(
     safe_address: &str,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
-) -> ApiResult<Json<String>> {
+) -> ApiResult<RawJson<String>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
 
     let url = core_uri!(
@@ -23,8 +23,8 @@ pub async fn collectibles(
         exclude_spam.unwrap_or(true)
     )?;
 
-    Ok(content::Json(
-        RequestCached::new_from_context(url, &context)
+    Ok(RawJson(
+        RequestCached::new_from_context(url, &context, ChainCache::from(chain_id))
             .request_timeout(collectibles_request_timeout())
             .execute()
             .await?,

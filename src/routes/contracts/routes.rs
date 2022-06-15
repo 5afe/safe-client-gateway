@@ -1,4 +1,5 @@
 use crate::cache::cache_operations::CacheResponse;
+use crate::cache::manager::ChainCache;
 use crate::routes::contracts::handlers;
 use crate::routes::contracts::models::DataDecoderRequest;
 use crate::utils::context::RequestContext;
@@ -56,8 +57,8 @@ pub async fn post_data_decoder<'e>(
     context: RequestContext,
     chain_id: String,
     data_decoder_request: Result<Json<DataDecoderRequest>, Error<'e>>,
-) -> ApiResult<content::Json<String>> {
-    Ok(content::Json(serde_json::to_string(
+) -> ApiResult<content::RawJson<String>> {
+    Ok(content::RawJson(serde_json::to_string(
         &handlers::request_data_decoded(&context, &chain_id, &data_decoder_request?.0).await?,
     )?))
 }
@@ -79,8 +80,8 @@ pub async fn get_contract(
     context: RequestContext,
     chain_id: String,
     contract_address: String,
-) -> ApiResult<content::Json<String>> {
-    CacheResponse::new(&context)
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
         .resp_generator(|| handlers::get_contract(&context, &chain_id, &contract_address))
         .execute()
         .await

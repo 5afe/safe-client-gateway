@@ -8,6 +8,10 @@ pub fn redis_uri() -> String {
     env::var("REDIS_URI").expect("REDIS_URI missing in env")
 }
 
+pub fn redis_uri_mainnet() -> String {
+    env::var("REDIS_URI_MAINNET").expect("REDIS_URI_MAINNET missing in env")
+}
+
 pub fn base_config_service_uri() -> String {
     format!(
         "{}{}",
@@ -84,10 +88,6 @@ pub fn balances_cache_duration() -> usize {
 
 pub fn balances_core_request_cache_duration() -> usize {
     env_with_default("BALANCES_CORE_REQUEST_CACHE_DURATION", indefinite_timeout())
-}
-
-pub fn safe_app_manifest_cache_duration() -> usize {
-    env_with_default("SAFE_APP_MANIFEST_CACHE_DURATION", indefinite_timeout())
 }
 
 pub fn owners_for_safes_cache_duration() -> usize {

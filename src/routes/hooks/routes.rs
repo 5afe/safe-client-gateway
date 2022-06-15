@@ -1,6 +1,7 @@
 use rocket::serde::json::Json;
 
 use crate::cache::cache_operations::{Invalidate, InvalidationPattern};
+use crate::cache::manager::ChainCache;
 use crate::common::models::backend::hooks::Payload;
 use crate::common::routes::authorization::AuthorizationToken;
 use crate::config::webhook_token;
@@ -17,7 +18,11 @@ pub async fn update(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    invalidate_caches(context.cache(), &update).await
+    invalidate_caches(
+        context.cache(ChainCache::from(update.chain_id.as_str())),
+        &update,
+    )
+    .await
 }
 
 #[post(
@@ -45,7 +50,7 @@ pub async fn post_hooks_events(
     _token: AuthorizationToken,
     payload: Json<Payload>,
 ) -> ApiResult<()> {
-    invalidate_caches(context.cache(), &payload).await
+    invalidate_caches(context.cache(ChainCache::from(chain_id.as_str())), &payload).await
 }
 
 #[post("/v1/flush/<token>", format = "json", data = "<invalidation_pattern>")]
@@ -57,7 +62,7 @@ pub async fn flush(
     if token != webhook_token() {
         bail!("Invalid token");
     }
-    Invalidate::new(invalidation_pattern.0, context.cache())
+    Invalidate::new(invalidation_pattern.0, context.cache(ChainCache::Other))
         .execute()
         .await;
     Ok(())
@@ -69,7 +74,7 @@ pub async fn post_flush_events(
     _token: AuthorizationToken,
     invalidation_pattern: Json<InvalidationPattern>,
 ) -> ApiResult<()> {
-    Invalidate::new(invalidation_pattern.0, context.cache())
+    Invalidate::new(invalidation_pattern.0, context.cache(ChainCache::Other))
         .execute()
         .await;
     Ok(())

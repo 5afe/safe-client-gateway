@@ -1,4 +1,14 @@
+use std::collections::HashMap;
+use std::future::Future;
+use std::sync::Arc;
+
+use rocket::futures::future::BoxFuture;
+use rocket::futures::FutureExt;
+use rocket::response::content;
+use serde::{Deserialize, Serialize};
+
 use crate::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+use crate::cache::manager::ChainCache;
 use crate::cache::{Cache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
 use crate::config::{
     base_config_service_uri, default_request_timeout, request_cache_duration,
@@ -8,13 +18,6 @@ use crate::providers::info::generate_token_key;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::HttpClient;
-use rocket::futures::future::BoxFuture;
-use rocket::futures::FutureExt;
-use rocket::response::content;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::future::Future;
-use std::sync::Arc;
 
 pub struct Invalidate {
     pub(super) cache: Arc<dyn Cache>,
@@ -115,10 +118,10 @@ impl<'a, R> CacheResponse<'a, R>
 where
     R: Serialize,
 {
-    pub fn new(context: &RequestContext) -> Self {
+    pub fn new(context: &RequestContext, chain_cache: ChainCache) -> Self {
         CacheResponse {
             key: context.request_id.to_string(),
-            cache: context.cache(),
+            cache: context.cache(chain_cache),
             duration: request_cache_duration(),
             resp_generator: None,
         }
@@ -142,7 +145,7 @@ where
         (self.resp_generator.as_ref().unwrap())().await
     }
 
-    pub async fn execute(&self) -> ApiResult<content::Json<String>> {
+    pub async fn execute(&self) -> ApiResult<content::RawJson<String>> {
         cache_response(self).await
     }
 }
@@ -172,10 +175,14 @@ impl RequestCached {
         }
     }
 
-    pub fn new_from_context(url: String, context: &RequestContext) -> Self {
+    pub fn new_from_context(
+        url: String,
+        context: &RequestContext,
+        chain_cache: ChainCache,
+    ) -> Self {
         RequestCached {
             client: context.http_client(),
-            cache: context.cache(),
+            cache: context.cache(chain_cache),
             url,
             request_timeout: default_request_timeout(),
             cache_duration: request_cache_duration(),

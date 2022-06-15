@@ -1,33 +1,33 @@
 [package]
 name = "safe-client-gateway"
-version = "3.20.1"
+version = "3.25.0"
 authors = ["jpalvarezl <jose.alvarez@gnosis.io>", "rmeissner <richard@gnosis.io>", "fmrsabino <frederico@gnosis.io>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bb8-redis = "0.10.1"
+bb8-redis = "0.11.0"
 bigdecimal = { version = "0.3.0", features = ["serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 derivative = "2.2.0"
 dotenv = "0.15.0"
 env_logger = "0.9.0"
-ethcontract-common = "0.15.1"
+ethcontract-common = "0.15.4"
 ethabi = "16.0.0"
-itertools = "0.10.1"
+itertools = "0.10.3"
 lazy_static = "1.4.0"
-log = "0.4"
-mockall = "0.11.0"
-rand = "0.8.4"
+log = "0.4.17"
+mockall = "0.11.1"
+rand = "0.8.5"
 r2d2 = "0.8.9"
-regex = "1.5.4"
-reqwest = { version = "0.11.3", features = ["json"] }
-rocket = { version = "0.5.0-rc.1", features = ["tls", "json"] }
-rocket_codegen = { version = "0.5.0-rc.1" }
-semver = "1.0.4"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = { version = "1.0", features = ["raw_value"] }
-serde_repr = "0.1"
-thiserror = "1.0.20"
+regex = "1.5.6"
+reqwest = { version = "0.11.10", features = ["json"] }
+rocket = { version = "0.5.0-rc.2", features = ["tls", "json"] }
+rocket_codegen = { version = "0.5.0-rc.2" }
+semver = "1.0.9"
+serde = { version = "1.0.137", features = ["derive"] }
+serde_json = { version = "1.0.81", features = ["raw_value"] }
+serde_repr = "0.1.8"
+thiserror = "1.0.31"
 tokio = "1.16.1"

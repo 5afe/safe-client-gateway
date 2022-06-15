@@ -71,7 +71,10 @@ async fn post_hooks_events_valid_token() {
 
     let request = client
         .post("/v1/chains/1/hooks/events")
-        .body(&json!({"address": "0x6810e776880C02933D47DB1b9fc05908e5386b96"}).to_string())
+        .body(
+            &json!({"address": "0x6810e776880C02933D47DB1b9fc05908e5386b96", "chainId" : "1"})
+                .to_string(),
+        )
         .header(ContentType::JSON)
         .header(Header::new("Authorization", "Basic test_webhook_token"))
         .header(Header::new("Host", "test.gnosis.io"));

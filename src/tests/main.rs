@@ -1,9 +1,12 @@
-use crate::cache::{Cache, MockCache};
-use crate::create_service_cache;
-use crate::utils::http_client::{HttpClient, MockHttpClient};
+use std::sync::Arc;
+
 use dotenv::dotenv;
 use rocket::{Build, Rocket, Route};
-use std::sync::Arc;
+
+use crate::cache::manager::ChainCache;
+use crate::cache::{Cache, MockCache};
+use crate::utils::http_client::{HttpClient, MockHttpClient};
+use crate::{create_cache_manager, RedisCacheManager};
 
 #[cfg(test)]
 pub async fn setup_rocket(
@@ -11,13 +14,20 @@ pub async fn setup_rocket(
     routes: impl Into<Vec<Route>>,
 ) -> Rocket<Build> {
     dotenv().ok();
-    let cache = create_service_cache().await;
-    cache.invalidate_pattern("*").await; // Clearing cache for test
+    let cache_manager = create_cache_manager().await;
+    cache_manager
+        .cache_for_chain(ChainCache::Mainnet)
+        .invalidate_pattern("*")
+        .await;
+    cache_manager
+        .cache_for_chain(ChainCache::Other)
+        .invalidate_pattern("*")
+        .await;
 
     rocket::build()
         .mount("/", routes)
         .manage(Arc::new(mock_http_client) as Arc<dyn HttpClient>)
-        .manage(Arc::new(cache) as Arc<dyn Cache>)
+        .manage(Arc::new(cache_manager) as Arc<dyn RedisCacheManager>)
 }
 
 #[cfg(test)]
@@ -36,5 +46,5 @@ pub fn setup_rocket_with_mock_cache(
 
 #[rocket::async_test]
 pub async fn main_produces_valid_rocket_instance() {
-    crate::rocket().await;
+    let _ = crate::rocket().await;
 }

@@ -6,7 +6,7 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
-
+use rocket_okapi::{openapi};
 /// `/v1/chains/<chain_id>/data-decoder` <br/>
 /// Returns [DataDecoded](crate::common::models::data_decoded::DataDecoded)
 ///
@@ -48,6 +48,7 @@ use rocket::serde::json::{Error, Json};
 ///   ]
 /// }
 /// ```
+//TODO add to swagger 
 #[post(
     "/v1/chains/<chain_id>/data-decoder",
     format = "application/json",
@@ -75,6 +76,7 @@ pub async fn post_data_decoder<'e>(
 /// ## Path
 ///
 /// - `GET /v1/chains/<chain_id>/contract/<contract_address>`
+#[openapi(tag = "Contracts")]
 #[get("/v1/chains/<chain_id>/contracts/<contract_address>")]
 pub async fn get_contract(
     context: RequestContext,

@@ -34,13 +34,7 @@ pub mod transactions;
 pub fn active_routes() -> Vec<Route> {
     routes![
         root,
-        balances::routes::get_balances,
-        balances::routes::get_supported_fiat,
-        chains::routes::get_chain,
-        chains::routes::get_chains,
-        collectibles::routes::get_collectibles,
         contracts::routes::post_data_decoder,
-        contracts::routes::get_contract,
         delegates::routes::delete_delegate,
         delegates::routes::delete_safe_delegate,
         delegates::routes::get_delegates,
@@ -75,7 +69,13 @@ pub fn openapi_active_routes() -> Vec<Route> {
         about::routes::get_about,
         about::routes::get_chains_about,
         about::routes::redis,
-        about::routes::get_master_copies
+        about::routes::get_master_copies,
+        balances::routes::get_balances,
+        balances::routes::get_supported_fiat,
+        chains::routes::get_chain,
+        chains::routes::get_chains,
+        collectibles::routes::get_collectibles,
+        contracts::routes::get_contract
         ]
 }
 

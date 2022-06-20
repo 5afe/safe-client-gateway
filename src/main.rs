@@ -49,8 +49,8 @@ async fn rocket() -> Rocket<Build> {
     let cache_manager = create_cache_manager().await;
 
     rocket::build()
-        .mount("/swagger",openapi_active_routes(),)
-        .mount("/", active_routes())
+        .mount("/",openapi_active_routes())
+        //.mount("/", active_routes())
         .mount("/",make_swagger_ui(&SwaggerUIConfig {
                 url: "../openapi.json".to_owned(),
                 ..Default::default()

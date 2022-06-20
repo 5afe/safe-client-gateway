@@ -1,6 +1,10 @@
 use std::sync::Arc;
 
 use rocket::request::{self, FromRequest, Request};
+use rocket_okapi::{
+    gen::OpenApiGenerator,
+    request::{OpenApiFromRequest, RequestHeaderInput},
+};
 
 use crate::cache::manager::ChainCache;
 use crate::cache::Cache;
@@ -78,5 +82,17 @@ impl<'r> FromRequest<'r> for RequestContext {
             cache_manager,
             http_client,
         });
+    }
+}
+
+
+impl<'a> OpenApiFromRequest<'a> for RequestContext {
+
+    fn from_request_input(
+        _gen: &mut OpenApiGenerator,
+        _name: String,
+        _required: bool,
+    ) -> rocket_okapi::Result<RequestHeaderInput> {
+        Ok(RequestHeaderInput::None)
     }
 }

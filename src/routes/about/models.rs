@@ -1,5 +1,6 @@
 use serde::Serialize;
-
+use rocket_okapi::okapi::schemars;
+use rocket_okapi::okapi::schemars::JsonSchema;
 /// ChainAbout
 ///
 /// <details>
@@ -14,7 +15,7 @@ use serde::Serialize;
 /// }
 /// ```
 /// </details>
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct ChainAbout {
     /// base URI string used for backend requests
@@ -36,7 +37,7 @@ pub struct ChainAbout {
 /// }
 /// ```
 /// </details>
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct About {
     /// crate name

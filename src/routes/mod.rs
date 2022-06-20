@@ -1,7 +1,7 @@
 use rocket::response::Redirect;
 use rocket::serde::json::{json, Value};
 use rocket::{Catcher, Route};
-
+use rocket_okapi::{openapi_get_routes};
 /// # About endpoint
 pub mod about;
 /// # Balance endpoints
@@ -34,11 +34,6 @@ pub mod transactions;
 pub fn active_routes() -> Vec<Route> {
     routes![
         root,
-        about::routes::backbone,
-        about::routes::get_about,
-        about::routes::get_chains_about,
-        about::routes::redis,
-        about::routes::get_master_copies,
         balances::routes::get_balances,
         balances::routes::get_supported_fiat,
         chains::routes::get_chain,
@@ -72,6 +67,16 @@ pub fn active_routes() -> Vec<Route> {
         hooks::routes::flush,
         health::routes::health
     ]
+}
+
+pub fn openapi_active_routes() -> Vec<Route> {
+    openapi_get_routes![
+        about::routes::backbone,
+        about::routes::get_about,
+        about::routes::get_chains_about,
+        about::routes::redis,
+        about::routes::get_master_copies
+        ]
 }
 
 #[doc(hidden)]

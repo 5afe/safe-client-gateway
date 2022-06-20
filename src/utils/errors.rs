@@ -12,17 +12,20 @@ use std::fmt;
 use std::io::Cursor;
 use std::result::Result;
 use thiserror::Error;
+use rocket_okapi::okapi::openapi3::Responses;
+use rocket_okapi::okapi::schemars::{self, Map};
+use rocket_okapi::{gen::OpenApiGenerator, response::OpenApiResponderInner, OpenApiError};
 
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 
-#[derive(Error, Debug, PartialEq)]
+#[derive(Error, Debug, PartialEq, schemars::JsonSchema)]
 #[cfg_attr(test, derive(Serialize, Deserialize))]
 pub struct ApiError {
     pub status: u16,
     pub details: ErrorDetails,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, schemars::JsonSchema)]
 pub struct ErrorDetails {
     pub code: u64,
     pub message: Option<String>,
@@ -93,7 +96,18 @@ impl ApiError {
         }
     }
 }
+impl OpenApiResponderInner for ApiError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        use rocket_okapi::okapi::openapi3::{RefOr, Response as OpenApiReponse};
 
+        let mut responses = Map::new();
+
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
 impl fmt::Display for ErrorDetails {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(

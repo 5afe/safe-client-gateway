@@ -9,6 +9,7 @@ use crate::routes::about::handlers;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
+use rocket_okapi::{openapi};
 
 /// `/v1/chains/<chain_id>/about` <br />
 /// Returns [ChainAbout](crate::routes::about::models::ChainAbout)
@@ -24,6 +25,7 @@ use crate::utils::http_client::Request;
 /// ## Query parameters
 ///
 /// There are no query parameters for this endpoint
+#[openapi(tag = "About")]
 #[get("/v1/chains/<chain_id>/about")]
 pub async fn get_chains_about(
     context: RequestContext,
@@ -46,6 +48,7 @@ pub async fn get_chains_about(
 /// ## Path
 ///
 /// `/about`
+#[openapi(tag = "About")]
 #[get("/about")]
 pub async fn get_about() -> ApiResult<content::RawJson<String>> {
     Ok(content::RawJson(serde_json::to_string(&handlers::about())?))
@@ -74,6 +77,7 @@ pub async fn get_about() -> ApiResult<content::RawJson<String>> {
 /// ]
 /// ```
 /// </details>
+#[openapi(tag = "About")]
 #[get("/v1/chains/<chain_id>/about/master-copies")]
 pub async fn get_master_copies(
     context: RequestContext,
@@ -86,7 +90,9 @@ pub async fn get_master_copies(
         .await
 }
 
+
 #[doc(hidden)]
+#[openapi(tag = "About")]
 #[get("/v1/chains/<chain_id>/about/backbone")]
 pub async fn backbone(
     context: RequestContext,
@@ -100,6 +106,7 @@ pub async fn backbone(
 }
 
 #[doc(hidden)]
+#[openapi(tag = "About")]
 #[get("/about/redis")]
 pub async fn redis(context: RequestContext, _token: AuthorizationToken) -> ApiResult<String> {
     Ok(context

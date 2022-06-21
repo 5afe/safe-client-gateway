@@ -42,32 +42,3 @@ impl<'r> FromRequest<'r> for AuthorizationToken {
         }
     }
 }
-
-impl<'a> OpenApiFromRequest<'a> for AuthorizationToken {
-    fn from_request_input(
-        _gen: &mut OpenApiGenerator,
-        _name: String,
-        _required: bool,
-    ) -> rocket_okapi::Result<RequestHeaderInput> {
-        // Setup global requirement for Security scheme
-        let security_scheme = SecurityScheme {
-            description: Some("Requires an API key to access, key is: `mykey`.".to_owned()),
-            // Setup data requirements.
-            data: SecuritySchemeData::ApiKey {
-                name: "Authorization".to_owned(),
-                location: "header".to_owned(),
-            },
-            extensions: Object::default(),
-        };
-        // Add the requirement for this route/endpoint
-        let mut security_req = SecurityRequirement::new();
-        // Each security requirement needs to be met before access is allowed.
-        security_req.insert("ApiKeyAuth".to_owned(), Vec::new());
-        // These vvvvvvv-----^^^^^^^^^^ values need to match exactly!
-        Ok(RequestHeaderInput::Security(
-            "ApiKeyAuth".to_owned(),
-            security_scheme,
-            security_req,
-        ))
-    }
-}

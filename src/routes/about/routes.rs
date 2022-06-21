@@ -105,7 +105,6 @@ pub async fn backbone(
 }
 
 #[doc(hidden)]
-#[openapi(tag = "About")]
 #[get("/about/redis")]
 pub async fn redis(context: RequestContext, _token: AuthorizationToken) -> ApiResult<String> {
     Ok(context

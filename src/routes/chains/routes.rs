@@ -5,7 +5,7 @@ use crate::routes::chains::handlers::{get_chains_paginated, get_single_chain};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
-use rocket_okapi::{openapi};
+use rocket_okapi::openapi;
 
 /// `/v1/chains/<chain_id>/` <br/>
 /// Returns [ChainInfo](crate::routes::chains::models::ChainInfo)

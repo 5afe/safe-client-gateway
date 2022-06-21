@@ -8,7 +8,7 @@ use crate::routes::balances::handlers::fiat_codes;
 use crate::routes::balances::{handlers, handlers_v2};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use rocket_okapi::{openapi};
+use rocket_okapi::openapi;
 
 /// `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
 /// Returns [Balances](crate::routes::balances::models::Balances)

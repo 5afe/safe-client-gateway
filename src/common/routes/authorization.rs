@@ -1,14 +1,14 @@
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome};
 use rocket::Request;
-use rocket_okapi::okapi::openapi3::{Object, SecurityScheme, SecuritySchemeData, SecurityRequirement};
-use serde::Serialize;
+use rocket_okapi::gen::OpenApiGenerator;
+use rocket_okapi::okapi::openapi3::{
+    Object, SecurityRequirement, SecurityScheme, SecuritySchemeData,
+};
 use rocket_okapi::okapi::schemars;
 use rocket_okapi::okapi::schemars::JsonSchema;
-use rocket_okapi::{
-    gen::OpenApiGenerator,
-    request::{OpenApiFromRequest, RequestHeaderInput},
-};
+use rocket_okapi::request::{OpenApiFromRequest, RequestHeaderInput};
+use serde::Serialize;
 
 use crate::config::webhook_token;
 

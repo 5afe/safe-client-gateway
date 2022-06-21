@@ -1,7 +1,7 @@
 use rocket::response::Redirect;
 use rocket::serde::json::{json, Value};
 use rocket::{Catcher, Route};
-use rocket_okapi::{openapi_get_routes};
+use rocket_okapi::openapi_get_routes;
 /// # About endpoint
 pub mod about;
 /// # Balance endpoints
@@ -32,19 +32,41 @@ pub mod transactions;
 
 #[doc(hidden)]
 pub fn active_routes() -> Vec<Route> {
-    routes![
+    let no_openapi = routes![
         root,
         contracts::routes::post_data_decoder,
+        notifications::routes::post_notification_registration,
+        safes::routes::post_safe_gas_estimation,
+        safes::routes::post_safe_gas_estimation_v2,
+        transactions::routes::post_confirmation,
+        transactions::routes::post_transaction,
+        // This endpoints shouldn't be exposed on swagger
+        about::routes::redis,
+        hooks::routes::update,
+        hooks::routes::post_hook_update,
+        hooks::routes::post_hooks_events,
+        hooks::routes::post_flush_events,
+        hooks::routes::flush
+    ];
+
+    let openapi = openapi_get_routes![
+        about::routes::backbone,
+        about::routes::get_about,
+        about::routes::get_chains_about,
+        about::routes::get_master_copies,
+        balances::routes::get_balances,
+        balances::routes::get_supported_fiat,
+        chains::routes::get_chain,
+        chains::routes::get_chains,
+        collectibles::routes::get_collectibles,
+        contracts::routes::get_contract,
         delegates::routes::delete_delegate,
         delegates::routes::delete_safe_delegate,
         delegates::routes::get_delegates,
         delegates::routes::post_delegate,
-        notifications::routes::post_notification_registration,
         notifications::routes::delete_notification_registration,
         safes::routes::get_safe_info,
         safes::routes::get_owners,
-        safes::routes::post_safe_gas_estimation,
-        safes::routes::post_safe_gas_estimation_v2,
         safe_apps::routes::get_safe_apps,
         transactions::routes::get_transactions,
         transactions::routes::get_transactions_history,
@@ -52,31 +74,9 @@ pub fn active_routes() -> Vec<Route> {
         transactions::routes::get_incoming_transfers,
         transactions::routes::get_module_transactions,
         transactions::routes::get_multisig_transactions,
-        transactions::routes::post_transaction,
-        transactions::routes::post_confirmation,
-        hooks::routes::update,
-        hooks::routes::post_hook_update,
-        hooks::routes::post_hooks_events,
-        hooks::routes::post_flush_events,
-        hooks::routes::flush,
         health::routes::health
-    ]
-}
-
-pub fn openapi_active_routes() -> Vec<Route> {
-    openapi_get_routes![
-        about::routes::backbone,
-        about::routes::get_about,
-        about::routes::get_chains_about,
-        about::routes::redis,
-        about::routes::get_master_copies,
-        balances::routes::get_balances,
-        balances::routes::get_supported_fiat,
-        chains::routes::get_chain,
-        chains::routes::get_chains,
-        collectibles::routes::get_collectibles,
-        contracts::routes::get_contract
-        ]
+    ];
+    return [&no_openapi[..], &openapi[..]].concat();
 }
 
 #[doc(hidden)]

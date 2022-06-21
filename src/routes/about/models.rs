@@ -1,6 +1,6 @@
-use serde::Serialize;
 use rocket_okapi::okapi::schemars;
 use rocket_okapi::okapi::schemars::JsonSchema;
+use serde::Serialize;
 /// ChainAbout
 ///
 /// <details>

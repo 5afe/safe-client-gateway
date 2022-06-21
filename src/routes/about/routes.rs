@@ -9,7 +9,7 @@ use crate::routes::about::handlers;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
-use rocket_okapi::{openapi};
+use rocket_okapi::openapi;
 
 /// `/v1/chains/<chain_id>/about` <br />
 /// Returns [ChainAbout](crate::routes::about::models::ChainAbout)
@@ -89,7 +89,6 @@ pub async fn get_master_copies(
         .execute()
         .await
 }
-
 
 #[doc(hidden)]
 #[openapi(tag = "About")]

@@ -5,6 +5,11 @@ use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
 use rocket::serde::json::Error;
+use rocket_okapi::gen::OpenApiGenerator;
+use rocket_okapi::okapi::openapi3::Responses;
+use rocket_okapi::okapi::schemars::{self, Map};
+use rocket_okapi::response::OpenApiResponderInner;
+use rocket_okapi::OpenApiError;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_json::value::Value;
@@ -12,9 +17,6 @@ use std::fmt;
 use std::io::Cursor;
 use std::result::Result;
 use thiserror::Error;
-use rocket_okapi::okapi::openapi3::Responses;
-use rocket_okapi::okapi::schemars::{self, Map};
-use rocket_okapi::{gen::OpenApiGenerator, response::OpenApiResponderInner, OpenApiError};
 
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 

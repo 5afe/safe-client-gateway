@@ -8,9 +8,10 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
-
+use rocket_okapi::openapi;
 /// `/v1/chains/<chain_id>/safes/<safe_address>` <br />
 /// Returns [SafeState](crate::routes::safes::models::SafeState)
+#[openapi(tag = "Safes")]
 #[get("/v1/chains/<chain_id>/safes/<safe_address>")]
 pub async fn get_safe_info(
     context: RequestContext,
@@ -27,6 +28,7 @@ pub async fn get_safe_info(
 /// Returns [Vec] of [String]
 ///
 /// Returns a list of Safes for which the address is an owner
+#[openapi(tag = "Safes")]
 #[get("/v1/chains/<chain_id>/owners/<owner_address>/safes")]
 pub async fn get_owners(
     context: RequestContext,
@@ -73,6 +75,7 @@ pub async fn get_owners(
 ///   "safeTxGas": "63417"
 /// }
 /// ```
+
 #[post(
     "/v1/chains/<chain_id>/safes/<safe_address>/multisig-transactions/estimations",
     format = "application/json",

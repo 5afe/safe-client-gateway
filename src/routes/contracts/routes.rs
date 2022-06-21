@@ -6,7 +6,7 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::{Error, Json};
-use rocket_okapi::{openapi};
+use rocket_okapi::openapi;
 /// `/v1/chains/<chain_id>/data-decoder` <br/>
 /// Returns [DataDecoded](crate::common::models::data_decoded::DataDecoded)
 ///
@@ -48,7 +48,7 @@ use rocket_okapi::{openapi};
 ///   ]
 /// }
 /// ```
-//TODO add to swagger 
+// TODO add to swagger
 #[post(
     "/v1/chains/<chain_id>/data-decoder",
     format = "application/json",

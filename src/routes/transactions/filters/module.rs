@@ -1,9 +1,11 @@
 use super::QueryParam;
 use rocket::form::FromForm;
 use rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
+use rocket_okapi::okapi::schemars;
+use rocket_okapi::okapi::schemars::JsonSchema;
 use std::fmt;
 
-#[derive(FromForm, Debug)]
+#[derive(FromForm, Debug, JsonSchema)]
 pub struct ModuleFilters {
     pub to: Option<String>,
     pub module: Option<String>,

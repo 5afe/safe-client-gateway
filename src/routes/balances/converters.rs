@@ -43,8 +43,8 @@ impl BalanceDto {
                 logo_uri,
             },
             balance: self.balance.to_owned(),
-            fiat_balance: fiat_balance.to_string(),
-            fiat_conversion: fiat_conversion.to_string(),
+            fiat_balance: ((fiat_balance * 10000.0).round() / 10000.0).to_string(),
+            fiat_conversion: ((fiat_conversion * 10000.0).round() / 10000.0).to_string(),
         }
     }
 }

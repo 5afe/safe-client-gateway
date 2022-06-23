@@ -19,11 +19,11 @@ fn native_token_balance() {
             logo_uri: Some("https://test.token.image.url".to_string()),
         },
         balance: "7457594371050000001".to_string(),
-        fiat_balance: "2523.7991".to_string(),
-        fiat_conversion: "338.42".to_string(),
+        fiat_balance: "7928.7487".to_string(),
+        fiat_conversion: "1063.1777".to_string(),
     };
 
-    let usd_to_fiat = 1.0;
+    let usd_to_fiat = std::f64::consts::PI;
     let native_currency = NativeCurrency {
         name: "Ether".to_string(),
         symbol: "ETH".to_string(),

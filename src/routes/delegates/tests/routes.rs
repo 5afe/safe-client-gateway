@@ -129,7 +129,6 @@ async fn add_delegate() {
         .body(String::from(super::BACKEND_CREATE_DELEGATE))
         .header(Header::new("Host", "test.gnosis.io/api"))
         .header(ContentType::JSON);
-    println!("{:?}", request);
     let response = request.dispatch().await;
     let actual_status = response.status();
 

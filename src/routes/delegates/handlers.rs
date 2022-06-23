@@ -48,7 +48,6 @@ pub async fn post_delegate(
         request.body(serde_json::to_string(&safe_delegate_create).ok());
         request
     };
-    println!("{:?}", request);
     context.http_client().post(request).await?;
     Ok(())
 }

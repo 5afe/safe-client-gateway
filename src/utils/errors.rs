@@ -7,7 +7,7 @@ use rocket::response::{self, Responder, Response};
 use rocket::serde::json::Error;
 use rocket_okapi::gen::OpenApiGenerator;
 use rocket_okapi::okapi::openapi3::Responses;
-use rocket_okapi::okapi::schemars::{self, Map};
+use rocket_okapi::okapi::schemars::{self, JsonSchema, Map};
 use rocket_okapi::response::OpenApiResponderInner;
 use rocket_okapi::OpenApiError;
 use serde::{Deserialize, Serialize};
@@ -20,14 +20,14 @@ use thiserror::Error;
 
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 
-#[derive(Error, Debug, PartialEq, schemars::JsonSchema)]
+#[derive(Error, Debug, PartialEq, JsonSchema)]
 #[cfg_attr(test, derive(Serialize, Deserialize))]
 pub struct ApiError {
     pub status: u16,
     pub details: ErrorDetails,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, schemars::JsonSchema)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, JsonSchema)]
 pub struct ErrorDetails {
     pub code: u64,
     pub message: Option<String>,
@@ -100,16 +100,10 @@ impl ApiError {
 }
 impl OpenApiResponderInner for ApiError {
     fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
-        use rocket_okapi::okapi::openapi3::{RefOr, Response as OpenApiReponse};
-
-        let mut responses = Map::new();
-
-        Ok(Responses {
-            responses,
-            ..Default::default()
-        })
+        Ok(Responses::default())
     }
 }
+
 impl fmt::Display for ErrorDetails {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(

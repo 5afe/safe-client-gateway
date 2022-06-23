@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use crate::common::models::page::Page;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::delegates::models::{
@@ -46,7 +48,7 @@ pub async fn post_delegate(
         request.body(serde_json::to_string(&safe_delegate_create).ok());
         request
     };
-
+    println!("{:?}", request);
     context.http_client().post(request).await?;
     Ok(())
 }

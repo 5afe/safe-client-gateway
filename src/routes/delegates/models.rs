@@ -13,25 +13,25 @@ pub struct Delegate {
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DelegateCreate {
-    pub safe: Option<String>,
-    pub delegate: String,
-    pub delegator: String,
-    pub signature: String,
-    pub label: String,
+    safe: Option<String>,
+    delegate: String,
+    delegator: String,
+    signature: String,
+    label: String,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DelegateDelete {
-    pub delegate: String,
-    pub delegator: String,
-    pub signature: String,
+    delegate: String,
+    delegator: String,
+    signature: String,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SafeDelegateDelete {
-    pub safe: String,
-    pub delegate: String,
-    pub signature: String,
+    safe: String,
+    delegate: String,
+    signature: String,
 }

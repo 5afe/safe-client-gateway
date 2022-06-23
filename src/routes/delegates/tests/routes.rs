@@ -6,6 +6,7 @@ use crate::tests::main::setup_rocket;
 use crate::utils::http_client::{MockHttpClient, Request, Response};
 use core::time::Duration;
 use mockall::predicate::eq;
+use rocket::http::hyper::request;
 use rocket::http::{ContentType, Header, Status};
 use rocket::local::asynchronous::Client;
 use serde_json::json;
@@ -97,16 +98,10 @@ async fn add_delegate() {
     let mut delegates_request = Request::new(format!(
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/delegates/"
     ));
-
-    delegates_request.body(Some(serde_json::to_string(
-        &DelegateCreate{
-            delegate: String::from("0x4CA998cE947Aed03c340141a5491Df539ff1Fd05"),
-            delegator: String::from("0xe6450667b7E9C19845751183f93bc97B01fBAec0"),
-            signature: String::from("0x7c3b61f015633198494c4f6153272e390785a2d1f5c661ac7fa7e53c434cf67d019a7778eb317ab4fb7c4c4cbec0dfa6130094f680da8458d849f58a4a412d291b"),
-            label: String::from("test_delegate"),
-            safe: None
-            }).unwrap())
-        );
+    let mut body_string = String::from(super::BACKEND_CREATE_DELEGATE);
+    body_string = body_string.replace('\n', "");
+    body_string = body_string.replace(' ', "");
+    delegates_request.body(Some(body_string));
     delegates_request.timeout(Duration::from_millis(default_request_timeout()));
     mock_http_client
         .expect_post()
@@ -114,7 +109,7 @@ async fn add_delegate() {
         .with(eq(delegates_request))
         .returning(move |_| {
             Ok(Response {
-                body: String::from(super::BACKEND_CREATE_DELEGATE_RESPONSE),
+                body: String::from(super::BACKEND_CREATE_DELEGATE),
                 status_code: 201,
             })
         });
@@ -131,14 +126,10 @@ async fn add_delegate() {
     // Create post request
     let request = client
         .post(format!("/v1/chains/4/delegates"))
-        .body(&json!({
-            "delegate": "0x4CA998cE947Aed03c340141a5491Df539ff1Fd05",
-            "delegator": "0xe6450667b7E9C19845751183f93bc97B01fBAec0",
-            "signature": "0x7c3b61f015633198494c4f6153272e390785a2d1f5c661ac7fa7e53c434cf67d019a7778eb317ab4fb7c4c4cbec0dfa6130094f680da8458d849f58a4a412d291b",
-            "label": "test_delegate"
-          }).to_string())
+        .body(String::from(super::BACKEND_CREATE_DELEGATE))
         .header(Header::new("Host", "test.gnosis.io/api"))
         .header(ContentType::JSON);
+    println!("{:?}", request);
     let response = request.dispatch().await;
     let actual_status = response.status();
 
@@ -170,13 +161,10 @@ async fn delete_delegate() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/delegates/{}/",
         delegate_address
     ));
-    delegates_request.body(Some(serde_json::to_string(
-        &DelegateDelete{
-            delegate: String::from(delegate_address),
-            delegator: String::from("0xe6450667b7E9C19845751183f93bc97B01fBAec0"),
-            signature: String::from("0x7c3b61f015633198494c4f6153272e390785a2d1f5c661ac7fa7e53c434cf67d019a7778eb317ab4fb7c4c4cbec0dfa6130094f680da8458d849f58a4a412d291b"),
-            }).unwrap())
-        );
+    let mut body_string = String::from(super::BACKEND_DELETE_DELEGATE);
+    body_string = body_string.replace('\n', "");
+    body_string = body_string.replace(' ', "");
+    delegates_request.body(Some(body_string));
     delegates_request.timeout(Duration::from_millis(default_request_timeout()));
     mock_http_client
         .expect_delete()
@@ -199,12 +187,8 @@ async fn delete_delegate() {
     .expect("valid rocket instance");
     // Create request to delete a delegate
     let request = client
-        .delete(format!("/v1/chains/4/delegates/{}",delegate_address))
-        .body(&json!({
-            "delegate": delegate_address,
-            "delegator": "0xe6450667b7E9C19845751183f93bc97B01fBAec0",
-            "signature": "0x7c3b61f015633198494c4f6153272e390785a2d1f5c661ac7fa7e53c434cf67d019a7778eb317ab4fb7c4c4cbec0dfa6130094f680da8458d849f58a4a412d291b"
-          }).to_string())
+        .delete(format!("/v1/chains/4/delegates/{}", delegate_address))
+        .body(String::from(super::BACKEND_DELETE_DELEGATE))
         .header(Header::new("Host", "test.gnosis.io/api"))
         .header(ContentType::JSON);
     let response = request.dispatch().await;
@@ -239,13 +223,10 @@ async fn delete_delegate_safe() {
         "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1/safes/{}/delegates/{}/",
         safe_address, delegate_address
     ));
-    delegates_request.body(Some(serde_json::to_string(
-        &SafeDelegateDelete{
-            delegate: String::from(delegate_address),
-            safe: String::from(safe_address),
-            signature: String::from("0x7c3b61f015633198494c4f6153272e390785a2d1f5c661ac7fa7e53c434cf67d019a7778eb317ab4fb7c4c4cbec0dfa6130094f680da8458d849f58a4a412d291b"),
-            }).unwrap())
-        );
+    let mut body_string = String::from(super::BACKEND_DELETE_DELEGATE_SAFE);
+    body_string = body_string.replace('\n', "");
+    body_string = body_string.replace(' ', "");
+    delegates_request.body(Some(body_string));
     delegates_request.timeout(Duration::from_millis(default_request_timeout()));
     mock_http_client
         .expect_delete()
@@ -268,12 +249,11 @@ async fn delete_delegate_safe() {
     .expect("valid rocket instance");
     // Create request to delete a delegate
     let request = client
-        .delete(format!("/v1/chains/4/safes/{}/delegates/{}/",safe_address,delegate_address))
-        .body(&json!({
-            "delegate": delegate_address,
-            "safe": safe_address,
-            "signature": "0x7c3b61f015633198494c4f6153272e390785a2d1f5c661ac7fa7e53c434cf67d019a7778eb317ab4fb7c4c4cbec0dfa6130094f680da8458d849f58a4a412d291b"
-          }).to_string())
+        .delete(format!(
+            "/v1/chains/4/safes/{}/delegates/{}/",
+            safe_address, delegate_address
+        ))
+        .body(String::from(super::BACKEND_DELETE_DELEGATE_SAFE))
         .header(Header::new("Host", "test.gnosis.io/api"))
         .header(ContentType::JSON);
     let response = request.dispatch().await;

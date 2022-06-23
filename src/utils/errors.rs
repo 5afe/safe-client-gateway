@@ -98,6 +98,8 @@ impl ApiError {
         }
     }
 }
+
+// Set to no documentation for different http codes in swagger
 impl OpenApiResponderInner for ApiError {
     fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
         Ok(Responses::default())

@@ -83,6 +83,7 @@ impl<'r> FromRequest<'r> for RequestContext {
     }
 }
 
+// Set to none the required header parameters for requestguard RequestContext.
 impl<'a> OpenApiFromRequest<'a> for RequestContext {
     fn from_request_input(
         _gen: &mut OpenApiGenerator,

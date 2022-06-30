@@ -7,7 +7,7 @@ use rocket::response::{self, Responder, Response};
 use rocket::serde::json::Error;
 use rocket_okapi::gen::OpenApiGenerator;
 use rocket_okapi::okapi::openapi3::Responses;
-use rocket_okapi::okapi::schemars::{self, JsonSchema, Map};
+use rocket_okapi::okapi::schemars::{self, JsonSchema};
 use rocket_okapi::response::OpenApiResponderInner;
 use rocket_okapi::OpenApiError;
 use serde::{Deserialize, Serialize};

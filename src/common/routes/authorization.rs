@@ -2,9 +2,7 @@ use crate::config::webhook_token;
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome};
 use rocket::Request;
-use serde::Serialize;
 
-#[derive(Serialize, Debug)]
 pub struct AuthorizationToken {
     value: String,
 }

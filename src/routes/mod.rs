@@ -34,6 +34,8 @@ pub mod transactions;
 pub fn active_routes() -> Vec<Route> {
     let no_openapi = routes![
         root,
+        // rocket_okapi don't support lifetimes
+        // https://github.com/GREsau/okapi/issues/84
         contracts::routes::post_data_decoder,
         notifications::routes::post_notification_registration,
         safes::routes::post_safe_gas_estimation,

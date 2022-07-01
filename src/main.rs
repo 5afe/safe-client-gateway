@@ -15,7 +15,7 @@ use utils::cors::CORS;
 use crate::cache::manager::{create_cache_manager, RedisCacheManager};
 use crate::routes::error_catchers;
 use crate::utils::http_client::{setup_http_client, HttpClient};
-use rocket_okapi::swagger_ui::*;
+use rocket_okapi::swagger_ui::{make_swagger_ui, SwaggerUIConfig};
 
 #[doc(hidden)]
 #[macro_use]

@@ -4,7 +4,9 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Json;
+use rocket_okapi::openapi;
 
+#[openapi(tag = "Delegates")]
 #[get("/v1/chains/<chain_id>/delegates?<safe>&<delegate>&<delegator>&<label>")]
 pub async fn get_delegates<'e>(
     context: RequestContext,
@@ -20,6 +22,7 @@ pub async fn get_delegates<'e>(
     Ok(content::RawJson(json))
 }
 
+#[openapi(tag = "Delegates")]
 #[post(
     "/v1/chains/<chain_id>/delegates",
     format = "application/json",
@@ -33,6 +36,7 @@ pub async fn post_delegate<'e>(
     return handlers::post_delegate(&context, chain_id, safe_delegate.0).await;
 }
 
+#[openapi(tag = "Delegates")]
 #[delete(
     "/v1/chains/<chain_id>/delegates/<delegate_address>",
     format = "application/json",
@@ -48,6 +52,7 @@ pub async fn delete_delegate<'e>(
         .await;
 }
 
+#[openapi(tag = "Delegates")]
 #[delete(
     "/v1/chains/<chain_id>/safes/<safe_address>/delegates/<delegate_address>",
     format = "application/json",

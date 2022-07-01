@@ -2,7 +2,7 @@ use crate::routes::safe_apps::handlers::safe_apps;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
-
+use rocket_okapi::openapi;
 /// `/v1/chains/<chain_id>/safe-apps` <br />
 /// Returns [SafeApp](crate::routes::safe_apps::models::SafeApp)
 ///
@@ -63,6 +63,7 @@ use rocket::response::content;
 ///          }
 ///     }
 /// ]
+#[openapi(tag = "SafeApps")]
 #[get("/v1/chains/<chain_id>/safe-apps?<client_url>")]
 pub async fn get_safe_apps(
     context: RequestContext,

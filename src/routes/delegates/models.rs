@@ -1,3 +1,5 @@
+use rocket_okapi::okapi::schemars;
+use rocket_okapi::okapi::schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -10,7 +12,7 @@ pub struct Delegate {
     label: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DelegateCreate {
     safe: Option<String>,
@@ -20,7 +22,7 @@ pub struct DelegateCreate {
     label: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DelegateDelete {
     delegate: String,
@@ -28,7 +30,7 @@ pub struct DelegateDelete {
     signature: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct SafeDelegateDelete {
     safe: String,

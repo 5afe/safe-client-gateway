@@ -5,6 +5,11 @@ use rocket::http::{ContentType, Status};
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
 use rocket::serde::json::Error;
+use rocket_okapi::gen::OpenApiGenerator;
+use rocket_okapi::okapi::openapi3::Responses;
+use rocket_okapi::okapi::schemars::{self, JsonSchema};
+use rocket_okapi::response::OpenApiResponderInner;
+use rocket_okapi::OpenApiError;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_json::value::Value;
@@ -15,14 +20,14 @@ use thiserror::Error;
 
 pub type ApiResult<T, E = ApiError> = Result<T, E>;
 
-#[derive(Error, Debug, PartialEq)]
+#[derive(Error, Debug, PartialEq, JsonSchema)]
 #[cfg_attr(test, derive(Serialize, Deserialize))]
 pub struct ApiError {
     pub status: u16,
     pub details: ErrorDetails,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, JsonSchema)]
 pub struct ErrorDetails {
     pub code: u64,
     pub message: Option<String>,
@@ -91,6 +96,13 @@ impl ApiError {
             status: status_code,
             details: message,
         }
+    }
+}
+
+// Set to no documentation for different http codes in swagger
+impl OpenApiResponderInner for ApiError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        Ok(Responses::default())
     }
 }
 

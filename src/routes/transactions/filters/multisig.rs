@@ -1,9 +1,11 @@
 use super::QueryParam;
 use rocket::form::FromForm;
 use rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
+use rocket_okapi::okapi::schemars;
+use rocket_okapi::okapi::schemars::JsonSchema;
 use std::fmt;
 
-#[derive(FromForm, Debug)]
+#[derive(FromForm, Debug, JsonSchema)]
 pub struct MultisigFilters {
     #[field(name = "execution_date__gte")]
     pub execution_date_gte: Option<String>,

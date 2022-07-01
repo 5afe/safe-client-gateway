@@ -8,6 +8,7 @@ use crate::routes::balances::handlers::fiat_codes;
 use crate::routes::balances::{handlers, handlers_v2};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use rocket_okapi::openapi;
 
 /// `/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>`<br/>
 /// Returns [Balances](crate::routes::balances::models::Balances)
@@ -28,6 +29,7 @@ use crate::utils::errors::ApiResult;
 ///
 /// - `<trusted>` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`
 /// - `<exclude_spam>`: A token is defined as spam by our core handlers process when adding them. Default value is `true`
+#[openapi(tag = "Balances")]
 #[get("/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>")]
 pub async fn get_balances(
     context: RequestContext,
@@ -72,6 +74,7 @@ pub async fn get_balances(
 /// Supported fiat codes for balances
 /// `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `<fiat>` segment of the balance endpoint.
 /// The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.
+#[openapi(tag = "Balances")]
 #[get("/v1/balances/supported-fiat-codes")]
 pub async fn get_supported_fiat(context: RequestContext) -> ApiResult<content::RawJson<String>> {
     CacheResponse::new(&context, ChainCache::Other)

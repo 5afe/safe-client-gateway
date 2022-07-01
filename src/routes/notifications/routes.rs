@@ -3,6 +3,7 @@ use crate::routes::notifications::models::NotificationRegistrationRequest;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::serde::json::{Error, Json};
+use rocket_okapi::openapi;
 
 /// `/v1/register/notifications` <br />
 /// Returns `()`
@@ -48,6 +49,7 @@ pub async fn post_notification_registration<'e>(
 /// ## Query parameters
 ///
 /// No query parameters available for this endpoint.
+#[openapi(tag = "Notifications")]
 #[delete("/v1/chains/<chain_id>/notifications/devices/<uuid>/safes/<safe_address>")]
 pub async fn delete_notification_registration(
     context: RequestContext,

@@ -62,11 +62,14 @@
 <span id="57">57</span>
 <span id="58">58</span>
 <span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::handlers</span>::{<span class="ident">delete_registration</span>, <span class="ident">post_registration</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::models::NotificationRegistrationRequest</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">Error</span>, <span class="ident">Json</span>};
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
 
 <span class="doccomment">/// `/v1/register/notifications` &lt;br /&gt;</span>
 <span class="doccomment">/// Returns `()`</span>
@@ -112,6 +115,7 @@
 <span class="doccomment">/// ## Query parameters</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// No query parameters available for this endpoint.</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Notifications&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">delete</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_notification_registration</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,

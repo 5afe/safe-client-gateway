@@ -293,6 +293,13 @@
 <span id="288">288</span>
 <span id="289">289</span>
 <span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::tx_queued_cache_duration</span>;
@@ -309,6 +316,7 @@
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">Error</span>, <span class="ident">Json</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::handlers</span>::{<span class="ident">module</span>, <span class="ident">multisig</span>, <span class="ident">transfers</span>};
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
 
 <span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;` &lt;br /&gt;</span>
 <span class="doccomment">/// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)</span>
@@ -326,6 +334,7 @@
 <span class="doccomment">/// ## Query paramets</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// There aren&#39;t any query parameters that can be passed to this endpoint.</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;details_id&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -416,6 +425,7 @@
 <span class="doccomment">/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.</span>
 <span class="doccomment">/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.</span>
 <span class="doccomment">/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions_history</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -463,6 +473,7 @@
 <span class="doccomment">/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.</span>
 <span class="doccomment">/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.</span>
 <span class="doccomment">/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions_queued</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -530,6 +541,7 @@
     <span class="kw">return</span> <span class="ident">tx_details</span>;
 }
 
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/incoming-transfers?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_incoming_transfers</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -546,6 +558,7 @@
         .<span class="kw">await</span>
 }
 
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/module-transactions?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_module_transactions</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -562,6 +575,7 @@
         .<span class="kw">await</span>
 }
 
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multisig_transactions</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,

@@ -107,10 +107,17 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::Redirect</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">json</span>, <span class="ident">Value</span>};
 <span class="kw">use</span> <span class="ident">rocket</span>::{<span class="ident">Catcher</span>, <span class="ident">Route</span>};
-
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi_get_routes</span>;
 <span class="doccomment">/// # About endpoint</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">about</span>;
 <span class="doccomment">/// # Balance endpoints</span>
@@ -141,30 +148,43 @@
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">active_routes</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Route</span><span class="op">&gt;</span> {
-    <span class="macro">routes!</span>[
+    <span class="kw">let</span> <span class="ident">no_openapi</span> <span class="op">=</span> <span class="macro">routes!</span>[
         <span class="ident">root</span>,
+        <span class="comment">// rocket_okapi don&#39;t support lifetimes</span>
+        <span class="comment">// https://github.com/GREsau/okapi/issues/84</span>
+        <span class="ident">contracts::routes::post_data_decoder</span>,
+        <span class="ident">notifications::routes::post_notification_registration</span>,
+        <span class="ident">safes::routes::post_safe_gas_estimation</span>,
+        <span class="ident">safes::routes::post_safe_gas_estimation_v2</span>,
+        <span class="ident">transactions::routes::post_confirmation</span>,
+        <span class="ident">transactions::routes::post_transaction</span>,
+        <span class="comment">// This endpoints shouldn&#39;t be exposed on swagger</span>
+        <span class="ident">about::routes::redis</span>,
+        <span class="ident">hooks::routes::update</span>,
+        <span class="ident">hooks::routes::post_hook_update</span>,
+        <span class="ident">hooks::routes::post_hooks_events</span>,
+        <span class="ident">hooks::routes::post_flush_events</span>,
+        <span class="ident">hooks::routes::flush</span>
+    ];
+
+    <span class="kw">let</span> <span class="ident">openapi</span> <span class="op">=</span> <span class="macro">openapi_get_routes!</span>[
         <span class="ident">about::routes::backbone</span>,
         <span class="ident">about::routes::get_about</span>,
         <span class="ident">about::routes::get_chains_about</span>,
-        <span class="ident">about::routes::redis</span>,
         <span class="ident">about::routes::get_master_copies</span>,
         <span class="ident">balances::routes::get_balances</span>,
         <span class="ident">balances::routes::get_supported_fiat</span>,
         <span class="ident">chains::routes::get_chain</span>,
         <span class="ident">chains::routes::get_chains</span>,
         <span class="ident">collectibles::routes::get_collectibles</span>,
-        <span class="ident">contracts::routes::post_data_decoder</span>,
         <span class="ident">contracts::routes::get_contract</span>,
         <span class="ident">delegates::routes::delete_delegate</span>,
         <span class="ident">delegates::routes::delete_safe_delegate</span>,
         <span class="ident">delegates::routes::get_delegates</span>,
         <span class="ident">delegates::routes::post_delegate</span>,
-        <span class="ident">notifications::routes::post_notification_registration</span>,
         <span class="ident">notifications::routes::delete_notification_registration</span>,
         <span class="ident">safes::routes::get_safe_info</span>,
         <span class="ident">safes::routes::get_owners</span>,
-        <span class="ident">safes::routes::post_safe_gas_estimation</span>,
-        <span class="ident">safes::routes::post_safe_gas_estimation_v2</span>,
         <span class="ident">safe_apps::routes::get_safe_apps</span>,
         <span class="ident">transactions::routes::get_transactions</span>,
         <span class="ident">transactions::routes::get_transactions_history</span>,
@@ -172,15 +192,9 @@
         <span class="ident">transactions::routes::get_incoming_transfers</span>,
         <span class="ident">transactions::routes::get_module_transactions</span>,
         <span class="ident">transactions::routes::get_multisig_transactions</span>,
-        <span class="ident">transactions::routes::post_transaction</span>,
-        <span class="ident">transactions::routes::post_confirmation</span>,
-        <span class="ident">hooks::routes::update</span>,
-        <span class="ident">hooks::routes::post_hook_update</span>,
-        <span class="ident">hooks::routes::post_hooks_events</span>,
-        <span class="ident">hooks::routes::post_flush_events</span>,
-        <span class="ident">hooks::routes::flush</span>,
         <span class="ident">health::routes::health</span>
-    ]
+    ];
+    <span class="kw">return</span> [<span class="kw-2">&amp;</span><span class="ident">no_openapi</span>[..], <span class="kw-2">&amp;</span><span class="ident">openapi</span>[..]].<span class="ident">concat</span>();
 }
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>

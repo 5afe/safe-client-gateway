@@ -169,11 +169,12 @@
 <span id="164">164</span>
 <span id="165">165</span>
 <span id="166">166</span>
+<span id="167">167</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::collectibles::handlers::collectibles</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
 <span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` &lt;br /&gt;</span>
 <span class="doccomment">/// Returns collectibles from the transaction handlers</span>
 <span class="doccomment">///</span>
@@ -318,6 +319,7 @@
 <span class="doccomment">/// ]</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// &lt;/details&gt;</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Collectibles&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_collectibles</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,

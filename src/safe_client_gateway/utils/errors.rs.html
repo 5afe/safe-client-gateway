@@ -167,6 +167,18 @@
 <span id="162">162</span>
 <span id="163">163</span>
 <span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::log_all_error_responses</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Response</span> <span class="kw">as</span> <span class="ident">HttpClientResponse</span>;
 <span class="kw">use</span> <span class="ident">reqwest::StatusCode</span>;
@@ -174,6 +186,11 @@
 <span class="kw">use</span> <span class="ident">rocket::request::Request</span>;
 <span class="kw">use</span> <span class="ident">rocket::response</span>::{<span class="self">self</span>, <span class="ident">Responder</span>, <span class="ident">Response</span>};
 <span class="kw">use</span> <span class="ident">rocket::serde::json::Error</span>;
+<span class="kw">use</span> <span class="ident">rocket_okapi::gen::OpenApiGenerator</span>;
+<span class="kw">use</span> <span class="ident">rocket_okapi::okapi::openapi3::Responses</span>;
+<span class="kw">use</span> <span class="ident">rocket_okapi::okapi::schemars</span>::{<span class="self">self</span>, <span class="ident">JsonSchema</span>};
+<span class="kw">use</span> <span class="ident">rocket_okapi::response::OpenApiResponderInner</span>;
+<span class="kw">use</span> <span class="ident">rocket_okapi::OpenApiError</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">serde_json</span>;
 <span class="kw">use</span> <span class="ident">serde_json::value::Value</span>;
@@ -184,14 +201,14 @@
 
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span> <span class="op">=</span> <span class="ident">ApiError</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Error</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Error</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ApiError</span> {
     <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">u16</span>,
     <span class="kw">pub</span> <span class="ident">details</span>: <span class="ident">ErrorDetails</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ErrorDetails</span> {
     <span class="kw">pub</span> <span class="ident">code</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -260,6 +277,13 @@
             <span class="ident">status</span>: <span class="ident">status_code</span>,
             <span class="ident">details</span>: <span class="ident">message</span>,
         }
+    }
+}
+
+<span class="comment">// Set to no documentation for different http codes in swagger</span>
+<span class="kw">impl</span> <span class="ident">OpenApiResponderInner</span> <span class="kw">for</span> <span class="ident">ApiError</span> {
+    <span class="kw">fn</span> <span class="ident">responses</span>(<span class="ident">_generator</span>: <span class="kw-2">&amp;mut</span> <span class="ident">OpenApiGenerator</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Responses</span>, <span class="ident">OpenApiError</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">Responses::default</span>())
     }
 }
 

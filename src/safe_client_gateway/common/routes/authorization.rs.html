@@ -37,12 +37,10 @@
 <span id="32">32</span>
 <span id="33">33</span>
 <span id="34">34</span>
-<span id="35">35</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::http::Status</span>;
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::webhook_token</span>;
+<span class="kw">use</span> <span class="ident">rocket::http::Status</span>;
 <span class="kw">use</span> <span class="ident">rocket::request</span>::{<span class="ident">FromRequest</span>, <span class="ident">Outcome</span>};
 <span class="kw">use</span> <span class="ident">rocket::Request</span>;
-
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::webhook_token</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AuthorizationToken</span> {
     <span class="ident">value</span>: <span class="ident">String</span>,

@@ -156,6 +156,9 @@
 <span id="151">151</span>
 <span id="152">152</span>
 <span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::owners_for_safes_cache_duration</span>;
@@ -166,9 +169,10 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">Error</span>, <span class="ident">Json</span>};
-
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
 <span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;` &lt;br /&gt;</span>
 <span class="doccomment">/// Returns [SafeState](crate::routes::safes::models::SafeState)</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Safes&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_safe_info</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -185,6 +189,7 @@
 <span class="doccomment">/// Returns [Vec] of [String]</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Returns a list of Safes for which the address is an owner</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Safes&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/owners/&lt;owner_address&gt;/safes&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_owners</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -231,6 +236,7 @@
 <span class="doccomment">///   &quot;safeTxGas&quot;: &quot;63417&quot;</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
+
 <span class="attribute">#[<span class="ident">post</span>(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions/estimations&quot;</span>,
     <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,

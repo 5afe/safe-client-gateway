@@ -84,6 +84,9 @@
 <span id="79">79</span>
 <span id="80">80</span>
 <span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::futures::FutureExt</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 
@@ -94,6 +97,7 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::balances</span>::{<span class="ident">handlers</span>, <span class="ident">handlers_v2</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
 
 <span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/balances/&lt;fiat&gt;?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;`&lt;br/&gt;</span>
 <span class="doccomment">/// Returns [Balances](crate::routes::balances::models::Balances)</span>
@@ -114,6 +118,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// - `&lt;trusted&gt;` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`</span>
 <span class="doccomment">/// - `&lt;exclude_spam&gt;`: A token is defined as spam by our core handlers process when adding them. Default value is `true`</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Balances&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/balances/&lt;fiat&gt;?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_balances</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -158,6 +163,7 @@
 <span class="doccomment">/// Supported fiat codes for balances</span>
 <span class="doccomment">/// `/v1/balances/supported-fiat-codes` : returns the supported fiat codes to be included int the `&lt;fiat&gt;` segment of the balance endpoint.</span>
 <span class="doccomment">/// The entries are sorted alphabetically, with the exception of `USD` and `EUR` being placed in the top of the list in that order.</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Balances&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/balances/supported-fiat-codes&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_supported_fiat</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::Other</span>)

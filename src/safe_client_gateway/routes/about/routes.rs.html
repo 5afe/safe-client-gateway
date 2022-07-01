@@ -113,6 +113,11 @@
 <span id="108">108</span>
 <span id="109">109</span>
 <span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::content</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
@@ -124,6 +129,7 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Request</span>;
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
 
 <span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about` &lt;br /&gt;</span>
 <span class="doccomment">/// Returns [ChainAbout](crate::routes::about::models::ChainAbout)</span>
@@ -139,6 +145,7 @@
 <span class="doccomment">/// ## Query parameters</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// There are no query parameters for this endpoint</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_chains_about</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -161,6 +168,7 @@
 <span class="doccomment">/// ## Path</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// `/about`</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/about&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_about</span>() -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">content::RawJson</span>(<span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">handlers::about</span>())<span class="question-mark">?</span>))
@@ -189,6 +197,7 @@
 <span class="doccomment">/// ]</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// &lt;/details&gt;</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/master-copies&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_master_copies</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,
@@ -202,6 +211,7 @@
 }
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/backbone&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backbone</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,

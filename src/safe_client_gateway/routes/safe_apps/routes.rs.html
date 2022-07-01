@@ -78,11 +78,12 @@
 <span id="73">73</span>
 <span id="74">74</span>
 <span id="75">75</span>
+<span id="76">76</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::safe_apps::handlers::safe_apps</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
 <span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-
+<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
 <span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safe-apps` &lt;br /&gt;</span>
 <span class="doccomment">/// Returns [SafeApp](crate::routes::safe_apps::models::SafeApp)</span>
 <span class="doccomment">///</span>
@@ -143,6 +144,7 @@
 <span class="doccomment">///          }</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// ]</span>
+<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;SafeApps&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safe-apps?&lt;client_url&gt;&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_safe_apps</span>(
     <span class="ident">context</span>: <span class="ident">RequestContext</span>,

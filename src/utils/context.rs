@@ -83,7 +83,9 @@ impl<'r> FromRequest<'r> for RequestContext {
     }
 }
 
-// Set to none the required header parameters for requestguard RequestContext.
+/// Implements [OpenApiFromRequest] for [RequestContext]
+/// This is required for custom types that implement [FromRequest]
+/// Since we do not want to set any headers on OpenApi for [RequestContext] we return [RequestHeaderInput::None]
 impl<'a> OpenApiFromRequest<'a> for RequestContext {
     fn from_request_input(
         _gen: &mut OpenApiGenerator,

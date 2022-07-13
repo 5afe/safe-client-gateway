@@ -47,6 +47,14 @@
       "created_at": "2022-05-25T13:46:30Z",
       "repoId": 273504006,
       "pullRequestNo": 893
+    },
+    {
+      "name": "hectorgomezv",
+      "id": 21182069,
+      "comment_id": 1183117893,
+      "created_at": "2022-07-13T11:43:52Z",
+      "repoId": 273504006,
+      "pullRequestNo": 923
     }
   ]
 }

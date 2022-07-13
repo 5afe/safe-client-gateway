@@ -21,7 +21,7 @@ use crate::utils::{SAFE_TRANSFER_FROM_METHOD, TRANSFER_FROM_METHOD, TRANSFER_MET
 use rocket::futures::future::OptionFuture;
 
 impl SafeTransaction {
-    async fn transaction_info(
+    pub(crate) async fn transaction_info(
         &self,
         info_provider: &(impl InfoProvider + Sync),
         is_cancellation: bool,

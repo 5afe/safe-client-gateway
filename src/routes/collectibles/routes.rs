@@ -1,8 +1,13 @@
+use crate::cache::cache_operations::CacheResponse;
+use crate::cache::manager::ChainCache;
+use crate::config::chain_info_response_cache_duration;
 use crate::routes::collectibles::handlers::collectibles;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket_okapi::openapi;
+
+use super::handlers::collectibles_paginated;
 /// `/v1/chains/<chain_id>/safes/<safe_address>/collectibles?<trusted>&<exclude_spam>` <br />
 /// Returns collectibles from the transaction handlers
 ///
@@ -164,4 +169,30 @@ pub async fn get_collectibles(
         exclude_spam,
     )
     .await
+}
+
+#[openapi(tag = "Collectibles")]
+#[get("/v2/chains/<chain_id>/safes/<safe_address>/collectibles?<cursor>&<trusted>&<exclude_spam>")]
+pub async fn get_collectibles_paginated(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: Option<String>,
+    trusted: Option<bool>,
+    exclude_spam: Option<bool>,
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::Other)
+        .duration(chain_info_response_cache_duration())
+        .resp_generator(|| {
+            collectibles_paginated(
+                &context,
+                chain_id.as_str(),
+                safe_address.as_str(),
+                trusted,
+                exclude_spam,
+                &cursor,
+            )
+        })
+        .execute()
+        .await
 }

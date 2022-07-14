@@ -1,0 +1,75 @@
+{
+"count": 4, 
+"next": "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v2/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/collectibles/?limit=3&offset=3&trusted=false&exclude_spam=true", 
+"previous": null, 
+"results":[
+    {
+        "address": "0x7667A25a327ee97EEc7d5d69F846659238F3c078",
+        "tokenName": "Copernicus.20200210.212404",
+        "tokenSymbol": "CP",
+        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x7667A25a327ee97EEc7d5d69F846659238F3c078.png",
+        "id": "11",
+        "uri": "https://projectcopernicus.autonomous-times.com/assets/json/ticket_11.json",
+        "name": null,
+        "description": null,
+        "imageUri": null,
+        "metadata": {}
+    },
+    {
+        "address": "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85",
+        "tokenName": "Ethereum Name Service",
+        "tokenSymbol": "ENS",
+        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/ENS.png",
+        "id": "73759565539416811842765838110575927933836232265069912251972739501781285886854",
+        "uri": null,
+        "name": "safe1.eth",
+        "description": ".eth ENS Domain",
+        "imageUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/ENS.png",
+        "metadata": {
+            "name": "safe1.eth",
+            "description": ".eth ENS Domain",
+            "image": "https://gnosis-safe-token-logos.s3.amazonaws.com/ENS.png"
+        }
+    },
+    {
+        "address": "0xAad76bea7CFEc82927239415BB18D2e93518ecBB",
+        "tokenName": ".crypto",
+        "tokenSymbol": "UD",
+        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xAad76bea7CFEc82927239415BB18D2e93518ecBB.png",
+        "id": "16901347448092016018370066087420610201854448193660137846183334589211113480159",
+        "uri": "https://metadata.staging.unstoppabledomains.com/metadata/udtestdev-361786.crypto",
+        "name": "udtestdev-361786.crypto",
+        "description": "A CNS or UNS blockchain domain. Use it to resolve your cryptocurrency addresses and decentralized websites.",
+        "imageUri": "https://storage.googleapis.com/dot-crypto-metadata-api/images/unstoppabledomains.svg",
+        "metadata": {
+            "name": "udtestdev-361786.crypto",
+            "description": "A CNS or UNS blockchain domain. Use it to resolve your cryptocurrency addresses and decentralized websites.",
+            "properties": {
+                "records": {}
+            },
+            "externalUrl": "https://unstoppabledomains.com/search?searchTerm=udtestdev-361786.crypto",
+            "image": "https://storage.googleapis.com/dot-crypto-metadata-api/images/unstoppabledomains.svg",
+            "attributes": [
+                {
+                    "traitType": "domain",
+                    "value": "udtestdev-361786.crypto"
+                },
+                {
+                    "traitType": "level",
+                    "value": 2
+                },
+                {
+                    "traitType": "length",
+                    "value": 16
+                },
+                {
+                    "traitType": "type",
+                    "value": "standard"
+                }
+            ],
+            "imageData": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"250px\" height=\"250px\" viewBox=\"0 0 250 250\" version=\"1.1\" style=\"background-color:#4C47F7\">\n  <!-- Generator: Sketch 61 (89581) - https://sketch.com -->\n  <title>unstoppabledomains_dot_crypto-</title>\n  <desc>Created with Sketch.</desc>\n  <g id=\"unstoppabledomains\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n      <rect fill=\"#4C47F7\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\"/>\n      <g id=\"Group-6\" transform=\"translate(70.000000, 154.000000)\">\n          <g id=\"Group\" transform=\"translate(5.000000, 43.000000)\">\n          <rect x=\"0\" y=\"0\" width=\"100\" height=\"34\" stroke=\"#2FE9FF\" stroke-width=\"2.112px\" rx=\"17\"/>\n              <text  dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#FFFFFF\" font-family=\"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Oxygen, Cantarell, sans-serif\"> <tspan x=\"19%\" y=\"20\">.CRYPTO</tspan></text>\n          </g>\n          <text text-anchor=\"middle\" id=\"domain\" font-family=\"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Oxygen, Cantarell, sans-serif\" font-size=\"24\" font-weight=\"bold\" fill=\"#FFFFFF\">\n              <tspan x=\"22.5%\" y=\"26\">udtestdev-361786</tspan>\n          </text>\n      </g>\n      <g id=\"sign\" transform=\"translate(56.000000, 19.000000)\">\n          <polygon id=\"Rectangle-Copy-3\" fill=\"#2FE9FF\" points=\"137.000268 2.12559903 137.000268 48.8887777 -2.72848394e-13 104.154352\"/>\n          <path d=\"M111.312718,-1.42108539e-14 L111.312718,80.7727631 C111.312718,104.251482 92.1448713,123.284744 68.5001341,123.284744 C44.855397,123.284744 25.6875503,104.251482 25.6875503,80.7727631 L25.6875503,46.7631786 L51.3751006,32.734225 L51.3751006,80.7727631 C51.3751006,88.9903146 58.0838469,95.6519563 66.3595049,95.6519563 C74.6351629,95.6519563 81.3439093,88.9903146 81.3439093,80.7727631 L81.3439093,16.3671125 L111.312718,-1.42108539e-14 Z\" id=\"Path\" fill=\"#FFFFFF\"/>\n      </g>\n  </g>\n</svg>",
+            "backgroundColor": "4C47F7"
+        }
+    }
+]
+}

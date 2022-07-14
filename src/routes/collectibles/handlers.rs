@@ -36,6 +36,7 @@ pub async fn collectibles(
     ))
 }
 
+/// Returns paginated collectibles.
 pub async fn collectibles_paginated(
     context: &RequestContext,
     chain_id: &str,
@@ -50,7 +51,7 @@ pub async fn collectibles_paginated(
         .map(|cursor| PageMetadata::from_cursor(cursor));
     let url = core_uri!(
         info_provider,
-        "/v2/safes/{}/collectibles/?{}&trusted={}&exclude_spam={}",
+        "/v2/safes/{}/collectibles/?{}&trusted={}&exclude_spam={}", /* paginated service in core is behind v2 api. */
         safe_address,
         page_metadata
             .as_ref()
@@ -59,7 +60,6 @@ pub async fn collectibles_paginated(
         trusted.unwrap_or(false),
         exclude_spam.unwrap_or(true)
     )?;
-    println!("{}", url);
 
     let body = RequestCached::new_from_context(url, &context, ChainCache::from(chain_id))
         .request_timeout(collectibles_request_timeout())

@@ -22,8 +22,9 @@ pub struct TransactionPreviewRequest {
     operation: Operation,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Deserialize))]
 pub struct TransactionPreview {
     pub tx_info: TransactionInfo,
     pub tx_data: TransactionData,

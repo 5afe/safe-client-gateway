@@ -1,0 +1,21 @@
+{
+  "txInfo": {
+    "type": "Custom",
+    "to": {
+      "value": "0x37D94d4E230859f83c0868CebEd8CcB83A765cee"
+    },
+    "dataSize": "68",
+    "value": "0",
+    "methodName": null,
+    "isCancellation": false
+  },
+  "txData": {
+    "hexData": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
+    "dataDecoded": null,
+    "to": {
+      "value": "0x37D94d4E230859f83c0868CebEd8CcB83A765cee"
+    },
+    "value": "0",
+    "operation": 0
+  }
+}

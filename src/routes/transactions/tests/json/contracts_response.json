@@ -1,0 +1,237 @@
+{
+  "address": "0x6810e776880C02933D47DB1b9fc05908e5386b96",
+  "name": "GnosisToken",
+  "displayName": "",
+  "logoUri": null,
+  "contractAbi": {
+    "abi": [
+      {
+        "name": "name",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "payable": false,
+        "constant": true
+      },
+      {
+        "name": "approve",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "_spender",
+            "type": "address"
+          },
+          {
+            "name": "_value",
+            "type": "uint256"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "constant": false
+      },
+      {
+        "name": "totalSupply",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "constant": true
+      },
+      {
+        "name": "transferFrom",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "_from",
+            "type": "address"
+          },
+          {
+            "name": "_to",
+            "type": "address"
+          },
+          {
+            "name": "_value",
+            "type": "uint256"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "constant": false
+      },
+      {
+        "name": "decimals",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint8"
+          }
+        ],
+        "payable": false,
+        "constant": true
+      },
+      {
+        "name": "balanceOf",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "_owner",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "constant": true
+      },
+      {
+        "name": "symbol",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "payable": false,
+        "constant": true
+      },
+      {
+        "name": "transfer",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "_to",
+            "type": "address"
+          },
+          {
+            "name": "_value",
+            "type": "uint256"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "constant": false
+      },
+      {
+        "name": "allowance",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "_owner",
+            "type": "address"
+          },
+          {
+            "name": "_spender",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "constant": true
+      },
+      {
+        "type": "constructor",
+        "inputs": [
+          {
+            "name": "dutchAuction",
+            "type": "address"
+          },
+          {
+            "name": "owners",
+            "type": "address[]"
+          },
+          {
+            "name": "tokens",
+            "type": "uint256[]"
+          }
+        ],
+        "payable": false
+      },
+      {
+        "name": "Transfer",
+        "type": "event",
+        "inputs": [
+          {
+            "name": "from",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "name": "to",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "name": "value",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "anonymous": false
+      },
+      {
+        "name": "Approval",
+        "type": "event",
+        "inputs": [
+          {
+            "name": "owner",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "name": "spender",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "name": "value",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "anonymous": false
+      }
+    ],
+    "description": "GnosisToken",
+    "relevance": 100
+  },
+  "trustedForDelegateCall": false
+}

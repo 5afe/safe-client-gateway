@@ -3,6 +3,8 @@ use crate::common::models::backend::chains::NativeCurrency;
 use crate::providers::info::{TokenInfo, TokenType};
 use crate::routes::balances::models::Balance;
 
+const SCALE: f64 = 1_0000_f64;
+
 impl BalanceDto {
     pub fn to_balance(&self, usd_to_fiat: f64, native_coin: &NativeCurrency) -> Balance {
         let fiat_conversion = self.fiat_conversion.parse::<f64>().unwrap_or(0.0) * usd_to_fiat;
@@ -43,8 +45,8 @@ impl BalanceDto {
                 logo_uri,
             },
             balance: self.balance.to_owned(),
-            fiat_balance: fiat_balance.to_string(),
-            fiat_conversion: fiat_conversion.to_string(),
+            fiat_balance: ((fiat_balance * SCALE).floor() / SCALE).to_string(),
+            fiat_conversion: ((fiat_conversion * SCALE).floor() / SCALE).to_string(),
         }
     }
 }

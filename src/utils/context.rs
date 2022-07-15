@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
 use rocket::request::{self, FromRequest, Request};
+use rocket_okapi::gen::OpenApiGenerator;
+use rocket_okapi::request::{OpenApiFromRequest, RequestHeaderInput};
 
 use crate::cache::manager::ChainCache;
 use crate::cache::Cache;
@@ -78,5 +80,18 @@ impl<'r> FromRequest<'r> for RequestContext {
             cache_manager,
             http_client,
         });
+    }
+}
+
+/// Implements [OpenApiFromRequest] for [RequestContext]
+/// This is required for custom types that implement [FromRequest]
+/// Since we do not want to set any headers on OpenApi for [RequestContext] we return [RequestHeaderInput::None]
+impl<'a> OpenApiFromRequest<'a> for RequestContext {
+    fn from_request_input(
+        _gen: &mut OpenApiGenerator,
+        _name: String,
+        _required: bool,
+    ) -> rocket_okapi::Result<RequestHeaderInput> {
+        Ok(RequestHeaderInput::None)
     }
 }

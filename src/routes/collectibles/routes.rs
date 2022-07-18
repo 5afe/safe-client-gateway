@@ -171,6 +171,22 @@ pub async fn get_collectibles(
     .await
 }
 
+/// `/v2/chains/<chain_id>/safes/<safe_address>/collectibles?<cursor>&<trusted>&<exclude_spam>` <br />
+/// Returns collectibles paginated
+///
+/// # Collectibles
+///
+/// The collectibles endpoint does not implement any logic in the client-gateway. The response from the core services is cached and then forwarded to the clients.
+///
+/// ## Path
+///
+/// - `/v1/chains/<chain_id>/safes/<safe_address>/collectibles?<cursor>&<trusted>&<exclude_spam>` : Returns a list of the ERC721 tokens stored in a safe
+///
+/// ## Query parameters
+///
+/// `<cursor>` : Pagination parameters (limit and offset)
+/// `<trusted>` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`
+/// `<exclude_spam>`: A token is defined as spam by our core handlers process when adding them. Default value is `true`
 #[openapi(tag = "Collectibles")]
 #[get("/v2/chains/<chain_id>/safes/<safe_address>/collectibles?<cursor>&<trusted>&<exclude_spam>")]
 pub async fn get_collectibles_paginated(
@@ -181,7 +197,6 @@ pub async fn get_collectibles_paginated(
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::RawJson<String>> {
-    println!("cursor {:?}", cursor);
     CacheResponse::new(&context, ChainCache::Other)
         .duration(chain_info_response_cache_duration())
         .resp_generator(|| {

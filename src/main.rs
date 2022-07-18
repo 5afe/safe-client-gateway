@@ -51,7 +51,7 @@ async fn rocket() -> Rocket<Build> {
     rocket::build()
         .mount("/", active_routes())
         .mount(
-            "/swagger",
+            "/",
             make_swagger_ui(&SwaggerUIConfig {
                 url: "../openapi.json".to_owned(),
                 ..Default::default()

@@ -107,13 +107,6 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
-<span id="110">110</span>
-<span id="111">111</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::Redirect</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">json</span>, <span class="ident">Value</span>};
 <span class="kw">use</span> <span class="ident">rocket</span>::{<span class="ident">Catcher</span>, <span class="ident">Route</span>};
@@ -149,7 +142,6 @@
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">active_routes</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Route</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">no_openapi</span> <span class="op">=</span> <span class="macro">routes!</span>[
-        <span class="ident">root</span>,
         <span class="comment">// rocket_okapi don&#39;t support lifetimes</span>
         <span class="comment">// https://github.com/GREsau/okapi/issues/84</span>
         <span class="ident">contracts::routes::post_data_decoder</span>,
@@ -218,12 +210,6 @@
         <span class="string">&quot;status&quot;</span>: <span class="string">&quot;error&quot;</span>,
         <span class="string">&quot;reason&quot;</span>: <span class="string">&quot;Server error occurred.&quot;</span>
     })
-}
-
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">root</span>() -&gt; <span class="ident">Redirect</span> {
-    <span class="ident">Redirect::temporary</span>(<span class="string">&quot;https://safe.global/safe-client-gateway/&quot;</span>)
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0 (a8314ef7d 2022-06-27)" ></div>

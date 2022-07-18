@@ -181,6 +181,7 @@ pub async fn get_collectibles_paginated(
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
 ) -> ApiResult<content::RawJson<String>> {
+    println!("cursor {:?}", cursor);
     CacheResponse::new(&context, ChainCache::Other)
         .duration(chain_info_response_cache_duration())
         .resp_generator(|| {
@@ -188,9 +189,9 @@ pub async fn get_collectibles_paginated(
                 &context,
                 chain_id.as_str(),
                 safe_address.as_str(),
+                &cursor,
                 trusted,
                 exclude_spam,
-                &cursor,
             )
         })
         .execute()

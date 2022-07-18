@@ -41,14 +41,15 @@ pub async fn collectibles_paginated(
     context: &RequestContext,
     chain_id: &str,
     safe_address: &str,
+    cursor: &Option<String>,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
-    cursor: &Option<String>,
 ) -> ApiResult<Page<ServiceCollectible>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let page_metadata = cursor
         .as_ref()
         .map(|cursor| PageMetadata::from_cursor(cursor));
+
     let url = core_uri!(
         info_provider,
         "/v2/safes/{}/collectibles/?{}&trusted={}&exclude_spam={}", /* paginated service in core is behind v2 api. */

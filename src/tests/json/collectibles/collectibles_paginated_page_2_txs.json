@@ -1,7 +1,7 @@
 {
     "count": 4,
     "next": null, 
-    "previous": null, 
+    "previous": "https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v2/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/collectibles/?limit=3&offset=0&trusted=false&exclude_spam=true", 
     "results":
     [
     {

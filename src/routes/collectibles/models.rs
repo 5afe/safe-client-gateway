@@ -1,6 +1,8 @@
+use rocket_okapi::okapi::schemars;
+use rocket_okapi::okapi::schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Collectible {
     address: String,

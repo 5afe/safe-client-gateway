@@ -10,6 +10,7 @@ use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::urls::build_absolute_uri;
 use rocket::response::content::RawJson;
+use rocket::serde::json::Json;
 
 pub async fn collectibles(
     context: &RequestContext,
@@ -44,7 +45,7 @@ pub async fn collectibles_paginated(
     cursor: &Option<String>,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
-) -> ApiResult<Page<ServiceCollectible>> {
+) -> ApiResult<Json<Page<ServiceCollectible>>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let page_metadata = cursor
         .as_ref()
@@ -69,7 +70,7 @@ pub async fn collectibles_paginated(
 
     let page = serde_json::from_str::<Page<ServiceCollectible>>(&body)?;
 
-    Ok(page.map_inner(|link| {
+    Ok(Json(page.map_inner(|link| {
         map_link(
             context,
             link,
@@ -78,7 +79,7 @@ pub async fn collectibles_paginated(
             trusted,
             exclude_spam,
         )
-    }))
+    })))
 }
 
 fn map_link(

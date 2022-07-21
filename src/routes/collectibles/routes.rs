@@ -1,7 +1,4 @@
-use crate::cache::cache_operations::CacheResponse;
-use crate::cache::manager::ChainCache;
 use crate::common::models::page::Page;
-use crate::config::chain_info_response_cache_duration;
 use crate::routes::collectibles::handlers::collectibles;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;

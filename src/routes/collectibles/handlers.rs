@@ -1,5 +1,3 @@
-use std::cmp::max;
-
 use crate::cache::cache_operations::RequestCached;
 use crate::cache::manager::ChainCache;
 use crate::common::models::page::{Page, PageMetadata};
@@ -53,7 +51,7 @@ pub async fn collectibles_paginated(
 
     let url = core_uri!(
         info_provider,
-        "/v2/safes/{}/collectibles/?{}&trusted={}&exclude_spam={}", /* paginated service in core is behind v2 api. */
+        "/v2/safes/{}/collectibles/?{}&trusted={}&exclude_spam={}",
         safe_address,
         page_metadata
             .as_ref()

@@ -47,16 +47,16 @@ pub async fn collectibles_paginated(
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
     let page_metadata = cursor
         .as_ref()
-        .map(|cursor| PageMetadata::from_cursor(cursor));
+        .map(|cursor| PageMetadata::from_cursor(cursor))
+        .as_ref()
+        .unwrap_or(&PageMetadata::default())
+        .to_url_string();
 
     let url = core_uri!(
         info_provider,
         "/v2/safes/{}/collectibles/?{}&trusted={}&exclude_spam={}",
         safe_address,
-        page_metadata
-            .as_ref()
-            .unwrap_or(&PageMetadata::default())
-            .to_url_string(),
+        page_metadata,
         trusted.unwrap_or(false),
         exclude_spam.unwrap_or(true)
     )?;

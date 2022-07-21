@@ -20,9 +20,8 @@ use crate::utils::http_client::{MockHttpClient, Request, Response};
 fn get_chain_info() -> ChainInfo {
     ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
-        transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
-        vpc_transaction_service: "http://mainnet-safe-transaction-web.safe.svc.cluster.local"
-            .to_string(),
+        transaction_service: "https://test.public".to_string(),
+        vpc_transaction_service: "http://test.local".to_string(),
         chain_id: "1".to_string(),
         chain_name: "".to_string(),
         short_name: "eth".to_string(),

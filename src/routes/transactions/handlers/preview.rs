@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use rocket::futures::future::OptionFuture;
 use serde::{Deserialize, Serialize};
 
@@ -79,22 +81,26 @@ pub async fn preview_transaction(
     .await
     .unwrap_or(None);
 
-    let transaction_data =
-        TransactionData {
-            hex_data: preview_request.data.clone(),
-            data_decoded,
-            to: to_address_ex,
-            value: Some(preview_request.value.to_string()),
-            operation: preview_request.operation,
-            trusted_delegate_call_target: is_trusted_delegate_call,
-            address_info_index: OptionFuture::from(safe_transaction.data_decoded.as_ref().map(
-                |data_decoded| async move {
-                    data_decoded.build_address_info_index(&info_provider).await
-                },
-            ))
-            .await
-            .flatten(),
-        };
+    let address_info_index: Option<HashMap<String, AddressEx>> = OptionFuture::from(
+        safe_transaction
+            .data_decoded
+            .as_ref()
+            .map(|data_decoded| async move {
+                data_decoded.build_address_info_index(&info_provider).await
+            }),
+    )
+    .await
+    .flatten();
+
+    let transaction_data = TransactionData {
+        hex_data: preview_request.data.clone(),
+        data_decoded,
+        to: to_address_ex,
+        value: Some(preview_request.value.to_string()),
+        operation: preview_request.operation,
+        trusted_delegate_call_target: is_trusted_delegate_call,
+        address_info_index,
+    };
 
     Ok(TransactionPreview {
         tx_info: transaction_info,

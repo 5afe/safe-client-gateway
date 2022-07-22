@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["routes",""]]});
+initSidebarItems({"mod":[["models",""],["routes",""]]});

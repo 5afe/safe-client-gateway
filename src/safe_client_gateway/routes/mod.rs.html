@@ -107,6 +107,7 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
+<span id="105">105</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::Redirect</span>;
 <span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">json</span>, <span class="ident">Value</span>};
 <span class="kw">use</span> <span class="ident">rocket</span>::{<span class="ident">Catcher</span>, <span class="ident">Route</span>};
@@ -156,7 +157,7 @@
         <span class="ident">hooks::routes::post_hook_update</span>,
         <span class="ident">hooks::routes::post_hooks_events</span>,
         <span class="ident">hooks::routes::post_flush_events</span>,
-        <span class="ident">hooks::routes::flush</span>
+        <span class="ident">hooks::routes::flush</span>,
     ];
 
     <span class="kw">let</span> <span class="ident">openapi</span> <span class="op">=</span> <span class="macro">openapi_get_routes!</span>[
@@ -169,6 +170,7 @@
         <span class="ident">chains::routes::get_chain</span>,
         <span class="ident">chains::routes::get_chains</span>,
         <span class="ident">collectibles::routes::get_collectibles</span>,
+        <span class="ident">collectibles::routes::get_collectibles_paginated</span>,
         <span class="ident">contracts::routes::get_contract</span>,
         <span class="ident">delegates::routes::delete_delegate</span>,
         <span class="ident">delegates::routes::delete_safe_delegate</span>,

@@ -53,7 +53,7 @@ pub async fn preview_transaction(
     // Get [DataDecoded]
     let data_decoded: Option<DataDecoded> = match &preview_request.data {
         None => None,
-        Some(data) => match decode_data(context, &info_provider, data).await {
+        Some(data) => match decode_data(context, &info_provider, data, &preview_request.to).await {
             Err(_) => None,
             Ok(decoded_data) => Some(decoded_data),
         },
@@ -112,6 +112,7 @@ async fn decode_data(
     context: &RequestContext,
     info_provider: &(impl InfoProvider + Sync),
     data: &str,
+    to: &String,
 ) -> ApiResult<DataDecoded> {
     let data_decoder_endpoint = core_uri!(info_provider, "/v1/data-decoder/")?;
     let client = context.http_client();
@@ -120,6 +121,7 @@ async fn decode_data(
         let mut request = Request::new(data_decoder_endpoint);
         let body = DataDecoderRequest {
             data: data.to_string(),
+            to: Some(to.to_string()),
         };
         request.body(Some(serde_json::to_string(&body)?));
         request

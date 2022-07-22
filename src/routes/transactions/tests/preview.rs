@@ -92,6 +92,7 @@ async fn post_preview_success() {
             Request::new(core_uri!(mock_info_provider, "/v1/data-decoder/").unwrap());
         data_decoder_request.body(Some(
             serde_json::to_string::<DataDecoderRequest>(&DataDecoderRequest {
+                to: Some("0x37D94d4E230859f83c0868CebEd8CcB83A765cee".to_string()),
                 data: data.to_string(),
             })
             .unwrap(),

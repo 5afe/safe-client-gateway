@@ -16,7 +16,7 @@ pub async fn collectibles(
     safe_address: &str,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
-) -> ApiResult<RawJson<String>> {
+) -> ApiResult<Json<Vec<ServiceCollectible>>> {
     let info_provider = DefaultInfoProvider::new(chain_id, &context);
 
     let url = core_uri!(
@@ -26,13 +26,13 @@ pub async fn collectibles(
         trusted.unwrap_or(false),
         exclude_spam.unwrap_or(true)
     )?;
-
-    Ok(RawJson(
-        RequestCached::new_from_context(url, &context, ChainCache::from(chain_id))
-            .request_timeout(collectibles_request_timeout())
-            .execute()
-            .await?,
-    ))
+    let body = RequestCached::new_from_context(url, &context, ChainCache::from(chain_id))
+        .request_timeout(collectibles_request_timeout())
+        .execute()
+        .await?;
+    Ok(Json(serde_json::from_str::<Vec<ServiceCollectible>>(
+        &body,
+    )?))
 }
 
 /// Returns paginated collectibles.

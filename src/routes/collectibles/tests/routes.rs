@@ -62,10 +62,12 @@ async fn collectibles() {
     };
 
     assert_eq!(response.status(), Status::Ok);
-    assert_eq!(
-        response.into_string().await.unwrap(),
-        crate::tests::json::COLLECTIBLES_PAGE
-    );
+    let expected =
+        serde_json::from_str::<Vec<Collectible>>(crate::tests::json::COLLECTIBLES_PAGE).unwrap();
+    let actual =
+        serde_json::from_str::<Vec<Collectible>>(&response.into_string().await.unwrap()).unwrap();
+
+    assert_eq!(expected, actual);
 }
 
 #[rocket::async_test]

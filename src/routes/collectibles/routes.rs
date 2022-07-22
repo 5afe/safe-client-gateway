@@ -2,7 +2,6 @@ use crate::common::models::page::Page;
 use crate::routes::collectibles::handlers::collectibles;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use rocket::response::content;
 use rocket::serde::json::Json;
 use rocket_okapi::openapi;
 
@@ -160,7 +159,7 @@ pub async fn get_collectibles(
     safe_address: String,
     trusted: Option<bool>,
     exclude_spam: Option<bool>,
-) -> ApiResult<content::RawJson<String>> {
+) -> ApiResult<Json<Vec<Collectible>>> {
     collectibles(
         &context,
         chain_id.as_str(),

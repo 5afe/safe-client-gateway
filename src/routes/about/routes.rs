@@ -1,5 +1,4 @@
-use rocket::response::content;
-
+use super::models::About;
 use crate::cache::cache_operations::CacheResponse;
 use crate::cache::manager::ChainCache;
 use crate::common::routes::authorization::AuthorizationToken;
@@ -9,8 +8,9 @@ use crate::routes::about::handlers;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::Request;
+use rocket::response::content;
+use rocket::serde::json::Json;
 use rocket_okapi::openapi;
-
 /// `/v1/chains/<chain_id>/about` <br />
 /// Returns [ChainAbout](crate::routes::about::models::ChainAbout)
 ///
@@ -50,8 +50,8 @@ pub async fn get_chains_about(
 /// `/about`
 #[openapi(tag = "About")]
 #[get("/about")]
-pub async fn get_about() -> ApiResult<content::RawJson<String>> {
-    Ok(content::RawJson(serde_json::to_string(&handlers::about())?))
+pub async fn get_about() -> ApiResult<Json<About>> {
+    Ok(Json(handlers::about()))
 }
 /// `/v1/chains/<chain_id>/about/master-copies` <br />
 /// Returns a list of `MasterCopy`

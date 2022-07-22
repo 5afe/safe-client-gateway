@@ -159,6 +159,24 @@ pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_mast
 
 pub const COLLECTIBLES_PAGE: &str = include_str!("collectibles/collectibles_page.json");
 
+pub const COLLECTIBLES_PAGINATED_EMPTY_TXS: &str =
+    include_str!("collectibles/collectibles_paginated_empty_txs.json");
+
+pub const COLLECTIBLES_PAGINATED_EMPTY_CGW: &str =
+    include_str!("collectibles/collectibles_paginated_empty_cgw.json");
+
+pub const COLLECTIBLES_PAGINATED_ONE_TXS: &str =
+    include_str!("collectibles/collectibles_paginated_page_1_txs.json");
+
+pub const COLLECTIBLES_PAGINATED_ONE_CGW: &str =
+    include_str!("collectibles/collectibles_paginated_page_1_cgw.json");
+
+pub const COLLECTIBLES_PAGINATED_TWO_TXS: &str =
+    include_str!("collectibles/collectibles_paginated_page_2_txs.json");
+
+pub const COLLECTIBLES_PAGINATED_TWO_CGW: &str =
+    include_str!("collectibles/collectibles_paginated_page_2_cgw.json");
+
 pub const EXCHANGE_CURRENCY_RATES: &str = include_str!("exchange/currency_rates.json");
 
 pub const CONTRACT_INFO_BID: &str = include_str!("contracts/contract_info_BID.json");

@@ -215,6 +215,10 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
@@ -388,6 +392,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">feature_flag_balances_rate_implementation</span>() -&gt; <span class="ident">bool</span> {
     <span class="ident">env_with_default</span>(<span class="string">&quot;FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION&quot;</span>, <span class="bool-val">false</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_preview_endpoint_enabled</span>() -&gt; <span class="ident">bool</span> {
+    <span class="ident">env_with_default</span>(<span class="string">&quot;FEATURE_PREVIEW_ENDPOINT&quot;</span>, <span class="bool-val">false</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_safe_apps_tags_feature_enabled</span>() -&gt; <span class="ident">bool</span> {

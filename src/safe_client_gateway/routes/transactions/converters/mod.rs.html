@@ -378,7 +378,7 @@
 <span class="kw">use</span> <span class="ident">rocket::futures::future::OptionFuture</span>;
 
 <span class="kw">impl</span> <span class="ident">SafeTransaction</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">transaction_info</span>(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">transaction_info</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
         <span class="ident">is_cancellation</span>: <span class="ident">bool</span>,

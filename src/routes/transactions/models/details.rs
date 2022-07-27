@@ -281,9 +281,9 @@ pub struct ModuleExecutionDetails {
     pub address: AddressEx,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
-#[cfg_attr(test, derive(serde::Deserialize, PartialEq))]
+#[cfg_attr(test, derive(serde::Deserialize))]
 pub struct TransactionData {
     pub hex_data: Option<String>,
     pub data_decoded: Option<DataDecoded>,

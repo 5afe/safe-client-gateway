@@ -2,6 +2,9 @@ use rocket::response::Redirect;
 use rocket::serde::json::{json, Value};
 use rocket::{Catcher, Route};
 use rocket_okapi::openapi_get_routes;
+
+use crate::config::is_preview_endpoint_enabled;
+
 /// # About endpoint
 pub mod about;
 /// # Balance endpoints
@@ -50,6 +53,12 @@ pub fn active_routes() -> Vec<Route> {
         hooks::routes::flush,
     ];
 
+    let preview_route = if is_preview_endpoint_enabled() {
+        routes![transactions::routes::post_preview_transaction]
+    } else {
+        routes![]
+    };
+
     let openapi = openapi_get_routes![
         about::routes::backbone,
         about::routes::get_about,
@@ -78,7 +87,7 @@ pub fn active_routes() -> Vec<Route> {
         transactions::routes::get_multisig_transactions,
         health::routes::health
     ];
-    return [&no_openapi[..], &openapi[..]].concat();
+    return [&no_openapi[..], &preview_route[..], &openapi[..]].concat();
 }
 
 #[doc(hidden)]

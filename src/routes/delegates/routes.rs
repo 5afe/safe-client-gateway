@@ -1,3 +1,4 @@
+use crate::common::models::page::Page;
 use crate::routes::delegates::handlers;
 use crate::routes::delegates::models::{DelegateCreate, DelegateDelete, SafeDelegateDelete};
 use crate::utils::context::RequestContext;
@@ -5,6 +6,8 @@ use crate::utils::errors::ApiResult;
 use rocket::response::content;
 use rocket::serde::json::Json;
 use rocket_okapi::openapi;
+
+use super::models::Delegate;
 
 #[openapi(tag = "Delegates")]
 #[get("/v1/chains/<chain_id>/delegates?<safe>&<delegate>&<delegator>&<label>")]
@@ -15,11 +18,8 @@ pub async fn get_delegates<'e>(
     delegate: Option<String>,
     delegator: Option<String>,
     label: Option<String>,
-) -> ApiResult<content::RawJson<String>> {
-    let json = serde_json::to_string(
-        &handlers::get_delegates(&context, chain_id, safe, delegate, delegator, label).await?,
-    )?;
-    Ok(content::RawJson(json))
+) -> ApiResult<Json<Page<Delegate>>> {
+    handlers::get_delegates(&context, chain_id, safe, delegate, delegator, label).await
 }
 
 #[openapi(tag = "Delegates")]

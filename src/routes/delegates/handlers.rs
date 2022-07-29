@@ -1,3 +1,5 @@
+use rocket::serde::json::Json;
+
 use crate::common::models::page::Page;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
 use crate::routes::delegates::models::{
@@ -14,7 +16,7 @@ pub async fn get_delegates(
     delegate: Option<String>,
     delegator: Option<String>,
     label: Option<String>,
-) -> ApiResult<Page<Delegate>> {
+) -> ApiResult<Json<Page<Delegate>>> {
     let info_provider = DefaultInfoProvider::new(&chain_id, &context);
     let url = core_uri!(
         info_provider,
@@ -30,7 +32,7 @@ pub async fn get_delegates(
     let response = context.http_client().get(request).await?;
     let safe_delegates = serde_json::from_str::<Page<Delegate>>(&response.body)?;
 
-    return Ok(safe_delegates);
+    return Ok(Json(safe_delegates));
 }
 
 pub async fn post_delegate(

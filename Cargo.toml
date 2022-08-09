@@ -29,6 +29,6 @@ rocket_okapi = { version="0.8.0-rc.2", features = ["swagger"] }
 semver = "1.0.13"
 serde = { version = "1.0.141", features = ["derive"] }
 serde_json = { version = "1.0.82", features = ["raw_value"] }
-serde_repr = "0.1.8"
+serde_repr = "0.1.9"
 thiserror = "1.0.31"
 tokio = "1.16.1"

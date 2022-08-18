@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Delegate",""],["DelegateCreate",""],["DelegateDelete",""],["SafeDelegateDelete",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["Delegate",""],["DelegateCreate",""],["DelegateDelete",""],["SafeDelegateDelete",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_balances","`/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>` Returns Balances"],["get_supported_fiat","`/v1/balances/supported-fiat-codes`  Returns [Vec] of [String]"]]});
+window.SIDEBAR_ITEMS = {"fn":[["get_balances","`/v1/chains/<chain_id>/safes/<safe_address>/balances/<fiat>?<trusted>&<exclude_spam>` Returns Balances"],["get_supported_fiat","`/v1/balances/supported-fiat-codes`  Returns [Vec] of [String]"]]};

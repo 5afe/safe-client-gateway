@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["DeviceType",""]],"struct":[["DeviceData",""],["NotificationRegistrationRequest","NotificationRegistrationRequest"],["SafeRegistration",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["DeviceType",""]],"struct":[["DeviceData",""],["NotificationRegistrationRequest","NotificationRegistrationRequest"],["SafeRegistration",""]]};

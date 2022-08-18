@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["address_info",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["address_info",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ImplementationVersionState",""]],"struct":[["Implementation",""],["SafeInfoEx",""],["SafeLastChanges",""],["SafeState",""],["SafeTransactionEstimation",""],["SafeTransactionEstimationRequest",""],["SafeTransactionEstimationV2",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["ImplementationVersionState",""]],"struct":[["Implementation",""],["SafeInfoEx",""],["SafeLastChanges",""],["SafeState",""],["SafeTransactionEstimation",""],["SafeTransactionEstimationRequest",""],["SafeTransactionEstimationV2",""]]};

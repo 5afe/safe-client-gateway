@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Page",""],["PageMetadata",""],["SafeList",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["Page",""],["PageMetadata",""],["SafeList",""]]};

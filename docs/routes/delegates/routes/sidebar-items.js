@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["delete_delegate",""],["delete_safe_delegate",""],["get_delegates",""],["post_delegate",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["delete_delegate",""],["delete_safe_delegate",""],["get_delegates",""],["post_delegate",""]]};

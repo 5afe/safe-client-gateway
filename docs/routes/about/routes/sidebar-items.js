@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_about","`/about`  About"],["get_chains_about","`/v1/chains/<chain_id>/about`  Returns ChainAbout"],["get_master_copies","`/v1/chains/<chain_id>/about/master-copies`  Returns a list of `MasterCopy`"]]});
+window.SIDEBAR_ITEMS = {"fn":[["get_about","`/about`  About"],["get_chains_about","`/v1/chains/<chain_id>/about`  Returns ChainAbout"],["get_master_copies","`/v1/chains/<chain_id>/about/master-copies`  Returns a list of `MasterCopy`"]]};

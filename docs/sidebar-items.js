@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["main",""]],"mod":[["common",""],["providers",""],["routes","Collection of all endpoints all endpoints"]]});
+window.SIDEBAR_ITEMS = {"fn":[["main",""]],"mod":[["common",""],["providers",""],["routes","Collection of all endpoints all endpoints"]]};

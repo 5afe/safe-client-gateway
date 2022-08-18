@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ModuleFilters",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["ModuleFilters",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["module",""],["multisig",""],["transfer",""]],"trait":[["QueryParam",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["module",""],["multisig",""],["transfer",""]],"trait":[["QueryParam",""]]};

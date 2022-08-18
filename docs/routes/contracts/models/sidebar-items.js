@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["DataDecoderRequest",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["DataDecoderRequest",""]]};

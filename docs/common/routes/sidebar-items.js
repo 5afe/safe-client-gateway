@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["authorization",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["authorization",""]]};

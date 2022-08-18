@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ConfirmationRequest",""],["MultisigTransactionRequest","MultisigTransactionRequest"]]});
+window.SIDEBAR_ITEMS = {"struct":[["ConfirmationRequest",""],["MultisigTransactionRequest","MultisigTransactionRequest"]]};

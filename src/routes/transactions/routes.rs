@@ -1,20 +1,22 @@
+use rocket::response::content;
+use rocket::serde::json::{Error, Json};
+use rocket_okapi::openapi;
+
 use crate::cache::cache_operations::CacheResponse;
 use crate::cache::manager::ChainCache;
 use crate::config::tx_queued_cache_duration;
 use crate::routes::transactions::filters::module::ModuleFilters;
 use crate::routes::transactions::filters::multisig::MultisigFilters;
 use crate::routes::transactions::filters::transfer::TransferFilters;
-use crate::routes::transactions::handlers::{details, history, proposal, queued};
+use crate::routes::transactions::handlers::preview::TransactionPreviewRequest;
+use crate::routes::transactions::handlers::{details, history, preview, proposal, queued};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
 };
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
-use rocket::response::content;
-use rocket::serde::json::{Error, Json};
 
 use super::handlers::{module, multisig, transfers};
-use rocket_okapi::openapi;
 
 /// `/v1/chains/<chain_id>/transactions/<transaction_id>` <br />
 /// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
@@ -290,6 +292,30 @@ pub async fn get_multisig_transactions(
                 &safe_address,
                 &cursor,
                 &filters,
+            )
+        })
+        .execute()
+        .await
+}
+
+#[post(
+    "/v1/chains/<chain_id>/transactions/<safe_address>/preview",
+    format = "application/json",
+    data = "<transaction_preview_request>"
+)]
+pub async fn post_preview_transaction(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    transaction_preview_request: Json<TransactionPreviewRequest>,
+) -> ApiResult<content::RawJson<String>> {
+    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            preview::preview_transaction(
+                &context,
+                &chain_id,
+                &safe_address,
+                &transaction_preview_request.0,
             )
         })
         .execute()

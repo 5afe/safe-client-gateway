@@ -1,6 +1,6 @@
 [package]
 name = "safe-client-gateway"
-version = "3.27.0"
+version = "3.30.0"
 authors = ["jpalvarezl <jose.alvarez@gnosis.io>", "rmeissner <richard@gnosis.io>", "fmrsabino <frederico@gnosis.io>"]
 edition = "2018"
 
@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 bb8-redis = "0.11.0"
 bigdecimal = { version = "0.3.0", features = ["serde"] }
-chrono = { version = "0.4", features = ["serde"] }
+chrono = { version = "0.4.20", features = ["serde"] }
 derivative = "2.2.0"
 dotenv = "0.15.0"
 env_logger = "0.9.0"
@@ -18,7 +18,7 @@ ethabi = "16.0.0"
 itertools = "0.10.3"
 lazy_static = "1.4.0"
 log = "0.4.17"
-mockall = "0.11.1"
+mockall = "0.11.2"
 rand = "0.8.5"
 r2d2 = "0.8.10"
 regex = "1.6.0"
@@ -26,9 +26,9 @@ reqwest = { version = "0.11.11", features = ["json"] }
 rocket = { version = "0.5.0-rc.2", features = ["tls", "json"] }
 rocket_codegen = { version = "0.5.0-rc.2" }
 rocket_okapi = { version="0.8.0-rc.2", features = ["swagger"] }
-semver = "1.0.12"
-serde = { version = "1.0.139", features = ["derive"] }
-serde_json = { version = "1.0.82", features = ["raw_value"] }
-serde_repr = "0.1.8"
-thiserror = "1.0.31"
+semver = "1.0.13"
+serde = { version = "1.0.143", features = ["derive"] }
+serde_json = { version = "1.0.83", features = ["raw_value"] }
+serde_repr = "0.1.9"
+thiserror = "1.0.32"
 tokio = "1.16.1"

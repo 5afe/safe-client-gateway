@@ -1,0 +1,65 @@
+{
+  "chainId": "1",
+  "chainName": "Ethereum",
+  "shortName": "eth",
+  "description": "The main Ethereum network",
+  "l2": false,
+  "rpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://mainnet.infura.io/v3/"
+  },
+  "safeAppsRpcUri": {
+    "authentication": "API_KEY_PATH",
+    "value": "https://mainnet.infura.io/v3/"
+  },
+  "publicRpcUri": {
+    "authentication": "NO_AUTHENTICATION",
+    "value": "https://cloudflare-eth.com"
+  },
+  "blockExplorerUriTemplate": {
+    "address": "https://etherscan.io/address/{{address}}",
+    "txHash": "https://etherscan.io/tx/{{txHash}}",
+    "api": "https://api.etherscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+  },
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18,
+    "logoUri": "https://safe-transaction-assets.gnosis-safe.io/chains/1/currency_logo.png"
+  },
+  "transactionService": "https://safe-transaction.example.gnosis.io",
+  "vpcTransactionService": "https://safe-transaction.example.gnosis.io",
+  "theme": {
+    "textColor": "#001428",
+    "backgroundColor": "#E8E7E6"
+  },
+  "gasPrice": [
+    {
+      "type": "oracle",
+      "uri": "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=JNFAU892RF9TJWBU3EV7DJCPIWZY8KEMY1",
+      "gasParameter": "FastGasPrice",
+      "gweiFactor": "1000000000.000000000"
+    },
+    {
+      "type": "oracle",
+      "uri": "https://ethgasstation.info/json/ethgasAPI.json?api-key=8bb8066b5c3ed1442190d0e30ad9126c7b8235314397efa76e6977791cb2",
+      "gasParameter": "fast",
+      "gweiFactor": "100000000.000000000"
+    }
+  ],
+  "ensRegistryAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+  "recommendedMasterCopyVersion": "1.3.0",
+  "disabledWallets": [
+    "lattice"
+  ],
+  "features": [
+    "CONTRACT_INTERACTION",
+    "DOMAIN_LOOKUP",
+    "EIP1559",
+    "ERC721",
+    "SAFE_APPS",
+    "SAFE_TX_GAS_OPTIONAL",
+    "SPENDING_LIMIT",
+    "TX_SIMULATION"
+  ]
+}

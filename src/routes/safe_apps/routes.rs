@@ -17,6 +17,7 @@ use rocket_okapi::openapi;
 /// ## Query parameters
 ///
 /// - `client_url`: The URL of the client application. Optional.
+/// - `url`: Filter Safe Apps available from url. url needs to be an exact match. Optional.
 ///
 /// ## Examples
 /// [
@@ -64,13 +65,14 @@ use rocket_okapi::openapi;
 ///     }
 /// ]
 #[openapi(tag = "SafeApps")]
-#[get("/v1/chains/<chain_id>/safe-apps?<client_url>")]
+#[get("/v1/chains/<chain_id>/safe-apps?<client_url>&<url>")]
 pub async fn get_safe_apps(
     context: RequestContext,
     chain_id: String,
     client_url: Option<String>,
+    url: Option<String>,
 ) -> ApiResult<content::RawJson<String>> {
     Ok(content::RawJson(serde_json::to_string(
-        &safe_apps(&context, &chain_id, &client_url).await?,
+        &safe_apps(&context, &chain_id, &client_url, &url).await?,
     )?))
 }

@@ -1,5 +1,5 @@
 use crate::routes::safe_apps::models::SafeApp;
-use crate::routes::safe_apps::tests::RESPONSE_SAFE_APPS_WITH_TAGS;
+use crate::routes::safe_apps::tests::{RESPONSE_SAFE_APPS_WITH_TAGS, RESPONSE_SAFE_APPS_WITH_URL_QUERY};
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
@@ -20,7 +20,7 @@ async fn safe_apps() {
     let mut mock_http_client = MockHttpClient::new();
 
     let safe_apps_request = Request::new(config_uri!(
-        "/v1/safe-apps/?chainId={}&clientUrl={}",
+        "/v1/safe-apps/?chainId={}&clientUrl={}&url=",
         chain_id,
         client_url
     ));
@@ -74,7 +74,7 @@ async fn safe_apps_not_found() {
     let mut mock_http_client = MockHttpClient::new();
 
     let safe_apps_request = Request::new(config_uri!(
-        "/v1/safe-apps/?chainId={}&clientUrl=",
+        "/v1/safe-apps/?chainId={}&clientUrl=&url=",
         chain_id
     ));
     mock_http_client
@@ -117,7 +117,7 @@ async fn safe_apps_tags() {
     let client_url = "https://gnosis-safe.io";
     let mut mock_http_client = MockHttpClient::new();
     let safe_apps_request = Request::new(config_uri!(
-        "/v1/safe-apps/?chainId={}&clientUrl={}",
+        "/v1/safe-apps/?chainId={}&clientUrl={}&url=",
         chain_id,
         client_url
     ));
@@ -149,6 +149,56 @@ async fn safe_apps_tags() {
     let actual_body = response.into_string().await.unwrap();
     let actual: Vec<SafeApp> = serde_json::from_str(&actual_body).unwrap();
     let expected: Vec<SafeApp> = serde_json::from_str(RESPONSE_SAFE_APPS_WITH_TAGS).unwrap();
+
+    assert_eq!(actual_status, Status::Ok);
+    assert_eq!(actual, expected);
+}
+
+#[rocket::async_test]
+async fn safe_apps_url_query_param() {
+    env::set_var("SAFE_APPS_TAGS_FEATURE_ENABLED", "false");
+    let chain_id = "137";
+    let client_url = "https://gnosis-safe.io";
+    let url = "https://test.app";
+
+    let mut mock_http_client = MockHttpClient::new();
+
+    let safe_apps_request = Request::new(config_uri!(
+        "/v1/safe-apps/?chainId={}&clientUrl={}&url={}",
+        chain_id,
+        client_url,
+        url
+    ));
+
+    mock_http_client
+        .expect_get()
+        .times(1)
+        .with(eq(safe_apps_request))
+        .return_once(move |_| {
+            Ok(Response {
+                status_code: 200,
+                body: String::from(crate::tests::json::POLYGON_SAFE_APP_URL_QUERY),
+            })
+        });
+
+    let client = Client::tracked(
+        setup_rocket(
+            mock_http_client,
+            routes![super::super::routes::get_safe_apps],
+        )
+            .await,
+    )
+        .await
+        .expect("valid rocket instance");
+    let response = {
+        let mut response = client.get("/v1/chains/137/safe-apps?client_url=https://gnosis-safe.io&url=https://test.app");
+        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.dispatch().await
+    };
+    let actual_status = response.status();
+    let actual_body = response.into_string().await.unwrap();
+    let actual: Vec<SafeApp> = serde_json::from_str(&actual_body).unwrap();
+    let expected: Vec<SafeApp> = serde_json::from_str(RESPONSE_SAFE_APPS_WITH_URL_QUERY).unwrap();
 
     assert_eq!(actual_status, Status::Ok);
     assert_eq!(actual, expected);

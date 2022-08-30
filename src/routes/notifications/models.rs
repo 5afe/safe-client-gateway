@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 /// <summary>Example body of NotificationRegistrationRequest registering a device for push notifications</summary>
 ///
 /// ```json
-/// 
+///
 /// {
 ///  "uuid": "c50750df-700c-4b17-98ca-b95a5c27ca18",
 ///  "cloudMessagingToken": "eWv4Ya6OSaiuDI91S0_C6D:APA91bGpprbGOCa1Qev0h3vlMu2nXa9nWpaL7N9fEcX2G4byZ3TSKXircrMtuWg1H4nSG9Ugu7a7rgY1eDKAR9UaxgaP1egTRj3taqAfAQblApuiWFfRRkyxdD3N23t7wYi9ZBIXZ88Z",

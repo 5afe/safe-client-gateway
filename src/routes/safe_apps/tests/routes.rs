@@ -1,5 +1,7 @@
 use crate::routes::safe_apps::models::SafeApp;
-use crate::routes::safe_apps::tests::{RESPONSE_SAFE_APPS_WITH_TAGS, RESPONSE_SAFE_APPS_WITH_URL_QUERY};
+use crate::routes::safe_apps::tests::{
+    RESPONSE_SAFE_APPS_WITH_TAGS, RESPONSE_SAFE_APPS_WITH_URL_QUERY,
+};
 use crate::tests::main::setup_rocket;
 use crate::utils::errors::{ApiError, ErrorDetails};
 use crate::utils::http_client::{MockHttpClient, Request, Response};
@@ -186,12 +188,13 @@ async fn safe_apps_url_query_param() {
             mock_http_client,
             routes![super::super::routes::get_safe_apps],
         )
-            .await,
+        .await,
     )
-        .await
-        .expect("valid rocket instance");
+    .await
+    .expect("valid rocket instance");
     let response = {
-        let mut response = client.get("/v1/chains/137/safe-apps?client_url=https://gnosis-safe.io&url=https://test.app");
+        let mut response = client
+            .get("/v1/chains/137/safe-apps?client_url=https://gnosis-safe.io&url=https://test.app");
         response.add_header(Header::new("Host", "test.gnosis.io"));
         response.dispatch().await
     };

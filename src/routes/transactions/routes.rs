@@ -8,7 +8,9 @@ use crate::config::tx_queued_cache_duration;
 use crate::routes::transactions::filters::module::ModuleFilters;
 use crate::routes::transactions::filters::multisig::MultisigFilters;
 use crate::routes::transactions::filters::transfer::TransferFilters;
-use crate::routes::transactions::handlers::preview::TransactionPreviewRequest;
+use crate::routes::transactions::handlers::preview::{
+    TransactionPreview, TransactionPreviewRequest,
+};
 use crate::routes::transactions::handlers::{details, history, preview, proposal, queued};
 use crate::routes::transactions::models::requests::{
     ConfirmationRequest, MultisigTransactionRequest,
@@ -309,15 +311,13 @@ pub async fn post_preview_transaction(
     safe_address: String,
     transaction_preview_request: Json<TransactionPreviewRequest>,
 ) -> ApiResult<content::RawJson<String>> {
-    CacheResponse::new(&context, ChainCache::from(chain_id.as_str()))
-        .resp_generator(|| {
-            preview::preview_transaction(
-                &context,
-                &chain_id,
-                &safe_address,
-                &transaction_preview_request.0,
-            )
-        })
-        .execute()
-        .await
+    let transaction_preview: TransactionPreview = preview::preview_transaction(
+        &context,
+        &chain_id,
+        &safe_address,
+        &transaction_preview_request.0,
+    )
+    .await?;
+    let body = serde_json::to_string(&transaction_preview)?;
+    return Ok(content::RawJson(body));
 }

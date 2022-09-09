@@ -1,0 +1,14 @@
+[
+  {
+    "id": 26,
+    "url": "https://test.app",
+    "name": "Test App",
+    "iconUrl": "https://test.app/logo.svg",
+    "description": "Some cool app",
+    "chainIds": ["1", "137"],
+    "provider": null,
+    "accessControl": {
+      "type": "NO_RESTRICTIONS"
+    }
+  }
+]

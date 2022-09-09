@@ -10,11 +10,13 @@ pub async fn safe_apps(
     context: &RequestContext,
     chain_id: &String,
     client_url: &Option<String>,
+    url: &Option<String>,
 ) -> ApiResult<Vec<SafeApp>> {
     let url = config_uri!(
-        "/v1/safe-apps/?chainId={}&clientUrl={}",
+        "/v1/safe-apps/?chainId={}&clientUrl={}&url={}",
         chain_id,
-        client_url.as_deref().unwrap_or("")
+        client_url.as_deref().unwrap_or(""),
+        url.as_deref().unwrap_or("")
     );
     let data = RequestCached::new_from_context(url, &context, ChainCache::from(chain_id.as_str()))
         .cache_duration(safe_apps_cache_duration())

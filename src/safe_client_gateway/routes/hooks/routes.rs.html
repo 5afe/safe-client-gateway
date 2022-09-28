@@ -85,6 +85,12 @@
 <span id="79">79</span>
 <span id="80">80</span>
 <span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations</span>::{<span class="ident">Invalidate</span>, <span class="ident">InvalidationPattern</span>};
@@ -161,6 +167,12 @@
     <span class="ident">_token</span>: <span class="ident">AuthorizationToken</span>,
     <span class="ident">invalidation_pattern</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">InvalidationPattern</span><span class="op">&gt;</span>,
 ) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Invalidate::new</span>(
+        <span class="ident">invalidation_pattern</span>.<span class="number">0</span>.<span class="ident">clone</span>(),
+        <span class="ident">context</span>.<span class="ident">cache</span>(<span class="ident">ChainCache::Mainnet</span>),
+    )
+    .<span class="ident">execute</span>()
+    .<span class="kw">await</span>;
     <span class="ident">Invalidate::new</span>(<span class="ident">invalidation_pattern</span>.<span class="number">0</span>, <span class="ident">context</span>.<span class="ident">cache</span>(<span class="ident">ChainCache::Other</span>))
         .<span class="ident">execute</span>()
         .<span class="kw">await</span>;

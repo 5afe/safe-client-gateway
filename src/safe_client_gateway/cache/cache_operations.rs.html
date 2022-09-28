@@ -255,14 +255,14 @@
     <span class="ident">pattern</span>: <span class="ident">InvalidationPattern</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">InvalidationScope</span> {
     <span class="ident">Requests</span>,
     <span class="ident">Responses</span>,
     <span class="ident">Both</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;invalidate&quot;</span>, <span class="ident">content</span> <span class="op">=</span> <span class="string">&quot;pattern_details&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">InvalidationPattern</span> {
     <span class="ident">Any</span>(<span class="ident">InvalidationScope</span>, <span class="ident">String</span>),

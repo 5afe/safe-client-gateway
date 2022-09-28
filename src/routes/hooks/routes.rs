@@ -74,6 +74,12 @@ pub async fn post_flush_events(
     _token: AuthorizationToken,
     invalidation_pattern: Json<InvalidationPattern>,
 ) -> ApiResult<()> {
+    Invalidate::new(
+        invalidation_pattern.0.clone(),
+        context.cache(ChainCache::Mainnet),
+    )
+    .execute()
+    .await;
     Invalidate::new(invalidation_pattern.0, context.cache(ChainCache::Other))
         .execute()
         .await;

@@ -24,14 +24,14 @@ pub struct Invalidate {
     pattern: InvalidationPattern,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub enum InvalidationScope {
     Requests,
     Responses,
     Both,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[serde(tag = "invalidate", content = "pattern_details")]
 pub enum InvalidationPattern {
     Any(InvalidationScope, String),

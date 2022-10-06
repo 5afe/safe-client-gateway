@@ -12,7 +12,7 @@ use rocket_okapi::openapi;
 ///
 /// ## Path
 ///
-/// - `/v1/chains/<chain_id>/safe-apps
+/// - `/v1/chains/<chain_id>/safe-apps`
 ///
 /// ## Query parameters
 ///
@@ -20,6 +20,7 @@ use rocket_okapi::openapi;
 /// - `url`: Filter Safe Apps available from url. url needs to be an exact match. Optional.
 ///
 /// ## Examples
+///
 /// [
 ///     {
 ///         "id": 24,

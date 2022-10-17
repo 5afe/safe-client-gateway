@@ -152,9 +152,9 @@ dependencies = [
 
 [[package]]
 name = "bb8-redis"
-version = "0.11.0"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b081e2864000416c5a4543fed63fb8dd979c4a0806b071fddab0e548c6cd4c74"
+checksum = "8310da711a26fa0326202261abd73a414340f3ec957f63927a055511a01d7fb2"
 dependencies = [
  "async-trait",
  "bb8",
@@ -504,12 +504,6 @@ name = "downcast"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1435fa1053d8b2fbbe9be7e97eca7f33d37b28409959813daefc1446a14247f1"
-
-[[package]]
-name = "dtoa"
-version = "0.4.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "56899898ce76aaf4a0f24d914c97ea6ed976d42fec6ad33fcbb0a1103e07b2b0"
 
 [[package]]
 name = "dyn-clone"
@@ -1777,20 +1771,20 @@ dependencies = [
 
 [[package]]
 name = "redis"
-version = "0.21.5"
+version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a80b5f38d7f5a020856a0e16e40a9cfabf88ae8f0e4c2dcd8a3114c1e470852"
+checksum = "2e5450e9add55de0ea728a964191669d3707fa20666c5f16753f3a6a51e96231"
 dependencies = [
  "async-trait",
  "bytes 1.0.1",
  "combine",
- "dtoa",
  "futures-util",
- "itoa 0.4.6",
+ "itoa 1.0.1",
  "percent-encoding",
  "pin-project-lite",
+ "ryu",
  "tokio",
- "tokio-util 0.6.3",
+ "tokio-util 0.7.1",
  "url",
 ]
 

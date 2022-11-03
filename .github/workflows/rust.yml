@@ -154,7 +154,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      DOCKERHUB_ORG: gnosispm
+      DOCKERHUB_ORG: safeglobal
       DOCKERHUB_PROJECT: safe-client-gateway
     needs: [ rustfmt, tests ]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')

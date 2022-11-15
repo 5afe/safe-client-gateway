@@ -20,6 +20,7 @@ pub mod delegates;
 pub mod health;
 #[doc(hidden)]
 pub mod hooks;
+pub mod messages;
 /// # Notification endpoints
 pub mod notifications;
 /// # SafeApps endpoints
@@ -75,6 +76,7 @@ pub fn active_routes() -> Vec<Route> {
         delegates::routes::delete_safe_delegate,
         delegates::routes::get_delegates,
         delegates::routes::post_delegate,
+        messages::routes::get_messages,
         notifications::routes::delete_notification_registration,
         safes::routes::get_safe_info,
         safes::routes::get_owners,

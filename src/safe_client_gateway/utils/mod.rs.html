@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/utils/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/utils/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -135,137 +129,136 @@
 <span id="129">129</span>
 <span id="130">130</span>
 <span id="131">131</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded::ValueDecodedType::InternalTransaction</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded</span>::{<span class="ident">DataDecoded</span>, <span class="ident">ParamValue</span>, <span class="ident">ValueDecodedType</span>};
-<span class="kw">use</span> <span class="ident">std::collections::hash_map::DefaultHasher</span>;
-<span class="kw">use</span> <span class="ident">std::hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::ValueDecodedType::InternalTransaction;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::{DataDecoded, ParamValue, ValueDecodedType};
+<span class="kw">use </span>std::collections::hash_map::DefaultHasher;
+<span class="kw">use </span>std::hash::{Hash, Hasher};
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">context</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">cors</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">errors</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">http_client</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">json</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transactions</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">urls</span>;
+<span class="kw">pub mod </span>context;
+<span class="kw">pub mod </span>cors;
+<span class="kw">pub mod </span>errors;
+<span class="kw">pub mod </span>http_client;
+<span class="kw">pub mod </span>json;
+<span class="kw">pub mod </span>transactions;
+<span class="kw">pub mod </span>urls;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests;
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TRANSFER_METHOD</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;transfer&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TRANSFER_FROM_METHOD</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;transferFrom&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SAFE_TRANSFER_FROM_METHOD</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;safeTransferFrom&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ERC20_TRANSFER_METHODS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="ident">TRANSFER_METHOD</span>, <span class="ident">TRANSFER_FROM_METHOD</span>];
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ERC721_TRANSFER_METHODS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
-    <span class="ident">TRANSFER_METHOD</span>,
-    <span class="ident">TRANSFER_FROM_METHOD</span>,
-    <span class="ident">SAFE_TRANSFER_FROM_METHOD</span>,
+<span class="kw">pub const </span>TRANSFER_METHOD: <span class="kw-2">&amp;</span>str = <span class="string">&quot;transfer&quot;</span>;
+<span class="kw">pub const </span>TRANSFER_FROM_METHOD: <span class="kw-2">&amp;</span>str = <span class="string">&quot;transferFrom&quot;</span>;
+<span class="kw">pub const </span>SAFE_TRANSFER_FROM_METHOD: <span class="kw-2">&amp;</span>str = <span class="string">&quot;safeTransferFrom&quot;</span>;
+<span class="kw">pub const </span>ERC20_TRANSFER_METHODS: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str] = <span class="kw-2">&amp;</span>[TRANSFER_METHOD, TRANSFER_FROM_METHOD];
+<span class="kw">pub const </span>ERC721_TRANSFER_METHODS: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str] = <span class="kw-2">&amp;</span>[
+    TRANSFER_METHOD,
+    TRANSFER_FROM_METHOD,
+    SAFE_TRANSFER_FROM_METHOD,
 ];
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SET_FALLBACK_HANDLER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;setFallbackHandler&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ADD_OWNER_WITH_THRESHOLD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;addOwnerWithThreshold&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">REMOVE_OWNER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;removeOwner&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SWAP_OWNER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;swapOwner&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CHANGE_THRESHOLD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;changeThreshold&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CHANGE_MASTER_COPY</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;changeMasterCopy&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ENABLE_MODULE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;enableModule&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISABLE_MODULE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;disableModule&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SET_GUARD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;setGuard&quot;</span>;
+<span class="kw">pub const </span>SET_FALLBACK_HANDLER: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;setFallbackHandler&quot;</span>;
+<span class="kw">pub const </span>ADD_OWNER_WITH_THRESHOLD: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;addOwnerWithThreshold&quot;</span>;
+<span class="kw">pub const </span>REMOVE_OWNER: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;removeOwner&quot;</span>;
+<span class="kw">pub const </span>SWAP_OWNER: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;swapOwner&quot;</span>;
+<span class="kw">pub const </span>CHANGE_THRESHOLD: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;changeThreshold&quot;</span>;
+<span class="kw">pub const </span>CHANGE_MASTER_COPY: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;changeMasterCopy&quot;</span>;
+<span class="kw">pub const </span>ENABLE_MODULE: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;enableModule&quot;</span>;
+<span class="kw">pub const </span>DISABLE_MODULE: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;disableModule&quot;</span>;
+<span class="kw">pub const </span>SET_GUARD: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;setGuard&quot;</span>;
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MULTI_SEND</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;multiSend&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MULTI_SEND_TRANSACTIONS_PARAM</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;transactions&quot;</span>;
+<span class="kw">pub const </span>MULTI_SEND: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;multiSend&quot;</span>;
+<span class="kw">pub const </span>MULTI_SEND_TRANSACTIONS_PARAM: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;transactions&quot;</span>;
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SETTINGS_CHANGE_METHODS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
-    <span class="ident">SET_FALLBACK_HANDLER</span>,
-    <span class="ident">ADD_OWNER_WITH_THRESHOLD</span>,
-    <span class="ident">REMOVE_OWNER</span>,
-    <span class="ident">SWAP_OWNER</span>,
-    <span class="ident">CHANGE_THRESHOLD</span>,
-    <span class="ident">CHANGE_MASTER_COPY</span>,
-    <span class="ident">ENABLE_MODULE</span>,
-    <span class="ident">DISABLE_MODULE</span>,
-    <span class="ident">SET_GUARD</span>,
+<span class="kw">pub const </span>SETTINGS_CHANGE_METHODS: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str] = <span class="kw-2">&amp;</span>[
+    SET_FALLBACK_HANDLER,
+    ADD_OWNER_WITH_THRESHOLD,
+    REMOVE_OWNER,
+    SWAP_OWNER,
+    CHANGE_THRESHOLD,
+    CHANGE_MASTER_COPY,
+    ENABLE_MODULE,
+    DISABLE_MODULE,
+    SET_GUARD,
 ];
 
-<span class="kw">impl</span> <span class="ident">DataDecoded</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_parameter_single_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">some_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">parameters</span>
-            .<span class="ident">as_ref</span>()<span class="question-mark">?</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">param</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">param</span>.<span class="ident">value</span> {
-                <span class="ident">ParamValue::SingleValue</span>(<span class="ident">value</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">param</span>.<span class="ident">name</span> <span class="op">==</span> <span class="ident">some_name</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">value</span>.<span class="ident">clone</span>())
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    }
+<span class="kw">impl </span>DataDecoded {
+    <span class="kw">pub fn </span>get_parameter_single_value(<span class="kw-2">&amp;</span><span class="self">self</span>, some_name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="self">self</span>.parameters
+            .as_ref()<span class="question-mark">?
+            </span>.iter()
+            .find_map(|param| <span class="kw">match </span><span class="kw-2">&amp;</span>param.value {
+                ParamValue::SingleValue(value) =&gt; {
+                    <span class="kw">if </span>param.name == some_name {
+                        <span class="prelude-val">Some</span>(value.clone())
+                    } <span class="kw">else </span>{
+                        <span class="prelude-val">None
+                    </span>}
                 }
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_parameter_value_decoded</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">parameter_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ValueDecodedType</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">parameters</span>
-            .<span class="ident">as_ref</span>()<span class="question-mark">?</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">param</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">param</span>.<span class="ident">value</span> {
-                <span class="ident">ParamValue::SingleValue</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">param</span>.<span class="ident">name</span> <span class="op">==</span> <span class="ident">parameter_name</span> {
-                        <span class="ident">param</span>.<span class="ident">value_decoded</span>.<span class="ident">to_owned</span>()
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    }
+    <span class="kw">pub fn </span>get_parameter_value_decoded(<span class="kw-2">&amp;</span><span class="self">self</span>, parameter_name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;ValueDecodedType&gt; {
+        <span class="self">self</span>.parameters
+            .as_ref()<span class="question-mark">?
+            </span>.iter()
+            .find_map(|param| <span class="kw">match </span><span class="kw-2">&amp;</span>param.value {
+                ParamValue::SingleValue(<span class="kw">_</span>) =&gt; {
+                    <span class="kw">if </span>param.name == parameter_name {
+                        param.value_decoded.to_owned()
+                    } <span class="kw">else </span>{
+                        <span class="prelude-val">None
+                    </span>}
                 }
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_action_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">method</span> <span class="op">==</span> <span class="ident">MULTI_SEND</span> {
-            <span class="self">self</span>.<span class="ident">get_parameter_value_decoded</span>(<span class="ident">MULTI_SEND_TRANSACTIONS_PARAM</span>)
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">value_decoded</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">value_decoded</span> {
-                    <span class="ident">InternalTransaction</span>(<span class="ident">internal_transactions</span>) =&gt; <span class="ident">internal_transactions</span>.<span class="ident">len</span>(),
+    <span class="kw">pub fn </span>get_action_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+        <span class="kw">if </span><span class="self">self</span>.method == MULTI_SEND {
+            <span class="self">self</span>.get_parameter_value_decoded(MULTI_SEND_TRANSACTIONS_PARAM)
+                .as_ref()
+                .map(|value_decoded| <span class="kw">match </span>value_decoded {
+                    InternalTransaction(internal_transactions) =&gt; internal_transactions.len(),
                 })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_parameter_single_value_at</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">position</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">parameters</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">parameters</span><span class="op">|</span> {
-            <span class="ident">parameters</span>
-                .<span class="ident">get</span>(<span class="ident">position</span>)
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">parameter</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">parameter</span>.<span class="ident">value</span> {
-                    <span class="ident">ParamValue::SingleValue</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">value</span>.<span class="ident">clone</span>()),
-                    <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">pub fn </span>get_parameter_single_value_at(<span class="kw-2">&amp;</span><span class="self">self</span>, position: usize) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="self">self</span>.parameters.as_ref().and_then(|parameters| {
+            parameters
+                .get(position)
+                .and_then(|parameter| <span class="kw">match </span><span class="kw-2">&amp;</span>parameter.value {
+                    ParamValue::SingleValue(value) =&gt; <span class="prelude-val">Some</span>(value.clone()),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
                 })
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_erc20_transfer_method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">ERC20_TRANSFER_METHODS</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">method</span>)
+    <span class="kw">pub fn </span>is_erc20_transfer_method(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        ERC20_TRANSFER_METHODS
+            .iter()
+            .any(|<span class="kw-2">&amp;</span>value| value == <span class="self">self</span>.method)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_erc721_transfer_method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">ERC721_TRANSFER_METHODS</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">method</span>)
+    <span class="kw">pub fn </span>is_erc721_transfer_method(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        ERC721_TRANSFER_METHODS
+            .iter()
+            .any(|<span class="kw-2">&amp;</span>value| value == <span class="self">self</span>.method)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_settings_change</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">SETTINGS_CHANGE_METHODS</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">method</span>)
+    <span class="kw">pub fn </span>is_settings_change(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        SETTINGS_CHANGE_METHODS
+            .iter()
+            .any(|<span class="kw-2">&amp;</span>value| value == <span class="self">self</span>.method)
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hex_hash</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Hash</span><span class="op">&gt;</span>(<span class="ident">t</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">DefaultHasher::new</span>();
-    <span class="ident">t</span>.<span class="ident">hash</span>(<span class="kw-2">&amp;mut</span> <span class="ident">s</span>);
-    <span class="macro">format!</span>(<span class="string">&quot;{:#x}&quot;</span>, <span class="ident">s</span>.<span class="ident">finish</span>())
+<span class="kw">pub fn </span>hex_hash&lt;T: Hash&gt;(t: <span class="kw-2">&amp;</span>T) -&gt; String {
+    <span class="kw">let </span><span class="kw-2">mut </span>s = DefaultHasher::new();
+    t.hash(<span class="kw-2">&amp;mut </span>s);
+    <span class="macro">format!</span>(<span class="string">&quot;{:#x}&quot;</span>, s.finish())
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

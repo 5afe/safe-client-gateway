@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/chains/converters.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>converters.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/chains/converters.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>converters.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -78,80 +72,79 @@
 <span id="72">72</span>
 <span id="73">73</span>
 <span id="74">74</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains</span>::{
-    <span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">BackendChainInfo</span>, <span class="ident">GasPrice</span>, <span class="ident">RpcAuthentication</span>, <span class="ident">RpcUri</span> <span class="kw">as</span> <span class="ident">BackendRpcUri</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::backend::chains::{
+    ChainInfo <span class="kw">as </span>BackendChainInfo, GasPrice, RpcAuthentication, RpcUri <span class="kw">as </span>BackendRpcUri,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::chains::models</span>::{
-    <span class="ident">BlockExplorerUriTemplate</span> <span class="kw">as</span> <span class="ident">ServiceBlockExplorerUriTemplate</span>, <span class="ident">ChainInfo</span> <span class="kw">as</span> <span class="ident">ServiceChainInfo</span>,
-    <span class="ident">GasPrice</span> <span class="kw">as</span> <span class="ident">ServiceGasPrice</span>, <span class="ident">NativeCurrency</span> <span class="kw">as</span> <span class="ident">ServiceNativeCurrency</span>,
-    <span class="ident">RpcAuthentication</span> <span class="kw">as</span> <span class="ident">ServiceRpcAuthentication</span>, <span class="ident">RpcUri</span> <span class="kw">as</span> <span class="ident">ServiceRpcUri</span>, <span class="ident">Theme</span> <span class="kw">as</span> <span class="ident">ServiceTheme</span>,
+<span class="kw">use </span><span class="kw">crate</span>::routes::chains::models::{
+    BlockExplorerUriTemplate <span class="kw">as </span>ServiceBlockExplorerUriTemplate, ChainInfo <span class="kw">as </span>ServiceChainInfo,
+    GasPrice <span class="kw">as </span>ServiceGasPrice, NativeCurrency <span class="kw">as </span>ServiceNativeCurrency,
+    RpcAuthentication <span class="kw">as </span>ServiceRpcAuthentication, RpcUri <span class="kw">as </span>ServiceRpcUri, Theme <span class="kw">as </span>ServiceTheme,
 };
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">BackendChainInfo</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ServiceChainInfo</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">chain_info</span>: <span class="ident">BackendChainInfo</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">transaction_service</span>: <span class="ident">chain_info</span>.<span class="ident">transaction_service</span>,
-            <span class="ident">chain_id</span>: <span class="ident">chain_info</span>.<span class="ident">chain_id</span>,
-            <span class="ident">chain_name</span>: <span class="ident">chain_info</span>.<span class="ident">chain_name</span>,
-            <span class="ident">short_name</span>: <span class="ident">chain_info</span>.<span class="ident">short_name</span>,
-            <span class="ident">l2</span>: <span class="ident">chain_info</span>.<span class="ident">l2</span>,
-            <span class="ident">description</span>: <span class="ident">chain_info</span>.<span class="ident">description</span>,
-            <span class="ident">rpc_uri</span>: <span class="ident">chain_info</span>.<span class="ident">rpc_uri</span>.<span class="ident">into</span>(),
-            <span class="ident">safe_apps_rpc_uri</span>: <span class="ident">chain_info</span>.<span class="ident">safe_apps_rpc_uri</span>.<span class="ident">into</span>(),
-            <span class="ident">public_rpc_uri</span>: <span class="ident">chain_info</span>.<span class="ident">public_rpc_uri</span>.<span class="ident">into</span>(),
-            <span class="ident">block_explorer_uri_template</span>: <span class="ident">ServiceBlockExplorerUriTemplate</span> {
-                <span class="ident">address</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">address</span>,
-                <span class="ident">tx_hash</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">tx_hash</span>,
-                <span class="ident">api</span>: <span class="ident">chain_info</span>.<span class="ident">block_explorer_uri_template</span>.<span class="ident">api</span>,
+<span class="kw">impl </span>From&lt;BackendChainInfo&gt; <span class="kw">for </span>ServiceChainInfo {
+    <span class="kw">fn </span>from(chain_info: BackendChainInfo) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            transaction_service: chain_info.transaction_service,
+            chain_id: chain_info.chain_id,
+            chain_name: chain_info.chain_name,
+            short_name: chain_info.short_name,
+            l2: chain_info.l2,
+            description: chain_info.description,
+            rpc_uri: chain_info.rpc_uri.into(),
+            safe_apps_rpc_uri: chain_info.safe_apps_rpc_uri.into(),
+            public_rpc_uri: chain_info.public_rpc_uri.into(),
+            block_explorer_uri_template: ServiceBlockExplorerUriTemplate {
+                address: chain_info.block_explorer_uri_template.address,
+                tx_hash: chain_info.block_explorer_uri_template.tx_hash,
+                api: chain_info.block_explorer_uri_template.api,
             },
-            <span class="ident">native_currency</span>: <span class="ident">ServiceNativeCurrency</span> {
-                <span class="ident">name</span>: <span class="ident">chain_info</span>.<span class="ident">native_currency</span>.<span class="ident">name</span>,
-                <span class="ident">symbol</span>: <span class="ident">chain_info</span>.<span class="ident">native_currency</span>.<span class="ident">symbol</span>,
-                <span class="ident">decimals</span>: <span class="ident">chain_info</span>.<span class="ident">native_currency</span>.<span class="ident">decimals</span>,
-                <span class="ident">logo_uri</span>: <span class="ident">chain_info</span>.<span class="ident">native_currency</span>.<span class="ident">logo_uri</span>,
+            native_currency: ServiceNativeCurrency {
+                name: chain_info.native_currency.name,
+                symbol: chain_info.native_currency.symbol,
+                decimals: chain_info.native_currency.decimals,
+                logo_uri: chain_info.native_currency.logo_uri,
             },
-            <span class="ident">theme</span>: <span class="ident">ServiceTheme</span> {
-                <span class="ident">text_color</span>: <span class="ident">chain_info</span>.<span class="ident">theme</span>.<span class="ident">text_color</span>,
-                <span class="ident">background_color</span>: <span class="ident">chain_info</span>.<span class="ident">theme</span>.<span class="ident">background_color</span>,
+            theme: ServiceTheme {
+                text_color: chain_info.theme.text_color,
+                background_color: chain_info.theme.background_color,
             },
-            <span class="ident">ens_registry_address</span>: <span class="ident">chain_info</span>.<span class="ident">ens_registry_address</span>,
-            <span class="ident">gas_price</span>: <span class="ident">chain_info</span>
-                .<span class="ident">gas_price</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">gas_price</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">gas_price</span> {
-                    <span class="ident">GasPrice::Oracle</span> {
-                        <span class="ident">uri</span>,
-                        <span class="ident">gas_parameter</span>,
-                        <span class="ident">gwei_factor</span>,
-                    } =&gt; <span class="ident">ServiceGasPrice::Oracle</span> {
-                        <span class="ident">uri</span>: <span class="ident">uri</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">gas_parameter</span>: <span class="ident">gas_parameter</span>.<span class="ident">to_string</span>(),
-                        <span class="ident">gwei_factor</span>: <span class="ident">gwei_factor</span>.<span class="ident">to_string</span>(),
+            ens_registry_address: chain_info.ens_registry_address,
+            gas_price: chain_info
+                .gas_price
+                .iter()
+                .map(|gas_price| <span class="kw">match </span>gas_price {
+                    GasPrice::Oracle {
+                        uri,
+                        gas_parameter,
+                        gwei_factor,
+                    } =&gt; ServiceGasPrice::Oracle {
+                        uri: uri.to_string(),
+                        gas_parameter: gas_parameter.to_string(),
+                        gwei_factor: gwei_factor.to_string(),
                     },
-                    <span class="ident">GasPrice::Fixed</span> { <span class="ident">wei_value</span> } =&gt; <span class="ident">ServiceGasPrice::Fixed</span> {
-                        <span class="ident">wei_value</span>: <span class="ident">wei_value</span>.<span class="ident">to_string</span>(),
+                    GasPrice::Fixed { wei_value } =&gt; ServiceGasPrice::Fixed {
+                        wei_value: wei_value.to_string(),
                     },
-                    <span class="ident">GasPrice::Unknown</span> =&gt; <span class="ident">ServiceGasPrice::Unknown</span>,
+                    GasPrice::Unknown =&gt; ServiceGasPrice::Unknown,
                 })
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ServiceGasPrice</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-            <span class="ident">disabled_wallets</span>: <span class="ident">chain_info</span>.<span class="ident">disabled_wallets</span>,
-            <span class="ident">features</span>: <span class="ident">chain_info</span>.<span class="ident">features</span>,
+                .collect::&lt;Vec&lt;ServiceGasPrice&gt;&gt;(),
+            disabled_wallets: chain_info.disabled_wallets,
+            features: chain_info.features,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">BackendRpcUri</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ServiceRpcUri</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">rpc_uri</span>: <span class="ident">BackendRpcUri</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">ServiceRpcUri</span> {
-            <span class="ident">authentication</span>: <span class="kw">match</span> <span class="ident">rpc_uri</span>.<span class="ident">authentication</span> {
-                <span class="ident">RpcAuthentication::ApiKeyPath</span> =&gt; <span class="ident">ServiceRpcAuthentication::ApiKeyPath</span>,
-                <span class="ident">RpcAuthentication::NoAuthentication</span> =&gt; <span class="ident">ServiceRpcAuthentication::NoAuthentication</span>,
-                <span class="ident">RpcAuthentication::Unknown</span> =&gt; <span class="ident">ServiceRpcAuthentication::Unknown</span>,
+<span class="kw">impl </span>From&lt;BackendRpcUri&gt; <span class="kw">for </span>ServiceRpcUri {
+    <span class="kw">fn </span>from(rpc_uri: BackendRpcUri) -&gt; <span class="self">Self </span>{
+        ServiceRpcUri {
+            authentication: <span class="kw">match </span>rpc_uri.authentication {
+                RpcAuthentication::ApiKeyPath =&gt; ServiceRpcAuthentication::ApiKeyPath,
+                RpcAuthentication::NoAuthentication =&gt; ServiceRpcAuthentication::NoAuthentication,
+                RpcAuthentication::Unknown =&gt; ServiceRpcAuthentication::Unknown,
             },
-            <span class="ident">value</span>: <span class="ident">rpc_uri</span>.<span class="ident">value</span>,
+            value: rpc_uri.value,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

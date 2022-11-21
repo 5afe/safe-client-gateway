@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/about/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/about/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -119,121 +113,120 @@
 <span id="113">113</span>
 <span id="114">114</span>
 <span id="115">115</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::content</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>rocket::response::content;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::routes::authorization::AuthorizationToken</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::about_cache_duration</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::about::handlers</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::Request</span>;
-<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
+<span class="kw">use </span><span class="kw">crate</span>::cache::cache_operations::CacheResponse;
+<span class="kw">use </span><span class="kw">crate</span>::cache::manager::ChainCache;
+<span class="kw">use </span><span class="kw">crate</span>::common::routes::authorization::AuthorizationToken;
+<span class="kw">use </span><span class="kw">crate</span>::config::about_cache_duration;
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider};
+<span class="kw">use </span><span class="kw">crate</span>::routes::about::handlers;
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span><span class="kw">crate</span>::utils::http_client::Request;
+<span class="kw">use </span>rocket_okapi::openapi;
 
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns [ChainAbout](crate::routes::about::models::ChainAbout)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Chain&#39;s About</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The about endpoint provides information of the environmental variables set for the instance of `safe-client-gateway`. This would allow to identify on which commit and version the last deployment happened and to which safe transaction handlers backend environment the current instance of the gateway is pointing to.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// There are no query parameters for this endpoint</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_chains_about</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">duration</span>(<span class="ident">about_cache_duration</span>())
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">handlers::chains_about</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>))
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about` &lt;br /&gt;
+/// Returns [ChainAbout](crate::routes::about::models::ChainAbout)
+///
+/// # Chain&#39;s About
+///
+/// The about endpoint provides information of the environmental variables set for the instance of `safe-client-gateway`. This would allow to identify on which commit and version the last deployment happened and to which safe transaction handlers backend environment the current instance of the gateway is pointing to.
+///
+/// ## Path
+///
+/// `/v1/chains/&lt;chain_id&gt;/about`
+///
+/// ## Query parameters
+///
+/// There are no query parameters for this endpoint
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;About&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_chains_about(
+    context: RequestContext,
+    chain_id: String,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .duration(about_cache_duration())
+        .resp_generator(|| handlers::chains_about(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id))
+        .execute()
+        .<span class="kw">await
+</span>}
+
+<span class="doccomment">/// `/about` &lt;br /&gt;
+/// [About](crate::routes::about::models::About)
+///
+/// # About
+///
+/// This endpoint is chain independent, and returns non cached information regarding this current CGW instance.
+///
+/// ## Path
+///
+/// `/about`
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;About&quot;</span>)]
+#[get(<span class="string">&quot;/about&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_about() -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    <span class="prelude-val">Ok</span>(content::RawJson(serde_json::to_string(<span class="kw-2">&amp;</span>handlers::about())<span class="question-mark">?</span>))
+}
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about/master-copies` &lt;br /&gt;
+/// Returns a list of `MasterCopy`
+///
+/// # Master Copies
+///
+/// This endpoint returns a list of `MasterCopy` objects just as documented in the core services
+///
+/// ## Path
+///
+/// `/v1/chains/&lt;chain_id&gt;/about/master-copies` where `chain_id` correspond to the chain id of the desired network
+///
+/// ## Sample Json
+/// &lt;details&gt;
+/// &lt;summary&gt;JSON sample&lt;/summary&gt;
+///
+/// ```json
+/// [
+///   {
+///     &quot;address&quot;: &quot;0x8942595A2dC5181Df0465AF0D7be08c8f23C93af&quot;,
+///     &quot;version&quot;: &quot;0.1.0&quot;
+///   }
+/// ]
+/// ```
+/// &lt;/details&gt;
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;About&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/master-copies&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_master_copies(
+    context: RequestContext,
+    chain_id: String,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .duration(about_cache_duration())
+        .resp_generator(|| handlers::get_master_copies(<span class="kw-2">&amp;</span>context, chain_id.as_str()))
+        .execute()
+        .<span class="kw">await
+</span>}
+
+<span class="attribute">#[doc(hidden)]
+#[openapi(tag = <span class="string">&quot;About&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/backbone&quot;</span>)]
+</span><span class="kw">pub async fn </span>backbone(
+    context: RequestContext,
+    chain_id: String,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    <span class="kw">let </span>client = context.http_client();
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(chain_id.as_str(), <span class="kw-2">&amp;</span>context);
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(info_provider, <span class="string">&quot;/v1/about/&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>request = Request::new(url);
+    <span class="prelude-val">Ok</span>(content::RawJson(client.get(request).<span class="kw">await</span><span class="question-mark">?</span>.body))
 }
 
-<span class="doccomment">/// `/about` &lt;br /&gt;</span>
-<span class="doccomment">/// [About](crate::routes::about::models::About)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # About</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint is chain independent, and returns non cached information regarding this current CGW instance.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `/about`</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/about&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_about</span>() -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="prelude-val">Ok</span>(<span class="ident">content::RawJson</span>(<span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">handlers::about</span>())<span class="question-mark">?</span>))
-}
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about/master-copies` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns a list of `MasterCopy`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Master Copies</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint returns a list of `MasterCopy` objects just as documented in the core services</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/about/master-copies` where `chain_id` correspond to the chain id of the desired network</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Sample Json</span>
-<span class="doccomment">/// &lt;details&gt;</span>
-<span class="doccomment">/// &lt;summary&gt;JSON sample&lt;/summary&gt;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```json</span>
-<span class="doccomment">/// [</span>
-<span class="doccomment">///   {</span>
-<span class="doccomment">///     &quot;address&quot;: &quot;0x8942595A2dC5181Df0465AF0D7be08c8f23C93af&quot;,</span>
-<span class="doccomment">///     &quot;version&quot;: &quot;0.1.0&quot;</span>
-<span class="doccomment">///   }</span>
-<span class="doccomment">/// ]</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// &lt;/details&gt;</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/master-copies&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_master_copies</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">duration</span>(<span class="ident">about_cache_duration</span>())
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">handlers::get_master_copies</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
-}
-
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;About&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/about/backbone&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backbone</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">http_client</span>();
-    <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>(), <span class="kw-2">&amp;</span><span class="ident">context</span>);
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(<span class="ident">info_provider</span>, <span class="string">&quot;/v1/about/&quot;</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">url</span>);
-    <span class="prelude-val">Ok</span>(<span class="ident">content::RawJson</span>(<span class="ident">client</span>.<span class="ident">get</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">body</span>))
-}
-
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/about/redis&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">redis</span>(<span class="ident">context</span>: <span class="ident">RequestContext</span>, <span class="ident">_token</span>: <span class="ident">AuthorizationToken</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-    <span class="prelude-val">Ok</span>(<span class="ident">context</span>
-        .<span class="ident">cache</span>(<span class="ident">ChainCache::Other</span>)
-        .<span class="ident">info</span>()
-        .<span class="kw">await</span>
-        .<span class="ident">unwrap_or</span>(<span class="ident">String::new</span>()))
+<span class="attribute">#[doc(hidden)]
+#[get(<span class="string">&quot;/about/redis&quot;</span>)]
+</span><span class="kw">pub async fn </span>redis(context: RequestContext, _token: AuthorizationToken) -&gt; ApiResult&lt;String&gt; {
+    <span class="prelude-val">Ok</span>(context
+        .cache(ChainCache::Other)
+        .info()
+        .<span class="kw">await
+        </span>.unwrap_or(String::new()))
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

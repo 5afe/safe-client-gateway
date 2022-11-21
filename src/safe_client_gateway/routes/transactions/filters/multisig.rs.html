@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/filters/multisig.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>multisig.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/filters/multisig.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>multisig.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -101,103 +95,102 @@
 <span id="95">95</span>
 <span id="96">96</span>
 <span id="97">97</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::QueryParam</span>;
-<span class="kw">use</span> <span class="ident">rocket::form::FromForm</span>;
-<span class="kw">use</span> <span class="ident">rocket::http::uri::fmt</span>::{<span class="ident">Formatter</span>, <span class="ident">FromUriParam</span>, <span class="ident">Query</span>, <span class="ident">UriDisplay</span>};
-<span class="kw">use</span> <span class="ident">rocket_okapi::okapi::schemars</span>;
-<span class="kw">use</span> <span class="ident">rocket_okapi::okapi::schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::QueryParam;
+<span class="kw">use </span>rocket::form::FromForm;
+<span class="kw">use </span>rocket::http::uri::fmt::{Formatter, FromUriParam, Query, UriDisplay};
+<span class="kw">use </span>rocket_okapi::okapi::schemars;
+<span class="kw">use </span>rocket_okapi::okapi::schemars::JsonSchema;
+<span class="kw">use </span>std::fmt;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">FromForm</span>, <span class="ident">Debug</span>, <span class="ident">JsonSchema</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultisigFilters</span> {
-    <span class="attribute">#[<span class="ident">field</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;execution_date__gte&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">execution_date_gte</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">field</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;execution_date__lte&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">execution_date_lte</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">to</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">nonce</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">executed</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(FromForm, Debug, JsonSchema)]
+</span><span class="kw">pub struct </span>MultisigFilters {
+    <span class="attribute">#[field(name = <span class="string">&quot;execution_date__gte&quot;</span>)]
+    </span><span class="kw">pub </span>execution_date_gte: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="attribute">#[field(name = <span class="string">&quot;execution_date__lte&quot;</span>)]
+    </span><span class="kw">pub </span>execution_date_lte: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>to: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>value: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>nonce: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>executed: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">QueryParam</span> <span class="kw">for</span> <span class="ident">MultisigFilters</span> {
-    <span class="kw">fn</span> <span class="ident">as_query_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">query_params</span> <span class="op">=</span> <span class="ident">String::new</span>();
+<span class="kw">impl </span>QueryParam <span class="kw">for </span>MultisigFilters {
+    <span class="kw">fn </span>as_query_param(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="kw">let </span><span class="kw-2">mut </span>query_params = String::new();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">execution_date_gte</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">execution_date_gte</span> {
-            <span class="ident">query_params</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;execution_date__gte={}&amp;&quot;</span>, <span class="ident">execution_date_gte</span>))
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(execution_date_gte) = <span class="kw-2">&amp;</span><span class="self">self</span>.execution_date_gte {
+            query_params.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;execution_date__gte={}&amp;&quot;</span>, execution_date_gte))
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">execution_date_lte</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">execution_date_lte</span> {
-            <span class="ident">query_params</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;execution_date__lte={}&amp;&quot;</span>, <span class="ident">execution_date_lte</span>))
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(execution_date_lte) = <span class="kw-2">&amp;</span><span class="self">self</span>.execution_date_lte {
+            query_params.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;execution_date__lte={}&amp;&quot;</span>, execution_date_lte))
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">to</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span> {
-            <span class="ident">query_params</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;to={}&amp;&quot;</span>, <span class="ident">to</span>))
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(to) = <span class="kw-2">&amp;</span><span class="self">self</span>.to {
+            query_params.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;to={}&amp;&quot;</span>, to))
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span> {
-            <span class="ident">query_params</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;value={}&amp;&quot;</span>, <span class="ident">value</span>))
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = <span class="kw-2">&amp;</span><span class="self">self</span>.value {
+            query_params.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;value={}&amp;&quot;</span>, value))
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">nonce</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">nonce</span> {
-            <span class="ident">query_params</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;nonce={}&amp;&quot;</span>, <span class="ident">nonce</span>))
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(nonce) = <span class="kw-2">&amp;</span><span class="self">self</span>.nonce {
+            query_params.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;nonce={}&amp;&quot;</span>, nonce))
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">executed</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">executed</span> {
-            <span class="ident">query_params</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;executed={}&amp;&quot;</span>, <span class="ident">executed</span>))
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(executed) = <span class="kw-2">&amp;</span><span class="self">self</span>.executed {
+            query_params.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;executed={}&amp;&quot;</span>, executed))
         }
 
-        <span class="kw">return</span> <span class="ident">query_params</span>;
+        <span class="kw">return </span>query_params;
     }
 }
 
-<span class="kw">impl</span>
-    <span class="ident">FromUriParam</span><span class="op">&lt;</span>
-        <span class="ident">Query</span>,
+<span class="kw">impl
+    </span>FromUriParam&lt;
+        Query,
         (
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
         ),
-    <span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MultisigFilters</span>
+    &gt; <span class="kw">for </span>MultisigFilters
 {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">MultisigFilters</span>;
+    <span class="kw">type </span>Target = MultisigFilters;
 
-    <span class="kw">fn</span> <span class="ident">from_uri_param</span>(
-        (<span class="ident">execution_date_gte</span>, <span class="ident">execution_date_lte</span>, <span class="ident">to</span>, <span class="ident">value</span>, <span class="ident">nonce</span>, <span class="ident">executed</span>): (
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">fn </span>from_uri_param(
+        (execution_date_gte, execution_date_lte, to, value, nonce, executed): (
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
+            <span class="prelude-ty">Option</span>&lt;String&gt;,
         ),
-    ) -&gt; <span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="ident">MultisigFilters</span> {
-            <span class="ident">execution_date_gte</span>,
-            <span class="ident">execution_date_lte</span>,
-            <span class="ident">to</span>,
-            <span class="ident">value</span>,
-            <span class="ident">nonce</span>,
-            <span class="ident">executed</span>,
+    ) -&gt; <span class="self">Self</span>::Target {
+        MultisigFilters {
+            execution_date_gte,
+            execution_date_lte,
+            to,
+            value,
+            nonce,
+            executed,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">UriDisplay</span><span class="op">&lt;</span><span class="ident">Query</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MultisigFilters</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="ident">Query</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">f</span>.<span class="ident">write_named_value</span>(<span class="string">&quot;execution_date__gte&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">execution_date_gte</span>)<span class="question-mark">?</span>;
-        <span class="ident">f</span>.<span class="ident">write_named_value</span>(<span class="string">&quot;execution_date__lte&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">execution_date_lte</span>)<span class="question-mark">?</span>;
-        <span class="ident">f</span>.<span class="ident">write_named_value</span>(<span class="string">&quot;to&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>)<span class="question-mark">?</span>;
-        <span class="ident">f</span>.<span class="ident">write_named_value</span>(<span class="string">&quot;value&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)<span class="question-mark">?</span>;
-        <span class="ident">f</span>.<span class="ident">write_named_value</span>(<span class="string">&quot;nonce&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">nonce</span>)<span class="question-mark">?</span>;
-        <span class="ident">f</span>.<span class="ident">write_named_value</span>(<span class="string">&quot;executed&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">executed</span>)
+<span class="kw">impl </span>UriDisplay&lt;Query&gt; <span class="kw">for </span>MultisigFilters {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;Query&gt;) -&gt; fmt::Result {
+        f.write_named_value(<span class="string">&quot;execution_date__gte&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.execution_date_gte)<span class="question-mark">?</span>;
+        f.write_named_value(<span class="string">&quot;execution_date__lte&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.execution_date_lte)<span class="question-mark">?</span>;
+        f.write_named_value(<span class="string">&quot;to&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.to)<span class="question-mark">?</span>;
+        f.write_named_value(<span class="string">&quot;value&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.value)<span class="question-mark">?</span>;
+        f.write_named_value(<span class="string">&quot;nonce&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.nonce)<span class="question-mark">?</span>;
+        f.write_named_value(<span class="string">&quot;executed&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.executed)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

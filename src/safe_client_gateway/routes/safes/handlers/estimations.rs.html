@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/safes/handlers/estimations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>estimations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/safes/handlers/estimations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>estimations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -142,144 +136,143 @@
 <span id="136">136</span>
 <span id="137">137</span>
 <span id="138">138</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions</span>::{
-    <span class="ident">MultisigTransaction</span> <span class="kw">as</span> <span class="ident">BackendMultisigTransaction</span>,
-    <span class="ident">SafeTransactionEstimation</span> <span class="kw">as</span> <span class="ident">BackendSafeTransactionEstimation</span>,
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transactions::{
+    MultisigTransaction <span class="kw">as </span>BackendMultisigTransaction,
+    SafeTransactionEstimation <span class="kw">as </span>BackendSafeTransactionEstimation,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page::Page</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::safes::models</span>::{
-    <span class="ident">SafeTransactionEstimation</span>, <span class="ident">SafeTransactionEstimationRequest</span>, <span class="ident">SafeTransactionEstimationV2</span>,
+<span class="kw">use </span><span class="kw">crate</span>::common::models::page::Page;
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider};
+<span class="kw">use </span><span class="kw">crate</span>::routes::safes::models::{
+    SafeTransactionEstimation, SafeTransactionEstimationRequest, SafeTransactionEstimationV2,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client</span>::{<span class="ident">HttpClient</span>, <span class="ident">Request</span>};
-<span class="kw">use</span> <span class="ident">std::cmp::max</span>;
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span><span class="kw">crate</span>::utils::http_client::{HttpClient, Request};
+<span class="kw">use </span>std::cmp::max;
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_last_known_nonce_and_estimate</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_transaction_estimation_request</span>: <span class="kw-2">&amp;</span><span class="ident">SafeTransactionEstimationRequest</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>);
+<span class="kw">async fn </span>get_last_known_nonce_and_estimate(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>str,
+    safe_address: <span class="kw-2">&amp;</span>str,
+    safe_transaction_estimation_request: <span class="kw-2">&amp;</span>SafeTransactionEstimationRequest,
+) -&gt; ApiResult&lt;(String, u64, <span class="prelude-ty">Option</span>&lt;u64&gt;)&gt; {
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(chain_id, <span class="kw-2">&amp;</span>context);
 
-    <span class="kw">let</span> <span class="ident">current_nonce</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">safe_info</span>(<span class="ident">safe_address</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">nonce</span>;
+    <span class="kw">let </span>current_nonce = info_provider.safe_info(safe_address).<span class="kw">await</span><span class="question-mark">?</span>.nonce;
 
-    <span class="kw">let</span> <span class="ident">latest_multisig_tx_url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
-        <span class="ident">info_provider</span>,
+    <span class="kw">let </span>latest_multisig_tx_url = <span class="macro">core_uri!</span>(
+        info_provider,
         <span class="string">&quot;/v1/safes/{}/multisig-transactions/?ordering=-nonce&amp;trusted=true&amp;limit=1&quot;</span>,
-        <span class="ident">safe_address</span>
+        safe_address
     )<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">last_known_nonce</span> <span class="op">=</span>
-        <span class="ident">fetch_last_known_nonce</span>(<span class="ident">context</span>.<span class="ident">http_client</span>(), <span class="ident">latest_multisig_tx_url</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let </span>last_known_nonce =
+        fetch_last_known_nonce(context.http_client(), latest_multisig_tx_url).<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">estimation_url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
-        <span class="ident">info_provider</span>,
+    <span class="kw">let </span>estimation_url = <span class="macro">core_uri!</span>(
+        info_provider,
         <span class="string">&quot;/v1/safes/{}/multisig-transactions/estimations/&quot;</span>,
-        <span class="ident">safe_address</span>
+        safe_address
     )<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">safe_tx_gas</span> <span class="op">=</span> <span class="ident">fetch_estimation</span>(
-        <span class="ident">context</span>.<span class="ident">http_client</span>(),
-        <span class="ident">estimation_url</span>,
-        <span class="ident">safe_transaction_estimation_request</span>,
+    <span class="kw">let </span>safe_tx_gas = fetch_estimation(
+        context.http_client(),
+        estimation_url,
+        safe_transaction_estimation_request,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="prelude-val">Ok</span>((<span class="ident">safe_tx_gas</span>, <span class="ident">current_nonce</span>, <span class="ident">last_known_nonce</span>))
+    <span class="prelude-val">Ok</span>((safe_tx_gas, current_nonce, last_known_nonce))
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">estimate_safe_tx_gas</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_transaction_estimation_request</span>: <span class="kw-2">&amp;</span><span class="ident">SafeTransactionEstimationRequest</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">SafeTransactionEstimation</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> (<span class="ident">safe_tx_gas</span>, <span class="ident">current_nonce</span>, <span class="ident">last_known_nonce</span>) <span class="op">=</span> <span class="ident">get_last_known_nonce_and_estimate</span>(
-        <span class="ident">context</span>,
-        <span class="ident">chain_id</span>,
-        <span class="ident">safe_address</span>,
-        <span class="ident">safe_transaction_estimation_request</span>,
+<span class="kw">pub async fn </span>estimate_safe_tx_gas(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>str,
+    safe_address: <span class="kw-2">&amp;</span>str,
+    safe_transaction_estimation_request: <span class="kw-2">&amp;</span>SafeTransactionEstimationRequest,
+) -&gt; ApiResult&lt;SafeTransactionEstimation&gt; {
+    <span class="kw">let </span>(safe_tx_gas, current_nonce, last_known_nonce) = get_last_known_nonce_and_estimate(
+        context,
+        chain_id,
+        safe_address,
+        safe_transaction_estimation_request,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="comment">// If there is no transaction available on the tx service, we default to 0</span>
-    <span class="comment">// Note: This is not really correct and therefore clients should use the recommended nonce returned</span>
-    <span class="kw">let</span> <span class="ident">latest_nonce</span> <span class="op">=</span> <span class="ident">last_known_nonce</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>);
+    <span class="comment">// If there is no transaction available on the tx service, we default to 0
+    // Note: This is not really correct and therefore clients should use the recommended nonce returned
+    </span><span class="kw">let </span>latest_nonce = last_known_nonce.unwrap_or(<span class="number">0</span>);
 
-    <span class="prelude-val">Ok</span>(<span class="ident">SafeTransactionEstimation</span> {
-        <span class="ident">current_nonce</span>,
-        <span class="ident">latest_nonce</span>,
-        <span class="ident">safe_tx_gas</span>,
+    <span class="prelude-val">Ok</span>(SafeTransactionEstimation {
+        current_nonce,
+        latest_nonce,
+        safe_tx_gas,
     })
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">estimate_safe_tx_gas_v2</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_transaction_estimation_request</span>: <span class="kw-2">&amp;</span><span class="ident">SafeTransactionEstimationRequest</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">SafeTransactionEstimationV2</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> (<span class="ident">safe_tx_gas</span>, <span class="ident">current_nonce</span>, <span class="ident">last_known_nonce</span>) <span class="op">=</span> <span class="ident">get_last_known_nonce_and_estimate</span>(
-        <span class="ident">context</span>,
-        <span class="ident">chain_id</span>,
-        <span class="ident">safe_address</span>,
-        <span class="ident">safe_transaction_estimation_request</span>,
+<span class="kw">pub async fn </span>estimate_safe_tx_gas_v2(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>str,
+    safe_address: <span class="kw-2">&amp;</span>str,
+    safe_transaction_estimation_request: <span class="kw-2">&amp;</span>SafeTransactionEstimationRequest,
+) -&gt; ApiResult&lt;SafeTransactionEstimationV2&gt; {
+    <span class="kw">let </span>(safe_tx_gas, current_nonce, last_known_nonce) = get_last_known_nonce_and_estimate(
+        context,
+        chain_id,
+        safe_address,
+        safe_transaction_estimation_request,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="comment">// The next nonce recommended to use for a new transaction is the maximum of</span>
-    <span class="comment">// - the nonce of the latest transaction from the tx service plus 1, or 0 if there is no such transaction</span>
-    <span class="comment">// - the current Safe nonce</span>
-    <span class="kw">let</span> <span class="ident">recommended_nonce</span> <span class="op">=</span> <span class="ident">max</span>(
-        <span class="ident">current_nonce</span>,
-        <span class="ident">last_known_nonce</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span> <span class="op">+</span> <span class="number">1</span>).<span class="ident">unwrap_or</span>(<span class="number">0</span>),
+    <span class="comment">// The next nonce recommended to use for a new transaction is the maximum of
+    // - the nonce of the latest transaction from the tx service plus 1, or 0 if there is no such transaction
+    // - the current Safe nonce
+    </span><span class="kw">let </span>recommended_nonce = max(
+        current_nonce,
+        last_known_nonce.map(|it| it + <span class="number">1</span>).unwrap_or(<span class="number">0</span>),
     );
 
-    <span class="prelude-val">Ok</span>(<span class="ident">SafeTransactionEstimationV2</span> {
-        <span class="ident">current_nonce</span>,
-        <span class="ident">recommended_nonce</span>,
-        <span class="ident">safe_tx_gas</span>,
+    <span class="prelude-val">Ok</span>(SafeTransactionEstimationV2 {
+        current_nonce,
+        recommended_nonce,
+        safe_tx_gas,
     })
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch_estimation</span>(
-    <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">HttpClient</span><span class="op">&gt;</span>,
-    <span class="ident">request_url</span>: <span class="ident">String</span>,
-    <span class="ident">safe_transaction_estimation_request</span>: <span class="kw-2">&amp;</span><span class="ident">SafeTransactionEstimationRequest</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">request_url</span>);
-        <span class="ident">request</span>.<span class="ident">body</span>(<span class="prelude-val">Some</span>(<span class="ident">serde_json::to_string</span>(
-            <span class="ident">safe_transaction_estimation_request</span>,
+<span class="kw">async fn </span>fetch_estimation(
+    client: Arc&lt;<span class="kw">dyn </span>HttpClient&gt;,
+    request_url: String,
+    safe_transaction_estimation_request: <span class="kw-2">&amp;</span>SafeTransactionEstimationRequest,
+) -&gt; ApiResult&lt;String&gt; {
+    <span class="kw">let </span>request = {
+        <span class="kw">let </span><span class="kw-2">mut </span>request = Request::new(request_url);
+        request.body(<span class="prelude-val">Some</span>(serde_json::to_string(
+            safe_transaction_estimation_request,
         )<span class="question-mark">?</span>));
-        <span class="ident">request</span>
+        request
     };
-    <span class="kw">let</span> <span class="ident">estimation_response</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">post</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let </span>estimation_response = client.post(request).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(
-        <span class="ident">serde_json::from_str</span>::<span class="op">&lt;</span><span class="ident">BackendSafeTransactionEstimation</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">estimation_response</span>.<span class="ident">body</span>)<span class="question-mark">?</span>
-            .<span class="ident">safe_tx_gas</span>,
+        serde_json::from_str::&lt;BackendSafeTransactionEstimation&gt;(<span class="kw-2">&amp;</span>estimation_response.body)<span class="question-mark">?
+            </span>.safe_tx_gas,
     )
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch_last_known_nonce</span>(
-    <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">HttpClient</span><span class="op">&gt;</span>,
-    <span class="ident">request_url</span>: <span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::new</span>(<span class="ident">request_url</span>);
-    <span class="kw">let</span> <span class="ident">latest_multisig_tx_response</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">nonce</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>::<span class="op">&lt;</span><span class="ident">Page</span><span class="op">&lt;</span><span class="ident">BackendMultisigTransaction</span><span class="op">&gt;</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="ident">latest_multisig_tx_response</span>.<span class="ident">body</span>,
-    )<span class="question-mark">?</span>
-    .<span class="ident">results</span>
-    .<span class="ident">first</span>()
-    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">nonce</span>);
+<span class="kw">async fn </span>fetch_last_known_nonce(
+    client: Arc&lt;<span class="kw">dyn </span>HttpClient&gt;,
+    request_url: String,
+) -&gt; ApiResult&lt;<span class="prelude-ty">Option</span>&lt;u64&gt;&gt; {
+    <span class="kw">let </span>request = Request::new(request_url);
+    <span class="kw">let </span>latest_multisig_tx_response = client.get(request).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let </span>nonce = serde_json::from_str::&lt;Page&lt;BackendMultisigTransaction&gt;&gt;(
+        <span class="kw-2">&amp;</span>latest_multisig_tx_response.body,
+    )<span class="question-mark">?
+    </span>.results
+    .first()
+    .map(|it| it.nonce);
 
-    <span class="prelude-val">Ok</span>(<span class="ident">nonce</span>)
+    <span class="prelude-val">Ok</span>(nonce)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

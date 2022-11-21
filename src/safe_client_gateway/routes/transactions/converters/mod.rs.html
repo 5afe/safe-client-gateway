@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/converters/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/converters/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -356,358 +350,357 @@
 <span id="350">350</span>
 <span id="351">351</span>
 <span id="352">352</span>
-</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">details</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">safe_app_info</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">summary</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transaction_id</span>;
+</pre><pre class="rust"><code><span class="kw">pub mod </span>details;
+<span class="kw">pub mod </span>safe_app_info;
+<span class="kw">pub mod </span>summary;
+<span class="kw">pub mod </span>transaction_id;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::converters</span>::{<span class="ident">get_address_ex_from_any_source</span>, <span class="ident">get_transfer_direction</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions</span>::{
-    <span class="ident">ModuleTransaction</span>, <span class="ident">MultisigTransaction</span>, <span class="ident">SafeTransaction</span>,
+<span class="kw">use </span><span class="kw">crate</span>::common::converters::{get_address_ex_from_any_source, get_transfer_direction};
+<span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transactions::{
+    ModuleTransaction, MultisigTransaction, SafeTransaction,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded</span>::{<span class="ident">DataDecoded</span>, <span class="ident">Operation</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">InfoProvider</span>, <span class="ident">SafeInfo</span>, <span class="ident">TokenInfo</span>, <span class="ident">TokenType</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models</span>::{
-    <span class="ident">Custom</span>, <span class="ident">Erc20Transfer</span>, <span class="ident">Erc721Transfer</span>, <span class="ident">NativeCoinTransfer</span>, <span class="ident">SettingsChange</span>, <span class="ident">TransactionInfo</span>,
-    <span class="ident">TransactionStatus</span>, <span class="ident">Transfer</span>, <span class="ident">TransferDirection</span>, <span class="ident">TransferInfo</span>,
+<span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::{DataDecoded, Operation};
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{InfoProvider, SafeInfo, TokenInfo, TokenType};
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::models::{
+    Custom, Erc20Transfer, Erc721Transfer, NativeCoinTransfer, SettingsChange, TransactionInfo,
+    TransactionStatus, Transfer, TransferDirection, TransferInfo,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="ident">SAFE_TRANSFER_FROM_METHOD</span>, <span class="ident">TRANSFER_FROM_METHOD</span>, <span class="ident">TRANSFER_METHOD</span>};
-<span class="kw">use</span> <span class="ident">rocket::futures::future::OptionFuture</span>;
+<span class="kw">use </span><span class="kw">crate</span>::utils::{SAFE_TRANSFER_FROM_METHOD, TRANSFER_FROM_METHOD, TRANSFER_METHOD};
+<span class="kw">use </span>rocket::futures::future::OptionFuture;
 
-<span class="kw">impl</span> <span class="ident">SafeTransaction</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">transaction_info</span>(
+<span class="kw">impl </span>SafeTransaction {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async fn </span>transaction_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-        <span class="ident">is_cancellation</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="ident">TransactionInfo</span> {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">value_as_uint</span>();
-        <span class="kw">let</span> <span class="ident">data_size</span> <span class="op">=</span> <span class="ident">data_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>);
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+        is_cancellation: bool,
+    ) -&gt; TransactionInfo {
+        <span class="kw">let </span>value = <span class="self">self</span>.value_as_uint();
+        <span class="kw">let </span>data_size = data_size(<span class="kw-2">&amp;</span><span class="self">self</span>.data);
 
-        <span class="kw">if</span> (<span class="ident">value</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">data_size</span> <span class="op">&gt;</span> <span class="number">0</span>) <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">operation</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Operation::CALL</span> {
-            <span class="ident">TransactionInfo::Custom</span>(<span class="self">self</span>.<span class="ident">to_custom</span>(<span class="ident">info_provider</span>, <span class="ident">is_cancellation</span>).<span class="kw">await</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">value</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">data_size</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="ident">TransactionInfo::Transfer</span>(<span class="self">self</span>.<span class="ident">to_ether_transfer</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">value</span> <span class="op">==</span> <span class="number">0</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">data_size</span> <span class="op">&gt;</span> <span class="number">0</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">safe</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">to</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>
-                .<span class="ident">data_decoded</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="bool-val">false</span>, <span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">is_settings_change</span>())
+        <span class="kw">if </span>(value &gt; <span class="number">0 </span>&amp;&amp; data_size &gt; <span class="number">0</span>) || <span class="self">self</span>.operation != Operation::CALL {
+            TransactionInfo::Custom(<span class="self">self</span>.to_custom(info_provider, is_cancellation).<span class="kw">await</span>)
+        } <span class="kw">else if </span>value &gt; <span class="number">0 </span>&amp;&amp; data_size == <span class="number">0 </span>{
+            TransactionInfo::Transfer(<span class="self">self</span>.to_ether_transfer(info_provider).<span class="kw">await</span>)
+        } <span class="kw">else if </span>value == <span class="number">0
+            </span>&amp;&amp; data_size &gt; <span class="number">0
+            </span>&amp;&amp; <span class="self">self</span>.safe == <span class="self">self</span>.to
+            &amp;&amp; <span class="self">self
+                </span>.data_decoded
+                .as_ref()
+                .map_or_else(|| <span class="bool-val">false</span>, |it| it.is_settings_change())
         {
-            <span class="ident">TransactionInfo::SettingsChange</span>(<span class="self">self</span>.<span class="ident">to_settings_change</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>
-            .<span class="ident">data_decoded</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> {
-                <span class="ident">data_decoded</span>.<span class="ident">is_erc20_transfer_method</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">data_decoded</span>.<span class="ident">is_erc721_transfer_method</span>()
+            TransactionInfo::SettingsChange(<span class="self">self</span>.to_settings_change(info_provider).<span class="kw">await</span>)
+        } <span class="kw">else if </span><span class="self">self
+            </span>.data_decoded
+            .as_ref()
+            .map(|data_decoded| {
+                data_decoded.is_erc20_transfer_method() || data_decoded.is_erc721_transfer_method()
             })
-            .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
-            <span class="op">&amp;&amp;</span> <span class="ident">check_sender_or_receiver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>)
+            .unwrap_or(<span class="bool-val">false</span>)
+            &amp;&amp; check_sender_or_receiver(<span class="kw-2">&amp;</span><span class="self">self</span>.data_decoded, <span class="kw-2">&amp;</span><span class="self">self</span>.safe)
         {
-            <span class="kw">match</span> <span class="ident">info_provider</span>.<span class="ident">token_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>).<span class="kw">await</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">token</span>) =&gt; <span class="kw">match</span> <span class="ident">token</span>.<span class="ident">token_type</span> {
-                    <span class="ident">TokenType::Erc20</span> =&gt; <span class="ident">TransactionInfo::Transfer</span>(
-                        <span class="self">self</span>.<span class="ident">to_erc20_transfer</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
+            <span class="kw">match </span>info_provider.token_info(<span class="kw-2">&amp;</span><span class="self">self</span>.to).<span class="kw">await </span>{
+                <span class="prelude-val">Ok</span>(token) =&gt; <span class="kw">match </span>token.token_type {
+                    TokenType::Erc20 =&gt; TransactionInfo::Transfer(
+                        <span class="self">self</span>.to_erc20_transfer(<span class="kw-2">&amp;</span>token, info_provider).<span class="kw">await</span>,
                     ),
-                    <span class="ident">TokenType::Erc721</span> =&gt; <span class="ident">TransactionInfo::Transfer</span>(
-                        <span class="self">self</span>.<span class="ident">to_erc721_transfer</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
+                    TokenType::Erc721 =&gt; TransactionInfo::Transfer(
+                        <span class="self">self</span>.to_erc721_transfer(<span class="kw-2">&amp;</span>token, info_provider).<span class="kw">await</span>,
                     ),
-                    <span class="kw">_</span> =&gt; <span class="ident">TransactionInfo::Custom</span>(
-                        <span class="self">self</span>.<span class="ident">to_custom</span>(<span class="ident">info_provider</span>, <span class="ident">is_cancellation</span>).<span class="kw">await</span>,
+                    <span class="kw">_ </span>=&gt; TransactionInfo::Custom(
+                        <span class="self">self</span>.to_custom(info_provider, is_cancellation).<span class="kw">await</span>,
                     ),
                 },
-                <span class="kw">_</span> =&gt; <span class="ident">TransactionInfo::Custom</span>(<span class="self">self</span>.<span class="ident">to_custom</span>(<span class="ident">info_provider</span>, <span class="ident">is_cancellation</span>).<span class="kw">await</span>),
+                <span class="kw">_ </span>=&gt; TransactionInfo::Custom(<span class="self">self</span>.to_custom(info_provider, is_cancellation).<span class="kw">await</span>),
             }
-        } <span class="kw">else</span> {
-            <span class="ident">TransactionInfo::Custom</span>(<span class="self">self</span>.<span class="ident">to_custom</span>(<span class="ident">info_provider</span>, <span class="ident">is_cancellation</span>).<span class="kw">await</span>)
+        } <span class="kw">else </span>{
+            TransactionInfo::Custom(<span class="self">self</span>.to_custom(info_provider, is_cancellation).<span class="kw">await</span>)
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_custom</span>(
+    <span class="kw">async fn </span>to_custom(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-        <span class="ident">is_cancellation</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="ident">Custom</span> {
-        <span class="ident">Custom</span> {
-            <span class="ident">to</span>: <span class="ident"><span class="kw">crate</span>::common::converters::get_address_ex_from_any_source</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>,
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>,
-                <span class="ident">info_provider</span>,
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+        is_cancellation: bool,
+    ) -&gt; Custom {
+        Custom {
+            to: <span class="kw">crate</span>::common::converters::get_address_ex_from_any_source(
+                <span class="kw-2">&amp;</span><span class="self">self</span>.safe,
+                <span class="kw-2">&amp;</span><span class="self">self</span>.to,
+                info_provider,
             )
             .<span class="kw">await</span>,
-            <span class="ident">is_cancellation</span>,
-            <span class="ident">data_size</span>: <span class="ident">data_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>).<span class="ident">to_string</span>(),
-            <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">String::from</span>(<span class="string">&quot;0&quot;</span>)).<span class="ident">clone</span>(),
-            <span class="ident">method_name</span>: <span class="self">self</span>.<span class="ident">data_decoded</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">method</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">action_count</span>: <span class="self">self</span>
-                .<span class="ident">data_decoded</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">get_action_count</span>()),
+            is_cancellation,
+            data_size: data_size(<span class="kw-2">&amp;</span><span class="self">self</span>.data).to_string(),
+            value: <span class="self">self</span>.value.as_ref().unwrap_or(<span class="kw-2">&amp;</span>String::from(<span class="string">&quot;0&quot;</span>)).clone(),
+            method_name: <span class="self">self</span>.data_decoded.as_ref().map(|it| it.method.to_owned()),
+            action_count: <span class="self">self
+                </span>.data_decoded
+                .as_ref()
+                .and_then(|it| it.get_action_count()),
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_erc20_transfer</span>(
+    <span class="kw">async fn </span>to_erc20_transfer(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">TokenInfo</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
-    ) -&gt; <span class="ident">Transfer</span> {
-        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">get_from_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>);
-        <span class="kw">let</span> <span class="ident">recipient</span> <span class="op">=</span> <span class="ident">get_to_param</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>,
+        token: <span class="kw-2">&amp;</span>TokenInfo,
+        info_provider: <span class="kw-2">&amp;</span><span class="kw">impl </span>InfoProvider,
+    ) -&gt; Transfer {
+        <span class="kw">let </span>sender = get_from_param(<span class="kw-2">&amp;</span><span class="self">self</span>.data_decoded, <span class="kw-2">&amp;</span><span class="self">self</span>.safe);
+        <span class="kw">let </span>recipient = get_to_param(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.data_decoded,
             <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>,
         );
-        <span class="kw">let</span> <span class="ident">direction</span> <span class="op">=</span> <span class="ident">get_transfer_direction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="kw-2">&amp;</span><span class="ident">recipient</span>);
-        <span class="ident">Transfer</span> {
-            <span class="ident">sender</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">recipient</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">recipient</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">direction</span>,
-            <span class="ident">transfer_info</span>: <span class="ident">TransferInfo::Erc20</span>(<span class="ident">Erc20Transfer</span> {
-                <span class="ident">token_address</span>: <span class="ident">token</span>.<span class="ident">address</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">logo_uri</span>: <span class="ident">token</span>.<span class="ident">logo_uri</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">token_name</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>()),
-                <span class="ident">token_symbol</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">symbol</span>.<span class="ident">to_owned</span>()),
-                <span class="ident">decimals</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">decimals</span>),
-                <span class="ident">value</span>: <span class="ident">get_value_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="string">&quot;0&quot;</span>),
+        <span class="kw">let </span>direction = get_transfer_direction(<span class="kw-2">&amp;</span><span class="self">self</span>.safe, <span class="kw-2">&amp;</span>sender, <span class="kw-2">&amp;</span>recipient);
+        Transfer {
+            sender: get_address_ex_from_any_source(<span class="kw-2">&amp;</span><span class="self">self</span>.safe, <span class="kw-2">&amp;</span>sender, info_provider).<span class="kw">await</span>,
+            recipient: get_address_ex_from_any_source(<span class="kw-2">&amp;</span><span class="self">self</span>.safe, <span class="kw-2">&amp;</span>recipient, info_provider).<span class="kw">await</span>,
+            direction,
+            transfer_info: TransferInfo::Erc20(Erc20Transfer {
+                token_address: token.address.to_owned(),
+                logo_uri: token.logo_uri.to_owned(),
+                token_name: <span class="prelude-val">Some</span>(token.name.to_owned()),
+                token_symbol: <span class="prelude-val">Some</span>(token.symbol.to_owned()),
+                decimals: <span class="prelude-val">Some</span>(token.decimals),
+                value: get_value_param(<span class="kw-2">&amp;</span><span class="self">self</span>.data_decoded, <span class="string">&quot;0&quot;</span>),
             }),
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_erc721_transfer</span>(
+    <span class="kw">async fn </span>to_erc721_transfer(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">TokenInfo</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
-    ) -&gt; <span class="ident">Transfer</span> {
-        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">get_from_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>);
-        <span class="kw">let</span> <span class="ident">recipient</span> <span class="op">=</span> <span class="ident">get_to_param</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>,
+        token: <span class="kw-2">&amp;</span>TokenInfo,
+        info_provider: <span class="kw-2">&amp;</span><span class="kw">impl </span>InfoProvider,
+    ) -&gt; Transfer {
+        <span class="kw">let </span>sender = get_from_param(<span class="kw-2">&amp;</span><span class="self">self</span>.data_decoded, <span class="kw-2">&amp;</span><span class="self">self</span>.safe);
+        <span class="kw">let </span>recipient = get_to_param(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.data_decoded,
             <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>,
         );
-        <span class="kw">let</span> <span class="ident">direction</span> <span class="op">=</span> <span class="ident">get_transfer_direction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="kw-2">&amp;</span><span class="ident">recipient</span>);
-        <span class="ident">Transfer</span> {
-            <span class="ident">sender</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">sender</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">recipient</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="ident">recipient</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">direction</span>,
-            <span class="ident">transfer_info</span>: <span class="ident">TransferInfo::Erc721</span>(<span class="ident">Erc721Transfer</span> {
-                <span class="ident">token_address</span>: <span class="ident">token</span>.<span class="ident">address</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">logo_uri</span>: <span class="ident">token</span>.<span class="ident">logo_uri</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">token_name</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>()),
-                <span class="ident">token_symbol</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>.<span class="ident">symbol</span>.<span class="ident">to_owned</span>()),
-                <span class="ident">token_id</span>: <span class="ident">get_value_param</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data_decoded</span>, <span class="string">&quot;0&quot;</span>),
+        <span class="kw">let </span>direction = get_transfer_direction(<span class="kw-2">&amp;</span><span class="self">self</span>.safe, <span class="kw-2">&amp;</span>sender, <span class="kw-2">&amp;</span>recipient);
+        Transfer {
+            sender: get_address_ex_from_any_source(<span class="kw-2">&amp;</span><span class="self">self</span>.safe, <span class="kw-2">&amp;</span>sender, info_provider).<span class="kw">await</span>,
+            recipient: get_address_ex_from_any_source(<span class="kw-2">&amp;</span><span class="self">self</span>.safe, <span class="kw-2">&amp;</span>recipient, info_provider).<span class="kw">await</span>,
+            direction,
+            transfer_info: TransferInfo::Erc721(Erc721Transfer {
+                token_address: token.address.to_owned(),
+                logo_uri: token.logo_uri.to_owned(),
+                token_name: <span class="prelude-val">Some</span>(token.name.to_owned()),
+                token_symbol: <span class="prelude-val">Some</span>(token.symbol.to_owned()),
+                token_id: get_value_param(<span class="kw-2">&amp;</span><span class="self">self</span>.data_decoded, <span class="string">&quot;0&quot;</span>),
             }),
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_ether_transfer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>) -&gt; <span class="ident">Transfer</span> {
-        <span class="ident">Transfer</span> {
-            <span class="ident">sender</span>: <span class="ident">AddressEx::address_only</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>),
-            <span class="ident">recipient</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">direction</span>: <span class="ident">TransferDirection::Outgoing</span>,
-            <span class="ident">transfer_info</span>: <span class="ident">TransferInfo::NativeCoin</span>(<span class="ident">NativeCoinTransfer</span> {
-                <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">to_string</span>(),
+    <span class="kw">async fn </span>to_ether_transfer(<span class="kw-2">&amp;</span><span class="self">self</span>, info_provider: <span class="kw-2">&amp;</span><span class="kw">impl </span>InfoProvider) -&gt; Transfer {
+        Transfer {
+            sender: AddressEx::address_only(<span class="kw-2">&amp;</span><span class="self">self</span>.safe),
+            recipient: get_address_ex_from_any_source(<span class="kw-2">&amp;</span><span class="self">self</span>.safe, <span class="kw-2">&amp;</span><span class="self">self</span>.to, info_provider).<span class="kw">await</span>,
+            direction: TransferDirection::Outgoing,
+            transfer_info: TransferInfo::NativeCoin(NativeCoinTransfer {
+                value: <span class="self">self</span>.value.as_ref().unwrap().to_string(),
             }),
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_settings_change</span>(
+    <span class="kw">async fn </span>to_settings_change(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    ) -&gt; <span class="ident">SettingsChange</span> {
-        <span class="ident">SettingsChange</span> {
-            <span class="ident">data_decoded</span>: <span class="self">self</span>.<span class="ident">data_decoded</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">to_owned</span>(),
-            <span class="ident">settings_info</span>: <span class="ident">OptionFuture::from</span>(
-                <span class="self">self</span>.<span class="ident">data_decoded</span>
-                    .<span class="ident">as_ref</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">it</span>.<span class="ident">to_settings_info</span>(<span class="ident">info_provider</span>).<span class="kw">await</span> }),
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    ) -&gt; SettingsChange {
+        SettingsChange {
+            data_decoded: <span class="self">self</span>.data_decoded.as_ref().unwrap().to_owned(),
+            settings_info: OptionFuture::from(
+                <span class="self">self</span>.data_decoded
+                    .as_ref()
+                    .map(|it| <span class="kw">async move </span>{ it.to_settings_info(info_provider).<span class="kw">await </span>}),
             )
-            .<span class="kw">await</span>
-            .<span class="ident">flatten</span>(),
+            .<span class="kw">await
+            </span>.flatten(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">value_as_uint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u128</span> {
-        <span class="self">self</span>.<span class="ident">value</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span>().<span class="ident">ok</span>())
-            .<span class="ident">flatten</span>()
-            .<span class="ident">unwrap_or</span>(<span class="number">0</span>)
+    <span class="kw">fn </span>value_as_uint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u128 {
+        <span class="self">self</span>.value
+            .as_ref()
+            .map(|it| it.parse::&lt;u128&gt;().ok())
+            .flatten()
+            .unwrap_or(<span class="number">0</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">MultisigTransaction</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">transaction_info</span>(
+<span class="kw">impl </span>MultisigTransaction {
+    <span class="kw">async fn </span>transaction_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    ) -&gt; <span class="ident">TransactionInfo</span> {
-        <span class="self">self</span>.<span class="ident">safe_transaction</span>
-            .<span class="ident">transaction_info</span>(<span class="ident">info_provider</span>, <span class="self">self</span>.<span class="ident">is_cancellation</span>())
-            .<span class="kw">await</span>
-    }
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    ) -&gt; TransactionInfo {
+        <span class="self">self</span>.safe_transaction
+            .transaction_info(info_provider, <span class="self">self</span>.is_cancellation())
+            .<span class="kw">await
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">confirmation_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">confirmations</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">confirmations</span>) =&gt; <span class="ident">confirmations</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>,
-            <span class="prelude-val">None</span> =&gt; <span class="number">0</span>,
+    <span class="kw">fn </span>confirmation_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.confirmations {
+            <span class="prelude-val">Some</span>(confirmations) =&gt; confirmations.len() <span class="kw">as </span>u64,
+            <span class="prelude-val">None </span>=&gt; <span class="number">0</span>,
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">confirmation_required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">threshold</span>: <span class="ident">u64</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">confirmations_required</span>.<span class="ident">unwrap_or</span>(<span class="ident">threshold</span>)
+    <span class="kw">fn </span>confirmation_required(<span class="kw-2">&amp;</span><span class="self">self</span>, threshold: u64) -&gt; u64 {
+        <span class="self">self</span>.confirmations_required.unwrap_or(threshold)
     }
 
-    <span class="kw">fn</span> <span class="ident">missing_signers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">owners</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AddressEx</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">confirmations</span>.<span class="ident">as_ref</span>().<span class="ident">map_or_else</span>(
-            <span class="op">|</span><span class="op">|</span> {
-                <span class="ident">owners</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">owner</span><span class="op">|</span> <span class="ident">AddressEx::address_only</span>(<span class="kw-2">&amp;</span><span class="ident">owner</span>))
-                    .<span class="ident">collect</span>()
+    <span class="kw">fn </span>missing_signers(<span class="kw-2">&amp;</span><span class="self">self</span>, owners: <span class="kw-2">&amp;</span>Vec&lt;String&gt;) -&gt; Vec&lt;AddressEx&gt; {
+        <span class="self">self</span>.confirmations.as_ref().map_or_else(
+            || {
+                owners
+                    .iter()
+                    .map(|owner| AddressEx::address_only(<span class="kw-2">&amp;</span>owner))
+                    .collect()
             },
-            <span class="op">|</span><span class="ident">confirmations</span><span class="op">|</span> {
-                <span class="ident">owners</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">owner</span><span class="op">|</span> {
-                        <span class="kw">if</span> <span class="op">!</span><span class="ident">confirmations</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">c</span>.<span class="ident">owner</span> <span class="op">==</span> <span class="ident">owner</span>) {
-                            <span class="prelude-val">Some</span>(<span class="ident">AddressEx::address_only</span>(<span class="kw-2">&amp;</span><span class="ident">owner</span>))
-                        } <span class="kw">else</span> {
-                            <span class="prelude-val">None</span>
-                        }
+            |confirmations| {
+                owners
+                    .iter()
+                    .filter_map(|owner| {
+                        <span class="kw">if </span>!confirmations.iter().any(|c| <span class="kw-2">&amp;</span>c.owner == owner) {
+                            <span class="prelude-val">Some</span>(AddressEx::address_only(<span class="kw-2">&amp;</span>owner))
+                        } <span class="kw">else </span>{
+                            <span class="prelude-val">None
+                        </span>}
                     })
-                    .<span class="ident">collect</span>()
+                    .collect()
             },
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">map_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">safe_info</span>: <span class="kw-2">&amp;</span><span class="ident">SafeInfo</span>) -&gt; <span class="ident">TransactionStatus</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_executed</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_successful</span>.<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
-                <span class="ident">TransactionStatus::Success</span>
-            } <span class="kw">else</span> {
-                <span class="ident">TransactionStatus::Failed</span>
+    <span class="kw">fn </span>map_status(<span class="kw-2">&amp;</span><span class="self">self</span>, safe_info: <span class="kw-2">&amp;</span>SafeInfo) -&gt; TransactionStatus {
+        <span class="kw">if </span><span class="self">self</span>.is_executed {
+            <span class="kw">if </span><span class="self">self</span>.is_successful.unwrap_or(<span class="bool-val">false</span>) {
+                TransactionStatus::Success
+            } <span class="kw">else </span>{
+                TransactionStatus::Failed
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">safe_info</span>.<span class="ident">nonce</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">nonce</span> {
-            <span class="ident">TransactionStatus::Cancelled</span>
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">confirmation_count</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">confirmation_required</span>(<span class="ident">safe_info</span>.<span class="ident">threshold</span>) {
-            <span class="ident">TransactionStatus::AwaitingConfirmations</span>
-        } <span class="kw">else</span> {
-            <span class="ident">TransactionStatus::AwaitingExecution</span>
+        } <span class="kw">else if </span>safe_info.nonce &gt; <span class="self">self</span>.nonce {
+            TransactionStatus::Cancelled
+        } <span class="kw">else if </span><span class="self">self</span>.confirmation_count() &lt; <span class="self">self</span>.confirmation_required(safe_info.threshold) {
+            TransactionStatus::AwaitingConfirmations
+        } <span class="kw">else </span>{
+            TransactionStatus::AwaitingExecution
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">is_cancellation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">to</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">safe</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">data_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">data</span>) <span class="op">==</span> <span class="number">0</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>
-                .<span class="ident">safe_transaction</span>
-                .<span class="ident">value</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span> <span class="op">==</span> <span class="string">&quot;0&quot;</span>)
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">operation</span> <span class="op">==</span> <span class="ident">Operation::CALL</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>
-                .<span class="ident">base_gas</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">base_gas</span><span class="op">|</span> <span class="ident">base_gas</span>.<span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="number">0</span>))
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>
-                .<span class="ident">gas_price</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">gas_price</span><span class="op">|</span> <span class="ident">gas_price</span> <span class="op">==</span> <span class="string">&quot;0&quot;</span>)
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">gas_token</span>.<span class="ident">as_ref</span>().<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">gas_token</span><span class="op">|</span> {
-                <span class="ident">gas_token</span> <span class="op">==</span> <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>
-            })
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>
-                .<span class="ident">refund_receiver</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">refund_receiver</span><span class="op">|</span> {
-                    <span class="ident">refund_receiver</span> <span class="op">==</span> <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>
-                })
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>
-                .<span class="ident">safe_tx_gas</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">safe_tx_gas</span><span class="op">|</span> <span class="ident">safe_tx_gas</span>.<span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="number">0</span>))
+    <span class="kw">fn </span>is_cancellation(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.safe_transaction.to == <span class="self">self</span>.safe_transaction.safe
+            &amp;&amp; data_size(<span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.data) == <span class="number">0
+            </span>&amp;&amp; <span class="self">self
+                </span>.safe_transaction
+                .value
+                .as_ref()
+                .map_or(<span class="bool-val">true</span>, |value| value == <span class="string">&quot;0&quot;</span>)
+            &amp;&amp; <span class="self">self</span>.safe_transaction.operation == Operation::CALL
+            &amp;&amp; <span class="self">self
+                </span>.base_gas
+                .as_ref()
+                .map_or(<span class="bool-val">true</span>, |base_gas| base_gas.eq(<span class="kw-2">&amp;</span><span class="number">0</span>))
+            &amp;&amp; <span class="self">self
+                </span>.gas_price
+                .as_ref()
+                .map_or(<span class="bool-val">true</span>, |gas_price| gas_price == <span class="string">&quot;0&quot;</span>)
+            &amp;&amp; <span class="self">self</span>.gas_token.as_ref().map_or(<span class="bool-val">true</span>, |gas_token| {
+                gas_token == <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;
+            </span>})
+            &amp;&amp; <span class="self">self
+                </span>.refund_receiver
+                .as_ref()
+                .map_or(<span class="bool-val">true</span>, |refund_receiver| {
+                    refund_receiver == <span class="string">&quot;0x0000000000000000000000000000000000000000&quot;
+                </span>})
+            &amp;&amp; <span class="self">self
+                </span>.safe_tx_gas
+                .as_ref()
+                .map_or(<span class="bool-val">true</span>, |safe_tx_gas| safe_tx_gas.eq(<span class="kw-2">&amp;</span><span class="number">0</span>))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ModuleTransaction</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">transaction_info</span>(
+<span class="kw">impl </span>ModuleTransaction {
+    <span class="kw">async fn </span>transaction_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    ) -&gt; <span class="ident">TransactionInfo</span> {
-        <span class="self">self</span>.<span class="ident">safe_transaction</span>
-            .<span class="ident">transaction_info</span>(<span class="ident">info_provider</span>, <span class="bool-val">false</span>)
-            .<span class="kw">await</span>
-    }
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    ) -&gt; TransactionInfo {
+        <span class="self">self</span>.safe_transaction
+            .transaction_info(info_provider, <span class="bool-val">false</span>)
+            .<span class="kw">await
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">map_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TransactionStatus</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_successful</span> {
-            <span class="ident">TransactionStatus::Success</span>
-        } <span class="kw">else</span> {
-            <span class="ident">TransactionStatus::Failed</span>
+    <span class="kw">fn </span>map_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TransactionStatus {
+        <span class="kw">if </span><span class="self">self</span>.is_successful {
+            TransactionStatus::Success
+        } <span class="kw">else </span>{
+            TransactionStatus::Failed
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">data_size</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="ident">usize</span> {
-    <span class="kw">match</span> <span class="ident">data</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">actual_data</span>) =&gt; {
-            <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">actual_data</span>.<span class="ident">len</span>();
-            <span class="kw">match</span> <span class="ident">length</span> {
-                <span class="number">0</span> =&gt; <span class="number">0</span>,
-                <span class="kw">_</span> =&gt; (<span class="ident">length</span> <span class="op">-</span> <span class="number">2</span>) <span class="op">/</span> <span class="number">2</span>,
+<span class="kw">fn </span>data_size(data: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; usize {
+    <span class="kw">match </span>data {
+        <span class="prelude-val">Some</span>(actual_data) =&gt; {
+            <span class="kw">let </span>length = actual_data.len();
+            <span class="kw">match </span>length {
+                <span class="number">0 </span>=&gt; <span class="number">0</span>,
+                <span class="kw">_ </span>=&gt; (length - <span class="number">2</span>) / <span class="number">2</span>,
             }
         }
-        <span class="prelude-val">None</span> =&gt; <span class="number">0</span>,
+        <span class="prelude-val">None </span>=&gt; <span class="number">0</span>,
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_from_param</span>(<span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>, <span class="ident">fallback</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-    <span class="ident">data_decoded</span>
-        .<span class="ident">as_ref</span>()
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">data_decoded</span>.<span class="ident">method</span>.<span class="ident">as_str</span>() {
-            <span class="ident">TRANSFER_METHOD</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>),
-            <span class="ident">SAFE_TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+<span class="kw">fn </span>get_from_param(data_decoded: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;DataDecoded&gt;, fallback: <span class="kw-2">&amp;</span>str) -&gt; String {
+    data_decoded
+        .as_ref()
+        .and_then(|data_decoded| <span class="kw">match </span>data_decoded.method.as_str() {
+            TRANSFER_METHOD =&gt; <span class="prelude-val">None</span>,
+            TRANSFER_FROM_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">0</span>),
+            SAFE_TRANSFER_FROM_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">0</span>),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
-        .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="ident">fallback</span>))
+        .unwrap_or(String::from(fallback))
 }
 
-<span class="kw">fn</span> <span class="ident">get_to_param</span>(<span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>, <span class="ident">fallback</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-    <span class="ident">data_decoded</span>
-        .<span class="ident">as_ref</span>()
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">data_decoded</span>.<span class="ident">method</span>.<span class="ident">as_str</span>() {
-            <span class="ident">TRANSFER_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">0</span>),
-            <span class="ident">TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">1</span>),
-            <span class="ident">SAFE_TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">1</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+<span class="kw">fn </span>get_to_param(data_decoded: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;DataDecoded&gt;, fallback: <span class="kw-2">&amp;</span>str) -&gt; String {
+    data_decoded
+        .as_ref()
+        .and_then(|data_decoded| <span class="kw">match </span>data_decoded.method.as_str() {
+            TRANSFER_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">0</span>),
+            TRANSFER_FROM_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">1</span>),
+            SAFE_TRANSFER_FROM_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">1</span>),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
-        .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="ident">fallback</span>))
+        .unwrap_or(String::from(fallback))
 }
 
-<span class="kw">fn</span> <span class="ident">get_value_param</span>(<span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>, <span class="ident">fallback</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-    <span class="ident">data_decoded</span>
-        .<span class="ident">as_ref</span>()
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">data_decoded</span>.<span class="ident">method</span>.<span class="ident">as_str</span>() {
-            <span class="ident">TRANSFER_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">1</span>),
-            <span class="ident">TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">2</span>),
-            <span class="ident">SAFE_TRANSFER_FROM_METHOD</span> =&gt; <span class="ident">data_decoded</span>.<span class="ident">get_parameter_single_value_at</span>(<span class="number">2</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+<span class="kw">fn </span>get_value_param(data_decoded: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;DataDecoded&gt;, fallback: <span class="kw-2">&amp;</span>str) -&gt; String {
+    data_decoded
+        .as_ref()
+        .and_then(|data_decoded| <span class="kw">match </span>data_decoded.method.as_str() {
+            TRANSFER_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">1</span>),
+            TRANSFER_FROM_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">2</span>),
+            SAFE_TRANSFER_FROM_METHOD =&gt; data_decoded.get_parameter_single_value_at(<span class="number">2</span>),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
-        .<span class="ident">unwrap_or</span>(<span class="ident">String::from</span>(<span class="ident">fallback</span>))
+        .unwrap_or(String::from(fallback))
 }
 
-<span class="kw">fn</span> <span class="ident">check_sender_or_receiver</span>(<span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>, <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">if</span> <span class="ident">data_decoded</span>.<span class="ident">is_none</span>() {
-        <span class="kw">return</span> <span class="bool-val">false</span>;
+<span class="kw">fn </span>check_sender_or_receiver(data_decoded: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;DataDecoded&gt;, expected: <span class="kw-2">&amp;</span>str) -&gt; bool {
+    <span class="kw">if </span>data_decoded.is_none() {
+        <span class="kw">return </span><span class="bool-val">false</span>;
     };
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">data_decoded</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>();
-    <span class="ident">data</span>.<span class="ident">method</span> <span class="op">==</span> <span class="ident">TRANSFER_METHOD</span>
-        <span class="op">|</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">get_from_param</span>(<span class="ident">data_decoded</span>, <span class="string">&quot;&quot;</span>) <span class="op">==</span> <span class="ident">expected</span>
-        <span class="op">|</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">get_to_param</span>(<span class="ident">data_decoded</span>, <span class="string">&quot;&quot;</span>) <span class="op">==</span> <span class="ident">expected</span>
+    <span class="kw">let </span>data = data_decoded.as_ref().unwrap();
+    data.method == TRANSFER_METHOD
+        || <span class="kw-2">&amp;</span>get_from_param(data_decoded, <span class="string">&quot;&quot;</span>) == expected
+        || <span class="kw-2">&amp;</span>get_to_param(data_decoded, <span class="string">&quot;&quot;</span>) == expected
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

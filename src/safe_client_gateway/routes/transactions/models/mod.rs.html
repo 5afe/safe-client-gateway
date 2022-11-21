@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/models/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/models/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -180,182 +174,181 @@
 <span id="174">174</span>
 <span id="175">175</span>
 <span id="176">176</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded::DataDecoded</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::DataDecoded;
+<span class="kw">use </span>serde::Serialize;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">details</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">requests</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">summary</span>;
+<span class="kw">pub mod </span>details;
+<span class="kw">pub mod </span>requests;
+<span class="kw">pub mod </span>summary;
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ID_SEPARATOR</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;_&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ID_PREFIX_MULTISIG_TX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;multisig&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ID_PREFIX_MODULE_TX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;module&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ID_PREFIX_ETHEREUM_TX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;ethereum&quot;</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ID_PREFIX_CREATION_TX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;creation&quot;</span>;
+<span class="kw">pub const </span>ID_SEPARATOR: <span class="kw-2">&amp;</span>str = <span class="string">&quot;_&quot;</span>;
+<span class="kw">pub const </span>ID_PREFIX_MULTISIG_TX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;multisig&quot;</span>;
+<span class="kw">pub const </span>ID_PREFIX_MODULE_TX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;module&quot;</span>;
+<span class="kw">pub const </span>ID_PREFIX_ETHEREUM_TX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;ethereum&quot;</span>;
+<span class="kw">pub const </span>ID_PREFIX_CREATION_TX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;creation&quot;</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">TransactionIdParts</span> {
-    <span class="ident">Creation</span>(<span class="ident">String</span>),
-    <span class="ident">Multisig</span> {
-        <span class="ident">safe_address</span>: <span class="ident">String</span>,
-        <span class="ident">safe_tx_hash</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(PartialEq, Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>TransactionIdParts {
+    Creation(String),
+    Multisig {
+        safe_address: String,
+        safe_tx_hash: String,
     },
-    <span class="ident">Module</span> {
-        <span class="ident">safe_address</span>: <span class="ident">String</span>,
-        <span class="ident">transaction_hash</span>: <span class="ident">String</span>,
-        <span class="ident">details_hash</span>: <span class="ident">String</span>,
+    Module {
+        safe_address: String,
+        transaction_hash: String,
+        details_hash: String,
     },
-    <span class="ident">Ethereum</span> {
-        <span class="ident">safe_address</span>: <span class="ident">String</span>,
-        <span class="ident">transaction_hash</span>: <span class="ident">String</span>,
-        <span class="ident">details_hash</span>: <span class="ident">String</span>,
+    Ethereum {
+        safe_address: String,
+        transaction_hash: String,
+        details_hash: String,
     },
-    <span class="ident">TransactionHash</span>(<span class="ident">String</span>),
+    TransactionHash(String),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TransactionStatus</span> {
-    <span class="ident">AwaitingConfirmations</span>,
-    <span class="ident">AwaitingExecution</span>,
-    <span class="ident">Cancelled</span>,
-    <span class="ident">Failed</span>,
-    <span class="ident">Success</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub enum </span>TransactionStatus {
+    AwaitingConfirmations,
+    AwaitingExecution,
+    Cancelled,
+    Failed,
+    Success,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TransactionInfo</span> {
-    <span class="ident">Transfer</span>(<span class="ident">Transfer</span>),
-    <span class="ident">SettingsChange</span>(<span class="ident">SettingsChange</span>),
-    <span class="ident">Custom</span>(<span class="ident">Custom</span>),
-    <span class="ident">Creation</span>(<span class="ident">Creation</span>),
-    <span class="ident">Unknown</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub enum </span>TransactionInfo {
+    Transfer(Transfer),
+    SettingsChange(SettingsChange),
+    Custom(Custom),
+    Creation(Creation),
+    Unknown,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Transfer</span> {
-    <span class="kw">pub</span> <span class="ident">sender</span>: <span class="ident">AddressEx</span>,
-    <span class="kw">pub</span> <span class="ident">recipient</span>: <span class="ident">AddressEx</span>,
-    <span class="kw">pub</span> <span class="ident">direction</span>: <span class="ident">TransferDirection</span>,
-    <span class="kw">pub</span> <span class="ident">transfer_info</span>: <span class="ident">TransferInfo</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub struct </span>Transfer {
+    <span class="kw">pub </span>sender: AddressEx,
+    <span class="kw">pub </span>recipient: AddressEx,
+    <span class="kw">pub </span>direction: TransferDirection,
+    <span class="kw">pub </span>transfer_info: TransferInfo,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TransferDirection</span> {
-    <span class="ident">Incoming</span>,
-    <span class="ident">Outgoing</span>,
-    <span class="ident">Unknown</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub enum </span>TransferDirection {
+    Incoming,
+    Outgoing,
+    Unknown,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TransferInfo</span> {
-    <span class="ident">Erc20</span>(<span class="ident">Erc20Transfer</span>),
-    <span class="ident">Erc721</span>(<span class="ident">Erc721Transfer</span>),
-    <span class="ident">NativeCoin</span>(<span class="ident">NativeCoinTransfer</span>),
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>, rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub enum </span>TransferInfo {
+    Erc20(Erc20Transfer),
+    Erc721(Erc721Transfer),
+    NativeCoin(NativeCoinTransfer),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Erc20Transfer</span> {
-    <span class="comment">// No need to map to AddressEx as the information are present in this struct</span>
-    <span class="kw">pub</span> <span class="ident">token_address</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">token_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">token_symbol</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">logo_uri</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">decimals</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub struct </span>Erc20Transfer {
+    <span class="comment">// No need to map to AddressEx as the information are present in this struct
+    </span><span class="kw">pub </span>token_address: String,
+    <span class="kw">pub </span>token_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>token_symbol: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>logo_uri: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>decimals: <span class="prelude-ty">Option</span>&lt;u64&gt;,
+    <span class="kw">pub </span>value: String,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Erc721Transfer</span> {
-    <span class="comment">// No need to map to AddressEx as the information are present in this struct</span>
-    <span class="kw">pub</span> <span class="ident">token_address</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">token_id</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">token_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">token_symbol</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">logo_uri</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub struct </span>Erc721Transfer {
+    <span class="comment">// No need to map to AddressEx as the information are present in this struct
+    </span><span class="kw">pub </span>token_address: String,
+    <span class="kw">pub </span>token_id: String,
+    <span class="kw">pub </span>token_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>token_symbol: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>logo_uri: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NativeCoinTransfer</span> {
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub struct </span>NativeCoinTransfer {
+    <span class="kw">pub </span>value: String,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SettingsChange</span> {
-    <span class="kw">pub</span> <span class="ident">data_decoded</span>: <span class="ident">DataDecoded</span>,
-    <span class="kw">pub</span> <span class="ident">settings_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SettingsInfo</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub struct </span>SettingsChange {
+    <span class="kw">pub </span>data_decoded: DataDecoded,
+    <span class="kw">pub </span>settings_info: <span class="prelude-ty">Option</span>&lt;SettingsInfo&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SettingsInfo</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">SetFallbackHandler</span> { <span class="ident">handler</span>: <span class="ident">AddressEx</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">AddOwner</span> { <span class="ident">owner</span>: <span class="ident">AddressEx</span>, <span class="ident">threshold</span>: <span class="ident">u64</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">RemoveOwner</span> { <span class="ident">owner</span>: <span class="ident">AddressEx</span>, <span class="ident">threshold</span>: <span class="ident">u64</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">SwapOwner</span> {
-        <span class="ident">old_owner</span>: <span class="ident">AddressEx</span>,
-        <span class="ident">new_owner</span>: <span class="ident">AddressEx</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub enum </span>SettingsInfo {
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>SetFallbackHandler { handler: AddressEx },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>AddOwner { owner: AddressEx, threshold: u64 },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>RemoveOwner { owner: AddressEx, threshold: u64 },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>SwapOwner {
+        old_owner: AddressEx,
+        new_owner: AddressEx,
     },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">ChangeThreshold</span> { <span class="ident">threshold</span>: <span class="ident">u64</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">ChangeImplementation</span> { <span class="ident">implementation</span>: <span class="ident">AddressEx</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">EnableModule</span> { <span class="ident">module</span>: <span class="ident">AddressEx</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">DisableModule</span> { <span class="ident">module</span>: <span class="ident">AddressEx</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">SetGuard</span> { <span class="ident">guard</span>: <span class="ident">AddressEx</span> },
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-    <span class="ident">DeleteGuard</span>,
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>ChangeThreshold { threshold: u64 },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>ChangeImplementation { implementation: AddressEx },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>EnableModule { module: AddressEx },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>DisableModule { module: AddressEx },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>SetGuard { guard: AddressEx },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>DeleteGuard,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Custom</span> {
-    <span class="kw">pub</span> <span class="ident">to</span>: <span class="ident">AddressEx</span>,
-    <span class="kw">pub</span> <span class="ident">data_size</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">method_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">action_count</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">is_cancellation</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub struct </span>Custom {
+    <span class="kw">pub </span>to: AddressEx,
+    <span class="kw">pub </span>data_size: String,
+    <span class="kw">pub </span>value: String,
+    <span class="kw">pub </span>method_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span><span class="kw">pub </span>action_count: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    <span class="kw">pub </span>is_cancellation: bool,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">serde::Deserialize</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Creation</span> {
-    <span class="kw">pub</span> <span class="ident">creator</span>: <span class="ident">AddressEx</span>,
-    <span class="kw">pub</span> <span class="ident">transaction_hash</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">implementation</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AddressEx</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">factory</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AddressEx</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Serialize, Debug, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[cfg_attr(test, derive(serde::Deserialize))]
+</span><span class="kw">pub struct </span>Creation {
+    <span class="kw">pub </span>creator: AddressEx,
+    <span class="kw">pub </span>transaction_hash: String,
+    <span class="kw">pub </span>implementation: <span class="prelude-ty">Option</span>&lt;AddressEx&gt;,
+    <span class="kw">pub </span>factory: <span class="prelude-ty">Option</span>&lt;AddressEx&gt;,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

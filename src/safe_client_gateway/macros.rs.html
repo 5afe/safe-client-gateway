@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/macros.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>macros.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../safe_client_gateway/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/macros.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>macros.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../safe_client_gateway/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -109,111 +103,110 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains::ChainInfo</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::vpc_transaction_service_uri</span>;
-<span class="macro">macro_rules!</span> <span class="ident">concat_parts</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_head</span>:<span class="ident">expr</span>) =&gt; {
-        <span class="comment">// `stringify!` will convert the expression *as it is* into a string.</span>
-        <span class="macro">format!</span>(
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::backend::chains::ChainInfo;
+<span class="kw">use </span><span class="kw">crate</span>::config::vpc_transaction_service_uri;
+<span class="macro">macro_rules! </span>concat_parts {
+    (<span class="macro-nonterminal">$parts_head</span>:expr) =&gt; {
+        <span class="comment">// `stringify!` will convert the expression *as it is* into a string.
+        </span><span class="macro">format!</span>(
             <span class="string">&quot;{}{}&quot;</span>,
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::routes::transactions::models::ID_SEPARATOR</span>,
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_head</span>
-        )
+            <span class="macro-nonterminal">$crate::routes::transactions::models::ID_SEPARATOR</span>,
+            <span class="macro-nonterminal">$parts_head
+        </span>)
     };
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_head</span>:<span class="ident">expr</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_tail</span>:<span class="ident">expr</span>),<span class="op">+</span>) =&gt; {
-        <span class="comment">// `stringify!` will convert the expression *as it is* into a string.</span>
-        <span class="macro">format!</span>(
+    (<span class="macro-nonterminal">$parts_head</span>:expr, $(<span class="macro-nonterminal">$parts_tail</span>:expr),+) =&gt; {
+        <span class="comment">// `stringify!` will convert the expression *as it is* into a string.
+        </span><span class="macro">format!</span>(
             <span class="string">&quot;{}{}{}&quot;</span>,
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::routes::transactions::models::ID_SEPARATOR</span>,
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_head</span>,
-            <span class="macro">concat_parts!</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts_tail</span>),<span class="op">+</span>)
+            <span class="macro-nonterminal">$crate::routes::transactions::models::ID_SEPARATOR</span>,
+            <span class="macro-nonterminal">$parts_head</span>,
+            <span class="macro">concat_parts!</span>($(<span class="macro-nonterminal">$parts_tail</span>),+)
         )
     };
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">create_id</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">tx_type</span>:<span class="ident">expr</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts</span>:<span class="ident">expr</span>),<span class="op">+</span>) =&gt; {
-        <span class="comment">// `stringify!` will convert the expression *as it is* into a string.</span>
-        <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tx_type</span>, <span class="macro">concat_parts!</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">parts</span>),<span class="op">+</span>))
+<span class="macro">macro_rules! </span>create_id {
+    (<span class="macro-nonterminal">$tx_type</span>:expr, $(<span class="macro-nonterminal">$parts</span>:expr),+) =&gt; {
+        <span class="comment">// `stringify!` will convert the expression *as it is* into a string.
+        </span><span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="macro-nonterminal">$tx_type</span>, <span class="macro">concat_parts!</span>($(<span class="macro-nonterminal">$parts</span>),+))
     };
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">bail</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">msg</span>:<span class="ident">literal</span> $(,)<span class="question-mark">?</span>) =&gt; {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="macro-nonterminal">$</span><span class="macro">crate::api_error!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">msg</span>))
+<span class="macro">macro_rules! </span>bail {
+    (<span class="macro-nonterminal">$msg</span>:literal $(,)<span class="question-mark">?</span>) =&gt; {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro-nonterminal">$</span><span class="macro">crate::api_error!</span>(<span class="macro-nonterminal">$msg</span>))
     };
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">fmt</span>:<span class="ident">expr</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) =&gt; {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="macro-nonterminal">$</span><span class="macro">crate::api_error!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">fmt</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>)<span class="kw-2">*</span>))
-    };
-}
-
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">api_error</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">msg</span>:<span class="ident">literal</span> $(,)<span class="question-mark">?</span>) =&gt; {
-        <span class="comment">// Handle $:literal as a special case to make cargo-expanded code more</span>
-        <span class="comment">// concise in the common case.</span>
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::utils::errors::ApiError::new_from_message</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">msg</span>)
-    };
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">fmt</span>:<span class="ident">expr</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) =&gt; {
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::utils::errors::ApiError::new_from_message</span>(<span class="macro">format!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">fmt</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>)<span class="kw-2">*</span>))
+    (<span class="macro-nonterminal">$fmt</span>:expr, $(<span class="macro-nonterminal">$arg</span>:tt)<span class="kw-2">*</span>) =&gt; {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro-nonterminal">$</span><span class="macro">crate::api_error!</span>(<span class="macro-nonterminal">$fmt</span>, $(<span class="macro-nonterminal">$arg</span>)<span class="kw-2">*</span>))
     };
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">client_error</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">status_code</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">message</span>:<span class="ident">expr</span>) =&gt; {
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::utils::errors::ApiError::new_from_message_with_code</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">status_code</span>, <span class="macro">format!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">message</span>))
+<span class="attribute">#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>api_error {
+    (<span class="macro-nonterminal">$msg</span>:literal $(,)<span class="question-mark">?</span>) =&gt; {
+        <span class="comment">// Handle $:literal as a special case to make cargo-expanded code more
+        // concise in the common case.
+        </span><span class="macro-nonterminal">$crate::utils::errors::ApiError::new_from_message</span>(<span class="macro-nonterminal">$msg</span>)
+    };
+    (<span class="macro-nonterminal">$fmt</span>:expr, $(<span class="macro-nonterminal">$arg</span>:tt)<span class="kw-2">*</span>) =&gt; {
+        <span class="macro-nonterminal">$crate::utils::errors::ApiError::new_from_message</span>(<span class="macro">format!</span>(<span class="macro-nonterminal">$fmt</span>, $(<span class="macro-nonterminal">$arg</span>)<span class="kw-2">*</span>))
     };
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">to_hex_string</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>:<span class="ident">expr</span>) =&gt; {{
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="kw">for</span> <span class="ident">byte</span> <span class="kw">in</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>.<span class="ident">iter</span>() {
-            <span class="ident">output</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{:02x?}&quot;</span>, <span class="ident">byte</span>)) <span class="comment">// uppercase x is for uppercase hex char.</span>
-        }
-        <span class="macro">format!</span>(<span class="string">&quot;0x{}&quot;</span>, <span class="ident">output</span>)
+<span class="attribute">#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>client_error {
+    (<span class="macro-nonterminal">$status_code</span>:expr, <span class="macro-nonterminal">$message</span>:expr) =&gt; {
+        <span class="macro-nonterminal">$crate::utils::errors::ApiError::new_from_message_with_code</span>(<span class="macro-nonterminal">$status_code</span>, <span class="macro">format!</span>(<span class="macro-nonterminal">$message</span>))
+    };
+}
+
+<span class="macro">macro_rules! </span>to_hex_string {
+    (<span class="macro-nonterminal">$input</span>:expr) =&gt; {{
+        <span class="kw">let </span><span class="kw-2">mut </span>output = String::new();
+        <span class="kw">for </span>byte <span class="kw">in </span><span class="macro-nonterminal">$input</span>.iter() {
+            output.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{:02x?}&quot;</span>, byte)) <span class="comment">// uppercase x is for uppercase hex char.
+        </span>}
+        <span class="macro">format!</span>(<span class="string">&quot;0x{}&quot;</span>, output)
     }};
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_transaction_service_host</span>(<span class="ident">chain_info</span>: <span class="ident">ChainInfo</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">if</span> <span class="ident">vpc_transaction_service_uri</span>() {
-        <span class="ident">chain_info</span>.<span class="ident">vpc_transaction_service</span>
-    } <span class="kw">else</span> {
-        <span class="ident">chain_info</span>.<span class="ident">transaction_service</span>
+<span class="kw">pub fn </span>get_transaction_service_host(chain_info: ChainInfo) -&gt; String {
+    <span class="kw">if </span>vpc_transaction_service_uri() {
+        chain_info.vpc_transaction_service
+    } <span class="kw">else </span>{
+        chain_info.transaction_service
     }
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">core_uri</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">info_provider</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>:<span class="ident">expr</span>) =&gt; {{
-        <span class="kw">let</span> <span class="ident">result</span>: <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span>
-        <span class="kw">match</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">info_provider</span>.<span class="ident">chain_info</span>().<span class="kw">await</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">chain_info</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;{}/api{}&quot;</span>, <span class="ident"><span class="kw">crate</span>::macros::get_transaction_service_host</span>(<span class="ident">chain_info</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>)),
-            <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">error</span>,)
+<span class="attribute">#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>core_uri {
+    (<span class="macro-nonterminal">$info_provider</span>:tt, <span class="macro-nonterminal">$path</span>:expr) =&gt; {{
+        <span class="kw">let </span>result: ApiResult&lt;String&gt; =
+        <span class="kw">match </span><span class="macro-nonterminal">$info_provider</span>.chain_info().<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(chain_info) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;{}/api{}&quot;</span>, <span class="kw">crate</span>::macros::get_transaction_service_host(chain_info), <span class="macro-nonterminal">$path</span>)),
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="prelude-val">Err</span>(error,)
         };
-        <span class="ident">result</span>
+        result
     }};
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">info_provider</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>:<span class="ident">literal</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) =&gt; {{
-        <span class="kw">let</span> <span class="ident">full_path</span>: <span class="ident">String</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>)<span class="kw-2">*</span>);
-        <span class="macro">core_uri!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">info_provider</span>, <span class="ident">full_path</span>)
+    (<span class="macro-nonterminal">$info_provider</span>:tt, <span class="macro-nonterminal">$path</span>:literal, $(<span class="macro-nonterminal">$arg</span>:tt)<span class="kw-2">*</span>) =&gt; {{
+        <span class="kw">let </span>full_path: String = <span class="macro">format!</span>(<span class="macro-nonterminal">$path</span>, $(<span class="macro-nonterminal">$arg</span>)<span class="kw-2">*</span>);
+        <span class="macro">core_uri!</span>(<span class="macro-nonterminal">$info_provider</span>, full_path)
     }};
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">config_uri</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>:<span class="ident">expr</span>) =&gt; {{
-        <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::config::base_config_service_uri</span>(), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>)
+<span class="attribute">#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>config_uri {
+    (<span class="macro-nonterminal">$path</span>:expr) =&gt; {{
+        <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="macro-nonterminal">$crate::config::base_config_service_uri</span>(), <span class="macro-nonterminal">$path</span>)
     }};
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>:<span class="ident">literal</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) =&gt; {{
-        <span class="kw">let</span> <span class="ident">full_path</span>: <span class="ident">String</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>)<span class="kw-2">*</span>);
-        <span class="macro">config_uri!</span>(<span class="ident">full_path</span>)
+    (<span class="macro-nonterminal">$path</span>:literal, $(<span class="macro-nonterminal">$arg</span>:tt)<span class="kw-2">*</span>) =&gt; {{
+        <span class="kw">let </span>full_path: String = <span class="macro">format!</span>(<span class="macro-nonterminal">$path</span>, $(<span class="macro-nonterminal">$arg</span>)<span class="kw-2">*</span>);
+        <span class="macro">config_uri!</span>(full_path)
     }};
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

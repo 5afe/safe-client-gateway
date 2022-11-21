@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -327,329 +321,328 @@
 <span id="321">321</span>
 <span id="322">322</span>
 <span id="323">323</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-<span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">Error</span>, <span class="ident">Json</span>};
-<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>rocket::response::content;
+<span class="kw">use </span>rocket::serde::json::{Error, Json};
+<span class="kw">use </span>rocket_okapi::openapi;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::CacheResponse</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::tx_queued_cache_duration</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::filters::module::ModuleFilters</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::filters::multisig::MultisigFilters</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::filters::transfer::TransferFilters</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::handlers::preview</span>::{
-    <span class="ident">TransactionPreview</span>, <span class="ident">TransactionPreviewRequest</span>,
+<span class="kw">use </span><span class="kw">crate</span>::cache::cache_operations::CacheResponse;
+<span class="kw">use </span><span class="kw">crate</span>::cache::manager::ChainCache;
+<span class="kw">use </span><span class="kw">crate</span>::config::tx_queued_cache_duration;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::filters::module::ModuleFilters;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::filters::multisig::MultisigFilters;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::filters::transfer::TransferFilters;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::handlers::preview::{
+    TransactionPreview, TransactionPreviewRequest,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::handlers</span>::{<span class="ident">details</span>, <span class="ident">history</span>, <span class="ident">preview</span>, <span class="ident">proposal</span>, <span class="ident">queued</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::requests</span>::{
-    <span class="ident">ConfirmationRequest</span>, <span class="ident">MultisigTransactionRequest</span>,
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::handlers::{details, history, preview, proposal, queued};
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::models::requests::{
+    ConfirmationRequest, MultisigTransactionRequest,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::handlers</span>::{<span class="ident">module</span>, <span class="ident">multisig</span>, <span class="ident">transfers</span>};
+<span class="kw">use </span><span class="kw">super</span>::handlers::{module, multisig, transfers};
 
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Transaction Details</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `GET /v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `&lt;transaction_id&gt;` can be either an `id` returned by the transaction summary list endpoint or a `safe_tx_hash` from the Safe Transaction API.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query paramets</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// There aren&#39;t any query parameters that can be passed to this endpoint.</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;details_id&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">details_id</span>: <span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">details::get_transactions_details</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">details_id</span>))
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
-}
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;` &lt;br /&gt;
+/// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
+///
+/// # Transaction Details
+///
+/// The transaction details endpoint provides additional information for a transaction, in much more detail than what the transaction summary endpoint does. It returns a single object (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
+///
+/// ## Path
+///
+/// `GET /v1/chains/&lt;chain_id&gt;/transactions/&lt;transaction_id&gt;`
+///
+/// `&lt;transaction_id&gt;` can be either an `id` returned by the transaction summary list endpoint or a `safe_tx_hash` from the Safe Transaction API.
+///
+/// ## Query paramets
+///
+/// There aren&#39;t any query parameters that can be passed to this endpoint.
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;Transactions&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;details_id&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_transactions(
+    context: RequestContext,
+    chain_id: String,
+    details_id: String,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| details::get_transactions_details(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>details_id))
+        .execute()
+        .<span class="kw">await
+</span>}
 
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Transaction Confirmation</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint provides a way for submitting confirmations for clients making use of the `safe_tx_hash` as part of the path, and the very same `safe_tx_hash` signed by an owner corresponding to the safe from which the transaction is being sent.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// If the confirmation is submitted successfully to the core services, then the local cache for that specific transaction is invalidated and the updated transaction details with the confirmation are returned in the request.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The expected (ConfirmationRequest)[crate::routes::transactions::models::requests::ConfirmationRequest] body for this request, as well as the returned (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// No query parameters available for this endpoint.</span>
-<span class="attribute">#[<span class="ident">post</span>(
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations` &lt;br /&gt;
+/// Returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
+///
+/// # Transaction Confirmation
+///
+/// This endpoint provides a way for submitting confirmations for clients making use of the `safe_tx_hash` as part of the path, and the very same `safe_tx_hash` signed by an owner corresponding to the safe from which the transaction is being sent.
+///
+/// If the confirmation is submitted successfully to the core services, then the local cache for that specific transaction is invalidated and the updated transaction details with the confirmation are returned in the request.
+///
+/// ## Path
+///
+/// `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations`
+///
+/// The expected (ConfirmationRequest)[crate::routes::transactions::models::requests::ConfirmationRequest] body for this request, as well as the returned (TransactionDetails)[crate::routes::transactions::models::details::TransactionDetails]
+///
+/// ## Query parameters
+///
+/// No query parameters available for this endpoint.
+</span><span class="attribute">#[post(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_tx_hash&gt;/confirmations&quot;</span>,
-    <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,
-    <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;tx_confirmation_request&gt;&quot;</span>
-)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post_confirmation</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_tx_hash</span>: <span class="ident">String</span>,
-    <span class="ident">tx_confirmation_request</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Json</span><span class="op">&lt;</span><span class="ident">ConfirmationRequest</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">request</span>: <span class="ident">ConfirmationRequest</span> <span class="op">=</span> <span class="ident">tx_confirmation_request</span><span class="question-mark">?</span>.<span class="number">0</span>;
+    format = <span class="string">&quot;application/json&quot;</span>,
+    data = <span class="string">&quot;&lt;tx_confirmation_request&gt;&quot;
+</span>)]
+</span><span class="kw">pub async fn </span>post_confirmation&lt;<span class="lifetime">&#39;e</span>&gt;(
+    context: RequestContext,
+    chain_id: String,
+    safe_tx_hash: String,
+    tx_confirmation_request: <span class="prelude-ty">Result</span>&lt;Json&lt;ConfirmationRequest&gt;, Error&lt;<span class="lifetime">&#39;e</span>&gt;&gt;,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    <span class="kw">let </span>request: ConfirmationRequest = tx_confirmation_request<span class="question-mark">?</span>.<span class="number">0</span>;
 
-    <span class="ident">proposal::submit_confirmation</span>(
-        <span class="kw-2">&amp;</span><span class="ident">context</span>,
-        <span class="kw-2">&amp;</span><span class="ident">chain_id</span>,
-        <span class="kw-2">&amp;</span><span class="ident">safe_tx_hash</span>,
-        <span class="kw-2">&amp;</span><span class="ident">request</span>.<span class="ident">signed_safe_tx_hash</span>,
+    proposal::submit_confirmation(
+        <span class="kw-2">&amp;</span>context,
+        <span class="kw-2">&amp;</span>chain_id,
+        <span class="kw-2">&amp;</span>safe_tx_hash,
+        <span class="kw-2">&amp;</span>request.signed_safe_tx_hash,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">tx_details</span> <span class="op">=</span> <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">details::get_transactions_details</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">safe_tx_hash</span>))
-        .<span class="ident">execute</span>()
+    <span class="kw">let </span>tx_details = CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| details::get_transactions_details(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>safe_tx_hash))
+        .execute()
         .<span class="kw">await</span>;
 
-    <span class="kw">return</span> <span class="ident">tx_details</span>;
+    <span class="kw">return </span>tx_details;
 }
 
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns a [Page](crate::common::models::page::Page) of [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Transactions History</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint returns all the transactions that have been executed for a given safe. Cancelled</span>
-<span class="doccomment">/// transactions will not be shown in this endpoint. Therefore, there is no concept of conflicting `nonces`</span>
-<span class="doccomment">/// for this endpoint, as there could potentially be for queued transactions.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint does not return any `TransactionListItem::Label` nor `TransactionListItem::ConflictHeader`</span>
-<span class="doccomment">/// as of the writing of this iteration of this document.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Transaction are aggregated by day and for each day there is a `TransactionListItem::DateLabel` added.</span>
-<span class="doccomment">/// The timestamp returned corresponds to the **date** only, **time** fields should be therefore ignored.</span>
-<span class="doccomment">/// The dates are returned in UTC, in a later iteration this will be offset by the `timezone_offset`</span>
-<span class="doccomment">/// sent by the clients in the query parameter.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `TransactionListItem::Transaction` is returned with the same data layout as in the `/transactions/queued` endpoint.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The structure of the `transaction` object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.</span>
-<span class="doccomment">/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.</span>
-<span class="doccomment">/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.</span>
-<span class="doccomment">/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions_history</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">timezone_offset</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">history::get_history_transactions</span>(
-                <span class="kw-2">&amp;</span><span class="ident">context</span>,
-                <span class="kw-2">&amp;</span><span class="ident">chain_id</span>,
-                <span class="kw-2">&amp;</span><span class="ident">safe_address</span>,
-                <span class="kw-2">&amp;</span><span class="ident">cursor</span>,
-                <span class="kw-2">&amp;</span><span class="ident">timezone_offset</span>,
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;
+/// Returns a [Page](crate::common::models::page::Page) of [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
+///
+/// # Transactions History
+///
+/// This endpoint returns all the transactions that have been executed for a given safe. Cancelled
+/// transactions will not be shown in this endpoint. Therefore, there is no concept of conflicting `nonces`
+/// for this endpoint, as there could potentially be for queued transactions.
+///
+/// This endpoint does not return any `TransactionListItem::Label` nor `TransactionListItem::ConflictHeader`
+/// as of the writing of this iteration of this document.
+///
+/// Transaction are aggregated by day and for each day there is a `TransactionListItem::DateLabel` added.
+/// The timestamp returned corresponds to the **date** only, **time** fields should be therefore ignored.
+/// The dates are returned in UTC, in a later iteration this will be offset by the `timezone_offset`
+/// sent by the clients in the query parameter.
+///
+/// `TransactionListItem::Transaction` is returned with the same data layout as in the `/transactions/queued` endpoint.
+///
+/// The structure of the `transaction` object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
+///
+/// ## Path
+///
+/// `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`
+///
+/// ## Query parameters
+///
+/// - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.
+/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.
+/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.
+/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;Transactions&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/history?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_transactions_history(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    timezone_offset: <span class="prelude-ty">Option</span>&lt;String&gt;,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            history::get_history_transactions(
+                <span class="kw-2">&amp;</span>context,
+                <span class="kw-2">&amp;</span>chain_id,
+                <span class="kw-2">&amp;</span>safe_address,
+                <span class="kw-2">&amp;</span>cursor,
+                <span class="kw-2">&amp;</span>timezone_offset,
             )
         })
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
-}
+        .execute()
+        .<span class="kw">await
+</span>}
 
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns a [Page](crate::common::models::page::Page) of  [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Transactions Queued</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a `Next` marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren&#39;t any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Additionally to the `Next` marker, there is also `Queued`. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the `Next` section of the list, a `ConflictHeader` will be introduced for any group of transactions sharing the same `nonce`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The structure of the transaction object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A `TransactionListItem` can be either a `Label` (containing either `Next` or `Queued`), `ConflictHeader` (with the conflicting `nonce`) and a `Transaction`, for which there is a `TransactionSummary` and a `ConflictType` associated. The conflict type can have `HasNext` or `End` value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a `ConflictType::End`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The response is a list of (TransactionListItem)[crate::routes::transactions::models::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.</span>
-<span class="doccomment">/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.</span>
-<span class="doccomment">/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.</span>
-<span class="doccomment">/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_transactions_queued</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">timezone_offset</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">trusted</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">queued::get_queued_transactions</span>(
-                <span class="kw-2">&amp;</span><span class="ident">context</span>,
-                <span class="kw-2">&amp;</span><span class="ident">chain_id</span>,
-                <span class="kw-2">&amp;</span><span class="ident">safe_address</span>,
-                <span class="kw-2">&amp;</span><span class="ident">cursor</span>,
-                <span class="kw-2">&amp;</span><span class="ident">timezone_offset</span>,
-                <span class="kw-2">&amp;</span><span class="ident">trusted</span>,
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;` &lt;br /&gt;
+/// Returns a [Page](crate::common::models::page::Page) of  [TransactionListItem](crate::routes::transactions::models::summary::TransactionListItem)
+///
+/// # Transactions Queued
+///
+/// This endpoint returns all the transactions that are still awaiting execution for a given safe. The list will contain a `Next` marker if there is a transaction matching the nonce of the safe, which means, that it will be the next transaction to be executed, provided there aren&#39;t any other transactions proposed utilizing the same nonce. If that were, the case a `ConflictHeader` will be introduced for which the `nonce` field will hold the conflicting value.
+///
+/// Additionally to the `Next` marker, there is also `Queued`. Under this marker, transactions that have a nonce greater than that of the safe are listed. Analogously to the `Next` section of the list, a `ConflictHeader` will be introduced for any group of transactions sharing the same `nonce`.
+///
+/// The structure of the transaction object corresponds to that of a (TransactionSummary)[crate::routes::transactions::models::summary::TransactionSummary]
+///
+/// A `TransactionListItem` can be either a `Label` (containing either `Next` or `Queued`), `ConflictHeader` (with the conflicting `nonce`) and a `Transaction`, for which there is a `TransactionSummary` and a `ConflictType` associated. The conflict type can have `HasNext` or `End` value. These values signal to which extent a group of conflicting transactions spans, ending as soon as a `Transaction` type item contains a `ConflictType::End`.
+///
+/// ## Path
+///
+/// `GET /v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;`
+///
+/// The response is a list of (TransactionListItem)[crate::routes::transactions::models::summary::TransactionListItem], which is a polymorphic struct. Details follow in the models sections.
+///
+/// ## Query parameters
+///
+/// - `&lt;safe_address&gt;` should be the checksummed address of the safe to be observed.
+/// - `&lt;cursor&gt;` is the desired page of data to be loaded. Values for this parameter can be either `Page.next` or `Page.previous`. **WARNING:** Don&#39;t fiddle with the values of these 2 fields.
+/// - `&lt;timezone_offset&gt;`: Currently ignored by the gateway.
+/// - `&lt;trusted&gt;`: forwarded directly to the core services. Only for debugging purposes clients **should not** send it (unless they know what they are doing).
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;Transactions&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/transactions/queued?&lt;cursor&gt;&amp;&lt;timezone_offset&gt;&amp;&lt;trusted&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_transactions_queued(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    timezone_offset: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    trusted: <span class="prelude-ty">Option</span>&lt;bool&gt;,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            queued::get_queued_transactions(
+                <span class="kw-2">&amp;</span>context,
+                <span class="kw-2">&amp;</span>chain_id,
+                <span class="kw-2">&amp;</span>safe_address,
+                <span class="kw-2">&amp;</span>cursor,
+                <span class="kw-2">&amp;</span>timezone_offset,
+                <span class="kw-2">&amp;</span>trusted,
             )
         })
-        .<span class="ident">duration</span>(<span class="ident">tx_queued_cache_duration</span>())
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
-}
+        .duration(tx_queued_cache_duration())
+        .execute()
+        .<span class="kw">await
+</span>}
 
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose` &lt;br /&gt;</span>
-<span class="doccomment">/// returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Transaction Proposal</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint provides a way for submitting transactions of any kind in the format expected by the core services.</span>
-<span class="doccomment">/// See the example `json` to see how to submit a cancellation transaction (you would need to supply a `nonce`, `signature` and `contractTransactionHash` appropriate to the transaction you are submitting)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The expected (MultisigTransactionRequest)[crate::routes::transactions::models::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// No query parameters available for this endpoint.</span>
-<span class="attribute">#[<span class="ident">post</span>(
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose` &lt;br /&gt;
+/// returns [TransactionDetails](crate::routes::transactions::models::details::TransactionDetails)
+///
+/// # Transaction Proposal
+///
+/// This endpoint provides a way for submitting transactions of any kind in the format expected by the core services.
+/// See the example `json` to see how to submit a cancellation transaction (you would need to supply a `nonce`, `signature` and `contractTransactionHash` appropriate to the transaction you are submitting)
+///
+/// ## Path
+///
+/// `POST /v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose`
+///
+/// The expected (MultisigTransactionRequest)[crate::routes::transactions::models::requests::MultisigTransactionRequest] body for this request, can be found in the sections [models](https://github.com/gnosis/safe-client-gateway/wiki/transactions_confirmation#models)
+///
+/// ## Query parameters
+///
+/// No query parameters available for this endpoint.
+</span><span class="attribute">#[post(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/propose&quot;</span>,
-    <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,
-    <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;multisig_transaction_request&gt;&quot;</span>
-)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post_transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">multisig_transaction_request</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Json</span><span class="op">&lt;</span><span class="ident">MultisigTransactionRequest</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">request</span>: <span class="ident">MultisigTransactionRequest</span> <span class="op">=</span> <span class="ident">multisig_transaction_request</span><span class="question-mark">?</span>.<span class="number">0</span>;
+    format = <span class="string">&quot;application/json&quot;</span>,
+    data = <span class="string">&quot;&lt;multisig_transaction_request&gt;&quot;
+</span>)]
+</span><span class="kw">pub async fn </span>post_transaction&lt;<span class="lifetime">&#39;e</span>&gt;(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    multisig_transaction_request: <span class="prelude-ty">Result</span>&lt;Json&lt;MultisigTransactionRequest&gt;, Error&lt;<span class="lifetime">&#39;e</span>&gt;&gt;,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    <span class="kw">let </span>request: MultisigTransactionRequest = multisig_transaction_request<span class="question-mark">?</span>.<span class="number">0</span>;
 
-    <span class="ident">proposal::propose_transaction</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">safe_address</span>, <span class="kw-2">&amp;</span><span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    proposal::propose_transaction(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>safe_address, <span class="kw-2">&amp;</span>request).<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">tx_details</span> <span class="op">=</span> <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">details::get_transactions_details</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">request</span>.<span class="ident">safe_tx_hash</span>)
+    <span class="kw">let </span>tx_details = CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            details::get_transactions_details(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>request.safe_tx_hash)
         })
-        .<span class="ident">execute</span>()
+        .execute()
         .<span class="kw">await</span>;
 
-    <span class="kw">return</span> <span class="ident">tx_details</span>;
+    <span class="kw">return </span>tx_details;
 }
 
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/incoming-transfers?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_incoming_transfers</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">filters</span>: <span class="ident">TransferFilters</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">transfers::get_incoming_transfers</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">safe_address</span>, <span class="kw-2">&amp;</span><span class="ident">cursor</span>, <span class="kw-2">&amp;</span><span class="ident">filters</span>)
+<span class="attribute">#[openapi(tag = <span class="string">&quot;Transactions&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/incoming-transfers?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_incoming_transfers(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    filters: TransferFilters,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            transfers::get_incoming_transfers(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>safe_address, <span class="kw-2">&amp;</span>cursor, <span class="kw-2">&amp;</span>filters)
         })
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
-}
+        .execute()
+        .<span class="kw">await
+</span>}
 
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/module-transactions?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_module_transactions</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">filters</span>: <span class="ident">ModuleFilters</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">module::get_module_transactions</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">safe_address</span>, <span class="kw-2">&amp;</span><span class="ident">cursor</span>, <span class="kw-2">&amp;</span><span class="ident">filters</span>)
+<span class="attribute">#[openapi(tag = <span class="string">&quot;Transactions&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/module-transactions?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_module_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    filters: ModuleFilters,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            module::get_module_transactions(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>safe_address, <span class="kw-2">&amp;</span>cursor, <span class="kw-2">&amp;</span>filters)
         })
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
-}
+        .execute()
+        .<span class="kw">await
+</span>}
 
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Transactions&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multisig_transactions</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">filters</span>: <span class="ident">MultisigFilters</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">CacheResponse::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>.<span class="ident">as_str</span>()))
-        .<span class="ident">resp_generator</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">multisig::get_multisig_transactions</span>(
-                <span class="kw-2">&amp;</span><span class="ident">context</span>,
-                <span class="kw-2">&amp;</span><span class="ident">chain_id</span>,
-                <span class="kw-2">&amp;</span><span class="ident">safe_address</span>,
-                <span class="kw-2">&amp;</span><span class="ident">cursor</span>,
-                <span class="kw-2">&amp;</span><span class="ident">filters</span>,
+<span class="attribute">#[openapi(tag = <span class="string">&quot;Transactions&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/multisig-transactions?&lt;cursor&gt;&amp;&lt;filters..&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_multisig_transactions(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    filters: MultisigFilters,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    CacheResponse::new(<span class="kw-2">&amp;</span>context, ChainCache::from(chain_id.as_str()))
+        .resp_generator(|| {
+            multisig::get_multisig_transactions(
+                <span class="kw-2">&amp;</span>context,
+                <span class="kw-2">&amp;</span>chain_id,
+                <span class="kw-2">&amp;</span>safe_address,
+                <span class="kw-2">&amp;</span>cursor,
+                <span class="kw-2">&amp;</span>filters,
             )
         })
-        .<span class="ident">execute</span>()
-        .<span class="kw">await</span>
-}
+        .execute()
+        .<span class="kw">await
+</span>}
 
-<span class="attribute">#[<span class="ident">post</span>(
+<span class="attribute">#[post(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/transactions/&lt;safe_address&gt;/preview&quot;</span>,
-    <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,
-    <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;transaction_preview_request&gt;&quot;</span>
-)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post_preview_transaction</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">transaction_preview_request</span>: <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">TransactionPreviewRequest</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">transaction_preview</span>: <span class="ident">TransactionPreview</span> <span class="op">=</span> <span class="ident">preview::preview_transaction</span>(
-        <span class="kw-2">&amp;</span><span class="ident">context</span>,
-        <span class="kw-2">&amp;</span><span class="ident">chain_id</span>,
-        <span class="kw-2">&amp;</span><span class="ident">safe_address</span>,
-        <span class="kw-2">&amp;</span><span class="ident">transaction_preview_request</span>.<span class="number">0</span>,
+    format = <span class="string">&quot;application/json&quot;</span>,
+    data = <span class="string">&quot;&lt;transaction_preview_request&gt;&quot;
+</span>)]
+</span><span class="kw">pub async fn </span>post_preview_transaction(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    transaction_preview_request: Json&lt;TransactionPreviewRequest&gt;,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    <span class="kw">let </span>transaction_preview: TransactionPreview = preview::preview_transaction(
+        <span class="kw-2">&amp;</span>context,
+        <span class="kw-2">&amp;</span>chain_id,
+        <span class="kw-2">&amp;</span>safe_address,
+        <span class="kw-2">&amp;</span>transaction_preview_request.<span class="number">0</span>,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">transaction_preview</span>)<span class="question-mark">?</span>;
-    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">content::RawJson</span>(<span class="ident">body</span>));
+    <span class="kw">let </span>body = serde_json::to_string(<span class="kw-2">&amp;</span>transaction_preview)<span class="question-mark">?</span>;
+    <span class="kw">return </span><span class="prelude-val">Ok</span>(content::RawJson(body));
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

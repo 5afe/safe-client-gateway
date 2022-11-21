@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/collectibles/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/collectibles/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -213,215 +207,214 @@
 <span id="207">207</span>
 <span id="208">208</span>
 <span id="209">209</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page::Page</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::collectibles::handlers::collectibles</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-<span class="kw">use</span> <span class="ident">rocket::serde::json::Json</span>;
-<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::page::Page;
+<span class="kw">use </span><span class="kw">crate</span>::routes::collectibles::handlers::collectibles;
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span>rocket::response::content;
+<span class="kw">use </span>rocket::serde::json::Json;
+<span class="kw">use </span>rocket_okapi::openapi;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::handlers::collectibles_paginated</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::models::Collectible</span>;
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns collectibles from the transaction handlers</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Collectibles</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The collectibles endpoint does not implement any logic in the client-gateway. The response from the core services is cached and then forwarded to the clients.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` : Returns a list of the ERC721 tokens stored in a safe</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `&lt;trusted&gt;` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`</span>
-<span class="doccomment">/// `&lt;exclude_spam&gt;`: A token is defined as spam by our core handlers process when adding them. Default value is `true`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Models</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// For the most up-to-date version of the endpoint please check: &lt;https://safe-transaction.gnosis.io/&gt;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```json</span>
-<span class="doccomment">/// [</span>
-<span class="doccomment">///   {</span>
-<span class="doccomment">///     &quot;address&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;tokenName&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;tokenSymbol&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;logoUri&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;id&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;uri&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;name&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;description&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;imageUri&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///     &quot;metadata&quot;: {</span>
-<span class="doccomment">///       &quot;additionalProp1&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///       &quot;additionalProp2&quot;: &quot;string&quot;,</span>
-<span class="doccomment">///       &quot;additionalProp3&quot;: &quot;string&quot;</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">///   }</span>
-<span class="doccomment">/// ]</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## JSON</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// &lt;details&gt;</span>
-<span class="doccomment">/// &lt;summary&gt;Full response&lt;/summary&gt;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```json</span>
-<span class="doccomment">/// [</span>
-<span class="doccomment">///   {</span>
-<span class="doccomment">///     &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,</span>
-<span class="doccomment">///     &quot;tokenName&quot;: &quot;Main&quot;,</span>
-<span class="doccomment">///     &quot;tokenSymbol&quot;: &quot;JOSE&quot;,</span>
-<span class="doccomment">///     &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,</span>
-<span class="doccomment">///     &quot;id&quot;: &quot;2&quot;,</span>
-<span class="doccomment">///     &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,</span>
-<span class="doccomment">///     &quot;name&quot;: &quot;Chiken dinner&quot;,</span>
-<span class="doccomment">///     &quot;description&quot;: &quot;This token is meant for testing. &quot;,</span>
-<span class="doccomment">///     &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,</span>
-<span class="doccomment">///     &quot;metadata&quot;: {</span>
-<span class="doccomment">///       &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,</span>
-<span class="doccomment">///       &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,</span>
-<span class="doccomment">///       &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,</span>
-<span class="doccomment">///       &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,</span>
-<span class="doccomment">///       &quot;fiatPrice&quot;: &quot;$0.00&quot;,</span>
-<span class="doccomment">///       &quot;name&quot;: &quot;Chiken dinner&quot;,</span>
-<span class="doccomment">///       &quot;description&quot;: &quot;This token is meant for testing. &quot;,</span>
-<span class="doccomment">///       &quot;youtubeUrl&quot;: &quot;&quot;,</span>
-<span class="doccomment">///       &quot;price&quot;: 0,</span>
-<span class="doccomment">///       &quot;ethPrice&quot;: &quot;0&quot;,</span>
-<span class="doccomment">///       &quot;amountToMint&quot;: &quot;5&quot;,</span>
-<span class="doccomment">///       &quot;visibility&quot;: &quot;safe&quot;,</span>
-<span class="doccomment">///       &quot;forSale&quot;: false,</span>
-<span class="doccomment">///       &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,</span>
-<span class="doccomment">///       &quot;attributes&quot;: [],</span>
-<span class="doccomment">///       &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,</span>
-<span class="doccomment">///       &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,</span>
-<span class="doccomment">///       &quot;type&quot;: &quot;ERC721&quot;</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">///   },</span>
-<span class="doccomment">///   {</span>
-<span class="doccomment">///     &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,</span>
-<span class="doccomment">///     &quot;tokenName&quot;: &quot;Main&quot;,</span>
-<span class="doccomment">///     &quot;tokenSymbol&quot;: &quot;JOSE&quot;,</span>
-<span class="doccomment">///     &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,</span>
-<span class="doccomment">///     &quot;id&quot;: &quot;4&quot;,</span>
-<span class="doccomment">///     &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,</span>
-<span class="doccomment">///     &quot;name&quot;: &quot;Chiken dinner&quot;,</span>
-<span class="doccomment">///     &quot;description&quot;: &quot;This token is meant for testing. &quot;,</span>
-<span class="doccomment">///     &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,</span>
-<span class="doccomment">///     &quot;metadata&quot;: {</span>
-<span class="doccomment">///       &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,</span>
-<span class="doccomment">///       &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,</span>
-<span class="doccomment">///       &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,</span>
-<span class="doccomment">///       &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,</span>
-<span class="doccomment">///       &quot;fiatPrice&quot;: &quot;$0.00&quot;,</span>
-<span class="doccomment">///       &quot;name&quot;: &quot;Chiken dinner&quot;,</span>
-<span class="doccomment">///       &quot;description&quot;: &quot;This token is meant for testing. &quot;,</span>
-<span class="doccomment">///       &quot;youtubeUrl&quot;: &quot;&quot;,</span>
-<span class="doccomment">///       &quot;price&quot;: 0,</span>
-<span class="doccomment">///       &quot;ethPrice&quot;: &quot;0&quot;,</span>
-<span class="doccomment">///       &quot;amountToMint&quot;: &quot;5&quot;,</span>
-<span class="doccomment">///       &quot;visibility&quot;: &quot;safe&quot;,</span>
-<span class="doccomment">///       &quot;forSale&quot;: false,</span>
-<span class="doccomment">///       &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,</span>
-<span class="doccomment">///       &quot;attributes&quot;: [],</span>
-<span class="doccomment">///       &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,</span>
-<span class="doccomment">///       &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,</span>
-<span class="doccomment">///       &quot;type&quot;: &quot;ERC721&quot;</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">///   },</span>
-<span class="doccomment">///   {</span>
-<span class="doccomment">///     &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,</span>
-<span class="doccomment">///     &quot;tokenName&quot;: &quot;Main&quot;,</span>
-<span class="doccomment">///     &quot;tokenSymbol&quot;: &quot;JOSE&quot;,</span>
-<span class="doccomment">///     &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,</span>
-<span class="doccomment">///     &quot;id&quot;: &quot;5&quot;,</span>
-<span class="doccomment">///     &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,</span>
-<span class="doccomment">///     &quot;name&quot;: &quot;Chiken dinner&quot;,</span>
-<span class="doccomment">///     &quot;description&quot;: &quot;This token is meant for testing. &quot;,</span>
-<span class="doccomment">///     &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,</span>
-<span class="doccomment">///     &quot;metadata&quot;: {</span>
-<span class="doccomment">///       &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,</span>
-<span class="doccomment">///       &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,</span>
-<span class="doccomment">///       &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,</span>
-<span class="doccomment">///       &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,</span>
-<span class="doccomment">///       &quot;fiatPrice&quot;: &quot;$0.00&quot;,</span>
-<span class="doccomment">///       &quot;name&quot;: &quot;Chiken dinner&quot;,</span>
-<span class="doccomment">///       &quot;description&quot;: &quot;This token is meant for testing. &quot;,</span>
-<span class="doccomment">///       &quot;youtubeUrl&quot;: &quot;&quot;,</span>
-<span class="doccomment">///       &quot;price&quot;: 0,</span>
-<span class="doccomment">///       &quot;ethPrice&quot;: &quot;0&quot;,</span>
-<span class="doccomment">///       &quot;amountToMint&quot;: &quot;5&quot;,</span>
-<span class="doccomment">///       &quot;visibility&quot;: &quot;safe&quot;,</span>
-<span class="doccomment">///       &quot;forSale&quot;: false,</span>
-<span class="doccomment">///       &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,</span>
-<span class="doccomment">///       &quot;attributes&quot;: [],</span>
-<span class="doccomment">///       &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,</span>
-<span class="doccomment">///       &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,</span>
-<span class="doccomment">///       &quot;type&quot;: &quot;ERC721&quot;</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">///   }</span>
-<span class="doccomment">/// ]</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// &lt;/details&gt;</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Collectibles&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_collectibles</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">trusted</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-    <span class="ident">exclude_spam</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">collectibles</span>(
-        <span class="kw-2">&amp;</span><span class="ident">context</span>,
-        <span class="ident">chain_id</span>.<span class="ident">as_str</span>(),
-        <span class="ident">safe_address</span>.<span class="ident">as_str</span>(),
-        <span class="ident">trusted</span>,
-        <span class="ident">exclude_spam</span>,
+<span class="kw">use </span><span class="kw">super</span>::handlers::collectibles_paginated;
+<span class="kw">use </span><span class="kw">super</span>::models::Collectible;
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` &lt;br /&gt;
+/// Returns collectibles from the transaction handlers
+///
+/// # Collectibles
+///
+/// The collectibles endpoint does not implement any logic in the client-gateway. The response from the core services is cached and then forwarded to the clients.
+///
+/// ## Path
+///
+/// - `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` : Returns a list of the ERC721 tokens stored in a safe
+///
+/// ## Query parameters
+///
+/// `&lt;trusted&gt;` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`
+/// `&lt;exclude_spam&gt;`: A token is defined as spam by our core handlers process when adding them. Default value is `true`
+///
+/// ## Models
+///
+/// For the most up-to-date version of the endpoint please check: &lt;https://safe-transaction.gnosis.io/&gt;
+///
+/// ```json
+/// [
+///   {
+///     &quot;address&quot;: &quot;string&quot;,
+///     &quot;tokenName&quot;: &quot;string&quot;,
+///     &quot;tokenSymbol&quot;: &quot;string&quot;,
+///     &quot;logoUri&quot;: &quot;string&quot;,
+///     &quot;id&quot;: &quot;string&quot;,
+///     &quot;uri&quot;: &quot;string&quot;,
+///     &quot;name&quot;: &quot;string&quot;,
+///     &quot;description&quot;: &quot;string&quot;,
+///     &quot;imageUri&quot;: &quot;string&quot;,
+///     &quot;metadata&quot;: {
+///       &quot;additionalProp1&quot;: &quot;string&quot;,
+///       &quot;additionalProp2&quot;: &quot;string&quot;,
+///       &quot;additionalProp3&quot;: &quot;string&quot;
+///     }
+///   }
+/// ]
+/// ```
+///
+/// ## JSON
+///
+/// &lt;details&gt;
+/// &lt;summary&gt;Full response&lt;/summary&gt;
+///
+/// ```json
+/// [
+///   {
+///     &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,
+///     &quot;tokenName&quot;: &quot;Main&quot;,
+///     &quot;tokenSymbol&quot;: &quot;JOSE&quot;,
+///     &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,
+///     &quot;id&quot;: &quot;2&quot;,
+///     &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,
+///     &quot;name&quot;: &quot;Chiken dinner&quot;,
+///     &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+///     &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+///     &quot;metadata&quot;: {
+///       &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,
+///       &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,
+///       &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+///       &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,
+///       &quot;fiatPrice&quot;: &quot;$0.00&quot;,
+///       &quot;name&quot;: &quot;Chiken dinner&quot;,
+///       &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+///       &quot;youtubeUrl&quot;: &quot;&quot;,
+///       &quot;price&quot;: 0,
+///       &quot;ethPrice&quot;: &quot;0&quot;,
+///       &quot;amountToMint&quot;: &quot;5&quot;,
+///       &quot;visibility&quot;: &quot;safe&quot;,
+///       &quot;forSale&quot;: false,
+///       &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+///       &quot;attributes&quot;: [],
+///       &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,
+///       &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+///       &quot;type&quot;: &quot;ERC721&quot;
+///     }
+///   },
+///   {
+///     &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,
+///     &quot;tokenName&quot;: &quot;Main&quot;,
+///     &quot;tokenSymbol&quot;: &quot;JOSE&quot;,
+///     &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,
+///     &quot;id&quot;: &quot;4&quot;,
+///     &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,
+///     &quot;name&quot;: &quot;Chiken dinner&quot;,
+///     &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+///     &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+///     &quot;metadata&quot;: {
+///       &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,
+///       &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,
+///       &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+///       &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,
+///       &quot;fiatPrice&quot;: &quot;$0.00&quot;,
+///       &quot;name&quot;: &quot;Chiken dinner&quot;,
+///       &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+///       &quot;youtubeUrl&quot;: &quot;&quot;,
+///       &quot;price&quot;: 0,
+///       &quot;ethPrice&quot;: &quot;0&quot;,
+///       &quot;amountToMint&quot;: &quot;5&quot;,
+///       &quot;visibility&quot;: &quot;safe&quot;,
+///       &quot;forSale&quot;: false,
+///       &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+///       &quot;attributes&quot;: [],
+///       &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,
+///       &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+///       &quot;type&quot;: &quot;ERC721&quot;
+///     }
+///   },
+///   {
+///     &quot;address&quot;: &quot;0xD753e03c05533F85bA9695C139771b1E9698a53C&quot;,
+///     &quot;tokenName&quot;: &quot;Main&quot;,
+///     &quot;tokenSymbol&quot;: &quot;JOSE&quot;,
+///     &quot;logoUri&quot;: &quot;https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png&quot;,
+///     &quot;id&quot;: &quot;5&quot;,
+///     &quot;uri&quot;: &quot;https://arweave.net/8Vje5kmuRKaJwYht19rl-tEte9J8WifCrXoCwAB2IK8&quot;,
+///     &quot;name&quot;: &quot;Chiken dinner&quot;,
+///     &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+///     &quot;imageUri&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+///     &quot;metadata&quot;: {
+///       &quot;minter&quot;: &quot;0x4d3101d77aac1b90ae42efa38d235a81af270d40&quot;,
+///       &quot;mintedOn&quot;: &quot;2020-12-29T13:49:02.654Z&quot;,
+///       &quot;contractAddress&quot;: &quot;0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+///       &quot;minted&quot;: &quot;Minted on Mintbase.io&quot;,
+///       &quot;fiatPrice&quot;: &quot;$0.00&quot;,
+///       &quot;name&quot;: &quot;Chiken dinner&quot;,
+///       &quot;description&quot;: &quot;This token is meant for testing. &quot;,
+///       &quot;youtubeUrl&quot;: &quot;&quot;,
+///       &quot;price&quot;: 0,
+///       &quot;ethPrice&quot;: &quot;0&quot;,
+///       &quot;amountToMint&quot;: &quot;5&quot;,
+///       &quot;visibility&quot;: &quot;safe&quot;,
+///       &quot;forSale&quot;: false,
+///       &quot;image&quot;: &quot;https://arweave.net/a_poR6wHyGUortY2G3ITFmpQJOsRGJUXngpUAharq8I&quot;,
+///       &quot;attributes&quot;: [],
+///       &quot;category&quot;: &quot;DQFi8lDeEyqqoAOPesJb&quot;,
+///       &quot;externalUrl&quot;: &quot;https://mintbase.io/my-market/0xd753e03c05533f85ba9695c139771b1e9698a53c&quot;,
+///       &quot;type&quot;: &quot;ERC721&quot;
+///     }
+///   }
+/// ]
+/// ```
+/// &lt;/details&gt;
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;Collectibles&quot;</span>)]
+#[get(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;trusted&gt;&amp;&lt;exclude_spam&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_collectibles(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    trusted: <span class="prelude-ty">Option</span>&lt;bool&gt;,
+    exclude_spam: <span class="prelude-ty">Option</span>&lt;bool&gt;,
+) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+    collectibles(
+        <span class="kw-2">&amp;</span>context,
+        chain_id.as_str(),
+        safe_address.as_str(),
+        trusted,
+        exclude_spam,
     )
-    .<span class="kw">await</span>
-}
+    .<span class="kw">await
+</span>}
 
-<span class="doccomment">/// `/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;cursor&gt;&amp;&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns collectibles paginated</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Collectibles</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The collectibles endpoint does not implement any logic in the client-gateway. The response from the core services is cached and then forwarded to the clients.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;cursor&gt;&amp;&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` : Returns a list of the ERC721 tokens stored in a safe</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `&lt;cursor&gt;` : Pagination parameters (limit and offset)</span>
-<span class="doccomment">/// `&lt;trusted&gt;` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`</span>
-<span class="doccomment">/// `&lt;exclude_spam&gt;`: A token is defined as spam by our core handlers process when adding them. Default value is `true`</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Collectibles&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">get</span>(<span class="string">&quot;/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;cursor&gt;&amp;&lt;trusted&gt;&amp;&lt;exclude_spam&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_collectibles_paginated</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-    <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">trusted</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-    <span class="ident">exclude_spam</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Json</span><span class="op">&lt;</span><span class="ident">Page</span><span class="op">&lt;</span><span class="ident">Collectible</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="ident">collectibles_paginated</span>(
-        <span class="kw-2">&amp;</span><span class="ident">context</span>,
-        <span class="ident">chain_id</span>.<span class="ident">as_str</span>(),
-        <span class="ident">safe_address</span>.<span class="ident">as_str</span>(),
-        <span class="kw-2">&amp;</span><span class="ident">cursor</span>,
-        <span class="ident">trusted</span>,
-        <span class="ident">exclude_spam</span>,
+<span class="doccomment">/// `/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;cursor&gt;&amp;&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` &lt;br /&gt;
+/// Returns collectibles paginated
+///
+/// # Collectibles
+///
+/// The collectibles endpoint does not implement any logic in the client-gateway. The response from the core services is cached and then forwarded to the clients.
+///
+/// ## Path
+///
+/// - `/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;cursor&gt;&amp;&lt;trusted&gt;&amp;&lt;exclude_spam&gt;` : Returns a list of the ERC721 tokens stored in a safe
+///
+/// ## Query parameters
+///
+/// `&lt;cursor&gt;` : Pagination parameters (limit and offset)
+/// `&lt;trusted&gt;` : A token is defined as trusted by our core handlers process when adding them. Default value is `false`
+/// `&lt;exclude_spam&gt;`: A token is defined as spam by our core handlers process when adding them. Default value is `true`
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;Collectibles&quot;</span>)]
+#[get(<span class="string">&quot;/v2/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/collectibles?&lt;cursor&gt;&amp;&lt;trusted&gt;&amp;&lt;exclude_spam&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>get_collectibles_paginated(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    cursor: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    trusted: <span class="prelude-ty">Option</span>&lt;bool&gt;,
+    exclude_spam: <span class="prelude-ty">Option</span>&lt;bool&gt;,
+) -&gt; ApiResult&lt;Json&lt;Page&lt;Collectible&gt;&gt;&gt; {
+    collectibles_paginated(
+        <span class="kw-2">&amp;</span>context,
+        chain_id.as_str(),
+        safe_address.as_str(),
+        <span class="kw-2">&amp;</span>cursor,
+        trusted,
+        exclude_spam,
     )
-    .<span class="kw">await</span>
-}
+    .<span class="kw">await
+</span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

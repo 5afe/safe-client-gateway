@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/notifications/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/notifications/routes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>routes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -65,67 +59,66 @@
 <span id="59">59</span>
 <span id="60">60</span>
 <span id="61">61</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::handlers</span>::{<span class="ident">delete_registration</span>, <span class="ident">post_registration</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::notifications::models::NotificationRegistrationRequest</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">rocket::serde::json</span>::{<span class="ident">Error</span>, <span class="ident">Json</span>};
-<span class="kw">use</span> <span class="ident">rocket_okapi::openapi</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::routes::notifications::handlers::{delete_registration, post_registration};
+<span class="kw">use </span><span class="kw">crate</span>::routes::notifications::models::NotificationRegistrationRequest;
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span>rocket::serde::json::{Error, Json};
+<span class="kw">use </span>rocket_okapi::openapi;
 
-<span class="doccomment">/// `/v1/register/notifications` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns `()`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Register notifications</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint provides a way for registering devices for push notifications.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// One can subscribe to as many safes in different chains as [SafeRegistration](crate::routes::notifications::models::SafeRegistration) provided in the payload</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `POST /v1/register/notifications`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// No query parameters available for this endpoint.</span>
-<span class="attribute">#[<span class="ident">post</span>(
+<span class="doccomment">/// `/v1/register/notifications` &lt;br /&gt;
+/// Returns `()`
+///
+/// # Register notifications
+///
+/// This endpoint provides a way for registering devices for push notifications.
+///
+/// One can subscribe to as many safes in different chains as [SafeRegistration](crate::routes::notifications::models::SafeRegistration) provided in the payload
+///
+/// ## Path
+///
+/// `POST /v1/register/notifications`
+///
+/// ## Query parameters
+///
+/// No query parameters available for this endpoint.
+</span><span class="attribute">#[post(
     <span class="string">&quot;/v1/register/notifications&quot;</span>,
-    <span class="ident">format</span> <span class="op">=</span> <span class="string">&quot;application/json&quot;</span>,
-    <span class="ident">data</span> <span class="op">=</span> <span class="string">&quot;&lt;registration_request&gt;&quot;</span>
-)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post_notification_registration</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">registration_request</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Json</span><span class="op">&lt;</span><span class="ident">NotificationRegistrationRequest</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="lifetime">&#39;e</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="ident">post_registration</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">registration_request</span><span class="question-mark">?</span>.<span class="number">0</span>).<span class="kw">await</span>
-}
+    format = <span class="string">&quot;application/json&quot;</span>,
+    data = <span class="string">&quot;&lt;registration_request&gt;&quot;
+</span>)]
+</span><span class="kw">pub async fn </span>post_notification_registration&lt;<span class="lifetime">&#39;e</span>&gt;(
+    context: RequestContext,
+    registration_request: <span class="prelude-ty">Result</span>&lt;Json&lt;NotificationRegistrationRequest&gt;, Error&lt;<span class="lifetime">&#39;e</span>&gt;&gt;,
+) -&gt; ApiResult&lt;()&gt; {
+    post_registration(<span class="kw-2">&amp;</span>context, registration_request<span class="question-mark">?</span>.<span class="number">0</span>).<span class="kw">await
+</span>}
 
-<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;` &lt;br /&gt;</span>
-<span class="doccomment">/// Returns `()`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Unregister notifications</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This endpoint provides a way to unsubscribe from push notifications for a given `uuid`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Clients are expected to manage the `uuid` provided originally to the backend.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Path</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `DELETE /v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Query parameters</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// No query parameters available for this endpoint.</span>
-<span class="attribute">#[<span class="ident">openapi</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;Notifications&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">delete</span>(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_notification_registration</span>(
-    <span class="ident">context</span>: <span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="ident">String</span>,
-    <span class="ident">uuid</span>: <span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="ident">delete_registration</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">chain_id</span>, <span class="ident">uuid</span>, <span class="ident">safe_address</span>).<span class="kw">await</span>
-}
+<span class="doccomment">/// `/v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;` &lt;br /&gt;
+/// Returns `()`
+///
+/// # Unregister notifications
+///
+/// This endpoint provides a way to unsubscribe from push notifications for a given `uuid`.
+///
+/// Clients are expected to manage the `uuid` provided originally to the backend.
+///
+/// ## Path
+///
+/// `DELETE /v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;`
+///
+/// ## Query parameters
+///
+/// No query parameters available for this endpoint.
+</span><span class="attribute">#[openapi(tag = <span class="string">&quot;Notifications&quot;</span>)]
+#[delete(<span class="string">&quot;/v1/chains/&lt;chain_id&gt;/notifications/devices/&lt;uuid&gt;/safes/&lt;safe_address&gt;&quot;</span>)]
+</span><span class="kw">pub async fn </span>delete_notification_registration(
+    context: RequestContext,
+    chain_id: String,
+    uuid: String,
+    safe_address: String,
+) -&gt; ApiResult&lt;()&gt; {
+    delete_registration(<span class="kw-2">&amp;</span>context, chain_id, uuid, safe_address).<span class="kw">await
+</span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

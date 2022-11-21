@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/balances/handlers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>handlers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/balances/handlers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>handlers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -92,94 +86,93 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::balances::Balance</span> <span class="kw">as</span> <span class="ident">BalanceDto</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::chains::NativeCurrency</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">balances_cache_duration</span>, <span class="ident">balances_request_timeout</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::fiat::FiatInfoProvider</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::balances::models</span>::{<span class="ident">Balance</span>, <span class="ident">Balances</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">bigdecimal</span>::{<span class="ident">BigDecimal</span>, <span class="ident">ToPrimitive</span>};
-<span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::cache_operations::RequestCached;
+<span class="kw">use </span><span class="kw">crate</span>::cache::manager::ChainCache;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::balances::Balance <span class="kw">as </span>BalanceDto;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::chains::NativeCurrency;
+<span class="kw">use </span><span class="kw">crate</span>::config::{balances_cache_duration, balances_request_timeout};
+<span class="kw">use </span><span class="kw">crate</span>::providers::fiat::FiatInfoProvider;
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider};
+<span class="kw">use </span><span class="kw">crate</span>::routes::balances::models::{Balance, Balances};
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span>bigdecimal::{BigDecimal, ToPrimitive};
+<span class="kw">use </span>std::cmp::Ordering;
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">balances</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">fiat</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">trusted</span>: <span class="ident">bool</span>,
-    <span class="ident">exclude_spam</span>: <span class="ident">bool</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Balances</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>);
-    <span class="kw">let</span> <span class="ident">fiat_info_provider</span> <span class="op">=</span> <span class="ident">FiatInfoProvider::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>);
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
-        <span class="ident">info_provider</span>,
+<span class="kw">pub async fn </span>balances(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>str,
+    safe_address: <span class="kw-2">&amp;</span>str,
+    fiat: <span class="kw-2">&amp;</span>str,
+    trusted: bool,
+    exclude_spam: bool,
+) -&gt; ApiResult&lt;Balances&gt; {
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(chain_id, <span class="kw-2">&amp;</span>context);
+    <span class="kw">let </span>fiat_info_provider = FiatInfoProvider::new(<span class="kw-2">&amp;</span>context);
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(
+        info_provider,
         <span class="string">&quot;/v1/safes/{}/balances/usd/?trusted={}&amp;exclude_spam={}&quot;</span>,
-        <span class="ident">safe_address</span>,
-        <span class="ident">trusted</span>,
-        <span class="ident">exclude_spam</span>
+        safe_address,
+        trusted,
+        exclude_spam
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>))
-        .<span class="ident">cache_duration</span>(<span class="ident">balances_cache_duration</span>())
-        .<span class="ident">request_timeout</span>(<span class="ident">balances_request_timeout</span>())
-        .<span class="ident">execute</span>()
+    <span class="kw">let </span>body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id))
+        .cache_duration(balances_cache_duration())
+        .request_timeout(balances_request_timeout())
+        .execute()
         .<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">backend_balances</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BalanceDto</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>backend_balances: Vec&lt;BalanceDto&gt; = serde_json::from_str(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">usd_to_fiat</span> <span class="op">=</span> <span class="ident">fiat_info_provider</span>
-        .<span class="ident">exchange_usd_to</span>(<span class="ident">fiat</span>)
-        .<span class="kw">await</span>
-        .<span class="ident">unwrap_or</span>(<span class="ident">BigDecimal::from</span>(<span class="number">0</span>))
-        .<span class="ident">to_f64</span>()
-        .<span class="ident">unwrap_or</span>(<span class="ident">f64::from</span>(<span class="number">0</span>));
+    <span class="kw">let </span>usd_to_fiat = fiat_info_provider
+        .exchange_usd_to(fiat)
+        .<span class="kw">await
+        </span>.unwrap_or(BigDecimal::from(<span class="number">0</span>))
+        .to_f64()
+        .unwrap_or(f64::from(<span class="number">0</span>));
 
-    <span class="kw">let</span> <span class="ident">native_currency</span>: <span class="ident">NativeCurrency</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">chain_info</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">native_currency</span>;
+    <span class="kw">let </span>native_currency: NativeCurrency = info_provider.chain_info().<span class="kw">await</span><span class="question-mark">?</span>.native_currency;
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_fiat</span> <span class="op">=</span> <span class="number">0.0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>total_fiat = <span class="number">0.0</span>;
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">service_balances</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Balance</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">backend_balances</span>
-        .<span class="ident">into_iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">balance</span> <span class="op">=</span> <span class="ident">it</span>.<span class="ident">to_balance</span>(<span class="ident">usd_to_fiat</span>, <span class="kw-2">&amp;</span><span class="ident">native_currency</span>);
-            <span class="ident">total_fiat</span> <span class="op">+</span><span class="op">=</span> <span class="ident">balance</span>.<span class="ident">fiat_balance</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>().<span class="ident">unwrap_or</span>(<span class="number">0.0</span>);
-            <span class="ident">balance</span>
+    <span class="kw">let </span><span class="kw-2">mut </span>service_balances: Vec&lt;Balance&gt; = backend_balances
+        .into_iter()
+        .map(|it| {
+            <span class="kw">let </span>balance = it.to_balance(usd_to_fiat, <span class="kw-2">&amp;</span>native_currency);
+            total_fiat += balance.fiat_balance.parse::&lt;f64&gt;().unwrap_or(<span class="number">0.0</span>);
+            balance
         })
-        .<span class="ident">collect</span>();
+        .collect();
 
-    <span class="ident">service_balances</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> {
-        <span class="ident">b</span>.<span class="ident">fiat_balance</span>
-            .<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>()
-            .<span class="ident">unwrap_or</span>(<span class="number">0.0</span>)
-            .<span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">fiat_balance</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>().<span class="ident">unwrap_or</span>(<span class="number">0.0</span>))
-            .<span class="ident">unwrap_or</span>(<span class="ident">Ordering::Equal</span>)
+    service_balances.sort_by(|a, b| {
+        b.fiat_balance
+            .parse::&lt;f64&gt;()
+            .unwrap_or(<span class="number">0.0</span>)
+            .partial_cmp(<span class="kw-2">&amp;</span>a.fiat_balance.parse::&lt;f64&gt;().unwrap_or(<span class="number">0.0</span>))
+            .unwrap_or(Ordering::Equal)
     });
-    <span class="prelude-val">Ok</span>(<span class="ident">Balances</span> {
-        <span class="ident">fiat_total</span>: <span class="ident">total_fiat</span>.<span class="ident">to_string</span>(),
-        <span class="ident">items</span>: <span class="ident">service_balances</span>,
+    <span class="prelude-val">Ok</span>(Balances {
+        fiat_total: total_fiat.to_string(),
+        items: service_balances,
     })
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fiat_codes</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">FiatInfoProvider::new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fiat_codes</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">available_currency_codes</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+<span class="kw">pub async fn </span>fiat_codes(context: <span class="kw-2">&amp;</span>RequestContext) -&gt; ApiResult&lt;Vec&lt;String&gt;&gt; {
+    <span class="kw">let </span>info_provider = FiatInfoProvider::new(<span class="kw-2">&amp;</span>context);
+    <span class="kw">let </span><span class="kw-2">mut </span>fiat_codes = info_provider.available_currency_codes().<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">usd_index</span> <span class="op">=</span> <span class="ident">fiat_codes</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">eq</span>(<span class="string">&quot;USD&quot;</span>)).<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">eur_index</span> <span class="op">=</span> <span class="ident">fiat_codes</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">eq</span>(<span class="string">&quot;EUR&quot;</span>)).<span class="ident">unwrap</span>();
+    <span class="kw">let </span>usd_index = fiat_codes.iter().position(|it| it.eq(<span class="string">&quot;USD&quot;</span>)).unwrap();
+    <span class="kw">let </span>eur_index = fiat_codes.iter().position(|it| it.eq(<span class="string">&quot;EUR&quot;</span>)).unwrap();
 
-    <span class="kw">let</span> <span class="ident">usd_code</span> <span class="op">=</span> <span class="ident">fiat_codes</span>.<span class="ident">swap_remove</span>(<span class="ident">usd_index</span>);
-    <span class="kw">let</span> <span class="ident">eur_code</span> <span class="op">=</span> <span class="ident">fiat_codes</span>.<span class="ident">swap_remove</span>(<span class="ident">eur_index</span>);
+    <span class="kw">let </span>usd_code = fiat_codes.swap_remove(usd_index);
+    <span class="kw">let </span>eur_code = fiat_codes.swap_remove(eur_index);
 
-    <span class="ident">fiat_codes</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">to_lowercase</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">to_lowercase</span>()));
+    fiat_codes.sort_by(|a, b| a.to_lowercase().cmp(<span class="kw-2">&amp;</span>b.to_lowercase()));
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">usd_code</span>, <span class="ident">eur_code</span>];
-    <span class="ident">output</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="ident">fiat_codes</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>output = <span class="macro">vec!</span>[usd_code, eur_code];
+    output.append(<span class="kw-2">&amp;mut </span>fiat_codes);
 
-    <span class="prelude-val">Ok</span>(<span class="ident">output</span>)
+    <span class="prelude-val">Ok</span>(output)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

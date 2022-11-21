@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/converters/details.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>details.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/converters/details.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>details.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -207,209 +201,208 @@
 <span id="201">201</span>
 <span id="202">202</span>
 <span id="203">203</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::addresses::AddressEx</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions</span>::{<span class="ident">ModuleTransaction</span>, <span class="ident">MultisigTransaction</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::data_decoded</span>::{<span class="ident">DataDecoded</span>, <span class="ident">Operation</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::ext::InfoProviderExt</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">InfoProvider</span>, <span class="ident">SafeInfo</span>, <span class="ident">TokenInfo</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::converters::safe_app_info::safe_app_info_from</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::details</span>::{
-    <span class="ident">DetailedExecutionInfo</span>, <span class="ident">ModuleExecutionDetails</span>, <span class="ident">MultisigConfirmation</span>, <span class="ident">MultisigExecutionDetails</span>,
-    <span class="ident">TransactionData</span>, <span class="ident">TransactionDetails</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
+<span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::{DataDecoded, Operation};
+<span class="kw">use </span><span class="kw">crate</span>::providers::ext::InfoProviderExt;
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{InfoProvider, SafeInfo, TokenInfo};
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::converters::safe_app_info::safe_app_info_from;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::models::details::{
+    DetailedExecutionInfo, ModuleExecutionDetails, MultisigConfirmation, MultisigExecutionDetails,
+    TransactionData, TransactionDetails,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">rocket::futures::future::OptionFuture</span>;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span>rocket::futures::future::OptionFuture;
 
-<span class="kw">impl</span> <span class="ident">MultisigTransaction</span> {
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transaction_details</span>(
+<span class="kw">impl </span>MultisigTransaction {
+    <span class="kw">pub async fn </span>to_transaction_details(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">rejections</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    ) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">TransactionDetails</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">safe_info</span> <span class="op">=</span> <span class="ident">info_provider</span>
-            .<span class="ident">safe_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">safe</span>.<span class="ident">to_string</span>())
+        rejections: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    ) -&gt; ApiResult&lt;TransactionDetails&gt; {
+        <span class="kw">let </span>safe_info = info_provider
+            .safe_info(<span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.safe.to_string())
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">gas_token</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">address_to_token_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">gas_token</span>).<span class="kw">await</span>;
-        <span class="kw">let</span> <span class="ident">is_trusted_delegate_call</span> <span class="op">=</span> <span class="ident">is_trusted_delegate_call</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">operation</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">to</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">data_decoded</span>,
-            <span class="ident">info_provider</span>,
+        <span class="kw">let </span>gas_token = info_provider.address_to_token_info(<span class="kw-2">&amp;</span><span class="self">self</span>.gas_token).<span class="kw">await</span>;
+        <span class="kw">let </span>is_trusted_delegate_call = is_trusted_delegate_call(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.operation,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.to,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.data_decoded,
+            info_provider,
         )
         .<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">TransactionDetails</span> {
-            <span class="ident">safe_address</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">safe</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">tx_id</span>: <span class="self">self</span>.<span class="ident">generate_id</span>(),
-            <span class="ident">executed_at</span>: <span class="self">self</span>.<span class="ident">execution_date</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">timestamp_millis</span>()),
-            <span class="ident">tx_status</span>: <span class="self">self</span>.<span class="ident">map_status</span>(<span class="kw-2">&amp;</span><span class="ident">safe_info</span>),
-            <span class="ident">tx_info</span>: <span class="self">self</span>.<span class="ident">transaction_info</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">tx_data</span>: <span class="prelude-val">Some</span>(<span class="ident">TransactionData</span> {
-                <span class="ident">to</span>: <span class="ident">AddressEx::any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">to</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-                <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">value</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">hex_data</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">data</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">data_decoded</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">data_decoded</span>.<span class="ident">clone</span>(),
-                <span class="ident">operation</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">operation</span>,
-                <span class="ident">address_info_index</span>: <span class="ident">OptionFuture::from</span>(
-                    <span class="self">self</span>.<span class="ident">safe_transaction</span>
-                        .<span class="ident">data_decoded</span>
-                        .<span class="ident">as_ref</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
-                            <span class="ident">data_decoded</span>.<span class="ident">build_address_info_index</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>
-                        }),
+        <span class="prelude-val">Ok</span>(TransactionDetails {
+            safe_address: <span class="self">self</span>.safe_transaction.safe.to_owned(),
+            tx_id: <span class="self">self</span>.generate_id(),
+            executed_at: <span class="self">self</span>.execution_date.map(|data| data.timestamp_millis()),
+            tx_status: <span class="self">self</span>.map_status(<span class="kw-2">&amp;</span>safe_info),
+            tx_info: <span class="self">self</span>.transaction_info(info_provider).<span class="kw">await</span>,
+            tx_data: <span class="prelude-val">Some</span>(TransactionData {
+                to: AddressEx::any_source(<span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.to, info_provider).<span class="kw">await</span>,
+                value: <span class="self">self</span>.safe_transaction.value.to_owned(),
+                hex_data: <span class="self">self</span>.safe_transaction.data.to_owned(),
+                data_decoded: <span class="self">self</span>.safe_transaction.data_decoded.clone(),
+                operation: <span class="self">self</span>.safe_transaction.operation,
+                address_info_index: OptionFuture::from(
+                    <span class="self">self</span>.safe_transaction
+                        .data_decoded
+                        .as_ref()
+                        .map(|data_decoded| <span class="kw">async move </span>{
+                            data_decoded.build_address_info_index(info_provider).<span class="kw">await
+                        </span>}),
                 )
-                .<span class="kw">await</span>
-                .<span class="ident">flatten</span>(),
-                <span class="ident">trusted_delegate_call_target</span>: <span class="ident">is_trusted_delegate_call</span>,
+                .<span class="kw">await
+                </span>.flatten(),
+                trusted_delegate_call_target: is_trusted_delegate_call,
             }),
-            <span class="ident">tx_hash</span>: <span class="self">self</span>.<span class="ident">transaction_hash</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">hash</span><span class="op">|</span> <span class="ident">hash</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">detailed_execution_info</span>: <span class="prelude-val">Some</span>(<span class="ident">DetailedExecutionInfo::Multisig</span>(
-                <span class="self">self</span>.<span class="ident">build_execution_details</span>(<span class="ident">safe_info</span>, <span class="ident">gas_token</span>, <span class="ident">rejections</span>),
+            tx_hash: <span class="self">self</span>.transaction_hash.as_ref().map(|hash| hash.to_owned()),
+            detailed_execution_info: <span class="prelude-val">Some</span>(DetailedExecutionInfo::Multisig(
+                <span class="self">self</span>.build_execution_details(safe_info, gas_token, rejections),
             )),
-            <span class="ident">safe_app_info</span>: <span class="ident">OptionFuture::from</span>(
-                <span class="self">self</span>.<span class="ident">origin</span>
-                    .<span class="ident">as_ref</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">origin</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">safe_app_info_from</span>(<span class="ident">origin</span>, <span class="ident">info_provider</span>).<span class="kw">await</span> }),
+            safe_app_info: OptionFuture::from(
+                <span class="self">self</span>.origin
+                    .as_ref()
+                    .map(|origin| <span class="kw">async move </span>{ safe_app_info_from(origin, info_provider).<span class="kw">await </span>}),
             )
-            .<span class="kw">await</span>
-            .<span class="ident">flatten</span>(),
+            .<span class="kw">await
+            </span>.flatten(),
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">build_execution_details</span>(
+    <span class="kw">fn </span>build_execution_details(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">safe_info</span>: <span class="ident">SafeInfo</span>,
-        <span class="ident">gas_token_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TokenInfo</span><span class="op">&gt;</span>,
-        <span class="ident">rejections</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">MultisigExecutionDetails</span> {
-        <span class="ident">MultisigExecutionDetails</span> {
-            <span class="ident">submitted_at</span>: <span class="self">self</span>.<span class="ident">submission_date</span>.<span class="ident">timestamp_millis</span>(),
-            <span class="ident">nonce</span>: <span class="self">self</span>.<span class="ident">nonce</span>,
-            <span class="ident">safe_tx_hash</span>: <span class="self">self</span>.<span class="ident">safe_tx_hash</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">executor</span>: <span class="self">self</span>
-                .<span class="ident">executor</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">address</span><span class="op">|</span> <span class="ident">AddressEx::address_only</span>(<span class="kw-2">&amp;</span><span class="ident">address</span>)),
-            <span class="ident">signers</span>: <span class="ident">safe_info</span>
-                .<span class="ident">owners</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">rejection</span><span class="op">|</span> <span class="ident">AddressEx::address_only</span>(<span class="ident">rejection</span>))
-                .<span class="ident">collect</span>(),
-            <span class="ident">confirmations_required</span>: <span class="self">self</span>.<span class="ident">confirmations_required</span>.<span class="ident">unwrap_or</span>(<span class="ident">safe_info</span>.<span class="ident">threshold</span>),
-            <span class="ident">confirmations</span>: <span class="self">self</span>
-                .<span class="ident">confirmations</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[])
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">confirmation</span><span class="op">|</span> <span class="ident">MultisigConfirmation</span> {
-                    <span class="ident">signer</span>: <span class="ident">AddressEx::address_only</span>(<span class="kw-2">&amp;</span><span class="ident">confirmation</span>.<span class="ident">owner</span>),
-                    <span class="ident">signature</span>: <span class="ident">confirmation</span>.<span class="ident">signature</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">submitted_at</span>: <span class="ident">confirmation</span>.<span class="ident">submission_date</span>.<span class="ident">timestamp_millis</span>(),
+        safe_info: SafeInfo,
+        gas_token_info: <span class="prelude-ty">Option</span>&lt;TokenInfo&gt;,
+        rejections: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
+    ) -&gt; MultisigExecutionDetails {
+        MultisigExecutionDetails {
+            submitted_at: <span class="self">self</span>.submission_date.timestamp_millis(),
+            nonce: <span class="self">self</span>.nonce,
+            safe_tx_hash: <span class="self">self</span>.safe_tx_hash.to_owned(),
+            executor: <span class="self">self
+                </span>.executor
+                .as_ref()
+                .map(|address| AddressEx::address_only(<span class="kw-2">&amp;</span>address)),
+            signers: safe_info
+                .owners
+                .iter()
+                .map(|rejection| AddressEx::address_only(rejection))
+                .collect(),
+            confirmations_required: <span class="self">self</span>.confirmations_required.unwrap_or(safe_info.threshold),
+            confirmations: <span class="self">self
+                </span>.confirmations
+                .as_ref()
+                .unwrap_or(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[])
+                .into_iter()
+                .map(|confirmation| MultisigConfirmation {
+                    signer: AddressEx::address_only(<span class="kw-2">&amp;</span>confirmation.owner),
+                    signature: confirmation.signature.to_owned(),
+                    submitted_at: confirmation.submission_date.timestamp_millis(),
                 })
-                .<span class="ident">collect</span>(),
-            <span class="ident">refund_receiver</span>: <span class="self">self</span>
-                .<span class="ident">refund_receiver</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">address</span><span class="op">|</span> <span class="ident">AddressEx::address_only</span>(<span class="ident">address</span>))
-                .<span class="ident">unwrap_or</span>(<span class="ident">AddressEx::zero</span>()),
-            <span class="ident">gas_token</span>: <span class="self">self</span>
-                .<span class="ident">gas_token</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">String::from</span>(<span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>))
-                .<span class="ident">to_owned</span>(),
-            <span class="ident">base_gas</span>: <span class="self">self</span>.<span class="ident">base_gas</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>).<span class="ident">to_string</span>(),
-            <span class="ident">safe_tx_gas</span>: <span class="self">self</span>.<span class="ident">safe_tx_gas</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>).<span class="ident">to_string</span>(),
-            <span class="ident">gas_price</span>: <span class="self">self</span>
-                .<span class="ident">gas_price</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">String::from</span>(<span class="string">&quot;0&quot;</span>))
-                .<span class="ident">to_owned</span>(),
-            <span class="ident">gas_token_info</span>,
-            <span class="ident">rejectors</span>: <span class="ident">rejections</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> {
-                <span class="ident">r</span>.<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">rejection</span><span class="op">|</span> <span class="ident">AddressEx::address_only</span>(<span class="ident">rejection</span>))
-                    .<span class="ident">collect</span>()
+                .collect(),
+            refund_receiver: <span class="self">self
+                </span>.refund_receiver
+                .as_ref()
+                .map(|address| AddressEx::address_only(address))
+                .unwrap_or(AddressEx::zero()),
+            gas_token: <span class="self">self
+                </span>.gas_token
+                .as_ref()
+                .unwrap_or(<span class="kw-2">&amp;</span>String::from(<span class="string">&quot;0x0000000000000000000000000000000000000000&quot;</span>))
+                .to_owned(),
+            base_gas: <span class="self">self</span>.base_gas.unwrap_or(<span class="number">0</span>).to_string(),
+            safe_tx_gas: <span class="self">self</span>.safe_tx_gas.unwrap_or(<span class="number">0</span>).to_string(),
+            gas_price: <span class="self">self
+                </span>.gas_price
+                .as_ref()
+                .unwrap_or(<span class="kw-2">&amp;</span>String::from(<span class="string">&quot;0&quot;</span>))
+                .to_owned(),
+            gas_token_info,
+            rejectors: rejections.map(|r| {
+                r.iter()
+                    .map(|rejection| AddressEx::address_only(rejection))
+                    .collect()
             }),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ModuleTransaction</span> {
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transaction_details</span>(
+<span class="kw">impl </span>ModuleTransaction {
+    <span class="kw">pub async fn </span>to_transaction_details(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    ) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">TransactionDetails</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">safe_transaction</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>;
-        <span class="kw">let</span> <span class="ident">module_info</span> <span class="op">=</span> <span class="ident">info_provider</span>
-            .<span class="ident">address_ex_from_contracts_or_default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">module</span>)
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    ) -&gt; ApiResult&lt;TransactionDetails&gt; {
+        <span class="kw">let </span>safe_transaction = <span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction;
+        <span class="kw">let </span>module_info = info_provider
+            .address_ex_from_contracts_or_default(<span class="kw-2">&amp;</span><span class="self">self</span>.module)
             .<span class="kw">await</span>;
-        <span class="kw">let</span> <span class="ident">is_trusted_delegate_call</span> <span class="op">=</span> <span class="ident">is_trusted_delegate_call</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">operation</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">to</span>,
-            <span class="kw-2">&amp;</span><span class="ident">safe_transaction</span>.<span class="ident">data_decoded</span>,
-            <span class="ident">info_provider</span>,
+        <span class="kw">let </span>is_trusted_delegate_call = is_trusted_delegate_call(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.operation,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.to,
+            <span class="kw-2">&amp;</span>safe_transaction.data_decoded,
+            info_provider,
         )
         .<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">TransactionDetails</span> {
-            <span class="ident">safe_address</span>: <span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">safe</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">tx_id</span>: <span class="self">self</span>.<span class="ident">generate_id</span>(),
-            <span class="ident">executed_at</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp_millis</span>()),
-            <span class="ident">tx_status</span>: <span class="self">self</span>.<span class="ident">map_status</span>(),
-            <span class="ident">tx_info</span>: <span class="self">self</span>.<span class="ident">transaction_info</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">tx_data</span>: <span class="prelude-val">Some</span>(<span class="ident">TransactionData</span> {
-                <span class="ident">to</span>: <span class="ident">AddressEx::any_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">safe_transaction</span>.<span class="ident">to</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-                <span class="ident">value</span>: <span class="ident">safe_transaction</span>.<span class="ident">value</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">hex_data</span>: <span class="ident">safe_transaction</span>.<span class="ident">data</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">data_decoded</span>: <span class="ident">safe_transaction</span>.<span class="ident">data_decoded</span>.<span class="ident">clone</span>(),
-                <span class="ident">operation</span>: <span class="ident">safe_transaction</span>.<span class="ident">operation</span>,
-                <span class="ident">address_info_index</span>: <span class="ident">OptionFuture::from</span>(<span class="ident">safe_transaction</span>.<span class="ident">data_decoded</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(
-                    <span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
-                        <span class="ident">data_decoded</span>.<span class="ident">build_address_info_index</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>
-                    },
+        <span class="prelude-val">Ok</span>(TransactionDetails {
+            safe_address: <span class="self">self</span>.safe_transaction.safe.to_owned(),
+            tx_id: <span class="self">self</span>.generate_id(),
+            executed_at: <span class="prelude-val">Some</span>(<span class="self">self</span>.execution_date.timestamp_millis()),
+            tx_status: <span class="self">self</span>.map_status(),
+            tx_info: <span class="self">self</span>.transaction_info(info_provider).<span class="kw">await</span>,
+            tx_data: <span class="prelude-val">Some</span>(TransactionData {
+                to: AddressEx::any_source(<span class="kw-2">&amp;</span><span class="self">self</span>.safe_transaction.to, info_provider).<span class="kw">await</span>,
+                value: safe_transaction.value.to_owned(),
+                hex_data: safe_transaction.data.to_owned(),
+                data_decoded: safe_transaction.data_decoded.clone(),
+                operation: safe_transaction.operation,
+                address_info_index: OptionFuture::from(safe_transaction.data_decoded.as_ref().map(
+                    |data_decoded| <span class="kw">async move </span>{
+                        data_decoded.build_address_info_index(info_provider).<span class="kw">await
+                    </span>},
                 ))
-                .<span class="kw">await</span>
-                .<span class="ident">flatten</span>(),
-                <span class="ident">trusted_delegate_call_target</span>: <span class="ident">is_trusted_delegate_call</span>,
+                .<span class="kw">await
+                </span>.flatten(),
+                trusted_delegate_call_target: is_trusted_delegate_call,
             }),
-            <span class="ident">tx_hash</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">transaction_hash</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">detailed_execution_info</span>: <span class="prelude-val">Some</span>(<span class="ident">DetailedExecutionInfo::Module</span>(<span class="ident">ModuleExecutionDetails</span> {
-                <span class="ident">address</span>: <span class="ident">module_info</span>,
+            tx_hash: <span class="prelude-val">Some</span>(<span class="self">self</span>.transaction_hash.to_owned()),
+            detailed_execution_info: <span class="prelude-val">Some</span>(DetailedExecutionInfo::Module(ModuleExecutionDetails {
+                address: module_info,
             })),
-            <span class="ident">safe_app_info</span>: <span class="prelude-val">None</span>,
+            safe_app_info: <span class="prelude-val">None</span>,
         })
     }
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">is_trusted_delegate_call</span>(
-    <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">Operation</span>,
-    <span class="ident">to</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">data_decoded</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DataDecoded</span><span class="op">&gt;</span>,
-    <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">operation</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">Operation::DELEGATE</span> {
-        <span class="kw">let</span> <span class="ident">contract_info</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">contract_info</span>(<span class="ident">to</span>).<span class="kw">await</span>;
-        <span class="kw">let</span> <span class="ident">contract_info</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">contract_info</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">contract_info</span>) =&gt; <span class="ident">contract_info</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">api_error</span>) =&gt; {
-                <span class="kw">return</span> <span class="kw">match</span> <span class="ident">api_error</span>.<span class="ident">status</span> {
-                    <span class="number">404</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
-                    <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">api_error</span>),
+<span class="kw">pub async fn </span>is_trusted_delegate_call(
+    operation: <span class="kw-2">&amp;</span>Operation,
+    to: <span class="kw-2">&amp;</span>str,
+    data_decoded: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;DataDecoded&gt;,
+    info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+) -&gt; ApiResult&lt;<span class="prelude-ty">Option</span>&lt;bool&gt;&gt; {
+    <span class="kw">if </span>operation == <span class="kw-2">&amp;</span>Operation::DELEGATE {
+        <span class="kw">let </span>contract_info = info_provider.contract_info(to).<span class="kw">await</span>;
+        <span class="kw">let </span>contract_info = <span class="kw">match </span>contract_info {
+            <span class="prelude-val">Ok</span>(contract_info) =&gt; contract_info,
+            <span class="prelude-val">Err</span>(api_error) =&gt; {
+                <span class="kw">return match </span>api_error.status {
+                    <span class="number">404 </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(api_error),
                 };
             }
         };
 
-        <span class="kw">let</span> <span class="ident">has_nested_delegate_calls</span> <span class="op">=</span> <span class="op">!</span><span class="ident">data_decoded</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">data_decoded</span><span class="op">|</span> <span class="ident">data_decoded</span>.<span class="ident">has_nested_delegated</span>());
+        <span class="kw">let </span>has_nested_delegate_calls = !data_decoded
+            .as_ref()
+            .map_or(<span class="bool-val">false</span>, |data_decoded| data_decoded.has_nested_delegated());
 
-        <span class="kw">let</span> <span class="ident">is_trusted_delegate_call</span> <span class="op">=</span>
-            <span class="ident">contract_info</span>.<span class="ident">trusted_for_delegate_call</span> <span class="op">&amp;&amp;</span> <span class="ident">has_nested_delegate_calls</span>;
-        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">is_trusted_delegate_call</span>));
-    } <span class="kw">else</span> {
+        <span class="kw">let </span>is_trusted_delegate_call =
+            contract_info.trusted_for_delegate_call &amp;&amp; has_nested_delegate_calls;
+        <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(is_trusted_delegate_call));
+    } <span class="kw">else </span>{
         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

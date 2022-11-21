@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/cache/redis.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>redis.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/cache/redis.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>redis.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -113,115 +107,114 @@
 <span id="107">107</span>
 <span id="108">108</span>
 <span id="109">109</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">bb8_redis::bb8</span>::{<span class="self">self</span>, <span class="ident">Pool</span>, <span class="ident">PooledConnection</span>};
-<span class="kw">use</span> <span class="ident">bb8_redis::redis</span>::{<span class="ident">cmd</span>, <span class="ident">AsyncCommands</span>, <span class="ident">AsyncIter</span>, <span class="ident">Cmd</span>, <span class="ident">Pipeline</span>, <span class="ident">ToRedisArgs</span>};
-<span class="kw">use</span> <span class="ident">bb8_redis::RedisConnectionManager</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>bb8_redis::bb8::{<span class="self">self</span>, Pool, PooledConnection};
+<span class="kw">use </span>bb8_redis::redis::{cmd, AsyncCommands, AsyncIter, Cmd, Pipeline, ToRedisArgs};
+<span class="kw">use </span>bb8_redis::RedisConnectionManager;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::Cache</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">redis_scan_count</span>, <span class="ident">redis_uri</span>, <span class="ident">redis_uri_mainnet</span>};
+<span class="kw">use </span><span class="kw">crate</span>::cache::Cache;
+<span class="kw">use </span><span class="kw">crate</span>::config::{redis_scan_count, redis_uri, redis_uri_mainnet};
 
-<span class="kw">type</span> <span class="ident">RedisPool</span> <span class="op">=</span> <span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">RedisConnectionManager</span><span class="op">&gt;</span>;
-<span class="kw">type</span> <span class="ident">RedisConnection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">PooledConnection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">RedisConnectionManager</span><span class="op">&gt;</span>;
+<span class="kw">type </span>RedisPool = Pool&lt;RedisConnectionManager&gt;;
+<span class="kw">type </span>RedisConnection&lt;<span class="lifetime">&#39;a</span>&gt; = PooledConnection&lt;<span class="lifetime">&#39;a</span>, RedisConnectionManager&gt;;
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_pool</span>(<span class="ident">for_mainnet</span>: <span class="ident">bool</span>) -&gt; <span class="ident">RedisPool</span> {
-    <span class="kw">let</span> <span class="ident">target</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">for_mainnet</span> {
-        <span class="ident">redis_uri_mainnet</span>()
-    } <span class="kw">else</span> {
-        <span class="ident">redis_uri</span>()
+<span class="kw">async fn </span>create_pool(for_mainnet: bool) -&gt; RedisPool {
+    <span class="kw">let </span>target = <span class="kw">if </span>for_mainnet {
+        redis_uri_mainnet()
+    } <span class="kw">else </span>{
+        redis_uri()
     };
-    <span class="kw">let</span> <span class="ident">manager</span> <span class="op">=</span> <span class="ident">RedisConnectionManager::new</span>(<span class="ident">target</span>)
-        .<span class="ident">expect</span>(<span class="string">&quot;Establishing connection with redis instance failed&quot;</span>);
-    <span class="ident">bb8::Pool::builder</span>()
-        .<span class="ident">max_size</span>(<span class="number">15</span>) <span class="comment">// default is 10</span>
-        .<span class="ident">build</span>(<span class="ident">manager</span>) <span class="comment">// we can technically also set a connection await timeout if necessary</span>
-        .<span class="kw">await</span>
-        .<span class="ident">expect</span>(<span class="string">&quot;Redis connection pool initialization failed&quot;</span>)
+    <span class="kw">let </span>manager = RedisConnectionManager::new(target)
+        .expect(<span class="string">&quot;Establishing connection with redis instance failed&quot;</span>);
+    bb8::Pool::builder()
+        .max_size(<span class="number">15</span>) <span class="comment">// default is 10
+        </span>.build(manager) <span class="comment">// we can technically also set a connection await timeout if necessary
+        </span>.<span class="kw">await
+        </span>.expect(<span class="string">&quot;Redis connection pool initialization failed&quot;</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ServiceCache</span>(<span class="ident">RedisPool</span>);
+<span class="kw">pub struct </span>ServiceCache(RedisPool);
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_service_cache</span>() -&gt; <span class="kw">impl</span> <span class="ident">Cache</span> {
-    <span class="ident">ServiceCache</span>(<span class="ident">create_pool</span>(<span class="bool-val">false</span>).<span class="kw">await</span>)
+<span class="kw">pub async fn </span>new_service_cache() -&gt; <span class="kw">impl </span>Cache {
+    ServiceCache(create_pool(<span class="bool-val">false</span>).<span class="kw">await</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_service_cache_mainnet</span>() -&gt; <span class="kw">impl</span> <span class="ident">Cache</span> {
-    <span class="ident">ServiceCache</span>(<span class="ident">create_pool</span>(<span class="bool-val">true</span>).<span class="kw">await</span>)
+<span class="kw">pub async fn </span>new_service_cache_mainnet() -&gt; <span class="kw">impl </span>Cache {
+    ServiceCache(create_pool(<span class="bool-val">true</span>).<span class="kw">await</span>)
 }
 
-<span class="kw">impl</span> <span class="ident">ServiceCache</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">conn</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RedisConnection</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>()
+<span class="kw">impl </span>ServiceCache {
+    <span class="kw">async fn </span>conn(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RedisConnection&lt;<span class="lifetime">&#39;_</span>&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.get().<span class="kw">await</span>.unwrap()
     }
 }
 
-<span class="attribute">#[<span class="ident">rocket::async_trait</span>]</span>
-<span class="kw">impl</span> <span class="ident">Cache</span> <span class="kw">for</span> <span class="ident">ServiceCache</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>.<span class="ident">get</span>(<span class="ident">id</span>).<span class="kw">await</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">value</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+<span class="attribute">#[rocket::async_trait]
+</span><span class="kw">impl </span>Cache <span class="kw">for </span>ServiceCache {
+    <span class="kw">async fn </span>fetch(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="kw">match </span><span class="self">self</span>.conn().<span class="kw">await</span>.get(id).<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(value) =&gt; <span class="prelude-val">Some</span>(value),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">timeout</span>: <span class="ident">usize</span>) {
-        <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>.<span class="ident">pset_ex</span>(<span class="ident">id</span>, <span class="ident">dest</span>, <span class="ident">timeout</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
+    <span class="kw">async fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>str, dest: <span class="kw-2">&amp;</span>str, timeout: usize) {
+        <span class="kw">let _</span>: () = <span class="self">self</span>.conn().<span class="kw">await</span>.pset_ex(id, dest, timeout).<span class="kw">await</span>.unwrap();
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">insert_in_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
-        <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>.<span class="ident">hset</span>(<span class="ident">hash</span>, <span class="ident">id</span>, <span class="ident">dest</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
+    <span class="kw">async fn </span>insert_in_hash(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>str, id: <span class="kw-2">&amp;</span>str, dest: <span class="kw-2">&amp;</span>str) {
+        <span class="kw">let _</span>: () = <span class="self">self</span>.conn().<span class="kw">await</span>.hset(hash, id, dest).<span class="kw">await</span>.unwrap();
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_from_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>.<span class="ident">hget</span>(<span class="ident">hash</span>, <span class="ident">id</span>).<span class="kw">await</span>.<span class="ident">ok</span>()
+    <span class="kw">async fn </span>get_from_hash(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>str, id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="self">self</span>.conn().<span class="kw">await</span>.hget(hash, id).<span class="kw">await</span>.ok()
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">has_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">result</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>.<span class="ident">exists</span>(<span class="ident">id</span>).<span class="kw">await</span>.<span class="ident">ok</span>();
-        <span class="ident">result</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
+    <span class="kw">async fn </span>has_key(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>str) -&gt; bool {
+        <span class="kw">let </span>result: <span class="prelude-ty">Option</span>&lt;usize&gt; = <span class="self">self</span>.conn().<span class="kw">await</span>.exists(id).<span class="kw">await</span>.ok();
+        result.map(|it| it != <span class="number">0</span>).unwrap_or(<span class="bool-val">false</span>)
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">expire_entity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">timeout</span>: <span class="ident">usize</span>) {
-        <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>.<span class="ident">pexpire</span>(<span class="ident">id</span>, <span class="ident">timeout</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
+    <span class="kw">async fn </span>expire_entity(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>str, timeout: usize) {
+        <span class="kw">let _</span>: () = <span class="self">self</span>.conn().<span class="kw">await</span>.pexpire(id, timeout).<span class="kw">await</span>.unwrap();
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">invalidate_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pattern</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">con</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>;
-        <span class="kw">let</span> <span class="ident">keys_cmd</span> <span class="op">=</span> <span class="ident">scan_match_count_cmd</span>(<span class="ident">pattern</span>, <span class="ident">redis_scan_count</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keys</span> <span class="op">=</span> <span class="ident">keys_cmd</span>.<span class="ident">iter_async</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">con</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
-        <span class="ident">pipeline_delete</span>(<span class="kw-2">&amp;mut</span> <span class="ident">keys</span>)
-            .<span class="kw">await</span>
-            .<span class="ident">query_async</span>::<span class="op">&lt;</span><span class="kw">_</span>, ()<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">con</span>)
-            .<span class="kw">await</span>
-            .<span class="ident">expect</span>(<span class="string">&quot;Pipeline delete error&quot;</span>);
+    <span class="kw">async fn </span>invalidate_pattern(<span class="kw-2">&amp;</span><span class="self">self</span>, pattern: <span class="kw-2">&amp;</span>str) {
+        <span class="kw">let </span><span class="kw-2">mut </span>con = <span class="self">self</span>.conn().<span class="kw">await</span>;
+        <span class="kw">let </span>keys_cmd = scan_match_count_cmd(pattern, redis_scan_count());
+        <span class="kw">let </span><span class="kw-2">mut </span>keys = keys_cmd.iter_async(<span class="kw-2">&amp;mut *</span>con).<span class="kw">await</span>.unwrap();
+        pipeline_delete(<span class="kw-2">&amp;mut </span>keys)
+            .<span class="kw">await
+            </span>.query_async::&lt;<span class="kw">_</span>, ()&gt;(<span class="kw-2">&amp;mut *</span>con)
+            .<span class="kw">await
+            </span>.expect(<span class="string">&quot;Pipeline delete error&quot;</span>);
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">invalidate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
-        <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>.<span class="ident">del</span>(<span class="ident">id</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
+    <span class="kw">async fn </span>invalidate(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>str) {
+        <span class="kw">let _</span>: () = <span class="self">self</span>.conn().<span class="kw">await</span>.del(id).<span class="kw">await</span>.unwrap();
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">conn</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>().<span class="kw">await</span>;
-        <span class="ident">cmd</span>(<span class="string">&quot;INFO&quot;</span>).<span class="ident">query_async</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">conn</span>).<span class="kw">await</span>.<span class="ident">ok</span>()
+    <span class="kw">async fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>conn = <span class="self">self</span>.conn().<span class="kw">await</span>;
+        cmd(<span class="string">&quot;INFO&quot;</span>).query_async(<span class="kw-2">&amp;mut *</span>conn).<span class="kw">await</span>.ok()
     }
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">pipeline_delete</span>(<span class="ident">keys</span>: <span class="kw-2">&amp;mut</span> <span class="ident">AsyncIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="ident">Pipeline</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pipeline</span> <span class="op">=</span> <span class="ident">Pipeline::new</span>();
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=</span> <span class="ident">keys</span>.<span class="ident">next_item</span>().<span class="kw">await</span> {
-        <span class="ident">pipeline</span>.<span class="ident">del</span>(<span class="ident">key</span>);
+<span class="kw">async fn </span>pipeline_delete(keys: <span class="kw-2">&amp;mut </span>AsyncIter&lt;<span class="lifetime">&#39;_</span>, String&gt;) -&gt; Pipeline {
+    <span class="kw">let </span><span class="kw-2">mut </span>pipeline = Pipeline::new();
+    <span class="kw">while let </span><span class="prelude-val">Some</span>(key) = keys.next_item().<span class="kw">await </span>{
+        pipeline.del(key);
     }
-    <span class="ident">pipeline</span>
+    pipeline
 }
 
-<span class="kw">fn</span> <span class="ident">scan_match_count_cmd</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">ToRedisArgs</span>, <span class="ident">C</span>: <span class="ident">ToRedisArgs</span><span class="op">&gt;</span>(<span class="ident">pattern</span>: <span class="ident">P</span>, <span class="ident">count</span>: <span class="ident">C</span>) -&gt; <span class="ident">Cmd</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cmd</span> <span class="op">=</span> <span class="ident">cmd</span>(<span class="string">&quot;SCAN&quot;</span>);
-    <span class="ident">cmd</span>.<span class="ident">cursor_arg</span>(<span class="number">0</span>)
-        .<span class="ident">arg</span>(<span class="string">&quot;MATCH&quot;</span>)
-        .<span class="ident">arg</span>(<span class="ident">pattern</span>)
-        .<span class="ident">arg</span>(<span class="string">&quot;COUNT&quot;</span>)
-        .<span class="ident">arg</span>(<span class="ident">count</span>);
-    <span class="ident">cmd</span>
+<span class="kw">fn </span>scan_match_count_cmd&lt;P: ToRedisArgs, C: ToRedisArgs&gt;(pattern: P, count: C) -&gt; Cmd {
+    <span class="kw">let </span><span class="kw-2">mut </span>cmd = cmd(<span class="string">&quot;SCAN&quot;</span>);
+    cmd.cursor_arg(<span class="number">0</span>)
+        .arg(<span class="string">&quot;MATCH&quot;</span>)
+        .arg(pattern)
+        .arg(<span class="string">&quot;COUNT&quot;</span>)
+        .arg(count);
+    cmd
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/cache/cache_operations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cache_operations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/cache/cache_operations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cache_operations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -229,231 +223,230 @@
 <span id="223">223</span>
 <span id="224">224</span>
 <span id="225">225</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::future::Future</span>;
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::future::Future;
+<span class="kw">use </span>std::sync::Arc;
 
-<span class="kw">use</span> <span class="ident">rocket::futures::future::BoxFuture</span>;
-<span class="kw">use</span> <span class="ident">rocket::futures::FutureExt</span>;
-<span class="kw">use</span> <span class="ident">rocket::response::content</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use </span>rocket::futures::future::BoxFuture;
+<span class="kw">use </span>rocket::futures::FutureExt;
+<span class="kw">use </span>rocket::response::content;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_op_executors</span>::{<span class="ident">cache_response</span>, <span class="ident">invalidate</span>, <span class="ident">request_cached</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache</span>::{<span class="ident">Cache</span>, <span class="ident">CACHE_REQS_PREFIX</span>, <span class="ident">CACHE_REQS_RESP_PREFIX</span>, <span class="ident">CACHE_RESP_PREFIX</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{
-    <span class="ident">base_config_service_uri</span>, <span class="ident">default_request_timeout</span>, <span class="ident">request_cache_duration</span>,
-    <span class="ident">request_error_cache_duration</span>,
+<span class="kw">use </span><span class="kw">crate</span>::cache::cache_op_executors::{cache_response, invalidate, request_cached};
+<span class="kw">use </span><span class="kw">crate</span>::cache::manager::ChainCache;
+<span class="kw">use </span><span class="kw">crate</span>::cache::{Cache, CACHE_REQS_PREFIX, CACHE_REQS_RESP_PREFIX, CACHE_RESP_PREFIX};
+<span class="kw">use </span><span class="kw">crate</span>::config::{
+    base_config_service_uri, default_request_timeout, request_cache_duration,
+    request_error_cache_duration,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info::generate_token_key</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::http_client::HttpClient</span>;
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::generate_token_key;
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span><span class="kw">crate</span>::utils::http_client::HttpClient;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Invalidate</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">cache</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Cache</span><span class="op">&gt;</span>,
-    <span class="ident">pattern</span>: <span class="ident">InvalidationPattern</span>,
+<span class="kw">pub struct </span>Invalidate {
+    <span class="kw">pub</span>(<span class="kw">super</span>) cache: Arc&lt;<span class="kw">dyn </span>Cache&gt;,
+    pattern: InvalidationPattern,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">InvalidationScope</span> {
-    <span class="ident">Requests</span>,
-    <span class="ident">Responses</span>,
-    <span class="ident">Both</span>,
+<span class="attribute">#[derive(Deserialize, Debug, Clone)]
+</span><span class="kw">pub enum </span>InvalidationScope {
+    Requests,
+    Responses,
+    Both,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;invalidate&quot;</span>, <span class="ident">content</span> <span class="op">=</span> <span class="string">&quot;pattern_details&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">InvalidationPattern</span> {
-    <span class="ident">Any</span>(<span class="ident">InvalidationScope</span>, <span class="ident">String</span>),
-    <span class="ident">Transactions</span>(<span class="ident">InvalidationScope</span>, <span class="ident">String</span>),
-    <span class="ident">Balances</span>(<span class="ident">InvalidationScope</span>, <span class="ident">String</span>),
-    <span class="ident">Collectibles</span>(<span class="ident">InvalidationScope</span>, <span class="ident">String</span>),
-    <span class="ident">Transfers</span>(<span class="ident">InvalidationScope</span>, <span class="ident">String</span>),
-    <span class="ident">Chains</span>,
-    <span class="ident">Contracts</span>,
-    <span class="ident">Tokens</span> { <span class="ident">chain_id</span>: <span class="ident">String</span> },
+<span class="attribute">#[derive(Deserialize, Debug, Clone)]
+#[serde(tag = <span class="string">&quot;invalidate&quot;</span>, content = <span class="string">&quot;pattern_details&quot;</span>)]
+</span><span class="kw">pub enum </span>InvalidationPattern {
+    Any(InvalidationScope, String),
+    Transactions(InvalidationScope, String),
+    Balances(InvalidationScope, String),
+    Collectibles(InvalidationScope, String),
+    Transfers(InvalidationScope, String),
+    Chains,
+    Contracts,
+    Tokens { chain_id: String },
 }
 
-<span class="kw">impl</span> <span class="ident">InvalidationPattern</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">to_pattern_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span> {
-            <span class="ident">InvalidationPattern::Any</span>(<span class="ident">scope</span>, <span class="ident">value</span>) =&gt; {
-                <span class="macro">format!</span>(<span class="string">&quot;{}*{}*&quot;</span>, <span class="ident">scope</span>.<span class="ident">invalidation_scope_string</span>(), <span class="kw-2">&amp;</span><span class="ident">value</span>)
+<span class="kw">impl </span>InvalidationPattern {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>to_pattern_string(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
+            InvalidationPattern::Any(scope, value) =&gt; {
+                <span class="macro">format!</span>(<span class="string">&quot;{}*{}*&quot;</span>, scope.invalidation_scope_string(), <span class="kw-2">&amp;</span>value)
             }
-            <span class="ident">InvalidationPattern::Balances</span>(<span class="ident">scope</span>, <span class="ident">value</span>) =&gt; {
-                <span class="macro">format!</span>(<span class="string">&quot;{}*/{}/balances*&quot;</span>, <span class="ident">scope</span>.<span class="ident">invalidation_scope_string</span>(), <span class="ident">value</span>)
+            InvalidationPattern::Balances(scope, value) =&gt; {
+                <span class="macro">format!</span>(<span class="string">&quot;{}*/{}/balances*&quot;</span>, scope.invalidation_scope_string(), value)
             }
-            <span class="ident">InvalidationPattern::Collectibles</span>(<span class="ident">scope</span>, <span class="ident">value</span>) =&gt; {
+            InvalidationPattern::Collectibles(scope, value) =&gt; {
                 <span class="macro">format!</span>(
                     <span class="string">&quot;{}*/{}/collectibles*&quot;</span>,
-                    <span class="ident">scope</span>.<span class="ident">invalidation_scope_string</span>(),
-                    <span class="ident">value</span>
+                    scope.invalidation_scope_string(),
+                    value
                 )
             }
-            <span class="ident">InvalidationPattern::Transfers</span>(<span class="ident">scope</span>, <span class="ident">value</span>) =&gt; {
+            InvalidationPattern::Transfers(scope, value) =&gt; {
                 <span class="macro">format!</span>(
                     <span class="string">&quot;{}*/{}/*transfer*&quot;</span>,
-                    <span class="ident">scope</span>.<span class="ident">invalidation_scope_string</span>(),
-                    <span class="ident">value</span>
+                    scope.invalidation_scope_string(),
+                    value
                 )
             }
-            <span class="ident">InvalidationPattern::Transactions</span>(<span class="ident">scope</span>, <span class="ident">value</span>) =&gt; {
+            InvalidationPattern::Transactions(scope, value) =&gt; {
                 <span class="macro">format!</span>(
                     <span class="string">&quot;{}*/{}/*transactions/*&quot;</span>,
-                    <span class="ident">scope</span>.<span class="ident">invalidation_scope_string</span>(),
-                    <span class="ident">value</span>
+                    scope.invalidation_scope_string(),
+                    value
                 )
             }
-            <span class="ident">InvalidationPattern::Contracts</span> =&gt; <span class="ident">String::from</span>(<span class="string">&quot;*contract*&quot;</span>),
-            <span class="ident">InvalidationPattern::Tokens</span> { <span class="ident">chain_id</span> } =&gt; <span class="ident">generate_token_key</span>(<span class="ident">chain_id</span>),
-            <span class="ident">InvalidationPattern::Chains</span> =&gt; {
-                <span class="macro">format!</span>(<span class="string">&quot;*{}*&quot;</span>, <span class="ident">base_config_service_uri</span>())
+            InvalidationPattern::Contracts =&gt; String::from(<span class="string">&quot;*contract*&quot;</span>),
+            InvalidationPattern::Tokens { chain_id } =&gt; generate_token_key(chain_id),
+            InvalidationPattern::Chains =&gt; {
+                <span class="macro">format!</span>(<span class="string">&quot;*{}*&quot;</span>, base_config_service_uri())
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">InvalidationScope</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">invalidation_scope_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span> {
-            <span class="ident">InvalidationScope::Requests</span> =&gt; <span class="ident">CACHE_REQS_PREFIX</span>,
-            <span class="ident">InvalidationScope::Responses</span> =&gt; <span class="ident">CACHE_RESP_PREFIX</span>,
-            <span class="ident">InvalidationScope::Both</span> =&gt; <span class="ident">CACHE_REQS_RESP_PREFIX</span>,
+<span class="kw">impl </span>InvalidationScope {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>invalidation_scope_string(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
+            InvalidationScope::Requests =&gt; CACHE_REQS_PREFIX,
+            InvalidationScope::Responses =&gt; CACHE_RESP_PREFIX,
+            InvalidationScope::Both =&gt; CACHE_REQS_RESP_PREFIX,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Invalidate</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">pattern</span>: <span class="ident">InvalidationPattern</span>, <span class="ident">cache</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Cache</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Invalidate</span> { <span class="ident">cache</span>, <span class="ident">pattern</span> }
+<span class="kw">impl </span>Invalidate {
+    <span class="kw">pub fn </span>new(pattern: InvalidationPattern, cache: Arc&lt;<span class="kw">dyn </span>Cache&gt;) -&gt; <span class="self">Self </span>{
+        Invalidate { cache, pattern }
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="ident">invalidate</span>(<span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pattern</span>).<span class="kw">await</span>
-    }
+    <span class="kw">pub async fn </span>execute(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        invalidate(<span class="self">self</span>.cache.clone(), <span class="kw-2">&amp;</span><span class="self">self</span>.pattern).<span class="kw">await
+    </span>}
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CacheResponse</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Serialize</span>,
+<span class="kw">pub struct </span>CacheResponse&lt;<span class="lifetime">&#39;a</span>, R&gt;
+<span class="kw">where
+    </span>R: Serialize,
 {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">cache</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Cache</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">duration</span>: <span class="ident">usize</span>,
-    <span class="comment">// &quot;dyn&quot; allows setting the type of the BoxFuture to different times in runtime</span>
-    <span class="kw">pub</span> <span class="ident">resp_generator</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>() -&gt; <span class="ident">BoxFuture</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) cache: Arc&lt;<span class="kw">dyn </span>Cache&gt;,
+    <span class="kw">pub </span>key: String,
+    <span class="kw">pub </span>duration: usize,
+    <span class="comment">// &quot;dyn&quot; allows setting the type of the BoxFuture to different times in runtime
+    </span><span class="kw">pub </span>resp_generator: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn() -&gt; BoxFuture&lt;<span class="lifetime">&#39;a</span>, ApiResult&lt;R&gt;&gt; + Send + Sync + <span class="lifetime">&#39;a</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span> <span class="ident">CacheResponse</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Serialize</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R&gt; CacheResponse&lt;<span class="lifetime">&#39;a</span>, R&gt;
+<span class="kw">where
+    </span>R: Serialize,
 {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>, <span class="ident">chain_cache</span>: <span class="ident">ChainCache</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">CacheResponse</span> {
-            <span class="ident">key</span>: <span class="ident">context</span>.<span class="ident">request_id</span>.<span class="ident">to_string</span>(),
-            <span class="ident">cache</span>: <span class="ident">context</span>.<span class="ident">cache</span>(<span class="ident">chain_cache</span>),
-            <span class="ident">duration</span>: <span class="ident">request_cache_duration</span>(),
-            <span class="ident">resp_generator</span>: <span class="prelude-val">None</span>,
+    <span class="kw">pub fn </span>new(context: <span class="kw-2">&amp;</span>RequestContext, chain_cache: ChainCache) -&gt; <span class="self">Self </span>{
+        CacheResponse {
+            key: context.request_id.to_string(),
+            cache: context.cache(chain_cache),
+            duration: request_cache_duration(),
+            resp_generator: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">duration</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">duration</span>: <span class="ident">usize</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">duration</span> <span class="op">=</span> <span class="ident">duration</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>duration(<span class="kw-2">&amp;mut </span><span class="self">self</span>, duration: usize) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.duration = duration;
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resp_generator</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">Fut</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">resp_generator</span>: <span class="ident">F</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">Fn</span>() -&gt; <span class="ident">Fut</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
-        <span class="ident">Fut</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
+    <span class="kw">pub fn </span>resp_generator&lt;F, Fut&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, resp_generator: F) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self
+    </span><span class="kw">where
+        </span>F: Fn() -&gt; Fut + Send + Sync + <span class="lifetime">&#39;a</span>,
+        Fut: Future&lt;Output = ApiResult&lt;R&gt;&gt; + Send + <span class="lifetime">&#39;a</span>,
     {
-        <span class="self">self</span>.<span class="ident">resp_generator</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="ident">resp_generator</span>().<span class="ident">boxed</span>()));
-        <span class="self">self</span>
-    }
+        <span class="self">self</span>.resp_generator = <span class="prelude-val">Some</span>(Box::new(<span class="kw">move </span>|| resp_generator().boxed()));
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-        (<span class="self">self</span>.<span class="ident">resp_generator</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>())().<span class="kw">await</span>
-    }
+    <span class="kw">pub async fn </span>generate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ApiResult&lt;R&gt; {
+        (<span class="self">self</span>.resp_generator.as_ref().unwrap())().<span class="kw">await
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">content::RawJson</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">cache_response</span>(<span class="self">self</span>).<span class="kw">await</span>
-    }
+    <span class="kw">pub async fn </span>execute(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ApiResult&lt;content::RawJson&lt;String&gt;&gt; {
+        cache_response(<span class="self">self</span>).<span class="kw">await
+    </span>}
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RequestCached</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">HttpClient</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">cache</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Cache</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">url</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">request_timeout</span>: <span class="ident">u64</span>,
-    <span class="kw">pub</span> <span class="ident">cache_duration</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span> <span class="ident">error_cache_duration</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span> <span class="ident">cache_all_errors</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">headers</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
+<span class="kw">pub struct </span>RequestCached {
+    <span class="kw">pub</span>(<span class="kw">super</span>) client: Arc&lt;<span class="kw">dyn </span>HttpClient&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) cache: Arc&lt;<span class="kw">dyn </span>Cache&gt;,
+    <span class="kw">pub </span>url: String,
+    <span class="kw">pub </span>request_timeout: u64,
+    <span class="kw">pub </span>cache_duration: usize,
+    <span class="kw">pub </span>error_cache_duration: usize,
+    <span class="kw">pub </span>cache_all_errors: bool,
+    <span class="kw">pub </span>headers: HashMap&lt;String, String&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">RequestCached</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">url</span>: <span class="ident">String</span>, <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">HttpClient</span><span class="op">&gt;</span>, <span class="ident">cache</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Cache</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">RequestCached</span> {
-            <span class="ident">client</span>: <span class="ident">client</span>.<span class="ident">clone</span>(),
-            <span class="ident">cache</span>: <span class="ident">cache</span>.<span class="ident">clone</span>(),
-            <span class="ident">url</span>,
-            <span class="ident">request_timeout</span>: <span class="ident">default_request_timeout</span>(),
-            <span class="ident">cache_duration</span>: <span class="ident">request_cache_duration</span>(),
-            <span class="ident">error_cache_duration</span>: <span class="ident">request_error_cache_duration</span>(),
-            <span class="ident">cache_all_errors</span>: <span class="bool-val">false</span>,
-            <span class="ident">headers</span>: <span class="ident">HashMap::default</span>(),
+<span class="kw">impl </span>RequestCached {
+    <span class="kw">pub fn </span>new(url: String, client: <span class="kw-2">&amp;</span>Arc&lt;<span class="kw">dyn </span>HttpClient&gt;, cache: <span class="kw-2">&amp;</span>Arc&lt;<span class="kw">dyn </span>Cache&gt;) -&gt; <span class="self">Self </span>{
+        RequestCached {
+            client: client.clone(),
+            cache: cache.clone(),
+            url,
+            request_timeout: default_request_timeout(),
+            cache_duration: request_cache_duration(),
+            error_cache_duration: request_error_cache_duration(),
+            cache_all_errors: <span class="bool-val">false</span>,
+            headers: HashMap::default(),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_context</span>(
-        <span class="ident">url</span>: <span class="ident">String</span>,
-        <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-        <span class="ident">chain_cache</span>: <span class="ident">ChainCache</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="ident">RequestCached</span> {
-            <span class="ident">client</span>: <span class="ident">context</span>.<span class="ident">http_client</span>(),
-            <span class="ident">cache</span>: <span class="ident">context</span>.<span class="ident">cache</span>(<span class="ident">chain_cache</span>),
-            <span class="ident">url</span>,
-            <span class="ident">request_timeout</span>: <span class="ident">default_request_timeout</span>(),
-            <span class="ident">cache_duration</span>: <span class="ident">request_cache_duration</span>(),
-            <span class="ident">error_cache_duration</span>: <span class="ident">request_error_cache_duration</span>(),
-            <span class="ident">cache_all_errors</span>: <span class="bool-val">false</span>,
-            <span class="ident">headers</span>: <span class="ident">HashMap::new</span>(),
+    <span class="kw">pub fn </span>new_from_context(
+        url: String,
+        context: <span class="kw-2">&amp;</span>RequestContext,
+        chain_cache: ChainCache,
+    ) -&gt; <span class="self">Self </span>{
+        RequestCached {
+            client: context.http_client(),
+            cache: context.cache(chain_cache),
+            url,
+            request_timeout: default_request_timeout(),
+            cache_duration: request_cache_duration(),
+            error_cache_duration: request_error_cache_duration(),
+            cache_all_errors: <span class="bool-val">false</span>,
+            headers: HashMap::new(),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_timeout</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">request_timeout</span>: <span class="ident">u64</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">request_timeout</span> <span class="op">=</span> <span class="ident">request_timeout</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>request_timeout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, request_timeout: u64) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.request_timeout = request_timeout;
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cache_duration</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cache_duration</span>: <span class="ident">usize</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">cache_duration</span> <span class="op">=</span> <span class="ident">cache_duration</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>cache_duration(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cache_duration: usize) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.cache_duration = cache_duration;
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_cache_duration</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">error_cache_duration</span>: <span class="ident">usize</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">error_cache_duration</span> <span class="op">=</span> <span class="ident">error_cache_duration</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>error_cache_duration(<span class="kw-2">&amp;mut </span><span class="self">self</span>, error_cache_duration: usize) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.error_cache_duration = error_cache_duration;
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cache_all_errors</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">cache_all_errors</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>cache_all_errors(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.cache_all_errors = <span class="bool-val">true</span>;
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">header</span>: (<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>)) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">headers</span>
-            .<span class="ident">insert</span>(<span class="ident">String::from</span>(<span class="ident">header</span>.<span class="number">0</span>), <span class="ident">String::from</span>(<span class="ident">header</span>.<span class="number">1</span>));
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>add_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>, header: (<span class="kw-2">&amp;</span>str, <span class="kw-2">&amp;</span>str)) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.headers
+            .insert(String::from(header.<span class="number">0</span>), String::from(header.<span class="number">1</span>));
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="macro">assert!</span>(<span class="self">self</span>.<span class="ident">request_timeout</span> <span class="op">&gt;</span> <span class="number">0</span>);
-        <span class="ident">request_cached</span>(<span class="self">self</span>).<span class="kw">await</span>
-    }
+    <span class="kw">pub async fn </span>execute(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ApiResult&lt;String&gt; {
+        <span class="macro">assert!</span>(<span class="self">self</span>.request_timeout &gt; <span class="number">0</span>);
+        request_cached(<span class="self">self</span>).<span class="kw">await
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

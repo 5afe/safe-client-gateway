@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/handlers/transfers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>transfers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/transactions/handlers/transfers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>transfers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -124,126 +118,125 @@
 <span id="118">118</span>
 <span id="119">119</span>
 <span id="120">120</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transfers::Transfer</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page</span>::{<span class="ident">Page</span>, <span class="ident">PageMetadata</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::transaction_request_timeout</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::filters::transfer::TransferFilters</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::handlers::offset_page_meta</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::summary</span>::{<span class="ident">ConflictType</span>, <span class="ident">TransactionListItem</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::urls::build_absolute_uri</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transfers::Transfer;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::page::{Page, PageMetadata};
+<span class="kw">use </span><span class="kw">crate</span>::config::transaction_request_timeout;
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider};
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::filters::transfer::TransferFilters;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::handlers::offset_page_meta;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::models::summary::{ConflictType, TransactionListItem};
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span><span class="kw">crate</span>::utils::urls::build_absolute_uri;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::commons::get_backend_page</span>;
+<span class="kw">use </span><span class="kw">super</span>::commons::get_backend_page;
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_incoming_transfers</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">cursor</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">filters</span>: <span class="kw-2">&amp;</span><span class="ident">TransferFilters</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Page</span><span class="op">&lt;</span><span class="ident">TransactionListItem</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>, <span class="ident">context</span>);
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
-        <span class="ident">info_provider</span>,
+<span class="kw">pub async fn </span>get_incoming_transfers(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>str,
+    safe_address: <span class="kw-2">&amp;</span>str,
+    cursor: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;String&gt;,
+    filters: <span class="kw-2">&amp;</span>TransferFilters,
+) -&gt; ApiResult&lt;Page&lt;TransactionListItem&gt;&gt; {
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(chain_id, context);
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(
+        info_provider,
         <span class="string">&quot;/v1/safes/{}/incoming-transfers/&quot;</span>,
-        <span class="ident">safe_address</span>
+        safe_address
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">page_meta</span>: <span class="ident">PageMetadata</span> <span class="op">=</span>
-        <span class="ident">PageMetadata::from_cursor</span>(<span class="ident">cursor</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()));
-    <span class="kw">let</span> <span class="ident">backend_txs</span> <span class="op">=</span> <span class="ident">get_backend_page</span>(
-        <span class="kw-2">&amp;</span><span class="ident">context</span>,
-        <span class="ident">chain_id</span>,
-        <span class="kw-2">&amp;</span><span class="ident">url</span>,
-        <span class="ident">transaction_request_timeout</span>(),
-        <span class="kw-2">&amp;</span><span class="ident">page_meta</span>,
-        <span class="ident">filters</span>,
+    <span class="kw">let </span>page_meta: PageMetadata =
+        PageMetadata::from_cursor(cursor.as_ref().unwrap_or(<span class="kw-2">&amp;</span><span class="string">&quot;&quot;</span>.to_string()));
+    <span class="kw">let </span>backend_txs = get_backend_page(
+        <span class="kw-2">&amp;</span>context,
+        chain_id,
+        <span class="kw-2">&amp;</span>url,
+        transaction_request_timeout(),
+        <span class="kw-2">&amp;</span>page_meta,
+        filters,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">service_txs</span> <span class="op">=</span> <span class="ident">backend_txs_to_summary_txs</span>(
-        <span class="kw-2">&amp;mut</span> <span class="ident">backend_txs</span>.<span class="ident">results</span>.<span class="ident">into_iter</span>(),
-        <span class="kw-2">&amp;</span><span class="ident">info_provider</span>,
-        <span class="ident">safe_address</span>,
+    <span class="kw">let </span>service_txs = backend_txs_to_summary_txs(
+        <span class="kw-2">&amp;mut </span>backend_txs.results.into_iter(),
+        <span class="kw-2">&amp;</span>info_provider,
+        safe_address,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Page</span> {
-        <span class="ident">next</span>: <span class="ident">build_cursor</span>(
-            <span class="ident">context</span>,
-            <span class="ident">chain_id</span>,
-            <span class="ident">safe_address</span>,
-            <span class="kw-2">&amp;</span><span class="ident">page_meta</span>,
-            <span class="ident">backend_txs</span>.<span class="ident">next</span>,
-            <span class="ident">filters</span>,
+    <span class="kw">return </span><span class="prelude-val">Ok</span>(Page {
+        next: build_cursor(
+            context,
+            chain_id,
+            safe_address,
+            <span class="kw-2">&amp;</span>page_meta,
+            backend_txs.next,
+            filters,
             <span class="number">1</span>,
         ),
-        <span class="ident">previous</span>: <span class="ident">build_cursor</span>(
-            <span class="ident">context</span>,
-            <span class="ident">chain_id</span>,
-            <span class="ident">safe_address</span>,
-            <span class="kw-2">&amp;</span><span class="ident">page_meta</span>,
-            <span class="ident">backend_txs</span>.<span class="ident">previous</span>,
-            <span class="ident">filters</span>,
-            <span class="op">-</span><span class="number">1</span>,
+        previous: build_cursor(
+            context,
+            chain_id,
+            safe_address,
+            <span class="kw-2">&amp;</span>page_meta,
+            backend_txs.previous,
+            filters,
+            -<span class="number">1</span>,
         ),
-        <span class="ident">results</span>: <span class="ident">service_txs</span>,
+        results: service_txs,
     });
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backend_txs_to_summary_txs</span>(
-    <span class="ident">transfers</span>: <span class="kw-2">&amp;mut</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Transfer</span><span class="op">&gt;</span>,
-    <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TransactionListItem</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="kw">for</span> <span class="ident">transfer</span> <span class="kw">in</span> <span class="ident">transfers</span> {
-        <span class="kw">let</span> <span class="ident">tx_summary</span> <span class="op">=</span> <span class="ident">transfer</span>
-            .<span class="ident">to_transaction_summary</span>(
-                <span class="ident">info_provider</span>,
-                <span class="ident">transfer</span>.<span class="ident">get_execution_time</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">safe_address</span>,
+<span class="kw">async fn </span>backend_txs_to_summary_txs(
+    transfers: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>Iterator&lt;Item = Transfer&gt;,
+    info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    safe_address: <span class="kw-2">&amp;</span>str,
+) -&gt; ApiResult&lt;Vec&lt;TransactionListItem&gt;&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>results = <span class="macro">vec!</span>[];
+    <span class="kw">for </span>transfer <span class="kw">in </span>transfers {
+        <span class="kw">let </span>tx_summary = transfer
+            .to_transaction_summary(
+                info_provider,
+                transfer.get_execution_time().unwrap(),
+                safe_address,
             )
             .<span class="kw">await</span>;
-        <span class="ident">results</span>.<span class="ident">push</span>(<span class="ident">TransactionListItem::Transaction</span> {
-            <span class="ident">transaction</span>: <span class="ident">tx_summary</span>,
-            <span class="ident">conflict_type</span>: <span class="ident">ConflictType::None</span>,
+        results.push(TransactionListItem::Transaction {
+            transaction: tx_summary,
+            conflict_type: ConflictType::None,
         });
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">results</span>)
+    <span class="prelude-val">Ok</span>(results)
 }
 
-<span class="kw">fn</span> <span class="ident">build_cursor</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">page_meta</span>: <span class="kw-2">&amp;</span><span class="ident">PageMetadata</span>,
-    <span class="ident">backend_page_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">filters</span>: <span class="kw-2">&amp;</span><span class="ident">TransferFilters</span>,
-    <span class="ident">direction</span>: <span class="ident">i64</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-    <span class="ident">backend_page_url</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="ident">offset_page_meta</span>(<span class="ident">page_meta</span>, <span class="ident">direction</span> <span class="op">*</span> (<span class="ident">page_meta</span>.<span class="ident">limit</span> <span class="kw">as</span> <span class="ident">i64</span>));
+<span class="kw">fn </span>build_cursor(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>str,
+    safe_address: <span class="kw-2">&amp;</span>str,
+    page_meta: <span class="kw-2">&amp;</span>PageMetadata,
+    backend_page_url: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    filters: <span class="kw-2">&amp;</span>TransferFilters,
+    direction: i64,
+) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+    backend_page_url.as_ref().map(|<span class="kw">_</span>| {
+        <span class="kw">let </span>cursor = offset_page_meta(page_meta, direction * (page_meta.limit <span class="kw">as </span>i64));
 
-        <span class="ident">build_absolute_uri</span>(
-            <span class="ident">context</span>,
-            <span class="macro">uri!</span>(<span class="ident"><span class="kw">crate</span>::routes::transactions::routes::get_incoming_transfers</span>(
-                <span class="ident">chain_id</span> <span class="op">=</span> <span class="ident">chain_id</span>,
-                <span class="ident">safe_address</span> <span class="op">=</span> <span class="ident">safe_address</span>,
-                <span class="ident">cursor</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">cursor</span>),
-                <span class="ident">filters</span> <span class="op">=</span> (
-                    <span class="ident">filters</span>.<span class="ident">execution_date_gte</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">filters</span>.<span class="ident">execution_date_lte</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">filters</span>.<span class="ident">to</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">filters</span>.<span class="ident">value</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">filters</span>.<span class="ident">token_address</span>.<span class="ident">to_owned</span>()
+        build_absolute_uri(
+            context,
+            <span class="macro">uri!</span>(<span class="kw">crate</span>::routes::transactions::routes::get_incoming_transfers(
+                chain_id = chain_id,
+                safe_address = safe_address,
+                cursor = <span class="prelude-val">Some</span>(cursor),
+                filters = (
+                    filters.execution_date_gte.to_owned(),
+                    filters.execution_date_lte.to_owned(),
+                    filters.to.to_owned(),
+                    filters.value.to_owned(),
+                    filters.token_address.to_owned()
                 )
             )),
         )
     })
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

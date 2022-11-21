@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/safes/handlers/safes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>safes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/routes/safes/handlers/safes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>safes.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -163,165 +157,164 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::cache_operations::RequestCached</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::manager::ChainCache</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transactions</span>::{<span class="ident">MultisigTransaction</span>, <span class="ident">Transaction</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transfers::Transfer</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::page</span>::{<span class="ident">Page</span>, <span class="ident">SafeList</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">owners_for_safes_cache_duration</span>, <span class="ident">transaction_request_timeout</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">DefaultInfoProvider</span>, <span class="ident">InfoProvider</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::safes::models</span>::{<span class="ident">SafeLastChanges</span>, <span class="ident">SafeState</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::context::RequestContext</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
-<span class="kw">use</span> <span class="ident">chrono::Utc</span>;
-<span class="kw">use</span> <span class="ident">rocket::futures::join</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::cache_operations::RequestCached;
+<span class="kw">use </span><span class="kw">crate</span>::cache::manager::ChainCache;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transactions::{MultisigTransaction, Transaction};
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transfers::Transfer;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::page::{Page, SafeList};
+<span class="kw">use </span><span class="kw">crate</span>::config::{owners_for_safes_cache_duration, transaction_request_timeout};
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider};
+<span class="kw">use </span><span class="kw">crate</span>::routes::safes::models::{SafeLastChanges, SafeState};
+<span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span>chrono::Utc;
+<span class="kw">use </span>rocket::futures::join;
 
-<span class="comment">// We use Utc::now().timestamp() as the fallback value so that we don&#39;t block clients from reloading</span>
-<span class="comment">// as returning always 0, and the clients invalidating on value changes, would prevent reloading</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_safe_info_ex</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">SafeState</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="ident">chain_id</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>);
-    <span class="kw">let</span> <span class="ident">safe_info</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">safe_info</span>(<span class="ident">safe_address</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="comment">// We want to be able to return the rest of `SafeInfo` in case the `about/master-copies` endpoint is not available</span>
-    <span class="kw">let</span> <span class="ident">supported_master_copies</span> <span class="op">=</span> <span class="ident">info_provider</span>.<span class="ident">master_copies</span>().<span class="kw">await</span>.<span class="ident">unwrap_or</span>(<span class="macro">vec!</span>[]);
-    <span class="kw">let</span> <span class="ident">safe_info_ex</span> <span class="op">=</span> <span class="ident">safe_info</span>
-        .<span class="ident">to_safe_info_ex</span>(<span class="kw-2">&amp;</span><span class="ident">info_provider</span>, <span class="ident">supported_master_copies</span>)
+<span class="comment">// We use Utc::now().timestamp() as the fallback value so that we don&#39;t block clients from reloading
+// as returning always 0, and the clients invalidating on value changes, would prevent reloading
+</span><span class="kw">pub async fn </span>get_safe_info_ex(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>String,
+    safe_address: <span class="kw-2">&amp;</span>String,
+) -&gt; ApiResult&lt;SafeState&gt; {
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(chain_id, <span class="kw-2">&amp;</span>context);
+    <span class="kw">let </span>safe_info = info_provider.safe_info(safe_address).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="comment">// We want to be able to return the rest of `SafeInfo` in case the `about/master-copies` endpoint is not available
+    </span><span class="kw">let </span>supported_master_copies = info_provider.master_copies().<span class="kw">await</span>.unwrap_or(<span class="macro">vec!</span>[]);
+    <span class="kw">let </span>safe_info_ex = safe_info
+        .to_safe_info_ex(<span class="kw-2">&amp;</span>info_provider, supported_master_copies)
         .<span class="kw">await</span>;
 
-    <span class="kw">let</span> (<span class="ident">collectibles_tag</span>, <span class="ident">tx_queued_tag</span>, <span class="ident">tx_history_tag</span>) <span class="op">=</span> <span class="macro">join!</span>(
-        <span class="ident">get_last_collectible</span>(<span class="kw-2">&amp;</span><span class="ident">info_provider</span>, <span class="ident">safe_address</span>),
-        <span class="ident">get_last_queued_tx</span>(<span class="kw-2">&amp;</span><span class="ident">info_provider</span>, <span class="ident">safe_address</span>),
-        <span class="ident">get_last_history_tx</span>(<span class="kw-2">&amp;</span><span class="ident">info_provider</span>, <span class="ident">safe_address</span>)
+    <span class="kw">let </span>(collectibles_tag, tx_queued_tag, tx_history_tag) = <span class="macro">join!</span>(
+        get_last_collectible(<span class="kw-2">&amp;</span>info_provider, safe_address),
+        get_last_queued_tx(<span class="kw-2">&amp;</span>info_provider, safe_address),
+        get_last_history_tx(<span class="kw-2">&amp;</span>info_provider, safe_address)
     );
 
-    <span class="kw">let</span> <span class="ident">safe_state</span> <span class="op">=</span> <span class="ident">SafeState</span> {
-        <span class="ident">safe_config</span>: <span class="ident">safe_info_ex</span>,
-        <span class="ident">safe_state</span>: <span class="ident">SafeLastChanges</span> {
-            <span class="ident">collectibles_tag</span>: <span class="ident">collectibles_tag</span>
-                .<span class="ident">unwrap_or</span>(<span class="ident">Utc::now</span>().<span class="ident">timestamp</span>())
-                .<span class="ident">to_string</span>(),
-            <span class="ident">tx_queued_tag</span>: <span class="ident">tx_queued_tag</span>.<span class="ident">unwrap_or</span>(<span class="ident">Utc::now</span>().<span class="ident">timestamp</span>()).<span class="ident">to_string</span>(),
-            <span class="ident">tx_history_tag</span>: <span class="ident">tx_history_tag</span>.<span class="ident">unwrap_or</span>(<span class="ident">Utc::now</span>().<span class="ident">timestamp</span>()).<span class="ident">to_string</span>(),
+    <span class="kw">let </span>safe_state = SafeState {
+        safe_config: safe_info_ex,
+        safe_state: SafeLastChanges {
+            collectibles_tag: collectibles_tag
+                .unwrap_or(Utc::now().timestamp())
+                .to_string(),
+            tx_queued_tag: tx_queued_tag.unwrap_or(Utc::now().timestamp()).to_string(),
+            tx_history_tag: tx_history_tag.unwrap_or(Utc::now().timestamp()).to_string(),
         },
     };
 
-    <span class="prelude-val">Ok</span>(<span class="ident">safe_state</span>)
+    <span class="prelude-val">Ok</span>(safe_state)
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_last_collectible</span>(
-    <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
-        <span class="ident">info_provider</span>,
+<span class="kw">async fn </span>get_last_collectible(
+    info_provider: <span class="kw-2">&amp;</span><span class="kw">impl </span>InfoProvider,
+    safe_address: <span class="kw-2">&amp;</span>String,
+) -&gt; ApiResult&lt;i64&gt; {
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(
+        info_provider,
         <span class="string">&quot;/v1/safes/{}/transfers/?\
         &amp;erc721=true\
         &amp;limit=1&quot;</span>,
-        <span class="ident">safe_address</span>,
+        safe_address,
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new</span>(<span class="ident">url</span>, <span class="kw-2">&amp;</span><span class="ident">info_provider</span>.<span class="ident">client</span>(), <span class="kw-2">&amp;</span><span class="ident">info_provider</span>.<span class="ident">cache</span>())
-        .<span class="ident">request_timeout</span>(<span class="ident">transaction_request_timeout</span>())
-        .<span class="ident">execute</span>()
+    <span class="kw">let </span>body = RequestCached::new(url, <span class="kw-2">&amp;</span>info_provider.client(), <span class="kw-2">&amp;</span>info_provider.cache())
+        .request_timeout(transaction_request_timeout())
+        .execute()
         .<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">transaction</span>: <span class="ident">Page</span><span class="op">&lt;</span><span class="ident">Transfer</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>transaction: Page&lt;Transfer&gt; = serde_json::from_str(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
 
-    <span class="ident">transaction</span>
-        .<span class="ident">results</span>
-        .<span class="ident">get</span>(<span class="number">0</span>)
-        .<span class="ident">as_ref</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">transfer</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">transfer</span> {
-            <span class="ident">Transfer::Erc721</span>(<span class="ident">transfer</span>) =&gt; <span class="ident">transfer</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp</span>(),
-            <span class="ident">Transfer::Erc20</span>(<span class="ident">transfer</span>) =&gt; <span class="ident">transfer</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp</span>(),
-            <span class="ident">Transfer::Ether</span>(<span class="ident">transfer</span>) =&gt; <span class="ident">transfer</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp</span>(),
-            <span class="ident">Transfer::Unknown</span> =&gt; <span class="ident">Utc::now</span>().<span class="ident">timestamp</span>(),
+    transaction
+        .results
+        .get(<span class="number">0</span>)
+        .as_ref()
+        .map(|transfer| <span class="kw">match </span>transfer {
+            Transfer::Erc721(transfer) =&gt; transfer.execution_date.timestamp(),
+            Transfer::Erc20(transfer) =&gt; transfer.execution_date.timestamp(),
+            Transfer::Ether(transfer) =&gt; transfer.execution_date.timestamp(),
+            Transfer::Unknown =&gt; Utc::now().timestamp(),
         })
-        .<span class="ident">ok_or</span>(<span class="macro">api_error!</span>(<span class="string">&quot;Couldn&#39;t get tx timestamps&quot;</span>))
+        .ok_or(<span class="macro">api_error!</span>(<span class="string">&quot;Couldn&#39;t get tx timestamps&quot;</span>))
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_last_queued_tx</span>(
-    <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
-        <span class="ident">info_provider</span>,
+<span class="kw">async fn </span>get_last_queued_tx(
+    info_provider: <span class="kw-2">&amp;</span><span class="kw">impl </span>InfoProvider,
+    safe_address: <span class="kw-2">&amp;</span>String,
+) -&gt; ApiResult&lt;i64&gt; {
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(
+        info_provider,
         <span class="string">&quot;/v1/safes/{}/multisig-transactions/?\
         &amp;ordering=-modified\
         &amp;executed=false\
         &amp;trusted=true\
         &amp;limit=1&quot;</span>,
-        <span class="ident">safe_address</span>,
+        safe_address,
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new</span>(<span class="ident">url</span>, <span class="kw-2">&amp;</span><span class="ident">info_provider</span>.<span class="ident">client</span>(), <span class="kw-2">&amp;</span><span class="ident">info_provider</span>.<span class="ident">cache</span>())
-        .<span class="ident">request_timeout</span>(<span class="ident">transaction_request_timeout</span>())
-        .<span class="ident">execute</span>()
+    <span class="kw">let </span>body = RequestCached::new(url, <span class="kw-2">&amp;</span>info_provider.client(), <span class="kw-2">&amp;</span>info_provider.cache())
+        .request_timeout(transaction_request_timeout())
+        .execute()
         .<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">transaction</span>: <span class="ident">Page</span><span class="op">&lt;</span><span class="ident">MultisigTransaction</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>transaction: Page&lt;MultisigTransaction&gt; = serde_json::from_str(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
 
-    <span class="ident">transaction</span>
-        .<span class="ident">results</span>
-        .<span class="ident">get</span>(<span class="number">0</span>)
-        .<span class="ident">as_ref</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">tx</span><span class="op">|</span> <span class="ident">tx</span>.<span class="ident">modified</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">timestamp</span>()))
-        .<span class="ident">flatten</span>()
-        .<span class="ident">ok_or</span>(<span class="macro">api_error!</span>(<span class="string">&quot;Couldn&#39;t get tx timestamps&quot;</span>))
+    transaction
+        .results
+        .get(<span class="number">0</span>)
+        .as_ref()
+        .map(|tx| tx.modified.as_ref().map(|it| it.timestamp()))
+        .flatten()
+        .ok_or(<span class="macro">api_error!</span>(<span class="string">&quot;Couldn&#39;t get tx timestamps&quot;</span>))
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_last_history_tx</span>(
-    <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">InfoProvider</span>,
-    <span class="ident">safe_address</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(
-        <span class="ident">info_provider</span>,
+<span class="kw">async fn </span>get_last_history_tx(
+    info_provider: <span class="kw-2">&amp;</span><span class="kw">impl </span>InfoProvider,
+    safe_address: <span class="kw-2">&amp;</span>String,
+) -&gt; ApiResult&lt;i64&gt; {
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(
+        info_provider,
         <span class="string">&quot;/v1/safes/{}/all-transactions/?\
         &amp;ordering=executionDate
         &amp;queued=false\
         &amp;executed=true&quot;</span>,
-        <span class="ident">safe_address</span>
+        safe_address
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new</span>(<span class="ident">url</span>, <span class="kw-2">&amp;</span><span class="ident">info_provider</span>.<span class="ident">client</span>(), <span class="kw-2">&amp;</span><span class="ident">info_provider</span>.<span class="ident">cache</span>())
-        .<span class="ident">request_timeout</span>(<span class="ident">transaction_request_timeout</span>())
-        .<span class="ident">execute</span>()
+    <span class="kw">let </span>body = RequestCached::new(url, <span class="kw-2">&amp;</span>info_provider.client(), <span class="kw-2">&amp;</span>info_provider.cache())
+        .request_timeout(transaction_request_timeout())
+        .execute()
         .<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">transaction</span>: <span class="ident">Page</span><span class="op">&lt;</span><span class="ident">Transaction</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>transaction: Page&lt;Transaction&gt; = serde_json::from_str(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
 
-    <span class="ident">transaction</span>
-        .<span class="ident">results</span>
-        .<span class="ident">get</span>(<span class="number">0</span>)
-        .<span class="ident">as_ref</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">tx</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">tx</span> {
-            <span class="ident">Transaction::Multisig</span>(<span class="ident">tx</span>) =&gt; <span class="ident">tx</span>
-                .<span class="ident">modified</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">timestamp</span>())
-                .<span class="ident">unwrap_or</span>(<span class="ident">tx</span>.<span class="ident">submission_date</span>.<span class="ident">timestamp</span>()),
-            <span class="ident">Transaction::Ethereum</span>(<span class="ident">tx</span>) =&gt; <span class="ident">tx</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp</span>(),
-            <span class="ident">Transaction::Module</span>(<span class="ident">tx</span>) =&gt; <span class="ident">tx</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp</span>(),
-            <span class="ident">Transaction::Unknown</span> =&gt; <span class="ident">Utc::now</span>().<span class="ident">timestamp</span>(),
+    transaction
+        .results
+        .get(<span class="number">0</span>)
+        .as_ref()
+        .map(|tx| <span class="kw">match </span>tx {
+            Transaction::Multisig(tx) =&gt; tx
+                .modified
+                .as_ref()
+                .map(|it| it.timestamp())
+                .unwrap_or(tx.submission_date.timestamp()),
+            Transaction::Ethereum(tx) =&gt; tx.execution_date.timestamp(),
+            Transaction::Module(tx) =&gt; tx.execution_date.timestamp(),
+            Transaction::Unknown =&gt; Utc::now().timestamp(),
         })
-        .<span class="ident">ok_or</span>(<span class="macro">api_error!</span>(<span class="string">&quot;Couldn&#39;t get tx timestamps&quot;</span>))
+        .ok_or(<span class="macro">api_error!</span>(<span class="string">&quot;Couldn&#39;t get tx timestamps&quot;</span>))
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_owners_for_safe</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">RequestContext</span>,
-    <span class="ident">chain_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">owner_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">SafeList</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">info_provider</span> <span class="op">=</span> <span class="ident">DefaultInfoProvider::new</span>(<span class="kw-2">&amp;</span><span class="ident">chain_id</span>, <span class="ident">context</span>);
+<span class="kw">pub async fn </span>get_owners_for_safe(
+    context: <span class="kw-2">&amp;</span>RequestContext,
+    chain_id: <span class="kw-2">&amp;</span>str,
+    owner_address: <span class="kw-2">&amp;</span>str,
+) -&gt; ApiResult&lt;SafeList&gt; {
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(<span class="kw-2">&amp;</span>chain_id, context);
 
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">core_uri!</span>(<span class="ident">info_provider</span>, <span class="string">&quot;/v1/owners/{}/safes/&quot;</span>, <span class="ident">owner_address</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">RequestCached::new_from_context</span>(<span class="ident">url</span>, <span class="ident">context</span>, <span class="ident">ChainCache::from</span>(<span class="ident">chain_id</span>))
-        .<span class="ident">cache_duration</span>(<span class="ident">owners_for_safes_cache_duration</span>())
-        .<span class="ident">execute</span>()
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(info_provider, <span class="string">&quot;/v1/owners/{}/safes/&quot;</span>, owner_address)<span class="question-mark">?</span>;
+    <span class="kw">let </span>body = RequestCached::new_from_context(url, context, ChainCache::from(chain_id))
+        .cache_duration(owners_for_safes_cache_duration())
+        .execute()
         .<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="prelude-val">Ok</span>(<span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>)
+    <span class="prelude-val">Ok</span>(serde_json::from_str(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

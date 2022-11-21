@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/common/converters/transfers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>transfers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/common/converters/transfers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>transfers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../safe_client_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../safe_client_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -197,199 +191,198 @@
 <span id="191">191</span>
 <span id="192">192</span>
 <span id="193">193</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::get_transfer_direction</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::converters::get_address_ex_from_any_source</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::common::models::backend::transfers</span>::{
-    <span class="ident">Erc20Transfer</span> <span class="kw">as</span> <span class="ident">Erc20TransferDto</span>, <span class="ident">Erc721Transfer</span> <span class="kw">as</span> <span class="ident">Erc721TransferDto</span>,
-    <span class="ident">EtherTransfer</span> <span class="kw">as</span> <span class="ident">EtherTransferDto</span>, <span class="ident">Transfer</span> <span class="kw">as</span> <span class="ident">TransferDto</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::get_transfer_direction;
+<span class="kw">use </span><span class="kw">crate</span>::common::converters::get_address_ex_from_any_source;
+<span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transfers::{
+    Erc20Transfer <span class="kw">as </span>Erc20TransferDto, Erc721Transfer <span class="kw">as </span>Erc721TransferDto,
+    EtherTransfer <span class="kw">as </span>EtherTransferDto, Transfer <span class="kw">as </span>TransferDto,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::providers::info</span>::{<span class="ident">InfoProvider</span>, <span class="ident">TokenInfo</span>, <span class="ident">TokenType</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models::details::TransactionDetails</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routes::transactions::models</span>::{
-    <span class="ident">Erc20Transfer</span>, <span class="ident">Erc721Transfer</span>, <span class="ident">NativeCoinTransfer</span>, <span class="ident">TransactionInfo</span>, <span class="ident">TransactionStatus</span>,
-    <span class="ident">Transfer</span> <span class="kw">as</span> <span class="ident">ServiceTransfer</span>, <span class="ident">TransferInfo</span>,
+<span class="kw">use </span><span class="kw">crate</span>::providers::info::{InfoProvider, TokenInfo, TokenType};
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::models::details::TransactionDetails;
+<span class="kw">use </span><span class="kw">crate</span>::routes::transactions::models::{
+    Erc20Transfer, Erc721Transfer, NativeCoinTransfer, TransactionInfo, TransactionStatus,
+    Transfer <span class="kw">as </span>ServiceTransfer, TransferInfo,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::errors::ApiResult</span>;
+<span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
 
-<span class="kw">impl</span> <span class="ident">TransferDto</span> {
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transfer</span>(
+<span class="kw">impl </span>TransferDto {
+    <span class="kw">pub async fn </span>to_transfer(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-        <span class="ident">safe</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">TransactionInfo</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TransferDto::Erc721</span>(<span class="ident">transfer</span>) =&gt; <span class="ident">TransactionInfo::Transfer</span>(
-                <span class="ident">transfer</span>.<span class="ident">to_transfer_transaction</span>(<span class="ident">info_provider</span>, <span class="ident">safe</span>).<span class="kw">await</span>,
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+        safe: <span class="kw-2">&amp;</span>str,
+    ) -&gt; TransactionInfo {
+        <span class="kw">match </span><span class="self">self </span>{
+            TransferDto::Erc721(transfer) =&gt; TransactionInfo::Transfer(
+                transfer.to_transfer_transaction(info_provider, safe).<span class="kw">await</span>,
             ),
-            <span class="ident">TransferDto::Erc20</span>(<span class="ident">transfer</span>) =&gt; <span class="ident">TransactionInfo::Transfer</span>(
-                <span class="ident">transfer</span>.<span class="ident">to_transfer_transaction</span>(<span class="ident">info_provider</span>, <span class="ident">safe</span>).<span class="kw">await</span>,
+            TransferDto::Erc20(transfer) =&gt; TransactionInfo::Transfer(
+                transfer.to_transfer_transaction(info_provider, safe).<span class="kw">await</span>,
             ),
-            <span class="ident">TransferDto::Ether</span>(<span class="ident">transfer</span>) =&gt; <span class="ident">TransactionInfo::Transfer</span>(
-                <span class="ident">transfer</span>.<span class="ident">to_transfer_transaction</span>(<span class="ident">info_provider</span>, <span class="ident">safe</span>).<span class="kw">await</span>,
+            TransferDto::Ether(transfer) =&gt; TransactionInfo::Transfer(
+                transfer.to_transfer_transaction(info_provider, safe).<span class="kw">await</span>,
             ),
-            <span class="kw">_</span> =&gt; <span class="ident">TransactionInfo::Unknown</span>,
+            <span class="kw">_ </span>=&gt; TransactionInfo::Unknown,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transaction_details</span>(
+    <span class="kw">pub async fn </span>to_transaction_details(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-        <span class="ident">safe</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">tx_hash</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">ApiResult</span><span class="op">&lt;</span><span class="ident">TransactionDetails</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">TransactionDetails</span> {
-            <span class="ident">safe_address</span>: <span class="ident">safe</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">tx_id</span>: <span class="self">self</span>.<span class="ident">generate_id</span>(<span class="ident">safe</span>, <span class="ident">tx_hash</span>),
-            <span class="ident">executed_at</span>: <span class="self">self</span>.<span class="ident">get_execution_time</span>(),
-            <span class="ident">tx_status</span>: <span class="ident">TransactionStatus::Success</span>,
-            <span class="ident">tx_info</span>: <span class="self">self</span>.<span class="ident">to_transfer</span>(<span class="ident">info_provider</span>, <span class="ident">safe</span>).<span class="kw">await</span>,
-            <span class="ident">tx_data</span>: <span class="prelude-val">None</span>,
-            <span class="ident">tx_hash</span>: <span class="self">self</span>.<span class="ident">get_transaction_hash</span>(),
-            <span class="ident">detailed_execution_info</span>: <span class="prelude-val">None</span>,
-            <span class="ident">safe_app_info</span>: <span class="prelude-val">None</span>,
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+        safe: <span class="kw-2">&amp;</span>str,
+        tx_hash: <span class="kw-2">&amp;</span>str,
+    ) -&gt; ApiResult&lt;TransactionDetails&gt; {
+        <span class="prelude-val">Ok</span>(TransactionDetails {
+            safe_address: safe.to_owned(),
+            tx_id: <span class="self">self</span>.generate_id(safe, tx_hash),
+            executed_at: <span class="self">self</span>.get_execution_time(),
+            tx_status: TransactionStatus::Success,
+            tx_info: <span class="self">self</span>.to_transfer(info_provider, safe).<span class="kw">await</span>,
+            tx_data: <span class="prelude-val">None</span>,
+            tx_hash: <span class="self">self</span>.get_transaction_hash(),
+            detailed_execution_info: <span class="prelude-val">None</span>,
+            safe_app_info: <span class="prelude-val">None</span>,
         })
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_execution_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TransferDto::Erc721</span>(<span class="ident">transfer</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">transfer</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp_millis</span>()),
-            <span class="ident">TransferDto::Erc20</span>(<span class="ident">transfer</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">transfer</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp_millis</span>()),
-            <span class="ident">TransferDto::Ether</span>(<span class="ident">transfer</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">transfer</span>.<span class="ident">execution_date</span>.<span class="ident">timestamp_millis</span>()),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_execution_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;i64&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            TransferDto::Erc721(transfer) =&gt; <span class="prelude-val">Some</span>(transfer.execution_date.timestamp_millis()),
+            TransferDto::Erc20(transfer) =&gt; <span class="prelude-val">Some</span>(transfer.execution_date.timestamp_millis()),
+            TransferDto::Ether(transfer) =&gt; <span class="prelude-val">Some</span>(transfer.execution_date.timestamp_millis()),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_transaction_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TransferDto::Erc721</span>(<span class="ident">transfer</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">transfer</span>.<span class="ident">transaction_hash</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">TransferDto::Erc20</span>(<span class="ident">transfer</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">transfer</span>.<span class="ident">transaction_hash</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">TransferDto::Ether</span>(<span class="ident">transfer</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">transfer</span>.<span class="ident">transaction_hash</span>.<span class="ident">to_owned</span>()),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_transaction_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            TransferDto::Erc721(transfer) =&gt; <span class="prelude-val">Some</span>(transfer.transaction_hash.to_owned()),
+            TransferDto::Erc20(transfer) =&gt; <span class="prelude-val">Some</span>(transfer.transaction_hash.to_owned()),
+            TransferDto::Ether(transfer) =&gt; <span class="prelude-val">Some</span>(transfer.transaction_hash.to_owned()),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Erc20TransferDto</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transfer_transaction</span>(
+<span class="kw">impl </span>Erc20TransferDto {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>to_transfer_transaction(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-        <span class="ident">safe</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">ServiceTransfer</span> {
-        <span class="ident">ServiceTransfer</span> {
-            <span class="ident">sender</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">from</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">recipient</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">direction</span>: <span class="ident">get_transfer_direction</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">from</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>),
-            <span class="ident">transfer_info</span>: <span class="self">self</span>.<span class="ident">to_transfer_info</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>,
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+        safe: <span class="kw-2">&amp;</span>str,
+    ) -&gt; ServiceTransfer {
+        ServiceTransfer {
+            sender: get_address_ex_from_any_source(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.from, info_provider).<span class="kw">await</span>,
+            recipient: get_address_ex_from_any_source(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.to, info_provider).<span class="kw">await</span>,
+            direction: get_transfer_direction(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.from, <span class="kw-2">&amp;</span><span class="self">self</span>.to),
+            transfer_info: <span class="self">self</span>.to_transfer_info(info_provider).<span class="kw">await</span>,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transfer_info</span>(
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>to_transfer_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    ) -&gt; <span class="ident">TransferInfo</span> {
-        <span class="kw">let</span> <span class="ident">token_info</span> <span class="op">=</span>
-            <span class="ident">token_info_with_fallback</span>(<span class="ident">info_provider</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token_address</span>, <span class="self">self</span>.<span class="ident">token_info</span>.<span class="ident">clone</span>())
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    ) -&gt; TransferInfo {
+        <span class="kw">let </span>token_info =
+            token_info_with_fallback(info_provider, <span class="kw-2">&amp;</span><span class="self">self</span>.token_address, <span class="self">self</span>.token_info.clone())
                 .<span class="kw">await</span>;
-        <span class="ident">build_transfer_info</span>(
-            <span class="ident">token_info</span>.<span class="ident">as_ref</span>(),
-            <span class="ident">TokenType::Erc20</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token_address</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>,
+        build_transfer_info(
+            token_info.as_ref(),
+            TokenType::Erc20,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.token_address,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.value,
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Erc721TransferDto</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transfer_transaction</span>(
+<span class="kw">impl </span>Erc721TransferDto {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>to_transfer_transaction(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-        <span class="ident">safe</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">ServiceTransfer</span> {
-        <span class="ident">ServiceTransfer</span> {
-            <span class="ident">sender</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">from</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">recipient</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">direction</span>: <span class="ident">get_transfer_direction</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">from</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>),
-            <span class="ident">transfer_info</span>: <span class="self">self</span>.<span class="ident">to_transfer_info</span>(<span class="ident">info_provider</span>).<span class="kw">await</span>,
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+        safe: <span class="kw-2">&amp;</span>str,
+    ) -&gt; ServiceTransfer {
+        ServiceTransfer {
+            sender: get_address_ex_from_any_source(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.from, info_provider).<span class="kw">await</span>,
+            recipient: get_address_ex_from_any_source(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.to, info_provider).<span class="kw">await</span>,
+            direction: get_transfer_direction(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.from, <span class="kw-2">&amp;</span><span class="self">self</span>.to),
+            transfer_info: <span class="self">self</span>.to_transfer_info(info_provider).<span class="kw">await</span>,
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transfer_info</span>(
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>to_transfer_info(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    ) -&gt; <span class="ident">TransferInfo</span> {
-        <span class="kw">let</span> <span class="ident">token_info</span> <span class="op">=</span>
-            <span class="ident">token_info_with_fallback</span>(<span class="ident">info_provider</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token_address</span>, <span class="self">self</span>.<span class="ident">token_info</span>.<span class="ident">clone</span>())
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    ) -&gt; TransferInfo {
+        <span class="kw">let </span>token_info =
+            token_info_with_fallback(info_provider, <span class="kw-2">&amp;</span><span class="self">self</span>.token_address, <span class="self">self</span>.token_info.clone())
                 .<span class="kw">await</span>;
-        <span class="ident">build_transfer_info</span>(
-            <span class="ident">token_info</span>.<span class="ident">as_ref</span>(),
-            <span class="ident">TokenType::Erc721</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token_address</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token_id</span>,
+        build_transfer_info(
+            token_info.as_ref(),
+            TokenType::Erc721,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.token_address,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.token_id,
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">EtherTransferDto</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">to_transfer_transaction</span>(
+<span class="kw">impl </span>EtherTransferDto {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>to_transfer_transaction(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-        <span class="ident">safe</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">ServiceTransfer</span> {
-        <span class="ident">ServiceTransfer</span> {
-            <span class="ident">sender</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">from</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">recipient</span>: <span class="ident">get_address_ex_from_any_source</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>, <span class="ident">info_provider</span>).<span class="kw">await</span>,
-            <span class="ident">direction</span>: <span class="ident">get_transfer_direction</span>(<span class="ident">safe</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">from</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to</span>),
-            <span class="ident">transfer_info</span>: <span class="self">self</span>.<span class="ident">to_transfer_info</span>(),
+        info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+        safe: <span class="kw-2">&amp;</span>str,
+    ) -&gt; ServiceTransfer {
+        ServiceTransfer {
+            sender: get_address_ex_from_any_source(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.from, info_provider).<span class="kw">await</span>,
+            recipient: get_address_ex_from_any_source(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.to, info_provider).<span class="kw">await</span>,
+            direction: get_transfer_direction(safe, <span class="kw-2">&amp;</span><span class="self">self</span>.from, <span class="kw-2">&amp;</span><span class="self">self</span>.to),
+            transfer_info: <span class="self">self</span>.to_transfer_info(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">to_transfer_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TransferInfo</span> {
-        <span class="ident">TransferInfo::NativeCoin</span>(<span class="ident">NativeCoinTransfer</span> {
-            <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">clone</span>(),
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>to_transfer_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TransferInfo {
+        TransferInfo::NativeCoin(NativeCoinTransfer {
+            value: <span class="self">self</span>.value.clone(),
         })
     }
 }
 
-<span class="kw">fn</span> <span class="ident">build_transfer_info</span>(
-    <span class="ident">token_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TokenInfo</span><span class="op">&gt;</span>,
-    <span class="ident">default_token_type</span>: <span class="ident">TokenType</span>,
-    <span class="ident">token_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) -&gt; <span class="ident">TransferInfo</span> {
-    <span class="kw">match</span> <span class="ident">token_info</span>
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">token_type</span>.<span class="ident">to_owned</span>())
-        .<span class="ident">unwrap_or</span>(<span class="ident">default_token_type</span>)
+<span class="kw">fn </span>build_transfer_info(
+    token_info: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TokenInfo&gt;,
+    default_token_type: TokenType,
+    token_address: <span class="kw-2">&amp;</span>str,
+    element: <span class="kw-2">&amp;</span>str,
+) -&gt; TransferInfo {
+    <span class="kw">match </span>token_info
+        .map(|it| it.token_type.to_owned())
+        .unwrap_or(default_token_type)
     {
-        <span class="ident">TokenType::Erc20</span> =&gt; <span class="ident">TransferInfo::Erc20</span>(<span class="ident">Erc20Transfer</span> {
-            <span class="ident">token_address</span>: <span class="ident">token_address</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">token_name</span>: <span class="ident">token_info</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">token_symbol</span>: <span class="ident">token_info</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">symbol</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">logo_uri</span>: <span class="ident">token_info</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">logo_uri</span>.<span class="ident">to_owned</span>()).<span class="ident">flatten</span>(),
-            <span class="ident">decimals</span>: <span class="ident">token_info</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">decimals</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">value</span>: <span class="ident">element</span>.<span class="ident">to_owned</span>(),
+        TokenType::Erc20 =&gt; TransferInfo::Erc20(Erc20Transfer {
+            token_address: token_address.to_owned(),
+            token_name: token_info.map(|it| it.name.to_owned()),
+            token_symbol: token_info.map(|it| it.symbol.to_owned()),
+            logo_uri: token_info.map(|it| it.logo_uri.to_owned()).flatten(),
+            decimals: token_info.map(|it| it.decimals.to_owned()),
+            value: element.to_owned(),
         }),
-        <span class="ident">TokenType::Erc721</span> =&gt; <span class="ident">TransferInfo::Erc721</span>(<span class="ident">Erc721Transfer</span> {
-            <span class="ident">token_address</span>: <span class="ident">token_address</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">token_id</span>: <span class="ident">element</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">token_name</span>: <span class="ident">token_info</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">token_symbol</span>: <span class="ident">token_info</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">symbol</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">logo_uri</span>: <span class="ident">token_info</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">it</span><span class="op">|</span> <span class="ident">it</span>.<span class="ident">logo_uri</span>.<span class="ident">to_owned</span>()).<span class="ident">flatten</span>(),
+        TokenType::Erc721 =&gt; TransferInfo::Erc721(Erc721Transfer {
+            token_address: token_address.to_owned(),
+            token_id: element.to_owned(),
+            token_name: token_info.map(|it| it.name.to_owned()),
+            token_symbol: token_info.map(|it| it.symbol.to_owned()),
+            logo_uri: token_info.map(|it| it.logo_uri.to_owned()).flatten(),
         }),
-        <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Transfer token type not supported&quot;</span>),
+        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Transfer token type not supported&quot;</span>),
     }
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">token_info_with_fallback</span>(
-    <span class="ident">info_provider</span>: <span class="kw-2">&amp;</span>(<span class="kw">impl</span> <span class="ident">InfoProvider</span> <span class="op">+</span> <span class="ident">Sync</span>),
-    <span class="ident">token_address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">token_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TokenInfo</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TokenInfo</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">token_info</span>.<span class="ident">is_none</span>() {
-        <span class="ident">info_provider</span>.<span class="ident">token_info</span>(<span class="ident">token_address</span>).<span class="kw">await</span>.<span class="ident">ok</span>()
-    } <span class="kw">else</span> {
-        <span class="ident">token_info</span>
+<span class="kw">async fn </span>token_info_with_fallback(
+    info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
+    token_address: <span class="kw-2">&amp;</span>str,
+    token_info: <span class="prelude-ty">Option</span>&lt;TokenInfo&gt;,
+) -&gt; <span class="prelude-ty">Option</span>&lt;TokenInfo&gt; {
+    <span class="kw">if </span>token_info.is_none() {
+        info_provider.token_info(token_address).<span class="kw">await</span>.ok()
+    } <span class="kw">else </span>{
+        token_info
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

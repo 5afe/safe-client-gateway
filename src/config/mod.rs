@@ -173,6 +173,10 @@ pub fn feature_flag_balances_rate_implementation() -> bool {
     env_with_default("FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION", false)
 }
 
+pub fn is_messages_feature_enabled() -> bool {
+    env_with_default("FEATURE_MESSAGES", false)
+}
+
 pub fn is_preview_endpoint_enabled() -> bool {
     env_with_default("FEATURE_PREVIEW_ENDPOINT", false)
 }

@@ -3,7 +3,7 @@ use rocket::serde::json::{json, Value};
 use rocket::{Catcher, Route};
 use rocket_okapi::openapi_get_routes;
 
-use crate::config::is_preview_endpoint_enabled;
+use crate::config::{is_messages_feature_enabled, is_preview_endpoint_enabled};
 
 /// # About endpoint
 pub mod about;
@@ -60,6 +60,12 @@ pub fn active_routes() -> Vec<Route> {
         routes![]
     };
 
+    let messages_routes = if is_messages_feature_enabled() {
+        routes![messages::routes::get_messages]
+    } else {
+        routes![]
+    };
+
     let openapi = openapi_get_routes![
         about::routes::backbone,
         about::routes::get_about,
@@ -76,7 +82,6 @@ pub fn active_routes() -> Vec<Route> {
         delegates::routes::delete_safe_delegate,
         delegates::routes::get_delegates,
         delegates::routes::post_delegate,
-        messages::routes::get_messages,
         notifications::routes::delete_notification_registration,
         safes::routes::get_safe_info,
         safes::routes::get_owners,
@@ -89,7 +94,13 @@ pub fn active_routes() -> Vec<Route> {
         transactions::routes::get_multisig_transactions,
         health::routes::health
     ];
-    return [&no_openapi[..], &preview_route[..], &openapi[..]].concat();
+    return [
+        &no_openapi[..],
+        &preview_route[..],
+        &messages_routes[..],
+        &openapi[..],
+    ]
+    .concat();
 }
 
 #[doc(hidden)]

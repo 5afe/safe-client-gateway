@@ -1,7 +1,5 @@
 use super::backend_models::Message;
 use super::frontend_models::{Confirmation as FrontendConfirmation, Message as FrontendMessage};
-use crate::cache::cache_operations::RequestCached;
-use crate::cache::manager::ChainCache;
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::providers::ext::InfoProviderExt;
@@ -10,6 +8,7 @@ use crate::routes::messages::backend_models::Confirmation;
 use crate::routes::messages::frontend_models::MessageStatus;
 use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
+use crate::utils::http_client::Request;
 use crate::utils::urls::build_absolute_uri;
 use reqwest::Url;
 use rocket::futures::future;
@@ -43,13 +42,8 @@ pub async fn get_messages(
     url.set_query(Some(&page_metadata.to_url_string()));
 
     // Request
-    let body = RequestCached::new_from_context(
-        url.into_string(),
-        &context,
-        ChainCache::from(chain_id.clone().as_str()),
-    )
-    .execute()
-    .await?;
+    let http_request = Request::new(url.into_string());
+    let body = info_provider.client().get(http_request).await?.body;
 
     let messages_page: Page<Message> = serde_json::from_str::<Page<Message>>(&body)?;
     let messages: Vec<FrontendMessage> = future::join_all(
@@ -102,7 +96,7 @@ fn get_route_url(
 
 fn page_metadata_from_url(url: &str) -> Option<PageMetadata> {
     let url = Url::parse(url).ok()?;
-    let mut query_pairs = url.query_pairs();
+    let query_pairs = url.query_pairs();
     let mut limit: u64 = 20;
     let mut offset: u64 = 0;
 

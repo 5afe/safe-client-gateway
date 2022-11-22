@@ -147,6 +147,18 @@ async fn map_message(
     let confirmations_required = safe_info.threshold as usize;
     let confirmations_submitted = message.confirmations.len();
 
+    // Get Safe App Info for specific ID.
+    // If the Safe App Info cannot be retrieved we return null
+    let safe_app_name_logo: (Option<String>, Option<String>) = match message.safe_app_id {
+        None => (None, None),
+        Some(safe_app_id) => info_provider
+            .safe_app_info_by_id(safe_app_id)
+            .await
+            .map_or((None, None), |safe_app| {
+                (Some(safe_app.name), Some(safe_app.logo_uri))
+            }),
+    };
+
     // Known Address for proposed_by
     let proposed_by: AddressEx = info_provider
         .address_ex_from_contracts_or_default(&message.proposed_by)
@@ -168,8 +180,8 @@ async fn map_message(
         } else {
             MessageStatus::NeedsConfirmation
         },
-        logo_uri: "".to_string(), // TODO fetch from safe-config-service using Safe App Id
-        name: "".to_string(),     // TODO fetch from safe-config-service using Safe App Id
+        name: safe_app_name_logo.0,
+        logo_uri: safe_app_name_logo.1,
         message: message.message.to_string(),
         creation_timestamp: message.created.timestamp_millis(),
         modified_timestamp: message.modified.timestamp_millis(),

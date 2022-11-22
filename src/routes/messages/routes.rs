@@ -150,8 +150,8 @@ async fn map_message(
         } else {
             MessageStatus::NeedsConfirmation
         },
-        logo_uri: "".to_string(), // TODO pending tx-service change
-        name: "".to_string(),     // TODO pending tx-service change
+        logo_uri: "".to_string(), // TODO fetch from safe-config-service using Safe App Id
+        name: "".to_string(),     // TODO fetch from safe-config-service using Safe App Id
         message: message.message.to_string(),
         creation_timestamp: message.created.timestamp_millis(),
         modified_timestamp: message.modified.timestamp_millis(),

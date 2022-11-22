@@ -29,7 +29,7 @@ pub(super) struct Message {
     pub(super) message_hash: String,
     pub(super) message: String,
     pub(super) proposed_by: String,
-    pub(super) description: String,
+    pub(super) safe_app_id: u64,
     pub(super) confirmations: Vec<Confirmation>,
     pub(super) prepared_signature: Option<String>,
 }

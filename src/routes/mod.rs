@@ -40,6 +40,7 @@ pub fn active_routes() -> Vec<Route> {
         // rocket_okapi don't support lifetimes
         // https://github.com/GREsau/okapi/issues/84
         contracts::routes::post_data_decoder,
+        messages::routes::create_message,
         notifications::routes::post_notification_registration,
         safes::routes::post_safe_gas_estimation,
         safes::routes::post_safe_gas_estimation_v2,

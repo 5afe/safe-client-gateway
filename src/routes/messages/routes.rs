@@ -5,14 +5,15 @@ use crate::common::models::page::{Page, PageMetadata};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
 use crate::routes::messages::backend_models::Confirmation;
-use crate::routes::messages::frontend_models::MessageStatus;
+use crate::routes::messages::frontend_models::{CreateMessage, MessageStatus};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
-use crate::utils::http_client::Request;
+use crate::utils::http_client::{Request, Response};
 use crate::utils::urls::build_absolute_uri;
 use reqwest::Url;
 use rocket::futures::future;
 use rocket::response::content;
+use rocket::serde::json::Json;
 use rocket_okapi::openapi;
 use std::borrow::Cow;
 
@@ -72,6 +73,29 @@ pub async fn get_messages(
 
     let body = serde_json::to_string(&body)?;
     return Ok(content::RawJson(body));
+}
+
+#[post(
+    "/v1/chains/<chain_id>/safes/<safe_address>/messages",
+    format = "application/json",
+    data = "<message_payload>"
+)]
+pub async fn create_message(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    message_payload: Json<CreateMessage>,
+) -> ApiResult<String> {
+    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+    let url = core_uri!(info_provider, "/v1/safes/{}/messages/", safe_address)?;
+
+    let request = {
+        let mut request = Request::new(url);
+        request.body(serde_json::to_string(&message_payload.0).ok());
+        request
+    };
+    let response_body: Response = context.http_client().post(request).await?;
+    return Ok(response_body.body);
 }
 
 fn get_route_url(

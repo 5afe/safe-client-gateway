@@ -1,5 +1,5 @@
 use crate::common::models::addresses::AddressEx;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
@@ -33,4 +33,12 @@ pub(super) enum Message {
         confirmations: Vec<Confirmation>,
         prepared_signature: Option<String>,
     },
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateMessage {
+    message: String,
+    safe_app_id: u64,
+    signature: String,
 }

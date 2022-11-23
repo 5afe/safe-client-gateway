@@ -355,6 +355,30 @@
 <span id="355">355</span>
 <span id="356">356</span>
 <span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 <span class="kw">use </span>std::future::Future;
 <span class="kw">use </span>std::sync::Arc;
@@ -461,6 +485,7 @@
     <span class="kw">async fn </span>safe_info(<span class="kw-2">&amp;</span><span class="self">self</span>, safe: <span class="kw-2">&amp;</span>str) -&gt; ApiResult&lt;SafeInfo&gt;;
     <span class="kw">async fn </span>token_info(<span class="kw-2">&amp;</span><span class="self">self</span>, token: <span class="kw-2">&amp;</span>str) -&gt; ApiResult&lt;TokenInfo&gt;;
     <span class="kw">async fn </span>safe_app_info(<span class="kw-2">&amp;</span><span class="self">self</span>, url: <span class="kw-2">&amp;</span>str) -&gt; ApiResult&lt;SafeAppInfo&gt;;
+    <span class="kw">async fn </span>safe_app_info_by_id(<span class="kw-2">&amp;</span><span class="self">self</span>, id: u64) -&gt; ApiResult&lt;SafeAppInfo&gt;;
     <span class="kw">async fn </span>contract_info(<span class="kw-2">&amp;</span><span class="self">self</span>, contract_address: <span class="kw-2">&amp;</span>str) -&gt; ApiResult&lt;ContractInfo&gt;;
 
     <span class="kw">async fn </span>address_ex_from_any_source(<span class="kw-2">&amp;</span><span class="self">self</span>, address: <span class="kw-2">&amp;</span>str) -&gt; ApiResult&lt;AddressEx&gt;;
@@ -532,6 +557,29 @@
             }),
             <span class="prelude-val">Some</span>(first) =&gt; <span class="prelude-val">Ok</span>(SafeAppInfo::from(first)),
         }
+    }
+
+    <span class="kw">async fn </span>safe_app_info_by_id(<span class="kw-2">&amp;</span><span class="self">self</span>, id: u64) -&gt; ApiResult&lt;SafeAppInfo&gt; {
+        <span class="kw">let </span>config_service_url = <span class="macro">config_uri!</span>(<span class="string">&quot;/v1/safe-apps/&quot;</span>);
+        <span class="kw">let </span>result = RequestCached::new(config_service_url, <span class="kw-2">&amp;</span><span class="self">self</span>.client, <span class="kw-2">&amp;</span><span class="self">self</span>.cache)
+            .execute()
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">let </span>safe_apps: Vec&lt;SafeApp&gt; = serde_json::from_str::&lt;Vec&lt;SafeApp&gt;&gt;(<span class="kw-2">&amp;</span>result)<span class="question-mark">?</span>;
+        <span class="kw">let </span>safe_app: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SafeApp&gt; = safe_apps.iter().find(|safe_app| safe_app.id == id);
+
+        <span class="kw">return match </span>safe_app {
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(ApiError {
+                status: <span class="number">404</span>,
+                details: ErrorDetails {
+                    code: <span class="number">404</span>,
+                    message: <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;No Safe App with id {}&quot;</span>, id)),
+                    arguments: <span class="prelude-val">None</span>,
+                    debug: <span class="prelude-val">None</span>,
+                },
+            }),
+            <span class="prelude-val">Some</span>(safe_app) =&gt; <span class="prelude-val">Ok</span>(SafeAppInfo::from(safe_app)),
+        };
     }
 
     <span class="kw">async fn </span>contract_info(<span class="kw-2">&amp;</span><span class="self">self</span>, contract_address: <span class="kw-2">&amp;</span>str) -&gt; ApiResult&lt;ContractInfo&gt; {

@@ -203,6 +203,18 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::backend_models::Message;
 <span class="kw">use </span><span class="kw">super</span>::frontend_models::{Confirmation <span class="kw">as </span>FrontendConfirmation, Message <span class="kw">as </span>FrontendMessage};
 <span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
@@ -352,6 +364,18 @@
     <span class="kw">let </span>confirmations_required = safe_info.threshold <span class="kw">as </span>usize;
     <span class="kw">let </span>confirmations_submitted = message.confirmations.len();
 
+    <span class="comment">// Get Safe App Info for specific ID.
+    // If the Safe App Info cannot be retrieved we return null
+    </span><span class="kw">let </span>safe_app_name_logo: (<span class="prelude-ty">Option</span>&lt;String&gt;, <span class="prelude-ty">Option</span>&lt;String&gt;) = <span class="kw">match </span>message.safe_app_id {
+        <span class="prelude-val">None </span>=&gt; (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>),
+        <span class="prelude-val">Some</span>(safe_app_id) =&gt; info_provider
+            .safe_app_info_by_id(safe_app_id)
+            .<span class="kw">await
+            </span>.map_or((<span class="prelude-val">None</span>, <span class="prelude-val">None</span>), |safe_app| {
+                (<span class="prelude-val">Some</span>(safe_app.name), <span class="prelude-val">Some</span>(safe_app.logo_uri))
+            }),
+    };
+
     <span class="comment">// Known Address for proposed_by
     </span><span class="kw">let </span>proposed_by: AddressEx = info_provider
         .address_ex_from_contracts_or_default(<span class="kw-2">&amp;</span>message.proposed_by)
@@ -373,9 +397,9 @@
         } <span class="kw">else </span>{
             MessageStatus::NeedsConfirmation
         },
-        logo_uri: <span class="string">&quot;&quot;</span>.to_string(), <span class="comment">// TODO fetch from safe-config-service using Safe App Id
-        </span>name: <span class="string">&quot;&quot;</span>.to_string(),     <span class="comment">// TODO fetch from safe-config-service using Safe App Id
-        </span>message: message.message.to_string(),
+        name: safe_app_name_logo.<span class="number">0</span>,
+        logo_uri: safe_app_name_logo.<span class="number">1</span>,
+        message: message.message.to_string(),
         creation_timestamp: message.created.timestamp_millis(),
         modified_timestamp: message.modified.timestamp_millis(),
         confirmations_submitted,

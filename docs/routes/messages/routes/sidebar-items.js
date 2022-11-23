@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["get_messages",""],["get_route_url",""],["map_confirmation",""],["map_message",""],["page_metadata_from_url",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["create_message",""],["get_messages",""],["get_route_url",""],["map_confirmation",""],["map_message",""],["page_metadata_from_url",""]]};

@@ -34,8 +34,16 @@
 <span id="34">34</span>
 <span id="35">35</span>
 <span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
-<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="attribute">#[derive(Serialize, Debug)]
 #[serde(rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
@@ -69,6 +77,14 @@
         confirmations: Vec&lt;Confirmation&gt;,
         prepared_signature: <span class="prelude-ty">Option</span>&lt;String&gt;,
     },
+}
+
+<span class="attribute">#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>CreateMessage {
+    message: String,
+    safe_app_id: u64,
+    signature: String,
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -179,6 +179,30 @@
 <span id="179">179</span>
 <span id="180">180</span>
 <span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::backend_models::Message;
 <span class="kw">use </span><span class="kw">super</span>::frontend_models::{Confirmation <span class="kw">as </span>FrontendConfirmation, Message <span class="kw">as </span>FrontendMessage};
 <span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
@@ -186,14 +210,15 @@
 <span class="kw">use </span><span class="kw">crate</span>::providers::ext::InfoProviderExt;
 <span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
 <span class="kw">use </span><span class="kw">crate</span>::routes::messages::backend_models::Confirmation;
-<span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::MessageStatus;
+<span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::{CreateMessage, MessageStatus};
 <span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
 <span class="kw">use </span><span class="kw">crate</span>::utils::errors::{ApiError, ApiResult, ErrorDetails};
-<span class="kw">use </span><span class="kw">crate</span>::utils::http_client::Request;
+<span class="kw">use </span><span class="kw">crate</span>::utils::http_client::{Request, Response};
 <span class="kw">use </span><span class="kw">crate</span>::utils::urls::build_absolute_uri;
 <span class="kw">use </span>reqwest::Url;
 <span class="kw">use </span>rocket::futures::future;
 <span class="kw">use </span>rocket::response::content;
+<span class="kw">use </span>rocket::serde::json::Json;
 <span class="kw">use </span>rocket_okapi::openapi;
 <span class="kw">use </span>std::borrow::Cow;
 
@@ -253,6 +278,29 @@
 
     <span class="kw">let </span>body = serde_json::to_string(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
     <span class="kw">return </span><span class="prelude-val">Ok</span>(content::RawJson(body));
+}
+
+<span class="attribute">#[post(
+    <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/messages&quot;</span>,
+    format = <span class="string">&quot;application/json&quot;</span>,
+    data = <span class="string">&quot;&lt;message_payload&gt;&quot;
+</span>)]
+</span><span class="kw">pub async fn </span>create_message(
+    context: RequestContext,
+    chain_id: String,
+    safe_address: String,
+    message_payload: Json&lt;CreateMessage&gt;,
+) -&gt; ApiResult&lt;String&gt; {
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(<span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>context);
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(info_provider, <span class="string">&quot;/v1/safes/{}/messages/&quot;</span>, safe_address)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>request = {
+        <span class="kw">let </span><span class="kw-2">mut </span>request = Request::new(url);
+        request.body(serde_json::to_string(<span class="kw-2">&amp;</span>message_payload.<span class="number">0</span>).ok());
+        request
+    };
+    <span class="kw">let </span>response_body: Response = context.http_client().post(request).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">return </span><span class="prelude-val">Ok</span>(response_body.body);
 }
 
 <span class="kw">fn </span>get_route_url(

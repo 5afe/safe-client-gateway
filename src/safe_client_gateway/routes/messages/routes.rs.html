@@ -215,6 +215,29 @@
 <span id="215">215</span>
 <span id="216">216</span>
 <span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::backend_models::Message;
 <span class="kw">use </span><span class="kw">super</span>::frontend_models::{Confirmation <span class="kw">as </span>FrontendConfirmation, Message <span class="kw">as </span>FrontendMessage};
 <span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
@@ -222,7 +245,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::providers::ext::InfoProviderExt;
 <span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
 <span class="kw">use </span><span class="kw">crate</span>::routes::messages::backend_models::Confirmation;
-<span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::{CreateMessage, MessageStatus};
+<span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::{CreateMessage, MessageStatus, UpdateMessage};
 <span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
 <span class="kw">use </span><span class="kw">crate</span>::utils::errors::{ApiError, ApiResult, ErrorDetails};
 <span class="kw">use </span><span class="kw">crate</span>::utils::http_client::{Request, Response};
@@ -309,6 +332,29 @@
     <span class="kw">let </span>request = {
         <span class="kw">let </span><span class="kw-2">mut </span>request = Request::new(url);
         request.body(serde_json::to_string(<span class="kw-2">&amp;</span>message_payload.<span class="number">0</span>).ok());
+        request
+    };
+    <span class="kw">let </span>response_body: Response = context.http_client().post(request).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">return </span><span class="prelude-val">Ok</span>(response_body.body);
+}
+
+<span class="attribute">#[post(
+    <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/messages/&lt;message_hash&gt;/signatures&quot;</span>,
+    format = <span class="string">&quot;application/json&quot;</span>,
+    data = <span class="string">&quot;&lt;signature_payload&gt;&quot;
+</span>)]
+</span><span class="kw">pub async fn </span>update_message(
+    context: RequestContext,
+    chain_id: String,
+    message_hash: String,
+    signature_payload: Json&lt;UpdateMessage&gt;,
+) -&gt; ApiResult&lt;String&gt; {
+    <span class="kw">let </span>info_provider = DefaultInfoProvider::new(<span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>context);
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(info_provider, <span class="string">&quot;/v1/messages/{}/signatures/&quot;</span>, <span class="kw-2">&amp;</span>message_hash)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>request = {
+        <span class="kw">let </span><span class="kw-2">mut </span>request = Request::new(url);
+        request.body(serde_json::to_string(<span class="kw-2">&amp;</span>signature_payload.<span class="number">0</span>).ok());
         request
     };
     <span class="kw">let </span>response_body: Response = context.http_client().post(request).<span class="kw">await</span><span class="question-mark">?</span>;

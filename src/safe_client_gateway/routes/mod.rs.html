@@ -128,6 +128,7 @@
 <span id="128">128</span>
 <span id="129">129</span>
 <span id="130">130</span>
+<span id="131">131</span>
 </pre><pre class="rust"><code><span class="kw">use </span>rocket::response::Redirect;
 <span class="kw">use </span>rocket::serde::json::{json, Value};
 <span class="kw">use </span>rocket::{Catcher, Route};
@@ -193,7 +194,8 @@
     <span class="kw">let </span>messages_routes = <span class="kw">if </span>is_messages_feature_enabled() {
         <span class="macro">routes!</span>[
             messages::routes::get_messages,
-            messages::routes::create_message
+            messages::routes::create_message,
+            messages::routes::update_message
         ]
     } <span class="kw">else </span>{
         <span class="macro">routes!</span>[]

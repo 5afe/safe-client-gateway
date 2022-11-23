@@ -5,7 +5,7 @@ use crate::common::models::page::{Page, PageMetadata};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
 use crate::routes::messages::backend_models::Confirmation;
-use crate::routes::messages::frontend_models::{CreateMessage, MessageStatus};
+use crate::routes::messages::frontend_models::{CreateMessage, MessageStatus, UpdateMessage};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
 use crate::utils::http_client::{Request, Response};
@@ -92,6 +92,29 @@ pub async fn create_message(
     let request = {
         let mut request = Request::new(url);
         request.body(serde_json::to_string(&message_payload.0).ok());
+        request
+    };
+    let response_body: Response = context.http_client().post(request).await?;
+    return Ok(response_body.body);
+}
+
+#[post(
+    "/v1/chains/<chain_id>/messages/<message_hash>/signatures",
+    format = "application/json",
+    data = "<signature_payload>"
+)]
+pub async fn update_message(
+    context: RequestContext,
+    chain_id: String,
+    message_hash: String,
+    signature_payload: Json<UpdateMessage>,
+) -> ApiResult<String> {
+    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+    let url = core_uri!(info_provider, "/v1/messages/{}/signatures/", &message_hash)?;
+
+    let request = {
+        let mut request = Request::new(url);
+        request.body(serde_json::to_string(&signature_payload.0).ok());
         request
     };
     let response_body: Response = context.http_client().post(request).await?;

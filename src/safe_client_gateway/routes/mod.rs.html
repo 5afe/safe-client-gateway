@@ -112,12 +112,25 @@
 <span id="112">112</span>
 <span id="113">113</span>
 <span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
 </pre><pre class="rust"><code><span class="kw">use </span>rocket::response::Redirect;
 <span class="kw">use </span>rocket::serde::json::{json, Value};
 <span class="kw">use </span>rocket::{Catcher, Route};
 <span class="kw">use </span>rocket_okapi::openapi_get_routes;
 
-<span class="kw">use </span><span class="kw">crate</span>::config::is_preview_endpoint_enabled;
+<span class="kw">use </span><span class="kw">crate</span>::config::{is_messages_feature_enabled, is_preview_endpoint_enabled};
 
 <span class="doccomment">/// # About endpoint
 </span><span class="kw">pub mod </span>about;
@@ -134,6 +147,7 @@
 </span><span class="kw">pub mod </span>health;
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>hooks;
+<span class="kw">pub mod </span>messages;
 <span class="doccomment">/// # Notification endpoints
 </span><span class="kw">pub mod </span>notifications;
 <span class="doccomment">/// # SafeApps endpoints
@@ -173,6 +187,12 @@
         <span class="macro">routes!</span>[]
     };
 
+    <span class="kw">let </span>messages_routes = <span class="kw">if </span>is_messages_feature_enabled() {
+        <span class="macro">routes!</span>[messages::routes::get_messages]
+    } <span class="kw">else </span>{
+        <span class="macro">routes!</span>[]
+    };
+
     <span class="kw">let </span>openapi = <span class="macro">openapi_get_routes!</span>[
         about::routes::backbone,
         about::routes::get_about,
@@ -201,7 +221,13 @@
         transactions::routes::get_multisig_transactions,
         health::routes::health
     ];
-    <span class="kw">return </span>[<span class="kw-2">&amp;</span>no_openapi[..], <span class="kw-2">&amp;</span>preview_route[..], <span class="kw-2">&amp;</span>openapi[..]].concat();
+    <span class="kw">return </span>[
+        <span class="kw-2">&amp;</span>no_openapi[..],
+        <span class="kw-2">&amp;</span>preview_route[..],
+        <span class="kw-2">&amp;</span>messages_routes[..],
+        <span class="kw-2">&amp;</span>openapi[..],
+    ]
+    .concat();
 }
 
 <span class="attribute">#[doc(hidden)]

@@ -214,6 +214,10 @@
 <span id="214">214</span>
 <span id="215">215</span>
 <span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::env;
 <span class="kw">use </span>std::str::FromStr;
 
@@ -387,6 +391,10 @@
 
 <span class="kw">pub fn </span>feature_flag_balances_rate_implementation() -&gt; bool {
     env_with_default(<span class="string">&quot;FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION&quot;</span>, <span class="bool-val">false</span>)
+}
+
+<span class="kw">pub fn </span>is_messages_feature_enabled() -&gt; bool {
+    env_with_default(<span class="string">&quot;FEATURE_MESSAGES&quot;</span>, <span class="bool-val">false</span>)
 }
 
 <span class="kw">pub fn </span>is_preview_endpoint_enabled() -&gt; bool {

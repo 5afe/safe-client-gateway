@@ -104,6 +104,7 @@ pub trait InfoProvider {
     async fn safe_info(&self, safe: &str) -> ApiResult<SafeInfo>;
     async fn token_info(&self, token: &str) -> ApiResult<TokenInfo>;
     async fn safe_app_info(&self, url: &str) -> ApiResult<SafeAppInfo>;
+    async fn safe_app_info_by_id(&self, id: u64) -> ApiResult<SafeAppInfo>;
     async fn contract_info(&self, contract_address: &str) -> ApiResult<ContractInfo>;
 
     async fn address_ex_from_any_source(&self, address: &str) -> ApiResult<AddressEx>;
@@ -175,6 +176,29 @@ impl InfoProvider for DefaultInfoProvider<'_> {
             }),
             Some(first) => Ok(SafeAppInfo::from(first)),
         }
+    }
+
+    async fn safe_app_info_by_id(&self, id: u64) -> ApiResult<SafeAppInfo> {
+        let config_service_url = config_uri!("/v1/safe-apps/");
+        let result = RequestCached::new(config_service_url, &self.client, &self.cache)
+            .execute()
+            .await?;
+
+        let safe_apps: Vec<SafeApp> = serde_json::from_str::<Vec<SafeApp>>(&result)?;
+        let safe_app: Option<&SafeApp> = safe_apps.iter().find(|safe_app| safe_app.id == id);
+
+        return match safe_app {
+            None => Err(ApiError {
+                status: 404,
+                details: ErrorDetails {
+                    code: 404,
+                    message: Some(format!("No Safe App with id {}", id)),
+                    arguments: None,
+                    debug: None,
+                },
+            }),
+            Some(safe_app) => Ok(SafeAppInfo::from(safe_app)),
+        };
     }
 
     async fn contract_info(&self, contract_address: &str) -> ApiResult<ContractInfo> {

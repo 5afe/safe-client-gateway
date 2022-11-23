@@ -22,8 +22,8 @@ pub(super) enum Message {
     Message {
         message_hash: String,
         status: MessageStatus,
-        logo_uri: String,
-        name: String,
+        logo_uri: Option<String>,
+        name: Option<String>,
         message: String,
         creation_timestamp: i64,
         modified_timestamp: i64,

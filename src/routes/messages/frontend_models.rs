@@ -42,3 +42,9 @@ pub struct CreateMessage {
     safe_app_id: u64,
     signature: String,
 }
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateMessage {
+    signature: String,
+}

@@ -1,10 +1,13 @@
 use super::backend_models::Message;
-use super::frontend_models::{Confirmation as FrontendConfirmation, Message as FrontendMessage};
+use super::frontend_models::{
+    Confirmation as FrontendConfirmation, Message as FrontendMessage,
+    MessageValue as FrontendMessageValue,
+};
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::page::{Page, PageMetadata};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
-use crate::routes::messages::backend_models::Confirmation;
+use crate::routes::messages::backend_models::{Confirmation, MessageValue};
 use crate::routes::messages::frontend_models::{CreateMessage, MessageStatus, UpdateMessage};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
@@ -205,7 +208,10 @@ async fn map_message(
         },
         name: safe_app_name_logo.0,
         logo_uri: safe_app_name_logo.1,
-        message: message.message.to_string(),
+        message: match &message.message {
+            MessageValue::String(value) => FrontendMessageValue::String(value.to_string()),
+            MessageValue::Object(value) => FrontendMessageValue::Object(value.clone()),
+        },
         creation_timestamp: message.created.timestamp_millis(),
         modified_timestamp: message.modified.timestamp_millis(),
         confirmations_submitted,

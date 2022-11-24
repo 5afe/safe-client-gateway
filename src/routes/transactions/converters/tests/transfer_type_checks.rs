@@ -93,6 +93,7 @@ async fn multisig_tx_check_erc721_transfer() {
             },
         )),
         signatures: Some(String::from("0x6722a6772c15dd72851593c69e521729be5f6e86cbe6881498885b6efb02f6a61638976cf12bb113d8a1f7cea776e9d5c4949dde7d8015ca03e433acc6f9435b1b75aa624315ed8a72e1fcf396fe8d7a50d6d71f18c3b6bddb025bf426b7e4de3f52ead25cef15c9b35feaeefb2b81f2b5333ed949035f948fbe0a9aec56f7ac5b1b000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001")),
+        trusted: false,
     };
 
     let expected = TransactionInfo::Transfer(Transfer {
@@ -196,6 +197,7 @@ async fn multisig_tx_check_erc20_transfer() {
             },
         )),
         signatures: Some(String::from("0x00000000000000000000000065f8236309e5a99ff0d129d04e486ebce20dc7b0000000000000000000000000000000000000000000000000000000000000000001ccbf629ad44c41c39e397d4c3c199593be908edf57d728204c2ebd5f384ad5c90f1e7fca86dab291e406724b99d7d956acaa01cb78d146e410a7accd1ffe0df01b9b3733a7018e90ca4ebb1504e1c230260f8d41d0542180e915fa10af694f18b360f5fe6c9dc252e257b3d45071b32977224122165ff771a018a392bb62dbf1491b")),
+        trusted: false,
     };
 
     let expected = TransactionInfo::Transfer(Transfer {
@@ -276,6 +278,7 @@ async fn multisig_tx_check_ether_transfer() {
             },
         )),
         signatures: Some(String::from("0x8b841f4b1b24c4db687bed9d9754253f94cd543d05447b31d32d945be6967a636a454fb210e058f783115c84fd141adf0e8d2fedb17df19419858cbb03fdddb31c000000000000000000000000f2cea96575d6b10f51d9af3b10e3e4e5738aa6bd000000000000000000000000000000000000000000000000000000000000000001")),
+        trusted: false,
     };
 
     let expected = TransactionInfo::Transfer(Transfer {

@@ -144,5 +144,6 @@
       "from": "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5"
     }
   ],
-  "txType": "MULTISIG_TRANSACTION"
+  "txType": "MULTISIG_TRANSACTION",
+  "trusted": false
 }

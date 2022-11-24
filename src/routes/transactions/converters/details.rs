@@ -121,6 +121,7 @@ impl MultisigTransaction {
                     .map(|rejection| AddressEx::address_only(rejection))
                     .collect()
             }),
+            trusted: self.trusted,
         }
     }
 }

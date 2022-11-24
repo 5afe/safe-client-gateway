@@ -54,5 +54,6 @@
       "signatureType": "EOA"
     }
   ],
-  "signatures": null
+  "signatures": null,
+  "trusted": false
 }

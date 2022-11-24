@@ -116,6 +116,7 @@ async fn multisig_custom_transaction_to_transaction_details() {
                 ],
                 rejectors: None,
                 gas_token_info: None,
+                trusted: false,
             })),
         safe_app_info: None,
     };

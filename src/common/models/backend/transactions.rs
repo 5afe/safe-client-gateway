@@ -54,6 +54,7 @@ pub struct MultisigTransaction {
     pub confirmations_required: Option<u64>,
     pub confirmations: Option<Vec<Confirmation>>,
     pub signatures: Option<String>,
+    pub trusted: bool,
 }
 
 #[derive(Deserialize, Debug, Hash)]

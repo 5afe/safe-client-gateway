@@ -201,6 +201,7 @@
 <span id="201">201</span>
 <span id="202">202</span>
 <span id="203">203</span>
+<span id="204">204</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transactions::{ModuleTransaction, MultisigTransaction};
 <span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::{DataDecoded, Operation};
@@ -324,6 +325,7 @@
                     .map(|rejection| AddressEx::address_only(rejection))
                     .collect()
             }),
+            trusted: <span class="self">self</span>.trusted,
         }
     }
 }

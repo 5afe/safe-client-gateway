@@ -108,6 +108,7 @@
 <span id="108">108</span>
 <span id="109">109</span>
 <span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transfers::Transfer;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::{DataDecoded, Operation};
 <span class="kw">use </span>chrono::{DateTime, Utc};
@@ -164,6 +165,7 @@
     <span class="kw">pub </span>confirmations_required: <span class="prelude-ty">Option</span>&lt;u64&gt;,
     <span class="kw">pub </span>confirmations: <span class="prelude-ty">Option</span>&lt;Vec&lt;Confirmation&gt;&gt;,
     <span class="kw">pub </span>signatures: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>trusted: bool,
 }
 
 <span class="attribute">#[derive(Deserialize, Debug, Hash)]

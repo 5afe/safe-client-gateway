@@ -296,6 +296,7 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
+<span id="299">299</span>
 </pre><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::{DataDecoded, Operation};
 <span class="kw">use </span><span class="kw">crate</span>::providers::info::{SafeAppInfo, TokenInfo};
@@ -561,6 +562,7 @@
     </span><span class="kw">pub </span>rejectors: <span class="prelude-ty">Option</span>&lt;Vec&lt;AddressEx&gt;&gt;,
     <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
     </span><span class="kw">pub </span>gas_token_info: <span class="prelude-ty">Option</span>&lt;TokenInfo&gt;,
+    <span class="kw">pub </span>trusted: bool,
 }
 
 <span class="attribute">#[derive(Serialize, Debug)]

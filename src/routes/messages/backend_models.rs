@@ -6,7 +6,7 @@ use serde::Deserialize;
 pub(super) enum SignatureType {
     ContractSignature,
     ApprovedHash,
-    EOA,
+    Eoa,
     EthSign,
 }
 

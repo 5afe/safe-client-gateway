@@ -238,13 +238,22 @@
 <span id="238">238</span>
 <span id="239">239</span>
 <span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::backend_models::Message;
-<span class="kw">use </span><span class="kw">super</span>::frontend_models::{Confirmation <span class="kw">as </span>FrontendConfirmation, Message <span class="kw">as </span>FrontendMessage};
+<span class="kw">use </span><span class="kw">super</span>::frontend_models::{
+    Confirmation <span class="kw">as </span>FrontendConfirmation, Message <span class="kw">as </span>FrontendMessage,
+    MessageValue <span class="kw">as </span>FrontendMessageValue,
+};
 <span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::page::{Page, PageMetadata};
 <span class="kw">use </span><span class="kw">crate</span>::providers::ext::InfoProviderExt;
 <span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
-<span class="kw">use </span><span class="kw">crate</span>::routes::messages::backend_models::Confirmation;
+<span class="kw">use </span><span class="kw">crate</span>::routes::messages::backend_models::{Confirmation, MessageValue};
 <span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::{CreateMessage, MessageStatus, UpdateMessage};
 <span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
 <span class="kw">use </span><span class="kw">crate</span>::utils::errors::{ApiError, ApiResult, ErrorDetails};
@@ -445,7 +454,10 @@
         },
         name: safe_app_name_logo.<span class="number">0</span>,
         logo_uri: safe_app_name_logo.<span class="number">1</span>,
-        message: message.message.to_string(),
+        message: <span class="kw">match </span><span class="kw-2">&amp;</span>message.message {
+            MessageValue::String(value) =&gt; FrontendMessageValue::String(value.to_string()),
+            MessageValue::Object(value) =&gt; FrontendMessageValue::Object(value.clone()),
+        },
         creation_timestamp: message.created.timestamp_millis(),
         modified_timestamp: message.modified.timestamp_millis(),
         confirmations_submitted,

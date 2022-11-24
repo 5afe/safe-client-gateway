@@ -33,8 +33,17 @@
 <span id="33">33</span>
 <span id="34">34</span>
 <span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
 </pre><pre class="rust"><code><span class="kw">use </span>chrono::{DateTime, Utc};
 <span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>std::collections::BTreeMap;
 
 <span class="attribute">#[derive(Deserialize, Debug)]
 #[serde(rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
@@ -62,11 +71,18 @@
     <span class="kw">pub</span>(<span class="kw">super</span>) modified: DateTime&lt;Utc&gt;,
     <span class="kw">pub</span>(<span class="kw">super</span>) safe: String,
     <span class="kw">pub</span>(<span class="kw">super</span>) message_hash: String,
-    <span class="kw">pub</span>(<span class="kw">super</span>) message: String,
+    <span class="kw">pub</span>(<span class="kw">super</span>) message: MessageValue,
     <span class="kw">pub</span>(<span class="kw">super</span>) proposed_by: String,
     <span class="kw">pub</span>(<span class="kw">super</span>) safe_app_id: <span class="prelude-ty">Option</span>&lt;u64&gt;,
     <span class="kw">pub</span>(<span class="kw">super</span>) confirmations: Vec&lt;Confirmation&gt;,
     <span class="kw">pub</span>(<span class="kw">super</span>) prepared_signature: <span class="prelude-ty">Option</span>&lt;String&gt;,
+}
+
+<span class="attribute">#[derive(Deserialize, Debug)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>MessageValue {
+    String(String),
+    Object(BTreeMap&lt;String, serde_json::Value&gt;),
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

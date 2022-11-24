@@ -92,5 +92,6 @@
       "from": "0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF"
     }
   ],
-  "txType": "MULTISIG_TRANSACTION"
+  "txType": "MULTISIG_TRANSACTION",
+  "trusted": false
 }

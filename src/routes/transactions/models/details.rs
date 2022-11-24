@@ -263,6 +263,7 @@ pub struct MultisigExecutionDetails {
     pub rejectors: Option<Vec<AddressEx>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gas_token_info: Option<TokenInfo>,
+    pub trusted: bool,
 }
 
 #[derive(Serialize, Debug)]

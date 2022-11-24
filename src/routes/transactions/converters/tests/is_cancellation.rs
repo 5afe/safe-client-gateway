@@ -113,5 +113,6 @@ fn build_multisig_tx() -> MultisigTransaction {
         confirmations_required: None,
         confirmations: None,
         signatures: None,
+        trusted: false,
     }
 }

@@ -39,7 +39,8 @@
                     "signatureType": "EOA"
                 }
             ],
-            "signatures": null
+            "signatures": null,
+            "trusted": false
         }
     ],
     "countUniqueNonce": 81

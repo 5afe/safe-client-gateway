@@ -1,5 +1,6 @@
 use crate::common::models::addresses::AddressEx;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
@@ -24,7 +25,7 @@ pub(super) enum Message {
         status: MessageStatus,
         logo_uri: Option<String>,
         name: Option<String>,
-        message: String,
+        message: MessageValue,
         creation_timestamp: i64,
         modified_timestamp: i64,
         confirmations_submitted: usize,
@@ -47,4 +48,11 @@ pub struct CreateMessage {
 #[serde(rename_all = "camelCase")]
 pub struct UpdateMessage {
     signature: String,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(untagged)]
+pub enum MessageValue {
+    String(String),
+    Object(BTreeMap<String, serde_json::Value>),
 }

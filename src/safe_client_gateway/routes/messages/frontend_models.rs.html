@@ -56,6 +56,8 @@
 <span id="56">56</span>
 <span id="57">57</span>
 <span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>std::collections::BTreeMap;
@@ -76,7 +78,7 @@
 
 <span class="attribute">#[derive(Serialize, Debug)]
 #[serde(tag = <span class="string">&quot;type&quot;</span>, rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
-</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>Message {
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>MessageItem {
     <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
     </span>Message {
         message_hash: String,
@@ -92,6 +94,8 @@
         confirmations: Vec&lt;Confirmation&gt;,
         prepared_signature: <span class="prelude-ty">Option</span>&lt;String&gt;,
     },
+    <span class="attribute">#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+    </span>DateLabel { timestamp: i64 },
 }
 
 <span class="attribute">#[derive(Deserialize, Serialize, Debug)]

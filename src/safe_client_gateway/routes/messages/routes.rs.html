@@ -244,9 +244,52 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::backend_models::Message;
 <span class="kw">use </span><span class="kw">super</span>::frontend_models::{
-    Confirmation <span class="kw">as </span>FrontendConfirmation, Message <span class="kw">as </span>FrontendMessage,
+    Confirmation <span class="kw">as </span>FrontendConfirmation, MessageItem <span class="kw">as </span>FrontendMessageItem,
     MessageValue <span class="kw">as </span>FrontendMessageValue,
 };
 <span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
@@ -254,11 +297,16 @@
 <span class="kw">use </span><span class="kw">crate</span>::providers::ext::InfoProviderExt;
 <span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
 <span class="kw">use </span><span class="kw">crate</span>::routes::messages::backend_models::{Confirmation, MessageValue};
-<span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::{CreateMessage, MessageStatus, UpdateMessage};
+<span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::MessageItem::DateLabel;
+<span class="kw">use </span><span class="kw">crate</span>::routes::messages::frontend_models::{
+    CreateMessage, MessageItem, MessageStatus, UpdateMessage,
+};
 <span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
 <span class="kw">use </span><span class="kw">crate</span>::utils::errors::{ApiError, ApiResult, ErrorDetails};
 <span class="kw">use </span><span class="kw">crate</span>::utils::http_client::{Request, Response};
 <span class="kw">use </span><span class="kw">crate</span>::utils::urls::build_absolute_uri;
+<span class="kw">use </span>chrono::{DateTime, Datelike, NaiveDate, Utc};
+<span class="kw">use </span>itertools::Itertools;
 <span class="kw">use </span>reqwest::Url;
 <span class="kw">use </span>rocket::futures::future;
 <span class="kw">use </span>rocket::response::content;
@@ -296,13 +344,29 @@
     <span class="kw">let </span>body = info_provider.client().get(http_request).<span class="kw">await</span><span class="question-mark">?</span>.body;
 
     <span class="kw">let </span>messages_page: Page&lt;Message&gt; = serde_json::from_str::&lt;Page&lt;Message&gt;&gt;(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
-    <span class="kw">let </span>messages: Vec&lt;FrontendMessage&gt; = future::join_all(
-        messages_page
-            .results
-            .iter()
-            .map(|message| map_message(<span class="kw-2">&amp;</span>info_provider, <span class="kw-2">&amp;</span>safe_info, <span class="kw-2">&amp;</span>message)),
-    )
-    .<span class="kw">await</span>;
+    <span class="kw">let </span>message_groups: Vec&lt;(<span class="prelude-ty">Option</span>&lt;NaiveDate&gt;, Vec&lt;Message&gt;)&gt; =
+        group_messages_by_date(messages_page.results);
+
+    <span class="comment">// Build final collection which includes DateLabels and Message types
+    </span><span class="kw">let </span><span class="kw-2">mut </span>message_items: Vec&lt;FrontendMessageItem&gt; = <span class="macro">vec!</span>[];
+    <span class="kw">for </span>(date_header, messages) <span class="kw">in </span>message_groups {
+        <span class="comment">// Maps the group header into a UNIX timestamp
+        </span><span class="kw">let </span>date_label_item: <span class="prelude-ty">Option</span>&lt;MessageItem&gt; = date_header
+            .and_then(|date| date.and_hms_nano_opt(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
+            .map(|date| DateLabel {
+                timestamp: date.timestamp_millis(),
+            });
+
+        <span class="comment">// If we have a resulting DateLabel we push it
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(message_item) = date_label_item {
+            message_items.push(message_item);
+        }
+
+        <span class="kw">for </span>message <span class="kw">in </span>messages {
+            <span class="kw">let </span>message_item = map_message(<span class="kw-2">&amp;</span>info_provider, <span class="kw-2">&amp;</span>safe_info, <span class="kw-2">&amp;</span>message).<span class="kw">await</span>;
+            message_items.push(message_item);
+        }
+    }
 
     <span class="kw">let </span>next_pagination: <span class="prelude-ty">Option</span>&lt;PageMetadata&gt; = <span class="kw">match </span>messages_page.next {
         <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
@@ -317,11 +381,33 @@
     <span class="kw">let </span>body = Page {
         next: get_route_url(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>safe_address, <span class="kw-2">&amp;</span>next_pagination),
         previous: get_route_url(<span class="kw-2">&amp;</span>context, <span class="kw-2">&amp;</span>chain_id, <span class="kw-2">&amp;</span>safe_address, <span class="kw-2">&amp;</span>previous_pagination),
-        results: messages,
+        results: message_items,
     };
 
     <span class="kw">let </span>body = serde_json::to_string(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
     <span class="kw">return </span><span class="prelude-val">Ok</span>(content::RawJson(body));
+}
+
+<span class="kw">fn </span>group_messages_by_date(messages: Vec&lt;Message&gt;) -&gt; Vec&lt;(<span class="prelude-ty">Option</span>&lt;NaiveDate&gt;, Vec&lt;Message&gt;)&gt; {
+    <span class="kw">let </span>groups = messages
+        .into_iter()
+        <span class="comment">// Sort by descending order (grouping works on consecutive entries)
+        </span>.sorted_by(|m1, m2| m2.created.cmp(<span class="kw-2">&amp;</span>m1.created))
+        <span class="comment">// Group by date
+        </span>.group_by(|message| {
+            <span class="kw">let </span>message_date: DateTime&lt;Utc&gt; = message.created;
+            <span class="kw">return </span>NaiveDate::from_ymd_opt(
+                message_date.year(),
+                message_date.month(),
+                message_date.day(),
+            );
+        });
+
+    <span class="kw">let </span><span class="kw-2">mut </span>data_grouped: Vec&lt;(<span class="prelude-ty">Option</span>&lt;NaiveDate&gt;, Vec&lt;Message&gt;)&gt; = Vec::new();
+    <span class="kw">for </span>(key, group) <span class="kw">in </span><span class="kw-2">&amp;</span>groups {
+        data_grouped.push((key, group.collect()));
+    }
+    <span class="kw">return </span>data_grouped;
 }
 
 <span class="attribute">#[post(
@@ -415,7 +501,7 @@
     info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
     safe_info: <span class="kw-2">&amp;</span>SafeInfo,
     message: <span class="kw-2">&amp;</span>Message,
-) -&gt; FrontendMessage {
+) -&gt; FrontendMessageItem {
     <span class="kw">let </span>confirmations_required = safe_info.threshold <span class="kw">as </span>usize;
     <span class="kw">let </span>confirmations_submitted = message.confirmations.len();
 
@@ -445,7 +531,7 @@
     )
     .<span class="kw">await</span>;
 
-    <span class="kw">return </span>FrontendMessage::Message {
+    <span class="kw">return </span>FrontendMessageItem::Message {
         message_hash: message.message_hash.to_string(),
         status: <span class="kw">if </span>confirmations_submitted &gt;= confirmations_required {
             MessageStatus::Confirmed

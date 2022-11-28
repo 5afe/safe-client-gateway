@@ -26,6 +26,9 @@ pub struct SafeLastChanges {
     pub collectibles_tag: String,
     pub tx_queued_tag: String,
     pub tx_history_tag: String,
+    // Can be String once the Messages feature is considered stable
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub messages_tag: Option<String>,
 }
 
 #[derive(Serialize, Debug, PartialEq)]

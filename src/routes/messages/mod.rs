@@ -1,4 +1,4 @@
 pub mod routes;
 
-mod backend_models;
+pub(crate) mod backend_models;
 mod frontend_models;

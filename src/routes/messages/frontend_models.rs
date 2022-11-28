@@ -18,7 +18,7 @@ pub(super) struct Confirmation {
 
 #[derive(Serialize, Debug)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
-pub(super) enum Message {
+pub(super) enum MessageItem {
     #[serde(rename_all = "camelCase")]
     Message {
         message_hash: String,
@@ -34,6 +34,8 @@ pub(super) enum Message {
         confirmations: Vec<Confirmation>,
         prepared_signature: Option<String>,
     },
+    #[serde(rename_all = "camelCase")]
+    DateLabel { timestamp: i64 },
 }
 
 #[derive(Deserialize, Serialize, Debug)]

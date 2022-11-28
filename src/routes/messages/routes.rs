@@ -1,6 +1,6 @@
 use super::backend_models::Message;
 use super::frontend_models::{
-    Confirmation as FrontendConfirmation, Message as FrontendMessage,
+    Confirmation as FrontendConfirmation, MessageItem as FrontendMessageItem,
     MessageValue as FrontendMessageValue,
 };
 use crate::common::models::addresses::AddressEx;
@@ -8,11 +8,16 @@ use crate::common::models::page::{Page, PageMetadata};
 use crate::providers::ext::InfoProviderExt;
 use crate::providers::info::{DefaultInfoProvider, InfoProvider, SafeInfo};
 use crate::routes::messages::backend_models::{Confirmation, MessageValue};
-use crate::routes::messages::frontend_models::{CreateMessage, MessageStatus, UpdateMessage};
+use crate::routes::messages::frontend_models::MessageItem::DateLabel;
+use crate::routes::messages::frontend_models::{
+    CreateMessage, MessageItem, MessageStatus, UpdateMessage,
+};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::{ApiError, ApiResult, ErrorDetails};
 use crate::utils::http_client::{Request, Response};
 use crate::utils::urls::build_absolute_uri;
+use chrono::{DateTime, Datelike, NaiveDate, Utc};
+use itertools::Itertools;
 use reqwest::Url;
 use rocket::futures::future;
 use rocket::response::content;
@@ -50,13 +55,29 @@ pub async fn get_messages(
     let body = info_provider.client().get(http_request).await?.body;
 
     let messages_page: Page<Message> = serde_json::from_str::<Page<Message>>(&body)?;
-    let messages: Vec<FrontendMessage> = future::join_all(
-        messages_page
-            .results
-            .iter()
-            .map(|message| map_message(&info_provider, &safe_info, &message)),
-    )
-    .await;
+    let message_groups: Vec<(Option<NaiveDate>, Vec<Message>)> =
+        group_messages_by_date(messages_page.results);
+
+    // Build final collection which includes DateLabels and Message types
+    let mut message_items: Vec<FrontendMessageItem> = vec![];
+    for (date_header, messages) in message_groups {
+        // Maps the group header into a UNIX timestamp
+        let date_label_item: Option<MessageItem> = date_header
+            .and_then(|date| date.and_hms_nano_opt(0, 0, 0, 0))
+            .map(|date| DateLabel {
+                timestamp: date.timestamp_millis(),
+            });
+
+        // If we have a resulting DateLabel we push it
+        if let Some(message_item) = date_label_item {
+            message_items.push(message_item);
+        }
+
+        for message in messages {
+            let message_item = map_message(&info_provider, &safe_info, &message).await;
+            message_items.push(message_item);
+        }
+    }
 
     let next_pagination: Option<PageMetadata> = match messages_page.next {
         None => None,
@@ -71,11 +92,33 @@ pub async fn get_messages(
     let body = Page {
         next: get_route_url(&context, &chain_id, &safe_address, &next_pagination),
         previous: get_route_url(&context, &chain_id, &safe_address, &previous_pagination),
-        results: messages,
+        results: message_items,
     };
 
     let body = serde_json::to_string(&body)?;
     return Ok(content::RawJson(body));
+}
+
+fn group_messages_by_date(messages: Vec<Message>) -> Vec<(Option<NaiveDate>, Vec<Message>)> {
+    let groups = messages
+        .into_iter()
+        // Sort by descending order (grouping works on consecutive entries)
+        .sorted_by(|m1, m2| m2.created.cmp(&m1.created))
+        // Group by date
+        .group_by(|message| {
+            let message_date: DateTime<Utc> = message.created;
+            return NaiveDate::from_ymd_opt(
+                message_date.year(),
+                message_date.month(),
+                message_date.day(),
+            );
+        });
+
+    let mut data_grouped: Vec<(Option<NaiveDate>, Vec<Message>)> = Vec::new();
+    for (key, group) in &groups {
+        data_grouped.push((key, group.collect()));
+    }
+    return data_grouped;
 }
 
 #[post(
@@ -169,7 +212,7 @@ async fn map_message(
     info_provider: &(impl InfoProvider + Sync),
     safe_info: &SafeInfo,
     message: &Message,
-) -> FrontendMessage {
+) -> FrontendMessageItem {
     let confirmations_required = safe_info.threshold as usize;
     let confirmations_submitted = message.confirmations.len();
 
@@ -199,7 +242,7 @@ async fn map_message(
     )
     .await;
 
-    return FrontendMessage::Message {
+    return FrontendMessageItem::Message {
         message_hash: message.message_hash.to_string(),
         status: if confirmations_submitted >= confirmations_required {
             MessageStatus::Confirmed

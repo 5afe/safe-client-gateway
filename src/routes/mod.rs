@@ -64,7 +64,8 @@ pub fn active_routes() -> Vec<Route> {
         routes![
             messages::routes::get_messages,
             messages::routes::create_message,
-            messages::routes::update_message
+            messages::routes::update_message,
+            messages::routes::get_message,
         ]
     } else {
         routes![]

@@ -312,8 +312,8 @@
 <span id="312">312</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::backend_models::Message;
 <span class="kw">use </span><span class="kw">super</span>::frontend_models::{
-    Confirmation <span class="kw">as </span>FrontendConfirmation, MessageItem <span class="kw">as </span>FrontendMessageItem,
-    MessageValue <span class="kw">as </span>FrontendMessageValue,
+    Confirmation <span class="kw">as </span>FrontendConfirmation, Message <span class="kw">as </span>FrontendMessage,
+    MessageItem <span class="kw">as </span>FrontendMessageItem, MessageValue <span class="kw">as </span>FrontendMessageValue,
 };
 <span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::page::{Page, PageMetadata};
@@ -387,7 +387,7 @@
 
         <span class="kw">for </span>message <span class="kw">in </span>messages {
             <span class="kw">let </span>message_item = map_message(<span class="kw-2">&amp;</span>info_provider, <span class="kw-2">&amp;</span>safe_info, <span class="kw-2">&amp;</span>message).<span class="kw">await</span>;
-            message_items.push(message_item);
+            message_items.push(FrontendMessageItem::Message(message_item));
         }
     }
 
@@ -428,7 +428,7 @@
     <span class="comment">// Request Safe Info with the safe field that was retrieved from the Message
     </span><span class="kw">let </span>safe_info = info_provider.safe_info(<span class="kw-2">&amp;</span>backend_message.safe).<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">let </span>message: MessageItem = map_message(<span class="kw-2">&amp;</span>info_provider, <span class="kw-2">&amp;</span>safe_info, <span class="kw-2">&amp;</span>backend_message).<span class="kw">await</span>;
+    <span class="kw">let </span>message: FrontendMessage = map_message(<span class="kw-2">&amp;</span>info_provider, <span class="kw-2">&amp;</span>safe_info, <span class="kw-2">&amp;</span>backend_message).<span class="kw">await</span>;
 
     <span class="kw">let </span>body = serde_json::to_string(<span class="kw-2">&amp;</span>message)<span class="question-mark">?</span>;
     <span class="kw">return </span><span class="prelude-val">Ok</span>(content::RawJson(body));
@@ -547,7 +547,7 @@
     info_provider: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>InfoProvider + Sync),
     safe_info: <span class="kw-2">&amp;</span>SafeInfo,
     message: <span class="kw-2">&amp;</span>Message,
-) -&gt; FrontendMessageItem {
+) -&gt; FrontendMessage {
     <span class="kw">let </span>confirmations_required = safe_info.threshold <span class="kw">as </span>usize;
     <span class="kw">let </span>confirmations_submitted = message.confirmations.len();
 
@@ -577,7 +577,7 @@
     )
     .<span class="kw">await</span>;
 
-    <span class="kw">return </span>FrontendMessageItem::Message {
+    <span class="kw">return </span>FrontendMessage {
         message_hash: message.message_hash.to_string(),
         status: <span class="kw">if </span>confirmations_submitted &gt;= confirmations_required {
             MessageStatus::Confirmed

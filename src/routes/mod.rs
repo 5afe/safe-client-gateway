@@ -62,10 +62,10 @@ pub fn active_routes() -> Vec<Route> {
 
     let messages_routes = if is_messages_feature_enabled() {
         routes![
-            messages::routes::get_messages,
-            messages::routes::create_message,
-            messages::routes::update_message,
-            messages::routes::get_message,
+            messages::create_message::route,
+            messages::get_message::route,
+            messages::get_messages::route,
+            messages::update_message::route,
         ]
     } else {
         routes![]

@@ -112,7 +112,7 @@
 #[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
 </span><span class="kw">pub struct </span>CreateMessage {
     message: String,
-    safe_app_id: u64,
+    safe_app_id: <span class="prelude-ty">Option</span>&lt;u64&gt;,
     signature: String,
 }
 

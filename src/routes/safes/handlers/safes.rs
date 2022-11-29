@@ -3,11 +3,15 @@ use crate::cache::manager::ChainCache;
 use crate::common::models::backend::transactions::{MultisigTransaction, Transaction};
 use crate::common::models::backend::transfers::Transfer;
 use crate::common::models::page::{Page, SafeList};
-use crate::config::{owners_for_safes_cache_duration, transaction_request_timeout};
+use crate::config::{
+    is_messages_feature_enabled, owners_for_safes_cache_duration, transaction_request_timeout,
+};
 use crate::providers::info::{DefaultInfoProvider, InfoProvider};
+use crate::routes::messages::backend_models::Message;
 use crate::routes::safes::models::{SafeLastChanges, SafeState};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
+use crate::utils::http_client::Request;
 use chrono::Utc;
 use rocket::futures::join;
 
@@ -32,6 +36,19 @@ pub async fn get_safe_info_ex(
         get_last_history_tx(&info_provider, safe_address)
     );
 
+    // This branch won't be required once the Messages feature is considered stable
+    // SafeLastChanges.messages_tag can also be safely converted to a non-optional field
+    let messages_tag: Option<String> = if is_messages_feature_enabled() {
+        Some(
+            get_last_modified_message(&info_provider, safe_address)
+                .await
+                .unwrap_or(Utc::now().timestamp())
+                .to_string(),
+        )
+    } else {
+        None
+    };
+
     let safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
@@ -40,10 +57,31 @@ pub async fn get_safe_info_ex(
                 .to_string(),
             tx_queued_tag: tx_queued_tag.unwrap_or(Utc::now().timestamp()).to_string(),
             tx_history_tag: tx_history_tag.unwrap_or(Utc::now().timestamp()).to_string(),
+            messages_tag,
         },
     };
 
     Ok(safe_state)
+}
+
+async fn get_last_modified_message(
+    info_provider: &impl InfoProvider,
+    safe_address: &String,
+) -> ApiResult<i64> {
+    let url = core_uri!(
+        info_provider,
+        "/v1/safes/{}/messages/?ordering=-modified&limit=1",
+        safe_address
+    )?;
+    let http_request = Request::new(url);
+    let body = info_provider.client().get(http_request).await?.body;
+    let messages_page: Page<Message> = serde_json::from_str::<Page<Message>>(&body)?;
+
+    return messages_page
+        .results
+        .get(0)
+        .map(|message| message.modified.timestamp())
+        .ok_or(api_error!("Couldn't get tx timestamps"));
 }
 
 async fn get_last_collectible(

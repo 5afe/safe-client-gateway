@@ -23,9 +23,9 @@ pub(super) struct Confirmation {
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub(super) struct Message {
+pub(crate) struct Message {
     pub(super) created: DateTime<Utc>,
-    pub(super) modified: DateTime<Utc>,
+    pub(crate) modified: DateTime<Utc>,
     pub(super) safe: String,
     pub(super) message_hash: String,
     pub(super) message: MessageValue,

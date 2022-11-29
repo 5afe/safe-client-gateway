@@ -157,16 +157,58 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::cache_operations::RequestCached;
 <span class="kw">use </span><span class="kw">crate</span>::cache::manager::ChainCache;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transactions::{MultisigTransaction, Transaction};
 <span class="kw">use </span><span class="kw">crate</span>::common::models::backend::transfers::Transfer;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::page::{Page, SafeList};
-<span class="kw">use </span><span class="kw">crate</span>::config::{owners_for_safes_cache_duration, transaction_request_timeout};
+<span class="kw">use </span><span class="kw">crate</span>::config::{
+    is_messages_feature_enabled, owners_for_safes_cache_duration, transaction_request_timeout,
+};
 <span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider};
+<span class="kw">use </span><span class="kw">crate</span>::routes::messages::backend_models::Message;
 <span class="kw">use </span><span class="kw">crate</span>::routes::safes::models::{SafeLastChanges, SafeState};
 <span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
 <span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
+<span class="kw">use </span><span class="kw">crate</span>::utils::http_client::Request;
 <span class="kw">use </span>chrono::Utc;
 <span class="kw">use </span>rocket::futures::join;
 
@@ -191,6 +233,19 @@
         get_last_history_tx(<span class="kw-2">&amp;</span>info_provider, safe_address)
     );
 
+    <span class="comment">// This branch won&#39;t be required once the Messages feature is considered stable
+    // SafeLastChanges.messages_tag can also be safely converted to a non-optional field
+    </span><span class="kw">let </span>messages_tag: <span class="prelude-ty">Option</span>&lt;String&gt; = <span class="kw">if </span>is_messages_feature_enabled() {
+        <span class="prelude-val">Some</span>(
+            get_last_modified_message(<span class="kw-2">&amp;</span>info_provider, safe_address)
+                .<span class="kw">await
+                </span>.unwrap_or(Utc::now().timestamp())
+                .to_string(),
+        )
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>};
+
     <span class="kw">let </span>safe_state = SafeState {
         safe_config: safe_info_ex,
         safe_state: SafeLastChanges {
@@ -199,10 +254,31 @@
                 .to_string(),
             tx_queued_tag: tx_queued_tag.unwrap_or(Utc::now().timestamp()).to_string(),
             tx_history_tag: tx_history_tag.unwrap_or(Utc::now().timestamp()).to_string(),
+            messages_tag,
         },
     };
 
     <span class="prelude-val">Ok</span>(safe_state)
+}
+
+<span class="kw">async fn </span>get_last_modified_message(
+    info_provider: <span class="kw-2">&amp;</span><span class="kw">impl </span>InfoProvider,
+    safe_address: <span class="kw-2">&amp;</span>String,
+) -&gt; ApiResult&lt;i64&gt; {
+    <span class="kw">let </span>url = <span class="macro">core_uri!</span>(
+        info_provider,
+        <span class="string">&quot;/v1/safes/{}/messages/?ordering=-modified&amp;limit=1&quot;</span>,
+        safe_address
+    )<span class="question-mark">?</span>;
+    <span class="kw">let </span>http_request = Request::new(url);
+    <span class="kw">let </span>body = info_provider.client().get(http_request).<span class="kw">await</span><span class="question-mark">?</span>.body;
+    <span class="kw">let </span>messages_page: Page&lt;Message&gt; = serde_json::from_str::&lt;Page&lt;Message&gt;&gt;(<span class="kw-2">&amp;</span>body)<span class="question-mark">?</span>;
+
+    <span class="kw">return </span>messages_page
+        .results
+        .get(<span class="number">0</span>)
+        .map(|message| message.modified.timestamp())
+        .ok_or(<span class="macro">api_error!</span>(<span class="string">&quot;Couldn&#39;t get tx timestamps&quot;</span>));
 }
 
 <span class="kw">async fn </span>get_last_collectible(

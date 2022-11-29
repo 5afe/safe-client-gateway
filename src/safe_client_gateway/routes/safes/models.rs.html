@@ -80,6 +80,9 @@
 <span id="80">80</span>
 <span id="81">81</span>
 <span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::addresses::AddressEx;
 <span class="kw">use </span><span class="kw">crate</span>::common::models::data_decoded::Operation;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
@@ -108,6 +111,9 @@
     <span class="kw">pub </span>collectibles_tag: String,
     <span class="kw">pub </span>tx_queued_tag: String,
     <span class="kw">pub </span>tx_history_tag: String,
+    <span class="comment">// Can be String once the Messages feature is considered stable
+    </span><span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span><span class="kw">pub </span>messages_tag: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
 <span class="attribute">#[derive(Serialize, Debug, PartialEq)]

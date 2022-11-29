@@ -66,9 +66,9 @@
 
 <span class="attribute">#[derive(Deserialize, Debug)]
 #[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
-</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>Message {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Message {
     <span class="kw">pub</span>(<span class="kw">super</span>) created: DateTime&lt;Utc&gt;,
-    <span class="kw">pub</span>(<span class="kw">super</span>) modified: DateTime&lt;Utc&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) modified: DateTime&lt;Utc&gt;,
     <span class="kw">pub</span>(<span class="kw">super</span>) safe: String,
     <span class="kw">pub</span>(<span class="kw">super</span>) message_hash: String,
     <span class="kw">pub</span>(<span class="kw">super</span>) message: MessageValue,

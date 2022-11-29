@@ -1,4 +1,8 @@
-pub mod routes;
+pub mod backend_models;
+pub mod create_message;
+pub mod get_message;
+pub mod get_messages;
+pub mod update_message;
 
-pub(crate) mod backend_models;
 mod frontend_models;
+mod message_mapper;

@@ -19,23 +19,28 @@ pub(super) struct Confirmation {
 #[derive(Serialize, Debug)]
 #[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
 pub(super) enum MessageItem {
+    Message(Message),
     #[serde(rename_all = "camelCase")]
-    Message {
-        message_hash: String,
-        status: MessageStatus,
-        logo_uri: Option<String>,
-        name: Option<String>,
-        message: MessageValue,
-        creation_timestamp: i64,
-        modified_timestamp: i64,
-        confirmations_submitted: usize,
-        confirmations_required: usize,
-        proposed_by: AddressEx,
-        confirmations: Vec<Confirmation>,
-        prepared_signature: Option<String>,
+    DateLabel {
+        timestamp: i64,
     },
-    #[serde(rename_all = "camelCase")]
-    DateLabel { timestamp: i64 },
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub(super) struct Message {
+    pub(super) message_hash: String,
+    pub(super) status: MessageStatus,
+    pub(super) logo_uri: Option<String>,
+    pub(super) name: Option<String>,
+    pub(super) message: MessageValue,
+    pub(super) creation_timestamp: i64,
+    pub(super) modified_timestamp: i64,
+    pub(super) confirmations_submitted: usize,
+    pub(super) confirmations_required: usize,
+    pub(super) proposed_by: AddressEx,
+    pub(super) confirmations: Vec<Confirmation>,
+    pub(super) prepared_signature: Option<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]

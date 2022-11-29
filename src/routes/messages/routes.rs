@@ -1,7 +1,7 @@
 use super::backend_models::Message;
 use super::frontend_models::{
-    Confirmation as FrontendConfirmation, MessageItem as FrontendMessageItem,
-    MessageValue as FrontendMessageValue,
+    Confirmation as FrontendConfirmation, Message as FrontendMessage,
+    MessageItem as FrontendMessageItem, MessageValue as FrontendMessageValue,
 };
 use crate::common::models::addresses::AddressEx;
 use crate::common::models::page::{Page, PageMetadata};
@@ -75,7 +75,7 @@ pub async fn get_messages(
 
         for message in messages {
             let message_item = map_message(&info_provider, &safe_info, &message).await;
-            message_items.push(message_item);
+            message_items.push(FrontendMessageItem::Message(message_item));
         }
     }
 
@@ -116,7 +116,7 @@ pub async fn get_message(
     // Request Safe Info with the safe field that was retrieved from the Message
     let safe_info = info_provider.safe_info(&backend_message.safe).await?;
 
-    let message: MessageItem = map_message(&info_provider, &safe_info, &backend_message).await;
+    let message: FrontendMessage = map_message(&info_provider, &safe_info, &backend_message).await;
 
     let body = serde_json::to_string(&message)?;
     return Ok(content::RawJson(body));
@@ -235,7 +235,7 @@ async fn map_message(
     info_provider: &(impl InfoProvider + Sync),
     safe_info: &SafeInfo,
     message: &Message,
-) -> FrontendMessageItem {
+) -> FrontendMessage {
     let confirmations_required = safe_info.threshold as usize;
     let confirmations_submitted = message.confirmations.len();
 
@@ -265,7 +265,7 @@ async fn map_message(
     )
     .await;
 
-    return FrontendMessageItem::Message {
+    return FrontendMessage {
         message_hash: message.message_hash.to_string(),
         status: if confirmations_submitted >= confirmations_required {
             MessageStatus::Confirmed

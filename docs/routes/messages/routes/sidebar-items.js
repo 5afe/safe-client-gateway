@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["create_message",""],["get_message",""],["get_messages",""],["get_route_url",""],["group_messages_by_date",""],["map_confirmation",""],["map_message",""],["page_metadata_from_url",""],["update_message",""]]};

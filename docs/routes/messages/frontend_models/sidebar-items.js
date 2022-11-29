@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["MessageItem",""],["MessageStatus",""],["MessageValue",""]],"struct":[["Confirmation",""],["CreateMessage",""],["Message",""],["UpdateMessage",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["MessageStatus",""],["MessageValue",""]],"struct":[["Confirmation",""],["Message",""]]};

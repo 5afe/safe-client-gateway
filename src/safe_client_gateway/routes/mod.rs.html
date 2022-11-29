@@ -194,10 +194,10 @@
 
     <span class="kw">let </span>messages_routes = <span class="kw">if </span>is_messages_feature_enabled() {
         <span class="macro">routes!</span>[
-            messages::routes::get_messages,
-            messages::routes::create_message,
-            messages::routes::update_message,
-            messages::routes::get_message,
+            messages::create_message::route,
+            messages::get_message::route,
+            messages::get_messages::route,
+            messages::update_message::route,
         ]
     } <span class="kw">else </span>{
         <span class="macro">routes!</span>[]

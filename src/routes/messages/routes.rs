@@ -99,6 +99,29 @@ pub async fn get_messages(
     return Ok(content::RawJson(body));
 }
 
+#[get("/v1/chains/<chain_id>/messages/<message_hash>")]
+pub async fn get_message(
+    context: RequestContext,
+    chain_id: String,
+    message_hash: String,
+) -> ApiResult<content::RawJson<String>> {
+    let info_provider = DefaultInfoProvider::new(&chain_id, &context);
+
+    // Request
+    let url = core_uri!(info_provider, "/v1/messages/{}/", message_hash)?;
+    let http_request = Request::new(url);
+    let body = info_provider.client().get(http_request).await?.body;
+    let backend_message: Message = serde_json::from_str::<Message>(&body)?;
+
+    // Request Safe Info with the safe field that was retrieved from the Message
+    let safe_info = info_provider.safe_info(&backend_message.safe).await?;
+
+    let message: MessageItem = map_message(&info_provider, &safe_info, &backend_message).await;
+
+    let body = serde_json::to_string(&message)?;
+    return Ok(content::RawJson(body));
+}
+
 fn group_messages_by_date(messages: Vec<Message>) -> Vec<(Option<NaiveDate>, Vec<Message>)> {
     let groups = messages
         .into_iter()

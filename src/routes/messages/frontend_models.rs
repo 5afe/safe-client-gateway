@@ -47,7 +47,7 @@ pub(super) struct Message {
 #[serde(rename_all = "camelCase")]
 pub struct CreateMessage {
     message: String,
-    safe_app_id: u64,
+    safe_app_id: Option<u64>,
     signature: String,
 }
 

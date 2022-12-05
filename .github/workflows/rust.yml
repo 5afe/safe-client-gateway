@@ -8,7 +8,7 @@ env:
 jobs:
 
   rustfmt:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
           args: --all --check
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     services:
       # Label used to access the service container
@@ -106,7 +106,7 @@ jobs:
           path-to-lcov: ${{ steps.coverage.outputs.report }}
 
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [ rustfmt, tests ]
     if: github.ref == 'refs/heads/main'
     steps:
@@ -152,7 +152,7 @@ jobs:
           publish_dir: ./target/doc
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       DOCKERHUB_ORG: safeglobal
       DOCKERHUB_PROJECT: safe-client-gateway
@@ -183,7 +183,7 @@ jobs:
         run: bash scripts/deploy_docker.sh develop
 
   autodeploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [deploy]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:

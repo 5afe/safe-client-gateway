@@ -26,7 +26,6 @@ use super::models::Collectible;
 ///
 /// ## Models
 ///
-/// For the most up-to-date version of the endpoint please check: <https://safe-transaction.gnosis.io/>
 ///
 /// ```json
 /// [

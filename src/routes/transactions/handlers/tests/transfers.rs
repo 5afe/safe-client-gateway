@@ -67,7 +67,7 @@ pub async fn get_incoming_transfers_no_filters() {
             "/v1/chains/4/safes/{}/incoming-transfers",
             &safe_address
         ))
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;

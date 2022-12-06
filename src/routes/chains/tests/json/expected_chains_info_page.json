@@ -1,6 +1,6 @@
 {
-    "next": "http://test.gnosis.io/api/v1/chains?cursor=limit%3D1%26offset%3D2",
-    "previous": "http://test.gnosis.io/api/v1/chains?cursor=limit%3D1%26offset%3D0",
+    "next": "http://test.safe.global/api/v1/chains?cursor=limit%3D1%26offset%3D2",
+    "previous": "http://test.safe.global/api/v1/chains?cursor=limit%3D1%26offset%3D0",
     "results": [
         {
             "transactionService": "https://safe-transaction-polygon.staging.gnosisdev.com",

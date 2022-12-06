@@ -64,7 +64,7 @@ async fn get_delegates_from_safe() {
     // Create request get delegates
     let request = client
         .get(format!("/v1/chains/{}/delegates?safe={}", 4, &safe_address))
-        .header(Header::new("Host", "test.gnosis.io/api"))
+        .header(Header::new("Host", "test.safe.global/api"))
         .header(ContentType::JSON);
     let response = request.dispatch().await;
     let actual_status = response.status();
@@ -127,7 +127,7 @@ async fn add_delegate() {
     let request = client
         .post(format!("/v1/chains/4/delegates"))
         .body(String::from(super::BACKEND_CREATE_DELEGATE))
-        .header(Header::new("Host", "test.gnosis.io/api"))
+        .header(Header::new("Host", "test.safe.global/api"))
         .header(ContentType::JSON);
     let response = request.dispatch().await;
     let actual_status = response.status();
@@ -188,7 +188,7 @@ async fn delete_delegate() {
     let request = client
         .delete(format!("/v1/chains/4/delegates/{}", delegate_address))
         .body(String::from(super::BACKEND_DELETE_DELEGATE))
-        .header(Header::new("Host", "test.gnosis.io/api"))
+        .header(Header::new("Host", "test.safe.global/api"))
         .header(ContentType::JSON);
     let response = request.dispatch().await;
     let actual_status = response.status();
@@ -253,7 +253,7 @@ async fn delete_delegate_safe() {
             safe_address, delegate_address
         ))
         .body(String::from(super::BACKEND_DELETE_DELEGATE_SAFE))
-        .header(Header::new("Host", "test.gnosis.io/api"))
+        .header(Header::new("Host", "test.safe.global/api"))
         .header(ContentType::JSON);
     let response = request.dispatch().await;
     let actual_status = response.status();

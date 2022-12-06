@@ -38,7 +38,7 @@ async fn paginated_chain_infos() {
 
     let request = client
         .get("/v1/chains?cursor=limit%3D1%26offset%3D1")
-        .header(Header::new("Host", "test.gnosis.io/api"))
+        .header(Header::new("Host", "test.safe.global/api"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -74,7 +74,7 @@ async fn single_chain_info() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/v1/chains/4");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
     let expected: ChainInfo =

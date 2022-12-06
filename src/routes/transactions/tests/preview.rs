@@ -45,7 +45,7 @@ async fn post_preview_success() {
 
         // Known Address Request (to field)
         let mut contract_request = Request::new(format!(
-            "https://safe-transaction.example.gnosis.io/api/v1/contracts/{}/",
+            "https://safe-transaction.example.safe.global/api/v1/contracts/{}/",
             contract_address
         ));
         contract_request.timeout(Duration::from_millis(contract_info_request_timeout()));
@@ -63,7 +63,7 @@ async fn post_preview_success() {
         // Data Decoder Request
         let data = "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000";
         let mut data_decoder_request = Request::new(
-            "https://safe-transaction.example.gnosis.io/api/v1/data-decoder/".to_string(),
+            "https://safe-transaction.example.safe.global/api/v1/data-decoder/".to_string(),
         );
         data_decoder_request.body(Some(
             serde_json::to_string::<DataDecoderRequest>(&DataDecoderRequest {
@@ -96,7 +96,7 @@ async fn post_preview_success() {
     .expect("Valid rocket instance");
 
     let request =  client.post("/v1/chains/1/transactions/0x37D94d4E230859f83c0868CebEd8CcB83A765cee/preview")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON)
         .body(&json!({
             "to": "0x37D94d4E230859f83c0868CebEd8CcB83A765cee",
@@ -141,7 +141,7 @@ async fn post_preview_data_decoder_error() {
 
         // Known Address Request (to field)
         let mut contract_request = Request::new(format!(
-            "https://safe-transaction.example.gnosis.io/api/v1/contracts/{}/",
+            "https://safe-transaction.example.safe.global/api/v1/contracts/{}/",
             contract_address
         ));
         contract_request.timeout(Duration::from_millis(contract_info_request_timeout()));
@@ -159,7 +159,7 @@ async fn post_preview_data_decoder_error() {
         // Data Decoder Request
         let data = "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000";
         let mut data_decoder_request = Request::new(
-            "https://safe-transaction.example.gnosis.io/api/v1/data-decoder/".to_string(),
+            "https://safe-transaction.example.safe.global/api/v1/data-decoder/".to_string(),
         );
         data_decoder_request.body(Some(
             serde_json::to_string::<DataDecoderRequest>(&DataDecoderRequest {
@@ -192,7 +192,7 @@ async fn post_preview_data_decoder_error() {
     .expect("Valid rocket instance");
 
     let request =  client.post("/v1/chains/1/transactions/0x37D94d4E230859f83c0868CebEd8CcB83A765cee/preview")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON)
         .body(&json!({
             "to": "0x37D94d4E230859f83c0868CebEd8CcB83A765cee",

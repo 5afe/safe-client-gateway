@@ -15,7 +15,7 @@ async fn health() {
 
     let request = client
         .get("/health")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;

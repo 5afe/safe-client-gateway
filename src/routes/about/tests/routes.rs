@@ -48,7 +48,7 @@ async fn get_chains_about() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/v1/chains/4/about");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -79,7 +79,7 @@ async fn get_about() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/about");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -146,7 +146,7 @@ async fn get_master_copies() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/v1/chains/137/about/master-copies");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -199,7 +199,7 @@ async fn get_backbone() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/v1/chains/137/about/backbone");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -234,7 +234,7 @@ async fn get_redis() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/about/redis");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.add_header(Header::new("Authorization", "Basic test_webhook_token"));
         response.dispatch().await
     };

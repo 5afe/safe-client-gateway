@@ -24,7 +24,7 @@ async fn post_hooks_events_no_token_set() {
         .post("/v1/chains/1/hooks/events")
         .body(&json!({"address": "0x6810e776880C02933D47DB1b9fc05908e5386b96"}).to_string())
         .header(ContentType::JSON)
-        .header(Header::new("Host", "test.gnosis.io"));
+        .header(Header::new("Host", "test.safe.global"));
     let response = request.dispatch().await;
 
     assert_eq!(response.status(), Status::BadRequest);
@@ -49,7 +49,7 @@ async fn post_hooks_events_invalid_token() {
         .body(&json!({"address": "0x6810e776880C02933D47DB1b9fc05908e5386b96"}).to_string())
         .header(ContentType::JSON)
         .header(Header::new("Authorization", "Basic some_token"))
-        .header(Header::new("Host", "test.gnosis.io"));
+        .header(Header::new("Host", "test.safe.global"));
     let response = request.dispatch().await;
 
     assert_eq!(response.status(), Status::Unauthorized);
@@ -77,7 +77,7 @@ async fn post_hooks_events_valid_token() {
         )
         .header(ContentType::JSON)
         .header(Header::new("Authorization", "Basic test_webhook_token"))
-        .header(Header::new("Host", "test.gnosis.io"));
+        .header(Header::new("Host", "test.safe.global"));
     let response = request.dispatch().await;
 
     assert_eq!(response.status(), Status::Ok);
@@ -99,7 +99,7 @@ async fn post_flush_events_no_token_set() {
     let request = client
         .post("/v2/flush")
         .header(ContentType::JSON)
-        .header(Header::new("Host", "test.gnosis.io"));
+        .header(Header::new("Host", "test.safe.global"));
     let response = request.dispatch().await;
 
     assert_eq!(response.status(), Status::BadRequest);
@@ -122,7 +122,7 @@ async fn post_flush_events_invalid_token() {
     let request = client
         .post("/v2/flush")
         .header(ContentType::JSON)
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(Header::new("Authorization", "Basic some_token"));
     let response = request.dispatch().await;
 
@@ -147,7 +147,7 @@ async fn post_flush_events_valid_token() {
         .post("/v2/flush")
         .body(&json!({"invalidate": "Chains"}).to_string())
         .header(ContentType::JSON)
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(Header::new("Authorization", "Basic test_webhook_token"));
     let response = request.dispatch().await;
 

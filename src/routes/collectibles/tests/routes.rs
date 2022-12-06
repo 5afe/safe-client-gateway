@@ -57,7 +57,7 @@ async fn collectibles() {
     let response = {
         let mut response = client
             .get("/v1/chains/4/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/collectibles");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -118,7 +118,7 @@ async fn collectibles_not_found() {
     let response = {
         let mut response = client
             .get("/v1/chains/4/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/collectibles");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -172,7 +172,7 @@ async fn collectibles_paginated_empty() {
     let response = {
         let mut response = client
             .get("/v2/chains/4/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/collectibles?cursor=limit%3D10%26offset%3D0&trusted=false&exclude_spam=true");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -227,7 +227,7 @@ async fn collectibles_paginated_page_one() {
     let response = {
         let mut response = client
             .get("/v2/chains/4/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/collectibles?cursor=limit%3D3%26offset%3D0&trusted=false&exclude_spam=true");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -284,7 +284,7 @@ async fn collectibles_paginated_page_two() {
     let response = {
         let mut response = client
             .get("/v2/chains/4/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/collectibles?cursor=limit%3D3%26offset%3D3&trusted=false&exclude_spam=true");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 

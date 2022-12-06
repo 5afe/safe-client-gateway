@@ -24,5 +24,9 @@
     "FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION": "false",
     "CONFIG_SERVICE_URI": "https://safe-config.sovryn.app",
     "REDIS_URI": "redis://redis-prod.id1ugm.ng.0001.use2.cache.amazonaws.com:6379"
+  },
+  "DEV_ENV_VARS": {
+  },
+  "PROD_ENV_VARS": {
   }
 }

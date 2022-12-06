@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-workflow-init:
-   uses: DistributedCollective/.github/.github/workflows/init.yml@master
+   uses: DistributedCollective/.github/.github/workflows/init.yml@ci_envs
    with:
      ref: ${{ github.ref }}
      base_ref: ${{ github.base_ref }}
@@ -15,6 +15,7 @@ jobs:
     uses: DistributedCollective/.github/.github/workflows/docker.yml@master
     needs: [call-workflow-init]
     with:
+      KUBE_NAMESPACE: ${{ needs.call-workflow-init.outputs.KUBE_NAMESPACE }}
       IMAGE_NAME: ${{ needs.call-workflow-init.outputs.image_name }}
       event_name: ${{ github.event_name }}
       registry: ${{ needs.call-workflow-init.outputs.registry }}
@@ -23,11 +24,13 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   call-workflow-k8s-deploy:
-    uses: DistributedCollective/.github/.github/workflows/deploy-k8s.yml@master
+    uses: DistributedCollective/.github/.github/workflows/deploy-k8s.yml@ci_envs
     needs: [call-workflow-init, call-workflow-docker-build]
     if: github.event_name != 'pull_request'
     with:
       KUBE_NAMESPACE: ${{ needs.call-workflow-init.outputs.KUBE_NAMESPACE }}
+      IMAGE_NAME: ${{ needs.call-workflow-init.outputs.image_name }}
+      ci_env: ${{ needs.call-workflow-init.outputs.ci_env }}
       aws_region: ${{ needs.call-workflow-init.outputs.aws_region }}
       k8s_cluster_name: ${{ needs.call-workflow-init.outputs.k8s_cluster_name }}
       app_name: ${{ needs.call-workflow-init.outputs.app_name }}

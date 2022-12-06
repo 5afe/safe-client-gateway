@@ -22,6 +22,7 @@ spec:
     spec:
       containers:
         - image: sovryn/safe-client-gateway
+          imagePullPolicy: Always
           envFrom:
           - secretRef:
               name: safe-client-gateway

@@ -56,7 +56,7 @@ async fn data_decoded() {
     .await
     .expect("valid rocket instance");
     let request  = client.post("/v1/chains/4/data-decoder")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON)
         .body(&json!({"data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000"}).to_string());
 
@@ -125,7 +125,7 @@ async fn data_decoded_error() {
     .await
     .expect("valid rocket instance");
     let request  = client.post("/v1/chains/4/data-decoder")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON)
         .body(&json!({"data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000"}).to_string());
 
@@ -185,7 +185,7 @@ async fn get_contract() {
 
     let request = client
         .get(format!("/v1/chains/4/contracts/{}", &bip_contract_address))
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -253,7 +253,7 @@ async fn get_contract_not_found() {
 
     let request = client
         .get(format!("/v1/chains/4/contracts/{}", &bip_contract_address))
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;

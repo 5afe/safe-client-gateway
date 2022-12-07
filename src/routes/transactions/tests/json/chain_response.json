@@ -27,8 +27,8 @@
     "decimals": 18,
     "logoUri": "https://safe-transaction-assets.gnosis-safe.io/chains/1/currency_logo.png"
   },
-  "transactionService": "https://safe-transaction.example.gnosis.io",
-  "vpcTransactionService": "https://safe-transaction.example.gnosis.io",
+  "transactionService": "https://safe-transaction.example.safe.global",
+  "vpcTransactionService": "https://safe-transaction.example.safe.global",
   "theme": {
     "textColor": "#001428",
     "backgroundColor": "#E8E7E6"

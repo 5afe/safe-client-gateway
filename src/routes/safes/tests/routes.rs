@@ -147,7 +147,7 @@ async fn get_safe_info() {
 
     let request = client
         .get("/v1/chains/4/safes/0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -213,7 +213,7 @@ async fn get_safe_info_not_found() {
 
     let request = client
         .get("/v1/chains/4/safes/0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -281,7 +281,7 @@ async fn get_owners() {
 
     let request = client
         .get("/v1/chains/4/owners/0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f/safes")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -341,7 +341,7 @@ async fn get_owners_not_found() {
 
     let request = client
         .get("/v1/chains/4/owners/0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f/safes")
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -459,7 +459,7 @@ async fn post_safe_gas_estimation() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -579,7 +579,7 @@ async fn post_safe_gas_estimation_no_queued_tx() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -699,7 +699,7 @@ async fn post_safe_gas_estimation_delayed_indexing() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -813,7 +813,7 @@ async fn post_safe_gas_estimation_estimation_error() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -897,7 +897,7 @@ async fn post_safe_gas_estimation_nonce_error() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -957,7 +957,7 @@ async fn post_safe_gas_estimation_safe_error() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -1071,7 +1071,7 @@ async fn post_safe_gas_estimation_v2() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -1191,7 +1191,7 @@ async fn post_safe_gas_estimation_v2_no_queued_tx() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -1311,7 +1311,7 @@ async fn post_safe_gas_estimation_v2_delayed_indexing() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -1425,7 +1425,7 @@ async fn post_safe_gas_estimation_v2_estimation_error() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -1509,7 +1509,7 @@ async fn post_safe_gas_estimation_v2_nonce_error() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -1569,7 +1569,7 @@ async fn post_safe_gas_estimation_v2_safe_error() {
             "data": "0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000",
             "operation": 0
             }).to_string())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;

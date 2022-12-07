@@ -12,7 +12,7 @@ async fn core_uri_success_with_params_prod() {
     let exclude_spam = true;
     let chain_info = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
-        transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
+        transaction_service: "https://safe-transaction.mainnet.safe.global".to_string(),
         vpc_transaction_service: "http://mainnet-safe-transaction-web.safe.svc.cluster.local"
             .to_string(),
         chain_id: "1".to_string(),
@@ -75,7 +75,7 @@ async fn core_uri_success_without_params_prod() {
     std::env::set_var("VPC_TRANSACTION_SERVICE_URI", "true");
     let chain_info = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
-        transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
+        transaction_service: "https://safe-transaction.mainnet.safe.global".to_string(),
         vpc_transaction_service: "http://mainnet-safe-transaction-web.safe.svc.cluster.local"
             .to_string(),
         chain_id: "1".to_string(),
@@ -138,7 +138,7 @@ async fn core_uri_success_with_params_local() {
     let exclude_spam = true;
     let chain_info = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
-        transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
+        transaction_service: "https://safe-transaction.mainnet.safe.global".to_string(),
         vpc_transaction_service: "http://mainnet-safe-transaction-web.safe.svc.cluster.local"
             .to_string(),
         chain_id: "1".to_string(),
@@ -193,7 +193,7 @@ async fn core_uri_success_with_params_local() {
         exclude_spam
     );
 
-    assert_eq!(url.unwrap(), "https://safe-transaction.mainnet.gnosis.io/api/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/balances/usd/?trusted=false&exclude_spam=true".to_string());
+    assert_eq!(url.unwrap(), "https://safe-transaction.mainnet.safe.global/api/v1/safes/0x1230B3d59858296A31053C1b8562Ecf89A2f888b/balances/usd/?trusted=false&exclude_spam=true".to_string());
 }
 
 #[rocket::async_test]
@@ -201,7 +201,7 @@ async fn core_uri_success_without_params_local() {
     std::env::set_var("VPC_TRANSACTION_SERVICE_URI", "false");
     let chain_info = ChainInfo {
         recommended_master_copy_version: "1.1.1".to_string(),
-        transaction_service: "https://safe-transaction.mainnet.gnosis.io".to_string(),
+        transaction_service: "https://safe-transaction.mainnet.safe.global".to_string(),
         vpc_transaction_service: "http://mainnet-safe-transaction-web.safe.svc.cluster.local"
             .to_string(),
         chain_id: "1".to_string(),
@@ -251,7 +251,7 @@ async fn core_uri_success_without_params_local() {
     let url = core_uri!(mock_info_provider, "/some/path");
 
     assert_eq!(
-        "https://safe-transaction.mainnet.gnosis.io/api/some/path",
+        "https://safe-transaction.mainnet.safe.global/api/some/path",
         url.unwrap()
     );
 }

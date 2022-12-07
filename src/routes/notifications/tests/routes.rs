@@ -62,7 +62,7 @@ async fn delete_notification_success() {
             "/v1/chains/{}/notifications/devices/{}/safes/{}",
             4, uuid, safe_address
         ))
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -122,7 +122,7 @@ async fn delete_notification_error() {
             "/v1/chains/{}/notifications/devices/{}/safes/{}",
             4, uuid, safe_address
         ))
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -235,7 +235,7 @@ async fn post_notification_success() {
     let request = client
         .post("/v1/register/notifications")
         .body(&serde_json::to_string(&request).unwrap())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -379,7 +379,7 @@ async fn post_notification_client_error() {
     let request = client
         .post("/v1/register/notifications")
         .body(&serde_json::to_string(&request).unwrap())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
 
     let response = request.dispatch().await;
@@ -484,7 +484,7 @@ async fn post_notification_server_and_client_errors() {
     let request = client
         .post("/v1/register/notifications")
         .body(&serde_json::to_string(&request).unwrap())
-        .header(Header::new("Host", "test.gnosis.io"))
+        .header(Header::new("Host", "test.safe.global"))
         .header(ContentType::JSON);
     let response = request.dispatch().await;
     let actual_status = response.status();

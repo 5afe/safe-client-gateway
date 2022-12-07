@@ -49,7 +49,7 @@ async fn safe_apps() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/v1/chains/137/safe-apps?client_url=https://gnosis-safe.io");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
     let actual_status = response.status();
@@ -101,7 +101,7 @@ async fn safe_apps_not_found() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/v1/chains/4/safe-apps");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
 
@@ -144,7 +144,7 @@ async fn safe_apps_tags() {
     .expect("valid rocket instance");
     let response = {
         let mut response = client.get("/v1/chains/137/safe-apps?client_url=https://gnosis-safe.io");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
     let actual_status = response.status();
@@ -195,7 +195,7 @@ async fn safe_apps_url_query_param() {
     let response = {
         let mut response = client
             .get("/v1/chains/137/safe-apps?client_url=https://gnosis-safe.io&url=https://test.app");
-        response.add_header(Header::new("Host", "test.gnosis.io"));
+        response.add_header(Header::new("Host", "test.safe.global"));
         response.dispatch().await
     };
     let actual_status = response.status();

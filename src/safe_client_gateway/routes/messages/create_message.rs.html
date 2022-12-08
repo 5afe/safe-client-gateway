@@ -35,12 +35,21 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::providers::info::{DefaultInfoProvider, InfoProvider};
 <span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
 <span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
 <span class="kw">use </span><span class="kw">crate</span>::utils::http_client::{Request, Response};
 <span class="kw">use </span>rocket::serde::json::Json;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::collections::BTreeMap;
 
 <span class="attribute">#[post(
     <span class="string">&quot;/v1/chains/&lt;chain_id&gt;/safes/&lt;safe_address&gt;/messages&quot;</span>,
@@ -68,9 +77,16 @@
 <span class="attribute">#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
 </span><span class="kw">pub struct </span>CreateMessage {
-    message: String,
+    message: MessageValue,
     safe_app_id: <span class="prelude-ty">Option</span>&lt;u64&gt;,
     signature: String,
+}
+
+<span class="attribute">#[derive(Deserialize, Serialize, Debug)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>MessageValue {
+    String(String),
+    Object(BTreeMap&lt;String, serde_json::Value&gt;),
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="safe_client_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

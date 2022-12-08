@@ -4,6 +4,7 @@ use crate::utils::errors::ApiResult;
 use crate::utils::http_client::{Request, Response};
 use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[post(
     "/v1/chains/<chain_id>/safes/<safe_address>/messages",
@@ -31,7 +32,14 @@ pub async fn route(
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CreateMessage {
-    message: String,
+    message: MessageValue,
     safe_app_id: Option<u64>,
     signature: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(untagged)]
+pub enum MessageValue {
+    String(String),
+    Object(BTreeMap<String, serde_json::Value>),
 }

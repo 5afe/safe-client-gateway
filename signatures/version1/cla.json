@@ -55,6 +55,14 @@
       "created_at": "2022-07-13T11:43:52Z",
       "repoId": 273504006,
       "pullRequestNo": 923
+    },
+    {
+      "name": "0xJuancito",
+      "id": 12957692,
+      "comment_id": 1373075411,
+      "created_at": "2023-01-06T02:52:08Z",
+      "repoId": 273504006,
+      "pullRequestNo": 1041
     }
   ]
 }

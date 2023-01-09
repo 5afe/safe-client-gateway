@@ -4,7 +4,7 @@
 
 ## Motivation
 
-This project is a gateway between the Safe clients ([Android](https://github.com/safe-global/safe-android)/ [iOS](https://github.com/safe-global/safe-ios)/ [web](https://github.com/safe-global/safe-react)) and the Safe backend services ([transaction service](https://github.com/safe-global/safe-transaction-service) and Ethereum nodes). It is providing a more UI-oriented mapping and multi-sourced data structures for ease of integration and rendering.
+This project is a gateway between the Safe clients ([Android](https://github.com/safe-global/safe-android)/ [iOS](https://github.com/safe-global/safe-ios)/ [web](https://github.com/safe-global/web-core)) and the Safe backend services ([transaction service](https://github.com/safe-global/safe-transaction-service) and Ethereum nodes). It is providing a more UI-oriented mapping and multi-sourced data structures for ease of integration and rendering.
 
 ## Documentation
 

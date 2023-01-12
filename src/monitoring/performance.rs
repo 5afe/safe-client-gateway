@@ -6,6 +6,8 @@ use rocket::{Data, Request, Response};
 
 pub struct PerformanceMonitor();
 
+const INVALID_IP_ADDRESS: &str = "-1";
+
 #[rocket::async_trait]
 impl Fairing for PerformanceMonitor {
     fn info(&self) -> Info {
@@ -35,14 +37,24 @@ impl Fairing for PerformanceMonitor {
             let method = request.method().as_str();
             let status_code = response.status().code;
             let delta = Utc::now().timestamp_millis() - cached;
+
+            // Reads the client IP from the "X-Real-IP" header
+            // If the IP is invalid or not present uses the remote connection instead
+            // If the IP is still invalid, we set the value to "-1"
+            let client_ip: String = request
+                .client_ip()
+                .and_then(|ip_addr| Some(ip_addr.to_string()))
+                .unwrap_or(INVALID_IP_ADDRESS.to_string());
+
             log::info!(
-                "MT::{}::{}::{}::{}::{}::{}",
+                "MT::{}::{}::{}::{}::{}::{}::{}",
                 method,
                 route,
                 delta,
                 status_code,
                 request.uri().to_string(), // full path with query params
-                chain_id
+                chain_id,
+                client_ip
             );
         }
     }

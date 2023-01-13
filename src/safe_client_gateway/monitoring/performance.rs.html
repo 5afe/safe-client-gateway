@@ -57,6 +57,18 @@
 <span id="57">57</span>
 <span id="58">58</span>
 <span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::config;
 <span class="kw">use </span>chrono::Utc;
 <span class="kw">use </span>rocket::fairing::{Fairing, Info, Kind};
@@ -64,6 +76,8 @@
 <span class="kw">use </span>rocket::{Data, Request, Response};
 
 <span class="kw">pub struct </span>PerformanceMonitor();
+
+<span class="kw">const </span>INVALID_IP_ADDRESS: <span class="kw-2">&amp;</span>str = <span class="string">&quot;-1&quot;</span>;
 
 <span class="attribute">#[rocket::async_trait]
 </span><span class="kw">impl </span>Fairing <span class="kw">for </span>PerformanceMonitor {
@@ -94,14 +108,24 @@
             <span class="kw">let </span>method = request.method().as_str();
             <span class="kw">let </span>status_code = response.status().code;
             <span class="kw">let </span>delta = Utc::now().timestamp_millis() - cached;
+
+            <span class="comment">// Reads the client IP from the &quot;X-Real-IP&quot; header
+            // If the IP is invalid or not present uses the remote connection instead
+            // If the IP is still invalid, we set the value to &quot;-1&quot;
+            </span><span class="kw">let </span>client_ip: String = request
+                .client_ip()
+                .and_then(|ip_addr| <span class="prelude-val">Some</span>(ip_addr.to_string()))
+                .unwrap_or(INVALID_IP_ADDRESS.to_string());
+
             <span class="macro">log::info!</span>(
-                <span class="string">&quot;MT::{}::{}::{}::{}::{}::{}&quot;</span>,
+                <span class="string">&quot;MT::{}::{}::{}::{}::{}::{}::{}&quot;</span>,
                 method,
                 route,
                 delta,
                 status_code,
                 request.uri().to_string(), <span class="comment">// full path with query params
-                </span>chain_id
+                </span>chain_id,
+                client_ip
             );
         }
     }

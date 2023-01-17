@@ -15,7 +15,6 @@ use super::RESPONSE_SAFE_APPS;
 
 #[rocket::async_test]
 async fn safe_apps() {
-    env::set_var("SAFE_APPS_TAGS_FEATURE_ENABLED", "false");
     let chain_id = "137";
     let client_url = "https://gnosis-safe.io";
 
@@ -63,7 +62,6 @@ async fn safe_apps() {
 
 #[rocket::async_test]
 async fn safe_apps_not_found() {
-    env::set_var("SAFE_APPS_TAGS_FEATURE_ENABLED", "false");
     let chain_id = "4";
     let backend_error_json = json!({"details": "Not found"}).to_string();
     let error = ErrorDetails {
@@ -114,7 +112,6 @@ async fn safe_apps_not_found() {
 
 #[rocket::async_test]
 async fn safe_apps_tags() {
-    env::set_var("SAFE_APPS_TAGS_FEATURE_ENABLED", "true");
     let chain_id = "137";
     let client_url = "https://gnosis-safe.io";
     let mut mock_http_client = MockHttpClient::new();
@@ -158,7 +155,6 @@ async fn safe_apps_tags() {
 
 #[rocket::async_test]
 async fn safe_apps_url_query_param() {
-    env::set_var("SAFE_APPS_TAGS_FEATURE_ENABLED", "false");
     let chain_id = "137";
     let client_url = "https://gnosis-safe.io";
     let url = "https://test.app";

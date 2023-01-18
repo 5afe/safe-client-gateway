@@ -40,7 +40,9 @@ use rocket_okapi::openapi;
 ///         "provider": null,
 ///         "accessControl": {
 ///            "type": "NO_RESTRICTIONS"
-///          }
+///          },
+///         "tags": ["nft"],
+///         "features": ["BATCHED_TRANSACTIONS"]
 ///     },
 ///     {
 ///         "id": 25,
@@ -62,7 +64,9 @@ use rocket_okapi::openapi;
 ///         "accessControl": {
 ///            "type": "DOMAIN_ALLOWLIST",
 ///           "value": ["https://gnosis-safe.io"]
-///          }
+///          },
+///         "tags": [],
+///         "features": []
 ///     }
 /// ]
 #[openapi(tag = "SafeApps")]

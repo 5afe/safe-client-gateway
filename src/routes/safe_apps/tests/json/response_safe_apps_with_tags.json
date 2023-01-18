@@ -10,7 +10,8 @@
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     },
-    "tags": ["tag1"]
+    "tags": ["tag1"],
+    "features": []
   },
   {
     "id": 24,
@@ -34,7 +35,8 @@
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     },
-    "tags": ["tag2"]
+    "tags": ["tag2"],
+    "features": []
   },
   {
     "id": 11,
@@ -50,7 +52,9 @@
     "accessControl": {
       "type": "DOMAIN_ALLOWLIST",
       "value": ["https://gnosis-safe.io", "https://dev.gnosis-safe.io"]
-    }
+    },
+    "tags": ["tag1"],
+    "features": ["BATCHED_TRANSACTIONS"]
   },
   {
     "id": 30,
@@ -62,7 +66,9 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "tags": ["tag1"],
+    "features": []
   },
   {
     "id": 25,
@@ -86,6 +92,7 @@
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     },
-    "tags": ["tag1", "tag2"]
+    "tags": ["tag1", "tag2"],
+    "features": []
   }
 ]

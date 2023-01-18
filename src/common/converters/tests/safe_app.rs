@@ -39,7 +39,8 @@ fn safe_apps_several_apps() {
             chain_ids: vec!["1".to_string(), "137".to_string()],
             provider: None,
             access_control: SafeAppAccessControlPolicies::NoRestrictions,
-            tags: vec![]
+            tags: vec![],
+            features: vec![],
         },
         SafeApp {
             id: 24,
@@ -50,7 +51,8 @@ fn safe_apps_several_apps() {
             chain_ids: vec!["1".to_string(), "4".to_string(),"10".to_string(),"56".to_string(),"100".to_string(),"137".to_string(),"246".to_string(), "42161".to_string(), "43114".to_string(), "73799".to_string()],
             provider: None,
             access_control: SafeAppAccessControlPolicies::NoRestrictions,
-            tags: vec![]
+            tags: vec![],
+            features: vec![],
         },
         SafeApp {
             id: 11,
@@ -66,7 +68,8 @@ fn safe_apps_several_apps() {
             access_control: SafeAppAccessControlPolicies::DomainAllowlist(SafeAppDomainAllowlistPolicy {
                 value: vec!["https://gnosis-safe.io".to_string(), "https://dev.gnosis-safe.io".to_string()],
             }),
-            tags: vec![]
+            tags: vec![],
+            features: vec!["BATCHED_TRANSACTIONS".to_string()],
         },
         SafeApp {
             id: 30,
@@ -77,7 +80,8 @@ fn safe_apps_several_apps() {
             chain_ids: vec!["1".to_string(),"56".to_string(),"137".to_string()],
             provider: None,
             access_control: SafeAppAccessControlPolicies::NoRestrictions,
-            tags: vec![]
+            tags: vec![],
+            features: vec![],
         },
         SafeApp {
             id: 25,
@@ -88,7 +92,8 @@ fn safe_apps_several_apps() {
             chain_ids: vec!["1".to_string(), "4".to_string(), "10".to_string(),"56".to_string(),"100".to_string(),"137".to_string(),"246".to_string(), "73799".to_string(), "42161".to_string(), "43114".to_string()],
             provider: None,
             access_control: SafeAppAccessControlPolicies::NoRestrictions,
-            tags: vec![]
+            tags: vec![],
+            features: vec![],
         },
     ];
 

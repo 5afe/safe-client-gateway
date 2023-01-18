@@ -14,6 +14,7 @@ pub struct SafeApp {
     // We set this value as a default since this feature might not be enabled yet. See SAFE_APPS_TAGS_FEATURE_ENABLED
     #[serde(default)]
     pub tags: Vec<String>,
+    pub features: Vec<String>,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]

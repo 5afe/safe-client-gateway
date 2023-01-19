@@ -37,7 +37,6 @@
 <span id="37">37</span>
 <span id="38">38</span>
 <span id="39">39</span>
-<span id="40">40</span>
 </pre><pre class="rust"><code><span class="kw">use </span>serde::Deserialize;
 
 <span class="attribute">#[derive(Deserialize, Debug, PartialEq, Clone)]
@@ -51,8 +50,7 @@
     <span class="kw">pub </span>chain_ids: Vec&lt;u64&gt;,
     <span class="kw">pub </span>provider: <span class="prelude-ty">Option</span>&lt;SafeAppProvider&gt;,
     <span class="kw">pub </span>access_control: SafeAppAccessControlPolicies,
-    <span class="comment">// We set this value as a default since this feature might not be enabled yet. See SAFE_APPS_TAGS_FEATURE_ENABLED
-    </span><span class="attribute">#[serde(default)]
+    <span class="attribute">#[serde(default)]
     </span><span class="kw">pub </span>tags: Vec&lt;String&gt;,
 }
 

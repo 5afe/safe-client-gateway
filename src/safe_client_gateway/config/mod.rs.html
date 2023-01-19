@@ -214,10 +214,6 @@
 <span id="214">214</span>
 <span id="215">215</span>
 <span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::env;
 <span class="kw">use </span>std::str::FromStr;
 
@@ -399,10 +395,6 @@
 
 <span class="kw">pub fn </span>is_preview_endpoint_enabled() -&gt; bool {
     env_with_default(<span class="string">&quot;FEATURE_PREVIEW_ENDPOINT&quot;</span>, <span class="bool-val">false</span>)
-}
-
-<span class="kw">pub fn </span>is_safe_apps_tags_feature_enabled() -&gt; bool {
-    env_with_default(<span class="string">&quot;SAFE_APPS_TAGS_FEATURE_ENABLED&quot;</span>, <span class="bool-val">false</span>)
 }
 
 <span class="kw">pub fn </span>vpc_transaction_service_uri() -&gt; bool {

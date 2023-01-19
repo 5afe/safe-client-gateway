@@ -42,16 +42,7 @@
 <span id="42">42</span>
 <span id="43">43</span>
 <span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
-<span id="51">51</span>
 </pre><pre class="rust"><code><span class="kw">use </span>serde::Serialize;
-
-<span class="kw">use </span><span class="kw">crate</span>::config::is_safe_apps_tags_feature_enabled;
 
 <span class="attribute">#[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
@@ -65,14 +56,9 @@
     <span class="kw">pub </span>chain_ids: Vec&lt;String&gt;,
     <span class="kw">pub </span>provider: <span class="prelude-ty">Option</span>&lt;SafeAppProvider&gt;,
     <span class="kw">pub </span>access_control: SafeAppAccessControlPolicies,
-    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;should_skip_serializing_tags&quot;</span>)]
-    </span><span class="comment">// We deserialize this for testing so it would break since the value wouldn&#39;t be present
+    <span class="comment">// We deserialize this for testing so it would break since the value wouldn&#39;t be present
     </span><span class="attribute">#[serde(default)]
     </span><span class="kw">pub </span>tags: Vec&lt;String&gt;,
-}
-
-<span class="kw">pub fn </span>should_skip_serializing_tags(_tags: <span class="kw-2">&amp;</span>Vec&lt;String&gt;) -&gt; bool {
-    <span class="kw">return </span>!is_safe_apps_tags_feature_enabled();
 }
 
 <span class="attribute">#[derive(Serialize, Debug, PartialEq, Clone)]

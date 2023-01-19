@@ -13,6 +13,15 @@ pub struct SafeApp {
     pub access_control: SafeAppAccessControlPolicies,
     #[serde(default)]
     pub tags: Vec<String>,
+    pub developer_website: Option<String>,
+    pub social_profiles: Vec<SafeAppSocialProfile>,
+}
+
+#[derive(Deserialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SafeAppSocialProfile {
+    pub platform: String,
+    pub url: String,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]

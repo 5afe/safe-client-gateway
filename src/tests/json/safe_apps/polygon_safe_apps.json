@@ -9,7 +9,14 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "developerWebsite": "https://curve.fi",
+    "socialProfiles": [
+      {
+        "platform": "TWITTER",
+        "url": "https://twitter.com/curvefinance"
+      }
+    ]
   },
   {
     "id": 24,
@@ -21,7 +28,9 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "developerWebsite": null,
+    "socialProfiles": []
   },
   {
     "id": 11,
@@ -37,7 +46,22 @@
     "accessControl": {
       "type": "DOMAIN_ALLOWLIST",
       "value": ["https://gnosis-safe.io", "https://dev.gnosis-safe.io"]
-    }
+    },
+    "developerWebsite": "https://1inch.io/",
+    "socialProfiles": [
+      {
+        "platform": "TWITTER",
+        "url": "https://twitter.com/1inchExchange"
+      },
+      {
+        "platform": "DISCORD",
+        "url": "https://discord.gg/1inch"
+      },
+      {
+        "platform": "GITHUB",
+        "url": "https://github.com/1inch"
+      }
+    ]
   },
   {
     "id": 30,
@@ -49,7 +73,9 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "developerWebsite": null,
+    "socialProfiles": []
   },
   {
     "id": 25,
@@ -61,6 +87,8 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "developerWebsite": null,
+    "socialProfiles": []
   }
 ]

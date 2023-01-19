@@ -210,10 +210,6 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::env;
 <span class="kw">use </span>std::str::FromStr;
 
@@ -391,10 +387,6 @@
 
 <span class="kw">pub fn </span>is_messages_feature_enabled() -&gt; bool {
     env_with_default(<span class="string">&quot;FEATURE_MESSAGES&quot;</span>, <span class="bool-val">false</span>)
-}
-
-<span class="kw">pub fn </span>is_preview_endpoint_enabled() -&gt; bool {
-    env_with_default(<span class="string">&quot;FEATURE_PREVIEW_ENDPOINT&quot;</span>, <span class="bool-val">false</span>)
 }
 
 <span class="kw">pub fn </span>vpc_transaction_service_uri() -&gt; bool {

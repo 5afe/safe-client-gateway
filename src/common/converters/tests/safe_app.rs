@@ -39,7 +39,7 @@ fn safe_apps_several_apps() {
             chain_ids: vec!["1".to_string(), "137".to_string()],
             provider: None,
             access_control: SafeAppAccessControlPolicies::NoRestrictions,
-            tags: vec![]
+            tags: vec!["tag1".to_string()]
         },
         SafeApp {
             id: 24,
@@ -50,7 +50,7 @@ fn safe_apps_several_apps() {
             chain_ids: vec!["1".to_string(), "4".to_string(),"10".to_string(),"56".to_string(),"100".to_string(),"137".to_string(),"246".to_string(), "42161".to_string(), "43114".to_string(), "73799".to_string()],
             provider: None,
             access_control: SafeAppAccessControlPolicies::NoRestrictions,
-            tags: vec![]
+            tags: vec!["tag2".to_string()]
         },
         SafeApp {
             id: 11,
@@ -88,7 +88,7 @@ fn safe_apps_several_apps() {
             chain_ids: vec!["1".to_string(), "4".to_string(), "10".to_string(),"56".to_string(),"100".to_string(),"137".to_string(),"246".to_string(), "73799".to_string(), "42161".to_string(), "43114".to_string()],
             provider: None,
             access_control: SafeAppAccessControlPolicies::NoRestrictions,
-            tags: vec![]
+            tags: vec!["tag1".to_string(), "tag2".to_string()]
         },
     ];
 

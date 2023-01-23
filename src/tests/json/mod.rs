@@ -152,8 +152,6 @@ pub const CHAIN_INFO_RINKEBY_ENABLED_FEATURES: &str =
 pub const POLYGON_SAFE_APPS: &str = include_str!("safe_apps/polygon_safe_apps.json");
 pub const POLYGON_SAFE_APP_URL_QUERY: &str =
     include_str!("safe_apps/polygon_safe_app_url_query.json");
-pub const POLYGON_SAFE_APPS_WITH_TAGS: &str =
-    include_str!("safe_apps/polygon_safe_apps_with_tags.json");
 
 pub const POLYGON_MASTER_COPIES: &str = include_str!("master_copies/polygon_master_copies.json");
 

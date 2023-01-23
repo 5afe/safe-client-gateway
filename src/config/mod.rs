@@ -177,14 +177,6 @@ pub fn is_messages_feature_enabled() -> bool {
     env_with_default("FEATURE_MESSAGES", false)
 }
 
-pub fn is_preview_endpoint_enabled() -> bool {
-    env_with_default("FEATURE_PREVIEW_ENDPOINT", false)
-}
-
-pub fn is_safe_apps_tags_feature_enabled() -> bool {
-    env_with_default("SAFE_APPS_TAGS_FEATURE_ENABLED", false)
-}
-
 pub fn vpc_transaction_service_uri() -> bool {
     env_with_default("VPC_TRANSACTION_SERVICE_URI", true)
 }

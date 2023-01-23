@@ -1,7 +1,5 @@
 use serde::Serialize;
 
-use crate::config::is_safe_apps_tags_feature_enabled;
-
 #[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 #[cfg_attr(test, derive(serde::Deserialize))]
@@ -14,15 +12,10 @@ pub struct SafeApp {
     pub chain_ids: Vec<String>,
     pub provider: Option<SafeAppProvider>,
     pub access_control: SafeAppAccessControlPolicies,
-    #[serde(skip_serializing_if = "should_skip_serializing_tags")]
     // We deserialize this for testing so it would break since the value wouldn't be present
     #[serde(default)]
     pub tags: Vec<String>,
     pub features: Vec<String>,
-}
-
-pub fn should_skip_serializing_tags(_tags: &Vec<String>) -> bool {
-    return !is_safe_apps_tags_feature_enabled();
 }
 
 #[derive(Serialize, Debug, PartialEq, Clone)]

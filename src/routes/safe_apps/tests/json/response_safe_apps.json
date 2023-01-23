@@ -9,7 +9,8 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "tags": ["tag1"]
   },
   {
     "id": 24,
@@ -32,7 +33,8 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "tags": ["tag2"]
   },
   {
     "id": 11,
@@ -83,6 +85,7 @@
     "provider": null,
     "accessControl": {
       "type": "NO_RESTRICTIONS"
-    }
+    },
+    "tags": ["tag1", "tag2"]
   }
 ]

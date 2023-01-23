@@ -15,6 +15,7 @@ pub struct SafeApp {
     // We deserialize this for testing so it would break since the value wouldn't be present
     #[serde(default)]
     pub tags: Vec<String>,
+    pub features: Vec<String>,
 }
 
 #[derive(Serialize, Debug, PartialEq, Clone)]

@@ -13,6 +13,7 @@ pub struct SafeApp {
     pub access_control: SafeAppAccessControlPolicies,
     #[serde(default)]
     pub tags: Vec<String>,
+    pub features: Vec<String>,
 }
 
 #[derive(Deserialize, Debug, PartialEq, Clone)]

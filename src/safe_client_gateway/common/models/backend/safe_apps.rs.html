@@ -37,6 +37,7 @@
 <span id="37">37</span>
 <span id="38">38</span>
 <span id="39">39</span>
+<span id="40">40</span>
 </pre><pre class="rust"><code><span class="kw">use </span>serde::Deserialize;
 
 <span class="attribute">#[derive(Deserialize, Debug, PartialEq, Clone)]
@@ -52,6 +53,7 @@
     <span class="kw">pub </span>access_control: SafeAppAccessControlPolicies,
     <span class="attribute">#[serde(default)]
     </span><span class="kw">pub </span>tags: Vec&lt;String&gt;,
+    <span class="kw">pub </span>features: Vec&lt;String&gt;,
 }
 
 <span class="attribute">#[derive(Deserialize, Debug, PartialEq, Clone)]

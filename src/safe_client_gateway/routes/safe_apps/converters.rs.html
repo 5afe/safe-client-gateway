@@ -37,6 +37,7 @@
 <span id="37">37</span>
 <span id="38">38</span>
 <span id="39">39</span>
+<span id="40">40</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::backend::safe_apps::{
     SafeApp <span class="kw">as </span>BackendSafeApp, SafeAppAccessControlPolicies <span class="kw">as </span>BackendSafeAppAccessControlPolicies,
 };
@@ -73,6 +74,7 @@
                 <span class="kw">_ </span>=&gt; SafeAppAccessControlPolicies::Unknown,
             },
             tags: safe_app.tags,
+            features: safe_app.features,
         }
     }
 }

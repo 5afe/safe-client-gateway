@@ -77,6 +77,10 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::routes::safe_apps::handlers::safe_apps;
 <span class="kw">use </span><span class="kw">crate</span>::utils::context::RequestContext;
 <span class="kw">use </span><span class="kw">crate</span>::utils::errors::ApiResult;
@@ -119,7 +123,9 @@
 ///         &quot;provider&quot;: null,
 ///         &quot;accessControl&quot;: {
 ///            &quot;type&quot;: &quot;NO_RESTRICTIONS&quot;
-///          }
+///          },
+///         &quot;tags&quot;: [&quot;nft&quot;],
+///         &quot;features&quot;: [&quot;BATCHED_TRANSACTIONS&quot;]
 ///     },
 ///     {
 ///         &quot;id&quot;: 25,
@@ -141,7 +147,9 @@
 ///         &quot;accessControl&quot;: {
 ///            &quot;type&quot;: &quot;DOMAIN_ALLOWLIST&quot;,
 ///           &quot;value&quot;: [&quot;https://gnosis-safe.io&quot;]
-///          }
+///          },
+///         &quot;tags&quot;: [],
+///         &quot;features&quot;: []
 ///     }
 /// ]
 </span><span class="attribute">#[openapi(tag = <span class="string">&quot;SafeApps&quot;</span>)]

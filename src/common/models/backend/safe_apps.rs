@@ -13,6 +13,7 @@ pub struct SafeApp {
     pub access_control: SafeAppAccessControlPolicies,
     #[serde(default)]
     pub tags: Vec<String>,
+    pub features: Vec<String>,
     pub developer_website: Option<String>,
     pub social_profiles: Vec<SafeAppSocialProfile>,
 }

@@ -10,8 +10,9 @@
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     },
-    "developerWebsite": null,
     "tags": [],
+    "features": [],
+    "developerWebsite": null,
     "socialProfiles": []
   }
 ]

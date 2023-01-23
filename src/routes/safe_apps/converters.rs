@@ -44,6 +44,7 @@ impl From<BackendSafeApp> for SafeApp {
                     url: profile.url.to_string(),
                 })
                 .collect(),
+            features: safe_app.features,
         }
     }
 }

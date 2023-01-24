@@ -7,7 +7,7 @@
         "address": "0x7667A25a327ee97EEc7d5d69F846659238F3c078",
         "tokenName": "Copernicus.20200210.212404",
         "tokenSymbol": "CP",
-        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0x7667A25a327ee97EEc7d5d69F846659238F3c078.png",
+        "logoUri": "https://example.com/0x7667A25a327ee97EEc7d5d69F846659238F3c078.png",
         "id": "11",
         "uri": "https://projectcopernicus.autonomous-times.com/assets/json/ticket_11.json",
         "name": null,
@@ -19,23 +19,23 @@
         "address": "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85",
         "tokenName": "Ethereum Name Service",
         "tokenSymbol": "ENS",
-        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/ENS.png",
+        "logoUri": "https://example.com/ENS.png",
         "id": "73759565539416811842765838110575927933836232265069912251972739501781285886854",
         "uri": null,
         "name": "safe1.eth",
         "description": ".eth ENS Domain",
-        "imageUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/ENS.png",
+        "imageUri": "https://example.com/ENS.png",
         "metadata": {
             "name": "safe1.eth",
             "description": ".eth ENS Domain",
-            "image": "https://gnosis-safe-token-logos.s3.amazonaws.com/ENS.png"
+            "image": "https://example.com/ENS.png"
         }
     },
     {
         "address": "0xAad76bea7CFEc82927239415BB18D2e93518ecBB",
         "tokenName": ".crypto",
         "tokenSymbol": "UD",
-        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xAad76bea7CFEc82927239415BB18D2e93518ecBB.png",
+        "logoUri": "https://example.com/0xAad76bea7CFEc82927239415BB18D2e93518ecBB.png",
         "id": "16901347448092016018370066087420610201854448193660137846183334589211113480159",
         "uri": "https://metadata.staging.unstoppabledomains.com/metadata/udtestdev-361786.crypto",
         "name": "udtestdev-361786.crypto",

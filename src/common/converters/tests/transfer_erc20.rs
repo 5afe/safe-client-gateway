@@ -26,16 +26,16 @@ async fn erc20_transfer_dto_to_incoming_transfer_transaction() {
         sender: AddressEx::address_only("0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F"),
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
-        transfer_info: TransferInfo::Erc20(
-            Erc20Transfer {
-                token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
-                value: "1000000000000000000".to_string(),
-                token_name: Some("Dai".to_string()),
-                token_symbol: Some("DAI".to_string()),
-                decimals: Some(18),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+            value: "1000000000000000000".to_string(),
+            token_name: Some("Dai".to_string()),
+            token_symbol: Some("DAI".to_string()),
+            decimals: Some(18),
+            logo_uri: Some(
+                "https://example.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string(),
+            ),
+        }),
     };
 
     let actual = Erc20TransferDto::to_transfer_transaction(
@@ -70,23 +70,23 @@ async fn erc20_transfer_dto_to_incoming_transfer_transaction_with_address_info()
         });
 
     let expected = Transfer {
-        sender: AddressEx{
+        sender: AddressEx {
             value: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
             name: Some("".to_string()),
-            logo_uri: None
+            logo_uri: None,
         },
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
-        transfer_info: TransferInfo::Erc20(
-            Erc20Transfer {
-                token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
-                value: "1000000000000000000".to_string(),
-                token_name: Some("Dai".to_string()),
-                token_symbol: Some("DAI".to_string()),
-                decimals: Some(18),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+            value: "1000000000000000000".to_string(),
+            token_name: Some("Dai".to_string()),
+            token_symbol: Some("DAI".to_string()),
+            decimals: Some(18),
+            logo_uri: Some(
+                "https://example.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string(),
+            ),
+        }),
     };
 
     let actual = Erc20TransferDto::to_transfer_transaction(
@@ -122,22 +122,22 @@ async fn erc20_transfer_dto_to_outgoing_transfer_transaction_with_address_info()
 
     let expected = Transfer {
         sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
-        recipient: AddressEx{
+        recipient: AddressEx {
             value: "0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F".to_string(),
             name: Some("".to_string()),
-            logo_uri: None
+            logo_uri: None,
         },
         direction: TransferDirection::Outgoing,
-        transfer_info: TransferInfo::Erc20(
-            Erc20Transfer {
-                token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
-                value: "1000000000000000000".to_string(),
-                token_name: Some("Dai".to_string()),
-                token_symbol: Some("DAI".to_string()),
-                decimals: Some(18),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+            value: "1000000000000000000".to_string(),
+            token_name: Some("Dai".to_string()),
+            token_symbol: Some("DAI".to_string()),
+            decimals: Some(18),
+            logo_uri: Some(
+                "https://example.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string(),
+            ),
+        }),
     };
 
     let actual = Erc20TransferDto::to_transfer_transaction(
@@ -160,16 +160,16 @@ async fn erc20_transfer_dto_to_transfer_info_token_available() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = TransferInfo::Erc20(
-        Erc20Transfer {
-            token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
-            value: "1000000000000000000".to_string(),
-            token_name: Some("Dai".to_string()),
-            token_symbol: Some("DAI".to_string()),
-            decimals: Some(18),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-        }
-    );
+    let expected = TransferInfo::Erc20(Erc20Transfer {
+        token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+        value: "1000000000000000000".to_string(),
+        token_name: Some("Dai".to_string()),
+        token_symbol: Some("DAI".to_string()),
+        decimals: Some(18),
+        logo_uri: Some(
+            "https://example.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string(),
+        ),
+    });
 
     let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;
 
@@ -213,13 +213,15 @@ async fn erc20_transfer_dto_get_token_info_present() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = TransferInfo::Erc20 (Erc20Transfer{
+    let expected = TransferInfo::Erc20(Erc20Transfer {
         token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
         token_name: Some("Dai".to_string()),
         token_symbol: Some("DAI".to_string()),
         decimals: Some(18),
-        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-        value: "1000000000000000000".to_string()
+        logo_uri: Some(
+            "https://example.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string(),
+        ),
+        value: "1000000000000000000".to_string(),
     });
     let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;
 
@@ -240,13 +242,15 @@ async fn erc20_transfer_dto_get_token_info_not_present() {
         .times(1)
         .return_once(move |_| Ok(token_info));
 
-    let expected = TransferInfo::Erc20 (Erc20Transfer{
+    let expected = TransferInfo::Erc20(Erc20Transfer {
         token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
         token_name: Some("Dai".to_string()),
         token_symbol: Some("DAI".to_string()),
         decimals: Some(18),
-        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-        value: "1000000000000000000".to_string()
+        logo_uri: Some(
+            "https://example.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string(),
+        ),
+        value: "1000000000000000000".to_string(),
     });
 
     let actual = Erc20TransferDto::to_transfer_info(&erc20_transfer, &mut mock_info_provider).await;

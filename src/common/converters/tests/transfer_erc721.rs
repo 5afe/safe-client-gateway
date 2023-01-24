@@ -26,15 +26,15 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction() {
         sender: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
-        transfer_info: TransferInfo::Erc721(
-            Erc721Transfer {
-                token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
-                token_id: "37".to_string(),
-                token_name: Some("PV Memorial Token".to_string()),
-                token_symbol: Some("PVT".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc721(Erc721Transfer {
+            token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+            token_id: "37".to_string(),
+            token_name: Some("PV Memorial Token".to_string()),
+            token_symbol: Some("PVT".to_string()),
+            logo_uri: Some(
+                "https://example.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string(),
+            ),
+        }),
     };
 
     let actual = Erc721TransferDto::to_transfer_transaction(
@@ -69,18 +69,22 @@ async fn erc721_transfer_dto_to_incoming_transfer_transaction_with_address_info(
         });
 
     let expected = Transfer {
-        sender: AddressEx { value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_uri: None },
+        sender: AddressEx {
+            value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            name: Some("".to_string()),
+            logo_uri: None,
+        },
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
-        transfer_info: TransferInfo::Erc721(
-            Erc721Transfer {
-                token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
-                token_id: "37".to_string(),
-                token_name: Some("PV Memorial Token".to_string()),
-                token_symbol: Some("PVT".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc721(Erc721Transfer {
+            token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+            token_id: "37".to_string(),
+            token_name: Some("PV Memorial Token".to_string()),
+            token_symbol: Some("PVT".to_string()),
+            logo_uri: Some(
+                "https://example.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string(),
+            ),
+        }),
     };
 
     let actual = Erc721TransferDto::to_transfer_transaction(
@@ -116,17 +120,21 @@ async fn erc721_transfer_dto_to_outgoing_transfer_transaction_with_address_info(
 
     let expected = Transfer {
         sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
-        recipient: AddressEx{ value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(), name: Some("".to_string()), logo_uri: None },
+        recipient: AddressEx {
+            value: "0x938bae50a210b80EA233112800Cd5Bc2e7644300".to_string(),
+            name: Some("".to_string()),
+            logo_uri: None,
+        },
         direction: TransferDirection::Outgoing,
-        transfer_info: TransferInfo::Erc721(
-            Erc721Transfer {
-                token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
-                token_id: "37".to_string(),
-                token_name: Some("PV Memorial Token".to_string()),
-                token_symbol: Some("PVT".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc721(Erc721Transfer {
+            token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+            token_id: "37".to_string(),
+            token_name: Some("PV Memorial Token".to_string()),
+            token_symbol: Some("PVT".to_string()),
+            logo_uri: Some(
+                "https://example.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string(),
+            ),
+        }),
     };
 
     let actual = Erc721TransferDto::to_transfer_transaction(
@@ -149,15 +157,15 @@ async fn erc721_transfer_dto_to_transfer_info_token_available() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = TransferInfo::Erc721(
-        Erc721Transfer {
-            token_id: "37".to_string(),
-            token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
-            token_name: Some("PV Memorial Token".to_string()),
-            token_symbol: Some("PVT".to_string()),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
-        }
-    );
+    let expected = TransferInfo::Erc721(Erc721Transfer {
+        token_id: "37".to_string(),
+        token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+        token_name: Some("PV Memorial Token".to_string()),
+        token_symbol: Some("PVT".to_string()),
+        logo_uri: Some(
+            "https://example.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string(),
+        ),
+    });
 
     let actual =
         Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
@@ -202,13 +210,15 @@ async fn erc721_transfer_dto_get_token_info_present() {
     mock_info_provider.expect_safe_info().times(0);
     mock_info_provider.expect_token_info().times(0);
 
-    let expected = TransferInfo::Erc721(Erc721Transfer{
+    let expected = TransferInfo::Erc721(Erc721Transfer {
         token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
         token_id: "37".to_string(),
         token_name: Some("PV Memorial Token".to_string()),
         token_symbol: Some("PVT".to_string()),
-        logo_uri:  Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string())
-    }) ;
+        logo_uri: Some(
+            "https://example.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string(),
+        ),
+    });
 
     let actual =
         Erc721TransferDto::to_transfer_info(&erc721_transfer, &mut mock_info_provider).await;
@@ -231,12 +241,14 @@ async fn erc721_transfer_dto_get_token_info_not_present() {
         .times(1)
         .return_once(move |_| Ok(token_info));
 
-    let expected = TransferInfo::Erc721 (Erc721Transfer{
+    let expected = TransferInfo::Erc721(Erc721Transfer {
         token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
         token_id: "37".to_string(),
         token_name: Some("PV Memorial Token".to_string()),
         token_symbol: Some("PVT".to_string()),
-        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
+        logo_uri: Some(
+            "https://example.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string(),
+        ),
     });
 
     let actual =

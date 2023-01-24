@@ -18,7 +18,9 @@ async fn multisig_tx_check_erc721_transfer() {
         name: String::from("CryptoKitties"),
         symbol: String::from("CK"),
         decimals: 0,
-        logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png")),
+        logo_uri: Some(String::from(
+            "https://example.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png",
+        )),
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -105,7 +107,9 @@ async fn multisig_tx_check_erc721_transfer() {
             token_id: "1126".to_string(),
             token_name: Some(String::from("CryptoKitties")),
             token_symbol: Some(String::from("CK")),
-            logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png")),
+            logo_uri: Some(String::from(
+                "https://example.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png",
+            )),
         }),
     });
 
@@ -122,7 +126,9 @@ async fn multisig_tx_check_erc20_transfer() {
         name: String::from("Maker"),
         symbol: String::from("MKR"),
         decimals: 18,
-        logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png")),
+        logo_uri: Some(String::from(
+            "https://example.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png",
+        )),
     };
     let mut mock_info_provider = MockInfoProvider::new();
     mock_info_provider.expect_safe_info().times(0);
@@ -208,7 +214,9 @@ async fn multisig_tx_check_erc20_transfer() {
             token_address: "0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85".to_string(),
             token_name: Some(String::from("Maker")),
             token_symbol: Some(String::from("MKR")),
-            logo_uri: Some(String::from("https://gnosis-safe-token-logos.s3.amazonaws.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png")),
+            logo_uri: Some(String::from(
+                "https://example.com/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85.png",
+            )),
             decimals: Some(18),
             value: "50000000000000".to_string(),
         }),

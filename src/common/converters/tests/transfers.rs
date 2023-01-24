@@ -32,16 +32,16 @@ async fn erc_20_transfer_dto_to_transaction_info() {
         sender: AddressEx::address_only("0xfFfa5813ED9a5DB4880D7303DB7d0cBe41bC771F"),
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
-        transfer_info: TransferInfo::Erc20(
-            Erc20Transfer {
-                token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
-                value: "1000000000000000000".to_string(),
-                token_name: Some("Dai".to_string()),
-                token_symbol: Some("DAI".to_string()),
-                decimals: Some(18),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".to_string(),
+            value: "1000000000000000000".to_string(),
+            token_name: Some("Dai".to_string()),
+            token_symbol: Some("DAI".to_string()),
+            decimals: Some(18),
+            logo_uri: Some(
+                "https://example.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png".to_string(),
+            ),
+        }),
     });
 
     let actual = erc_20_transfer
@@ -73,15 +73,15 @@ async fn erc_721_transfer_dto_to_transaction_info() {
         sender: AddressEx::address_only("0x938bae50a210b80EA233112800Cd5Bc2e7644300"),
         recipient: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         direction: TransferDirection::Incoming,
-        transfer_info: TransferInfo::Erc721(
-            Erc721Transfer {
-                token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
-                token_id: "37".to_string(),
-                token_name: Some("PV Memorial Token".to_string()),
-                token_symbol: Some("PVT".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string()),
-            }
-        ),
+        transfer_info: TransferInfo::Erc721(Erc721Transfer {
+            token_address: "0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98".to_string(),
+            token_id: "37".to_string(),
+            token_name: Some("PV Memorial Token".to_string()),
+            token_symbol: Some("PVT".to_string()),
+            logo_uri: Some(
+                "https://example.com/0x8979D84FF2c2B797dFEc02469d3a5322cBEf4b98.png".to_string(),
+            ),
+        }),
     });
 
     let actual = erc_721_transfer
@@ -237,7 +237,9 @@ async fn transfer_erc20_transfer_with_erc721_token_info_returns_transfer_tx() {
             token_id: "856420144564".to_string(),
             token_name: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
             token_symbol: Some("a!NEVER VISIT www.168pools.com to check DeFi ROi !".to_string()),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xa9517B2E61a57350D6555665292dBC632C76adFe.png".to_string()),
+            logo_uri: Some(
+                "https://example.com/0xa9517B2E61a57350D6555665292dBC632C76adFe.png".to_string(),
+            ),
         }),
     });
 

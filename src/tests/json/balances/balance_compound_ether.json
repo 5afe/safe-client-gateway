@@ -4,7 +4,7 @@
     "name": "Compound Ether 📈",
     "symbol": "cETH",
     "decimals": 8,
-    "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png"
+    "logoUri": "https://example.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png"
   },
   "balance": "5002",
   "fiatBalance": "0.0014",

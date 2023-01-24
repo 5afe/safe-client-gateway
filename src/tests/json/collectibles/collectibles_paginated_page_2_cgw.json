@@ -7,7 +7,7 @@
         "address": "0xAad76bea7CFEc82927239415BB18D2e93518ecBB",
         "tokenName": ".crypto",
         "tokenSymbol": "UD",
-        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xAad76bea7CFEc82927239415BB18D2e93518ecBB.png",
+        "logoUri": "https://example.com/0xAad76bea7CFEc82927239415BB18D2e93518ecBB.png",
         "id": "65064849277095008645805721699881592934207592453433429843849505605132523369844",
         "uri": "https://metadata.staging.unstoppabledomains.com/metadata/udtestdev-8f3755.crypto",
         "name": "udtestdev-8f3755.crypto",

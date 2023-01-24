@@ -38,11 +38,22 @@
 <span id="38">38</span>
 <span id="39">39</span>
 <span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::common::models::backend::safe_apps::{
     SafeApp <span class="kw">as </span>BackendSafeApp, SafeAppAccessControlPolicies <span class="kw">as </span>BackendSafeAppAccessControlPolicies,
 };
 <span class="kw">use </span><span class="kw">crate</span>::routes::safe_apps::models::{
     SafeApp, SafeAppAccessControlPolicies, SafeAppDomainAllowlistPolicy, SafeAppProvider,
+    SafeAppSocialProfile,
 };
 
 <span class="kw">impl </span>From&lt;BackendSafeApp&gt; <span class="kw">for </span>SafeApp {
@@ -74,6 +85,15 @@
                 <span class="kw">_ </span>=&gt; SafeAppAccessControlPolicies::Unknown,
             },
             tags: safe_app.tags,
+            developer_website: safe_app.developer_website,
+            social_profiles: safe_app
+                .social_profiles
+                .into_iter()
+                .map(|profile| SafeAppSocialProfile {
+                    platform: profile.platform.to_string(),
+                    url: profile.url.to_string(),
+                })
+                .collect(),
             features: safe_app.features,
         }
     }

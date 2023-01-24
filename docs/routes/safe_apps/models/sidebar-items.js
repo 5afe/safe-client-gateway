@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["SafeAppAccessControlPolicies",""]],"struct":[["SafeApp",""],["SafeAppDomainAllowlistPolicy",""],["SafeAppProvider",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["SafeAppAccessControlPolicies",""]],"struct":[["SafeApp",""],["SafeAppDomainAllowlistPolicy",""],["SafeAppProvider",""],["SafeAppSocialProfile",""]]};

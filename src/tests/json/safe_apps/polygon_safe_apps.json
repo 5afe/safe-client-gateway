@@ -13,6 +13,13 @@
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     },
+    "developerWebsite": "https://curve.fi",
+    "socialProfiles": [
+      {
+        "platform": "TWITTER",
+        "url": "https://twitter.com/curvefinance"
+      }
+    ],
     "tags": [
       "tag1"
     ],
@@ -29,6 +36,8 @@
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     },
+    "developerWebsite": null,
+    "socialProfiles": [],
     "tags": ["tag2"],
     "features": []
   },
@@ -47,6 +56,21 @@
       "type": "DOMAIN_ALLOWLIST",
       "value": ["https://gnosis-safe.io", "https://dev.gnosis-safe.io"]
     },
+    "developerWebsite": "https://1inch.io/",
+    "socialProfiles": [
+      {
+        "platform": "TWITTER",
+        "url": "https://twitter.com/1inchExchange"
+      },
+      {
+        "platform": "DISCORD",
+        "url": "https://discord.gg/1inch"
+      },
+      {
+        "platform": "GITHUB",
+        "url": "https://github.com/1inch"
+      }
+    ],
     "tags": [],
     "features": ["BATCHED_TRANSACTIONS"]
   },
@@ -62,7 +86,9 @@
       "type": "NO_RESTRICTIONS"
     },
     "tags": [],
-    "features": []
+    "features": [],
+    "developerWebsite": null,
+    "socialProfiles": []
   },
   {
     "id": 25,
@@ -75,6 +101,8 @@
     "accessControl": {
       "type": "NO_RESTRICTIONS"
     },
+    "developerWebsite": null,
+    "socialProfiles": [],
     "tags": ["tag1", "tag2"],
     "features": []
   }

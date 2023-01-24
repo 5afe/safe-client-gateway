@@ -3,6 +3,7 @@ use crate::common::models::backend::safe_apps::{
 };
 use crate::routes::safe_apps::models::{
     SafeApp, SafeAppAccessControlPolicies, SafeAppDomainAllowlistPolicy, SafeAppProvider,
+    SafeAppSocialProfile,
 };
 
 impl From<BackendSafeApp> for SafeApp {
@@ -34,6 +35,15 @@ impl From<BackendSafeApp> for SafeApp {
                 _ => SafeAppAccessControlPolicies::Unknown,
             },
             tags: safe_app.tags,
+            developer_website: safe_app.developer_website,
+            social_profiles: safe_app
+                .social_profiles
+                .into_iter()
+                .map(|profile| SafeAppSocialProfile {
+                    platform: profile.platform.to_string(),
+                    url: profile.url.to_string(),
+                })
+                .collect(),
             features: safe_app.features,
         }
     }

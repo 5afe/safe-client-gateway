@@ -16,6 +16,16 @@ pub struct SafeApp {
     #[serde(default)]
     pub tags: Vec<String>,
     pub features: Vec<String>,
+    pub developer_website: Option<String>,
+    pub social_profiles: Vec<SafeAppSocialProfile>,
+}
+
+#[derive(Serialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(serde::Deserialize))]
+pub struct SafeAppSocialProfile {
+    pub platform: String,
+    pub url: String,
 }
 
 #[derive(Serialize, Debug, PartialEq, Clone)]

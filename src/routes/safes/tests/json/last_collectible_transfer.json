@@ -18,7 +18,7 @@
                 "name": "Main",
                 "symbol": "TEST",
                 "decimals": null,
-                "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png"
+                "logoUri": "https://example.com/0xD753e03c05533F85bA9695C139771b1E9698a53C.png"
             },
             "from": "0x4cb09344de5bCCD45F045c5Defa0E0452869FF0f"
         }

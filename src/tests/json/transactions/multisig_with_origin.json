@@ -139,7 +139,7 @@
         "name": "Wrapped Ether",
         "symbol": "WETH",
         "decimals": 18,
-        "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2.png"
+        "logoUri": "https://example.com/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2.png"
       },
       "from": "0xd47140F6Ab73f6d6B6675Fb1610Bb5E9B5d96FE5"
     }

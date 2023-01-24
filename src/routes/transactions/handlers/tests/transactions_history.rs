@@ -164,7 +164,7 @@ async fn backend_txs_to_summary_txs_with_values() {
                                 "AQER".into(),
                             ),
                             logo_uri: Some(
-                                "https://gnosis-safe-token-logos.s3.amazonaws.com/0x63704B63Ac04f3a173Dfe677C7e3D330c347CD88.png".into(),
+                                "https://example.com/0x63704B63Ac04f3a173Dfe677C7e3D330c347CD88.png".into(),
                             ),
                             decimals: Some(
                                 18,
@@ -196,7 +196,7 @@ async fn backend_txs_to_summary_txs_with_values() {
                                 "AQER".into(),
                             ),
                             logo_uri: Some(
-                                "https://gnosis-safe-token-logos.s3.amazonaws.com/0x63704B63Ac04f3a173Dfe677C7e3D330c347CD88.png".into(),
+                                "https://example.com/0x63704B63Ac04f3a173Dfe677C7e3D330c347CD88.png".into(),
                             ),
                             decimals: Some(18),
                             value: "100000000000000000".into(),
@@ -226,7 +226,7 @@ async fn backend_txs_to_summary_txs_with_values() {
                                 "LS".into(),
                             ),
                             logo_uri: Some(
-                                "https://gnosis-safe-token-logos.s3.amazonaws.com/0x81D0FF4fE216fB6aC98ED609086A92d94dbfE666.png".into(),
+                                "https://example.com/0x81D0FF4fE216fB6aC98ED609086A92d94dbfE666.png".into(),
                             ),
                             decimals: Some(
                                 18,

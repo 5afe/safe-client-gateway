@@ -465,7 +465,11 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
         .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionSummary {
-        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"),
+        id: create_id!(
+            ID_PREFIX_MULTISIG_TX,
+            "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+            "0x95e32bb8cb88ecdc45732c0a551eae7b3744187cf1ba19cda1440eaaf7b4950c"
+        ),
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
@@ -476,7 +480,10 @@ async fn multisig_transaction_to_erc20_transfer_summary() {
                 token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
                 token_name: Some("Compound USDT".to_string()),
                 token_symbol: Some("USDT".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png".to_string()),
+                logo_uri: Some(
+                    "https://example.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png"
+                        .to_string(),
+                ),
                 decimals: Some(18),
                 value: "50000000000000".to_string(),
             }),
@@ -522,7 +529,11 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
         .return_once(move |_| bail!("No address info"));
 
     let expected = TransactionSummary {
-        id: create_id!(ID_PREFIX_MULTISIG_TX, "0x1230B3d59858296A31053C1b8562Ecf89A2f888b", "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"),
+        id: create_id!(
+            ID_PREFIX_MULTISIG_TX,
+            "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
+            "0x9155f7741dd33572bc49c251eb4f4a5e9cf9653151417bdc4a2aca0767779603"
+        ),
         timestamp: multisig_tx.execution_date.unwrap().timestamp_millis(),
         tx_status: TransactionStatus::Success,
         tx_info: TransactionInfo::Transfer(Transfer {
@@ -534,7 +545,10 @@ async fn multisig_transaction_to_erc721_transfer_summary() {
                 token_id: "1316".to_string(),
                 token_name: Some("CryptoKitties".to_string()),
                 token_symbol: Some("CK".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string()),
+                logo_uri: Some(
+                    "https://example.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png"
+                        .to_string(),
+                ),
             }),
         }),
         execution_info: Some(ExecutionInfo::Multisig(MultisigExecutionInfo {
@@ -816,7 +830,10 @@ async fn ethereum_transaction_with_inconsistent_token_types() {
                 token_id: "856420144564".to_string(),
                 token_name: Some("A! WWW.SPACESWAP.APP ! TOP DEFI AGGREGATOR !".to_string()),
                 token_symbol: Some("A! WWW.SPACESWAP.APP ! TOP DEFI AGGREGATOR !".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xb07de4b2989E180F8907B8C7e617637C26cE2776.png".to_string()),
+                logo_uri: Some(
+                    "https://example.com/0xb07de4b2989E180F8907B8C7e617637C26cE2776.png"
+                        .to_string(),
+                ),
             }),
         }),
         execution_info: None,

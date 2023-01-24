@@ -17,7 +17,7 @@
       "tokenAddress": "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46",
       "tokenName": "BigAmount",
       "tokenSymbol": "BA-T",
-      "logoUri": "https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png",
+      "logoUri": "https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png",
       "decimals": 1,
       "value": "20"
     }

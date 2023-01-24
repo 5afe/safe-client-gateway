@@ -239,7 +239,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "10".to_string()
                     })
@@ -272,7 +272,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })
@@ -303,7 +303,7 @@ async fn process_transactions_no_conflicts_everything_queued() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })
@@ -400,7 +400,7 @@ async fn process_transactions_conflicts_in_queued() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "10".to_string()
                     })
@@ -437,7 +437,7 @@ async fn process_transactions_conflicts_in_queued() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })
@@ -468,7 +468,7 @@ async fn process_transactions_conflicts_in_queued() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })
@@ -568,7 +568,7 @@ async fn process_transactions_conflicts_in_next() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "10".to_string()
                     }),
@@ -600,7 +600,7 @@ async fn process_transactions_conflicts_in_next() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })
@@ -634,7 +634,7 @@ async fn process_transactions_conflicts_in_next() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })
@@ -729,7 +729,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "10".to_string()
                     })
@@ -763,7 +763,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })
@@ -794,7 +794,7 @@ async fn process_transactions_conflicts_in_queued_spanning_to_next_page() {
                         token_address: "0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46".to_string(),
                         token_name: Some("BigAmount".to_string()),
                         token_symbol: Some("BA-T".to_string()),
-                        logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
+                        logo_uri: Some("https://example.com/0xD81F7D71ed570D121A1Ef9e3Bc0fc2bd6192De46.png".to_string()),
                         decimals: Some(1),
                         value: "20".to_string()
                     })

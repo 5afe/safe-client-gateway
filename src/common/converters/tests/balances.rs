@@ -48,7 +48,9 @@ fn erc20_token_balance_usd_balance() {
             decimals: 8,
             symbol: "cETH".to_string(),
             name: "Compound Ether 📈".to_string(),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png".to_string()),
+            logo_uri: Some(
+                "https://example.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png".to_string(),
+            ),
         },
         balance: "5002".to_string(),
         fiat_balance: "0.0014".to_string(),
@@ -80,7 +82,9 @@ fn erc20_token_balance_fiat_is_twice_usd() {
             decimals: 8,
             symbol: "cETH".to_string(),
             name: "Compound Ether 📈".to_string(),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png".to_string()),
+            logo_uri: Some(
+                "https://example.com/0xd6801a1DfFCd0a410336Ef88DeF4320D6DF1883e.png".to_string(),
+            ),
         },
         balance: "5002".to_string(),
         fiat_balance: "0.0028".to_string(),

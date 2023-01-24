@@ -361,15 +361,16 @@ async fn transaction_data_decoded_is_erc20_receiver_ok_transfer_method() {
         sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         recipient: AddressEx::address_only("0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0"),
         direction: TransferDirection::Outgoing,
-        transfer_info: TransferInfo::Erc20(
-            Erc20Transfer {
-                token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
-                token_name: Some("Compound USDT".to_string()),
-                token_symbol: Some("USDT".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png".to_string()),
-                decimals: Some(18),
-                value: "50000000000000".to_string(),
-            }),
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
+            token_name: Some("Compound USDT".to_string()),
+            token_symbol: Some("USDT".to_string()),
+            logo_uri: Some(
+                "https://example.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png".to_string(),
+            ),
+            decimals: Some(18),
+            value: "50000000000000".to_string(),
+        }),
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider).await;
@@ -398,15 +399,16 @@ async fn module_transaction_data_decoded_is_erc20_receiver_ok_transfer_method() 
         sender: AddressEx::address_only("0x1230B3d59858296A31053C1b8562Ecf89A2f888b"),
         recipient: AddressEx::address_only("0xF353eBBa77e5E71c210599236686D51cA1F88b84"),
         direction: TransferDirection::Outgoing,
-        transfer_info: TransferInfo::Erc20(
-            Erc20Transfer {
-                token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
-                token_name: Some("Compound USDT".to_string()),
-                token_symbol: Some("USDT".to_string()),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png".to_string()),
-                decimals: Some(18),
-                value: "100000000000000".to_string(),
-            }),
+        transfer_info: TransferInfo::Erc20(Erc20Transfer {
+            token_address: "0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02".to_string(),
+            token_name: Some("Compound USDT".to_string()),
+            token_symbol: Some("USDT".to_string()),
+            logo_uri: Some(
+                "https://example.com/0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02.png".to_string(),
+            ),
+            decimals: Some(18),
+            value: "100000000000000".to_string(),
+        }),
     });
 
     let actual = tx.transaction_info(&mut mock_info_provider).await;
@@ -442,7 +444,9 @@ async fn transaction_data_decoded_is_erc721_receiver_ok_transfer_method() {
             token_id: "1316".to_string(),
             token_name: Some("CryptoKitties".to_string()),
             token_symbol: Some("CK".to_string()),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string()),
+            logo_uri: Some(
+                "https://example.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string(),
+            ),
         }),
     });
 
@@ -478,7 +482,9 @@ async fn module_transaction_data_decoded_is_erc721_receiver_ok_transfer_method()
             token_id: "1316".to_string(),
             token_name: Some("CryptoKitties".to_string()),
             token_symbol: Some("CK".to_string()),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string()),
+            logo_uri: Some(
+                "https://example.com/0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF.png".to_string(),
+            ),
         }),
     });
 
@@ -626,7 +632,10 @@ async fn transaction_data_decoded_is_erc20_unexpected_parameter_names() {
                 decimals: 18,
                 symbol: "WETH".to_string(),
                 name: "Wrapped Ether".to_string(),
-                logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xc778417E063141139Fce010982780140Aa0cD5Ab.png".to_string()),
+                logo_uri: Some(
+                    "https://example.com/0xc778417E063141139Fce010982780140Aa0cD5Ab.png"
+                        .to_string(),
+                ),
             })
         });
 
@@ -642,7 +651,9 @@ async fn transaction_data_decoded_is_erc20_unexpected_parameter_names() {
             token_address: "0xc778417E063141139Fce010982780140Aa0cD5Ab".to_string(),
             token_name: Some("Wrapped Ether".to_string()),
             token_symbol: Some("WETH".to_string()),
-            logo_uri: Some("https://gnosis-safe-token-logos.s3.amazonaws.com/0xc778417E063141139Fce010982780140Aa0cD5Ab.png".to_string()),
+            logo_uri: Some(
+                "https://example.com/0xc778417E063141139Fce010982780140Aa0cD5Ab.png".to_string(),
+            ),
             decimals: Some(18),
             value: "10000000000000000".to_string(),
         }),

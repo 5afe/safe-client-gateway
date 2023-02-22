@@ -71,7 +71,7 @@ jobs:
           override: true
 
       - name: Cargo cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Run tests
         uses: actions-rs/cargo@v1
@@ -128,7 +128,7 @@ jobs:
           components: rustfmt
 
       - name: Cargo cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Generate docs
         uses: actions-rs/cargo@v1

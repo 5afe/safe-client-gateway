@@ -8,7 +8,10 @@ RUN set -ex; \
   pkg-config ca-certificates libssl-dev \
   && rm -rf /var/lib/apt/lists/*
 
+ARG TARGET
 ENV USER=root
+ENV TARGET_CC=${TARGET}-gcc
+ENV TARGET_AR=${TARGET}-ar
 WORKDIR "/app"
 # Cache dependencies
 # We copy the toolchain requirements first. 
@@ -17,7 +20,7 @@ COPY rust-toolchain.toml rust-toolchain.toml
 RUN cargo init
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
-RUN cargo build --release --locked
+RUN cargo build --release --locked --target=${TARGET} --all-features
 
 COPY . .
 
@@ -25,7 +28,7 @@ ARG VERSION
 ARG BUILD_NUMBER
 # Remove fingerprint of app to force recompile (without dependency recompile)
 RUN rm -rf target/release/.fingerprint/safe-client-gateway*
-RUN cargo build --release --locked
+RUN cargo build --release --locked --target=${TARGET} --all-features
 
 # Runtime Image
 FROM debian:buster-slim

@@ -152,9 +152,12 @@ jobs:
           publish_dir: ./target/doc
 
   docker-publish-staging:
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    needs: [ rustfmt, tests ]
+    #    if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    #    needs: [ rustfmt, tests ]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [ aarch64-unknown-linux-musl ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -183,7 +186,9 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          build-args: VERSION=${{ env.VERSION }}
+          build-args: |
+            VERSION=${{ env.VERSION }}
+            TARGET=${{ matrix.target }}
           tags: safeglobal/safe-client-gateway:staging
           cache-from: type=registry,ref=safeglobal/safe-client-gateway:staging
           cache-to: type=inline

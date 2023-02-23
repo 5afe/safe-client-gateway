@@ -8,6 +8,11 @@ RUN set -ex; \
   pkg-config ca-certificates libssl-dev \
   && rm -rf /var/lib/apt/lists/*
 
+ENV CC_aarch64_unknown_linux_musl=clang-15
+ENV AR_aarch64_unknown_linux_musl=llvm-ar-15
+ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="$rustflags_self_contained"
+ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUNNER="$qemu_aarch64"
+
 ARG TARGET
 ENV USER=root
 ENV TARGET_CC=${TARGET}-gcc
@@ -20,7 +25,7 @@ COPY rust-toolchain.toml rust-toolchain.toml
 RUN cargo init
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
-RUN cargo build --release --locked --target=${TARGET} --all-features
+RUN cargo build --release --locked --target=arm-unknown-linux-gnueabihf
 
 COPY . .
 
@@ -28,7 +33,7 @@ ARG VERSION
 ARG BUILD_NUMBER
 # Remove fingerprint of app to force recompile (without dependency recompile)
 RUN rm -rf target/release/.fingerprint/safe-client-gateway*
-RUN cargo build --release --locked --target=${TARGET} --all-features
+RUN cargo build --release --locked --target=arm-unknown-linux-gnueabihf
 
 # Runtime Image
 FROM debian:buster-slim
@@ -44,6 +49,7 @@ RUN set -ex; \
   apt-get update; \
   apt-get install -y --no-install-recommends \
   ca-certificates libssl-dev \
+  gcc-arm-linux-gnueabihf qemu-user libc6-dev-armhf-cross \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder --chown=rust:rust /app/target/release/safe-client-gateway ./

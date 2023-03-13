@@ -3,7 +3,7 @@
 # BUILDPLATFORM is available inside Docker context. It contains the name of the host platform
 # See https://docs.docker.com/build/building/multi-platform/#building-multi-platform-images
 # See https://jakewharton.com/cross-compiling-static-rust-binaries-in-docker-for-raspberry-pi/
-FROM --platform=$BUILDPLATFORM rust:1.65.0 as builder
+FROM --platform=$BUILDPLATFORM rust:1.68.0 as builder
 
 # TARGETPLATFORM is available inside the Docker context. It contains the name of the target platform
 # See https://docs.docker.com/build/building/multi-platform/#building-multi-platform-images

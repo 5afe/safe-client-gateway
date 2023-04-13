@@ -19,7 +19,7 @@ itertools = "0.10.5"
 lazy_static = "1.4.0"
 log = "0.4.17"
 mockall = "0.11.3"
-openssl = { version = "0.10", features = ["vendored"] }
+openssl = { version = "0.10.50", features = ["vendored"] } # Latest version: https://crates.io/crates/openssl
 rand = "0.8.5"
 r2d2 = "0.8.10"
 regex = "1.7.1"

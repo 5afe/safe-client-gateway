@@ -7,7 +7,10 @@ use serde::Deserialize;
 use crate::cache::cache_operations::RequestCached;
 use crate::cache::manager::ChainCache;
 use crate::cache::Cache;
-use crate::config::{base_exchange_api_uri, exchange_api_cache_duration, short_error_duration};
+use crate::config::{
+    base_exchange_api_uri, exchange_api_cache_duration, exchange_api_key_header,
+    short_error_duration,
+};
 use crate::utils::context::RequestContext;
 use crate::utils::errors::ApiResult;
 use crate::utils::http_client::HttpClient;
@@ -60,11 +63,20 @@ impl FiatInfoProvider {
 
     async fn fetch_exchange(&self) -> ApiResult<Exchange> {
         let url = base_exchange_api_uri();
-        let body = RequestCached::new(url, &self.client, &self.cache)
-            .cache_duration(exchange_api_cache_duration())
-            .error_cache_duration(short_error_duration())
-            .execute()
-            .await?;
+        let mut request = RequestCached::new(url, &self.client, &self.cache);
+
+        let cache_duration = exchange_api_cache_duration();
+        request.cache_duration(cache_duration);
+
+        let error_cache_duration = short_error_duration();
+        request.error_cache_duration(error_cache_duration);
+
+        if let Some(header) = exchange_api_key_header() {
+            let (ref key, ref value) = header;
+            request.add_header((key.as_str(), value.as_str()));
+        }
+
+        let body = request.execute().await?;
         serde_json::from_str::<Exchange>(&body)
             .map_err(|_| api_error!("Unknown 'Exchange' json structure"))
     }

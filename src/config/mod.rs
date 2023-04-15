@@ -20,12 +20,35 @@ pub fn base_config_service_uri() -> String {
     )
 }
 
+pub fn exchange_api_key_in_header() -> bool {
+    let value = env::var("EXCHANGE_API_KEY_IN_HEADER")
+        .unwrap_or_default()
+        .to_lowercase();
+    value == "1" || value == "true" || value == "yes"
+}
+
+pub fn exchange_api_key_header() -> Option<(String, String)> {
+    if exchange_api_key_in_header() {
+        let key_name = env::var("EXCHANGE_API_KEY_NAME").unwrap_or(String::from("access_key"));
+        let key_value = env::var("EXCHANGE_API_KEY").unwrap();
+
+        Some((key_name, key_value))
+    } else {
+        None
+    }
+}
+
 pub fn base_exchange_api_uri() -> String {
-    format!(
-        "{}?access_key={}",
-        env::var("EXCHANGE_API_BASE_URI").unwrap(),
-        env::var("EXCHANGE_API_KEY").unwrap()
-    )
+    let base_uri = env::var("EXCHANGE_API_BASE_URI").unwrap();
+
+    if exchange_api_key_in_header() {
+        base_uri
+    } else {
+        let key_name = env::var("EXCHANGE_API_KEY_NAME").unwrap_or(String::from("access_key"));
+        let key_value = env::var("EXCHANGE_API_KEY").unwrap();
+
+        format!("{}?{}={}", base_uri, key_name, key_value)
+    }
 }
 
 pub fn webhook_token() -> String {

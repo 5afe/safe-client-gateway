@@ -23,7 +23,7 @@ runtime_image_id="$DOCKERHUB_ORG/$DOCKERHUB_PROJECT:$1"
 # Load cached builder image
 docker pull $cached_builder_image_id || true
 # Rebuild builder image if required
-docker build \
+docker buildx build \
     --target builder \
     --cache-from $cached_builder_image_id \
     -t $cached_builder_image_id \
@@ -34,7 +34,7 @@ docker build \
 # Load cached runtime image
 docker pull $cached_runtime_image_id || true
 # Rebuild runtime image if required
-docker build \
+docker buildx build \
     --cache-from $cached_builder_image_id \
     --cache-from $cached_runtime_image_id \
     -t $runtime_image_id \

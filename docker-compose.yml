@@ -25,3 +25,32 @@ services:
       - .env
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
+
+  nginx-dev:
+    image: nginx:1.21-alpine
+    env_file:
+      - .env.dev
+    ports:
+      - "${NGINX_HOST_PORT}:80"
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates
+    depends_on:
+      - web-dev
+
+  web-dev-build:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: syscoin/safe-client-gateway:dev
+    env_file:
+      - .env.dev
+    entrypoint: ["/bin/bash"]
+    restart: "no"
+
+  web-dev:
+    image: syscoin/safe-client-gateway:dev
+    env_file:
+      - .env.dev
+    depends_on:
+      - web-dev-build
+      - redis

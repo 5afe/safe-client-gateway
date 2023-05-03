@@ -1,0 +1,14 @@
+# Build Image for Development
+FROM rust:1.68.1 as builder
+WORKDIR "/app"
+
+# Copy the actual source code and build the project
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
+RUN cargo build --locked
+
+# Set up the environment for running the application
+ENV ROCKET_ENV=development ROCKET_ADDRESS=0.0.0.0 ROCKET_PORT=3666
+EXPOSE $ROCKET_PORT
+CMD ["./target/debug/safe-client-gateway"]
+

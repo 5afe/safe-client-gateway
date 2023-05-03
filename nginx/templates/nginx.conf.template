@@ -14,7 +14,7 @@ http {
 
   upstream app_server {
     ip_hash;  # For load-balancing
-    server web:${ROCKET_PORT} fail_timeout=0;
+    server ${ROCKET_HOST}:${ROCKET_PORT} fail_timeout=0;
     keepalive 32;
   }
 

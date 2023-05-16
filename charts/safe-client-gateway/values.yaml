@@ -1,0 +1,162 @@
+## @section Common parameters
+##
+
+## @param nameOverride String to partially override common.names.fullname
+##
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname
+##
+fullnameOverride: ""
+
+
+
+## @section Installation Parameters
+##
+
+## @param replicas Replicas for deployment
+##
+replicas: 1
+
+## @param strategy Strategy for deployment
+##
+strategy: "Recreate"
+
+## @param commonLabels [object] Labels to add to all related objects
+##
+commonLabels: {}
+
+## @param commonAnnotations [object] Annotations to to all related objects
+##
+commonAnnotations: {}
+
+ingress:
+  ## @param ingress.ingressClassName Name of the ingress class name to be used
+  ##
+  ingressClassName: ""
+
+  ## @param ingress.hostname Default host for the ingress record
+  ##
+  hostname: safe-client-gateway.cluster.local
+
+  ## @param ingress.annotations Annotations to be added to ingress resources
+  ## @skipingress.annotations
+  ##
+  annotations: {}
+
+## @param nodeSelector Object containing node selection constraint to deployment
+## https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
+##
+nodeSelector: {}
+
+## @param resources Resource specification to deployment
+##
+resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+## @param tolerations Tolerations specifications to deployment
+##
+tolerations: []
+
+## @param affinity Affinity specifications to deployment
+##
+affinity: {}
+
+image:
+  ## @param image.registry Docker registry to deployment
+  ##
+  registry: registry.hub.docker.com
+
+  ## @param image.repository Docker image repository to deployment
+  ##
+  repository: safeglobal/safe-client-gateway
+
+  ## @param image.tag Docker image tag to deployment
+  ##
+  tag: ""
+
+  ## @param image.pullPolicy Pull policy to deployment as deinfed in 
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+
+service:
+  ## @param service.type service type
+  ##
+  type: ClusterIP
+  ports:
+    ## @param service.ports.number service port number
+    ##  
+    number: 80
+    ## @param service.ports.name service port name
+    ##
+    name: api
+  ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
+  ## Values: ClientIP or None
+  ## ref: https://kubernetes.io/docs/user-guide/services/
+  ##
+  sessionAffinity: None
+
+## @section Config Service Parameters
+
+config:
+  ## @param config.configServiceEndpoint The Base URL of the Safe Config Service
+  ##
+  configServiceEndpoint: https://safe.cluster.local/cfg/
+
+  ## @param config.secretKey Rocket Secret Key. 
+  # Random string (generated with openssl rand -base64 32)
+  # [string] a 256-bit base64 encoded string (44 characters) to use as the secret key
+  ##
+  secretKey: ""
+
+  ## @param config.webToken Client Gateway Web Token
+  ##
+  webToken: ""
+
+  ## @param config.transactionServiceToken Client Gateway Web Token
+  ##
+  transactionServiceToken: ""
+
+  ## @param config.secretReferenceKey Reference to an existing secret containing the following entries: ROCKET_SECRET_KEY, WEBHOOK_TOKEN, TRANSACTION_SERVICE_AUTH_TOKEN
+  ##
+  secretReferenceKey: ""
+
+  ## @param config.extraEnvVars [object] Add additional extra environment vairables to the configMap
+  ##
+  extraEnvVars: {}
+
+  ## @param config.logLevel Allowed hosts
+  ##
+  logLevel: normal
+
+  redis:
+    ## @param config.redis.secretReferenceKey Reference to an existing secret containing the following entries: REDIS_URI
+    secretReferenceKey: ""
+    ## @param config.redis.password Redis user's password
+    password: ""
+    ## @param config.redis.host Redis server host
+    host: ""
+    ## @param config.redis.port Redis server port
+    port: "6379"
+
+  redisMainnet:
+    ## @param config.redisMainnet.secretReferenceKey Reference to an existing secret containing the following entries: REDIS_URI_MAINNET
+    secretReferenceKey: ""
+    ## @param config.redisMainnet.password Redis user's password
+    password: ""
+    ## @param config.redisMainnet.host Redis server host
+    host: ""
+    ## @param config.redisMainnet.port Redis server port
+    port: "6379"
+
+
+

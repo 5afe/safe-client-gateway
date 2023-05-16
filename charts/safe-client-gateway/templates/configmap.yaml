@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "safe-client-gateway.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "safe-client-gateway.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- .Values.commonLabels | toYaml | nindent 4 }}
+    {{- end }}
+{{- if .Values.commonAnnotations }}
+  annotations:
+    {{- .Values.commonAnnotations | toYaml | nindent 4 }}
+{{- end }}
+data:
+  ROCKET_ADDRESS: 0.0.0.0
+  SCHEME: http
+  EXCHANGE_API_BASE_URI: http://api.exchangeratesapi.io/latest
+
+  CONFIG_SERVICE_URI: {{ .Values.config.configServiceEndpoint }}
+  ROCKET_LOG_LEVEL: {{ .Values.config.logLevel }}
+  ROCKET_PORT: {{ .Values.service.ports.number | quote }}
+
+  # Hardcoded parameters
+  FEATURE_FLAG_NESTED_DECODING: "true"
+  FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION: "false"
+  RUST_LOG: "safe_client_gateway=error,safe_client_gateway::monitoring=info"
+  LOG_ALL_ERROR_RESPONSES: "false"
+  VPC_TRANSACTION_SERVICE_URI: "true"
+  CONCURRENT_BALANCE_TOKEN_REQUESTS: "5"
+  INTERNAL_CLIENT_CONNECT_TIMEOUT: "10000"
+  SAFE_APP_INFO_REQUEST_TIMEOUT: "10000"
+  CHAIN_INFO_REQUEST_TIMEOUT: "15000"
+  {{- if .Values.config.extraEnvVars }}
+  {{ .Values.config.extraEnvVars | toYaml | nindent 2 }}
+  {{- end }}

@@ -1,0 +1,1 @@
+[INFO] Safe Config Service Helm chart deployed successfully

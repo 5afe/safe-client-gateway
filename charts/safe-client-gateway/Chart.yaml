@@ -1,0 +1,8 @@
+---
+apiVersion: v2
+name: safe-client-gateway
+version: 0.1.1
+appVersion: v3.53.0
+description: A Helm chart for installing Safe Client Gateway
+type: application
+icon: "https://raw.githubusercontent.com/safe-global/safe-core-sdk/main/assets/logo.png"

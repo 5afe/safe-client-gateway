@@ -41,14 +41,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    image: syscoin/safe-client-gateway:dev
+    image: safe-global/safe-client-gateway:dev
     env_file:
       - .env.dev
     entrypoint: ["/bin/bash"]
     restart: "no"
 
   web-dev:
-    image: syscoin/safe-client-gateway:dev
+    image: safe-global/safe-client-gateway:dev
     env_file:
       - .env.dev
     depends_on:

@@ -57,5 +57,11 @@ WORKDIR "/app"
 ENV ROCKET_ENV=production ROCKET_ADDRESS=0.0.0.0 ROCKET_PORT=3666
 EXPOSE $ROCKET_PORT
 
+RUN set -ex; \ 
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+  ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /app/safe-client-gateway ./
 CMD ["./safe-client-gateway"]

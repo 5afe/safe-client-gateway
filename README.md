@@ -2,6 +2,8 @@
 [![Actions Status](https://github.com/safe-global/safe-client-gateway/workflows/safe-client-gateway/badge.svg?branch=main)](https://github.com/safe-global/safe-client-gateway/actions)
 [![Coverage Status](https://coveralls.io/repos/github/safe-global/safe-client-gateway/badge.svg)](https://coveralls.io/github/safe-global/safe-client-gateway)
 
+⚠️ This project is no longer being maintained. A new version which supports the same API can be found on https://github.com/safe-global/safe-client-gateway-nest. For the teams running an instance of this service, we strongly advise using the new version as it will include new features and any security related updates.
+
 ## Motivation
 
 This project is a gateway between the Safe clients ([Android](https://github.com/safe-global/safe-android)/ [iOS](https://github.com/safe-global/safe-ios)/ [web](https://github.com/safe-global/web-core)) and the Safe backend services ([transaction service](https://github.com/safe-global/safe-transaction-service) and Ethereum nodes). It is providing a more UI-oriented mapping and multi-sourced data structures for ease of integration and rendering.

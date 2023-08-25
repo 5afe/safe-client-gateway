@@ -82,29 +82,6 @@ jobs:
           CARGO_INCREMENTAL: '0'
           RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Awarnings'
 
-      - name: Cache grcov
-        id: grcov-cache
-        uses: actions/cache@v3.3.1
-        with:
-          path: /home/runner/.cargo/bin/
-          key: ${{ runner.os }}-grcov-v080
-
-      - name: Fetch grcov
-        if: steps.grcov-cache.outputs.cache-hit != 'true'
-        run: curl --location https://github.com/mozilla/grcov/releases/download/v0.8.0/grcov-linux-x86_64.tar.bz2 | tar jxf -
-
-      - name: Run grcov
-        id: coverage
-        uses: actions-rs/grcov@v0.1
-        with:
-          config: ./.github/action-rs/grcov.yml
-
-      - name: Coveralls upload
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ steps.coverage.outputs.report }}
-
   docs:
     runs-on: ubuntu-20.04
     needs: [ rustfmt, tests ]
